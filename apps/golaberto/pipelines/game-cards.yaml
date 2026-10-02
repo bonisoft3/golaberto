@@ -1,0 +1,150 @@
+# Every game as the lists show it, written beside its ids. A change to a game
+# names that game; a change to a team, a phase, a championship, a stadium or a
+# referee names the games that print its name; one pass over every game runs at
+# start. For each game the stream re-reads it with its names and posts its card,
+# upserting on the game's id, and one line for each of its teams, upserting on
+# <team>:<game>, and deletes the line of a team the game no longer has. A
+# replayed event posts the same rows, so at-least-once delivery is harmless; a
+# pass that fails is rejected and delivered again. A deleted game takes its
+# card and its lines with it: they reference it.
+#
+# The sinks are live, off the CDC publication, so they cannot re-feed this
+# stream.
+input:
+  broker:
+    inputs:
+      - redis_streams:
+          url: ${REDIS_URL}
+          streams:
+            - cdc-events
+          body_key: data
+          consumer_group: golaberto-game-cards
+      - generate:
+          count: 1
+          interval: ""
+          mapping: 'root = {"boot": true}'
+pipeline:
+  threads: 1
+  processors:
+    - mapping: |
+        let row = if this.exists("data") && this.data.type() == "string" && this.data.length() > 0 { this.data.parse_json() } else { {} }
+        let table = $row.__table.or("")
+        # The games and, in the same read, every name a card prints.
+        let games = "game?select=*,home:home_id(name),away:away_id(name),stadium:stadium_id(name),referee:referee_id(name),phase!inner(name,championship_id,championship(full_name))"
+        root = match {
+          this.boot.or(false) => {"scope": $games},
+          # Only a game's own change can take a team off it.
+          $table == "game" => {"scope": $games + "&id=eq." + $row.id, "own": true},
+          $table == "team" => {"scope": $games + "&or=(home_id.eq." + $row.id + ",away_id.eq." + $row.id + ")"},
+          $table == "phase" => {"scope": $games + "&phase_id=eq." + $row.id},
+          $table == "championship" => {"scope": $games + "&phase.championship_id=eq." + $row.id},
+          $table == "stadium" => {"scope": $games + "&stadium_id=eq." + $row.id},
+          $table == "referee" => {"scope": $games + "&referee_id=eq." + $row.id},
+          _ => deleted(),
+        }
+    # A failing step skips the rest, and the output rejects the message.
+    - try:
+        - branch:
+            processors:
+              - http:
+                  url: ${CRUD_URL}/${! this.scope }
+                  verb: GET
+                  retries: 30
+                  retry_period: 2s
+                  headers:
+                    Authorization: Bearer ${SERVICE_JWT}
+            result_map: root.games = this
+        # One message per game; a game gone before its pass ran took its rows
+        # with it.
+        - mapping: |
+            let own = this.own.or(false)
+            root = if this.games.length() == 0 { deleted() } else { this.games.map_each(g -> g.merge({"own": $own})) }
+        - unarchive:
+            format: json_array
+        - bloblang: |
+            # The game from one team's side.
+            map line {
+              let home = this.side == "home"
+              let mine = if $home { this.g.home_score } else { this.g.away_score }
+              let theirs = if $home { this.g.away_score } else { this.g.home_score }
+              root.id = (if $home { this.g.home_id } else { this.g.away_id }) + ":" + this.g.id
+              root.team_id = if $home { this.g.home_id } else { this.g.away_id }
+              root.game_id = this.g.id
+              root.side = this.side
+              root.opponent_id = if $home { this.g.away_id } else { this.g.home_id }
+              root.opponent_name = if $home { this.g.away.name } else { this.g.home.name }
+              root.championship_id = this.g.phase.championship_id
+              root.championship_name = this.g.phase.championship.full_name
+              root.day = this.g.day
+              root.kickoff = this.g.kickoff
+              root.played = this.g.played
+              root.goals_for = $mine
+              root.goals_against = $theirs
+              root.result = if !this.g.played { "" } else if $mine > $theirs { "w" } else if $mine < $theirs { "l" } else { "d" }
+            }
+
+            let g = this
+            let card = {
+              "id": $g.id, "phase_id": $g.phase_id, "championship_id": $g.phase.championship_id,
+              "round": $g.round, "day": $g.day, "kickoff": $g.kickoff, "played": $g.played,
+              "home_id": $g.home_id, "away_id": $g.away_id, "home_name": $g.home.name, "away_name": $g.away.name,
+              "home_score": $g.home_score, "away_score": $g.away_score, "home_aet": $g.home_aet, "away_aet": $g.away_aet,
+              "home_pen": $g.home_pen, "away_pen": $g.away_pen,
+              "championship_name": $g.phase.championship.full_name, "phase_name": $g.phase.name,
+              "stadium_id": $g.stadium_id, "stadium_name": $g.stadium.name.or(null),
+              "referee_id": $g.referee_id, "referee_name": $g.referee.name.or(null), "attendance": $g.attendance,
+            }
+            # A team the game no longer has keeps no line of it.
+            root = [
+              {"sink": "game_card", "rows": [$card]},
+              {"sink": "team_game", "rows": [{"g": $g, "side": "home"}.apply("line"), {"g": $g, "side": "away"}.apply("line")]},
+              {"sink": "delete", "filter": "team_game?game_id=eq." + $g.id + "&team_id=not.in.(" + $g.home_id + "," + $g.away_id + ")"},
+            ].filter(m -> m.sink != "delete" || $g.own.or(false))
+        - unarchive:
+            format: json_array
+        # A delete names its rows in its address and carries no body.
+        - mapping: |
+            meta sink = this.sink
+            meta filter = this.filter.or("")
+            root = if this.sink == "delete" { "" } else { this.rows }
+output:
+  reject_errored:
+    switch:
+      cases:
+        - check: '@sink == "game_card"'
+          output:
+            http_client:
+              url: ${CRUD_URL}/game_card?on_conflict=id
+              verb: POST
+              max_in_flight: 1
+              headers:
+                Content-Type: application/json
+                Prefer: resolution=merge-duplicates
+                Authorization: Bearer ${SERVICE_JWT}
+              successful_on:
+                - 200
+                - 201
+        - check: '@sink == "team_game"'
+          output:
+            http_client:
+              url: ${CRUD_URL}/team_game?on_conflict=id
+              verb: POST
+              max_in_flight: 1
+              headers:
+                Content-Type: application/json
+                Prefer: resolution=merge-duplicates
+                Authorization: Bearer ${SERVICE_JWT}
+              successful_on:
+                - 200
+                - 201
+        - check: '@sink == "delete"'
+          output:
+            http_client:
+              url: ${CRUD_URL}/${! @filter }
+              verb: DELETE
+              max_in_flight: 1
+              headers:
+                Authorization: Bearer ${SERVICE_JWT}
+              successful_on:
+                - 200
+                - 204

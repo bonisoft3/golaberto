@@ -1,0 +1,18 @@
+{
+  "name": "pronto",
+  "version": "0.4.0",
+  "description": "The outer loop. Drives one turn of design, the sayt TDD loop, and review, routing each obligation to the budget that can settle it.",
+  "agents": [
+    "./agents/pipeline-designer.md",
+    "./teams/studio/backend.md",
+    "./teams/studio/frontend.md",
+    "./teams/studio/designer.md",
+    "./teams/studio/ux.md",
+    "./teams/studio/qa.md",
+    "./teams/studio/platform-advisor.md"
+  ],
+  "author": { "name": "bonisoft3", "url": "https://github.com/bonisoft3" },
+  "repository": "https://github.com/bonisoft3/pronto",
+  "license": "MIT",
+  "keywords": ["outer-loop", "design", "review", "sayt", "workflow"]
+}

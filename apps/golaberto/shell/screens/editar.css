@@ -1,0 +1,71 @@
+@import url("shared/chrome.css");
+@import url("shared/games.css");
+/* The game editor, as its canvas draws it: the scoreboard as fields on the
+   moss stripe, the facts, each side's goals as the archive's table, and the
+   actions with the refusal above them. Tokens only. */
+.edit { display: flex; flex-direction: column; gap: var(--sp-xl); }
+.edit-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 var(--sp-md); padding-bottom: var(--sp-sm); border-bottom: var(--border-size-2) solid var(--date-bar); }
+.edit-head h2 { margin: 0; }
+.edit-head .meta { color: var(--secondary); font-size: var(--type-caption); font-weight: 700; }
+.edit-sec { border: 0; margin: 0; padding: 0; min-width: 0; display: flex; flex-direction: column; gap: var(--sp-md); }
+.edit-sec > .hint { margin: 0; color: var(--secondary); font-size: var(--type-caption); }
+.edit-sec > legend { padding: 0; margin-bottom: var(--sp-md); font-size: var(--type-subtitle); font-weight: 700; color: var(--primary); }
+
+/* Text controls take the composer's rim: --secondary, never the faint --border. */
+.edit input, .edit select {
+  box-sizing: border-box; min-height: var(--control-h); padding: 0 var(--control-pad-x);
+  font: inherit; font-size: var(--type-body); font-weight: 400; color: var(--primary);
+  background: var(--surface); border: var(--border-size-1) solid var(--secondary); border-radius: var(--r-sm);
+}
+.edit input::placeholder { color: var(--secondary); opacity: 1; }
+.edit input:focus, .edit select:focus { outline: var(--border-size-2) solid var(--accent); outline-offset: var(--border-size-1); border-color: var(--accent); }
+.edit .field { color: var(--primary); }
+.edit .field > input, .edit .field > select { width: 100%; }
+
+.score-edit { padding: var(--sp-lg); background: var(--surface-muted); border-radius: var(--r-sm); }
+.score-row { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); gap: var(--sp-lg); align-items: center; }
+.score-row .team { font-size: var(--type-title); line-height: var(--type-leading-title); font-weight: 700; }
+.score-row .team.home { text-align: end; }
+.pair { display: flex; align-items: center; gap: var(--sp-sm); }
+.pair i { font-style: normal; font-size: var(--type-title); color: var(--secondary); }
+.edit .pair input { inline-size: 2.25em; min-height: var(--control-h-lg); padding: 0; text-align: center; font-size: var(--type-title); font-weight: 700; font-variant-numeric: tabular-nums; }
+
+.fields, .goal-new { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: var(--sp-lg); }
+.fields .field, .goal-new .field { grid-column: span 2; }
+.fields .field.wide, .goal-new .field.wide { grid-column: span 3; }
+.edit input[inputmode="numeric"] { font-variant-numeric: tabular-nums; }
+
+.goal-sides { display: flex; flex-direction: column; gap: var(--sp-lg); }
+.goal-side { display: flex; flex-direction: column; }
+.goal-side > header { padding: var(--sp-sm) var(--sp-md); background: var(--table-head); color: var(--table-head-ink); }
+.goal-side > header h3 { margin: 0; font-size: var(--type-caption); font-weight: 700; }
+.goal-rows { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.goal-rows > li { display: grid; grid-template-columns: 4.5em minmax(0, 1fr) auto; gap: var(--sp-md); align-items: center; padding: var(--sp-sm) var(--sp-md); }
+.goal-rows > li:nth-child(odd) { background: var(--surface-muted); }
+.goal-rows .minute { text-align: center; font-variant-numeric: tabular-nums; }
+.goal-rows .minute:not(:empty)::after { content: "'"; }
+.goal-rows .remove { font-size: var(--type-caption); }
+.goal-side .add-goal { align-self: flex-start; margin-top: var(--sp-sm); font-size: var(--type-caption); padding: 0 var(--sp-md); }
+
+.edit-actions { display: flex; flex-direction: column; gap: var(--sp-md); padding-top: var(--sp-lg); border-top: var(--border-size-1) solid var(--border); }
+.edit-actions .buttons { display: flex; align-items: center; gap: var(--sp-md); }
+.edit[data-state="refused"] .refusal { display: block; }
+
+/* Saving: one write in flight; everything else goes quiet. */
+.edit[data-state="saving"] .btn { color: var(--secondary); background: var(--chip); border-color: var(--border); cursor: progress; pointer-events: none; }
+.edit[data-state="saving"] .btn .idle { display: none; }
+.edit[data-state="saving"] .btn .busy { display: inline; }
+.edit[data-state="saving"] input, .edit[data-state="saving"] select { color: var(--secondary); border-color: var(--border); }
+
+@media (max-width: 720px) {
+  .edit { gap: var(--sp-lg); }
+  .score-edit { padding: var(--sp-md); }
+  .score-row { gap: var(--sp-md); }
+  .score-row .team { font-size: var(--type-subtitle); overflow-wrap: anywhere; }
+  .edit input, .edit select { min-height: var(--control-h-lg); }
+  .fields, .goal-new { grid-template-columns: minmax(0, 1fr); }
+  .fields .field, .fields .field.wide, .goal-new .field, .goal-new .field.wide { grid-column: 1 / -1; }
+  .goal-side .add-goal { align-self: stretch; }
+  .edit-actions .btn { flex: 2; }
+  .edit-actions .btn-quiet { flex: 1; }
+}

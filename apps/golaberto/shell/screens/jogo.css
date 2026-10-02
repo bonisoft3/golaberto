@@ -1,0 +1,44 @@
+@import url("shared/chrome.css");
+@import url("shared/games.css");
+/* The game's head: its phase, and an editor's way in. */
+.game-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-md); flex-wrap: wrap; min-height: var(--control-h); }
+.game-head .phase-name { margin: 0; }
+.edit-link { font-size: var(--type-caption); padding: 0 var(--sp-md); }
+
+/* What readers said: the composer, then the comments, newest first, as the
+   archive lists anything — a ruled heading, zebra rows. */
+.comments h2 { padding-bottom: var(--sp-sm); border-bottom: var(--border-size-2) solid var(--date-bar); }
+.composer { display: flex; flex-direction: column; gap: var(--sp-md); margin-block-end: var(--sp-lg); }
+.composer .field { color: var(--primary); }
+.composer textarea {
+  min-height: calc(var(--control-h) * 3); padding: var(--sp-sm) var(--control-pad-x); box-sizing: border-box;
+  font: inherit; font-size: var(--type-body); font-weight: 400; line-height: var(--type-leading-body);
+  border: var(--border-size-1) solid var(--secondary); border-radius: var(--r-sm);
+  background: var(--surface); color: var(--primary); resize: vertical;
+}
+.composer textarea::placeholder { color: var(--secondary); opacity: 1; }
+.composer textarea:focus { outline: var(--border-size-2) solid var(--accent); outline-offset: var(--border-size-1); border-color: var(--accent); }
+.composer[data-state="refused"] textarea { border-color: var(--attention); }
+.composer[data-state="refused"] .refusal { display: block; }
+.composer .post { align-self: flex-start; }
+.composer[data-state="sending"] .post .idle { display: none; }
+.composer[data-state="sending"] .post .busy { display: inline; }
+.composer[data-state="sending"] .post { color: var(--secondary); background: var(--chip); border-color: var(--border); cursor: progress; pointer-events: none; }
+.composer[data-state="sending"] textarea { color: var(--secondary); }
+.comment-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.comment-list li { display: flex; flex-direction: column; gap: var(--sp-sm); padding: var(--sp-md) var(--sp-lg); }
+.comment-list li:nth-child(odd) { background: var(--surface-muted); }
+.comment-list .byline { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 var(--sp-md); }
+.comment-list .byline b { color: var(--primary); font-size: var(--type-caption); }
+.comment-list time { color: var(--secondary); font-size: var(--type-label); font-variant-numeric: tabular-nums; }
+.comment-list .body { margin: 0; color: var(--primary); line-height: var(--type-leading-body); white-space: pre-wrap; overflow-wrap: anywhere; }
+/* The comments close the page under the game, in the content column's width,
+   and only under a game that exists. */
+.page-tail { display: flex; flex-direction: column; gap: var(--sp-md); padding: 0 var(--sp-lg) var(--sp-xl); max-width: calc(100% - var(--measure-side)); box-sizing: border-box; }
+.page-tail h2 { margin: 0; }
+section[data-screen="jogo"]:has(> [data-live="game_card"]:not(:has(article))) .page-tail { display: none; }
+@media (max-width: 720px) {
+  .page-tail { max-width: none; }
+  .composer .post { align-self: stretch; }
+  .comment-list li { padding: var(--sp-md); }
+}

@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+# Mise is supplied by Sayt; the stub pins Deno independently of the project lock.
+set -e
+DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+ROOT=$(CDPATH= cd -- "$DIR/.." && pwd)
+export MISE_LOCKED=0
+exec "$DIR/deno.toml" run --no-lock --no-check --node-modules-dir=none \
+	--config "$ROOT/test/deno.json" \
+	--allow-read=".,$ROOT" --allow-write=. --allow-env \
+	"$DIR/cli.ts" "$@"

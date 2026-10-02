@@ -1,0 +1,135 @@
+// stacks/go — Go toolchain concept library.
+//
+// Pure go concepts — no opinion about which target each lands on. A
+// project unifies these fragments into its bayt targets.
+//
+// In-container, a `go env -w GOMODCACHE=$PWD/depsDir` stage preamble
+// (persisted at /root/.config/go/env, inherited through FROM chains)
+// points every go invocation at the project-local closure; commands
+// stay plain exec-form. The host keeps go's default shared modcache.
+package go
+
+// Cache mounts at go's default cache paths — mounts inside a stage, the dev's
+// real caches on the host (one command serves both). `scope: "global"`, shared
+// like a dev machine's single GOMODCACHE/GOCACHE: safe because go verifies
+// entries (go.sum, build-cache action-ID hashes).
+_modCacheMount:   {type: "cache", target: "/root/go/pkg/mod", scope: "global"}
+_buildCacheMount: {type: "cache", target: "/root/.cache/go-build", scope: "global"}
+
+// The materialized module closure's project-local home.
+depsDir: ".gomodcache"
+
+// _twoPhase — mount-as-proxy download. Phase 1 (`download`) fills the
+// mount; phase 2 (`materialize`, `network:"none"`) re-resolves against it
+// as a file:// GOPROXY (`,direct` for misses) into the active GOMODCACHE,
+// materializing exactly the current closure — not the mount's accrued
+// versions. Both phases are RUN-only (`dockerfile.do`, see #cmd): they
+// write go's root-user cache path via the mount, which has no host
+// analogue (a host go auto-downloads into its own modcache). `_dir`
+// selects the module (`-C`); materialize runs at `_prio + 1`.
+_twoPhase: T={
+	_dir:  string // "" = module root; concrete (a disjunction default stays non-concrete under pass-2 interpolation)
+	_prio: int
+	let _c = [if T._dir != "" {"-C \(T._dir) "}, ""][0]
+	cmd: "download": {
+		priority: T._prio
+		dockerfile: {
+			do:     *"env GOMODCACHE=\(_modCacheMount.target) go \(_c)mod download" | string
+			mounts: [_modCacheMount]
+		}
+	}
+	cmd: "materialize": {
+		priority: T._prio + 1
+		dockerfile: {
+			do:      *"env GOSUMDB=off GOPROXY=file://\(_modCacheMount.target)/cache/download,direct go \(_c)mod download" | string
+			mounts:  [_modCacheMount]
+			network: "none"
+		}
+	}
+}
+
+// Persists the project-local GOMODCACHE into the stage (go requires an
+// absolute path; $PWD is the WORKDIR at preamble time).
+_goEnvPreamble: "go-modcache": {
+	line: "RUN mkdir -p /root/.config/go && echo \"GOMODCACHE=$PWD/\(depsDir)\" >> /root/.config/go/env"
+}
+
+// modDownload — the root module's closure as a real image layer (the
+// `deps` target), reachable by runtime containers and cold builders.
+// Rides the setup chain, so monorepo-wide setup churn re-keys it; the
+// warm mount re-materializes without network. go.sum pins every artifact
+// → digest-stable. Emits the closure at depsDir.
+modDownload: _twoPhase & {
+	_dir:  ""
+	_prio: -1
+	srcs: defaultGlobs: {
+		"go-mod": *{glob: "go.mod"} | null
+		"go-sum": *{glob: "go.sum"} | null
+	}
+	dockerfile: defaultPreamble: _goEnvPreamble
+	outs: globs: ["\(depsDir)/**/*"]
+}
+
+// build — `go build`. Manifests are compile inputs, so they key this
+// stage directly; the closure itself arrives from the `:deps:outs`
+// view. Test files live beside sources in go packages, so **/*.go
+// includes them — a test edit invalidates build; acceptable until
+// srcs excludes earn their keep. Leaves outs to the leaf (the
+// artifact name is the module's).
+build: {
+	// go compiles more than .go: a package can implement a go declaration in
+	// assembly, and a cgo package carries c and h beside it. Leaving them out
+	// builds on a host that has them on disk while keying the target without
+	// them, so the miss only surfaces in a container.
+	srcs: defaultGlobs: {
+		"go-src": *{glob: "**/*.go"} | null
+		"go-asm": *{glob: "**/*.[sS]"} | null
+		"go-c":   *{glob: "**/*.c"} | null
+		"go-h":   *{glob: "**/*.h"} | null
+		"go-mod": *{glob: "go.mod"} | null
+		"go-sum": *{glob: "go.sum"} | null
+	}
+	cmd: "builtin": {
+		do: *"go build" | string
+		dockerfile: mounts: [_buildCacheMount]
+	}
+	dockerfile: defaultPreamble: _goEnvPreamble
+}
+
+// test — `go test ./...`. it/ is its own module, so the walk never
+// descends into it.
+test: {
+	// `**/testdata/**`: a project is a module and its fixtures sit beside
+	// each package, not at the module root. The shallow glob staged none of
+	// them, and only a container notices — on a host the files are there
+	// whether or not the target declares them.
+	srcs: defaultGlobs: {
+		"go-test":     *{glob: "**/*_test.go"} | null
+		"go-testdata": *{glob: "**/testdata/**"} | null
+	}
+	cmd: "builtin": {
+		do: *"go test ./..." | string
+		dockerfile: mounts: [_buildCacheMount]
+	}
+}
+
+// integrationTest — `go -C it test ./...`. it/ is its own module (nested
+// go.mod): units stay hermetic (no flags/tags) and the daemon-needing
+// tree (testcontainers) lives in it/go.mod, off the service's graph. The
+// stage inherits build's GOMODCACHE=.gomodcache (service closure only),
+// so it two-phases the it/ closure before the tests run.
+integrationTest: _twoPhase & {
+	_dir:  "it"
+	_prio: -2
+	srcs: defaultGlobs: {
+		"go-it": *{glob: "it/**/*"} | null
+	}
+	cmd: "builtin": {
+		do: *"go -C it test ./..." | string
+		dockerfile: mounts: [_buildCacheMount]
+	}
+}
+
+vet: cmd: "builtin": do: *"go vet ./..." | string
+
+run: cmd: "builtin": do: *"go run ." | string

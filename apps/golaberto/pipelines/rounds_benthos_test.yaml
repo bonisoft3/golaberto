@@ -1,0 +1,50 @@
+# The rounds transform's choices: the regression rationale for each case is
+# its name. Rounds are not dense — a knockout's follow the group stage's —
+# and a phase may have nothing played yet, or nothing numbered at all.
+tests:
+  - name: the current round is the latest with a played game, and the next the one after it
+    target_processors: /pipeline/processors/1/try/4
+    input_batch:
+      - content: '{"phase": "p", "games": [{"round": 1, "played": true}, {"round": 2, "played": true}, {"round": 3, "played": false}]}'
+    output_batches:
+      - - bloblang: 'this == {"id": "p", "phase_id": "p", "current": 2, "next": 3}'
+          metadata_equals:
+            sink: upsert
+  - name: a phase with nothing played opens on its first round, never a round 0
+    target_processors: /pipeline/processors/1/try/4
+    input_batch:
+      - content: '{"phase": "p", "games": [{"round": 28, "played": false}, {"round": 28, "played": false}, {"round": 29, "played": false}]}'
+    output_batches:
+      - - bloblang: 'this == {"id": "p", "phase_id": "p", "current": 28, "next": 29}'
+  - name: the next round is the one that exists, not current plus one
+    target_processors: /pipeline/processors/1/try/4
+    input_batch:
+      - content: '{"phase": "p", "games": [{"round": 27, "played": true}, {"round": 30, "played": false}]}'
+    output_batches:
+      - - bloblang: 'this == {"id": "p", "phase_id": "p", "current": 27, "next": 30}'
+  - name: after the last round there is no next
+    target_processors: /pipeline/processors/1/try/4
+    input_batch:
+      - content: '{"phase": "p", "games": [{"round": 38, "played": true}]}'
+    output_batches:
+      - - bloblang: 'this == {"id": "p", "phase_id": "p", "current": 38, "next": null}'
+  - name: a phase with no numbered game has its row deleted
+    target_processors: /pipeline/processors/1/try/4
+    input_batch:
+      - content: '{"phase": "p", "games": []}'
+    output_batches:
+      - - bloblang: 'this == {"id": "p"}'
+          metadata_equals:
+            sink: delete
+  - name: a game names its own phase, with no read to find it
+    target_processors: /pipeline/processors/0
+    input_batch:
+      - content: '{"data": "{\"__table\": \"game\", \"phase_id\": \"p\"}"}'
+    output_batches:
+      - - bloblang: 'this == {"phases": [{"id": "p"}]}'
+  - name: only the boot recount lists the phases
+    target_processors: /pipeline/processors/0
+    input_batch:
+      - content: '{"boot": true}'
+    output_batches:
+      - - bloblang: 'this == {"scope": "phase?select=id"}'

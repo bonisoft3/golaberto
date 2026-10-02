@@ -1,0 +1,2799 @@
+{
+ "path": "/championship/show/1524-america-do-sul-copa-libertadores-2026",
+ "phases": [
+  {
+   "upstream": 4479,
+   "name": "1a Fase",
+   "position": 0,
+   "groups": [
+    {
+     "upstream": 16515,
+     "name": "Grupo 1",
+     "teams": [
+      {
+       "upstream": 198,
+       "name": "Deportivo Tachira"
+      },
+      {
+       "upstream": 206,
+       "name": "The Strongest"
+      }
+     ],
+     "zones": [
+      {
+       "name": "2a Fase",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16516,
+     "name": "Grupo 2",
+     "teams": [
+      {
+       "upstream": 1005,
+       "name": "2 de Mayo"
+      },
+      {
+       "upstream": 511,
+       "name": "Alianza Lima"
+      }
+     ],
+     "zones": [
+      {
+       "name": "2a Fase",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16517,
+     "name": "Grupo 3",
+     "teams": [
+      {
+       "upstream": 2239,
+       "name": "Juventud"
+      },
+      {
+       "upstream": 2231,
+       "name": "Universidad Católica-ECU"
+      }
+     ],
+     "zones": [
+      {
+       "name": "2a Fase",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    }
+   ],
+   "games": [
+    {
+     "upstream": 364216,
+     "round": 1,
+     "date": "04/02/2026",
+     "time": "00:30",
+     "home": "The Strongest",
+     "away": "Deportivo Tachira",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364217,
+     "round": 1,
+     "date": "05/02/2026",
+     "time": "00:30",
+     "home": "2 de Mayo",
+     "away": "Alianza Lima",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364218,
+     "round": 1,
+     "date": "06/02/2026",
+     "time": "00:30",
+     "home": "Juventud",
+     "away": "Universidad Católica-ECU",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364220,
+     "round": 1,
+     "date": "12/02/2026",
+     "time": "00:30",
+     "home": "Alianza Lima",
+     "away": "2 de Mayo",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "upstream": 4480,
+   "name": "2a Fase",
+   "position": 1,
+   "groups": [
+    {
+     "upstream": 16518,
+     "name": "Grupo 1",
+     "teams": [
+      {
+       "upstream": 2239,
+       "name": "Juventud"
+      },
+      {
+       "upstream": 752,
+       "name": "Club Guaraní"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3a Fase",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16519,
+     "name": "Grupo 2",
+     "teams": [
+      {
+       "upstream": 505,
+       "name": "Tolima"
+      },
+      {
+       "upstream": 198,
+       "name": "Deportivo Tachira"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3a Fase",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16520,
+     "name": "Grupo 3",
+     "teams": [
+      {
+       "upstream": 204,
+       "name": "Sporting Cristal"
+      },
+      {
+       "upstream": 1005,
+       "name": "2 de Mayo"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3a Fase",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16521,
+     "name": "Grupo 4",
+     "teams": [
+      {
+       "upstream": 1149,
+       "name": "Barcelona de Guayaquil"
+      },
+      {
+       "upstream": 630,
+       "name": "Argentinos Juniors"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3a Fase",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16522,
+     "name": "Grupo 5",
+     "teams": [
+      {
+       "upstream": 7,
+       "name": "Botafogo-RJ"
+      },
+      {
+       "upstream": 2237,
+       "name": "Nacional Potosí"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3a Fase",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16523,
+     "name": "Grupo 6",
+     "teams": [
+      {
+       "upstream": 386,
+       "name": "Carabobo"
+      },
+      {
+       "upstream": 1826,
+       "name": "Huachipato"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3a Fase",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16524,
+     "name": "Grupo 7",
+     "teams": [
+      {
+       "upstream": 2218,
+       "name": "O'Higgins"
+      },
+      {
+       "upstream": 74,
+       "name": "Bahia-BA"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3a Fase",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16525,
+     "name": "Grupo 8",
+     "teams": [
+      {
+       "upstream": 748,
+       "name": "Independiente Medellín"
+      },
+      {
+       "upstream": 1003,
+       "name": "Liverpool-URU"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3a Fase",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    }
+   ],
+   "games": [
+    {
+     "upstream": 364224,
+     "round": 2,
+     "date": "17/02/2026",
+     "time": "22:00",
+     "home": "Carabobo",
+     "away": "Huachipato",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364225,
+     "round": 2,
+     "date": "18/02/2026",
+     "time": "00:30",
+     "home": "2 de Mayo",
+     "away": "Sporting Cristal",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 364226,
+     "round": 2,
+     "date": "18/02/2026",
+     "time": "00:30",
+     "home": "Liverpool-URU",
+     "away": "Independiente Medellín",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364228,
+     "round": 2,
+     "date": "18/02/2026",
+     "time": "22:00",
+     "home": "O'Higgins",
+     "away": "Bahia-BA",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364229,
+     "round": 2,
+     "date": "19/02/2026",
+     "time": "00:30",
+     "home": "Barcelona de Guayaquil",
+     "away": "Argentinos Juniors",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364230,
+     "round": 2,
+     "date": "19/02/2026",
+     "time": "00:30",
+     "home": "Nacional Potosí",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364231,
+     "round": 2,
+     "date": "19/02/2026",
+     "time": "22:00",
+     "home": "Juventud",
+     "away": "Club Guaraní",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364227,
+     "round": 2,
+     "date": "20/02/2026",
+     "time": "00:30",
+     "home": "Deportivo Tachira",
+     "away": "Tolima",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364232,
+     "round": 2,
+     "date": "24/02/2026",
+     "time": "22:00",
+     "home": "Huachipato",
+     "away": "Carabobo",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364234,
+     "round": 2,
+     "date": "25/02/2026",
+     "time": "00:30",
+     "home": "Independiente Medellín",
+     "away": "Liverpool-URU",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364237,
+     "round": 2,
+     "date": "26/02/2026",
+     "time": "00:30",
+     "home": "Botafogo-RJ",
+     "away": "Nacional Potosí",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364238,
+     "round": 2,
+     "date": "26/02/2026",
+     "time": "22:00",
+     "home": "Club Guaraní",
+     "away": "Juventud",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    }
+   ]
+  },
+  {
+   "upstream": 4487,
+   "name": "3a Fase",
+   "position": 2,
+   "groups": [
+    {
+     "upstream": 16625,
+     "name": "Grupo 1",
+     "teams": [
+      {
+       "upstream": 1149,
+       "name": "Barcelona de Guayaquil"
+      },
+      {
+       "upstream": 7,
+       "name": "Botafogo-RJ"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Fase de Grupos",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16626,
+     "name": "Grupo 2",
+     "teams": [
+      {
+       "upstream": 204,
+       "name": "Sporting Cristal"
+      },
+      {
+       "upstream": 386,
+       "name": "Carabobo"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Fase de Grupos",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16627,
+     "name": "Grupo 3",
+     "teams": [
+      {
+       "upstream": 505,
+       "name": "Tolima"
+      },
+      {
+       "upstream": 2218,
+       "name": "O'Higgins"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Fase de Grupos",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16628,
+     "name": "Grupo 4",
+     "teams": [
+      {
+       "upstream": 748,
+       "name": "Independiente Medellín"
+      },
+      {
+       "upstream": 2239,
+       "name": "Juventud"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Fase de Grupos",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    }
+   ],
+   "games": [
+    {
+     "upstream": 364370,
+     "round": 3,
+     "date": "04/03/2026",
+     "time": "00:30",
+     "home": "Barcelona de Guayaquil",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364371,
+     "round": 3,
+     "date": "04/03/2026",
+     "time": "22:00",
+     "home": "Carabobo",
+     "away": "Sporting Cristal",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364372,
+     "round": 3,
+     "date": "05/03/2026",
+     "time": "00:30",
+     "home": "O'Higgins",
+     "away": "Tolima",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364373,
+     "round": 3,
+     "date": "06/03/2026",
+     "time": "00:30",
+     "home": "Juventud",
+     "away": "Independiente Medellín",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364374,
+     "round": 3,
+     "date": "11/03/2026",
+     "time": "00:30",
+     "home": "Botafogo-RJ",
+     "away": "Barcelona de Guayaquil",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364376,
+     "round": 3,
+     "date": "12/03/2026",
+     "time": "00:30",
+     "home": "Tolima",
+     "away": "O'Higgins",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364377,
+     "round": 3,
+     "date": "13/03/2026",
+     "time": "00:30",
+     "home": "Independiente Medellín",
+     "away": "Juventud",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "upstream": 4498,
+   "name": "Fase de Grupos",
+   "position": 3,
+   "groups": [
+    {
+     "upstream": 16692,
+     "name": "Grupo A",
+     "teams": [
+      {
+       "upstream": 17,
+       "name": "Flamengo-RJ"
+      },
+      {
+       "upstream": 203,
+       "name": "Estudiantes"
+      },
+      {
+       "upstream": 748,
+       "name": "Independiente Medellín"
+      },
+      {
+       "upstream": 1825,
+       "name": "Cusco"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Round of 16",
+       "first": 1,
+       "last": 2
+      },
+      {
+       "name": "Sudamericana",
+       "first": 3,
+       "last": 3
+      }
+     ]
+    },
+    {
+     "upstream": 16693,
+     "name": "Grupo B",
+     "teams": [
+      {
+       "upstream": 3220,
+       "name": "Coquimbo Unido"
+      },
+      {
+       "upstream": 505,
+       "name": "Tolima"
+      },
+      {
+       "upstream": 216,
+       "name": "Nacional-URU"
+      },
+      {
+       "upstream": 191,
+       "name": "Universitario"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Round of 16",
+       "first": 1,
+       "last": 2
+      },
+      {
+       "name": "Sudamericana",
+       "first": 3,
+       "last": 3
+      }
+     ]
+    },
+    {
+     "upstream": 16694,
+     "name": "Grupo C",
+     "teams": [
+      {
+       "upstream": 3407,
+       "name": "Independiente Rivadavia"
+      },
+      {
+       "upstream": 8,
+       "name": "Fluminense-RJ"
+      },
+      {
+       "upstream": 202,
+       "name": "Bolivar"
+      },
+      {
+       "upstream": 2236,
+       "name": "La Guaira"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Round of 16",
+       "first": 1,
+       "last": 2
+      },
+      {
+       "name": "Sudamericana",
+       "first": 3,
+       "last": 3
+      }
+     ]
+    },
+    {
+     "upstream": 16695,
+     "name": "Grupo D",
+     "teams": [
+      {
+       "upstream": 210,
+       "name": "Universidad Católica"
+      },
+      {
+       "upstream": 15,
+       "name": "Cruzeiro-MG"
+      },
+      {
+       "upstream": 437,
+       "name": "Boca Juniors"
+      },
+      {
+       "upstream": 1149,
+       "name": "Barcelona de Guayaquil"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Round of 16",
+       "first": 1,
+       "last": 2
+      },
+      {
+       "name": "Sudamericana",
+       "first": 3,
+       "last": 3
+      }
+     ]
+    },
+    {
+     "upstream": 16696,
+     "name": "Grupo E",
+     "teams": [
+      {
+       "upstream": 24,
+       "name": "Corinthians-SP"
+      },
+      {
+       "upstream": 3396,
+       "name": "Platense"
+      },
+      {
+       "upstream": 193,
+       "name": "Santa Fe"
+      },
+      {
+       "upstream": 749,
+       "name": "Peñarol"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Round of 16",
+       "first": 1,
+       "last": 2
+      },
+      {
+       "name": "Sudamericana",
+       "first": 3,
+       "last": 3
+      }
+     ]
+    },
+    {
+     "upstream": 16697,
+     "name": "Grupo F",
+     "teams": [
+      {
+       "upstream": 220,
+       "name": "Cerro Porteño"
+      },
+      {
+       "upstream": 16,
+       "name": "Palmeiras-SP"
+      },
+      {
+       "upstream": 204,
+       "name": "Sporting Cristal"
+      },
+      {
+       "upstream": 1145,
+       "name": "Junior Barranquilla"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Round of 16",
+       "first": 1,
+       "last": 2
+      },
+      {
+       "name": "Sudamericana",
+       "first": 3,
+       "last": 3
+      }
+     ]
+    },
+    {
+     "upstream": 16698,
+     "name": "Grupo G",
+     "teams": [
+      {
+       "upstream": 211,
+       "name": "LDU"
+      },
+      {
+       "upstream": 584,
+       "name": "Mirassol-SP"
+      },
+      {
+       "upstream": 393,
+       "name": "Lanús"
+      },
+      {
+       "upstream": 3227,
+       "name": "Always Ready"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Round of 16",
+       "first": 1,
+       "last": 2
+      },
+      {
+       "name": "Sudamericana",
+       "first": 3,
+       "last": 3
+      }
+     ]
+    },
+    {
+     "upstream": 16699,
+     "name": "Grupo H",
+     "teams": [
+      {
+       "upstream": 2217,
+       "name": "Independiente del Valle"
+      },
+      {
+       "upstream": 221,
+       "name": "Rosario Central"
+      },
+      {
+       "upstream": 3466,
+       "name": "Universidad Central"
+      },
+      {
+       "upstream": 223,
+       "name": "Libertad"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Round of 16",
+       "first": 1,
+       "last": 2
+      },
+      {
+       "name": "Sudamericana",
+       "first": 3,
+       "last": 3
+      }
+     ]
+    }
+   ],
+   "games": [
+    {
+     "upstream": 365241,
+     "round": 1,
+     "date": "07/04/2026",
+     "time": "22:00",
+     "home": "Independiente Rivadavia",
+     "away": "Bolivar",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365240,
+     "round": 1,
+     "date": "07/04/2026",
+     "time": "22:00",
+     "home": "La Guaira",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 365243,
+     "round": 1,
+     "date": "08/04/2026",
+     "time": "00:00",
+     "home": "Always Ready",
+     "away": "LDU",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 365242,
+     "round": 1,
+     "date": "08/04/2026",
+     "time": "00:00",
+     "home": "Barcelona de Guayaquil",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 365244,
+     "round": 1,
+     "date": "08/04/2026",
+     "time": "00:30",
+     "home": "Universidad Católica",
+     "away": "Boca Juniors",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 365245,
+     "round": 1,
+     "date": "08/04/2026",
+     "time": "02:00",
+     "home": "Tolima",
+     "away": "Universitario",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 365246,
+     "round": 1,
+     "date": "08/04/2026",
+     "time": "22:00",
+     "home": "Coquimbo Unido",
+     "away": "Nacional-URU",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365247,
+     "round": 1,
+     "date": "08/04/2026",
+     "time": "22:00",
+     "home": "Mirassol-SP",
+     "away": "Lanús",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365248,
+     "round": 1,
+     "date": "09/04/2026",
+     "time": "00:00",
+     "home": "Independiente Medellín",
+     "away": "Estudiantes",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365249,
+     "round": 1,
+     "date": "09/04/2026",
+     "time": "00:30",
+     "home": "Cusco",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 365250,
+     "round": 1,
+     "date": "09/04/2026",
+     "time": "00:30",
+     "home": "Junior Barranquilla",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365251,
+     "round": 1,
+     "date": "09/04/2026",
+     "time": "02:00",
+     "home": "Sporting Cristal",
+     "away": "Cerro Porteño",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365252,
+     "round": 1,
+     "date": "09/04/2026",
+     "time": "22:00",
+     "home": "Rosario Central",
+     "away": "Independiente del Valle",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 365253,
+     "round": 1,
+     "date": "09/04/2026",
+     "time": "22:00",
+     "home": "Universidad Central",
+     "away": "Libertad",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 365254,
+     "round": 1,
+     "date": "10/04/2026",
+     "time": "00:00",
+     "home": "Platense",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 365255,
+     "round": 1,
+     "date": "10/04/2026",
+     "time": "02:00",
+     "home": "Santa Fe",
+     "away": "Peñarol",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365258,
+     "round": 2,
+     "date": "14/04/2026",
+     "time": "22:00",
+     "home": "Cerro Porteño",
+     "away": "Junior Barranquilla",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365256,
+     "round": 2,
+     "date": "14/04/2026",
+     "time": "22:00",
+     "home": "Estudiantes",
+     "away": "Cusco",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 365257,
+     "round": 2,
+     "date": "14/04/2026",
+     "time": "22:00",
+     "home": "Nacional-URU",
+     "away": "Tolima",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 365260,
+     "round": 2,
+     "date": "15/04/2026",
+     "time": "00:00",
+     "home": "Boca Juniors",
+     "away": "Barcelona de Guayaquil",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 365259,
+     "round": 2,
+     "date": "15/04/2026",
+     "time": "00:00",
+     "home": "Bolivar",
+     "away": "La Guaira",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365262,
+     "round": 2,
+     "date": "15/04/2026",
+     "time": "02:00",
+     "home": "LDU",
+     "away": "Mirassol-SP",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 365261,
+     "round": 2,
+     "date": "15/04/2026",
+     "time": "02:00",
+     "home": "Universitario",
+     "away": "Coquimbo Unido",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 365263,
+     "round": 2,
+     "date": "15/04/2026",
+     "time": "22:00",
+     "home": "Cruzeiro-MG",
+     "away": "Universidad Católica",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 365264,
+     "round": 2,
+     "date": "15/04/2026",
+     "time": "22:00",
+     "home": "Libertad",
+     "away": "Rosario Central",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 365266,
+     "round": 2,
+     "date": "16/04/2026",
+     "time": "00:30",
+     "home": "Corinthians-SP",
+     "away": "Santa Fe",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 365265,
+     "round": 2,
+     "date": "16/04/2026",
+     "time": "00:30",
+     "home": "Fluminense-RJ",
+     "away": "Independiente Rivadavia",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 365267,
+     "round": 2,
+     "date": "16/04/2026",
+     "time": "02:00",
+     "home": "Independiente del Valle",
+     "away": "Universidad Central",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 365269,
+     "round": 2,
+     "date": "16/04/2026",
+     "time": "22:00",
+     "home": "Lanús",
+     "away": "Always Ready",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365268,
+     "round": 2,
+     "date": "16/04/2026",
+     "time": "22:00",
+     "home": "Palmeiras-SP",
+     "away": "Sporting Cristal",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 365270,
+     "round": 2,
+     "date": "17/04/2026",
+     "time": "00:30",
+     "home": "Flamengo-RJ",
+     "away": "Independiente Medellín",
+     "played": true,
+     "score": [
+      4,
+      1
+     ]
+    },
+    {
+     "upstream": 365271,
+     "round": 2,
+     "date": "17/04/2026",
+     "time": "00:30",
+     "home": "Peñarol",
+     "away": "Platense",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 365272,
+     "round": 3,
+     "date": "28/04/2026",
+     "time": "22:00",
+     "home": "Lanús",
+     "away": "LDU",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365273,
+     "round": 3,
+     "date": "28/04/2026",
+     "time": "22:00",
+     "home": "Libertad",
+     "away": "Independiente del Valle",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 365274,
+     "round": 3,
+     "date": "29/04/2026",
+     "time": "00:00",
+     "home": "Universidad Central",
+     "away": "Rosario Central",
+     "played": true,
+     "score": [
+      0,
+      3
+     ]
+    },
+    {
+     "upstream": 365275,
+     "round": 3,
+     "date": "29/04/2026",
+     "time": "00:30",
+     "home": "Cruzeiro-MG",
+     "away": "Boca Juniors",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365277,
+     "round": 3,
+     "date": "29/04/2026",
+     "time": "02:00",
+     "home": "Sporting Cristal",
+     "away": "Junior Barranquilla",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 365276,
+     "round": 3,
+     "date": "29/04/2026",
+     "time": "02:00",
+     "home": "Tolima",
+     "away": "Coquimbo Unido",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 365279,
+     "round": 3,
+     "date": "29/04/2026",
+     "time": "22:00",
+     "home": "Mirassol-SP",
+     "away": "Always Ready",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 365278,
+     "round": 3,
+     "date": "29/04/2026",
+     "time": "22:00",
+     "home": "Platense",
+     "away": "Santa Fe",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 365280,
+     "round": 3,
+     "date": "30/04/2026",
+     "time": "00:00",
+     "home": "Barcelona de Guayaquil",
+     "away": "Universidad Católica",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 365282,
+     "round": 3,
+     "date": "30/04/2026",
+     "time": "00:30",
+     "home": "Cerro Porteño",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365281,
+     "round": 3,
+     "date": "30/04/2026",
+     "time": "00:30",
+     "home": "Estudiantes",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365283,
+     "round": 3,
+     "date": "30/04/2026",
+     "time": "02:00",
+     "home": "Universitario",
+     "away": "Nacional-URU",
+     "played": true,
+     "score": [
+      4,
+      2
+     ]
+    },
+    {
+     "upstream": 365284,
+     "round": 3,
+     "date": "30/04/2026",
+     "time": "22:00",
+     "home": "Bolivar",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 365285,
+     "round": 3,
+     "date": "30/04/2026",
+     "time": "22:00",
+     "home": "Independiente Rivadavia",
+     "away": "La Guaira",
+     "played": true,
+     "score": [
+      4,
+      1
+     ]
+    },
+    {
+     "upstream": 365286,
+     "round": 3,
+     "date": "01/05/2026",
+     "time": "00:00",
+     "home": "Corinthians-SP",
+     "away": "Peñarol",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 365287,
+     "round": 3,
+     "date": "01/05/2026",
+     "time": "02:00",
+     "home": "Independiente Medellín",
+     "away": "Cusco",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365289,
+     "round": 4,
+     "date": "05/05/2026",
+     "time": "22:00",
+     "home": "Rosario Central",
+     "away": "Libertad",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365288,
+     "round": 4,
+     "date": "05/05/2026",
+     "time": "22:00",
+     "home": "Sporting Cristal",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 365290,
+     "round": 4,
+     "date": "06/05/2026",
+     "time": "00:00",
+     "home": "Barcelona de Guayaquil",
+     "away": "Boca Juniors",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365291,
+     "round": 4,
+     "date": "06/05/2026",
+     "time": "00:00",
+     "home": "Universidad Central",
+     "away": "Independiente del Valle",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 365292,
+     "round": 4,
+     "date": "06/05/2026",
+     "time": "00:30",
+     "home": "Always Ready",
+     "away": "Lanús",
+     "played": true,
+     "score": [
+      4,
+      0
+     ]
+    },
+    {
+     "upstream": 365293,
+     "round": 4,
+     "date": "06/05/2026",
+     "time": "22:00",
+     "home": "Cusco",
+     "away": "Estudiantes",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365294,
+     "round": 4,
+     "date": "06/05/2026",
+     "time": "22:00",
+     "home": "La Guaira",
+     "away": "Bolivar",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365295,
+     "round": 4,
+     "date": "07/05/2026",
+     "time": "00:30",
+     "home": "Independiente Rivadavia",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365296,
+     "round": 4,
+     "date": "07/05/2026",
+     "time": "00:30",
+     "home": "Santa Fe",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365297,
+     "round": 4,
+     "date": "07/05/2026",
+     "time": "02:00",
+     "home": "Tolima",
+     "away": "Nacional-URU",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 365298,
+     "round": 4,
+     "date": "07/05/2026",
+     "time": "02:00",
+     "home": "Universidad Católica",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 365300,
+     "round": 4,
+     "date": "07/05/2026",
+     "time": "22:00",
+     "home": "Mirassol-SP",
+     "away": "LDU",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 365299,
+     "round": 4,
+     "date": "07/05/2026",
+     "time": "22:00",
+     "home": "Platense",
+     "away": "Peñarol",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365301,
+     "round": 4,
+     "date": "08/05/2026",
+     "time": "00:00",
+     "home": "Coquimbo Unido",
+     "away": "Universitario",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 365303,
+     "round": 4,
+     "date": "08/05/2026",
+     "time": "02:00",
+     "home": "Junior Barranquilla",
+     "away": "Cerro Porteño",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 365304,
+     "round": 5,
+     "date": "19/05/2026",
+     "time": "22:00",
+     "home": "Coquimbo Unido",
+     "away": "Tolima",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 365305,
+     "round": 5,
+     "date": "19/05/2026",
+     "time": "22:00",
+     "home": "Fluminense-RJ",
+     "away": "Bolivar",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 365306,
+     "round": 5,
+     "date": "19/05/2026",
+     "time": "22:00",
+     "home": "Rosario Central",
+     "away": "Universidad Central",
+     "played": true,
+     "score": [
+      4,
+      0
+     ]
+    },
+    {
+     "upstream": 365308,
+     "round": 5,
+     "date": "20/05/2026",
+     "time": "00:00",
+     "home": "Always Ready",
+     "away": "Mirassol-SP",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 365307,
+     "round": 5,
+     "date": "20/05/2026",
+     "time": "00:00",
+     "home": "Santa Fe",
+     "away": "Platense",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 365309,
+     "round": 5,
+     "date": "20/05/2026",
+     "time": "00:30",
+     "home": "Boca Juniors",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365310,
+     "round": 5,
+     "date": "20/05/2026",
+     "time": "02:00",
+     "home": "Independiente del Valle",
+     "away": "Libertad",
+     "played": true,
+     "score": [
+      4,
+      1
+     ]
+    },
+    {
+     "upstream": 365311,
+     "round": 5,
+     "date": "20/05/2026",
+     "time": "22:00",
+     "home": "Nacional-URU",
+     "away": "Universitario",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 365312,
+     "round": 5,
+     "date": "21/05/2026",
+     "time": "00:30",
+     "home": "Flamengo-RJ",
+     "away": "Estudiantes",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365314,
+     "round": 5,
+     "date": "21/05/2026",
+     "time": "00:30",
+     "home": "LDU",
+     "away": "Lanús",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 365313,
+     "round": 5,
+     "date": "21/05/2026",
+     "time": "00:30",
+     "home": "Palmeiras-SP",
+     "away": "Cerro Porteño",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 365315,
+     "round": 5,
+     "date": "21/05/2026",
+     "time": "02:00",
+     "home": "Cusco",
+     "away": "Independiente Medellín",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 365316,
+     "round": 5,
+     "date": "21/05/2026",
+     "time": "02:00",
+     "home": "Junior Barranquilla",
+     "away": "Sporting Cristal",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 365317,
+     "round": 5,
+     "date": "21/05/2026",
+     "time": "22:00",
+     "home": "La Guaira",
+     "away": "Independiente Rivadavia",
+     "played": true,
+     "score": [
+      2,
+      4
+     ]
+    },
+    {
+     "upstream": 365319,
+     "round": 5,
+     "date": "22/05/2026",
+     "time": "00:30",
+     "home": "Peñarol",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365318,
+     "round": 5,
+     "date": "22/05/2026",
+     "time": "00:30",
+     "home": "Universidad Católica",
+     "away": "Barcelona de Guayaquil",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 365320,
+     "round": 6,
+     "date": "26/05/2026",
+     "time": "22:00",
+     "home": "Lanús",
+     "away": "Mirassol-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365321,
+     "round": 6,
+     "date": "26/05/2026",
+     "time": "22:00",
+     "home": "LDU",
+     "away": "Always Ready",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 365322,
+     "round": 6,
+     "date": "27/05/2026",
+     "time": "00:30",
+     "home": "Estudiantes",
+     "away": "Independiente Medellín",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365323,
+     "round": 6,
+     "date": "27/05/2026",
+     "time": "00:30",
+     "home": "Flamengo-RJ",
+     "away": "Cusco",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 365324,
+     "round": 6,
+     "date": "27/05/2026",
+     "time": "00:30",
+     "home": "Nacional-URU",
+     "away": "Coquimbo Unido",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365325,
+     "round": 6,
+     "date": "27/05/2026",
+     "time": "00:30",
+     "home": "Universitario",
+     "away": "Tolima",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 365326,
+     "round": 6,
+     "date": "27/05/2026",
+     "time": "22:00",
+     "home": "Independiente del Valle",
+     "away": "Rosario Central",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365327,
+     "round": 6,
+     "date": "27/05/2026",
+     "time": "22:00",
+     "home": "Libertad",
+     "away": "Universidad Central",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 365328,
+     "round": 6,
+     "date": "28/05/2026",
+     "time": "00:30",
+     "home": "Bolivar",
+     "away": "Independiente Rivadavia",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 365330,
+     "round": 6,
+     "date": "28/05/2026",
+     "time": "00:30",
+     "home": "Corinthians-SP",
+     "away": "Platense",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 365329,
+     "round": 6,
+     "date": "28/05/2026",
+     "time": "00:30",
+     "home": "Fluminense-RJ",
+     "away": "La Guaira",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 365331,
+     "round": 6,
+     "date": "28/05/2026",
+     "time": "00:30",
+     "home": "Peñarol",
+     "away": "Santa Fe",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 365332,
+     "round": 6,
+     "date": "28/05/2026",
+     "time": "22:00",
+     "home": "Cerro Porteño",
+     "away": "Sporting Cristal",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 365333,
+     "round": 6,
+     "date": "28/05/2026",
+     "time": "22:00",
+     "home": "Palmeiras-SP",
+     "away": "Junior Barranquilla",
+     "played": true,
+     "score": [
+      4,
+      1
+     ]
+    },
+    {
+     "upstream": 365334,
+     "round": 6,
+     "date": "29/05/2026",
+     "time": "00:30",
+     "home": "Boca Juniors",
+     "away": "Universidad Católica",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 365335,
+     "round": 6,
+     "date": "29/05/2026",
+     "time": "00:30",
+     "home": "Cruzeiro-MG",
+     "away": "Barcelona de Guayaquil",
+     "played": true,
+     "score": [
+      4,
+      0
+     ]
+    }
+   ]
+  },
+  {
+   "upstream": 4521,
+   "name": "Oitavas",
+   "position": 4,
+   "groups": [
+    {
+     "upstream": 16903,
+     "name": "Grupo 1",
+     "teams": [
+      {
+       "upstream": 203,
+       "name": "Estudiantes"
+      },
+      {
+       "upstream": 210,
+       "name": "Universidad Católica"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Quartas",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16904,
+     "name": "Grupo 2",
+     "teams": [
+      {
+       "upstream": 211,
+       "name": "LDU"
+      },
+      {
+       "upstream": 584,
+       "name": "Mirassol-SP"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Quartas",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16905,
+     "name": "Grupo 3",
+     "teams": [
+      {
+       "upstream": 8,
+       "name": "Fluminense-RJ"
+      },
+      {
+       "upstream": 3407,
+       "name": "Independiente Rivadavia"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Quartas",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16906,
+     "name": "Grupo 4",
+     "teams": [
+      {
+       "upstream": 2217,
+       "name": "Independiente del Valle"
+      },
+      {
+       "upstream": 505,
+       "name": "Tolima"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Quartas",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16907,
+     "name": "Grupo 5",
+     "teams": [
+      {
+       "upstream": 17,
+       "name": "Flamengo-RJ"
+      },
+      {
+       "upstream": 15,
+       "name": "Cruzeiro-MG"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Quartas",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16908,
+     "name": "Grupo 6",
+     "teams": [
+      {
+       "upstream": 3396,
+       "name": "Platense"
+      },
+      {
+       "upstream": 3220,
+       "name": "Coquimbo Unido"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Quartas",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16909,
+     "name": "Grupo 7",
+     "teams": [
+      {
+       "upstream": 16,
+       "name": "Palmeiras-SP"
+      },
+      {
+       "upstream": 220,
+       "name": "Cerro Porteño"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Quartas",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16910,
+     "name": "Grupo 8",
+     "teams": [
+      {
+       "upstream": 24,
+       "name": "Corinthians-SP"
+      },
+      {
+       "upstream": 221,
+       "name": "Rosario Central"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Quartas",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    }
+   ],
+   "games": [
+    {
+     "upstream": 366042,
+     "round": 5,
+     "date": "11/08/2026",
+     "time": "22:00",
+     "home": "Fluminense-RJ",
+     "away": "Independiente Rivadavia",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 366044,
+     "round": 5,
+     "date": "12/08/2026",
+     "time": "00:30",
+     "home": "Estudiantes",
+     "away": "Universidad Católica",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 366046,
+     "round": 5,
+     "date": "12/08/2026",
+     "time": "22:00",
+     "home": "Palmeiras-SP",
+     "away": "Cerro Porteño",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 366045,
+     "round": 5,
+     "date": "12/08/2026",
+     "time": "22:00",
+     "home": "Platense",
+     "away": "Coquimbo Unido",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 366047,
+     "round": 5,
+     "date": "13/08/2026",
+     "time": "00:30",
+     "home": "Cruzeiro-MG",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 366048,
+     "round": 5,
+     "date": "13/08/2026",
+     "time": "22:00",
+     "home": "Mirassol-SP",
+     "away": "LDU",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 366049,
+     "round": 5,
+     "date": "14/08/2026",
+     "time": "00:30",
+     "home": "Rosario Central",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 366043,
+     "round": 5,
+     "date": "19/08/2026",
+     "time": "00:30",
+     "home": "Tolima",
+     "away": "Independiente del Valle",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 366057,
+     "round": 5,
+     "date": "19/08/2026",
+     "time": "00:30",
+     "home": "Universidad Católica",
+     "away": "Estudiantes",
+     "played": true,
+     "score": [
+      0,
+      3
+     ]
+    },
+    {
+     "upstream": 366050,
+     "round": 5,
+     "date": "19/08/2026",
+     "time": "22:00",
+     "home": "Cerro Porteño",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 366053,
+     "round": 5,
+     "date": "20/08/2026",
+     "time": "00:30",
+     "home": "Flamengo-RJ",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 366052,
+     "round": 5,
+     "date": "21/08/2026",
+     "time": "00:30",
+     "home": "Corinthians-SP",
+     "away": "Rosario Central",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 366055,
+     "round": 5,
+     "date": "26/08/2026",
+     "time": "00:30",
+     "home": "Independiente del Valle",
+     "away": "Tolima",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "upstream": 4541,
+   "name": "Quartas",
+   "position": 5,
+   "groups": [
+    {
+     "upstream": 17037,
+     "name": "Grupo 1",
+     "teams": [
+      {
+       "upstream": 203,
+       "name": "Estudiantes"
+      },
+      {
+       "upstream": 24,
+       "name": "Corinthians-SP"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Semis",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 17038,
+     "name": "Grupo 2",
+     "teams": [
+      {
+       "upstream": 16,
+       "name": "Palmeiras-SP"
+      },
+      {
+       "upstream": 211,
+       "name": "LDU"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Semis",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 17039,
+     "name": "Grupo 3",
+     "teams": [
+      {
+       "upstream": 8,
+       "name": "Fluminense-RJ"
+      },
+      {
+       "upstream": 3396,
+       "name": "Platense"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Semis",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 17040,
+     "name": "Grupo 4",
+     "teams": [
+      {
+       "upstream": 17,
+       "name": "Flamengo-RJ"
+      },
+      {
+       "upstream": 2217,
+       "name": "Independiente del Valle"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Semis",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    }
+   ],
+   "games": [
+    {
+     "upstream": 370126,
+     "round": 27,
+     "date": "08/09/2026",
+     "time": "22:00",
+     "home": "Fluminense-RJ",
+     "away": "Platense",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 370128,
+     "round": 27,
+     "date": "09/09/2026",
+     "time": "22:00",
+     "home": "Palmeiras-SP",
+     "away": "LDU",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 370125,
+     "round": 27,
+     "date": "10/09/2026",
+     "time": "00:30",
+     "home": "Estudiantes",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 370127,
+     "round": 27,
+     "date": "11/09/2026",
+     "time": "00:30",
+     "home": "Independiente del Valle",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 370129,
+     "round": 27,
+     "date": "15/09/2026",
+     "time": "22:00",
+     "home": "Platense",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 370130,
+     "round": 27,
+     "date": "17/09/2026",
+     "time": "00:30",
+     "home": "Corinthians-SP",
+     "away": "Estudiantes",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 370131,
+     "round": 27,
+     "date": "18/09/2026",
+     "time": "00:30",
+     "home": "Flamengo-RJ",
+     "away": "Independiente del Valle",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "upstream": 4548,
+   "name": "Semis",
+   "position": 6,
+   "groups": [
+    {
+     "upstream": 17052,
+     "name": "Grupo 1",
+     "teams": [
+      {
+       "upstream": 203,
+       "name": "Estudiantes"
+      },
+      {
+       "upstream": 17,
+       "name": "Flamengo-RJ"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Final",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 17053,
+     "name": "Grupo 2",
+     "teams": [
+      {
+       "upstream": 8,
+       "name": "Fluminense-RJ"
+      },
+      {
+       "upstream": 16,
+       "name": "Palmeiras-SP"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Final",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    }
+   ],
+   "games": [
+    {
+     "upstream": 370639,
+     "round": 28,
+     "date": "13/10/2026",
+     "time": "22:00",
+     "home": "Estudiantes",
+     "away": "Flamengo-RJ",
+     "played": false,
+     "chances": [
+      26.48,
+      27.23,
+      46.29
+     ]
+    },
+    {
+     "upstream": 370640,
+     "round": 28,
+     "date": "13/10/2026",
+     "time": "22:00",
+     "home": "Fluminense-RJ",
+     "away": "Palmeiras-SP",
+     "played": false,
+     "chances": [
+      31.4,
+      26.86,
+      41.74
+     ]
+    },
+    {
+     "upstream": 370641,
+     "round": 28,
+     "date": "20/10/2026",
+     "time": "22:00",
+     "home": "Flamengo-RJ",
+     "away": "Estudiantes",
+     "played": false,
+     "chances": [
+      65.54,
+      22.0,
+      12.45
+     ]
+    },
+    {
+     "upstream": 370642,
+     "round": 28,
+     "date": "20/10/2026",
+     "time": "22:00",
+     "home": "Palmeiras-SP",
+     "away": "Fluminense-RJ",
+     "played": false,
+     "chances": [
+      60.84,
+      23.01,
+      16.16
+     ]
+    }
+   ]
+  }
+ ]
+}

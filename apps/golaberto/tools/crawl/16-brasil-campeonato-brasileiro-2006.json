@@ -1,0 +1,5052 @@
+{
+ "path": "/championship/show/16-brasil-campeonato-brasileiro-2006",
+ "phases": [
+  {
+   "upstream": 32,
+   "name": "Turno e Returno",
+   "position": 0,
+   "groups": [
+    {
+     "upstream": null,
+     "name": "Grupo Único",
+     "teams": [
+      {
+       "upstream": 14,
+       "name": "São Paulo-SP"
+      },
+      {
+       "upstream": 20,
+       "name": "Internacional-RS"
+      },
+      {
+       "upstream": 79,
+       "name": "Grêmio-RS"
+      },
+      {
+       "upstream": 6,
+       "name": "Santos-SP"
+      },
+      {
+       "upstream": 21,
+       "name": "Paraná-PR"
+      },
+      {
+       "upstream": 18,
+       "name": "Vasco-RJ"
+      },
+      {
+       "upstream": 23,
+       "name": "Figueirense-SC"
+      },
+      {
+       "upstream": 11,
+       "name": "Goiás-GO"
+      },
+      {
+       "upstream": 24,
+       "name": "Corinthians-SP"
+      },
+      {
+       "upstream": 15,
+       "name": "Cruzeiro-MG"
+      },
+      {
+       "upstream": 17,
+       "name": "Flamengo-RJ"
+      },
+      {
+       "upstream": 7,
+       "name": "Botafogo-RJ"
+      },
+      {
+       "upstream": 5,
+       "name": "Athletico-PR"
+      },
+      {
+       "upstream": 12,
+       "name": "Juventude-RS"
+      },
+      {
+       "upstream": 8,
+       "name": "Fluminense-RJ"
+      },
+      {
+       "upstream": 16,
+       "name": "Palmeiras-SP"
+      },
+      {
+       "upstream": 9,
+       "name": "Ponte Preta-SP"
+      },
+      {
+       "upstream": 22,
+       "name": "Fortaleza-CE"
+      },
+      {
+       "upstream": 13,
+       "name": "São Caetano-SP"
+      },
+      {
+       "upstream": 84,
+       "name": "Santa Cruz-PE"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Promoted",
+       "first": 1,
+       "last": 4
+      },
+      {
+       "name": "Relegated",
+       "first": 17,
+       "last": 20
+      }
+     ]
+    }
+   ],
+   "games": [
+    {
+     "upstream": 3643,
+     "round": 1,
+     "date": "15/04/2006",
+     "time": "21:10",
+     "home": "Juventude-RS",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3645,
+     "round": 1,
+     "date": "15/04/2006",
+     "time": "21:10",
+     "home": "Vasco-RJ",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3650,
+     "round": 1,
+     "date": "16/04/2006",
+     "time": "19:00",
+     "home": "Botafogo-RJ",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3647,
+     "round": 1,
+     "date": "16/04/2006",
+     "time": "19:00",
+     "home": "Grêmio-RS",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3649,
+     "round": 1,
+     "date": "16/04/2006",
+     "time": "19:00",
+     "home": "São Caetano-SP",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3648,
+     "round": 1,
+     "date": "16/04/2006",
+     "time": "19:00",
+     "home": "São Paulo-SP",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3652,
+     "round": 1,
+     "date": "16/04/2006",
+     "time": "21:10",
+     "home": "Athletico-PR",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3651,
+     "round": 1,
+     "date": "16/04/2006",
+     "time": "21:10",
+     "home": "Goiás-GO",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3646,
+     "round": 1,
+     "date": "16/04/2006",
+     "time": "21:10",
+     "home": "Palmeiras-SP",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 3644,
+     "round": 1,
+     "date": "16/04/2006",
+     "time": "21:10",
+     "home": "Santa Cruz-PE",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3654,
+     "round": 2,
+     "date": "22/04/2006",
+     "time": "19:00",
+     "home": "Corinthians-SP",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 3656,
+     "round": 2,
+     "date": "22/04/2006",
+     "time": "21:10",
+     "home": "Figueirense-SC",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      6,
+      1
+     ]
+    },
+    {
+     "upstream": 3655,
+     "round": 2,
+     "date": "22/04/2006",
+     "time": "21:10",
+     "home": "Fluminense-RJ",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3660,
+     "round": 2,
+     "date": "23/04/2006",
+     "time": "19:00",
+     "home": "Flamengo-RJ",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 3657,
+     "round": 2,
+     "date": "23/04/2006",
+     "time": "19:00",
+     "home": "Internacional-RS",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3659,
+     "round": 2,
+     "date": "23/04/2006",
+     "time": "19:00",
+     "home": "Ponte Preta-SP",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3658,
+     "round": 2,
+     "date": "23/04/2006",
+     "time": "19:00",
+     "home": "Santos-SP",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3653,
+     "round": 2,
+     "date": "23/04/2006",
+     "time": "21:10",
+     "home": "Cruzeiro-MG",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 3662,
+     "round": 2,
+     "date": "23/04/2006",
+     "time": "21:10",
+     "home": "Fortaleza-CE",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3661,
+     "round": 2,
+     "date": "23/04/2006",
+     "time": "21:10",
+     "home": "Paraná-PR",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3663,
+     "round": 3,
+     "date": "29/04/2006",
+     "time": "19:00",
+     "home": "Fortaleza-CE",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3664,
+     "round": 3,
+     "date": "29/04/2006",
+     "time": "21:10",
+     "home": "Botafogo-RJ",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      0,
+      4
+     ]
+    },
+    {
+     "upstream": 3665,
+     "round": 3,
+     "date": "29/04/2006",
+     "time": "21:10",
+     "home": "São Paulo-SP",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      4,
+      0
+     ]
+    },
+    {
+     "upstream": 3666,
+     "round": 3,
+     "date": "30/04/2006",
+     "time": "19:00",
+     "home": "Internacional-RS",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3669,
+     "round": 3,
+     "date": "30/04/2006",
+     "time": "19:00",
+     "home": "Palmeiras-SP",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3668,
+     "round": 3,
+     "date": "30/04/2006",
+     "time": "19:00",
+     "home": "Paraná-PR",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      5,
+      2
+     ]
+    },
+    {
+     "upstream": 3667,
+     "round": 3,
+     "date": "30/04/2006",
+     "time": "19:00",
+     "home": "Ponte Preta-SP",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 3672,
+     "round": 3,
+     "date": "30/04/2006",
+     "time": "21:10",
+     "home": "Figueirense-SC",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 3671,
+     "round": 3,
+     "date": "30/04/2006",
+     "time": "21:10",
+     "home": "Juventude-RS",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3670,
+     "round": 3,
+     "date": "30/04/2006",
+     "time": "21:10",
+     "home": "Vasco-RJ",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3673,
+     "round": 4,
+     "date": "06/05/2006",
+     "time": "19:00",
+     "home": "Santa Cruz-PE",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3674,
+     "round": 4,
+     "date": "06/05/2006",
+     "time": "21:10",
+     "home": "Fluminense-RJ",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3681,
+     "round": 4,
+     "date": "06/05/2006",
+     "time": "21:10",
+     "home": "Santos-SP",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3678,
+     "round": 4,
+     "date": "07/05/2006",
+     "time": "19:00",
+     "home": "Athletico-PR",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3679,
+     "round": 4,
+     "date": "07/05/2006",
+     "time": "19:00",
+     "home": "Corinthians-SP",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 3676,
+     "round": 4,
+     "date": "07/05/2006",
+     "time": "19:00",
+     "home": "Grêmio-RS",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3677,
+     "round": 4,
+     "date": "07/05/2006",
+     "time": "19:00",
+     "home": "São Caetano-SP",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3682,
+     "round": 4,
+     "date": "07/05/2006",
+     "time": "21:10",
+     "home": "Cruzeiro-MG",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3680,
+     "round": 4,
+     "date": "07/05/2006",
+     "time": "21:10",
+     "home": "Flamengo-RJ",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3675,
+     "round": 4,
+     "date": "07/05/2006",
+     "time": "21:10",
+     "home": "Goiás-GO",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3685,
+     "round": 5,
+     "date": "13/05/2006",
+     "time": "21:10",
+     "home": "Botafogo-RJ",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 3686,
+     "round": 5,
+     "date": "13/05/2006",
+     "time": "21:10",
+     "home": "Santos-SP",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 3684,
+     "round": 5,
+     "date": "13/05/2006",
+     "time": "21:10",
+     "home": "São Caetano-SP",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 3688,
+     "round": 5,
+     "date": "14/05/2006",
+     "time": "19:00",
+     "home": "Figueirense-SC",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3687,
+     "round": 5,
+     "date": "14/05/2006",
+     "time": "19:00",
+     "home": "Internacional-RS",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 3689,
+     "round": 5,
+     "date": "14/05/2006",
+     "time": "19:00",
+     "home": "Palmeiras-SP",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3683,
+     "round": 5,
+     "date": "14/05/2006",
+     "time": "19:00",
+     "home": "Santa Cruz-PE",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3690,
+     "round": 5,
+     "date": "14/05/2006",
+     "time": "21:10",
+     "home": "Flamengo-RJ",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3692,
+     "round": 5,
+     "date": "14/05/2006",
+     "time": "21:10",
+     "home": "Goiás-GO",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3691,
+     "round": 5,
+     "date": "14/05/2006",
+     "time": "21:10",
+     "home": "Paraná-PR",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3693,
+     "round": 6,
+     "date": "20/05/2006",
+     "time": "19:00",
+     "home": "Athletico-PR",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 3694,
+     "round": 6,
+     "date": "20/05/2006",
+     "time": "19:00",
+     "home": "Fortaleza-CE",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3695,
+     "round": 6,
+     "date": "20/05/2006",
+     "time": "21:10",
+     "home": "Internacional-RS",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      2,
+      4
+     ]
+    },
+    {
+     "upstream": 3696,
+     "round": 6,
+     "date": "20/05/2006",
+     "time": "21:10",
+     "home": "São Paulo-SP",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3698,
+     "round": 6,
+     "date": "21/05/2006",
+     "time": "19:00",
+     "home": "Cruzeiro-MG",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3699,
+     "round": 6,
+     "date": "21/05/2006",
+     "time": "19:00",
+     "home": "Palmeiras-SP",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3697,
+     "round": 6,
+     "date": "21/05/2006",
+     "time": "19:00",
+     "home": "Vasco-RJ",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      2,
+      4
+     ]
+    },
+    {
+     "upstream": 3701,
+     "round": 6,
+     "date": "21/05/2006",
+     "time": "21:10",
+     "home": "Fluminense-RJ",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3702,
+     "round": 6,
+     "date": "21/05/2006",
+     "time": "21:10",
+     "home": "Juventude-RS",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3700,
+     "round": 6,
+     "date": "21/05/2006",
+     "time": "21:10",
+     "home": "Ponte Preta-SP",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3705,
+     "round": 7,
+     "date": "24/05/2006",
+     "time": "22:30",
+     "home": "Cruzeiro-MG",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      5,
+      1
+     ]
+    },
+    {
+     "upstream": 3703,
+     "round": 7,
+     "date": "24/05/2006",
+     "time": "22:30",
+     "home": "Juventude-RS",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      4,
+      1
+     ]
+    },
+    {
+     "upstream": 3704,
+     "round": 7,
+     "date": "24/05/2006",
+     "time": "22:30",
+     "home": "Paraná-PR",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3706,
+     "round": 7,
+     "date": "24/05/2006",
+     "time": "23:30",
+     "home": "São Paulo-SP",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      4,
+      1
+     ]
+    },
+    {
+     "upstream": 3708,
+     "round": 7,
+     "date": "25/05/2006",
+     "time": "00:45",
+     "home": "Flamengo-RJ",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 3709,
+     "round": 7,
+     "date": "25/05/2006",
+     "time": "00:45",
+     "home": "Fortaleza-CE",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      2,
+      5
+     ]
+    },
+    {
+     "upstream": 3707,
+     "round": 7,
+     "date": "25/05/2006",
+     "time": "00:45",
+     "home": "São Caetano-SP",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3710,
+     "round": 7,
+     "date": "25/05/2006",
+     "time": "23:30",
+     "home": "Botafogo-RJ",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      4,
+      1
+     ]
+    },
+    {
+     "upstream": 3712,
+     "round": 7,
+     "date": "25/05/2006",
+     "time": "23:30",
+     "home": "Corinthians-SP",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 3711,
+     "round": 7,
+     "date": "25/05/2006",
+     "time": "23:30",
+     "home": "Grêmio-RS",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3715,
+     "round": 8,
+     "date": "27/05/2006",
+     "time": "21:10",
+     "home": "Athletico-PR",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3713,
+     "round": 8,
+     "date": "27/05/2006",
+     "time": "21:10",
+     "home": "Figueirense-SC",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3714,
+     "round": 8,
+     "date": "27/05/2006",
+     "time": "21:10",
+     "home": "Ponte Preta-SP",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      2,
+      5
+     ]
+    },
+    {
+     "upstream": 3716,
+     "round": 8,
+     "date": "28/05/2006",
+     "time": "19:00",
+     "home": "Internacional-RS",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3718,
+     "round": 8,
+     "date": "28/05/2006",
+     "time": "19:00",
+     "home": "Santa Cruz-PE",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3717,
+     "round": 8,
+     "date": "28/05/2006",
+     "time": "19:00",
+     "home": "Santos-SP",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3720,
+     "round": 8,
+     "date": "28/05/2006",
+     "time": "19:30",
+     "home": "Fluminense-RJ",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3719,
+     "round": 8,
+     "date": "28/05/2006",
+     "time": "21:10",
+     "home": "Goiás-GO",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3722,
+     "round": 8,
+     "date": "28/05/2006",
+     "time": "21:10",
+     "home": "Palmeiras-SP",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 3721,
+     "round": 8,
+     "date": "28/05/2006",
+     "time": "21:10",
+     "home": "Vasco-RJ",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3724,
+     "round": 9,
+     "date": "31/05/2006",
+     "time": "22:30",
+     "home": "Cruzeiro-MG",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3725,
+     "round": 9,
+     "date": "31/05/2006",
+     "time": "22:30",
+     "home": "Fortaleza-CE",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3723,
+     "round": 9,
+     "date": "31/05/2006",
+     "time": "22:30",
+     "home": "Juventude-RS",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 3726,
+     "round": 9,
+     "date": "31/05/2006",
+     "time": "23:30",
+     "home": "São Caetano-SP",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3727,
+     "round": 9,
+     "date": "01/06/2006",
+     "time": "00:45",
+     "home": "Flamengo-RJ",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3728,
+     "round": 9,
+     "date": "01/06/2006",
+     "time": "00:45",
+     "home": "Grêmio-RS",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3729,
+     "round": 9,
+     "date": "01/06/2006",
+     "time": "00:45",
+     "home": "São Paulo-SP",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3731,
+     "round": 9,
+     "date": "01/06/2006",
+     "time": "23:30",
+     "home": "Botafogo-RJ",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 3732,
+     "round": 9,
+     "date": "01/06/2006",
+     "time": "23:30",
+     "home": "Corinthians-SP",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 3730,
+     "round": 9,
+     "date": "01/06/2006",
+     "time": "23:30",
+     "home": "Paraná-PR",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 3733,
+     "round": 10,
+     "date": "03/06/2006",
+     "time": "19:00",
+     "home": "Fluminense-RJ",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 3734,
+     "round": 10,
+     "date": "03/06/2006",
+     "time": "19:00",
+     "home": "Fortaleza-CE",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 3735,
+     "round": 10,
+     "date": "03/06/2006",
+     "time": "21:10",
+     "home": "Grêmio-RS",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3736,
+     "round": 10,
+     "date": "04/06/2006",
+     "time": "19:00",
+     "home": "Athletico-PR",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3738,
+     "round": 10,
+     "date": "04/06/2006",
+     "time": "19:00",
+     "home": "Corinthians-SP",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 3739,
+     "round": 10,
+     "date": "04/06/2006",
+     "time": "19:00",
+     "home": "Ponte Preta-SP",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 3737,
+     "round": 10,
+     "date": "04/06/2006",
+     "time": "19:00",
+     "home": "Vasco-RJ",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3740,
+     "round": 10,
+     "date": "04/06/2006",
+     "time": "21:10",
+     "home": "Goiás-GO",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3741,
+     "round": 10,
+     "date": "04/06/2006",
+     "time": "21:10",
+     "home": "Juventude-RS",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3742,
+     "round": 10,
+     "date": "04/06/2006",
+     "time": "21:10",
+     "home": "Santos-SP",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3744,
+     "round": 11,
+     "date": "12/07/2006",
+     "time": "22:30",
+     "home": "Athletico-PR",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3745,
+     "round": 11,
+     "date": "12/07/2006",
+     "time": "22:30",
+     "home": "Fluminense-RJ",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 3743,
+     "round": 11,
+     "date": "12/07/2006",
+     "time": "22:30",
+     "home": "Internacional-RS",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3746,
+     "round": 11,
+     "date": "12/07/2006",
+     "time": "23:30",
+     "home": "São Paulo-SP",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3749,
+     "round": 11,
+     "date": "13/07/2006",
+     "time": "00:45",
+     "home": "Cruzeiro-MG",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3747,
+     "round": 11,
+     "date": "13/07/2006",
+     "time": "00:45",
+     "home": "Figueirense-SC",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3748,
+     "round": 11,
+     "date": "13/07/2006",
+     "time": "00:45",
+     "home": "São Caetano-SP",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3751,
+     "round": 11,
+     "date": "13/07/2006",
+     "time": "23:30",
+     "home": "Flamengo-RJ",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      1,
+      4
+     ]
+    },
+    {
+     "upstream": 3752,
+     "round": 11,
+     "date": "13/07/2006",
+     "time": "23:30",
+     "home": "Palmeiras-SP",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      4,
+      2
+     ]
+    },
+    {
+     "upstream": 3750,
+     "round": 11,
+     "date": "13/07/2006",
+     "time": "23:30",
+     "home": "Santa Cruz-PE",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3753,
+     "round": 12,
+     "date": "15/07/2006",
+     "time": "19:00",
+     "home": "Botafogo-RJ",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      4,
+      1
+     ]
+    },
+    {
+     "upstream": 3754,
+     "round": 12,
+     "date": "15/07/2006",
+     "time": "21:10",
+     "home": "São Paulo-SP",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3757,
+     "round": 12,
+     "date": "16/07/2006",
+     "time": "19:00",
+     "home": "Cruzeiro-MG",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3755,
+     "round": 12,
+     "date": "16/07/2006",
+     "time": "19:00",
+     "home": "Grêmio-RS",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      4,
+      4
+     ]
+    },
+    {
+     "upstream": 3758,
+     "round": 12,
+     "date": "16/07/2006",
+     "time": "19:00",
+     "home": "Palmeiras-SP",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3756,
+     "round": 12,
+     "date": "16/07/2006",
+     "time": "19:00",
+     "home": "São Caetano-SP",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3759,
+     "round": 12,
+     "date": "16/07/2006",
+     "time": "21:10",
+     "home": "Flamengo-RJ",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 3762,
+     "round": 12,
+     "date": "16/07/2006",
+     "time": "21:10",
+     "home": "Fortaleza-CE",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      1,
+      4
+     ]
+    },
+    {
+     "upstream": 3760,
+     "round": 12,
+     "date": "16/07/2006",
+     "time": "21:10",
+     "home": "Juventude-RS",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3761,
+     "round": 12,
+     "date": "16/07/2006",
+     "time": "21:10",
+     "home": "Paraná-PR",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3763,
+     "round": 13,
+     "date": "22/07/2006",
+     "time": "19:00",
+     "home": "Figueirense-SC",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3764,
+     "round": 13,
+     "date": "22/07/2006",
+     "time": "19:00",
+     "home": "Paraná-PR",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3765,
+     "round": 13,
+     "date": "22/07/2006",
+     "time": "21:10",
+     "home": "Corinthians-SP",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 3766,
+     "round": 13,
+     "date": "22/07/2006",
+     "time": "21:10",
+     "home": "Fluminense-RJ",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 3767,
+     "round": 13,
+     "date": "23/07/2006",
+     "time": "19:00",
+     "home": "Ponte Preta-SP",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 3769,
+     "round": 13,
+     "date": "23/07/2006",
+     "time": "19:00",
+     "home": "Santa Cruz-PE",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 3768,
+     "round": 13,
+     "date": "23/07/2006",
+     "time": "19:00",
+     "home": "Vasco-RJ",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3772,
+     "round": 13,
+     "date": "23/07/2006",
+     "time": "21:10",
+     "home": "Goiás-GO",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 3771,
+     "round": 13,
+     "date": "23/07/2006",
+     "time": "21:10",
+     "home": "Internacional-RS",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3770,
+     "round": 13,
+     "date": "23/07/2006",
+     "time": "21:10",
+     "home": "Santos-SP",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 3773,
+     "round": 14,
+     "date": "29/07/2006",
+     "time": "19:00",
+     "home": "Juventude-RS",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3775,
+     "round": 14,
+     "date": "29/07/2006",
+     "time": "21:10",
+     "home": "Palmeiras-SP",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      4,
+      2
+     ]
+    },
+    {
+     "upstream": 3774,
+     "round": 14,
+     "date": "29/07/2006",
+     "time": "21:10",
+     "home": "São Caetano-SP",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3776,
+     "round": 14,
+     "date": "30/07/2006",
+     "time": "19:00",
+     "home": "Athletico-PR",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3778,
+     "round": 14,
+     "date": "30/07/2006",
+     "time": "19:00",
+     "home": "Santa Cruz-PE",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3779,
+     "round": 14,
+     "date": "30/07/2006",
+     "time": "19:00",
+     "home": "São Paulo-SP",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      0,
+      4
+     ]
+    },
+    {
+     "upstream": 3777,
+     "round": 14,
+     "date": "30/07/2006",
+     "time": "19:00",
+     "home": "Vasco-RJ",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3780,
+     "round": 14,
+     "date": "30/07/2006",
+     "time": "21:10",
+     "home": "Fluminense-RJ",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3782,
+     "round": 14,
+     "date": "30/07/2006",
+     "time": "21:10",
+     "home": "Goiás-GO",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3781,
+     "round": 14,
+     "date": "30/07/2006",
+     "time": "21:10",
+     "home": "Internacional-RS",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3784,
+     "round": 15,
+     "date": "05/08/2006",
+     "time": "19:00",
+     "home": "Figueirense-SC",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3783,
+     "round": 15,
+     "date": "05/08/2006",
+     "time": "19:00",
+     "home": "Grêmio-RS",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3786,
+     "round": 15,
+     "date": "05/08/2006",
+     "time": "21:10",
+     "home": "Corinthians-SP",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3785,
+     "round": 15,
+     "date": "05/08/2006",
+     "time": "21:10",
+     "home": "Flamengo-RJ",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3787,
+     "round": 15,
+     "date": "06/08/2006",
+     "time": "19:00",
+     "home": "Botafogo-RJ",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3789,
+     "round": 15,
+     "date": "06/08/2006",
+     "time": "19:00",
+     "home": "Paraná-PR",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3788,
+     "round": 15,
+     "date": "06/08/2006",
+     "time": "19:00",
+     "home": "Santos-SP",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3791,
+     "round": 15,
+     "date": "06/08/2006",
+     "time": "21:10",
+     "home": "Cruzeiro-MG",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      3,
+      3
+     ]
+    },
+    {
+     "upstream": 3792,
+     "round": 15,
+     "date": "06/08/2006",
+     "time": "21:10",
+     "home": "Fortaleza-CE",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3790,
+     "round": 15,
+     "date": "06/08/2006",
+     "time": "21:10",
+     "home": "Ponte Preta-SP",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 3793,
+     "round": 16,
+     "date": "12/08/2006",
+     "time": "19:00",
+     "home": "Juventude-RS",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3794,
+     "round": 16,
+     "date": "12/08/2006",
+     "time": "19:00",
+     "home": "São Caetano-SP",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3796,
+     "round": 16,
+     "date": "12/08/2006",
+     "time": "21:10",
+     "home": "Corinthians-SP",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 3795,
+     "round": 16,
+     "date": "12/08/2006",
+     "time": "21:10",
+     "home": "Flamengo-RJ",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3797,
+     "round": 16,
+     "date": "13/08/2006",
+     "time": "19:00",
+     "home": "Botafogo-RJ",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 3799,
+     "round": 16,
+     "date": "13/08/2006",
+     "time": "19:00",
+     "home": "Cruzeiro-MG",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 3798,
+     "round": 16,
+     "date": "13/08/2006",
+     "time": "19:00",
+     "home": "Grêmio-RS",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3800,
+     "round": 16,
+     "date": "13/08/2006",
+     "time": "21:10",
+     "home": "Fortaleza-CE",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3802,
+     "round": 16,
+     "date": "13/08/2006",
+     "time": "21:10",
+     "home": "Paraná-PR",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3801,
+     "round": 16,
+     "date": "13/08/2006",
+     "time": "21:10",
+     "home": "São Paulo-SP",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3803,
+     "round": 17,
+     "date": "16/08/2006",
+     "time": "22:30",
+     "home": "Ponte Preta-SP",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 3805,
+     "round": 17,
+     "date": "16/08/2006",
+     "time": "22:30",
+     "home": "Santa Cruz-PE",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      2,
+      4
+     ]
+    },
+    {
+     "upstream": 3804,
+     "round": 17,
+     "date": "16/08/2006",
+     "time": "22:30",
+     "home": "Vasco-RJ",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3806,
+     "round": 17,
+     "date": "16/08/2006",
+     "time": "23:30",
+     "home": "Goiás-GO",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 3807,
+     "round": 17,
+     "date": "17/08/2006",
+     "time": "01:00",
+     "home": "Figueirense-SC",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3809,
+     "round": 17,
+     "date": "17/08/2006",
+     "time": "01:00",
+     "home": "Fluminense-RJ",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3812,
+     "round": 17,
+     "date": "17/08/2006",
+     "time": "23:30",
+     "home": "Palmeiras-SP",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3808,
+     "round": 17,
+     "date": "17/08/2006",
+     "time": "23:30",
+     "home": "Santos-SP",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3813,
+     "round": 18,
+     "date": "19/08/2006",
+     "time": "19:00",
+     "home": "Ponte Preta-SP",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 3814,
+     "round": 18,
+     "date": "19/08/2006",
+     "time": "21:10",
+     "home": "Flamengo-RJ",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3817,
+     "round": 18,
+     "date": "20/08/2006",
+     "time": "19:00",
+     "home": "Cruzeiro-MG",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 3815,
+     "round": 18,
+     "date": "20/08/2006",
+     "time": "19:00",
+     "home": "Fluminense-RJ",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3818,
+     "round": 18,
+     "date": "20/08/2006",
+     "time": "19:00",
+     "home": "Fortaleza-CE",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      4,
+      1
+     ]
+    },
+    {
+     "upstream": 3816,
+     "round": 18,
+     "date": "20/08/2006",
+     "time": "19:00",
+     "home": "Santos-SP",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 3822,
+     "round": 18,
+     "date": "20/08/2006",
+     "time": "21:10",
+     "home": "Corinthians-SP",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3819,
+     "round": 18,
+     "date": "20/08/2006",
+     "time": "21:10",
+     "home": "Figueirense-SC",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      3,
+      3
+     ]
+    },
+    {
+     "upstream": 3821,
+     "round": 18,
+     "date": "20/08/2006",
+     "time": "21:10",
+     "home": "Internacional-RS",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3820,
+     "round": 18,
+     "date": "20/08/2006",
+     "time": "21:10",
+     "home": "Paraná-PR",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3831,
+     "round": 19,
+     "date": "23/08/2006",
+     "time": "22:30",
+     "home": "Athletico-PR",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 3824,
+     "round": 19,
+     "date": "23/08/2006",
+     "time": "22:30",
+     "home": "Goiás-GO",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 3825,
+     "round": 19,
+     "date": "23/08/2006",
+     "time": "22:30",
+     "home": "Palmeiras-SP",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 3826,
+     "round": 19,
+     "date": "23/08/2006",
+     "time": "23:30",
+     "home": "Botafogo-RJ",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3828,
+     "round": 19,
+     "date": "24/08/2006",
+     "time": "01:00",
+     "home": "Juventude-RS",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3827,
+     "round": 19,
+     "date": "24/08/2006",
+     "time": "01:00",
+     "home": "Santa Cruz-PE",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3829,
+     "round": 19,
+     "date": "24/08/2006",
+     "time": "01:00",
+     "home": "São Caetano-SP",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 3823,
+     "round": 19,
+     "date": "24/08/2006",
+     "time": "23:30",
+     "home": "Grêmio-RS",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      4,
+      1
+     ]
+    },
+    {
+     "upstream": 3830,
+     "round": 19,
+     "date": "24/08/2006",
+     "time": "23:30",
+     "home": "São Paulo-SP",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 3832,
+     "round": 19,
+     "date": "24/08/2006",
+     "time": "23:30",
+     "home": "Vasco-RJ",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 3833,
+     "round": 20,
+     "date": "26/08/2006",
+     "time": "19:00",
+     "home": "Fluminense-RJ",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3840,
+     "round": 20,
+     "date": "26/08/2006",
+     "time": "21:10",
+     "home": "Cruzeiro-MG",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 3836,
+     "round": 20,
+     "date": "26/08/2006",
+     "time": "21:10",
+     "home": "Santos-SP",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3842,
+     "round": 20,
+     "date": "27/08/2006",
+     "time": "19:00",
+     "home": "Corinthians-SP",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 3839,
+     "round": 20,
+     "date": "27/08/2006",
+     "time": "19:00",
+     "home": "Flamengo-RJ",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3834,
+     "round": 20,
+     "date": "27/08/2006",
+     "time": "19:00",
+     "home": "Internacional-RS",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3838,
+     "round": 20,
+     "date": "27/08/2006",
+     "time": "19:00",
+     "home": "Paraná-PR",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 3835,
+     "round": 20,
+     "date": "27/08/2006",
+     "time": "21:10",
+     "home": "Figueirense-SC",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3841,
+     "round": 20,
+     "date": "27/08/2006",
+     "time": "21:10",
+     "home": "Fortaleza-CE",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 3837,
+     "round": 20,
+     "date": "27/08/2006",
+     "time": "21:10",
+     "home": "Ponte Preta-SP",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3850,
+     "round": 21,
+     "date": "30/08/2006",
+     "time": "22:30",
+     "home": "Goiás-GO",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 3844,
+     "round": 21,
+     "date": "30/08/2006",
+     "time": "22:30",
+     "home": "Grêmio-RS",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3851,
+     "round": 21,
+     "date": "30/08/2006",
+     "time": "22:30",
+     "home": "Santa Cruz-PE",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 3852,
+     "round": 21,
+     "date": "30/08/2006",
+     "time": "23:30",
+     "home": "Palmeiras-SP",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3848,
+     "round": 21,
+     "date": "31/08/2006",
+     "time": "01:00",
+     "home": "Athletico-PR",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3845,
+     "round": 21,
+     "date": "31/08/2006",
+     "time": "01:00",
+     "home": "Juventude-RS",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3847,
+     "round": 21,
+     "date": "31/08/2006",
+     "time": "01:00",
+     "home": "São Caetano-SP",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 3843,
+     "round": 21,
+     "date": "31/08/2006",
+     "time": "23:30",
+     "home": "Botafogo-RJ",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      4,
+      0
+     ]
+    },
+    {
+     "upstream": 3846,
+     "round": 21,
+     "date": "31/08/2006",
+     "time": "23:30",
+     "home": "São Paulo-SP",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3849,
+     "round": 21,
+     "date": "31/08/2006",
+     "time": "23:30",
+     "home": "Vasco-RJ",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 3855,
+     "round": 22,
+     "date": "02/09/2006",
+     "time": "19:00",
+     "home": "Cruzeiro-MG",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 3859,
+     "round": 22,
+     "date": "02/09/2006",
+     "time": "21:10",
+     "home": "Flamengo-RJ",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3858,
+     "round": 22,
+     "date": "03/09/2006",
+     "time": "19:00",
+     "home": "Athletico-PR",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      0,
+      5
+     ]
+    },
+    {
+     "upstream": 3860,
+     "round": 22,
+     "date": "03/09/2006",
+     "time": "19:00",
+     "home": "Goiás-GO",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3854,
+     "round": 22,
+     "date": "03/09/2006",
+     "time": "19:00",
+     "home": "Grêmio-RS",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3856,
+     "round": 22,
+     "date": "03/09/2006",
+     "time": "19:00",
+     "home": "Santos-SP",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      5,
+      1
+     ]
+    },
+    {
+     "upstream": 3857,
+     "round": 22,
+     "date": "03/09/2006",
+     "time": "19:00",
+     "home": "São Caetano-SP",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3862,
+     "round": 22,
+     "date": "03/09/2006",
+     "time": "21:10",
+     "home": "Corinthians-SP",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3853,
+     "round": 22,
+     "date": "03/09/2006",
+     "time": "21:10",
+     "home": "Fluminense-RJ",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3861,
+     "round": 22,
+     "date": "03/09/2006",
+     "time": "21:10",
+     "home": "Santa Cruz-PE",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 3867,
+     "round": 23,
+     "date": "09/09/2006",
+     "time": "19:00",
+     "home": "Ponte Preta-SP",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3872,
+     "round": 23,
+     "date": "09/09/2006",
+     "time": "21:10",
+     "home": "Palmeiras-SP",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 3869,
+     "round": 23,
+     "date": "09/09/2006",
+     "time": "21:10",
+     "home": "Vasco-RJ",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3865,
+     "round": 23,
+     "date": "10/09/2006",
+     "time": "19:00",
+     "home": "Figueirense-SC",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 3870,
+     "round": 23,
+     "date": "10/09/2006",
+     "time": "19:00",
+     "home": "Juventude-RS",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3868,
+     "round": 23,
+     "date": "10/09/2006",
+     "time": "19:00",
+     "home": "Paraná-PR",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3866,
+     "round": 23,
+     "date": "10/09/2006",
+     "time": "19:00",
+     "home": "São Paulo-SP",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3863,
+     "round": 23,
+     "date": "10/09/2006",
+     "time": "21:10",
+     "home": "Botafogo-RJ",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 3871,
+     "round": 23,
+     "date": "10/09/2006",
+     "time": "21:10",
+     "home": "Fortaleza-CE",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3864,
+     "round": 23,
+     "date": "10/09/2006",
+     "time": "21:10",
+     "home": "Internacional-RS",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3878,
+     "round": 24,
+     "date": "16/09/2006",
+     "time": "19:00",
+     "home": "Athletico-PR",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3882,
+     "round": 24,
+     "date": "16/09/2006",
+     "time": "21:10",
+     "home": "Corinthians-SP",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3879,
+     "round": 24,
+     "date": "16/09/2006",
+     "time": "21:10",
+     "home": "Vasco-RJ",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3880,
+     "round": 24,
+     "date": "17/09/2006",
+     "time": "19:00",
+     "home": "Cruzeiro-MG",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3874,
+     "round": 24,
+     "date": "17/09/2006",
+     "time": "19:00",
+     "home": "Grêmio-RS",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      4,
+      0
+     ]
+    },
+    {
+     "upstream": 3875,
+     "round": 24,
+     "date": "17/09/2006",
+     "time": "19:00",
+     "home": "Juventude-RS",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3877,
+     "round": 24,
+     "date": "17/09/2006",
+     "time": "19:00",
+     "home": "Ponte Preta-SP",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3876,
+     "round": 24,
+     "date": "17/09/2006",
+     "time": "19:00",
+     "home": "São Paulo-SP",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3873,
+     "round": 24,
+     "date": "17/09/2006",
+     "time": "21:10",
+     "home": "Fluminense-RJ",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3881,
+     "round": 24,
+     "date": "17/09/2006",
+     "time": "21:10",
+     "home": "Fortaleza-CE",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      3,
+      4
+     ]
+    },
+    {
+     "upstream": 3884,
+     "round": 25,
+     "date": "20/09/2006",
+     "time": "19:00",
+     "home": "Grêmio-RS",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      4,
+      0
+     ]
+    },
+    {
+     "upstream": 3883,
+     "round": 25,
+     "date": "20/09/2006",
+     "time": "22:30",
+     "home": "Botafogo-RJ",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3885,
+     "round": 25,
+     "date": "20/09/2006",
+     "time": "22:30",
+     "home": "Figueirense-SC",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3888,
+     "round": 25,
+     "date": "20/09/2006",
+     "time": "22:30",
+     "home": "Paraná-PR",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3890,
+     "round": 25,
+     "date": "20/09/2006",
+     "time": "23:30",
+     "home": "Goiás-GO",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 3892,
+     "round": 25,
+     "date": "21/09/2006",
+     "time": "01:00",
+     "home": "Corinthians-SP",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3886,
+     "round": 25,
+     "date": "21/09/2006",
+     "time": "01:00",
+     "home": "Santos-SP",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3887,
+     "round": 25,
+     "date": "21/09/2006",
+     "time": "01:00",
+     "home": "São Caetano-SP",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 3889,
+     "round": 25,
+     "date": "21/09/2006",
+     "time": "23:30",
+     "home": "Flamengo-RJ",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3891,
+     "round": 25,
+     "date": "21/09/2006",
+     "time": "23:30",
+     "home": "Santa Cruz-PE",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 3898,
+     "round": 26,
+     "date": "23/09/2006",
+     "time": "19:00",
+     "home": "Athletico-PR",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 3893,
+     "round": 26,
+     "date": "23/09/2006",
+     "time": "19:00",
+     "home": "Fluminense-RJ",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 3895,
+     "round": 26,
+     "date": "24/09/2006",
+     "time": "19:00",
+     "home": "Figueirense-SC",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 3894,
+     "round": 26,
+     "date": "24/09/2006",
+     "time": "19:00",
+     "home": "Internacional-RS",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3902,
+     "round": 26,
+     "date": "24/09/2006",
+     "time": "19:00",
+     "home": "Palmeiras-SP",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 3901,
+     "round": 26,
+     "date": "24/09/2006",
+     "time": "19:00",
+     "home": "Santa Cruz-PE",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3896,
+     "round": 26,
+     "date": "24/09/2006",
+     "time": "19:00",
+     "home": "Santos-SP",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 3900,
+     "round": 26,
+     "date": "24/09/2006",
+     "time": "21:10",
+     "home": "Goiás-GO",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      4,
+      0
+     ]
+    },
+    {
+     "upstream": 3897,
+     "round": 26,
+     "date": "24/09/2006",
+     "time": "21:10",
+     "home": "Ponte Preta-SP",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 3899,
+     "round": 26,
+     "date": "24/09/2006",
+     "time": "21:10",
+     "home": "Vasco-RJ",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3811,
+     "round": 17,
+     "date": "30/09/2006",
+     "time": "19:00",
+     "home": "Athletico-PR",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3810,
+     "round": 17,
+     "date": "30/09/2006",
+     "time": "19:00",
+     "home": "Internacional-RS",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 3911,
+     "round": 27,
+     "date": "04/10/2006",
+     "time": "22:30",
+     "home": "Fortaleza-CE",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3905,
+     "round": 27,
+     "date": "04/10/2006",
+     "time": "22:30",
+     "home": "Juventude-RS",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 3908,
+     "round": 27,
+     "date": "04/10/2006",
+     "time": "22:30",
+     "home": "Paraná-PR",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3910,
+     "round": 27,
+     "date": "04/10/2006",
+     "time": "23:30",
+     "home": "Cruzeiro-MG",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3909,
+     "round": 27,
+     "date": "04/10/2006",
+     "time": "23:30",
+     "home": "Flamengo-RJ",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      4,
+      1
+     ]
+    },
+    {
+     "upstream": 3904,
+     "round": 27,
+     "date": "05/10/2006",
+     "time": "01:00",
+     "home": "Grêmio-RS",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3907,
+     "round": 27,
+     "date": "05/10/2006",
+     "time": "01:00",
+     "home": "São Caetano-SP",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3906,
+     "round": 27,
+     "date": "05/10/2006",
+     "time": "01:00",
+     "home": "São Paulo-SP",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      5,
+      1
+     ]
+    },
+    {
+     "upstream": 3903,
+     "round": 27,
+     "date": "05/10/2006",
+     "time": "23:30",
+     "home": "Botafogo-RJ",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 3912,
+     "round": 27,
+     "date": "05/10/2006",
+     "time": "23:30",
+     "home": "Corinthians-SP",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      0,
+      3
+     ]
+    },
+    {
+     "upstream": 3917,
+     "round": 28,
+     "date": "07/10/2006",
+     "time": "19:00",
+     "home": "Ponte Preta-SP",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 3913,
+     "round": 28,
+     "date": "07/10/2006",
+     "time": "21:10",
+     "home": "Fluminense-RJ",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3919,
+     "round": 28,
+     "date": "07/10/2006",
+     "time": "21:10",
+     "home": "Vasco-RJ",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3918,
+     "round": 28,
+     "date": "08/10/2006",
+     "time": "19:00",
+     "home": "Athletico-PR",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3920,
+     "round": 28,
+     "date": "08/10/2006",
+     "time": "19:00",
+     "home": "Goiás-GO",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 3914,
+     "round": 28,
+     "date": "08/10/2006",
+     "time": "19:00",
+     "home": "Internacional-RS",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3922,
+     "round": 28,
+     "date": "08/10/2006",
+     "time": "19:00",
+     "home": "Palmeiras-SP",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 3921,
+     "round": 28,
+     "date": "08/10/2006",
+     "time": "19:00",
+     "home": "Santa Cruz-PE",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 3915,
+     "round": 28,
+     "date": "08/10/2006",
+     "time": "21:10",
+     "home": "Figueirense-SC",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3916,
+     "round": 28,
+     "date": "08/10/2006",
+     "time": "21:10",
+     "home": "Santos-SP",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3930,
+     "round": 29,
+     "date": "14/10/2006",
+     "time": "19:00",
+     "home": "Cruzeiro-MG",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3924,
+     "round": 29,
+     "date": "14/10/2006",
+     "time": "19:00",
+     "home": "Internacional-RS",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 3923,
+     "round": 29,
+     "date": "14/10/2006",
+     "time": "21:10",
+     "home": "Botafogo-RJ",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      4,
+      3
+     ]
+    },
+    {
+     "upstream": 3927,
+     "round": 29,
+     "date": "14/10/2006",
+     "time": "21:10",
+     "home": "São Caetano-SP",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 3926,
+     "round": 29,
+     "date": "14/10/2006",
+     "time": "21:10",
+     "home": "São Paulo-SP",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      5,
+      0
+     ]
+    },
+    {
+     "upstream": 3925,
+     "round": 29,
+     "date": "15/10/2006",
+     "time": "19:00",
+     "home": "Figueirense-SC",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3929,
+     "round": 29,
+     "date": "15/10/2006",
+     "time": "19:00",
+     "home": "Flamengo-RJ",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 3928,
+     "round": 29,
+     "date": "15/10/2006",
+     "time": "19:00",
+     "home": "Paraná-PR",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3932,
+     "round": 29,
+     "date": "15/10/2006",
+     "time": "21:10",
+     "home": "Palmeiras-SP",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 3931,
+     "round": 29,
+     "date": "15/10/2006",
+     "time": "21:10",
+     "home": "Santa Cruz-PE",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      0,
+      4
+     ]
+    },
+    {
+     "upstream": 3939,
+     "round": 30,
+     "date": "19/10/2006",
+     "time": "01:00",
+     "home": "Vasco-RJ",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 3940,
+     "round": 30,
+     "date": "21/10/2006",
+     "time": "19:00",
+     "home": "Goiás-GO",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      5,
+      3
+     ]
+    },
+    {
+     "upstream": 3937,
+     "round": 30,
+     "date": "21/10/2006",
+     "time": "21:10",
+     "home": "Ponte Preta-SP",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 3936,
+     "round": 30,
+     "date": "21/10/2006",
+     "time": "21:10",
+     "home": "Santos-SP",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3941,
+     "round": 30,
+     "date": "22/10/2006",
+     "time": "19:00",
+     "home": "Fortaleza-CE",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      3,
+      4
+     ]
+    },
+    {
+     "upstream": 3934,
+     "round": 30,
+     "date": "22/10/2006",
+     "time": "19:00",
+     "home": "Grêmio-RS",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3938,
+     "round": 30,
+     "date": "22/10/2006",
+     "time": "19:00",
+     "home": "Paraná-PR",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 3933,
+     "round": 30,
+     "date": "22/10/2006",
+     "time": "21:10",
+     "home": "Botafogo-RJ",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3942,
+     "round": 30,
+     "date": "22/10/2006",
+     "time": "21:10",
+     "home": "Corinthians-SP",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3935,
+     "round": 30,
+     "date": "22/10/2006",
+     "time": "21:10",
+     "home": "Juventude-RS",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3952,
+     "round": 31,
+     "date": "26/10/2006",
+     "time": "01:00",
+     "home": "Corinthians-SP",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3943,
+     "round": 31,
+     "date": "26/10/2006",
+     "time": "23:30",
+     "home": "Fluminense-RJ",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3944,
+     "round": 31,
+     "date": "26/10/2006",
+     "time": "23:30",
+     "home": "Internacional-RS",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3951,
+     "round": 31,
+     "date": "26/10/2006",
+     "time": "23:30",
+     "home": "Santa Cruz-PE",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 3949,
+     "round": 31,
+     "date": "26/10/2006",
+     "time": "23:30",
+     "home": "Vasco-RJ",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 3948,
+     "round": 31,
+     "date": "28/10/2006",
+     "time": "19:00",
+     "home": "Athletico-PR",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      4,
+      0
+     ]
+    },
+    {
+     "upstream": 3945,
+     "round": 31,
+     "date": "28/10/2006",
+     "time": "19:00",
+     "home": "Figueirense-SC",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 3947,
+     "round": 31,
+     "date": "28/10/2006",
+     "time": "19:00",
+     "home": "Ponte Preta-SP",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3950,
+     "round": 31,
+     "date": "28/10/2006",
+     "time": "21:10",
+     "home": "Goiás-GO",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 3946,
+     "round": 31,
+     "date": "28/10/2006",
+     "time": "21:10",
+     "home": "Santos-SP",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3958,
+     "round": 32,
+     "date": "01/11/2006",
+     "time": "22:30",
+     "home": "Athletico-PR",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      6,
+      4
+     ]
+    },
+    {
+     "upstream": 3959,
+     "round": 32,
+     "date": "01/11/2006",
+     "time": "22:30",
+     "home": "Flamengo-RJ",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3962,
+     "round": 32,
+     "date": "01/11/2006",
+     "time": "22:30",
+     "home": "Palmeiras-SP",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 3954,
+     "round": 32,
+     "date": "01/11/2006",
+     "time": "23:30",
+     "home": "Grêmio-RS",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3961,
+     "round": 32,
+     "date": "02/11/2006",
+     "time": "00:45",
+     "home": "Fortaleza-CE",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      0,
+      4
+     ]
+    },
+    {
+     "upstream": 3955,
+     "round": 32,
+     "date": "02/11/2006",
+     "time": "00:45",
+     "home": "Juventude-RS",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 3957,
+     "round": 32,
+     "date": "02/11/2006",
+     "time": "00:45",
+     "home": "São Caetano-SP",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3953,
+     "round": 32,
+     "date": "02/11/2006",
+     "time": "23:30",
+     "home": "Botafogo-RJ",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 3960,
+     "round": 32,
+     "date": "02/11/2006",
+     "time": "23:30",
+     "home": "Cruzeiro-MG",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 3956,
+     "round": 32,
+     "date": "02/11/2006",
+     "time": "23:30",
+     "home": "São Paulo-SP",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3965,
+     "round": 33,
+     "date": "04/11/2006",
+     "time": "21:10",
+     "home": "Figueirense-SC",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3969,
+     "round": 33,
+     "date": "04/11/2006",
+     "time": "21:10",
+     "home": "Flamengo-RJ",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3970,
+     "round": 33,
+     "date": "05/11/2006",
+     "time": "18:00",
+     "home": "Cruzeiro-MG",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3971,
+     "round": 33,
+     "date": "05/11/2006",
+     "time": "18:00",
+     "home": "Fortaleza-CE",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      0,
+      3
+     ]
+    },
+    {
+     "upstream": 3964,
+     "round": 33,
+     "date": "05/11/2006",
+     "time": "18:00",
+     "home": "Grêmio-RS",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 3967,
+     "round": 33,
+     "date": "05/11/2006",
+     "time": "18:00",
+     "home": "Ponte Preta-SP",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3966,
+     "round": 33,
+     "date": "05/11/2006",
+     "time": "18:00",
+     "home": "Santos-SP",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 3963,
+     "round": 33,
+     "date": "05/11/2006",
+     "time": "20:10",
+     "home": "Botafogo-RJ",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3972,
+     "round": 33,
+     "date": "05/11/2006",
+     "time": "20:10",
+     "home": "Corinthians-SP",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3968,
+     "round": 33,
+     "date": "05/11/2006",
+     "time": "20:10",
+     "home": "Paraná-PR",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      4,
+      2
+     ]
+    },
+    {
+     "upstream": 3975,
+     "round": 34,
+     "date": "08/11/2006",
+     "time": "21:30",
+     "home": "Juventude-RS",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3977,
+     "round": 34,
+     "date": "08/11/2006",
+     "time": "21:30",
+     "home": "São Caetano-SP",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 3979,
+     "round": 34,
+     "date": "08/11/2006",
+     "time": "21:30",
+     "home": "Vasco-RJ",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 3982,
+     "round": 34,
+     "date": "08/11/2006",
+     "time": "22:30",
+     "home": "Palmeiras-SP",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 3978,
+     "round": 34,
+     "date": "08/11/2006",
+     "time": "23:45",
+     "home": "Athletico-PR",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 3980,
+     "round": 34,
+     "date": "08/11/2006",
+     "time": "23:45",
+     "home": "Goiás-GO",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 3974,
+     "round": 34,
+     "date": "08/11/2006",
+     "time": "23:45",
+     "home": "Internacional-RS",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3973,
+     "round": 34,
+     "date": "09/11/2006",
+     "time": "22:30",
+     "home": "Fluminense-RJ",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3981,
+     "round": 34,
+     "date": "09/11/2006",
+     "time": "22:30",
+     "home": "Santa Cruz-PE",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      4,
+      1
+     ]
+    },
+    {
+     "upstream": 3976,
+     "round": 34,
+     "date": "09/11/2006",
+     "time": "22:30",
+     "home": "São Paulo-SP",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 3984,
+     "round": 35,
+     "date": "11/11/2006",
+     "time": "20:10",
+     "home": "Internacional-RS",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 3986,
+     "round": 35,
+     "date": "11/11/2006",
+     "time": "20:10",
+     "home": "Santos-SP",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3989,
+     "round": 35,
+     "date": "11/11/2006",
+     "time": "20:10",
+     "home": "Vasco-RJ",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3985,
+     "round": 35,
+     "date": "12/11/2006",
+     "time": "18:00",
+     "home": "Figueirense-SC",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 3983,
+     "round": 35,
+     "date": "12/11/2006",
+     "time": "18:00",
+     "home": "Fluminense-RJ",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3990,
+     "round": 35,
+     "date": "12/11/2006",
+     "time": "18:00",
+     "home": "Goiás-GO",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 3987,
+     "round": 35,
+     "date": "12/11/2006",
+     "time": "18:00",
+     "home": "Ponte Preta-SP",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 3988,
+     "round": 35,
+     "date": "12/11/2006",
+     "time": "20:10",
+     "home": "Athletico-PR",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 3992,
+     "round": 35,
+     "date": "12/11/2006",
+     "time": "20:10",
+     "home": "Palmeiras-SP",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 3991,
+     "round": 35,
+     "date": "12/11/2006",
+     "time": "20:10",
+     "home": "Santa Cruz-PE",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      0,
+      3
+     ]
+    },
+    {
+     "upstream": 4002,
+     "round": 36,
+     "date": "18/11/2006",
+     "time": "20:10",
+     "home": "Corinthians-SP",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3999,
+     "round": 36,
+     "date": "18/11/2006",
+     "time": "20:10",
+     "home": "Flamengo-RJ",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 3994,
+     "round": 36,
+     "date": "18/11/2006",
+     "time": "20:10",
+     "home": "Grêmio-RS",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 3995,
+     "round": 36,
+     "date": "19/11/2006",
+     "time": "18:00",
+     "home": "Juventude-RS",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 3998,
+     "round": 36,
+     "date": "19/11/2006",
+     "time": "18:00",
+     "home": "Paraná-PR",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 3997,
+     "round": 36,
+     "date": "19/11/2006",
+     "time": "18:00",
+     "home": "São Caetano-SP",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 3996,
+     "round": 36,
+     "date": "19/11/2006",
+     "time": "18:00",
+     "home": "São Paulo-SP",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 3993,
+     "round": 36,
+     "date": "19/11/2006",
+     "time": "20:10",
+     "home": "Botafogo-RJ",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 4000,
+     "round": 36,
+     "date": "19/11/2006",
+     "time": "20:10",
+     "home": "Cruzeiro-MG",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 4001,
+     "round": 36,
+     "date": "19/11/2006",
+     "time": "20:10",
+     "home": "Fortaleza-CE",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 4008,
+     "round": 37,
+     "date": "26/11/2006",
+     "time": "18:00",
+     "home": "Athletico-PR",
+     "away": "Figueirense-SC",
+     "played": true,
+     "score": [
+      1,
+      4
+     ]
+    },
+    {
+     "upstream": 4003,
+     "round": 37,
+     "date": "26/11/2006",
+     "time": "18:00",
+     "home": "Botafogo-RJ",
+     "away": "Corinthians-SP",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 4010,
+     "round": 37,
+     "date": "26/11/2006",
+     "time": "18:00",
+     "home": "Goiás-GO",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 4004,
+     "round": 37,
+     "date": "26/11/2006",
+     "time": "18:00",
+     "home": "Grêmio-RS",
+     "away": "Flamengo-RJ",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 4005,
+     "round": 37,
+     "date": "26/11/2006",
+     "time": "18:00",
+     "home": "Juventude-RS",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 4012,
+     "round": 37,
+     "date": "26/11/2006",
+     "time": "18:00",
+     "home": "Palmeiras-SP",
+     "away": "Internacional-RS",
+     "played": true,
+     "score": [
+      1,
+      4
+     ]
+    },
+    {
+     "upstream": 4011,
+     "round": 37,
+     "date": "26/11/2006",
+     "time": "18:00",
+     "home": "Santa Cruz-PE",
+     "away": "Fluminense-RJ",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 4007,
+     "round": 37,
+     "date": "26/11/2006",
+     "time": "18:00",
+     "home": "São Caetano-SP",
+     "away": "Paraná-PR",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 4006,
+     "round": 37,
+     "date": "26/11/2006",
+     "time": "18:00",
+     "home": "São Paulo-SP",
+     "away": "Cruzeiro-MG",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 4009,
+     "round": 37,
+     "date": "26/11/2006",
+     "time": "18:00",
+     "home": "Vasco-RJ",
+     "away": "Santos-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 4019,
+     "round": 38,
+     "date": "02/12/2006",
+     "time": "20:10",
+     "home": "Flamengo-RJ",
+     "away": "São Caetano-SP",
+     "played": true,
+     "score": [
+      4,
+      1
+     ]
+    },
+    {
+     "upstream": 4014,
+     "round": 38,
+     "date": "02/12/2006",
+     "time": "20:10",
+     "home": "Internacional-RS",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      1,
+      4
+     ]
+    },
+    {
+     "upstream": 4022,
+     "round": 38,
+     "date": "03/12/2006",
+     "time": "18:00",
+     "home": "Corinthians-SP",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      5,
+      3
+     ]
+    },
+    {
+     "upstream": 4020,
+     "round": 38,
+     "date": "03/12/2006",
+     "time": "18:00",
+     "home": "Cruzeiro-MG",
+     "away": "Botafogo-RJ",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 4015,
+     "round": 38,
+     "date": "03/12/2006",
+     "time": "18:00",
+     "home": "Figueirense-SC",
+     "away": "Vasco-RJ",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 4013,
+     "round": 38,
+     "date": "03/12/2006",
+     "time": "18:00",
+     "home": "Fluminense-RJ",
+     "away": "Palmeiras-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 4018,
+     "round": 38,
+     "date": "03/12/2006",
+     "time": "18:00",
+     "home": "Paraná-PR",
+     "away": "São Paulo-SP",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 4017,
+     "round": 38,
+     "date": "03/12/2006",
+     "time": "18:00",
+     "home": "Ponte Preta-SP",
+     "away": "Athletico-PR",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 4021,
+     "round": 38,
+     "date": "03/12/2006",
+     "time": "20:10",
+     "home": "Fortaleza-CE",
+     "away": "Grêmio-RS",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 4016,
+     "round": 38,
+     "date": "03/12/2006",
+     "time": "20:10",
+     "home": "Santos-SP",
+     "away": "Santa Cruz-PE",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    }
+   ]
+  }
+ ]
+}

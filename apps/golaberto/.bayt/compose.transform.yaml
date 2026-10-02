@@ -1,0 +1,68 @@
+# generated from bayt.cue — do not edit
+services:
+  apps_golaberto-transform:
+    build:
+      additional_contexts:
+        apps_golaberto-redis: service:apps_golaberto-redis
+        apps_golaberto-crud: service:apps_golaberto-crud
+      context: ..
+      dockerfile: .bayt/Dockerfile.transform
+      target: transform
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    depends_on:
+      apps_golaberto-redis:
+        condition: service_healthy
+        restart: true
+      apps_golaberto-crud:
+        condition: service_healthy
+        restart: true
+    develop:
+      watch:
+      - action: sync+restart
+        path: ../docker/golaberto-standings.yaml
+        target: /pipelines/golaberto-standings.yaml
+      - action: sync+restart
+        path: ../docker/golaberto-game-cards.yaml
+        target: /pipelines/golaberto-game-cards.yaml
+      - action: sync+restart
+        path: ../docker/golaberto-player-stats.yaml
+        target: /pipelines/golaberto-player-stats.yaml
+      - action: sync+restart
+        path: ../docker/golaberto-rounds.yaml
+        target: /pipelines/golaberto-rounds.yaml
+    environment:
+      CRUD_URL: http://crud:3000
+      REDIS_URL: redis://redis:6379
+      SERVICE_JWT: >-
+        ${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
+    image: bayt-apps_golaberto-transform:${BAYT_IMAGE_TAG:-latest}
+    networks:
+      default:
+        aliases:
+        - transform
+    restart: on-failure
+  apps_golaberto-transform_bayt:
+    build:
+      additional_contexts:
+        apps_golaberto-redis_bayt: service:apps_golaberto-redis_bayt
+        apps_golaberto-crud_bayt: service:apps_golaberto-crud_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.transform
+      target: transform_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-apps_golaberto-transform_bayt:latest
+    scale: 0
+  apps_golaberto-transform_srcs:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.transform
+      target: transform_srcs
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-apps_golaberto-transform_srcs:latest
+    scale: 0

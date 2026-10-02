@@ -1,0 +1,27 @@
+[package]
+name = "golaberto-odds-wasm"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+# Not a member of the repository's workspace.
+[workspace]
+
+[[bin]]
+name = "golaberto-odds"
+path = "src/main.rs"
+
+[dependencies]
+# upstream/ is galo2099/golaberto's GPLv2 source with odds-wasm.patch applied (vendor.sh).
+golaberto-odds = { path = "upstream/odds-rust", default-features = false }
+player-ratings = { package = "golaberto-player-ratings", path = "upstream/stats/core" }
+chrono = { version = "=0.4.45", default-features = false, features = ["std"] }
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.151", features = ["float_roundtrip"] }
+smallvec = "=1.16.2"
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

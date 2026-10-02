@@ -1,0 +1,5142 @@
+{
+ "path": "/championship/show/1527-brasil-campeonato-brasileiro-serie-b-2026",
+ "phases": [
+  {
+   "upstream": 4489,
+   "name": "Turno e Returno",
+   "position": 0,
+   "groups": [
+    {
+     "upstream": 16653,
+     "name": "Grupo Único",
+     "teams": [
+      {
+       "upstream": 70,
+       "name": "Vila Nova-GO"
+      },
+      {
+       "upstream": 12,
+       "name": "Juventude-RS"
+      },
+      {
+       "upstream": 22,
+       "name": "Fortaleza-CE"
+      },
+      {
+       "upstream": 2064,
+       "name": "Novorizontino-SP"
+      },
+      {
+       "upstream": 73,
+       "name": "Criciúma-SC"
+      },
+      {
+       "upstream": 279,
+       "name": "Atlético-GO"
+      },
+      {
+       "upstream": 80,
+       "name": "CRB-AL"
+      },
+      {
+       "upstream": 588,
+       "name": "Operário-PR"
+      },
+      {
+       "upstream": 77,
+       "name": "Sport-PE"
+      },
+      {
+       "upstream": 96,
+       "name": "Cuiabá-MT"
+      },
+      {
+       "upstream": 11,
+       "name": "Goiás-GO"
+      },
+      {
+       "upstream": 429,
+       "name": "São Bernardo-SP"
+      },
+      {
+       "upstream": 550,
+       "name": "Athletic-MG"
+      },
+      {
+       "upstream": 87,
+       "name": "Náutico-PE"
+      },
+      {
+       "upstream": 69,
+       "name": "Ceará-CE"
+      },
+      {
+       "upstream": 457,
+       "name": "Botafogo-SP"
+      },
+      {
+       "upstream": 68,
+       "name": "Avaí-SC"
+      },
+      {
+       "upstream": 95,
+       "name": "Londrina-PR"
+      },
+      {
+       "upstream": 125,
+       "name": "América-MG"
+      },
+      {
+       "upstream": 9,
+       "name": "Ponte Preta-SP"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Campeão",
+       "first": 1,
+       "last": 1
+      },
+      {
+       "name": "Promoção",
+       "first": 1,
+       "last": 2
+      },
+      {
+       "name": "Playoffs",
+       "first": 3,
+       "last": 6
+      },
+      {
+       "name": "Rebaixamento",
+       "first": 17,
+       "last": 20
+      }
+     ]
+    }
+   ],
+   "games": [
+    {
+     "upstream": 364403,
+     "round": 1,
+     "date": "21/03/2026",
+     "time": "20:00",
+     "home": "Vila Nova-GO",
+     "away": "CRB-AL",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 364402,
+     "round": 1,
+     "date": "21/03/2026",
+     "time": "21:00",
+     "home": "Ceará-CE",
+     "away": "São Bernardo-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364404,
+     "round": 1,
+     "date": "21/03/2026",
+     "time": "21:15",
+     "home": "Operário-PR",
+     "away": "Atlético-GO",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364405,
+     "round": 1,
+     "date": "21/03/2026",
+     "time": "22:15",
+     "home": "Botafogo-SP",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      4,
+      0
+     ]
+    },
+    {
+     "upstream": 364406,
+     "round": 1,
+     "date": "21/03/2026",
+     "time": "23:30",
+     "home": "Cuiabá-MT",
+     "away": "Sport-PE",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364407,
+     "round": 1,
+     "date": "22/03/2026",
+     "time": "19:00",
+     "home": "Avaí-SC",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364408,
+     "round": 1,
+     "date": "22/03/2026",
+     "time": "19:00",
+     "home": "Náutico-PE",
+     "away": "Criciúma-SC",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364409,
+     "round": 1,
+     "date": "22/03/2026",
+     "time": "21:00",
+     "home": "Athletic-MG",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364410,
+     "round": 1,
+     "date": "22/03/2026",
+     "time": "21:00",
+     "home": "Goiás-GO",
+     "away": "América-MG",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 364411,
+     "round": 1,
+     "date": "22/03/2026",
+     "time": "23:00",
+     "home": "Novorizontino-SP",
+     "away": "Londrina-PR",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 364413,
+     "round": 2,
+     "date": "31/03/2026",
+     "time": "21:30",
+     "home": "Juventude-RS",
+     "away": "Novorizontino-SP",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364412,
+     "round": 2,
+     "date": "31/03/2026",
+     "time": "22:00",
+     "home": "Fortaleza-CE",
+     "away": "Cuiabá-MT",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364421,
+     "round": 2,
+     "date": "01/04/2026",
+     "time": "21:00",
+     "home": "América-MG",
+     "away": "Botafogo-SP",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364414,
+     "round": 2,
+     "date": "01/04/2026",
+     "time": "22:00",
+     "home": "Atlético-GO",
+     "away": "Náutico-PE",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364415,
+     "round": 2,
+     "date": "01/04/2026",
+     "time": "22:00",
+     "home": "Londrina-PR",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 364416,
+     "round": 2,
+     "date": "01/04/2026",
+     "time": "22:00",
+     "home": "Sport-PE",
+     "away": "Vila Nova-GO",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364417,
+     "round": 2,
+     "date": "02/04/2026",
+     "time": "00:00",
+     "home": "Ponte Preta-SP",
+     "away": "Ceará-CE",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364418,
+     "round": 2,
+     "date": "02/04/2026",
+     "time": "00:30",
+     "home": "CRB-AL",
+     "away": "Avaí-SC",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364419,
+     "round": 2,
+     "date": "02/04/2026",
+     "time": "00:30",
+     "home": "Criciúma-SC",
+     "away": "Athletic-MG",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364420,
+     "round": 2,
+     "date": "02/04/2026",
+     "time": "22:00",
+     "home": "São Bernardo-SP",
+     "away": "Operário-PR",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364422,
+     "round": 3,
+     "date": "04/04/2026",
+     "time": "19:00",
+     "home": "Fortaleza-CE",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364423,
+     "round": 3,
+     "date": "04/04/2026",
+     "time": "21:00",
+     "home": "Cuiabá-MT",
+     "away": "Ceará-CE",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 364424,
+     "round": 3,
+     "date": "04/04/2026",
+     "time": "21:00",
+     "home": "Náutico-PE",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364425,
+     "round": 3,
+     "date": "04/04/2026",
+     "time": "23:00",
+     "home": "Vila Nova-GO",
+     "away": "Atlético-GO",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364426,
+     "round": 3,
+     "date": "04/04/2026",
+     "time": "23:30",
+     "home": "Londrina-PR",
+     "away": "Sport-PE",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364427,
+     "round": 3,
+     "date": "05/04/2026",
+     "time": "19:00",
+     "home": "Avaí-SC",
+     "away": "Operário-PR",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364428,
+     "round": 3,
+     "date": "05/04/2026",
+     "time": "21:00",
+     "home": "Novorizontino-SP",
+     "away": "CRB-AL",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364429,
+     "round": 3,
+     "date": "05/04/2026",
+     "time": "23:00",
+     "home": "Athletic-MG",
+     "away": "América-MG",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364430,
+     "round": 3,
+     "date": "05/04/2026",
+     "time": "23:30",
+     "home": "Botafogo-SP",
+     "away": "São Bernardo-SP",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364431,
+     "round": 3,
+     "date": "07/04/2026",
+     "time": "00:00",
+     "home": "Goiás-GO",
+     "away": "Criciúma-SC",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364432,
+     "round": 4,
+     "date": "10/04/2026",
+     "time": "23:30",
+     "home": "Criciúma-SC",
+     "away": "Botafogo-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364436,
+     "round": 4,
+     "date": "11/04/2026",
+     "time": "19:00",
+     "home": "Juventude-RS",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364434,
+     "round": 4,
+     "date": "11/04/2026",
+     "time": "21:00",
+     "home": "Ponte Preta-SP",
+     "away": "Vila Nova-GO",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364433,
+     "round": 4,
+     "date": "11/04/2026",
+     "time": "21:00",
+     "home": "Sport-PE",
+     "away": "Avaí-SC",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 364435,
+     "round": 4,
+     "date": "11/04/2026",
+     "time": "23:30",
+     "home": "Ceará-CE",
+     "away": "Náutico-PE",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364438,
+     "round": 4,
+     "date": "12/04/2026",
+     "time": "21:00",
+     "home": "América-MG",
+     "away": "Novorizontino-SP",
+     "played": true,
+     "score": [
+      0,
+      3
+     ]
+    },
+    {
+     "upstream": 364439,
+     "round": 4,
+     "date": "12/04/2026",
+     "time": "21:00",
+     "home": "Operário-PR",
+     "away": "Cuiabá-MT",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364437,
+     "round": 4,
+     "date": "12/04/2026",
+     "time": "21:00",
+     "home": "São Bernardo-SP",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364440,
+     "round": 4,
+     "date": "12/04/2026",
+     "time": "23:00",
+     "home": "CRB-AL",
+     "away": "Athletic-MG",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 364441,
+     "round": 4,
+     "date": "12/04/2026",
+     "time": "23:30",
+     "home": "Atlético-GO",
+     "away": "Londrina-PR",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364442,
+     "round": 5,
+     "date": "18/04/2026",
+     "time": "21:00",
+     "home": "América-MG",
+     "away": "Sport-PE",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364443,
+     "round": 5,
+     "date": "18/04/2026",
+     "time": "21:00",
+     "home": "Náutico-PE",
+     "away": "São Bernardo-SP",
+     "played": true,
+     "score": [
+      0,
+      3
+     ]
+    },
+    {
+     "upstream": 364445,
+     "round": 5,
+     "date": "18/04/2026",
+     "time": "21:30",
+     "home": "Vila Nova-GO",
+     "away": "Operário-PR",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364444,
+     "round": 5,
+     "date": "18/04/2026",
+     "time": "23:30",
+     "home": "Avaí-SC",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364446,
+     "round": 5,
+     "date": "18/04/2026",
+     "time": "23:45",
+     "home": "CRB-AL",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364451,
+     "round": 5,
+     "date": "19/04/2026",
+     "time": "19:00",
+     "home": "Botafogo-SP",
+     "away": "Atlético-GO",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364447,
+     "round": 5,
+     "date": "19/04/2026",
+     "time": "19:00",
+     "home": "Londrina-PR",
+     "away": "Ceará-CE",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364448,
+     "round": 5,
+     "date": "19/04/2026",
+     "time": "21:00",
+     "home": "Goiás-GO",
+     "away": "Cuiabá-MT",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 364449,
+     "round": 5,
+     "date": "19/04/2026",
+     "time": "23:00",
+     "home": "Fortaleza-CE",
+     "away": "Criciúma-SC",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 364450,
+     "round": 5,
+     "date": "19/04/2026",
+     "time": "23:00",
+     "home": "Novorizontino-SP",
+     "away": "Athletic-MG",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364456,
+     "round": 6,
+     "date": "23/04/2026",
+     "time": "00:30",
+     "home": "Cuiabá-MT",
+     "away": "Botafogo-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364459,
+     "round": 6,
+     "date": "24/04/2026",
+     "time": "23:00",
+     "home": "Ponte Preta-SP",
+     "away": "América-MG",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364460,
+     "round": 6,
+     "date": "25/04/2026",
+     "time": "23:30",
+     "home": "Sport-PE",
+     "away": "Novorizontino-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364457,
+     "round": 6,
+     "date": "26/04/2026",
+     "time": "00:00",
+     "home": "Juventude-RS",
+     "away": "Londrina-PR",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364461,
+     "round": 6,
+     "date": "26/04/2026",
+     "time": "19:00",
+     "home": "São Bernardo-SP",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364454,
+     "round": 6,
+     "date": "26/04/2026",
+     "time": "21:00",
+     "home": "Ceará-CE",
+     "away": "Vila Nova-GO",
+     "played": true,
+     "score": [
+      3,
+      3
+     ]
+    },
+    {
+     "upstream": 364458,
+     "round": 6,
+     "date": "26/04/2026",
+     "time": "21:00",
+     "home": "Operário-PR",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364453,
+     "round": 6,
+     "date": "26/04/2026",
+     "time": "23:30",
+     "home": "Atlético-GO",
+     "away": "Avaí-SC",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364455,
+     "round": 6,
+     "date": "26/04/2026",
+     "time": "23:30",
+     "home": "Criciúma-SC",
+     "away": "CRB-AL",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 364452,
+     "round": 6,
+     "date": "27/04/2026",
+     "time": "22:00",
+     "home": "Athletic-MG",
+     "away": "Náutico-PE",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364465,
+     "round": 7,
+     "date": "02/05/2026",
+     "time": "19:00",
+     "home": "Botafogo-SP",
+     "away": "Náutico-PE",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364466,
+     "round": 7,
+     "date": "02/05/2026",
+     "time": "21:30",
+     "home": "Cuiabá-MT",
+     "away": "Criciúma-SC",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364467,
+     "round": 7,
+     "date": "02/05/2026",
+     "time": "23:30",
+     "home": "Fortaleza-CE",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      4,
+      1
+     ]
+    },
+    {
+     "upstream": 364468,
+     "round": 7,
+     "date": "03/05/2026",
+     "time": "19:00",
+     "home": "Operário-PR",
+     "away": "Londrina-PR",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 364470,
+     "round": 7,
+     "date": "03/05/2026",
+     "time": "19:00",
+     "home": "São Bernardo-SP",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 364469,
+     "round": 7,
+     "date": "03/05/2026",
+     "time": "21:00",
+     "home": "Sport-PE",
+     "away": "Ceará-CE",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364463,
+     "round": 7,
+     "date": "03/05/2026",
+     "time": "21:30",
+     "home": "Atlético-GO",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364462,
+     "round": 7,
+     "date": "03/05/2026",
+     "time": "23:30",
+     "home": "América-MG",
+     "away": "CRB-AL",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364464,
+     "round": 7,
+     "date": "03/05/2026",
+     "time": "23:30",
+     "home": "Avaí-SC",
+     "away": "Novorizontino-SP",
+     "played": true,
+     "score": [
+      3,
+      3
+     ]
+    },
+    {
+     "upstream": 364471,
+     "round": 7,
+     "date": "04/05/2026",
+     "time": "22:00",
+     "home": "Vila Nova-GO",
+     "away": "Athletic-MG",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364476,
+     "round": 8,
+     "date": "09/05/2026",
+     "time": "19:00",
+     "home": "Goiás-GO",
+     "away": "Vila Nova-GO",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364472,
+     "round": 8,
+     "date": "09/05/2026",
+     "time": "21:00",
+     "home": "Athletic-MG",
+     "away": "Cuiabá-MT",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364481,
+     "round": 8,
+     "date": "09/05/2026",
+     "time": "21:30",
+     "home": "Ponte Preta-SP",
+     "away": "Sport-PE",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 364475,
+     "round": 8,
+     "date": "09/05/2026",
+     "time": "22:00",
+     "home": "Ceará-CE",
+     "away": "Atlético-GO",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364474,
+     "round": 8,
+     "date": "09/05/2026",
+     "time": "23:30",
+     "home": "CRB-AL",
+     "away": "Operário-PR",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 364478,
+     "round": 8,
+     "date": "10/05/2026",
+     "time": "00:15",
+     "home": "Juventude-RS",
+     "away": "Criciúma-SC",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364480,
+     "round": 8,
+     "date": "10/05/2026",
+     "time": "19:00",
+     "home": "Náutico-PE",
+     "away": "América-MG",
+     "played": true,
+     "score": [
+      4,
+      0
+     ]
+    },
+    {
+     "upstream": 364473,
+     "round": 8,
+     "date": "10/05/2026",
+     "time": "21:30",
+     "home": "Avaí-SC",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364477,
+     "round": 8,
+     "date": "10/05/2026",
+     "time": "22:30",
+     "home": "Novorizontino-SP",
+     "away": "Botafogo-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364479,
+     "round": 8,
+     "date": "12/05/2026",
+     "time": "22:30",
+     "home": "Londrina-PR",
+     "away": "São Bernardo-SP",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 364487,
+     "round": 9,
+     "date": "16/05/2026",
+     "time": "19:00",
+     "home": "Operário-PR",
+     "away": "Náutico-PE",
+     "played": true,
+     "score": [
+      2,
+      6
+     ]
+    },
+    {
+     "upstream": 364490,
+     "round": 9,
+     "date": "16/05/2026",
+     "time": "19:00",
+     "home": "São Bernardo-SP",
+     "away": "América-MG",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364486,
+     "round": 9,
+     "date": "16/05/2026",
+     "time": "21:30",
+     "home": "Goiás-GO",
+     "away": "Botafogo-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364485,
+     "round": 9,
+     "date": "16/05/2026",
+     "time": "23:30",
+     "home": "Cuiabá-MT",
+     "away": "Novorizontino-SP",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364482,
+     "round": 9,
+     "date": "17/05/2026",
+     "time": "19:00",
+     "home": "Athletic-MG",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364491,
+     "round": 9,
+     "date": "17/05/2026",
+     "time": "21:00",
+     "home": "Vila Nova-GO",
+     "away": "Avaí-SC",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364483,
+     "round": 9,
+     "date": "17/05/2026",
+     "time": "21:30",
+     "home": "Ceará-CE",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364484,
+     "round": 9,
+     "date": "17/05/2026",
+     "time": "21:30",
+     "home": "Criciúma-SC",
+     "away": "Atlético-GO",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364489,
+     "round": 9,
+     "date": "17/05/2026",
+     "time": "23:30",
+     "home": "Sport-PE",
+     "away": "CRB-AL",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364488,
+     "round": 9,
+     "date": "18/05/2026",
+     "time": "22:00",
+     "home": "Ponte Preta-SP",
+     "away": "Londrina-PR",
+     "played": true,
+     "score": [
+      1,
+      4
+     ]
+    },
+    {
+     "upstream": 364500,
+     "round": 10,
+     "date": "22/05/2026",
+     "time": "22:00",
+     "home": "Náutico-PE",
+     "away": "Cuiabá-MT",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364498,
+     "round": 10,
+     "date": "23/05/2026",
+     "time": "19:00",
+     "home": "Novorizontino-SP",
+     "away": "Ceará-CE",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364497,
+     "round": 10,
+     "date": "23/05/2026",
+     "time": "21:30",
+     "home": "Fortaleza-CE",
+     "away": "Londrina-PR",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 364499,
+     "round": 10,
+     "date": "23/05/2026",
+     "time": "23:30",
+     "home": "Juventude-RS",
+     "away": "Sport-PE",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364493,
+     "round": 10,
+     "date": "24/05/2026",
+     "time": "19:00",
+     "home": "Atlético-GO",
+     "away": "São Bernardo-SP",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364496,
+     "round": 10,
+     "date": "24/05/2026",
+     "time": "19:30",
+     "home": "CRB-AL",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      4,
+      2
+     ]
+    },
+    {
+     "upstream": 364492,
+     "round": 10,
+     "date": "24/05/2026",
+     "time": "21:30",
+     "home": "América-MG",
+     "away": "Vila Nova-GO",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364494,
+     "round": 10,
+     "date": "24/05/2026",
+     "time": "22:00",
+     "home": "Avaí-SC",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 364501,
+     "round": 10,
+     "date": "24/05/2026",
+     "time": "23:30",
+     "home": "Operário-PR",
+     "away": "Criciúma-SC",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364495,
+     "round": 10,
+     "date": "25/05/2026",
+     "time": "22:00",
+     "home": "Botafogo-SP",
+     "away": "Athletic-MG",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364507,
+     "round": 11,
+     "date": "30/05/2026",
+     "time": "00:00",
+     "home": "Juventude-RS",
+     "away": "América-MG",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 364503,
+     "round": 11,
+     "date": "30/05/2026",
+     "time": "19:00",
+     "home": "Atlético-GO",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364504,
+     "round": 11,
+     "date": "30/05/2026",
+     "time": "19:00",
+     "home": "Avaí-SC",
+     "away": "Criciúma-SC",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364502,
+     "round": 11,
+     "date": "30/05/2026",
+     "time": "21:00",
+     "home": "Athletic-MG",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364510,
+     "round": 11,
+     "date": "30/05/2026",
+     "time": "23:30",
+     "home": "Sport-PE",
+     "away": "Náutico-PE",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364508,
+     "round": 11,
+     "date": "31/05/2026",
+     "time": "14:00",
+     "home": "Londrina-PR",
+     "away": "Vila Nova-GO",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364511,
+     "round": 11,
+     "date": "31/05/2026",
+     "time": "14:00",
+     "home": "São Bernardo-SP",
+     "away": "Novorizontino-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364505,
+     "round": 11,
+     "date": "31/05/2026",
+     "time": "19:00",
+     "home": "Ceará-CE",
+     "away": "Operário-PR",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364506,
+     "round": 11,
+     "date": "31/05/2026",
+     "time": "23:30",
+     "home": "Cuiabá-MT",
+     "away": "CRB-AL",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364509,
+     "round": 11,
+     "date": "01/06/2026",
+     "time": "22:00",
+     "home": "Ponte Preta-SP",
+     "away": "Botafogo-SP",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364518,
+     "round": 12,
+     "date": "05/06/2026",
+     "time": "23:00",
+     "home": "Operário-PR",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364515,
+     "round": 12,
+     "date": "06/06/2026",
+     "time": "14:00",
+     "home": "Criciúma-SC",
+     "away": "Londrina-PR",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365704,
+     "round": 12,
+     "date": "07/06/2026",
+     "time": "19:00",
+     "home": "CRB-AL",
+     "away": "São Bernardo-SP",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 364512,
+     "round": 12,
+     "date": "08/06/2026",
+     "time": "23:00",
+     "home": "América-MG",
+     "away": "Atlético-GO",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364521,
+     "round": 12,
+     "date": "08/06/2026",
+     "time": "23:00",
+     "home": "Vila Nova-GO",
+     "away": "Botafogo-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364517,
+     "round": 12,
+     "date": "09/06/2026",
+     "time": "22:00",
+     "home": "Náutico-PE",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 365724,
+     "round": 12,
+     "date": "09/06/2026",
+     "time": "22:00",
+     "home": "Ponte Preta-SP",
+     "away": "Cuiabá-MT",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364514,
+     "round": 12,
+     "date": "10/06/2026",
+     "time": "23:00",
+     "home": "Ceará-CE",
+     "away": "Avaí-SC",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364516,
+     "round": 12,
+     "date": "10/06/2026",
+     "time": "23:00",
+     "home": "Goiás-GO",
+     "away": "Novorizontino-SP",
+     "played": true,
+     "score": [
+      0,
+      4
+     ]
+    },
+    {
+     "upstream": 364520,
+     "round": 12,
+     "date": "11/06/2026",
+     "time": "00:00",
+     "home": "Sport-PE",
+     "away": "Athletic-MG",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365705,
+     "round": 13,
+     "date": "12/06/2026",
+     "time": "22:00",
+     "home": "Atlético-GO",
+     "away": "CRB-AL",
+     "played": true,
+     "score": [
+      3,
+      3
+     ]
+    },
+    {
+     "upstream": 365725,
+     "round": 13,
+     "date": "14/06/2026",
+     "time": "14:00",
+     "home": "Juventude-RS",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 364531,
+     "round": 13,
+     "date": "14/06/2026",
+     "time": "14:00",
+     "home": "São Bernardo-SP",
+     "away": "Sport-PE",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364522,
+     "round": 13,
+     "date": "14/06/2026",
+     "time": "19:00",
+     "home": "Athletic-MG",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364526,
+     "round": 13,
+     "date": "14/06/2026",
+     "time": "20:00",
+     "home": "Cuiabá-MT",
+     "away": "Vila Nova-GO",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364524,
+     "round": 13,
+     "date": "14/06/2026",
+     "time": "22:00",
+     "home": "Botafogo-SP",
+     "away": "Operário-PR",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364528,
+     "round": 13,
+     "date": "14/06/2026",
+     "time": "22:00",
+     "home": "Novorizontino-SP",
+     "away": "Náutico-PE",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 364525,
+     "round": 13,
+     "date": "16/06/2026",
+     "time": "00:00",
+     "home": "Criciúma-SC",
+     "away": "Ceará-CE",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365717,
+     "round": 13,
+     "date": "16/06/2026",
+     "time": "00:00",
+     "home": "Londrina-PR",
+     "away": "Avaí-SC",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 364527,
+     "round": 13,
+     "date": "16/06/2026",
+     "time": "23:00",
+     "home": "Fortaleza-CE",
+     "away": "América-MG",
+     "played": true,
+     "score": [
+      0,
+      3
+     ]
+    },
+    {
+     "upstream": 364539,
+     "round": 14,
+     "date": "19/06/2026",
+     "time": "00:00",
+     "home": "Sport-PE",
+     "away": "Atlético-GO",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364537,
+     "round": 14,
+     "date": "20/06/2026",
+     "time": "14:00",
+     "home": "Londrina-PR",
+     "away": "Athletic-MG",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364535,
+     "round": 14,
+     "date": "20/06/2026",
+     "time": "22:00",
+     "home": "Ceará-CE",
+     "away": "Botafogo-SP",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 365719,
+     "round": 14,
+     "date": "20/06/2026",
+     "time": "22:00",
+     "home": "Vila Nova-GO",
+     "away": "Náutico-PE",
+     "played": true,
+     "score": [
+      4,
+      3
+     ]
+    },
+    {
+     "upstream": 364533,
+     "round": 14,
+     "date": "21/06/2026",
+     "time": "14:00",
+     "home": "Avaí-SC",
+     "away": "Cuiabá-MT",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365706,
+     "round": 14,
+     "date": "21/06/2026",
+     "time": "19:00",
+     "home": "CRB-AL",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364540,
+     "round": 14,
+     "date": "21/06/2026",
+     "time": "20:00",
+     "home": "São Bernardo-SP",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 365720,
+     "round": 14,
+     "date": "21/06/2026",
+     "time": "21:30",
+     "home": "Goiás-GO",
+     "away": "Operário-PR",
+     "played": true,
+     "score": [
+      0,
+      3
+     ]
+    },
+    {
+     "upstream": 365726,
+     "round": 14,
+     "date": "22/06/2026",
+     "time": "23:00",
+     "home": "Ponte Preta-SP",
+     "away": "Novorizontino-SP",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 364532,
+     "round": 14,
+     "date": "23/06/2026",
+     "time": "23:00",
+     "home": "América-MG",
+     "away": "Criciúma-SC",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364546,
+     "round": 15,
+     "date": "25/06/2026",
+     "time": "23:30",
+     "home": "Cuiabá-MT",
+     "away": "Londrina-PR",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 364548,
+     "round": 15,
+     "date": "26/06/2026",
+     "time": "22:00",
+     "home": "Novorizontino-SP",
+     "away": "Vila Nova-GO",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364551,
+     "round": 15,
+     "date": "27/06/2026",
+     "time": "14:00",
+     "home": "Operário-PR",
+     "away": "América-MG",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364545,
+     "round": 15,
+     "date": "27/06/2026",
+     "time": "19:00",
+     "home": "Criciúma-SC",
+     "away": "São Bernardo-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364542,
+     "round": 15,
+     "date": "28/06/2026",
+     "time": "19:00",
+     "home": "Athletic-MG",
+     "away": "Avaí-SC",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365727,
+     "round": 15,
+     "date": "28/06/2026",
+     "time": "19:00",
+     "home": "Atlético-GO",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364549,
+     "round": 15,
+     "date": "28/06/2026",
+     "time": "19:00",
+     "home": "Juventude-RS",
+     "away": "Ceará-CE",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364547,
+     "round": 15,
+     "date": "28/06/2026",
+     "time": "21:30",
+     "home": "Fortaleza-CE",
+     "away": "Sport-PE",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364550,
+     "round": 15,
+     "date": "28/06/2026",
+     "time": "21:30",
+     "home": "Náutico-PE",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 365708,
+     "round": 15,
+     "date": "30/06/2026",
+     "time": "23:00",
+     "home": "Botafogo-SP",
+     "away": "CRB-AL",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364555,
+     "round": 16,
+     "date": "02/07/2026",
+     "time": "23:00",
+     "home": "Cuiabá-MT",
+     "away": "América-MG",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365728,
+     "round": 16,
+     "date": "03/07/2026",
+     "time": "00:00",
+     "home": "Fortaleza-CE",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364554,
+     "round": 16,
+     "date": "04/07/2026",
+     "time": "19:00",
+     "home": "Criciúma-SC",
+     "away": "Sport-PE",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365709,
+     "round": 16,
+     "date": "04/07/2026",
+     "time": "19:00",
+     "home": "Londrina-PR",
+     "away": "CRB-AL",
+     "played": true,
+     "score": [
+      5,
+      0
+     ]
+    },
+    {
+     "upstream": 364558,
+     "round": 16,
+     "date": "04/07/2026",
+     "time": "19:00",
+     "home": "Novorizontino-SP",
+     "away": "Atlético-GO",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 364557,
+     "round": 16,
+     "date": "04/07/2026",
+     "time": "23:00",
+     "home": "Goiás-GO",
+     "away": "Ceará-CE",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364560,
+     "round": 16,
+     "date": "05/07/2026",
+     "time": "23:30",
+     "home": "Náutico-PE",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364553,
+     "round": 16,
+     "date": "06/07/2026",
+     "time": "22:00",
+     "home": "Botafogo-SP",
+     "away": "Avaí-SC",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 364561,
+     "round": 16,
+     "date": "06/07/2026",
+     "time": "22:00",
+     "home": "Vila Nova-GO",
+     "away": "São Bernardo-SP",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364552,
+     "round": 16,
+     "date": "07/07/2026",
+     "time": "23:00",
+     "home": "Athletic-MG",
+     "away": "Operário-PR",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 365729,
+     "round": 17,
+     "date": "08/07/2026",
+     "time": "23:00",
+     "home": "Ponte Preta-SP",
+     "away": "Criciúma-SC",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364567,
+     "round": 17,
+     "date": "10/07/2026",
+     "time": "22:00",
+     "home": "Juventude-RS",
+     "away": "Vila Nova-GO",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364570,
+     "round": 17,
+     "date": "10/07/2026",
+     "time": "23:00",
+     "home": "Sport-PE",
+     "away": "Botafogo-SP",
+     "played": true,
+     "score": [
+      3,
+      3
+     ]
+    },
+    {
+     "upstream": 364568,
+     "round": 17,
+     "date": "12/07/2026",
+     "time": "14:00",
+     "home": "Operário-PR",
+     "away": "Novorizontino-SP",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364564,
+     "round": 17,
+     "date": "12/07/2026",
+     "time": "19:00",
+     "home": "Avaí-SC",
+     "away": "Náutico-PE",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364571,
+     "round": 17,
+     "date": "12/07/2026",
+     "time": "19:00",
+     "home": "São Bernardo-SP",
+     "away": "Cuiabá-MT",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 364563,
+     "round": 17,
+     "date": "12/07/2026",
+     "time": "21:00",
+     "home": "Atlético-GO",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365710,
+     "round": 17,
+     "date": "12/07/2026",
+     "time": "22:00",
+     "home": "CRB-AL",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 364562,
+     "round": 17,
+     "date": "13/07/2026",
+     "time": "22:00",
+     "home": "América-MG",
+     "away": "Londrina-PR",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364566,
+     "round": 17,
+     "date": "13/07/2026",
+     "time": "23:30",
+     "home": "Ceará-CE",
+     "away": "Athletic-MG",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 365730,
+     "round": 18,
+     "date": "16/07/2026",
+     "time": "23:00",
+     "home": "CRB-AL",
+     "away": "Náutico-PE",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364572,
+     "round": 18,
+     "date": "17/07/2026",
+     "time": "22:00",
+     "home": "América-MG",
+     "away": "Ceará-CE",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364577,
+     "round": 18,
+     "date": "17/07/2026",
+     "time": "22:00",
+     "home": "Juventude-RS",
+     "away": "Cuiabá-MT",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364581,
+     "round": 18,
+     "date": "17/07/2026",
+     "time": "22:00",
+     "home": "São Bernardo-SP",
+     "away": "Avaí-SC",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364576,
+     "round": 18,
+     "date": "18/07/2026",
+     "time": "00:00",
+     "home": "Fortaleza-CE",
+     "away": "Novorizontino-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364578,
+     "round": 18,
+     "date": "18/07/2026",
+     "time": "00:00",
+     "home": "Londrina-PR",
+     "away": "Botafogo-SP",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364575,
+     "round": 18,
+     "date": "18/07/2026",
+     "time": "19:00",
+     "home": "Criciúma-SC",
+     "away": "Vila Nova-GO",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 365731,
+     "round": 18,
+     "date": "18/07/2026",
+     "time": "19:00",
+     "home": "Ponte Preta-SP",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364580,
+     "round": 18,
+     "date": "18/07/2026",
+     "time": "19:00",
+     "home": "Sport-PE",
+     "away": "Operário-PR",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 364573,
+     "round": 18,
+     "date": "18/07/2026",
+     "time": "21:00",
+     "home": "Atlético-GO",
+     "away": "Athletic-MG",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364583,
+     "round": 19,
+     "date": "21/07/2026",
+     "time": "22:30",
+     "home": "Avaí-SC",
+     "away": "América-MG",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364588,
+     "round": 19,
+     "date": "21/07/2026",
+     "time": "22:30",
+     "home": "Novorizontino-SP",
+     "away": "Criciúma-SC",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364591,
+     "round": 19,
+     "date": "22/07/2026",
+     "time": "00:35",
+     "home": "Vila Nova-GO",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364585,
+     "round": 19,
+     "date": "22/07/2026",
+     "time": "22:30",
+     "home": "Ceará-CE",
+     "away": "CRB-AL",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 365732,
+     "round": 19,
+     "date": "22/07/2026",
+     "time": "22:30",
+     "home": "Operário-PR",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 364587,
+     "round": 19,
+     "date": "22/07/2026",
+     "time": "23:30",
+     "home": "Goiás-GO",
+     "away": "Sport-PE",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364589,
+     "round": 19,
+     "date": "23/07/2026",
+     "time": "00:30",
+     "home": "Náutico-PE",
+     "away": "Londrina-PR",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364582,
+     "round": 19,
+     "date": "23/07/2026",
+     "time": "22:30",
+     "home": "Athletic-MG",
+     "away": "São Bernardo-SP",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364586,
+     "round": 19,
+     "date": "23/07/2026",
+     "time": "23:30",
+     "home": "Cuiabá-MT",
+     "away": "Atlético-GO",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364584,
+     "round": 19,
+     "date": "24/07/2026",
+     "time": "00:30",
+     "home": "Botafogo-SP",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      4,
+      2
+     ]
+    },
+    {
+     "upstream": 364595,
+     "round": 20,
+     "date": "26/07/2026",
+     "time": "19:00",
+     "home": "Criciúma-SC",
+     "away": "Náutico-PE",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364601,
+     "round": 20,
+     "date": "26/07/2026",
+     "time": "19:00",
+     "home": "São Bernardo-SP",
+     "away": "Ceará-CE",
+     "played": true,
+     "score": [
+      3,
+      4
+     ]
+    },
+    {
+     "upstream": 364592,
+     "round": 20,
+     "date": "26/07/2026",
+     "time": "21:30",
+     "home": "América-MG",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364598,
+     "round": 20,
+     "date": "26/07/2026",
+     "time": "21:30",
+     "home": "Londrina-PR",
+     "away": "Novorizontino-SP",
+     "played": true,
+     "score": [
+      1,
+      4
+     ]
+    },
+    {
+     "upstream": 364593,
+     "round": 20,
+     "date": "27/07/2026",
+     "time": "22:30",
+     "home": "Atlético-GO",
+     "away": "Operário-PR",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 364594,
+     "round": 20,
+     "date": "27/07/2026",
+     "time": "22:30",
+     "home": "CRB-AL",
+     "away": "Vila Nova-GO",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364600,
+     "round": 20,
+     "date": "27/07/2026",
+     "time": "22:30",
+     "home": "Sport-PE",
+     "away": "Cuiabá-MT",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364597,
+     "round": 20,
+     "date": "28/07/2026",
+     "time": "22:30",
+     "home": "Juventude-RS",
+     "away": "Avaí-SC",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365733,
+     "round": 20,
+     "date": "28/07/2026",
+     "time": "22:30",
+     "home": "Ponte Preta-SP",
+     "away": "Athletic-MG",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364596,
+     "round": 20,
+     "date": "29/07/2026",
+     "time": "00:35",
+     "home": "Fortaleza-CE",
+     "away": "Botafogo-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364610,
+     "round": 21,
+     "date": "07/08/2026",
+     "time": "22:30",
+     "home": "Operário-PR",
+     "away": "São Bernardo-SP",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 365734,
+     "round": 21,
+     "date": "07/08/2026",
+     "time": "23:30",
+     "home": "Ceará-CE",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364611,
+     "round": 21,
+     "date": "08/08/2026",
+     "time": "19:00",
+     "home": "Vila Nova-GO",
+     "away": "Sport-PE",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364604,
+     "round": 21,
+     "date": "08/08/2026",
+     "time": "21:30",
+     "home": "Botafogo-SP",
+     "away": "América-MG",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364602,
+     "round": 21,
+     "date": "09/08/2026",
+     "time": "14:00",
+     "home": "Athletic-MG",
+     "away": "Criciúma-SC",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364609,
+     "round": 21,
+     "date": "09/08/2026",
+     "time": "19:00",
+     "home": "Náutico-PE",
+     "away": "Atlético-GO",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364608,
+     "round": 21,
+     "date": "09/08/2026",
+     "time": "19:00",
+     "home": "Novorizontino-SP",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364606,
+     "round": 21,
+     "date": "09/08/2026",
+     "time": "21:00",
+     "home": "Cuiabá-MT",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364607,
+     "round": 21,
+     "date": "10/08/2026",
+     "time": "22:30",
+     "home": "Goiás-GO",
+     "away": "Londrina-PR",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364603,
+     "round": 21,
+     "date": "11/08/2026",
+     "time": "22:30",
+     "home": "Avaí-SC",
+     "away": "CRB-AL",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 365735,
+     "round": 22,
+     "date": "14/08/2026",
+     "time": "22:30",
+     "home": "Ponte Preta-SP",
+     "away": "Náutico-PE",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364621,
+     "round": 22,
+     "date": "14/08/2026",
+     "time": "22:30",
+     "home": "São Bernardo-SP",
+     "away": "Botafogo-SP",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364620,
+     "round": 22,
+     "date": "14/08/2026",
+     "time": "23:30",
+     "home": "Sport-PE",
+     "away": "Londrina-PR",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364613,
+     "round": 22,
+     "date": "15/08/2026",
+     "time": "19:00",
+     "home": "Atlético-GO",
+     "away": "Vila Nova-GO",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 364615,
+     "round": 22,
+     "date": "15/08/2026",
+     "time": "19:00",
+     "home": "Ceará-CE",
+     "away": "Cuiabá-MT",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 364616,
+     "round": 22,
+     "date": "15/08/2026",
+     "time": "19:00",
+     "home": "Criciúma-SC",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364617,
+     "round": 22,
+     "date": "15/08/2026",
+     "time": "21:30",
+     "home": "Juventude-RS",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364618,
+     "round": 22,
+     "date": "16/08/2026",
+     "time": "14:00",
+     "home": "Operário-PR",
+     "away": "Avaí-SC",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364612,
+     "round": 22,
+     "date": "16/08/2026",
+     "time": "21:30",
+     "home": "América-MG",
+     "away": "Athletic-MG",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 364614,
+     "round": 22,
+     "date": "16/08/2026",
+     "time": "21:30",
+     "home": "CRB-AL",
+     "away": "Novorizontino-SP",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364629,
+     "round": 23,
+     "date": "18/08/2026",
+     "time": "22:30",
+     "home": "Londrina-PR",
+     "away": "Atlético-GO",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364630,
+     "round": 23,
+     "date": "19/08/2026",
+     "time": "00:30",
+     "home": "Náutico-PE",
+     "away": "Ceará-CE",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364627,
+     "round": 23,
+     "date": "19/08/2026",
+     "time": "00:35",
+     "home": "Goiás-GO",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364623,
+     "round": 23,
+     "date": "19/08/2026",
+     "time": "22:30",
+     "home": "Avaí-SC",
+     "away": "Sport-PE",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364626,
+     "round": 23,
+     "date": "19/08/2026",
+     "time": "22:30",
+     "home": "Fortaleza-CE",
+     "away": "São Bernardo-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364625,
+     "round": 23,
+     "date": "19/08/2026",
+     "time": "23:30",
+     "home": "Cuiabá-MT",
+     "away": "Operário-PR",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365736,
+     "round": 23,
+     "date": "19/08/2026",
+     "time": "23:30",
+     "home": "Vila Nova-GO",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      6,
+      0
+     ]
+    },
+    {
+     "upstream": 364624,
+     "round": 23,
+     "date": "20/08/2026",
+     "time": "00:30",
+     "home": "Botafogo-SP",
+     "away": "Criciúma-SC",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364622,
+     "round": 23,
+     "date": "20/08/2026",
+     "time": "22:30",
+     "home": "Athletic-MG",
+     "away": "CRB-AL",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 364628,
+     "round": 23,
+     "date": "20/08/2026",
+     "time": "23:30",
+     "home": "Novorizontino-SP",
+     "away": "América-MG",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 364634,
+     "round": 24,
+     "date": "22/08/2026",
+     "time": "21:00",
+     "home": "Ceará-CE",
+     "away": "Londrina-PR",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364636,
+     "round": 24,
+     "date": "22/08/2026",
+     "time": "21:30",
+     "home": "Cuiabá-MT",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365737,
+     "round": 24,
+     "date": "23/08/2026",
+     "time": "19:00",
+     "home": "Ponte Preta-SP",
+     "away": "Avaí-SC",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 364641,
+     "round": 24,
+     "date": "23/08/2026",
+     "time": "19:00",
+     "home": "São Bernardo-SP",
+     "away": "Náutico-PE",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364638,
+     "round": 24,
+     "date": "23/08/2026",
+     "time": "21:00",
+     "home": "Operário-PR",
+     "away": "Vila Nova-GO",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364635,
+     "round": 24,
+     "date": "23/08/2026",
+     "time": "21:30",
+     "home": "Criciúma-SC",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 364632,
+     "round": 24,
+     "date": "24/08/2026",
+     "time": "22:30",
+     "home": "Athletic-MG",
+     "away": "Novorizontino-SP",
+     "played": true,
+     "score": [
+      1,
+      4
+     ]
+    },
+    {
+     "upstream": 364640,
+     "round": 24,
+     "date": "24/08/2026",
+     "time": "22:30",
+     "home": "Sport-PE",
+     "away": "América-MG",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 364633,
+     "round": 24,
+     "date": "25/08/2026",
+     "time": "22:30",
+     "home": "Atlético-GO",
+     "away": "Botafogo-SP",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 364637,
+     "round": 24,
+     "date": "25/08/2026",
+     "time": "22:30",
+     "home": "Juventude-RS",
+     "away": "CRB-AL",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364647,
+     "round": 25,
+     "date": "28/08/2026",
+     "time": "22:30",
+     "home": "Goiás-GO",
+     "away": "São Bernardo-SP",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364650,
+     "round": 25,
+     "date": "28/08/2026",
+     "time": "23:30",
+     "home": "Náutico-PE",
+     "away": "Athletic-MG",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364648,
+     "round": 25,
+     "date": "28/08/2026",
+     "time": "23:30",
+     "home": "Novorizontino-SP",
+     "away": "Sport-PE",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364644,
+     "round": 25,
+     "date": "29/08/2026",
+     "time": "21:30",
+     "home": "Botafogo-SP",
+     "away": "Cuiabá-MT",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 365738,
+     "round": 25,
+     "date": "30/08/2026",
+     "time": "19:00",
+     "home": "América-MG",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364643,
+     "round": 25,
+     "date": "30/08/2026",
+     "time": "19:00",
+     "home": "Avaí-SC",
+     "away": "Atlético-GO",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364645,
+     "round": 25,
+     "date": "30/08/2026",
+     "time": "21:00",
+     "home": "CRB-AL",
+     "away": "Criciúma-SC",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364651,
+     "round": 25,
+     "date": "30/08/2026",
+     "time": "21:30",
+     "home": "Vila Nova-GO",
+     "away": "Ceará-CE",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364646,
+     "round": 25,
+     "date": "31/08/2026",
+     "time": "22:30",
+     "home": "Fortaleza-CE",
+     "away": "Operário-PR",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364649,
+     "round": 25,
+     "date": "01/09/2026",
+     "time": "22:30",
+     "home": "Londrina-PR",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364660,
+     "round": 26,
+     "date": "03/09/2026",
+     "time": "23:00",
+     "home": "Náutico-PE",
+     "away": "Botafogo-SP",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364655,
+     "round": 26,
+     "date": "04/09/2026",
+     "time": "22:30",
+     "home": "Criciúma-SC",
+     "away": "Cuiabá-MT",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364652,
+     "round": 26,
+     "date": "04/09/2026",
+     "time": "23:30",
+     "home": "Athletic-MG",
+     "away": "Vila Nova-GO",
+     "played": true,
+     "score": [
+      5,
+      0
+     ]
+    },
+    {
+     "upstream": 364653,
+     "round": 26,
+     "date": "05/09/2026",
+     "time": "00:30",
+     "home": "CRB-AL",
+     "away": "América-MG",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 364656,
+     "round": 26,
+     "date": "05/09/2026",
+     "time": "19:00",
+     "home": "Goiás-GO",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364657,
+     "round": 26,
+     "date": "05/09/2026",
+     "time": "19:00",
+     "home": "Novorizontino-SP",
+     "away": "Avaí-SC",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 364658,
+     "round": 26,
+     "date": "05/09/2026",
+     "time": "21:00",
+     "home": "Juventude-RS",
+     "away": "Atlético-GO",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 364654,
+     "round": 26,
+     "date": "05/09/2026",
+     "time": "21:30",
+     "home": "Ceará-CE",
+     "away": "Sport-PE",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364659,
+     "round": 26,
+     "date": "06/09/2026",
+     "time": "14:00",
+     "home": "Londrina-PR",
+     "away": "Operário-PR",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 365739,
+     "round": 26,
+     "date": "06/09/2026",
+     "time": "21:30",
+     "home": "Ponte Preta-SP",
+     "away": "São Bernardo-SP",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 364666,
+     "round": 27,
+     "date": "08/09/2026",
+     "time": "23:30",
+     "home": "Cuiabá-MT",
+     "away": "Athletic-MG",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 364665,
+     "round": 27,
+     "date": "09/09/2026",
+     "time": "00:00",
+     "home": "Criciúma-SC",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 364664,
+     "round": 27,
+     "date": "09/09/2026",
+     "time": "22:30",
+     "home": "Botafogo-SP",
+     "away": "Novorizontino-SP",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 364667,
+     "round": 27,
+     "date": "09/09/2026",
+     "time": "22:30",
+     "home": "Fortaleza-CE",
+     "away": "Avaí-SC",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364662,
+     "round": 27,
+     "date": "09/09/2026",
+     "time": "23:30",
+     "home": "América-MG",
+     "away": "Náutico-PE",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364668,
+     "round": 27,
+     "date": "09/09/2026",
+     "time": "23:30",
+     "home": "Operário-PR",
+     "away": "CRB-AL",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 364663,
+     "round": 27,
+     "date": "10/09/2026",
+     "time": "00:30",
+     "home": "Atlético-GO",
+     "away": "Ceará-CE",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364671,
+     "round": 27,
+     "date": "10/09/2026",
+     "time": "22:30",
+     "home": "Vila Nova-GO",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364670,
+     "round": 27,
+     "date": "10/09/2026",
+     "time": "23:50",
+     "home": "São Bernardo-SP",
+     "away": "Londrina-PR",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 365740,
+     "round": 27,
+     "date": "11/09/2026",
+     "time": "00:30",
+     "home": "Sport-PE",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364673,
+     "round": 28,
+     "date": "13/09/2026",
+     "time": "19:00",
+     "home": "Atlético-GO",
+     "away": "Criciúma-SC",
+     "played": true,
+     "score": [
+      4,
+      0
+     ]
+    },
+    {
+     "upstream": 364679,
+     "round": 28,
+     "date": "13/09/2026",
+     "time": "21:00",
+     "home": "Juventude-RS",
+     "away": "Athletic-MG",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 364677,
+     "round": 28,
+     "date": "13/09/2026",
+     "time": "21:30",
+     "home": "Fortaleza-CE",
+     "away": "Ceará-CE",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364678,
+     "round": 28,
+     "date": "13/09/2026",
+     "time": "21:30",
+     "home": "Novorizontino-SP",
+     "away": "Cuiabá-MT",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 364672,
+     "round": 28,
+     "date": "14/09/2026",
+     "time": "22:30",
+     "home": "América-MG",
+     "away": "São Bernardo-SP",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 364675,
+     "round": 28,
+     "date": "14/09/2026",
+     "time": "22:30",
+     "home": "Botafogo-SP",
+     "away": "Goiás-GO",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 364674,
+     "round": 28,
+     "date": "15/09/2026",
+     "time": "00:30",
+     "home": "Avaí-SC",
+     "away": "Vila Nova-GO",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365741,
+     "round": 28,
+     "date": "15/09/2026",
+     "time": "22:30",
+     "home": "Londrina-PR",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      6,
+      0
+     ]
+    },
+    {
+     "upstream": 364681,
+     "round": 28,
+     "date": "15/09/2026",
+     "time": "22:30",
+     "home": "Náutico-PE",
+     "away": "Operário-PR",
+     "played": true,
+     "score": [
+      3,
+      3
+     ]
+    },
+    {
+     "upstream": 364676,
+     "round": 28,
+     "date": "16/09/2026",
+     "time": "00:00",
+     "home": "CRB-AL",
+     "away": "Sport-PE",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364691,
+     "round": 29,
+     "date": "18/09/2026",
+     "time": "22:30",
+     "home": "Vila Nova-GO",
+     "away": "América-MG",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364683,
+     "round": 29,
+     "date": "18/09/2026",
+     "time": "23:30",
+     "home": "Ceará-CE",
+     "away": "Novorizontino-SP",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364690,
+     "round": 29,
+     "date": "19/09/2026",
+     "time": "00:00",
+     "home": "São Bernardo-SP",
+     "away": "Atlético-GO",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364689,
+     "round": 29,
+     "date": "19/09/2026",
+     "time": "19:30",
+     "home": "Sport-PE",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364682,
+     "round": 29,
+     "date": "19/09/2026",
+     "time": "21:30",
+     "home": "Athletic-MG",
+     "away": "Botafogo-SP",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365742,
+     "round": 29,
+     "date": "20/09/2026",
+     "time": "14:00",
+     "home": "Ponte Preta-SP",
+     "away": "CRB-AL",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 364686,
+     "round": 29,
+     "date": "20/09/2026",
+     "time": "19:00",
+     "home": "Goiás-GO",
+     "away": "Avaí-SC",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 364687,
+     "round": 29,
+     "date": "20/09/2026",
+     "time": "21:30",
+     "home": "Londrina-PR",
+     "away": "Fortaleza-CE",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 364685,
+     "round": 29,
+     "date": "22/09/2026",
+     "time": "00:30",
+     "home": "Cuiabá-MT",
+     "away": "Náutico-PE",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 364684,
+     "round": 29,
+     "date": "22/09/2026",
+     "time": "22:30",
+     "home": "Criciúma-SC",
+     "away": "Operário-PR",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 364698,
+     "round": 30,
+     "date": "25/09/2026",
+     "time": "22:30",
+     "home": "Novorizontino-SP",
+     "away": "São Bernardo-SP",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 364701,
+     "round": 30,
+     "date": "25/09/2026",
+     "time": "23:30",
+     "home": "Vila Nova-GO",
+     "away": "Londrina-PR",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364699,
+     "round": 30,
+     "date": "26/09/2026",
+     "time": "19:30",
+     "home": "Náutico-PE",
+     "away": "Sport-PE",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 364700,
+     "round": 30,
+     "date": "26/09/2026",
+     "time": "19:30",
+     "home": "Operário-PR",
+     "away": "Ceará-CE",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 364697,
+     "round": 30,
+     "date": "26/09/2026",
+     "time": "21:30",
+     "home": "Goiás-GO",
+     "away": "Atlético-GO",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 364695,
+     "round": 30,
+     "date": "27/09/2026",
+     "time": "14:00",
+     "home": "Criciúma-SC",
+     "away": "Avaí-SC",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 364694,
+     "round": 30,
+     "date": "27/09/2026",
+     "time": "19:00",
+     "home": "CRB-AL",
+     "away": "Cuiabá-MT",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 364696,
+     "round": 30,
+     "date": "27/09/2026",
+     "time": "21:30",
+     "home": "Fortaleza-CE",
+     "away": "Athletic-MG",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 364692,
+     "round": 30,
+     "date": "28/09/2026",
+     "time": "22:30",
+     "home": "América-MG",
+     "away": "Juventude-RS",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 365743,
+     "round": 30,
+     "date": "29/09/2026",
+     "time": "22:30",
+     "home": "Botafogo-SP",
+     "away": "Ponte Preta-SP",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 364702,
+     "round": 31,
+     "date": "01/10/2026",
+     "time": "23:30",
+     "home": "Athletic-MG",
+     "away": "Sport-PE",
+     "played": false,
+     "chances": [
+      45.74,
+      24.89,
+      29.37
+     ]
+    },
+    {
+     "upstream": 364708,
+     "round": 31,
+     "date": "02/10/2026",
+     "time": "00:00",
+     "home": "Novorizontino-SP",
+     "away": "Goiás-GO",
+     "played": false,
+     "chances": [
+      54.35,
+      27.58,
+      18.07
+     ]
+    },
+    {
+     "upstream": 364711,
+     "round": 31,
+     "date": "02/10/2026",
+     "time": "22:30",
+     "home": "São Bernardo-SP",
+     "away": "CRB-AL",
+     "played": false,
+     "chances": [
+      43.91,
+      27.93,
+      28.15
+     ]
+    },
+    {
+     "upstream": 364710,
+     "round": 31,
+     "date": "02/10/2026",
+     "time": "23:30",
+     "home": "Londrina-PR",
+     "away": "Criciúma-SC",
+     "played": false,
+     "chances": [
+      34.87,
+      27.81,
+      37.32
+     ]
+    },
+    {
+     "upstream": 364709,
+     "round": 31,
+     "date": "02/10/2026",
+     "time": "23:45",
+     "home": "Juventude-RS",
+     "away": "Operário-PR",
+     "played": false,
+     "chances": [
+      48.27,
+      27.72,
+      24.01
+     ]
+    },
+    {
+     "upstream": 364707,
+     "round": 31,
+     "date": "03/10/2026",
+     "time": "00:35",
+     "home": "Fortaleza-CE",
+     "away": "Náutico-PE",
+     "played": false,
+     "chances": [
+      53.47,
+      25.18,
+      21.35
+     ]
+    },
+    {
+     "upstream": 364704,
+     "round": 31,
+     "date": "03/10/2026",
+     "time": "14:00",
+     "home": "Avaí-SC",
+     "away": "Ceará-CE",
+     "played": false,
+     "chances": [
+      37.84,
+      28.64,
+      33.51
+     ]
+    },
+    {
+     "upstream": 364703,
+     "round": 31,
+     "date": "03/10/2026",
+     "time": "19:00",
+     "home": "Atlético-GO",
+     "away": "América-MG",
+     "played": false,
+     "chances": [
+      58.21,
+      25.89,
+      15.9
+     ]
+    },
+    {
+     "upstream": 365744,
+     "round": 31,
+     "date": "03/10/2026",
+     "time": "20:00",
+     "home": "Cuiabá-MT",
+     "away": "Ponte Preta-SP",
+     "played": false,
+     "chances": [
+      68.05,
+      22.58,
+      9.367
+     ]
+    },
+    {
+     "upstream": 364705,
+     "round": 31,
+     "date": "03/10/2026",
+     "time": "21:30",
+     "home": "Botafogo-SP",
+     "away": "Vila Nova-GO",
+     "played": false,
+     "chances": [
+      35.56,
+      27.91,
+      36.53
+     ]
+    },
+    {
+     "upstream": 364720,
+     "round": 32,
+     "date": "06/10/2026",
+     "time": "22:30",
+     "home": "Sport-PE",
+     "away": "São Bernardo-SP",
+     "played": false,
+     "chances": [
+      41.15,
+      27.74,
+      31.11
+     ]
+    },
+    {
+     "upstream": 364716,
+     "round": 32,
+     "date": "06/10/2026",
+     "time": "23:30",
+     "home": "Goiás-GO",
+     "away": "Athletic-MG",
+     "played": false,
+     "chances": [
+      44.28,
+      27.33,
+      28.39
+     ]
+    },
+    {
+     "upstream": 365745,
+     "round": 32,
+     "date": "07/10/2026",
+     "time": "00:35",
+     "home": "Ponte Preta-SP",
+     "away": "Juventude-RS",
+     "played": false,
+     "chances": [
+      16.68,
+      25.47,
+      57.86
+     ]
+    },
+    {
+     "upstream": 364713,
+     "round": 32,
+     "date": "07/10/2026",
+     "time": "22:30",
+     "home": "Avaí-SC",
+     "away": "Londrina-PR",
+     "played": false,
+     "chances": [
+      45.05,
+      26.41,
+      28.54
+     ]
+    },
+    {
+     "upstream": 364718,
+     "round": 32,
+     "date": "07/10/2026",
+     "time": "22:30",
+     "home": "Operário-PR",
+     "away": "Botafogo-SP",
+     "played": false,
+     "chances": [
+      52.11,
+      26.07,
+      21.82
+     ]
+    },
+    {
+     "upstream": 364712,
+     "round": 32,
+     "date": "07/10/2026",
+     "time": "23:30",
+     "home": "América-MG",
+     "away": "Fortaleza-CE",
+     "played": false,
+     "chances": [
+      24.78,
+      26.36,
+      48.86
+     ]
+    },
+    {
+     "upstream": 364714,
+     "round": 32,
+     "date": "07/10/2026",
+     "time": "23:30",
+     "home": "CRB-AL",
+     "away": "Atlético-GO",
+     "played": false,
+     "chances": [
+      40.85,
+      28.43,
+      30.73
+     ]
+    },
+    {
+     "upstream": 364721,
+     "round": 32,
+     "date": "07/10/2026",
+     "time": "23:30",
+     "home": "Vila Nova-GO",
+     "away": "Cuiabá-MT",
+     "played": false,
+     "chances": [
+      41.94,
+      29.42,
+      28.64
+     ]
+    },
+    {
+     "upstream": 364715,
+     "round": 32,
+     "date": "08/10/2026",
+     "time": "22:30",
+     "home": "Ceará-CE",
+     "away": "Criciúma-SC",
+     "played": false,
+     "chances": [
+      40.82,
+      29.62,
+      29.56
+     ]
+    },
+    {
+     "upstream": 364717,
+     "round": 32,
+     "date": "08/10/2026",
+     "time": "22:30",
+     "home": "Náutico-PE",
+     "away": "Novorizontino-SP",
+     "played": false,
+     "chances": [
+      33.23,
+      28.34,
+      38.44
+     ]
+    },
+    {
+     "upstream": 364729,
+     "round": 33,
+     "date": "11/10/2026",
+     "time": "19:00",
+     "home": "Juventude-RS",
+     "away": "São Bernardo-SP",
+     "played": false,
+     "chances": [
+      47.02,
+      29.55,
+      23.42
+     ]
+    },
+    {
+     "upstream": 364723,
+     "round": 33,
+     "date": "11/10/2026",
+     "time": "19:10",
+     "home": "Atlético-GO",
+     "away": "Sport-PE",
+     "played": false,
+     "chances": [
+      48.96,
+      27.2,
+      23.84
+     ]
+    },
+    {
+     "upstream": 364730,
+     "round": 33,
+     "date": "11/10/2026",
+     "time": "20:30",
+     "home": "Náutico-PE",
+     "away": "Vila Nova-GO",
+     "played": false,
+     "chances": [
+      43.75,
+      26.78,
+      29.47
+     ]
+    },
+    {
+     "upstream": 364726,
+     "round": 33,
+     "date": "11/10/2026",
+     "time": "21:30",
+     "home": "Cuiabá-MT",
+     "away": "Avaí-SC",
+     "played": false,
+     "chances": [
+      48.85,
+      29.0,
+      22.15
+     ]
+    },
+    {
+     "upstream": 364731,
+     "round": 33,
+     "date": "11/10/2026",
+     "time": "21:30",
+     "home": "Operário-PR",
+     "away": "Goiás-GO",
+     "played": false,
+     "chances": [
+      44.08,
+      28.45,
+      27.47
+     ]
+    },
+    {
+     "upstream": 365746,
+     "round": 33,
+     "date": "12/10/2026",
+     "time": "22:00",
+     "home": "Novorizontino-SP",
+     "away": "Ponte Preta-SP",
+     "played": false,
+     "chances": [
+      76.94,
+      17.39,
+      5.67
+     ]
+    },
+    {
+     "upstream": 364725,
+     "round": 33,
+     "date": "12/10/2026",
+     "time": "22:30",
+     "home": "Criciúma-SC",
+     "away": "América-MG",
+     "played": false,
+     "chances": [
+      57.95,
+      25.59,
+      16.46
+     ]
+    },
+    {
+     "upstream": 364727,
+     "round": 33,
+     "date": "12/10/2026",
+     "time": "23:30",
+     "home": "Fortaleza-CE",
+     "away": "CRB-AL",
+     "played": false,
+     "chances": [
+      52.75,
+      24.96,
+      22.29
+     ]
+    },
+    {
+     "upstream": 364724,
+     "round": 33,
+     "date": "13/10/2026",
+     "time": "00:00",
+     "home": "Botafogo-SP",
+     "away": "Ceará-CE",
+     "played": false,
+     "chances": [
+      34.68,
+      28.65,
+      36.67
+     ]
+    },
+    {
+     "upstream": 364722,
+     "round": 33,
+     "date": "13/10/2026",
+     "time": "22:30",
+     "home": "Athletic-MG",
+     "away": "Londrina-PR",
+     "played": false,
+     "chances": [
+      49.97,
+      24.26,
+      25.76
+     ]
+    },
+    {
+     "upstream": 365747,
+     "round": 34,
+     "date": "16/10/2026",
+     "time": "22:30",
+     "home": "Ponte Preta-SP",
+     "away": "Atlético-GO",
+     "played": false,
+     "chances": [
+      17.43,
+      26.63,
+      55.94
+     ]
+    },
+    {
+     "upstream": 364739,
+     "round": 34,
+     "date": "16/10/2026",
+     "time": "23:30",
+     "home": "Sport-PE",
+     "away": "Fortaleza-CE",
+     "played": false,
+     "chances": [
+      34.37,
+      26.38,
+      39.25
+     ]
+    },
+    {
+     "upstream": 364737,
+     "round": 34,
+     "date": "17/10/2026",
+     "time": "18:00",
+     "home": "Londrina-PR",
+     "away": "Cuiabá-MT",
+     "played": false,
+     "chances": [
+      36.25,
+      28.55,
+      35.2
+     ]
+    },
+    {
+     "upstream": 364735,
+     "round": 34,
+     "date": "17/10/2026",
+     "time": "19:30",
+     "home": "Ceará-CE",
+     "away": "Juventude-RS",
+     "played": false,
+     "chances": [
+      39.05,
+      29.52,
+      31.44
+     ]
+    },
+    {
+     "upstream": 364732,
+     "round": 34,
+     "date": "17/10/2026",
+     "time": "21:30",
+     "home": "América-MG",
+     "away": "Operário-PR",
+     "played": false,
+     "chances": [
+      31.84,
+      27.48,
+      40.68
+     ]
+    },
+    {
+     "upstream": 364733,
+     "round": 34,
+     "date": "18/10/2026",
+     "time": "19:00",
+     "home": "Avaí-SC",
+     "away": "Athletic-MG",
+     "played": false,
+     "chances": [
+      40.01,
+      26.71,
+      33.28
+     ]
+    },
+    {
+     "upstream": 364734,
+     "round": 34,
+     "date": "18/10/2026",
+     "time": "19:00",
+     "home": "CRB-AL",
+     "away": "Botafogo-SP",
+     "played": false,
+     "chances": [
+      52.73,
+      25.25,
+      22.01
+     ]
+    },
+    {
+     "upstream": 364740,
+     "round": 34,
+     "date": "18/10/2026",
+     "time": "19:00",
+     "home": "São Bernardo-SP",
+     "away": "Criciúma-SC",
+     "played": false,
+     "chances": [
+      40.53,
+      30.75,
+      28.72
+     ]
+    },
+    {
+     "upstream": 364741,
+     "round": 34,
+     "date": "18/10/2026",
+     "time": "21:00",
+     "home": "Vila Nova-GO",
+     "away": "Novorizontino-SP",
+     "played": false,
+     "chances": [
+      33.48,
+      28.6,
+      37.92
+     ]
+    },
+    {
+     "upstream": 364736,
+     "round": 34,
+     "date": "19/10/2026",
+     "time": "22:30",
+     "home": "Goiás-GO",
+     "away": "Náutico-PE",
+     "played": false,
+     "chances": [
+      43.39,
+      28.35,
+      28.25
+     ]
+    },
+    {
+     "upstream": 364742,
+     "round": 35,
+     "date": "24/10/2026",
+     "time": "18:00",
+     "home": "América-MG",
+     "away": "Cuiabá-MT",
+     "played": false,
+     "chances": [
+      30.16,
+      29.77,
+      40.07
+     ]
+    },
+    {
+     "upstream": 364743,
+     "round": 35,
+     "date": "24/10/2026",
+     "time": "18:00",
+     "home": "Atlético-GO",
+     "away": "Novorizontino-SP",
+     "played": false,
+     "chances": [
+      35.83,
+      31.11,
+      33.05
+     ]
+    },
+    {
+     "upstream": 364744,
+     "round": 35,
+     "date": "24/10/2026",
+     "time": "18:00",
+     "home": "Avaí-SC",
+     "away": "Botafogo-SP",
+     "played": false,
+     "chances": [
+      46.42,
+      27.61,
+      25.97
+     ]
+    },
+    {
+     "upstream": 364746,
+     "round": 35,
+     "date": "24/10/2026",
+     "time": "18:00",
+     "home": "Ceará-CE",
+     "away": "Goiás-GO",
+     "played": false,
+     "chances": [
+      44.11,
+      29.19,
+      26.7
+     ]
+    },
+    {
+     "upstream": 364745,
+     "round": 35,
+     "date": "24/10/2026",
+     "time": "18:00",
+     "home": "CRB-AL",
+     "away": "Londrina-PR",
+     "played": false,
+     "chances": [
+      51.3,
+      24.38,
+      24.32
+     ]
+    },
+    {
+     "upstream": 364747,
+     "round": 35,
+     "date": "24/10/2026",
+     "time": "18:00",
+     "home": "Juventude-RS",
+     "away": "Náutico-PE",
+     "played": false,
+     "chances": [
+      49.03,
+      27.31,
+      23.66
+     ]
+    },
+    {
+     "upstream": 364748,
+     "round": 35,
+     "date": "24/10/2026",
+     "time": "18:00",
+     "home": "Operário-PR",
+     "away": "Athletic-MG",
+     "played": false,
+     "chances": [
+      45.59,
+      25.82,
+      28.59
+     ]
+    },
+    {
+     "upstream": 365748,
+     "round": 35,
+     "date": "24/10/2026",
+     "time": "18:00",
+     "home": "Ponte Preta-SP",
+     "away": "Fortaleza-CE",
+     "played": false,
+     "chances": [
+      14.79,
+      22.97,
+      62.24
+     ]
+    },
+    {
+     "upstream": 364751,
+     "round": 35,
+     "date": "24/10/2026",
+     "time": "18:00",
+     "home": "São Bernardo-SP",
+     "away": "Vila Nova-GO",
+     "played": false,
+     "chances": [
+      44.16,
+      28.61,
+      27.23
+     ]
+    },
+    {
+     "upstream": 364750,
+     "round": 35,
+     "date": "24/10/2026",
+     "time": "18:00",
+     "home": "Sport-PE",
+     "away": "Criciúma-SC",
+     "played": false,
+     "chances": [
+      39.12,
+      27.8,
+      33.08
+     ]
+    },
+    {
+     "upstream": 364752,
+     "round": 36,
+     "date": "31/10/2026",
+     "time": "18:00",
+     "home": "Athletic-MG",
+     "away": "Ceará-CE",
+     "played": false,
+     "chances": [
+      42.73,
+      26.63,
+      30.64
+     ]
+    },
+    {
+     "upstream": 364753,
+     "round": 36,
+     "date": "31/10/2026",
+     "time": "18:00",
+     "home": "Botafogo-SP",
+     "away": "Sport-PE",
+     "played": false,
+     "chances": [
+      37.66,
+      26.93,
+      35.41
+     ]
+    },
+    {
+     "upstream": 365749,
+     "round": 36,
+     "date": "31/10/2026",
+     "time": "18:00",
+     "home": "Criciúma-SC",
+     "away": "Ponte Preta-SP",
+     "played": false,
+     "chances": [
+      70.03,
+      21.12,
+      8.846
+     ]
+    },
+    {
+     "upstream": 364755,
+     "round": 36,
+     "date": "31/10/2026",
+     "time": "18:00",
+     "home": "Cuiabá-MT",
+     "away": "São Bernardo-SP",
+     "played": false,
+     "chances": [
+      42.59,
+      31.39,
+      26.01
+     ]
+    },
+    {
+     "upstream": 364756,
+     "round": 36,
+     "date": "31/10/2026",
+     "time": "18:00",
+     "home": "Fortaleza-CE",
+     "away": "Atlético-GO",
+     "played": false,
+     "chances": [
+      48.85,
+      28.15,
+      23.0
+     ]
+    },
+    {
+     "upstream": 364757,
+     "round": 36,
+     "date": "31/10/2026",
+     "time": "18:00",
+     "home": "Goiás-GO",
+     "away": "CRB-AL",
+     "played": false,
+     "chances": [
+      42.7,
+      27.94,
+      29.35
+     ]
+    },
+    {
+     "upstream": 364759,
+     "round": 36,
+     "date": "31/10/2026",
+     "time": "18:00",
+     "home": "Londrina-PR",
+     "away": "América-MG",
+     "played": false,
+     "chances": [
+      49.6,
+      25.41,
+      24.99
+     ]
+    },
+    {
+     "upstream": 364760,
+     "round": 36,
+     "date": "31/10/2026",
+     "time": "18:00",
+     "home": "Náutico-PE",
+     "away": "Avaí-SC",
+     "played": false,
+     "chances": [
+      48.41,
+      26.57,
+      25.02
+     ]
+    },
+    {
+     "upstream": 364758,
+     "round": 36,
+     "date": "31/10/2026",
+     "time": "18:00",
+     "home": "Novorizontino-SP",
+     "away": "Operário-PR",
+     "played": false,
+     "chances": [
+      54.33,
+      26.26,
+      19.42
+     ]
+    },
+    {
+     "upstream": 364761,
+     "round": 36,
+     "date": "31/10/2026",
+     "time": "18:00",
+     "home": "Vila Nova-GO",
+     "away": "Juventude-RS",
+     "played": false,
+     "chances": [
+      38.75,
+      28.7,
+      32.55
+     ]
+    },
+    {
+     "upstream": 364762,
+     "round": 37,
+     "date": "07/11/2026",
+     "time": "18:00",
+     "home": "Athletic-MG",
+     "away": "Atlético-GO",
+     "played": false,
+     "chances": [
+      39.6,
+      28.02,
+      32.39
+     ]
+    },
+    {
+     "upstream": 364763,
+     "round": 37,
+     "date": "07/11/2026",
+     "time": "18:00",
+     "home": "Avaí-SC",
+     "away": "São Bernardo-SP",
+     "played": false,
+     "chances": [
+      37.28,
+      29.64,
+      33.08
+     ]
+    },
+    {
+     "upstream": 364764,
+     "round": 37,
+     "date": "07/11/2026",
+     "time": "18:00",
+     "home": "Botafogo-SP",
+     "away": "Londrina-PR",
+     "played": false,
+     "chances": [
+      41.75,
+      26.74,
+      31.51
+     ]
+    },
+    {
+     "upstream": 364765,
+     "round": 37,
+     "date": "07/11/2026",
+     "time": "18:00",
+     "home": "Ceará-CE",
+     "away": "América-MG",
+     "played": false,
+     "chances": [
+      55.91,
+      25.46,
+      18.63
+     ]
+    },
+    {
+     "upstream": 364766,
+     "round": 37,
+     "date": "07/11/2026",
+     "time": "18:00",
+     "home": "Cuiabá-MT",
+     "away": "Juventude-RS",
+     "played": false,
+     "chances": [
+      38.78,
+      31.45,
+      29.77
+     ]
+    },
+    {
+     "upstream": 365750,
+     "round": 37,
+     "date": "07/11/2026",
+     "time": "18:00",
+     "home": "Goiás-GO",
+     "away": "Ponte Preta-SP",
+     "played": false,
+     "chances": [
+      66.85,
+      22.53,
+      10.63
+     ]
+    },
+    {
+     "upstream": 364769,
+     "round": 37,
+     "date": "07/11/2026",
+     "time": "18:00",
+     "home": "Náutico-PE",
+     "away": "CRB-AL",
+     "played": false,
+     "chances": [
+      43.46,
+      26.19,
+      30.35
+     ]
+    },
+    {
+     "upstream": 364768,
+     "round": 37,
+     "date": "07/11/2026",
+     "time": "18:00",
+     "home": "Novorizontino-SP",
+     "away": "Fortaleza-CE",
+     "played": false,
+     "chances": [
+      46.11,
+      28.05,
+      25.84
+     ]
+    },
+    {
+     "upstream": 364770,
+     "round": 37,
+     "date": "07/11/2026",
+     "time": "18:00",
+     "home": "Operário-PR",
+     "away": "Sport-PE",
+     "played": false,
+     "chances": [
+      46.49,
+      25.83,
+      27.68
+     ]
+    },
+    {
+     "upstream": 364771,
+     "round": 37,
+     "date": "07/11/2026",
+     "time": "18:00",
+     "home": "Vila Nova-GO",
+     "away": "Criciúma-SC",
+     "played": false,
+     "chances": [
+      40.53,
+      28.81,
+      30.66
+     ]
+    },
+    {
+     "upstream": 364772,
+     "round": 38,
+     "date": "14/11/2026",
+     "time": "18:00",
+     "home": "América-MG",
+     "away": "Avaí-SC",
+     "played": false,
+     "chances": [
+      36.45,
+      28.14,
+      35.41
+     ]
+    },
+    {
+     "upstream": 364773,
+     "round": 38,
+     "date": "14/11/2026",
+     "time": "18:00",
+     "home": "Atlético-GO",
+     "away": "Cuiabá-MT",
+     "played": false,
+     "chances": [
+      44.4,
+      31.52,
+      24.08
+     ]
+    },
+    {
+     "upstream": 364774,
+     "round": 38,
+     "date": "14/11/2026",
+     "time": "18:00",
+     "home": "CRB-AL",
+     "away": "Ceará-CE",
+     "played": false,
+     "chances": [
+      44.02,
+      26.94,
+      29.05
+     ]
+    },
+    {
+     "upstream": 364775,
+     "round": 38,
+     "date": "14/11/2026",
+     "time": "18:00",
+     "home": "Criciúma-SC",
+     "away": "Novorizontino-SP",
+     "played": false,
+     "chances": [
+      35.62,
+      30.57,
+      33.81
+     ]
+    },
+    {
+     "upstream": 364776,
+     "round": 38,
+     "date": "14/11/2026",
+     "time": "18:00",
+     "home": "Fortaleza-CE",
+     "away": "Vila Nova-GO",
+     "played": false,
+     "chances": [
+      53.03,
+      25.46,
+      21.51
+     ]
+    },
+    {
+     "upstream": 364777,
+     "round": 38,
+     "date": "14/11/2026",
+     "time": "18:00",
+     "home": "Juventude-RS",
+     "away": "Botafogo-SP",
+     "played": false,
+     "chances": [
+      56.37,
+      26.13,
+      17.5
+     ]
+    },
+    {
+     "upstream": 364778,
+     "round": 38,
+     "date": "14/11/2026",
+     "time": "18:00",
+     "home": "Londrina-PR",
+     "away": "Náutico-PE",
+     "played": false,
+     "chances": [
+      38.61,
+      26.16,
+      35.23
+     ]
+    },
+    {
+     "upstream": 365751,
+     "round": 38,
+     "date": "14/11/2026",
+     "time": "18:00",
+     "home": "Ponte Preta-SP",
+     "away": "Operário-PR",
+     "played": false,
+     "chances": [
+      20.34,
+      25.52,
+      54.15
+     ]
+    },
+    {
+     "upstream": 364781,
+     "round": 38,
+     "date": "14/11/2026",
+     "time": "18:00",
+     "home": "São Bernardo-SP",
+     "away": "Athletic-MG",
+     "played": false,
+     "chances": [
+      45.5,
+      27.29,
+      27.21
+     ]
+    },
+    {
+     "upstream": 364780,
+     "round": 38,
+     "date": "14/11/2026",
+     "time": "18:00",
+     "home": "Sport-PE",
+     "away": "Goiás-GO",
+     "played": false,
+     "chances": [
+      42.37,
+      27.53,
+      30.1
+     ]
+    }
+   ]
+  }
+ ]
+}

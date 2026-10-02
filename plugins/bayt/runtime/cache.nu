@@ -1,0 +1,968 @@
+#!/usr/bin/env nu
+# cache.nu — content-addressable cache for bayt targets.
+#
+# Wrap a cmd with restore-before-run + store-after-success. Cache key
+# comes from fingerprint.nu's compute-fingerprint applied to the same
+# manifest as fingerprint.nu's hash-stamp — single source of truth.
+#
+# Modes (composable; opt-in via flags from gen_taskfile's _cacheWrap):
+#   default         exact-match restore + always run cmd
+#   --full          exact-match restore + skip cmd  (gradle daemon escape hatch)
+#   --similar       on miss, restore closest entry as warm starting state
+#
+# Backend (env-selected, first match wins):
+#   BAYT_CACHE_URL       buchgr/bazel-remote HTTP (start with --disable_http_ac_validation;
+#                        bazel-remote handles S3/GCS/Azure/depot.dev chaining itself)
+#   BAYT_CACHE_REGISTRY  ORAS OCI registry (`oras` CLI required)
+#   (none)               local FS at $BAYT_CACHE_DIR ($XDG_CACHE_HOME/bayt
+#                        on *nix, $LOCALAPPDATA/bayt on Windows, or
+#                        ~/.cache/bayt fallback)
+#
+# Other env knobs:
+#   BAYT_CACHE_TOKEN     auth bearer for bazel-remote
+#   BAYT_CACHE_ENABLED   "false" bypasses the wrap entirely
+#   BAYT_CACHE_MAX_SIZE  local-FS GC budget in bytes (default 10GB)
+#   BAYT_CACHE_NO_GC     "true" skips gc at end of generate-bayt
+#   BAYT_CACHE_DEBUG     path; appends one JSON record per invocation
+#                        with the cache decision (for tests + debugging)
+#   BAYT_CACHE_BRANCH    used by --similar's metadata scoring
+#
+# The contract, and how this per-target cache composes with a tool's own
+# per-task cache: SPEC.md#the-cache.
+
+use ./fingerprint.nu [manifest-fingerprint, manifest-root, outs-present, resolve-manifest, write-stamp]
+use ./tools.nu [run-curl, run-oras]
+
+# ============================================================================
+# Similarity scoring (used by every backend's lookup path)
+# ============================================================================
+#
+# Each cache entry carries three records, one per concern:
+#   metadata.json      — {user, branch, ts} scoring metadata (PUT time;
+#                        user from $env.USER, branch from
+#                        $env.BAYT_CACHE_BRANCH, ts current timestamp)
+#   srcs.manifest.json — [{path, hash}] the inputs fingerprint.nu saw
+#                        (hash flavor is mode-dependent: git blob hash
+#                        or raw sha256) — feeds --similar scoring
+#   outs.manifest.json — [{path, size, sha256}] the payload contract,
+#                        verified before any restore
+# Entries missing either manifest are quarantined on hit — the schema
+# has no legacy mode.
+#
+# Lookup ranks candidates by weighted intersection. Weights are fixed
+# constants — promoting them to a per-project DSL is cheap if real
+# usage shows projects want different trade-offs.
+const WEIGHT_FILE   = 1.0
+const WEIGHT_BRANCH = 30.0
+const WEIGHT_USER   = 50.0
+const WEIGHT_DAY    = 5.0
+
+def current-meta [project: string, target: string]: nothing -> record {
+	{
+		project: $project,
+		target: $target,
+		user: ($env.USER? | default ""),
+		branch: ($env.BAYT_CACHE_BRANCH? | default ""),
+		ts: (date now | format date "%+"),
+	}
+}
+
+# Score one candidate against the current state. Higher = better
+# starting point. Returns 0 for entries with zero overlap (no shared
+# files, no shared user/branch, different day) — caller filters those
+# out.
+def similarity-score [current: record, entry_meta: record, entry_inputs: record]: nothing -> float {
+	let file_score = (
+		$current.inputs | columns | reduce --fold 0.0 { |path, acc|
+			let cur = ($current.inputs | get $path)
+			let other = ($entry_inputs | get -o $path)
+			if $other == $cur { $acc + $WEIGHT_FILE } else { $acc }
+		}
+	)
+	let user_score   = if ($current.user   != "") and ($entry_meta.user?   == $current.user)   { $WEIGHT_USER   } else { 0.0 }
+	let branch_score = if ($current.branch != "") and ($entry_meta.branch? == $current.branch) { $WEIGHT_BRANCH } else { 0.0 }
+	let day_score    = if ($current.ts | str substring 0..10) == (($entry_meta.ts? | default "") | str substring 0..10) { $WEIGHT_DAY } else { 0.0 }
+	$file_score + $user_score + $branch_score + $day_score
+}
+
+# ============================================================================
+# Backend selection
+# ============================================================================
+
+def backend []: nothing -> string {
+	if (($env.BAYT_CACHE_URL?      | default "") | is-not-empty) { return "bazel" }
+	if (($env.BAYT_CACHE_REGISTRY? | default "") | is-not-empty) { return "oras"  }
+	"local"
+}
+
+def cache-enabled []: nothing -> bool {
+	($env.BAYT_CACHE_ENABLED? | default "true") != "false"
+}
+
+# Append one JSON record per cache.nu invocation to BAYT_CACHE_DEBUG
+# (if set). Used by tests and "why didn't this hit?" investigations
+# to inspect the actual cache decision rather than guess from timing.
+# Best-effort: a write failure would only lose telemetry, never block
+# the build, so any error is silently dropped.
+def debug-log [record: record] {
+	let path = ($env.BAYT_CACHE_DEBUG? | default "")
+	if ($path | is-empty) { return }
+	try {
+		mkdir ($path | path dirname)
+		$"($record | to json --raw)\n" | save --append $path
+	} catch { }
+}
+
+# Expand a list of glob patterns to a flat list of matched files.
+# Used by every backend's put path. Empty patterns / no-matches yield
+# []; malformed glob errors are swallowed (a rare case, not worth
+# erroring the build over). Caller resolves files relative to cwd.
+#
+# `--no-dir` filters real directories but NOT symlinks-to-directories;
+# Nuxt-style build trees can include those. The `path type == "file"`
+# filter catches both — a file or a symlink-to-file.
+# nu's glob parses `\` as an escape, so a native base path is not a usable
+# pattern prefix.
+def glob-pat [base: path, pat: string]: nothing -> string {
+	($base | path join $pat) | str replace -a '\' '/'
+}
+
+# Excludes are project-relative, but nu's `glob --exclude` matches relative to
+# the pattern's literal prefix (`build/` in `build/**/*`). Each is rebased onto
+# that prefix; one rooted elsewhere cannot match under it and is dropped, and a
+# wildcard-led one stands as written.
+def rebase-excludes [g: string, excludes: list<string>]: nothing -> list<string> {
+	let lit = ($g | split row "/" | take while { |s| not ($s =~ '[*?\[{]') })
+	let prefix = ($lit | each { |s| $s + "/" } | str join)
+	$excludes | each { |e|
+		if ($prefix | is-empty) or ($e =~ '^[*?\[{]') { $e } else if ($e | str starts-with $prefix) { $e | str substring ($prefix | str length).. } else { null }
+	} | compact
+}
+
+def expand-globs [globs: list<string>, excludes: list<string>]: nothing -> list<string> {
+	$globs
+	| each { |g| try { glob $g --no-dir --exclude (rebase-excludes $g $excludes) } catch { [] } }
+	| flatten
+	| where { |p| ($p | path type) == "file" }
+}
+
+# ============================================================================
+# Local-FS backend
+# ============================================================================
+
+def local-root []: nothing -> path {
+	# Resolution order:
+	#   1. $BAYT_CACHE_DIR if set (explicit override)
+	#   2. $XDG_CACHE_HOME/bayt if set (XDG-compliant *nix default)
+	#   3. $LOCALAPPDATA/bayt if set (Windows-idiomatic; undefined on
+	#      *nix and inside Linux containers, so the rung short-circuits
+	#      there and resolution falls through to the XDG fallback)
+	#   4. ~/.cache/bayt (XDG fallback — also the in-container default
+	#      since BuildKit's bayt-cache mount lands at /root/.cache/bayt)
+	let explicit = ($env.BAYT_CACHE_DIR? | default "")
+	if ($explicit | is-not-empty) { return $explicit }
+	let xdg = ($env.XDG_CACHE_HOME? | default "")
+	if ($xdg | is-not-empty) { return ($xdg | path join "bayt") }
+	let lad = ($env.LOCALAPPDATA? | default "")
+	if ($lad | is-not-empty) { return ($lad | path join "bayt") }
+	# Use $env.HOME (not $nu.home-dir) for stability across nu versions.
+	# Windows path is handled by $LOCALAPPDATA above.
+	$env.HOME | path join ".cache" "bayt"
+}
+
+# Local entry path, sharded by first 2 hash chars.
+def local-entry [key: string]: nothing -> path {
+	(local-root) | path join ($key | str substring 0..2) | path join $key
+}
+
+# Manifest keys are data, not paths: one spelling so an entry reads the same
+# wherever it was written. Keys only — filesystem work stays native, since
+# `path join` and `path dirname` parse separators rather than hand them to
+# the OS.
+def manifest-key [rel: string]: nothing -> string {
+	$rel | str replace -a '\' '/'
+}
+
+# Copy every file under <outs_dir>/** into the corresponding cwd path,
+# creating parent dirs as needed. Missing <outs_dir> is a valid hit —
+# that is what an empty outs list stores. Used by the local-FS restore
+# paths (exact and warm). False means the workspace was left without a
+# partial restore in it; the caller treats that as a miss.
+def restore-outs-from [outs_dir: path]: nothing -> bool {
+	if not ($outs_dir | path exists) { return true }
+	let cwd = (pwd)
+	# Canonicalize so symlink-resolved glob results stay relative to base.
+	let base = ($outs_dir | path expand)
+	# Same `path type == "file"` filter as expand-globs — `--no-dir`
+	# alone misses symlinks-to-directories.
+	let srcs = (glob (glob-pat $base "**/*") --no-dir | where { |p| ($p | path type) == "file" })
+	try {
+		for src in $srcs {
+			let dst = ($cwd | path join ($src | path relative-to $base))
+			mkdir ($dst | path dirname)
+			cp $src $dst
+		}
+		true
+	} catch { |e|
+		# Same recovery as bazel-get's publish loop, for the same reason.
+		for src in $srcs { rm -rf ($cwd | path join ($src | path relative-to $base)) }
+		print -e $"BAYT_CACHE warn: restore aborted mid-copy, outs cleared: ($e.msg)"
+		false
+	}
+}
+
+# Verify an entry against its outs.manifest.json: every recorded file
+# present with matching size; BAYT_CACHE_VERIFY=full re-hashes content
+# (one read pass — bitrot check). Both manifests are required — a
+# failing or pre-schema entry degrades to a miss, never an error: the
+# caller quarantines and reruns the cmd.
+def local-verify [entry: path]: nothing -> bool {
+	let mpath = ($entry | path join "outs.manifest.json")
+	if not ($mpath | path exists) { return false }
+	if not (($entry | path join "srcs.manifest.json") | path exists) { return false }
+	let base = ($entry | path join "outs")
+	let full = (($env.BAYT_CACHE_VERIFY? | default "") == "full")
+	for r in (open $mpath) {
+		let f = ($base | path join $r.path)
+		if ($f | path type) != "file" { return false }
+		if ((ls $f | first | get size | into int) != $r.size) { return false }
+		if $full and ((open --raw $f | hash sha256) != $r.sha256) { return false }
+	}
+	true
+}
+
+# Restore from a local entry. Returns true on hit (restored) or false
+# on entry-missing/corrupt (corrupt entries are quarantined so the
+# next run doesn't re-trip). Errors during the copy itself bubble up
+# to the caller's try/catch as warnings (broken cache shouldn't block
+# the build).
+def local-get [key: string]: nothing -> bool {
+	let entry = (local-entry $key)
+	if not ($entry | path exists) { return false }
+	if not (local-verify $entry) {
+		print -e $"BAYT_CACHE warn: corrupt entry quarantined: ($entry | path basename)"
+		rm -rf $entry
+		return false
+	}
+	restore-outs-from ($entry | path join "outs")
+}
+
+# Store an entry locally. Atomic via tempdir + rename. Skip on
+# already-published (winner-takes-all race semantics).
+def local-put [key: string, e: record] {
+	let entry = (local-entry $key)
+	if ($entry | path exists) { return }
+
+	let tmp_root = ((local-root) | path join "_tmp")
+	mkdir $tmp_root
+	let tmp = ($tmp_root | path join (random uuid))
+	let outs_tmp = ($tmp | path join "outs")
+	mkdir $outs_tmp
+
+	let cwd = (pwd)
+	# outs.manifest.json — the entry's own contract: {path, size, sha256}
+	# per payload file, verified by local-verify before any restore.
+	# metadata.json records what went IN (inputs, for --similar); this
+	# records what must come OUT.
+	mut rows = []
+	for src in (expand-globs $e.outs $e.outs_exclude) {
+		let rel = ($src | path relative-to $cwd)
+		let dst = ($outs_tmp | path join $rel)
+		mkdir ($dst | path dirname)
+		cp $src $dst
+		$rows = ($rows | append {
+			path:   (manifest-key $rel),
+			size:   (ls $src | first | get size | into int),
+			sha256: (open --raw $src | hash sha256),
+		})
+	}
+	$rows | to json | save -f ($tmp | path join "outs.manifest.json")
+	($e.inputs | transpose path hash) | to json | save -f ($tmp | path join "srcs.manifest.json")
+	cp $e.manifest ($tmp | path join "manifest.json")
+	$e.meta | to json | save -f ($tmp | path join "metadata.json")
+
+	mkdir ($entry | path dirname)
+	# The path-exists check catches the common race; mv inside try
+	# catches the narrow TOCTOU window where another writer publishes
+	# between the check and the rename. On macOS, `mv tmp existing-dir`
+	# would otherwise move tmp INSIDE existing-dir (silent corruption-
+	# by-litter) instead of failing — wrapping in try makes either OS
+	# safe. Loser cleans up its tempdir; winner's entry stands.
+	if ($entry | path exists) {
+		rm -rf $tmp
+	} else {
+		try { mv $tmp $entry } catch { rm -rf $tmp }
+	}
+}
+
+# Walk every local entry, score against `current` meta, return the
+# best match (with scoring details) if its score > 0. Used on
+# exact-key miss to pick a warm starting state — gradle/cargo/etc.
+# validate restored state on every invocation so a "close enough"
+# entry is safe to restore (worst case: tool re-does more work than
+# a perfect match would).
+#
+# Returns: { entry: path, score: float, candidate_count: int,
+#            winner_meta: record } on hit, or null on no candidates.
+def local-similar [current: record]: nothing -> any {
+	let root = (local-root)
+	if not ($root | path exists) { return null }
+	let scored = (
+		glob (glob-pat $root "*/*") --no-symlink --no-file
+		| where { |p| ($p | path basename) != "_tmp" }
+		| each { |entry|
+			let meta_path = ($entry | path join "metadata.json")
+			if not ($meta_path | path exists) { return null }
+			let meta = (try { open $meta_path } catch { return null })
+			# Different (project, target) entries share storage but
+			# never share inputs in any meaningful way.
+			if ($meta.project? | default "") != $current.project { return null }
+			if ($meta.target?  | default "") != $current.target  { return null }
+			let srcs_path = ($entry | path join "srcs.manifest.json")
+			if not ($srcs_path | path exists) { return null }
+			let entry_inputs = (try {
+				open $srcs_path | reduce --fold {} { |r, acc| $acc | insert $r.path $r.hash }
+			} catch { return null })
+			{ entry: $entry, meta: $meta, score: (similarity-score $current $meta $entry_inputs) }
+		}
+		| where { |x| $x != null and $x.score > 0 }
+		| sort-by score --reverse
+	)
+	if ($scored | is-empty) { null } else {
+		let winner = ($scored | first)
+		{
+			entry: $winner.entry,
+			score: $winner.score,
+			candidate_count: ($scored | length),
+			winner_meta: $winner.meta,
+		}
+	}
+}
+
+# ============================================================================
+# buchgr/bazel-remote HTTP cache backend
+#
+# Split storage. Addressing payload by content stores and transfers a file
+# shared by two entries once, the common case since most outs survive a
+# rebuild, and keeps raw bytes where a single-blob entry would need an
+# encoding wrapper.
+#   /cas/<sha256>  one blob per payload file, addressed by its content
+#   /ac/<key>      the entry: JSON [{path, size, sha256, exec}]
+#
+# The entry is not a REAPI ActionResult, so bazel-remote must run with
+# `--disable_http_ac_validation`. The CAS half needs no such flag:
+# bazel-remote validates uploads against the digest in the URL and rejects
+# a mismatch, so a corrupted blob can never be stored under a good name.
+#
+#   bazel-remote --dir <path> --max_size <gb> --disable_http_ac_validation
+#
+# Eviction is bazel-remote's job (--max_size); cache.nu's gc subcommand is
+# local-FS only and won't touch this backend. An entry whose blobs were
+# evicted degrades to a miss.
+# ============================================================================
+
+def bazel-url []: nothing -> string { $env.BAYT_CACHE_URL? | default "" }
+
+def bazel-headers []: nothing -> record {
+	let token = ($env.BAYT_CACHE_TOKEN? | default "")
+	if ($token | is-empty) { {} } else { { Authorization: $"Bearer ($token)" } }
+}
+
+# Entry address. Folds a format tag into the key so a client speaking a
+# different entry format lands on its own slot and misses, rather than
+# fetching a body it cannot parse. Re-hashed to stay 64 hex chars, which is
+# what bazel-remote's URL parsing accepts.
+def bazel-ac-key [key: string]: nothing -> string {
+	$"bayt-ac-v2:($key)" | hash sha256
+}
+
+# Owner's exec bit. Tracked per file rather than the full mode because
+# that is the only bit that changes how a restored artifact behaves —
+# the same choice REAPI's OutputFile.is_executable makes.
+def is-exec [f: path]: nothing -> bool {
+	(ls -l $f | first | get mode | str substring 0..<3 | str contains "x")
+}
+
+# The messages at the leaves of an error tree. par-each wraps a failure
+# in "Eval block failed with pipeline input", which names no cause.
+def error-leaves [d: record]: nothing -> string {
+	let inner = ($d.inner? | default [])
+	if ($inner | is-empty) { $d.msg } else { $inner | each { |i| error-leaves $i } | str join "; " }
+}
+
+# A value in curl's config syntax.
+def curl-quote [v: string]: nothing -> string {
+	$"\"($v | str replace -a '\' '\\' | str replace -a '"' '\"')\""
+}
+
+# One curl run for many transfers, multiplexed over HTTP/2. The config file
+# keeps the token out of argv, and curl does not forward it across a redirect
+# to another host.
+def bazel-curl [flags: list<string>, lines: list<string>]: nothing -> record {
+	let auth = (bazel-headers | transpose name value | each { |h| $"header = (curl-quote $"($h.name): ($h.value)")" })
+	let dir = (mktemp -d)
+	let cfg = ($dir | path join "curl.cfg")
+	$auth ++ $lines | str join "\n" | save -f $cfg
+	let res = (do { run-curl --parallel --parallel-max 64 --silent --show-error ...$flags --config $cfg } | complete)
+	rm -rf $dir
+	$res
+}
+
+def bazel-fetch [stage: string, rows: list<record>]: nothing -> nothing {
+	if ($rows | is-empty) { return }
+	let lines = ($rows | each { |r| [
+		$"url = (curl-quote $"(bazel-url)/cas/($r.sha256)")"
+		$"output = (curl-quote ($stage | path join $r.path))"
+	] } | flatten)
+	let res = (bazel-curl [--fail --location --create-dirs] $lines)
+	if $res.exit_code != 0 { error make { msg: $"cas fetch: ($res.stderr | str trim)" } }
+}
+
+# Uploads the blobs the CAS lacks: a HEAD pass finds them, since a blob left
+# by an earlier build is the common case, then a PUT pass sends them. HEAD
+# redirects stay unfollowed: a server that fronts object storage (depot)
+# answers a present blob with a 303 to a URL presigned for GET only, where a
+# HEAD draws 403. `upload-file` sends Content-Length, which bazel-remote's CAS
+# handler needs to verify the digest.
+def bazel-upload [cwd: string, rows: list<record>]: nothing -> nothing {
+	let blobs = ($rows | uniq-by sha256)
+	if ($blobs | is-empty) { return }
+	let sink = (if $nu.os-info.name == "windows" { "NUL" } else { "/dev/null" })
+	let probe = (bazel-curl [--head --write-out "%{http_code} %{url}\n"] ($blobs | each { |r| [
+		$"url = (curl-quote $"(bazel-url)/cas/($r.sha256)")"
+		$"output = (curl-quote $sink)"
+	] } | flatten))
+	if $probe.exit_code != 0 { error make { msg: $"cas probe: ($probe.stderr | str trim)" } }
+	let present = ($probe.stdout | lines | parse "{code} {url}"
+		| where { |l| ($l.code | into int) >= 200 and ($l.code | into int) < 400 }
+		| each { |l| $l.url | split row "/" | last })
+	let missing = ($blobs | where { |r| $r.sha256 not-in $present })
+	if ($missing | is-empty) { return }
+	let put = (bazel-curl [--fail] (["header = \"Content-Type: application/octet-stream\""] ++ ($missing | each { |r| [
+		$"url = (curl-quote $"(bazel-url)/cas/($r.sha256)")"
+		$"upload-file = (curl-quote ($cwd | path join $r.path))"
+	] } | flatten)))
+	if $put.exit_code != 0 { error make { msg: $"cas upload: ($put.stderr | str trim)" } }
+}
+
+def bazel-get [key: string]: nothing -> bool {
+	let body = try { http get --headers (bazel-headers) --raw $"(bazel-url)/ac/(bazel-ac-key $key)" } catch { return false }
+	if ($body | is-empty) { return false }
+	# `http get --raw` yields a string for a text content-type and binary
+	# otherwise, and depot serves a small entry as text/plain.
+	let rows = try { $body | into binary | decode utf-8 | from json } catch { return false }
+	# nushell describes uniform records as `table<…>` and only the empty
+	# list as `list<any>`; an entry is legitimately either.
+	let shape = ($rows | describe)
+	if not (($shape | str starts-with "table") or ($shape | str starts-with "list")) { return false }
+	# Paths come off the wire and are joined onto cwd, so one escaping the
+	# workspace would write outside it.
+	if ($rows | any { |r| ($r.path? | default "" | is-empty) or ($r.path | str starts-with "/") or ($r.path | str contains "..") }) {
+		return false
+	}
+
+	let cwd = (pwd)
+	# Fetch only what the workspace lacks. A warm worktree after an
+	# unrelated edit differs in a handful of outs, so this is the
+	# difference between refetching a payload and refetching nothing.
+	let missing = ($rows | where { |r|
+		let dst = ($cwd | path join $r.path)
+		if ($dst | path type) != "file" { true } else { (open --raw $dst | hash sha256) != $r.sha256 }
+	})
+
+	# Stage, then publish: nothing enters the workspace until every blob has
+	# arrived.
+	let stage = (mktemp -d)
+	let ok = try {
+		bazel-fetch $stage $missing
+		$missing | par-each { |r|
+			let tmp = ($stage | path join $r.path)
+			# bazel-remote rejects a blob whose stored size disagrees, but it
+			# fronts S3/GCS and proxies to other caches, and a short read from
+			# the chain behind it arrives as a valid response.
+			if ((ls $tmp | first | get size | into int) != $r.size) {
+				error make { msg: $"cas blob ($r.sha256) for ($r.path): size mismatch" }
+			}
+			if (($env.BAYT_CACHE_VERIFY? | default "") == "full") and ((open --raw $tmp | hash sha256) != $r.sha256) {
+				error make { msg: $"cas blob ($r.sha256) for ($r.path): content mismatch" }
+			}
+		} | ignore
+		true
+	} catch { |e|
+		print -e $"BAYT_CACHE warn: restore aborted, workspace untouched: (error-leaves $e.details)"
+		false
+	}
+	if not $ok { rm -rf $stage; return false }
+
+	# A landed `mv` cannot be undone, so recovery clears every declared out
+	# rather than reconciling a partial mix. It assumes the cmd regenerates
+	# an out that is absent — true of gradle, go and turbo; a tool that
+	# trusts its own incremental state without checking output presence
+	# would leave the hole, and the store that follows would publish it.
+	let published = try {
+		for r in $missing {
+			let dst = ($cwd | path join $r.path)
+			mkdir ($dst | path dirname)
+			# POSIX `mv file dir` lands the file inside the directory and
+			# raises nothing.
+			if ($dst | path exists) and (($dst | path type) != "file") { rm -rf $dst }
+			mv --force ($stage | path join $r.path) $dst
+		}
+		true
+	} catch { |e|
+		for r in $rows { rm -rf ($cwd | path join $r.path) }
+		print -e $"BAYT_CACHE warn: restore aborted mid-publish, outs cleared: ($e.msg)"
+		false
+	}
+	rm -rf $stage
+	if not $published { return false }
+
+	# Mode is not covered by the content digest, so a file skipped by the
+	# digest check can carry a stale bit in either direction — and `save`
+	# truncates in place, leaving a fetched file the mode it already had.
+	if $nu.os-info.name != "windows" {
+		for r in $rows {
+			let p = ($cwd | path join $r.path)
+			if ($r.exec? | default false) { ^chmod +x $p } else { ^chmod -x $p }
+		}
+	}
+	true
+}
+
+def bazel-put [key: string, outs_globs: list<string>, outs_exclude: list<string>, _manifest: string] {
+	let cwd = (pwd)
+	let files = (expand-globs $outs_globs $outs_exclude)
+	# An empty outs list is a real entry, not a skip: it records "this ran
+	# on these inputs", which is what --full consults.
+	let rows = ($files | par-each { |f|
+		{
+			path:   (manifest-key ($f | path relative-to $cwd)),
+			size:   (ls $f | first | get size | into int),
+			sha256: (open --raw $f | hash sha256),
+			exec:   (is-exec $f),
+		}
+	})
+	# Every blob before the entry, never the reverse: the entry is what
+	# makes the payload reachable, so publishing it first would expose a
+	# key whose blobs a concurrent reader cannot fetch.
+	bazel-upload $cwd $rows
+	(http put --headers (bazel-headers) --content-type "application/json"
+		$"(bazel-url)/ac/(bazel-ac-key $key)" ($rows | to json --raw))
+}
+
+# ============================================================================
+# ORAS OCI registry backend
+#
+# Each entry pushed as an OCI artifact tagged <project>-<target>-<hash[0:16]>.
+# Including project + target in the tag means a shared registry across
+# many projects keeps entries human-browsable (the OCI tag list shows
+# what's cached for what); the truncated content hash disambiguates
+# different inputs to the same target. ORAS handles transport, manifest
+# creation, content addressing on its own; we just shell out. Registry's
+# GC policy (e.g. GCR's untagged-image cleanup) handles eviction.
+# ============================================================================
+
+def oras-ref [project: string, target: string, key: string]: nothing -> string {
+	let short = ($key | str substring 0..16)
+	# OCI tag charset: [a-zA-Z0-9._-], max 128. project + target both
+	# already pass this constraint by bayt's own naming rules
+	# (slash→underscore on dirs, alphanum verbs).
+	$"($env.BAYT_CACHE_REGISTRY?):($project)-($target)-($short)"
+}
+
+def oras-get [project: string, target: string, key: string]: nothing -> bool {
+	if (which oras | is-empty) {
+		error make { msg: "cache.nu: BAYT_CACHE_REGISTRY set but `oras` CLI not on PATH" }
+	}
+	let ref = (oras-ref $project $target $key)
+	let exists = (do { run-oras manifest fetch $ref } | complete)
+	if $exists.exit_code != 0 { return false }
+	run-oras pull $ref --output .
+	true
+}
+
+def oras-put [project: string, target: string, key: string, outs_globs: list<string>, outs_exclude: list<string>, _manifest: string] {
+	if (which oras | is-empty) {
+		error make { msg: "cache.nu: BAYT_CACHE_REGISTRY set but `oras` CLI not on PATH" }
+	}
+	let cwd = (pwd)
+	let files = (expand-globs $outs_globs $outs_exclude | each { |f| $f | path relative-to $cwd })
+	if ($files | is-empty) { return }
+	run-oras push (oras-ref $project $target $key) ...$files
+}
+
+# ============================================================================
+# Backend dispatch
+# ============================================================================
+
+# Backend dispatch.
+#
+# project + target are passed for ORAS tag construction and local-FS
+# similarity scoping. Only local-FS persists `e.meta` (metadata.json
+# beside the entry); bazel-remote and ORAS receive the entry record but
+# store nothing from it, which is why only local-FS can answer
+# backend-similar.
+def backend-get [project: string, target: string, key: string]: nothing -> bool {
+	match (backend) {
+		"bazel" => (bazel-get $key)
+		"oras"  => (oras-get  $project $target $key)
+		_       => (local-get $key)
+	}
+}
+
+def backend-put [project: string, target: string, key: string, e: record] {
+	match (backend) {
+		"bazel" => { bazel-put $key $e.outs $e.outs_exclude $e.manifest }
+		"oras"  => { oras-put  $project $target $key $e.outs $e.outs_exclude $e.manifest }
+		_       => { local-put $key $e }
+	}
+}
+
+# Find a "similar enough" cached entry to use as a warm starting
+# state. Backend-specific:
+#   * local-FS: walk all entries, score by weighted similarity
+#   * bazel-remote: pointer-based candidate enumeration (phase 2)
+#   * ORAS: tag-listing-based enumeration (phase 3)
+# Returns a record { entry, score, candidate_count, winner_meta } on
+# hit, or null on no match. The structured shape supports debug
+# tracing (BAYT_CACHE_DEBUG) without re-walking the cache.
+def backend-similar [current: record]: nothing -> any {
+	match (backend) {
+		"local" => (local-similar $current)
+		_ => null   # phase 2/3 will fill in
+	}
+}
+
+# Restore an entry's outs into the workspace from a backend-specific
+# handle (a path for local-FS, a key for bazel/oras).
+def backend-restore-from [handle: any] {
+	match (backend) {
+		"local" => {
+			if (local-verify $handle) {
+				restore-outs-from ($handle | path join "outs")
+			} else {
+				print -e $"BAYT_CACHE warn: corrupt entry quarantined: ($handle | path basename)"
+				rm -rf $handle
+			}
+		}
+		_ => { }   # phase 2/3
+	}
+}
+
+# ============================================================================
+# Run the wrapped cmd
+# ============================================================================
+
+# Run an external cmd, streaming its stdout/stderr live (no buffering),
+# returning its exit code without blowing up the cache.nu process on
+# non-zero exit.
+#
+# Three nushell quirks make this fiddly:
+#   1. `do --ignore-errors { ^cmd }` zeros LAST_EXIT_CODE (treats the
+#      ignored error as success), so we can't use it.
+#   2. `^cmd | complete` captures stdout/stderr into a buffer — defeats
+#      live progress for long-running cmds like gradle, so we can't
+#      use it either.
+#   3. `try { ^cmd } catch { }` keeps streaming AND preserves a non-zero
+#      LAST_EXIT_CODE, BUT it does NOT reset LAST_EXIT_CODE if cmd
+#      succeeded — it's an inherited value from the surrounding scope.
+#      So if a *prior* `try { error make ... } catch { }` left
+#      LAST_EXIT_CODE=1, a successful ^cmd inside try/catch leaves it
+#      at 1 too, silently masking success as failure. Reset it to 0
+#      first.
+def run-cmd [cmd_args: list<string>]: nothing -> int {
+	# nushell's --wrapped passes `--` through literally as the first
+	# arg (unlike POSIX shells where the parser consumes it).
+	let args = if ($cmd_args | length) > 0 and ($cmd_args | first) == "--" { $cmd_args | skip 1 } else { $cmd_args }
+	if ($args | is-empty) { error make { msg: "cache.nu run: empty cmd (need '-- <cmd>')" } }
+	$env.LAST_EXIT_CODE = 0
+	try { ^($args | first) ...($args | skip 1) } catch { }
+	$env.LAST_EXIT_CODE
+}
+
+# ============================================================================
+# Subcommands
+# ============================================================================
+
+# A cross-project dep's runner is skipped where that project has no `.bayt`
+# — right in a container, whose Dockerfile COPYs a dep's outs and never its
+# `.bayt`, and wrong anywhere else. Either way the dep's outs must be on disk
+# before this target runs, so a dep skipped where it should have built stops
+# here instead of this target building on nothing. Not a cache concern, so
+# BAYT_CACHE_ENABLED does not turn it off.
+def assert-cross-deps-built [manifest: string]: nothing -> nothing {
+	# An unreadable manifest is the bypass path's to report, not this check's.
+	# Nothing else is read: the case this exists for is a dep whose .bayt, and
+	# so whose manifest, is missing.
+	let m = try { open $manifest } catch { return }
+	let root = (manifest-root $manifest $m.dir)
+	let missing = ($m.chainedDeps? | default []
+		| where { |d| $d.dir != $m.dir and not ($d.name =~ "_(srcs|bayt)$") }
+		| each { |d|
+			let globs = ($d.outs?.globs? | default [] | where { |g| not ($g | str starts-with ".task/") })
+			$d | upsert outs.globs $globs
+		}
+		| where { |d| not ($d.outs.globs | is-empty) }
+		| where { |d|
+			let dir = ($root | path join $d.dir)
+			not (($dir | path exists) and (do { cd $dir; outs-present $d.outs.globs }))
+		})
+	if not ($missing | is-empty) {
+		let names = ($missing | each { |d| $"($d.dir):($d.name)" } | str join ", ")
+		error make { msg: $"cross deps left no outs: ($names). A dep is skipped where its project has no .bayt; if it should build here, that .bayt is missing." }
+	}
+}
+
+# `cache.nu run` — restore on hit, run cmd (or skip it under --full), store
+# outs on success. A failed lookup or restore degrades to a miss; a failed
+# store fails the target.
+export def --wrapped "main run" [
+	--manifest: string                        # path to .bayt/bayt.<verb>.json
+	--cmd: string = ""                        # optional cmd name within manifest's cmds list
+	--full                                    # on EXACT hit, skip cmd entirely (trust the restored outs)
+	--similar                                 # on EXACT miss, restore closest cached entry as warm starting state
+	...cmd_args                               # untyped: a typed `...string` rejects a bare keyword arg (`true`/`false`/`null`) at parse time
+] {
+	let cmd_args = ($cmd_args | each { into string })
+	if ($manifest | is-empty) { error make { msg: "cache.nu run: --manifest required" } }
+	assert-cross-deps-built $manifest
+	if not (cache-enabled) { exit (run-cmd $cmd_args) }
+
+	# Resolving the manifest + computing the key requires every input
+	# in the merkle chain to exist on disk: project srcs, the manifest
+	# itself, and (critically) cross-project dep stamps at
+	# `../../<dep>/.task/bayt/<n>.hash`. Inside docker these stamps are
+	# COPYed in via the Dockerfile chain. On the host they only exist
+	# after each dep has been built — `just sayt build` from a fresh
+	# tree has none of them. compute-fingerprint errors loudly in that case;
+	# the right response here is "no cache key → no cache lookup →
+	# run cmd raw" (the cmd's own semantics handle the missing inputs).
+	#
+	# Resolve manifest, derive cache key + per-file input set + project
+	# metadata. project + target identify the (project, verb) namespace;
+	# inputs feeds similarity scoring on lookup; the merkle hash IS the
+	# exact-match cache key. Bypass if any of these can't be computed
+	# (host invocation with missing dep stamps, malformed manifest, …).
+	let m_or_err = try {
+		let resolved = (resolve-manifest $manifest $cmd)
+		let m = (open $manifest)
+		let fp = (manifest-fingerprint $resolved)
+		{
+			ok: true,
+			key: $fp.hash,
+			inputs: $fp.inputs,
+			# Payload = declared outs only. resolve-manifest's outs union
+			# state for the presence probe; state never enters the cache.
+			# outs.exclude prunes the store-side walk (tool-owned trees
+			# like node_modules must not enter entries).
+			outs: $m.outs.globs,
+			outs_exclude: $m.outs.exclude,
+			project: $m.project,
+			target: $m.name,
+		}
+	} catch { |e|
+		{ ok: false, msg: $e.msg }
+	}
+	if not $m_or_err.ok {
+		print -e $"BAYT_CACHE bypass: ($m_or_err.msg)"
+		exit (run-cmd $cmd_args)
+	}
+	let key     = $m_or_err.key
+	let outs    = $m_or_err.outs
+	let outs_exclude = $m_or_err.outs_exclude
+	let project = $m_or_err.project
+	let target  = $m_or_err.target
+	let meta    = (current-meta $project $target)
+	let inputs  = $m_or_err.inputs
+
+	# Three lookup phases:
+	#   1. exact-match on content key
+	#   2. similar-match on weighted intersection (warm starting state)
+	#   3. cold (cmd runs from nothing)
+	let exact_hit = try {
+		backend-get $project $target $key
+	} catch { |e|
+		print -e $"BAYT_CACHE warn: backend GET failed for ($key): ($e.msg) — falling through"
+		false
+	}
+
+	# Warm-start lookup is opt-in via --similar. Without the flag,
+	# behaviour collapses to "exact-match only" — the safe-but-low-
+	# benefit shape that doesn't risk surprising the user.
+	let warm_result = if $exact_hit or (not $similar) { null } else {
+		try { backend-similar ($meta | insert inputs $inputs) } catch { null }
+	}
+	# try: a broken warm entry degrades to a cold miss, same contract
+	# as the exact-hit path.
+	let warm_hit = if $warm_result != null {
+		try { backend-restore-from $warm_result.entry; true } catch { false }
+	} else { false }
+
+	let base_mode = if $full { "full" } else { "run" }
+	let mode = if $similar { $base_mode + "+similar" } else { $base_mode }
+	let status = if $exact_hit { "HIT" } else if $warm_hit { "WARM" } else { "MISS" }
+	print -e $"BAYT_CACHE ($status) ($mode) ($key)"
+
+	debug-log {
+		ts: (date now | format date "%+"),
+		project: $project,
+		target: $target,
+		key: $key,
+		mode: $mode,
+		status: $status,
+		similar_attempted: ($similar and not $exact_hit),
+		warm_candidate_count: (if $warm_result != null { $warm_result.candidate_count } else { 0 }),
+		warm_winner_score: (if $warm_result != null { $warm_result.score } else { 0.0 }),
+		warm_winner: (if $warm_result != null {
+			{
+				user: ($warm_result.winner_meta.user? | default ""),
+				branch: ($warm_result.winner_meta.branch? | default ""),
+				ts: ($warm_result.winner_meta.ts? | default ""),
+			}
+		} else { null }),
+	}
+
+	# --full + exact-hit is the only case that lets us short-circuit
+	# the cmd entirely. --full + warm-hit still runs cmd because warm
+	# state is by definition "close, not exact" — the tool's
+	# incremental engine has to validate and finish the work.
+	if $exact_hit and $full { exit 0 }
+
+	let exit_code = (run-cmd $cmd_args)
+	if $exit_code != 0 { exit $exit_code }
+
+	if not $exact_hit {
+		# PUT both on miss AND on warm-hit: warm-hit by definition
+		# means our exact key wasn't in cache, so we want to record
+		# this build's output under our key. No try/catch — silent
+		# PUT failure means caching is broken for the user explicitly
+		# opted into backend.
+		backend-put $project $target $key {outs: $outs, outs_exclude: $outs_exclude, manifest: $manifest, meta: $meta, inputs: $inputs}
+	}
+	exit 0
+}
+
+# `cache.nu check` — can this target be satisfied without running anything,
+# its deps included? A cache.full target carries it as its task-level `if:`,
+# which go-task evaluates before running the deps, so a yes skips the whole
+# subgraph beneath the target. See CONTRIBUTING.md#the-cache-check.
+#
+# Exit 10 is yes: the outs are in place and the stamp holds the key. Exit 0 is
+# no: go-task runs the deps, then the task. The `if:` tests for 10 alone, so
+# any other exit, a crash included, also runs the task.
+#
+# The key is walked from manifests, trusting only the stamp of a dep with no
+# manifest on disk: the deps have not run yet, so a stamp may predate an edit,
+# and a dep with no manifest cannot run.
+export def "main check" [
+	--manifest: string                        # path to .bayt/bayt.<verb>.json
+	--stamp-file: string                      # the target's L0 stamp, cwd-relative
+] {
+	if ($manifest | is-empty) or ($stamp_file | is-empty) {
+		error make { msg: "cache.nu check: --manifest and --stamp-file required" }
+	}
+	let resolved = (resolve-manifest $manifest)
+	let key = (manifest-fingerprint $resolved false false true).hash
+	# resolve-manifest's outs carry state too; a restore brings back outs
+	# only, so a target whose state is missing has to run to rebuild it.
+	let present = { outs-present $resolved.outs }
+	if ($stamp_file | path exists) and ((open $stamp_file | str trim) == $key) and (do $present) {
+		exit 10
+	}
+	if not (cache-enabled) { exit 0 }
+
+	let m = (open $manifest)
+	let hit = try {
+		backend-get $m.project $m.name $key
+	} catch { |e|
+		print -e $"BAYT_CACHE warn: backend GET failed for ($key): ($e.msg) — the task runs"
+		false
+	}
+	if not ($hit and (do $present)) { exit 0 }
+	# A task skipped by `if:` never reaches the defer that stamps it.
+	write-stamp $stamp_file $key
+	print -e $"BAYT_CACHE HIT check ($key)"
+	exit 10
+}
+
+# `cache.nu gc` — local-FS only. Walks entries, sums apparent sizes,
+# evicts oldest-mtime first until total is under BAYT_CACHE_MAX_SIZE
+# (default 10 GB). Quiet on no-op. Generate-bayt.nu invokes this at
+# the end of regeneration unless BAYT_CACHE_NO_GC=true.
+export def "main gc" [
+	--max-bytes: int = 10737418240            # default 10 GB
+] {
+	if (backend) != "local" { return }                       # remote backends self-manage
+	if (($env.BAYT_CACHE_NO_GC? | default "") == "true") { return }
+	let root = (local-root)
+	if not ($root | path exists) { return }
+
+	# Budget is bytes (int). du returns filesize values; convert via
+	# `into int` so arithmetic and comparisons work uniformly.
+	let env_budget = ($env.BAYT_CACHE_MAX_SIZE? | default "")
+	let budget = if ($env_budget | is-empty) { $max_bytes } else { $env_budget | into int }
+	let entries = (
+		glob (glob-pat $root "*/*") --no-symlink --no-file
+		| where { |p| ($p | path basename) != "_tmp" }
+		| each { |p| {
+			path: $p,
+			size: (du $p | get apparent | math sum | into int),
+			mtime: (ls -D $p | get 0.modified)
+		} }
+	)
+	let total = if ($entries | is-empty) { 0 } else { $entries | get size | math sum }
+	if $total <= $budget { return }
+
+	let to_drop = ($entries | sort-by mtime | reduce --fold {acc: [], saved: 0} { |row, st|
+		if (($total - $st.saved) <= $budget) { $st } else {
+			{acc: ($st.acc | append $row), saved: ($st.saved + $row.size)}
+		}
+	})
+	for row in $to_drop.acc { rm -rf $row.path }
+	let n = ($to_drop.acc | length)
+	let reclaimed = ($to_drop.saved | into filesize)
+	print -e $"BAYT_CACHE gc: evicted ($n) entries, ($reclaimed) reclaimed"
+}
+
+# `cache.nu status` — local-FS only quick view of size + entry count.
+export def "main status" [] {
+	if (backend) != "local" {
+		print $"backend: (backend) — status only meaningful for local-FS"
+		return
+	}
+	let root = (local-root)
+	if not ($root | path exists) {
+		print $"cache empty: ($root)"
+		return
+	}
+	let entries = (glob (glob-pat $root "*/*") --no-symlink --no-file | where { |p| ($p | path basename) != "_tmp" })
+	let total = ($entries | each { |d| (du $d | get apparent | math sum) } | math sum | default 0)
+	print { root: $root, entries: ($entries | length), size: ($total | into filesize) }
+}
+
+# `cache.nu clear` — wipe local-FS cache. No prompts (regenerable by
+# definition). No-op for remote backends (we don't own them).
+export def "main clear" [] {
+	if (backend) != "local" {
+		print -e $"backend: (backend) — clear only supported for local-FS"
+		return
+	}
+	let root = (local-root)
+	if ($root | path exists) {
+		rm -rf $root
+		print $"cleared: ($root)"
+	}
+}
+
+def main [] {
+	print "cache.nu — content-addressable cache for bayt targets"
+	print ""
+	print "Subcommands:"
+	print "  run --manifest <path> [--cmd <name>] [--full] [--similar] -- <cmd...>"
+	print "  gc [--max-bytes <N>]"
+	print "  status"
+	print "  clear"
+	print ""
+	print "Env: BAYT_CACHE_URL | BAYT_CACHE_REGISTRY | BAYT_CACHE_DIR (selects backend)"
+	print "     BAYT_CACHE_TOKEN, BAYT_CACHE_ENABLED, BAYT_CACHE_MAX_SIZE, BAYT_CACHE_NO_GC"
+}

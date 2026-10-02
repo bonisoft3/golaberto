@@ -1,0 +1,148 @@
+// The CEL derivation: one `cel:` string per constraint, and everything the
+// rest of the program needs said in its own language, rendered from the
+// parsed expression.
+//
+// Two artifacts, both checked in, both generated:
+//
+//   .pronto/cel.json   cel.expr.ParsedExpr per distinct constraint, canonical
+//                      protobuf-JSON, one line per constraint so a changed
+//                      constraint is a changed line.
+//   program_cel.cue    the CHECK bodies and CUE constraints, whose own header
+//                      states what each block is for.
+
+import type { ParsedExpr } from "./cel-emit.ts";
+import { cueConstraint, enumValues, sqlCheck } from "./cel-emit.ts";
+import { BOUND_KEYS, extractBounds, type FieldBounds } from "./bounds.ts";
+
+export type Entity = {
+  table: string;
+  durability: string;
+  fields: { name: string; cel?: string }[];
+  invariant?: { cel: string };
+};
+
+/** Where a constraint is stated. `col` is the column a field-level `this`
+ * stands for, or null for an entity's row-level invariant. */
+export type CelSite = { entity: string; durability: string; col: string | null; cel: string };
+
+const BROWSER = new Set(["tab", "device"]);
+
+/** Every constraint a program states, in declaration order. */
+export function celSites(entities: Record<string, Entity>): CelSite[] {
+  const sites: CelSite[] = [];
+  for (const [entity, e] of Object.entries(entities)) {
+    for (const f of e.fields ?? []) {
+      if (f.cel !== undefined) sites.push({ entity, durability: e.durability, col: f.name, cel: f.cel });
+    }
+    if (e.invariant !== undefined) sites.push({ entity, durability: e.durability, col: null, cel: e.invariant.cel });
+  }
+  return sites;
+}
+
+/** .pronto/cel.json: the IR of every distinct constraint, keyed by source. */
+export function renderIr(irs: Map<string, ParsedExpr>): string {
+  const lines = [...irs.keys()].sort().map((k) => `  ${JSON.stringify(k)}: ${JSON.stringify(irs.get(k))}`);
+  return `{\n${lines.join(",\n")}\n}\n`;
+}
+
+import { quoteKey } from "./cue.ts";
+
+/** One column's value domain as a CUE struct, or null where the constraint
+ * bounds nothing this reading recognises. The keys are stated in a fixed
+ * order, so the line a column renders to depends on the constraint and not on
+ * the order its conjuncts were written in. */
+function boundsCue(bounds: FieldBounds): string | null {
+  const stated = BOUND_KEYS
+    .filter((k) => bounds[k] !== undefined)
+    .map((k) => `${k}: ${JSON.stringify(bounds[k])}`);
+  return stated.length === 0 ? null : `{${stated.join(", ")}}`;
+}
+
+/** program_cel.cue, or the reason a constraint has no rendering. */
+export function renderCel(pkg: string, sites: CelSite[], irs: Map<string, ParsedExpr>): string {
+  const ir = (cel: string) => irs.get(cel) ?? (() => { throw new Error(`no IR for ${JSON.stringify(cel)}`); })();
+  // The CHECK body is the one rendering with no "no rendering" answer: a
+  // server-tier field whose constraint reaches no SQL is a constraint the
+  // database does not hold, and it must stop the derivation naming itself.
+  const sql = (s: CelSite) => {
+    try {
+      return sqlCheck(ir(s.cel), s.col);
+    } catch (e) {
+      throw new Error(`${s.entity}.${s.col ?? "<invariant>"}: cel ${JSON.stringify(s.cel)} has no SQL: ${(e as Error).message}`);
+    }
+  };
+  const blocks: string[] = [];
+  let usesStrings = false;
+  for (const entity of [...new Set(sites.map((s) => s.entity))]) {
+    const mine = sites.filter((s) => s.entity === entity);
+    const lines: string[] = [];
+    // A browser tier emits no table, so a CHECK body would render nowhere.
+    const checks = BROWSER.has(mine[0].durability)
+      ? []
+      : mine.filter((s) => s.col !== null).map((s) => `\t\t${quoteKey(s.col!)}: ${JSON.stringify(sql(s))}`);
+    if (checks.length > 0) lines.push(`\tchecks: {\n${checks.join("\n")}\n\t}`);
+    const invariant = mine.find((s) => s.col === null);
+    if (invariant !== undefined && !BROWSER.has(invariant.durability)) {
+      lines.push(`\tinvariant: check: ${JSON.stringify(sql(invariant))}`);
+    }
+    const seed: string[] = [];
+    for (const s of mine) {
+      if (s.col === null) continue;
+      const c = cueConstraint(ir(s.cel), true);
+      if ("no" in c) {
+        lines.push(`\t// ${s.col} states no CUE constraint: ${c.no}`);
+        continue;
+      }
+      if (c.strings) usesStrings = true;
+      seed.push(`\t\t${quoteKey(s.col)}?: ${c.cue}`);
+    }
+    if (seed.length > 0) lines.push(`\tseed: [...{\n${seed.join("\n")}\n\t}]`);
+    // The declarable values of every column whose constraint closes its set,
+    // off the same IR the CUE constraint above is rendered from. A disjunction
+    // states them to CUE and answers no reader that has to LIST them, which is
+    // what the terminal's markup rules and the emitted shell.yaml both need.
+    const enums: string[] = [];
+    for (const s of mine) {
+      if (s.col === null) continue;
+      const values = enumValues(ir(s.cel));
+      if (values !== null) enums.push(`\t\t${quoteKey(s.col)}: ${JSON.stringify(values)}`);
+    }
+    if (enums.length > 0) lines.push(`\tenums: {\n${enums.join("\n")}\n\t}`);
+    // What the same IR says about a value the set does not close: the range an
+    // int admits, the length a string admits, the pattern it must match. A
+    // reader that has to PROPOSE a value needs this and cannot get it from a
+    // CUE disjunction or a SQL CHECK, and reading it here is what keeps the
+    // constraint language behind one front end. A column whose constraint
+    // closes its set says so under `enums` and nothing here — bounds.ts's
+    // self-test holds that.
+    const bounds: string[] = [];
+    for (const s of mine) {
+      if (s.col === null) continue;
+      const stated = boundsCue(extractBounds(ir(s.cel)));
+      if (stated !== null) bounds.push(`\t\t${quoteKey(s.col)}: ${stated}`);
+    }
+    if (bounds.length > 0) lines.push(`\tbounds: {\n${bounds.join("\n")}\n\t}`);
+    if (lines.length > 0) blocks.push(`${quoteKey(entity)}: {\n${lines.join("\n")}\n}`);
+  }
+  const body = blocks.map((b) => b.split("\n").map((l) => `\t${l}`).join("\n")).join("\n");
+  return [
+    "// generated by pronto from the cel: constraints in program.cue — do not edit",
+    "//",
+    "// `checks` are the SQL CHECK bodies emit.cue renders into the table DDL;",
+    "// `seed` carries what each field-level cel says about the field's own",
+    "// value, which is what vets a stated row; `enums` lists the values a",
+    "// closed constraint admits, for the readers that cannot enumerate a CUE",
+    "// disjunction, and `bounds` states what an open one admits — a range, a",
+    "// length, a pattern — for the readers that have to propose a value.",
+    "// An invariant binds `this` to the ROW, and a predicate over",
+    "// several columns constrains no single field's value, so it derives a",
+    "// CHECK body and nothing for CUE.",
+    `package ${pkg}`,
+    "",
+    ...(usesStrings ? ['import "strings"', ""] : []),
+    "code: state: entities: {",
+    body,
+    "}",
+    "",
+  ].join("\n");
+}

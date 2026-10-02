@@ -1,0 +1,61 @@
+# The browser suites run at integrate, not at test.
+#
+# They are deterministic and quick — they fulfil every request themselves,
+# reach no cluster and read no wall clock — so speed and repeatability are not
+# what keeps them out of `just test`. The toolchain is: a unit test must run
+# from the ide environment's own `.mise.toml`, and a browser binary is the
+# container environment's to provide.
+say:
+  setup:
+    rulemap:
+      builtin:
+        cmds:
+          - do: setup
+            use: ./setup.nu
+          - do: mise exec -- pnpm install --filter @omnishell/core --frozen-lockfile
+  # The checkers are reached through the command line that dispatches to them,
+  # which imports every one: a checker this list never names is typed anyway,
+  # and one added later is typed the day it is dispatched rather than the day
+  # somebody remembers a glob.
+  lint:
+    rulemap:
+      types:
+        cmds:
+          - do: "deno check --config test/deno.json src/ test/ check-visual.ts runtime/cli.ts"
+  test:
+    rulemap:
+      native:
+        priority: 0
+        cmds:
+          - do: "sh -c 'cd android && ./gradlew test'"
+          - do: "sh -c 'cd ios && swift test'"
+      runtime:
+        priority: -1
+        cmds:
+          - do: "deno test --config test/deno.json --allow-read --allow-write --allow-run runtime/cli_test.ts"
+      # The battery's own claims, run through the command line that is the
+      # surface, on the pins the tool stub states — deno's version for this
+      # checker travels with the command and not with the suite beside it.
+      # The stub is named rather than the launchers wrapping it: a shebang
+      # elects one platform, and this rule stands on every platform sayt does.
+      battery:
+        priority: -1
+        cmds:
+          - do: "with-env {MISE_LOCKED: '0'} { mise tool-stub runtime/deno.toml run --no-lock --no-check --node-modules-dir=none --config test/deno.json --allow-read=. --allow-write=. --allow-env runtime/cli.ts check battery --self-test }"
+  integrate:
+    rulemap:
+      builtin:
+        stop: false
+        cmds:
+          - do: integrate
+            use: ./integrate.nu
+      browser:
+        cmds:
+          - do: mise exec -- pnpm run test:browser
+      # The deno-driven browser suites: visual lint's checks over their fixture
+      # pages, settle, CLS, the picker and select-change. package.json's test:pw
+      # is their one roster, in the browser playwright installed at the version
+      # harness.ts imports.
+      visual:
+        cmds:
+          - do: pnpm run test:pw

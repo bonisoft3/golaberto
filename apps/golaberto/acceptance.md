@@ -1,0 +1,47 @@
+# Acceptance
+
+- [ ] A played game carries both scores and an unplayed one carries neither; a half-typed score is refused. {#accept-score-whole}
+- [ ] A game between a team and itself is refused. {#accept-no-self-game}
+- [ ] A championship states its own points for a win, a draw and a loss, three, one and none unless it says otherwise. {#accept-points-rule}
+- [ ] A championship's season reads "2026" when it begins and ends in one year and "2026/2027" when it spans two. {#accept-season}
+- [ ] A player's position is one of the eight the archive knows, or none. {#accept-position}
+- [ ] Extra-time and penalty scores come in pairs, and only on a played game. {#accept-extra-time}
+- [ ] A season never ends before it begins; a one-day tournament is a season. {#accept-season-order}
+- [ ] A zone of a table runs from a place down to a place at or below it. {#accept-zone-order}
+- [ ] A goal is a penalty, an own goal or neither — never both. {#accept-goal-kind}
+- [ ] A phase's table breaks ties by the archive's own keys — points, wins, goal difference, goals for, shoot-out goals, away goals, head-to-head, name — in the order the phase states, upstream's order unless it says otherwise. {#accept-tiebreak}
+- [ ] A goal counts for the home or the away side of its game, and nothing else. {#accept-goal-side}
+- [ ] The front page lists the archive's championships in three levels — world, continental, national — most recent first, each leading to its page. {#accept-home-levels}
+- [ ] The front page leads with the season an editor features: its current round's results and the next round, its top six with each side's title chance, and the way to its chances. {#accept-home-featured}
+- [ ] The catalogue lists every championship with its level and its category, "Profissional" when it names none. {#accept-catalog}
+- [ ] Typing part of a name or picking a level narrows the catalogue as the reader types, and a search that matches nothing says so. {#accept-catalog-search}
+- [ ] A championship's page shows its full name and season, its level, its category, the points for a win, a draw and a loss, and every phase in order with its groups, their teams and their zones; a phase with no groups says so. {#accept-championship-page}
+- [ ] Every page reads in Portuguese, Spanish and English at its own address, and switching language keeps the reader on the same page. {#accept-languages}
+- [ ] Every page renders in a dark appearance when the reader's system asks for one, with the same hierarchy and readable contrast. {#accept-dark}
+- [ ] Every page is readable without sideways scrolling on a phone (390px), a tablet (768px), a laptop (1366px) and a desktop (1920px). {#accept-screen-range}
+- [ ] An address that names no championship says so in words rather than showing an empty page. {#accept-championship-gone}
+- [ ] A group's table is recounted from its games — points, games, wins, draws, losses, goals and position by the phase's own tie-breaks — and matches the table golaberto.com.br shows for the same games. {#accept-standings}
+- [ ] A result recorded after the fact moves the table for every reader without a reload. {#accept-standings-live}
+- [ ] The games page lists the upcoming games across the archive, soonest first, each with its championship, teams and Brasília kick-off. {#accept-games-upcoming}
+- [ ] The games page's results tab lists the latest played games with their scores, and a reader who comes back finds the tab they left. {#accept-games-results}
+- [ ] A game's page shows its championship and phase, the score with extra time and penalties when there were any, its round, day, kick-off, stadium, referee and attendance, its goals by minute on their side, and both line-ups with minutes and cards. {#accept-game-page}
+- [ ] An address that names no game says so in words. {#accept-game-gone}
+- [ ] A championship's page shows each phase's current round and the next, with their games. {#accept-rounds}
+- [ ] The teams page lists every team with its city and country, and typing part of a name narrows it as the reader types. {#accept-teams}
+- [ ] A team's page shows its full name, city, country, foundation and stadium, its next games and latest results, and its squad in each championship with every player's games, minutes, goals and cards. {#accept-team-page}
+- [ ] A player's page shows their name, position and country, a line for each championship and team they played for, and the games they played. {#accept-player-page}
+- [ ] A player's season is recounted from the line-ups and goals recorded, and matches the player table golaberto.com.br shows for the same games. {#accept-player-stats}
+- [ ] A goal or an appearance recorded after the fact moves the player's season for every reader without a reload. {#accept-player-stats-live}
+- [ ] An address that names no team, or no player, says so in words. {#accept-team-gone}
+- [ ] The stadiums page lists every stadium with its city and country, and the referees page every referee with where they are from; typing part of a name narrows either as the reader types. {#accept-venues}
+- [ ] A stadium's page shows its name, full name, city and country, the teams that play there, and the games played there, newest first, each leading to its page. {#accept-stadium-page}
+- [ ] A referee's page shows their name, where they are from, and the games they refereed, newest first, each leading to its page. {#accept-referee-page}
+- [ ] A game's page names its stadium and its referee, each leading to their page. {#accept-game-venue}
+- [ ] An address that names no stadium, or no referee, says so in words. {#accept-venue-gone}
+- [ ] A reader signs in with one gesture and a passkey, and keeps the handle they had as a guest. {#accept-sign-in}
+- [ ] A signed-in reader comments on a game; the comment appears for every reader of the game with the author's handle, newest first, without a reload. {#accept-comment}
+- [ ] A comment that cannot be posted — empty, too long, or written by a reader who has not signed in — is refused with a sentence saying why, and what was typed is kept. {#accept-comment-refused}
+- [ ] An editor corrects a game from its page — the score, whether it was played, the crowd, the stadium, the referee, and its goals, each added for a player of the line-ups or removed — and the game's page and the scorers' seasons follow without a reload; a reader who is not an editor is not offered the editor. {#accept-edit-game}
+- [ ] A correction the archive refuses — saved by an account that is not an editor, or a goal with no scorer — is refused with a sentence saying why, and the edits are kept. {#accept-edit-refused}
+- [ ] A reader opens a group's chances from its table: each team's chance of ending in each of the group's zones, and of each final position, worked out from the season so far and the same for every reader; when a result is recorded the chances follow on an open page. {#accept-chances}
+- [ ] A team's page shows its rating and a player's page his, both refit from the archive as results are recorded. {#accept-ratings}

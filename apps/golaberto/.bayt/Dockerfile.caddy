@@ -1,0 +1,99 @@
+# generated from bayt.cue — do not edit
+FROM caddy:2.9-alpine@sha256:b4e3952384eb9524a887633ce65c752dd7c71314d2c2acf98cd5c715aaa534f0 AS caddy
+WORKDIR /monorepo/apps/golaberto
+COPY --chmod=755 --from=tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa /bin/httpcheck /usr/local/bin/httpcheck
+COPY docker/Caddyfile /etc/caddy/Caddyfile
+COPY shell/index.html /srv/shell/index.html
+COPY shell/shell.css /srv/shell/shell.css
+COPY shell/boot.js /srv/shell/boot.js
+COPY offline-first-sw.js /srv/offline-first-sw.js
+COPY shell/shell.yaml /srv/shell/shell.yaml
+COPY shell/shell.json /srv/shell/shell.json
+COPY shell/design.css /srv/shell/design.css
+COPY shell/screens/principal.html /srv/shell/screens/principal.html
+COPY shell/screens/principal.css /srv/shell/screens/principal.css
+COPY shell/screens/campeonatos.html /srv/shell/screens/campeonatos.html
+COPY shell/screens/campeonatos.css /srv/shell/screens/campeonatos.css
+COPY shell/screens/jogos.html /srv/shell/screens/jogos.html
+COPY shell/screens/jogos.css /srv/shell/screens/jogos.css
+COPY shell/screens/jogo.html /srv/shell/screens/jogo.html
+COPY shell/screens/jogo.css /srv/shell/screens/jogo.css
+COPY shell/screens/chances.html /srv/shell/screens/chances.html
+COPY shell/screens/chances.css /srv/shell/screens/chances.css
+COPY shell/screens/editar.html /srv/shell/screens/editar.html
+COPY shell/screens/editar.css /srv/shell/screens/editar.css
+COPY shell/screens/equipes.html /srv/shell/screens/equipes.html
+COPY shell/screens/equipes.css /srv/shell/screens/equipes.css
+COPY shell/screens/estadios.html /srv/shell/screens/estadios.html
+COPY shell/screens/estadios.css /srv/shell/screens/estadios.css
+COPY shell/screens/estadio.html /srv/shell/screens/estadio.html
+COPY shell/screens/estadio.css /srv/shell/screens/estadio.css
+COPY shell/screens/arbitros.html /srv/shell/screens/arbitros.html
+COPY shell/screens/arbitros.css /srv/shell/screens/arbitros.css
+COPY shell/screens/arbitro.html /srv/shell/screens/arbitro.html
+COPY shell/screens/arbitro.css /srv/shell/screens/arbitro.css
+COPY shell/screens/equipe.html /srv/shell/screens/equipe.html
+COPY shell/screens/equipe.css /srv/shell/screens/equipe.css
+COPY shell/screens/jogador.html /srv/shell/screens/jogador.html
+COPY shell/screens/jogador.css /srv/shell/screens/jogador.css
+COPY shell/screens/campeonato.html /srv/shell/screens/campeonato.html
+COPY shell/screens/campeonato.css /srv/shell/screens/campeonato.css
+COPY shell/handlers/blank-null.js /srv/shell/handlers/blank-null.js
+COPY shell/handlers/both-scored.js /srv/shell/handlers/both-scored.js
+COPY shell/handlers/count-or-null.js /srv/shell/handlers/count-or-null.js
+COPY shell/handlers/row-id.js /srv/shell/handlers/row-id.js
+COPY shell/shared/catalog.css /srv/shell/shared/catalog.css
+COPY shell/shared/chrome.css /srv/shell/shared/chrome.css
+COPY shell/shared/games.css /srv/shell/shared/games.css
+COPY messages/pt-BR.json /srv/messages/pt-BR.json
+COPY messages/es-AR.json /srv/messages/es-AR.json
+COPY messages/en-GB.json /srv/messages/en-GB.json
+COPY messages/it-IT.json /srv/messages/it-IT.json
+COPY messages/de-DE.json /srv/messages/de-DE.json
+COPY messages/fr-FR.json /srv/messages/fr-FR.json
+COPY --from=root plugins/omnishell/interpreter/shell.js /omnishell/interpreter/shell.js
+COPY --from=root plugins/omnishell/interpreter/chrome.js /omnishell/interpreter/chrome.js
+COPY --from=root plugins/omnishell/interpreter/screen.js /omnishell/interpreter/screen.js
+COPY --from=root plugins/omnishell/interpreter/fragment.js /omnishell/interpreter/fragment.js
+COPY --from=root plugins/omnishell/interpreter/data-sync.js /omnishell/interpreter/data-sync.js
+COPY --from=root plugins/omnishell/interpreter/validate.js /omnishell/interpreter/validate.js
+COPY --from=root plugins/omnishell/interpreter/render.js /omnishell/interpreter/render.js
+COPY --from=root plugins/omnishell/interpreter/hatch.js /omnishell/interpreter/hatch.js
+COPY --from=root plugins/omnishell/interpreter/hatch-worker.js /omnishell/interpreter/hatch-worker.js
+COPY --from=root plugins/omnishell/interpreter/storybook.js /omnishell/interpreter/storybook.js
+COPY --from=root plugins/omnishell/interpreter/jessie.js /omnishell/interpreter/jessie.js
+COPY --from=root plugins/omnishell/interpreter/kinetic.js /omnishell/interpreter/kinetic.js
+COPY --from=root plugins/omnishell/interpreter/prng.js /omnishell/interpreter/prng.js
+COPY --from=root plugins/omnishell/interpreter/vendor/mecha-client.js /omnishell/interpreter/vendor/mecha-client.js
+COPY --from=root plugins/omnishell/interpreter/vendor/js-yaml.js /omnishell/interpreter/vendor/js-yaml.js
+COPY --from=root plugins/omnishell/interpreter/vendor/ses.umd.min.js /omnishell/interpreter/vendor/ses.umd.min.js
+COPY --from=root plugins/omnishell/interpreter/vendor/morphlex.js /omnishell/interpreter/vendor/morphlex.js
+COPY --from=root plugins/omnishell/interpreter/vendor/messages.js /omnishell/interpreter/vendor/messages.js
+COPY --from=root plugins/omnishell/components/wallclock.js /omnishell/components/wallclock.js
+COPY brief.html /srv/docs/brief.html
+COPY ir.html /srv/docs/ir.html
+COPY acceptance.md /srv/docs/acceptance.md
+COPY DESIGN.md /srv/docs/DESIGN.md
+COPY robots.txt /srv/robots.txt
+COPY sitemap.xml /srv/sitemap.xml
+COPY --parents docker/Caddyfile shell/index.html shell/shell.css shell/boot.js offline-first-sw.js shell/shell.yaml shell/shell.json shell/design.css shell/screens/principal.html shell/screens/principal.css shell/screens/campeonatos.html shell/screens/campeonatos.css shell/screens/jogos.html shell/screens/jogos.css shell/screens/jogo.html shell/screens/jogo.css shell/screens/chances.html shell/screens/chances.css shell/screens/editar.html shell/screens/editar.css shell/screens/equipes.html shell/screens/equipes.css shell/screens/estadios.html shell/screens/estadios.css shell/screens/estadio.html shell/screens/estadio.css shell/screens/arbitros.html shell/screens/arbitros.css shell/screens/arbitro.html shell/screens/arbitro.css shell/screens/equipe.html shell/screens/equipe.css shell/screens/jogador.html shell/screens/jogador.css shell/screens/campeonato.html shell/screens/campeonato.css shell/handlers/blank-null.js shell/handlers/both-scored.js shell/handlers/count-or-null.js shell/handlers/row-id.js shell/shared/catalog.css shell/shared/chrome.css shell/shared/games.css messages/pt-BR.json messages/es-AR.json messages/en-GB.json messages/it-IT.json messages/de-DE.json messages/fr-FR.json brief.html ir.html acceptance.md DESIGN.md robots.txt sitemap.xml ./
+COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.caddy.json ./.bayt/
+HEALTHCHECK --interval=5s --timeout=5s --retries=30 --start-period=10s CMD ["httpcheck","http://127.0.0.1:8080/health"]
+
+FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS caddy_ctxs
+WORKDIR /monorepo/apps/golaberto
+COPY --parents docker/Caddyfile shell/index.html shell/shell.css shell/boot.js offline-first-sw.js shell/shell.yaml shell/shell.json shell/design.css shell/screens/principal.html shell/screens/principal.css shell/screens/campeonatos.html shell/screens/campeonatos.css shell/screens/jogos.html shell/screens/jogos.css shell/screens/jogo.html shell/screens/jogo.css shell/screens/chances.html shell/screens/chances.css shell/screens/editar.html shell/screens/editar.css shell/screens/equipes.html shell/screens/equipes.css shell/screens/estadios.html shell/screens/estadios.css shell/screens/estadio.html shell/screens/estadio.css shell/screens/arbitros.html shell/screens/arbitros.css shell/screens/arbitro.html shell/screens/arbitro.css shell/screens/equipe.html shell/screens/equipe.css shell/screens/jogador.html shell/screens/jogador.css shell/screens/campeonato.html shell/screens/campeonato.css shell/handlers/blank-null.js shell/handlers/both-scored.js shell/handlers/count-or-null.js shell/handlers/row-id.js shell/shared/catalog.css shell/shared/chrome.css shell/shared/games.css messages/pt-BR.json messages/es-AR.json messages/en-GB.json messages/it-IT.json messages/de-DE.json messages/fr-FR.json brief.html ir.html acceptance.md DESIGN.md robots.txt sitemap.xml ./
+ARG SOURCE_DATE_EPOCH
+ARG BAYT_CLAMP=1
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/apps/golaberto -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && touch -hd @${SOURCE_DATE_EPOCH:-0} /monorepo /monorepo/apps; fi
+FROM scratch AS caddy_srcs
+COPY --from=caddy_ctxs /monorepo /monorepo
+
+FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS caddy_bayt_ctxs
+WORKDIR /monorepo/apps/golaberto
+COPY --parents .bayt/compose.caddy.yaml .bayt/Dockerfile.caddy .bayt/bayt.caddy.json .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml ./
+ARG SOURCE_DATE_EPOCH
+ARG BAYT_CLAMP=1
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/apps/golaberto -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && touch -hd @${SOURCE_DATE_EPOCH:-0} /monorepo /monorepo/apps; fi
+FROM scratch AS caddy_bayt
+COPY --from=caddy_bayt_ctxs /monorepo /monorepo

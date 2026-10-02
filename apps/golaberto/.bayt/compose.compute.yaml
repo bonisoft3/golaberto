@@ -1,0 +1,72 @@
+# generated from bayt.cue — do not edit
+services:
+  apps_golaberto-compute:
+    build:
+      additional_contexts:
+        libraries_mecha-compute-image: service:libraries_mecha-compute-image
+        apps_golaberto-crud: service:apps_golaberto-crud
+        apps_golaberto-database: service:apps_golaberto-database
+      context: ..
+      dockerfile: .bayt/Dockerfile.compute
+      target: compute
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    depends_on:
+      apps_golaberto-crud:
+        condition: service_healthy
+        restart: true
+      apps_golaberto-database:
+        condition: service_healthy
+        restart: true
+    develop:
+      watch:
+      - action: sync+restart
+        path: ../computations/ratings.js
+        target: /app/computations/golaberto-ratings.js
+      - action: sync+restart
+        path: ../computations/chances.js
+        target: /app/computations/golaberto-chances.js
+      - action: sync+restart
+        path: ../computations/golaberto-odds.wasm
+        target: /app/computations/golaberto-odds.wasm
+    environment:
+      CRUD_URL: http://crud:3000
+      DATABASE_URL: >-
+        postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}
+      LAKE_DIR: /lake
+      COMPUTATIONS: "[{\"name\":\"golaberto-ratings\",\"file\":\"/app/computations/golaberto-ratings.js\",\"every\":300,\"to\":[\"team_rating\",\"player_rating\",\"rating_eval\"],\"wasm\":[\"/app/computations/golaberto-odds.wasm\"]},{\"name\":\"golaberto-chances\",\"file\":\"/app/computations/golaberto-chances.js\",\"every\":30,\"to\":[\"team_chance\",\"zone_chance\",\"position_chance\",\"game_importance\"],\"wasm\":[\"/app/computations/golaberto-odds.wasm\"]}]"
+      SERVICE_JWT: >-
+        ${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
+    image: bayt-apps_golaberto-compute:${BAYT_IMAGE_TAG:-latest}
+    networks:
+      default:
+        aliases:
+        - compute
+    restart: on-failure
+  apps_golaberto-compute_bayt:
+    build:
+      additional_contexts:
+        libraries_mecha-compute-image_bayt: service:libraries_mecha-compute-image_bayt
+        apps_golaberto-crud_bayt: service:apps_golaberto-crud_bayt
+        apps_golaberto-database_bayt: service:apps_golaberto-database_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.compute
+      target: compute_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-apps_golaberto-compute_bayt:latest
+    scale: 0
+  apps_golaberto-compute_srcs:
+    build:
+      additional_contexts:
+        libraries_mecha-compute-image_srcs: service:libraries_mecha-compute-image_srcs
+      context: ..
+      dockerfile: .bayt/Dockerfile.compute
+      target: compute_srcs
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-apps_golaberto-compute_srcs:latest
+    scale: 0

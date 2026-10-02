@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GolAberto — brief</title>
+<script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"
+  integrity="sha384-wLhprpjsmjc/XYIcF+LpMxd8yS1gss6jhevOp6F6zhiIoFK6AmHtm4bGKtehTani"
+  crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/markdown-it-attrs@4.3.1/markdown-it-attrs.browser.js"
+  integrity="sha384-x7/cajBAdDAXNBhe8vNNlRjlB/UuamDg9uMIUg3C+kQOPaBWDg7khpyX13BiKuue"
+  crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"
+  integrity="sha384-+pxiN6T7yvpryuJmE1gM9PX7yQit15auDb+ZwwvJOd/4be2Cie5/IuVXgQb/S9du"
+  crossorigin="anonymous"></script>
+<style>
+  :root { color-scheme: light dark; }
+  body { max-width: 46rem; margin: 2rem auto; padding: 0 1rem;
+         font: 16px/1.6 Georgia, 'Times New Roman', serif; }
+  header.harness { font-family: ui-monospace, monospace; font-size: 0.8rem;
+         border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+         border-radius: 6px; padding: 0.6rem 0.9rem; margin-bottom: 2rem; }
+  header.harness dt { display: inline; font-weight: 700; }
+  header.harness dd { display: inline; margin: 0 1.1em 0 0.3em; }
+  a.wikilink { text-decoration-style: dotted; }
+  a.agent::after { content: " ⚙"; }
+  a.context::after { content: " ※"; }
+  .transclusion-failed { border: 1px dashed color-mix(in srgb, currentColor 40%, transparent);
+         padding: 0.5rem 0.9rem; border-radius: 6px; }
+  .checklist li { list-style: none; }
+  #edit { display: none; width: 100%; min-height: 30rem;
+         font: 13px/1.5 ui-monospace, monospace; }
+  body.editing #edit { display: block; }
+  body.editing #view { display: none; }
+  nav.bar { display: flex; gap: 0.8rem; font-family: ui-monospace, monospace;
+         font-size: 0.8rem; margin-bottom: 1rem; }
+  nav.bar button { font: inherit; }
+</style>
+</head>
+<body>
+<!-- Contentless presentation shell: the source of truth is brief.md,
+     fetched and rendered here. Editing writes brief.md back. -->
+<nav class="bar">
+  <button id="toggle">edit source</button>
+  <button id="save" hidden>save brief.md</button>
+</nav>
+<header class="harness"><dl id="harness"></dl></header>
+<textarea id="edit" spellcheck="false"></textarea>
+<main id="view"></main>
+<script>
+"use strict";
+const md = window.markdownit({html: false, linkify: false})
+  .use(window.markdownItAttrs);
+
+// Pronto link taxonomy (ours, not a library's): [[Id]] is a design-object
+// reference into ir.html; ![[path]] is a transclusion; {.agent}/{.context}
+// classes on plain links are compile directives and citations.
+md.inline.ruler.before("link", "pronto_wikilink", (state, silent) => {
+  const src = state.src.slice(state.pos);
+  const m = /^(!?)\[\[([^\]|]+)\]\]/.exec(src);
+  if (!m) return false;
+  if (!silent) {
+    const token = state.push(m[1] ? "pronto_transclude" : "pronto_ref", "", 0);
+    token.content = m[2];
+  }
+  state.pos += m[0].length;
+  return true;
+});
+md.renderer.rules.pronto_ref = (tokens, i) => {
+  const id = tokens[i].content;
+  return `<a class="wikilink" href="ir.html#${id}">${id}</a>`;
+};
+md.renderer.rules.pronto_transclude = (tokens, i) => {
+  const path = tokens[i].content;
+  return `<div class="transclusion" data-src="${path}"><div class="transclusion-failed"><a href="${path}">${path}</a></div></div>`;
+};
+
+let source = "";
+async function load() {
+  source = await (await fetch("brief.md")).text();
+  document.getElementById("edit").value = source;
+  render();
+}
+function render() {
+  const m = /^---\n([\s\S]*?)\n---\n/.exec(source);
+  const body = m ? source.slice(m[0].length) : source;
+  const dl = document.getElementById("harness");
+  dl.innerHTML = "";
+  if (m) {
+    const harness = window.jsyaml.load(m[1]);
+    for (const [k, v] of Object.entries(harness)) {
+      dl.insertAdjacentHTML("beforeend", `<dt>${k}</dt><dd>${v}</dd>`);
+    }
+  }
+  document.getElementById("view").innerHTML = md.render(body);
+  for (const el of document.querySelectorAll(".transclusion")) {
+    fetch(el.dataset.src)
+      .then(r => { if (!r.ok) throw new Error(); return r.text(); })
+      .then(text => { el.innerHTML = md.render(text); })
+      .catch(() => {}); // file:// or missing: the boxed link stays
+  }
+}
+document.getElementById("toggle").onclick = () => {
+  const editing = document.body.classList.toggle("editing");
+  document.getElementById("save").hidden = !editing;
+  document.getElementById("toggle").textContent = editing ? "preview" : "edit source";
+  if (!editing) { source = document.getElementById("edit").value; render(); }
+};
+document.getElementById("edit").addEventListener("input", e => {
+  source = e.target.value;
+});
+document.getElementById("save").onclick = async () => {
+  source = document.getElementById("edit").value;
+  if (window.showSaveFilePicker) {
+    const handle = await showSaveFilePicker({suggestedName: "brief.md"});
+    const w = await handle.createWritable();
+    await w.write(source); await w.close();
+  } else {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([source], {type: "text/markdown"}));
+    a.download = "brief.md";
+    a.click();
+  }
+  render();
+};
+load();
+</script>
+</body>
+</html>

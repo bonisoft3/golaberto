@@ -1,0 +1,40 @@
+# generated from bayt.cue — do not edit
+include:
+- path: ../../../apps/golaberto/.bayt/compose.launch.yaml
+  required: false
+- path: ../../../apps/golaberto/.bayt/compose.caddy.yaml
+  required: false
+- path: ../../../apps/golaberto/.bayt/compose.database.yaml
+  required: false
+- path: ../../../libraries/mecha/.bayt/compose.database-image.yaml
+  required: false
+- path: ../../../apps/golaberto/.bayt/compose.crud.yaml
+  required: false
+- path: ../../../apps/golaberto/.bayt/compose.electric.yaml
+  required: false
+- path: ../../../apps/golaberto/.bayt/compose.redis.yaml
+  required: false
+- path: ../../../apps/golaberto/.bayt/compose.mesh-events.yaml
+  required: false
+- path: ../../../libraries/mecha/.bayt/compose.mesh-image.yaml
+  required: false
+- path: ../../../apps/golaberto/.bayt/compose.conduit.yaml
+  required: false
+- path: ../../../libraries/mecha/.bayt/compose.conduit-image.yaml
+  required: false
+- path: ../../../apps/golaberto/.bayt/compose.transform.yaml
+  required: false
+- path: ../../../apps/golaberto/.bayt/compose.compute.yaml
+  required: false
+- path: ../../../libraries/mecha/.bayt/compose.compute-image.yaml
+  required: false
+- path: ../../../apps/golaberto/.bayt/compose.auth.yaml
+  required: false
+- path: ../../../libraries/mecha/.bayt/compose.auth-image.yaml
+  required: false
+services:
+  bayt:
+    extends:
+      file: ./compose.launch.yaml
+      service: apps_golaberto-launch
+    scale: 1

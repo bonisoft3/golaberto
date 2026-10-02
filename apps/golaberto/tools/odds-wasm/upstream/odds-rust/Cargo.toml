@@ -1,0 +1,50 @@
+[package]
+name = "golaberto-odds"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.88"
+publish = false
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["float_roundtrip"] }
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
+mysql = { version = "26", default-features = false, features = ["minimal-rust"], optional = true }
+tiny_http = { version = "0.12", optional = true }
+smallvec = "1.10.0"
+player-ratings = { package = "golaberto-player-ratings", path = "../stats/core" }
+
+[features]
+default = ["service"]
+# The HTTP server and its MySQL persistence; without them the library builds for wasm32-wasip1.
+service = ["dep:mysql", "dep:tiny_http"]
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+debug = 1
+
+[lib]
+name = "golaberto_odds"
+path = "src/lib.rs"
+
+[[bin]]
+name = "golaberto-odds"
+path = "src/main.rs"
+required-features = ["service"]
+
+[[example]]
+name = "player_ratings_dry_run"
+required-features = ["service"]
+
+[[test]]
+name = "database"
+required-features = ["service"]
+
+[[test]]
+name = "http"
+required-features = ["service"]
+
+[[test]]
+name = "player_ratings"
+required-features = ["service"]

@@ -1,0 +1,44 @@
+@import url("shared/chrome.css");
+@import url("shared/games.css");
+/* The home page, as its canvas draws it: the featured season's round and
+   table first, then the recent championships, one column per level of play. */
+.feature-body { display: flex; flex-direction: column; gap: var(--sp-md); }
+.feature-head {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--sp-sm) var(--sp-md);
+  padding: var(--sp-sm) var(--sp-md); background: var(--table-head); color: var(--table-head-ink);
+}
+.feature-head h2 { margin: 0; font-variant-numeric: tabular-nums; }
+.feature-head a { color: inherit; font-size: var(--type-caption); font-weight: 700; }
+.feature-grid { display: flex; flex-direction: column; gap: var(--sp-lg); }
+.round h3, .top-six h3 { margin: 0; padding-bottom: var(--sp-sm); border-bottom: var(--border-size-2) solid var(--date-bar); }
+.round h3 small, .top-six h3 small { font-size: var(--type-label); font-weight: 700; color: var(--secondary); }
+.top-six { display: flex; flex-direction: column; gap: var(--sp-sm); }
+.standings td.odds { text-align: end; font-weight: 700; white-space: nowrap; }
+.title-chance { display: inline-flex; align-items: center; gap: var(--sp-sm); }
+.title-chance .bar { width: 40px; height: 8px; box-sizing: border-box; border: var(--border-size-1) solid var(--primary); }
+.title-chance .bar i { display: block; height: 100%; width: var(--fill); background: var(--primary); }
+.title-chance[data-band="0"] { --fill: 0%; }
+.title-chance[data-band="1"] { --fill: 25%; }
+.title-chance[data-band="2"] { --fill: 50%; }
+.title-chance[data-band="3"] { --fill: 75%; }
+.title-chance[data-band="4"] { --fill: 100%; }
+/* The mark of a 0 rides on its number, not a gap away. */
+.title-chance .reach { margin-inline-start: calc(-1 * var(--sp-sm)); }
+.top-foot { display: flex; justify-content: flex-end; }
+
+.recent-title { margin: var(--sp-lg) 0 0; padding: var(--sp-sm) var(--sp-md); background: var(--table-head); color: var(--table-head-ink); }
+.regions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-lg); }
+.recent { display: flex; flex-direction: column; gap: var(--sp-sm); }
+.recent h2 { border-bottom: var(--border-size-2) solid var(--date-bar); padding-bottom: var(--sp-sm); font-size: var(--type-subtitle); }
+.champ-list { list-style: none; margin: 0; padding: 0; font-size: var(--type-caption); }
+.champ-list li { padding: var(--sp-sm); }
+.champ-list li:nth-child(odd) { background: var(--surface-muted); }
+.more { margin: 0; font-weight: 700; }
+
+@media (max-width: 720px) {
+  .regions { grid-template-columns: minmax(0, 1fr); }
+  .round .game-row { padding-block: var(--sp-md); }
+}
+@media (max-width: 520px) {
+  .title-chance .bar { width: 24px; }
+}

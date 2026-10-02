@@ -1,0 +1,98 @@
+/* A game wherever it is listed, and the game's own page. */
+.games { list-style: none; margin: 0; padding: 0; font-size: var(--type-caption); font-variant-numeric: tabular-nums; }
+.games > li:nth-child(odd) { background: var(--surface-muted); }
+.game-row {
+  display: grid; grid-template-columns: 9.5em minmax(0, 1fr) minmax(0, 1fr) 4.5em minmax(0, 1fr);
+  grid-template-areas: "when where home score away";
+  gap: var(--sp-sm); align-items: center; padding: var(--sp-sm);
+  color: var(--primary); text-decoration: none;
+}
+.game-row:hover .home, .game-row:hover .away { text-decoration: underline; }
+.game-row .when { grid-area: when; display: flex; gap: var(--sp-sm); color: var(--secondary); white-space: nowrap; }
+.game-row .where { grid-area: where; color: var(--secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.game-row .home, .scoreboard .home { grid-area: home; text-align: end; }
+.game-row .away, .scoreboard .away { grid-area: away; }
+.game-row .score, .scoreboard .score { grid-area: score; display: flex; gap: var(--sp-sm); justify-content: center; font-weight: 700; }
+.game-row .score i, .scoreboard .score i { font-style: normal; color: var(--secondary); font-weight: 400; }
+[data-played="false"] .score b { display: none; }
+.round-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--sp-lg); }
+.round .game-row { grid-template-columns: 6em minmax(0, 1fr) 4.5em minmax(0, 1fr); grid-template-areas: "when home score away"; }
+/* A track too narrow for day and hour side by side stacks them. */
+.round .game-row .when { flex-direction: column; gap: 0; }
+.round-next:not(:has(.round)) { display: none; }
+
+.tabs { display: flex; gap: var(--sp-sm); margin-block-end: var(--sp-md); }
+.tabs [role="tab"] {
+  font: inherit; font-weight: 700; min-height: var(--control-h); padding: 0 var(--sp-lg);
+  border: var(--border-size-1) solid var(--border); border-radius: var(--r-sm);
+  background: var(--chip); color: var(--chip-ink); cursor: pointer;
+}
+.tabs [role="tab"][aria-selected="true"] { background: var(--band); color: var(--band-ink); border-color: var(--band); }
+.games-view[data-view="upcoming"] .results, .games-view[data-view="results"] .upcoming { display: none; }
+
+.phase-name { margin: 0; color: var(--secondary); font-weight: 700; }
+.scoreboard { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); grid-template-areas: "home score away"; gap: var(--sp-lg); align-items: center; font-size: var(--type-title); font-weight: 700; }
+.extra { margin: 0; text-align: center; color: var(--secondary); font-size: var(--type-caption); }
+.extra .aet:has(b:empty), .extra .pen:has(b:empty) { display: none; }
+.game-facts { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: var(--sp-sm) var(--sp-lg); margin: 0; font-size: var(--type-caption); }
+.game-facts dt { font-weight: 700; color: var(--secondary); }
+.game-facts dd { margin: 0; }
+.game-facts dd:empty::before, .game-facts dd:has(> a:empty)::before { content: "—"; color: var(--secondary); }
+/* A fact that names nothing leads nowhere. */
+.game-facts dd > a:empty { display: none; }
+/* A rating or importance not yet computed is no fact: its term goes with it. */
+.game-facts dd:is(.rating, .importance):empty,
+.game-facts dt:has(+ dd:is(.rating, .importance):empty) { display: none; }
+.goals { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-sm); font-size: var(--type-caption); }
+.goals li[data-side="away"] { text-align: end; }
+.goals .minute { font-variant-numeric: tabular-nums; color: var(--secondary); }
+.goals .minute:not(:empty)::after { content: "'"; }
+.goals .mark { display: none; color: var(--secondary); }
+.goals li[data-penalty="true"] .pen, .goals li[data-own-goal="true"] .og { display: inline; }
+.lineups .sides { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--sp-lg); }
+.lineup caption { caption-side: top; text-align: start; padding-block-end: var(--sp-sm); font-weight: 700; font-size: var(--type-subtitle); }
+/* A card, on a line-up's row or an appearance, shown when the row has one. */
+.cards i { display: none; width: 8px; height: 11px; border-radius: var(--r-sm); border: var(--border-size-1) solid var(--form-rim); }
+[data-yellow="true"] .cards i.yellow { display: inline-block; background: var(--form-draw); }
+[data-red="true"] .cards i.red { display: inline-block; background: var(--form-loss); }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+@media (max-width: 720px) {
+  /* The championship drops to a line of its own under the teams: on a phone it
+     is still what tells an Arsenal x Chelsea in one competition from another. */
+  .game-row, .round .game-row {
+    grid-template-columns: 6em minmax(0, 1fr) 4em minmax(0, 1fr);
+    grid-template-areas: "when home score away" "when where where where";
+    row-gap: 0;
+  }
+  .game-row .when { flex-direction: column; gap: 0; }
+  .game-row .where { text-align: center; font-size: var(--type-label); }
+  .scoreboard { font-size: var(--type-subtitle); }
+}
+
+/* A group's table, as the championship page and the home page show it. */
+.standings { font-variant-numeric: tabular-nums; }
+.standings th.num, .standings td.num, .standings .pos { text-align: center; }
+.standings .name { width: 100%; white-space: nowrap; }
+/* A club is a link, in the row's own ink: the zone colours are chosen against it. */
+.standings .name a { color: inherit; }
+.standings td.pts { font-weight: 700; }
+.standings tbody tr[data-zone]:not([data-zone=""]) td { background: var(--zone); }
+.standings .form { white-space: nowrap; }
+.standings .form i { display: inline-block; width: 8px; height: 8px; margin-inline-end: 2px; border-radius: var(--r-full); border: var(--border-size-1) solid var(--form-rim); }
+.standings .form i[data-result="w"] { background: var(--form-win); }
+.standings .form i[data-result="d"] { background: var(--form-draw); }
+.standings .form i[data-result="l"] { background: var(--form-loss); }
+.standings .form i[data-result=""] { visibility: hidden; }
+@media (max-width: 520px) {
+  .standings .wide { display: none; }
+}
+.chances-link { font-size: var(--type-caption); padding: 0 var(--sp-md); }
+
+/* A chance that shows 0, marked as upstream marks it: * still possible, ?
+   not yet known; one that can no longer happen bears no mark. */
+.reach { display: none; color: var(--secondary); font-weight: 400; }
+.reach[data-reach="reachable"], .reach[data-reach="undecided"] { display: inline; }
+.reach[data-reach="reachable"]::after { content: "*"; }
+.reach[data-reach="undecided"]::after { content: "?"; }
+.reach::after { font-size: var(--type-label); vertical-align: super; line-height: 0; }

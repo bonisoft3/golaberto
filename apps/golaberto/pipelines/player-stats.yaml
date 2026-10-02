@@ -1,0 +1,188 @@
+# A player's season, recounted absolutely. A change to an appearance or a goal
+# names its player in its game's championship; a change to a player names all
+# their championships; a change to a game names everyone who played in it; one
+# pass over every player who played or scored runs at start. For each player and
+# championship the stream re-reads their appearances and goals there and posts a
+# line per team they played for, upserting on <championship>:<team>:<player>,
+# and deletes the lines of teams they no longer did. A replayed event posts the
+# same rows, so at-least-once delivery is harmless; a pass that fails is
+# rejected and delivered again.
+#
+# The sink is live, off the CDC publication, so it cannot re-feed this stream.
+input:
+  broker:
+    inputs:
+      - redis_streams:
+          url: ${REDIS_URL}
+          streams:
+            - cdc-events
+          body_key: data
+          consumer_group: golaberto-player-stats
+      - generate:
+          count: 1
+          interval: ""
+          mapping: 'root = {"boot": true}'
+pipeline:
+  threads: 1
+  processors:
+    # Which players in which championships this event can move, as the reads
+    # that list them: rows naming a player and a championship. An appearance or
+    # a goal names its player itself, and its season through its game and
+    # through the player's own lines: a game deleted with its goals and
+    # appearances is gone before the stream asks, and only the lines remember
+    # the seasons it leaves.
+    - mapping: |
+        let row = if this.exists("data") && this.data.type() == "string" && this.data.length() > 0 { this.data.parse_json() } else { {} }
+        let table = $row.__table.or("")
+        let via = "select=player_id,game!inner(phase!inner(championship_id))"
+        let scopes = match {
+          this.boot.or(false) => ["player_game?" + $via, "goal?" + $via],
+          $table == "player_game" || $table == "goal" => ["game?select=phase!inner(championship_id)&id=eq." + $row.game_id, "player_stat?select=player_id,championship_id&player_id=eq." + $row.player_id],
+          $table == "player" => ["player_game?" + $via + "&player_id=eq." + $row.id, "goal?" + $via + "&player_id=eq." + $row.id, "player_stat?select=player_id,championship_id&player_id=eq." + $row.id],
+          $table == "game" => ["player_game?" + $via + "&game_id=eq." + $row.id, "goal?" + $via + "&game_id=eq." + $row.id],
+          _ => [],
+        }
+        let player = if $table == "player_game" || $table == "goal" { $row.player_id } else { null }
+        root = if $scopes.length() == 0 { deleted() } else { {"scopes": $scopes, "player": $player} }
+    # A failing step skips the rest, and the output rejects the message.
+    - try:
+        # Every scope read in one message, so a pair two of them name is
+        # recounted once.
+        - branch:
+            request_map: 'root = this.scopes.map_each(s -> {"scope": s})'
+            processors:
+              - unarchive:
+                  format: json_array
+              - http:
+                  url: ${CRUD_URL}/${! this.scope }
+                  verb: GET
+                  retries: 30
+                  retry_period: 2s
+                  headers:
+                    Authorization: Bearer ${SERVICE_JWT}
+              - archive:
+                  format: json_array
+            result_map: root.rows = this.flatten()
+        # One message per player and championship, so no read or post grows with
+        # the archive.
+        - mapping: |
+            # unique() compares strings, so a pair travels as one.
+            let player = this.player
+            let pairs = this.rows.map_each(r -> r.player_id.or($player) + " " + r.game.phase.championship_id.or(r.phase.championship_id).or(r.championship_id)).unique().map_each(k -> {"player": k.split(" ").index(0), "championship": k.split(" ").index(1)})
+            root = if $pairs.length() == 0 { deleted() } else { $pairs }
+        - unarchive:
+            format: json_array
+        - branch:
+            processors:
+              - http:
+                  url: ${CRUD_URL}/player_game?select=side,on_minute,off_minute,yellow,red,bench,game!inner(home_id,away_id,home:home_id(name),away:away_id(name),phase!inner(championship_id))&player_id=eq.${! this.player }&game.phase.championship_id=eq.${! this.championship }
+                  verb: GET
+                  retries: 30
+                  retry_period: 2s
+                  headers:
+                    Authorization: Bearer ${SERVICE_JWT}
+            result_map: root.apps = this
+        - branch:
+            processors:
+              - http:
+                  url: ${CRUD_URL}/goal?select=side,penalty,own_goal,game!inner(home_id,away_id,home:home_id(name),away:away_id(name),phase!inner(championship_id))&player_id=eq.${! this.player }&game.phase.championship_id=eq.${! this.championship }
+                  verb: GET
+                  retries: 30
+                  retry_period: 2s
+                  headers:
+                    Authorization: Bearer ${SERVICE_JWT}
+            result_map: root.goals = this
+        - branch:
+            processors:
+              - http:
+                  url: ${CRUD_URL}/player?select=name,position&id=eq.${! this.player }
+                  verb: GET
+                  retries: 30
+                  retry_period: 2s
+                  headers:
+                    Authorization: Bearer ${SERVICE_JWT}
+            # A deleted player took their rows with them; their lines go too.
+            result_map: 'root.player_row = this.index(0).catch({})'
+        - branch:
+            processors:
+              - http:
+                  url: ${CRUD_URL}/championship?select=full_name&id=eq.${! this.championship }
+                  verb: GET
+                  retries: 30
+                  retry_period: 2s
+                  headers:
+                    Authorization: Bearer ${SERVICE_JWT}
+            result_map: root.championship_name = this.index(0).full_name
+        - bloblang: |
+            # One team's line: what the player did for it.
+            map season {
+              let team = this.team
+              let apps = this.apps.filter(a -> a.team == $team)
+              let goals = this.goals.filter(q -> q.team == $team)
+              let named = this.apps.concat(this.goals).filter(x -> x.team == $team)
+              let on = $apps.filter(a -> !a.bench)
+              root.id = this.championship + ":" + $team + ":" + this.player
+              root.championship_id = this.championship
+              root.team_id = $team
+              root.player_id = this.player
+              root.player_name = this.name
+              root.championship_name = this.championship_name
+              root.team_name = $named.index(0).team_name
+              root.position = this.position
+              root.played = $on.length()
+              root.started = $on.filter(a -> a.on_minute == 0).length()
+              root.came_on = $on.filter(a -> a.on_minute > 0).length()
+              root.bench = $apps.filter(a -> a.bench).length()
+              # On at the end of stoppage time and never off is on until then.
+              root.minutes = $on.map_each(a -> a.off_minute.or([a.on_minute, 90].max()) - a.on_minute).sum().or(0)
+              root.goals = $goals.filter(q -> !q.own_goal).length()
+              root.penalties = $goals.filter(q -> q.penalty && !q.own_goal).length()
+              root.own_goals = $goals.filter(q -> q.own_goal).length()
+              root.yellow = $apps.filter(a -> a.yellow).length()
+              root.red = $apps.filter(a -> a.red).length()
+            }
+
+            # An appearance counts for its side's team; a goal for the side it
+            # counts for, unless it is an own goal, which the other side scored.
+            let apps = this.apps.map_each(a -> a.merge(if a.side == "home" { {"team": a.game.home_id, "team_name": a.game.home.name} } else { {"team": a.game.away_id, "team_name": a.game.away.name} }))
+            let goals = this.goals.map_each(q -> q.merge(if (q.side == "home") != q.own_goal { {"team": q.game.home_id, "team_name": q.game.home.name} } else { {"team": q.game.away_id, "team_name": q.game.away.name} }))
+            let teams = $apps.map_each(a -> a.team).concat($goals.map_each(q -> q.team)).unique().sort()
+            let base = {"championship": this.championship, "championship_name": this.championship_name, "player": this.player, "name": this.player_row.name.or(""), "position": this.player_row.position.or(""), "apps": $apps, "goals": $goals}
+            let lines = $teams.map_each(t -> $base.merge({"team": t}).apply("season"))
+            let stale = "player_stat?championship_id=eq." + this.championship + "&player_id=eq." + this.player + if $teams.length() == 0 { "" } else { "&team_id=not.in.(" + $teams.join(",") + ")" }
+            root = [{"sink": "upsert", "rows": $lines}, {"sink": "delete", "filter": $stale}].filter(m -> m.sink == "delete" || m.rows.length() > 0)
+        - unarchive:
+            format: json_array
+        # A delete names its rows in its address and carries no body.
+        - mapping: |
+            meta sink = this.sink
+            meta filter = this.filter.or("")
+            root = if this.sink == "delete" { "" } else { this.rows }
+output:
+  reject_errored:
+    switch:
+      cases:
+        - check: '@sink == "upsert"'
+          output:
+            http_client:
+              url: ${CRUD_URL}/player_stat?on_conflict=id
+              verb: POST
+              max_in_flight: 1
+              headers:
+                Content-Type: application/json
+                Prefer: resolution=merge-duplicates
+                Authorization: Bearer ${SERVICE_JWT}
+              successful_on:
+                - 200
+                - 201
+        - check: '@sink == "delete"'
+          output:
+            http_client:
+              url: ${CRUD_URL}/${! @filter }
+              verb: DELETE
+              max_in_flight: 1
+              headers:
+                Authorization: Bearer ${SERVICE_JWT}
+              successful_on:
+                - 200
+                - 204

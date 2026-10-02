@@ -1,0 +1,7 @@
+/* The catalogue: a filter row over the whole list. */
+.catalog { display: flex; flex-direction: column; gap: var(--sp-lg); }
+.filters { display: flex; gap: var(--sp-md); align-items: flex-end; flex-wrap: wrap; }
+.catalog-table td a { font-weight: 700; }
+@media (max-width: 520px) {
+  .catalog-table .drop { display: none; }
+}

@@ -1,0 +1,169 @@
+/* The archive's frame, shared by every screen: the earth-brown ground, one
+   parchment column, the masthead above the terminal's strip, the title band,
+   the side column, and the table every page reads in. Every colour is a token
+   of shell/design.css (DESIGN.md); this file names none of its own. */
+
+body {
+  --shell-font: var(--type-body)/var(--type-leading-body) Arial, Helvetica, sans-serif;
+  position: relative;
+  padding-top: var(--measure-masthead);
+}
+
+/* The strip, dressed as upstream's olive bar and kept inside the column. The
+   terminal draws it before the screen's mount, so the masthead above it is
+   placed out of the screen into the space the body keeps for it. */
+body > nav {
+  max-width: var(--measure-page); margin-inline: auto; box-sizing: border-box;
+  background: var(--strip); color: var(--strip-ink);
+  border-bottom: 0; gap: 0; justify-content: center;
+  padding: var(--sp-sm) var(--sp-md);
+  font-size: var(--type-label); font-weight: 700;
+}
+body > nav > a { padding: 0 var(--sp-md); border-inline-start: var(--border-size-2) solid var(--surface); }
+body > nav > a:first-child { border-inline-start: 0; }
+body > nav > a[aria-current="page"] { text-decoration: underline; text-underline-offset: 3px; }
+
+/* The reader: a guest is offered a passkey, a signed-in reader is named. */
+body > nav .shell-me { flex: none; }
+body > nav .shell-signin { font: inherit; font-weight: 700; color: var(--strip-ink); background: none; border: 0; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 0 var(--sp-md); }
+
+/* The archive's buttons: the band's colours for the one action, a quiet rim
+   for the way back, and a link-like text button for a row's small action. */
+.btn, .btn-quiet {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-sm);
+  min-height: var(--control-h); padding: 0 var(--sp-lg); box-sizing: border-box; cursor: pointer;
+  font: inherit; font-size: var(--type-body); font-weight: 700; line-height: 1; text-decoration: none;
+  border: var(--border-size-1) solid var(--secondary); border-radius: var(--r-sm);
+}
+.btn { color: var(--band-ink); background: var(--band); }
+.btn-quiet { color: var(--primary); background: var(--surface); }
+.btn:hover, .btn-quiet:hover { text-decoration: underline; text-underline-offset: 3px; }
+.btn:focus-visible, .btn-quiet:focus-visible { outline: var(--border-size-2) solid var(--accent); outline-offset: var(--border-size-2); }
+.btn .busy { display: none; }
+/* Why a write was refused, beside the control that sent it; shown by its
+   screen's refused state. */
+.refusal {
+  display: none; margin: 0; padding: var(--sp-sm) var(--sp-md);
+  border: var(--border-size-2) solid var(--attention); border-radius: var(--r-sm);
+  background: var(--surface); color: var(--primary); font-size: var(--type-caption); font-weight: 700;
+}
+.text-btn {
+  display: inline-flex; align-items: center; min-height: var(--min-touch); padding: 0 var(--sp-sm);
+  font: inherit; font-size: var(--type-label); font-weight: 700; line-height: 1; cursor: pointer;
+  color: var(--accent); background: none; border: 0; text-decoration: underline; text-underline-offset: 3px;
+}
+.text-btn:hover { color: var(--attention); }
+.text-btn:focus-visible { outline: var(--border-size-2) solid var(--accent); outline-offset: var(--border-size-1); border-radius: var(--r-sm); }
+
+/* A table wider than its column scrolls inside its own box, never the page. */
+.table-wrap { overflow-x: auto; }
+
+main#app { max-width: var(--measure-page); margin-inline: auto; background: var(--surface); }
+
+.screen { color: var(--primary); min-height: 70vh; }
+/* Prose links; a component that styles its own links wins without a fight. */
+:where(.screen) a { color: var(--accent); }
+:where(.screen) a:hover { color: var(--attention); }
+
+/* The masthead: the wordmark and the language switcher, in the band the body
+   reserves above the strip. */
+.masthead {
+  position: absolute; inset-block-start: 0; inset-inline: 0;
+  max-width: var(--measure-page); height: var(--measure-masthead); margin-inline: auto;
+  box-sizing: border-box; padding: var(--sp-md) var(--sp-lg);
+  background: var(--masthead);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-md);
+}
+.masthead .wordmark {
+  display: inline-flex; align-items: baseline; gap: var(--sp-sm);
+  text-decoration: none; font-family: "Arial Black", Arial, sans-serif; line-height: 1;
+}
+.masthead .wordmark b {
+  font-size: var(--type-display); font-weight: 900; letter-spacing: .02em;
+  color: var(--wordmark);
+  -webkit-text-stroke: 2px var(--wordmark-edge); paint-order: stroke fill;
+  text-shadow: 3px 3px 0 var(--wordmark-edge);
+}
+.masthead .wordmark span {
+  font-size: var(--type-title); font-weight: 900; color: var(--wordmark-accent);
+  -webkit-text-stroke: 1px var(--wordmark-edge); paint-order: stroke fill;
+}
+.masthead .langs { display: flex; flex-wrap: nowrap; gap: var(--sp-md); font-size: var(--type-label); font-weight: 700; }
+.masthead .langs .short { display: none; }
+.masthead .langs a { color: var(--masthead-ink); text-decoration: none; padding: var(--sp-sm) 0; min-height: var(--min-touch); display: inline-flex; align-items: center; }
+.masthead .langs a[aria-current] { text-decoration: underline; text-underline-offset: 3px; }
+
+/* The title band every page opens with. */
+.band {
+  margin: 0; padding: var(--sp-sm) var(--sp-lg);
+  background: var(--band); color: var(--band-ink);
+  font-size: var(--type-title); line-height: var(--type-leading-title); font-weight: 700;
+}
+.band a { color: var(--band-ink); text-underline-offset: 3px; }
+abbr[title] { text-decoration: none; }
+
+/* Content beside a side column on a wide screen, above it on a narrow one. */
+.page { display: grid; grid-template-columns: minmax(0, 1fr) var(--measure-side); }
+.content { padding: var(--sp-xl) var(--sp-lg); display: flex; flex-direction: column; gap: var(--sp-lg); min-width: 0; }
+.side { background: var(--side); color: var(--strip-ink); padding: var(--sp-lg); font-weight: 700; font-size: var(--type-caption); }
+.side a { color: var(--strip-ink); }
+.side p { margin: 0 0 var(--sp-md); }
+
+h2 { font-size: var(--type-subtitle); margin: 0; }
+h3 { font-size: var(--type-body); margin: 0; }
+.lead { margin: 0; padding: var(--sp-md) var(--sp-lg); border: var(--border-size-1) solid var(--border); }
+
+/* The archive's table: navy head, zebra rows in the column's two greens. */
+.grid { width: 100%; border-collapse: separate; border-spacing: 0 1px; font-size: var(--type-caption); }
+.grid th { background: var(--table-head); color: var(--table-head-ink); text-align: start; padding: var(--sp-sm); }
+.grid td { padding: var(--sp-sm); }
+.grid tbody tr:nth-child(odd) td { background: var(--surface-muted); }
+
+.chip {
+  display: inline-flex; align-items: center; min-height: var(--min-touch);
+  padding: 0 var(--sp-md); background: var(--chip); color: var(--chip-ink);
+  border-radius: var(--r-sm); font-size: var(--type-caption); text-decoration: none;
+}
+a.chip { color: var(--chip-ink); }
+.chip .empty { padding: 0; color: var(--chip-ink); }
+a.chip:hover { color: var(--chip-ink); text-decoration: underline; }
+
+/* A zone's colour is its role, resolved in both appearances. */
+[data-zone="champion"] { --zone: var(--zone-champion); }
+[data-zone="qualify"] { --zone: var(--zone-qualify); }
+[data-zone="playoff"] { --zone: var(--zone-playoff); }
+[data-zone="promotion"] { --zone: var(--zone-promotion); }
+[data-zone="relegation"] { --zone: var(--zone-relegation); }
+
+.field { display: flex; flex-direction: column; gap: var(--sp-sm); font-size: var(--type-label); font-weight: 700; }
+.field input, .field select {
+  font: inherit; font-size: var(--type-body); font-weight: 400;
+  min-height: var(--control-h); padding: 0 var(--control-pad-x);
+  background: var(--surface); color: var(--primary);
+  border: var(--border-size-1) solid var(--border); border-radius: var(--r-sm);
+}
+.field.grow { flex: 1; }
+
+.empty { color: var(--secondary); padding: var(--sp-lg) 0; }
+
+/* Tablet and phone: the side column follows the content, the masthead and
+   the band shrink, and the strip wraps rather than hide the way in past the edge. */
+@media (max-width: 720px) {
+  .page { grid-template-columns: minmax(0, 1fr); }
+  .btn, .btn-quiet, .text-btn { min-height: var(--control-h-lg); }
+  .content { padding: var(--sp-lg) var(--sp-md); }
+  .masthead { padding: var(--sp-sm) var(--sp-md); }
+  .masthead .wordmark b { font-size: var(--type-title); }
+  .masthead .wordmark span { font-size: var(--type-subtitle); }
+  .band { font-size: var(--type-subtitle); padding: var(--sp-sm) var(--sp-md); }
+  body > nav { justify-content: flex-start; flex-wrap: wrap; row-gap: var(--sp-sm); }
+  body > nav .shell-me { margin-inline-start: auto; }
+  .masthead .langs { gap: var(--sp-sm); }
+  /* Six names do not fit beside the wordmark: each language by its code. */
+  .masthead .langs .long { display: none; }
+  .masthead .langs .short { display: inline; letter-spacing: .04em; }
+  .masthead .langs a { justify-content: center; min-width: var(--control-h); min-height: var(--control-h); padding: 0; }
+}
+@media (max-width: 420px) {
+  .masthead .wordmark span { display: none; }
+}

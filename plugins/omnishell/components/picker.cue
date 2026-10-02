@@ -1,0 +1,224 @@
+// omnishell--picker: shadcn's Select (the single-pick lite) restated in the
+// binding vocabulary — selection is a #Machine over one field, openness is
+// the platform's: `popover` on the listbox, `commandfor`/`command` on the
+// buttons, anchor positioning in CSS. Zero script for the open/close half,
+// because dismissal, top-layer and the invoker's aria-expanded are browser
+// primitives every engine ships (plugins/omnishell/docs/terminal.md).
+//
+// Selection follows #Tabs' shape: one state per option, one component-written
+// `click@trigger-<name>` arrow per (state, option) pair. An option button
+// carries BOTH declarative behaviors — its id feeds the machine's
+// discrimination, its command closes the popover — one click, two closed
+// vocabularies, no code.
+//
+// Two readouts, because the selected-state has two honest homes:
+//   columns — the readout label and each option's aria-selected are columns
+//     of the row, kept by literal assigns; ARIA-complete with zero script,
+//     for an entity that carries the columns (the gallery's demo row).
+//   text — the machine writes only its field plus each option's declared
+//     assigns; the readout is per-option <i data-t> spans, one shown by the
+//     component's own <style> keyed on the bound data-value, and per-option
+//     selected-state is the consumer's concern (truco keeps an aria-checked
+//     observer). For rows whose entity carries no readout columns.
+package components
+
+import (
+	"list"
+	"strings"
+
+	terminal "bonisoft.org/plugins/omnishell:terminal"
+)
+
+#Picker: P={
+	collection: string
+	row:        *"the" | string
+	field:      *"choice" | string
+	label:      string
+	// Distinguishes instances sharing one collection (ids, data-picker); the
+	// single-instance default keeps the collection as the name.
+	key: *P.collection | string
+	// The slot's read. The default pins the row's id, which is also the
+	// machine-region precondition; a filter pinning anything else must bring
+	// emptyRow (the lint's other arm).
+	filter: *"id=eq.\(P.row)" | string
+	// Emitted as data-empty-row when set — the fallback row for a slot whose
+	// filter pins no id; must agree with the machine (vetted at generate).
+	emptyRow?: string
+	// The machine's initial state; an emptyRow's field value must equal it.
+	initial: *P.options[0].name | string
+	// item is the listbox line, label the readout's short form; assign merges
+	// extra columns (literals or {type, params} leaves) into every arrow
+	// TARGETING that option — a choice carrying its declared consequences on
+	// the row without leaving it.
+	msgLabel?: string
+	options: [...{
+		name:      string
+		label:     string
+		item:      *label | string
+		msg?:      string
+		msgLabel?: string
+		// Tags the row's <li> as data-group so a consumer's stylesheet can
+		// gather or order the list without a second listbox. readout "text".
+		group?: string
+		// A second, quieter value on the row — what the choice costs the
+		// reader, beside what it is called. The label moves into a child span
+		// when a note is set, because the label's binding writes the button's
+		// textContent and would wipe a sibling. readout "text".
+		note?: string
+		assign?: [string]: string | number | bool | {type: string, params?: [string]: string | number | bool}
+	}] & [_, _, ...]
+	// Inert rows the consumer's stylesheet places: `at` names the option the
+	// heading precedes, and a heading naming none leads the list. Presentational
+	// and with no id and no command — a heading is not an option, and the
+	// consumer's [data-opt] observers never see one. readout "text".
+	heads?: [...{name: string, label: string, msgLabel?: string, at: *"" | or([for o in P.options {o.name}])}]
+	// Applied to every arrow as its one guarded candidate — the picker-wide
+	// admission (truco: "a sitting exists").
+	guard?: string | {type: string, params?: [string]: string | number | bool}
+	readout: *"columns" | "text"
+
+	_pop: "picker-pop-\(P.key)"
+	_initialLabel: [for o in P.options if o.name == P.initial {o.label}][0]
+
+	_assignOf: {for o in P.options {
+		(o.name): {
+			if P.readout == "columns" {
+				"label": o.label
+				for u in P.options {
+					("sel_\(u.name)"): [if u.name == o.name {"true"}, "false"][0]
+				}
+			}
+			if o.assign != _|_ {o.assign}
+		}
+	}}
+	_hasAssign: {for o in P.options {
+		(o.name): P.readout == "columns" || o.assign != _|_
+	}}
+
+	machine: terminal.#Machine & {
+		field:   P.field
+		initial: P.initial
+		if P.readout == "columns" {
+			context: {
+				label: P._initialLabel
+				for o in P.options {
+					("sel_\(o.name)"): [if o.name == P.initial {"true"}, "false"][0]
+				}
+			}
+		}
+		on: {for o in P.options {
+			("click@\(P.key)-trigger-\(o.name)"): [
+				if P.guard != _|_ {
+					[{
+						guard:  P.guard
+						target: o.name
+						if P._hasAssign[o.name] {assign: P._assignOf[o.name]}
+					}]
+				},
+				{
+					target: o.name
+					if P._hasAssign[o.name] {assign: P._assignOf[o.name]}
+				},
+			][0]
+		}}
+		states: {for s in P.options {
+			(s.name): on: {
+				("click@\(P.key)-trigger-\(s.name)"): []
+			}
+		}}
+	}
+
+	_emptyRowAttr: [
+		if P.emptyRow != _|_ {"\n       data-empty-row='\((#attrEscape & {in: P.emptyRow}).out)'"},
+		"",
+	][0]
+
+	_srAttr: [if P.msgLabel != _|_ {" data-text=\"{\(P.msgLabel)}\""}, ""][0]
+	_ariaAttr: [if P.msgLabel != _|_ {"{\(P.msgLabel)}"}, P.label][0]
+
+	if P.readout == "columns" {
+		_options: strings.Join([for o in P.options {
+			let _optText = [if o.msg != _|_ {" data-text=\"{\(o.msg)}\""}, ""][0]
+			"""
+				      <li><button type="button" role="option" value="\(o.name)" id="\(P.key)-trigger-\(o.name)" class="picker-option"\(_optText)
+				              aria-selected="{sel_\(o.name)}"
+				              commandfor="\(P._pop)" command="hide-popover">\(o.item)</button></li>
+				"""
+		}], "\n")
+
+		markup: """
+			<omnishell--picker>
+			  <div class="picker" data-live="\(P.collection)" data-filter="\(P.filter)"\(P._emptyRowAttr)
+			       data-state="{\(P.field)}"
+			       data-machine='\((#attrJSON & {in: P.machine}).out)'>
+			    <button type="button" id="picker-open-\(P.key)" class="picker-trigger"
+			            commandfor="\(P._pop)" command="toggle-popover" aria-haspopup="listbox">
+			      <span class="picker-label"\(_srAttr)>\(P.label)</span>
+			      <span class="picker-value" data-text="{label}">\(P._initialLabel)</span>
+			    </button>
+			    <ul id="\(P._pop)" class="picker-list" popover role="listbox" aria-label="\(_ariaAttr)">
+			\(P._options)
+			    </ul>
+			  </div>
+			</omnishell--picker>
+			"""
+	}
+
+	if P.readout == "text" {
+		_optionRow: {for o in P.options {
+			let _optText = [if o.msg != _|_ {" data-text=\"{\(o.msg)}\""}, ""][0]
+			let _grp = [if o.group != _|_ {" data-group=\"\(o.group)\""}, ""][0]
+			let _btnText = [if o.note != _|_ {""}, _optText][0]
+			let _line = [if o.note != _|_ {"<span\(_optText)>\(o.item)</span> <small class=\"picker-note\">\(o.note)</small>"}, o.item][0]
+			(o.name): """
+				      <li\(_grp)><button type="button" role="option" value="\(o.name)" id="\(P.key)-trigger-\(o.name)" data-opt="\(o.name)"\(_btnText)
+				              commandfor="\(P._pop)" command="hide-popover">\(_line)</button></li>
+				"""
+		}}
+		_headList: [if P.heads != _|_ {P.heads}, []][0]
+		_headRow: {for h in P._headList {
+			let _headText = [if h.msgLabel != _|_ {" data-text=\"{\(h.msgLabel)}\""}, ""][0]
+			(h.name): "      <li class=\"picker-head\" role=\"presentation\" data-head=\"\(h.name)\"\(_headText)>\(h.label)</li>"
+		}}
+		_options: strings.Join(list.Concat([
+			[for h in P._headList if h.at == "" {P._headRow[h.name]}],
+			[for o in P.options {strings.Join(list.Concat([
+				[for h in P._headList if h.at == o.name {P._headRow[h.name]}],
+				[P._optionRow[o.name]],
+			]), "\n")
+			}],
+		]), "\n")
+		_spans: strings.Join([for o in P.options {
+			let _spanText = [if o.msgLabel != _|_ {" data-text=\"{\(o.msgLabel)}\""}, ""][0]
+			"<i data-t=\"\(o.name)\"\(_spanText)>\(o.label)</i>"
+		}], "")
+		// The trigger names the chosen option with no app stylesheet: one rule per
+		// option shows its span, scoped to the picker's key and more specific
+		// than a screen's own rule over every span.
+		_show: strings.Join([
+			"[data-picker=\"\(P.key)\"] .pick-label i { display: none; }",
+			for o in P.options {
+				"[data-picker=\"\(P.key)\"][data-value=\"\(o.name)\"] .pick-label i[data-t=\"\(o.name)\"] { display: inline; }"
+			},
+		], "\n    ")
+
+		markup: """
+			<omnishell--picker>
+			  <style>
+			    \(P._show)
+			  </style>
+			  <div class="picker" data-picker="\(P.key)" data-value="{\(P.field)}" data-live="\(P.collection)" data-filter="\(P.filter)"\(P._emptyRowAttr)
+			       data-machine='\((#attrJSON & {in: P.machine}).out)'>
+			    <button type="button" id="picker-open-\(P.key)"
+			            commandfor="\(P._pop)" command="toggle-popover" aria-haspopup="listbox">
+			      <span class="sr"\(_srAttr)>\(P.label):</span>
+			      <span class="pick-label">\(_spans)</span>
+			    </button>
+			    <ul id="\(P._pop)" class="picker-list" popover role="listbox" aria-label="\(_ariaAttr)">
+			\(P._options)
+			    </ul>
+			  </div>
+			</omnishell--picker>
+			"""
+	}
+}

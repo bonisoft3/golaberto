@@ -1,0 +1,17 @@
+[settings]
+locked = true
+github.slsa = false
+github.github_attestations = false
+lockfile = true
+experimental = true
+github_attestations = false
+slsa = false
+aqua.github_attestations = false
+aqua.cosign = false
+aqua.slsa = false
+aqua.minisign = false
+
+[tools]
+"github:denoland/deno" = "v2.9.7"
+node = "22.14.0"
+"github:pnpm/pnpm" = "10.32.1"

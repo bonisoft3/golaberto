@@ -1,0 +1,5045 @@
+[
+ {
+  "round": 1,
+  "upstream": 363799,
+  "date": "28/01/2026",
+  "time": "22:00",
+  "home": "Atlético-MG",
+  "away": "Palmeiras-SP",
+  "played": true,
+  "score": [
+   2,
+   2
+  ]
+ },
+ {
+  "round": 1,
+  "upstream": 363800,
+  "date": "28/01/2026",
+  "time": "22:00",
+  "home": "Coritiba-PR",
+  "away": "Bragantino-SP",
+  "played": true,
+  "score": [
+   0,
+   1
+  ]
+ },
+ {
+  "round": 1,
+  "upstream": 363801,
+  "date": "28/01/2026",
+  "time": "22:00",
+  "home": "Internacional-RS",
+  "away": "Athletico-PR",
+  "played": true,
+  "score": [
+   0,
+   1
+  ]
+ },
+ {
+  "round": 1,
+  "upstream": 363802,
+  "date": "28/01/2026",
+  "time": "22:00",
+  "home": "Vitória-BA",
+  "away": "Remo-PA",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 1,
+  "upstream": 363803,
+  "date": "28/01/2026",
+  "time": "22:30",
+  "home": "Fluminense-RJ",
+  "away": "Grêmio-RS",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 1,
+  "upstream": 363804,
+  "date": "28/01/2026",
+  "time": "23:00",
+  "home": "Chapecoense-SC",
+  "away": "Santos-SP",
+  "played": true,
+  "score": [
+   4,
+   2
+  ]
+ },
+ {
+  "round": 1,
+  "upstream": 363805,
+  "date": "28/01/2026",
+  "time": "23:00",
+  "home": "Corinthians-SP",
+  "away": "Bahia-BA",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 1,
+  "upstream": 363806,
+  "date": "29/01/2026",
+  "time": "00:30",
+  "home": "São Paulo-SP",
+  "away": "Flamengo-RJ",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 1,
+  "upstream": 363807,
+  "date": "29/01/2026",
+  "time": "23:00",
+  "home": "Mirassol-SP",
+  "away": "Vasco-RJ",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 1,
+  "upstream": 363808,
+  "date": "30/01/2026",
+  "time": "00:30",
+  "home": "Botafogo-RJ",
+  "away": "Cruzeiro-MG",
+  "played": true,
+  "score": [
+   4,
+   0
+  ]
+ },
+ {
+  "round": 2,
+  "upstream": 363810,
+  "date": "04/02/2026",
+  "time": "22:00",
+  "home": "Bragantino-SP",
+  "away": "Atlético-MG",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 2,
+  "upstream": 363809,
+  "date": "04/02/2026",
+  "time": "22:00",
+  "home": "Flamengo-RJ",
+  "away": "Internacional-RS",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 2,
+  "upstream": 363811,
+  "date": "04/02/2026",
+  "time": "23:00",
+  "home": "Remo-PA",
+  "away": "Mirassol-SP",
+  "played": true,
+  "score": [
+   2,
+   2
+  ]
+ },
+ {
+  "round": 2,
+  "upstream": 363812,
+  "date": "04/02/2026",
+  "time": "23:00",
+  "home": "Santos-SP",
+  "away": "São Paulo-SP",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 2,
+  "upstream": 363813,
+  "date": "05/02/2026",
+  "time": "00:30",
+  "home": "Grêmio-RS",
+  "away": "Botafogo-RJ",
+  "played": true,
+  "score": [
+   5,
+   3
+  ]
+ },
+ {
+  "round": 2,
+  "upstream": 363814,
+  "date": "05/02/2026",
+  "time": "00:30",
+  "home": "Palmeiras-SP",
+  "away": "Vitória-BA",
+  "played": true,
+  "score": [
+   5,
+   1
+  ]
+ },
+ {
+  "round": 2,
+  "upstream": 363815,
+  "date": "05/02/2026",
+  "time": "22:00",
+  "home": "Bahia-BA",
+  "away": "Fluminense-RJ",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 2,
+  "upstream": 363816,
+  "date": "05/02/2026",
+  "time": "23:00",
+  "home": "Vasco-RJ",
+  "away": "Chapecoense-SC",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 2,
+  "upstream": 363817,
+  "date": "06/02/2026",
+  "time": "00:30",
+  "home": "Cruzeiro-MG",
+  "away": "Coritiba-PR",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 2,
+  "upstream": 363818,
+  "date": "19/02/2026",
+  "time": "22:30",
+  "home": "Athletico-PR",
+  "away": "Corinthians-SP",
+  "played": true,
+  "score": [
+   0,
+   1
+  ]
+ },
+ {
+  "round": 3,
+  "upstream": 363819,
+  "date": "11/02/2026",
+  "time": "00:30",
+  "home": "Vitória-BA",
+  "away": "Flamengo-RJ",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 3,
+  "upstream": 363820,
+  "date": "11/02/2026",
+  "time": "22:00",
+  "home": "Chapecoense-SC",
+  "away": "Coritiba-PR",
+  "played": true,
+  "score": [
+   3,
+   3
+  ]
+ },
+ {
+  "round": 3,
+  "upstream": 363821,
+  "date": "11/02/2026",
+  "time": "22:00",
+  "home": "Mirassol-SP",
+  "away": "Cruzeiro-MG",
+  "played": true,
+  "score": [
+   2,
+   2
+  ]
+ },
+ {
+  "round": 3,
+  "upstream": 363822,
+  "date": "11/02/2026",
+  "time": "23:00",
+  "home": "Atlético-MG",
+  "away": "Remo-PA",
+  "played": true,
+  "score": [
+   3,
+   3
+  ]
+ },
+ {
+  "round": 3,
+  "upstream": 363823,
+  "date": "12/02/2026",
+  "time": "00:30",
+  "home": "São Paulo-SP",
+  "away": "Grêmio-RS",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 3,
+  "upstream": 363824,
+  "date": "12/02/2026",
+  "time": "00:30",
+  "home": "Vasco-RJ",
+  "away": "Bahia-BA",
+  "played": true,
+  "score": [
+   0,
+   1
+  ]
+ },
+ {
+  "round": 3,
+  "upstream": 363825,
+  "date": "12/02/2026",
+  "time": "22:00",
+  "home": "Athletico-PR",
+  "away": "Santos-SP",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 3,
+  "upstream": 363826,
+  "date": "12/02/2026",
+  "time": "22:30",
+  "home": "Fluminense-RJ",
+  "away": "Botafogo-RJ",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 3,
+  "upstream": 363827,
+  "date": "12/02/2026",
+  "time": "23:00",
+  "home": "Corinthians-SP",
+  "away": "Bragantino-SP",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 3,
+  "upstream": 363828,
+  "date": "13/02/2026",
+  "time": "00:30",
+  "home": "Internacional-RS",
+  "away": "Palmeiras-SP",
+  "played": true,
+  "score": [
+   1,
+   3
+  ]
+ },
+ {
+  "round": 4,
+  "upstream": 363832,
+  "date": "25/02/2026",
+  "time": "22:00",
+  "home": "Bragantino-SP",
+  "away": "Athletico-PR",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 4,
+  "upstream": 363833,
+  "date": "25/02/2026",
+  "time": "22:00",
+  "home": "Remo-PA",
+  "away": "Internacional-RS",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 4,
+  "upstream": 363838,
+  "date": "25/02/2026",
+  "time": "22:30",
+  "home": "Coritiba-PR",
+  "away": "São Paulo-SP",
+  "played": true,
+  "score": [
+   0,
+   1
+  ]
+ },
+ {
+  "round": 4,
+  "upstream": 363834,
+  "date": "25/02/2026",
+  "time": "23:00",
+  "home": "Cruzeiro-MG",
+  "away": "Corinthians-SP",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 4,
+  "upstream": 363835,
+  "date": "26/02/2026",
+  "time": "00:30",
+  "home": "Grêmio-RS",
+  "away": "Atlético-MG",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 4,
+  "upstream": 363836,
+  "date": "26/02/2026",
+  "time": "00:30",
+  "home": "Palmeiras-SP",
+  "away": "Fluminense-RJ",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 4,
+  "upstream": 363837,
+  "date": "26/02/2026",
+  "time": "22:00",
+  "home": "Santos-SP",
+  "away": "Vasco-RJ",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 4,
+  "upstream": 363829,
+  "date": "17/07/2026",
+  "time": "22:30",
+  "home": "Bahia-BA",
+  "away": "Chapecoense-SC",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 4,
+  "upstream": 363830,
+  "date": "23/07/2026",
+  "time": "22:30",
+  "home": "Botafogo-RJ",
+  "away": "Vitória-BA",
+  "played": true,
+  "score": [
+   0,
+   0
+  ]
+ },
+ {
+  "round": 4,
+  "upstream": 363831,
+  "date": "02/09/2026",
+  "time": "22:30",
+  "home": "Flamengo-RJ",
+  "away": "Mirassol-SP",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 5,
+  "upstream": 363839,
+  "date": "11/03/2026",
+  "time": "00:30",
+  "home": "Mirassol-SP",
+  "away": "Santos-SP",
+  "played": true,
+  "score": [
+   2,
+   2
+  ]
+ },
+ {
+  "round": 5,
+  "upstream": 363841,
+  "date": "11/03/2026",
+  "time": "22:00",
+  "home": "Atlético-MG",
+  "away": "Internacional-RS",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 5,
+  "upstream": 363842,
+  "date": "11/03/2026",
+  "time": "23:00",
+  "home": "Bahia-BA",
+  "away": "Vitória-BA",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 5,
+  "upstream": 363843,
+  "date": "12/03/2026",
+  "time": "00:30",
+  "home": "Corinthians-SP",
+  "away": "Coritiba-PR",
+  "played": true,
+  "score": [
+   0,
+   2
+  ]
+ },
+ {
+  "round": 5,
+  "upstream": 363844,
+  "date": "12/03/2026",
+  "time": "00:30",
+  "home": "Flamengo-RJ",
+  "away": "Cruzeiro-MG",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 5,
+  "upstream": 363845,
+  "date": "12/03/2026",
+  "time": "22:00",
+  "home": "Remo-PA",
+  "away": "Fluminense-RJ",
+  "played": true,
+  "score": [
+   0,
+   2
+  ]
+ },
+ {
+  "round": 5,
+  "upstream": 363846,
+  "date": "12/03/2026",
+  "time": "22:30",
+  "home": "Vasco-RJ",
+  "away": "Palmeiras-SP",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 5,
+  "upstream": 363847,
+  "date": "12/03/2026",
+  "time": "23:00",
+  "home": "São Paulo-SP",
+  "away": "Chapecoense-SC",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 5,
+  "upstream": 363848,
+  "date": "13/03/2026",
+  "time": "00:30",
+  "home": "Grêmio-RS",
+  "away": "Bragantino-SP",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 5,
+  "upstream": 363840,
+  "date": "29/03/2026",
+  "time": "22:30",
+  "home": "Athletico-PR",
+  "away": "Botafogo-RJ",
+  "played": true,
+  "score": [
+   4,
+   1
+  ]
+ },
+ {
+  "round": 6,
+  "upstream": 363849,
+  "date": "14/03/2026",
+  "time": "21:30",
+  "home": "Vitória-BA",
+  "away": "Atlético-MG",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 6,
+  "upstream": 363850,
+  "date": "14/03/2026",
+  "time": "23:30",
+  "home": "Botafogo-RJ",
+  "away": "Flamengo-RJ",
+  "played": true,
+  "score": [
+   0,
+   3
+  ]
+ },
+ {
+  "round": 6,
+  "upstream": 363851,
+  "date": "15/03/2026",
+  "time": "19:00",
+  "home": "Fluminense-RJ",
+  "away": "Athletico-PR",
+  "played": true,
+  "score": [
+   3,
+   2
+  ]
+ },
+ {
+  "round": 6,
+  "upstream": 363852,
+  "date": "15/03/2026",
+  "time": "19:00",
+  "home": "Internacional-RS",
+  "away": "Bahia-BA",
+  "played": true,
+  "score": [
+   0,
+   1
+  ]
+ },
+ {
+  "round": 6,
+  "upstream": 363853,
+  "date": "15/03/2026",
+  "time": "19:00",
+  "home": "Santos-SP",
+  "away": "Corinthians-SP",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 6,
+  "upstream": 363854,
+  "date": "15/03/2026",
+  "time": "21:30",
+  "home": "Coritiba-PR",
+  "away": "Remo-PA",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 6,
+  "upstream": 363855,
+  "date": "15/03/2026",
+  "time": "21:30",
+  "home": "Palmeiras-SP",
+  "away": "Mirassol-SP",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 6,
+  "upstream": 363857,
+  "date": "15/03/2026",
+  "time": "23:30",
+  "home": "Bragantino-SP",
+  "away": "São Paulo-SP",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 6,
+  "upstream": 363856,
+  "date": "15/03/2026",
+  "time": "23:30",
+  "home": "Cruzeiro-MG",
+  "away": "Vasco-RJ",
+  "played": true,
+  "score": [
+   3,
+   3
+  ]
+ },
+ {
+  "round": 6,
+  "upstream": 363858,
+  "date": "16/03/2026",
+  "time": "23:00",
+  "home": "Chapecoense-SC",
+  "away": "Grêmio-RS",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 7,
+  "upstream": 363859,
+  "date": "18/03/2026",
+  "time": "22:00",
+  "home": "Bahia-BA",
+  "away": "Bragantino-SP",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 7,
+  "upstream": 363860,
+  "date": "18/03/2026",
+  "time": "22:00",
+  "home": "Palmeiras-SP",
+  "away": "Botafogo-RJ",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 7,
+  "upstream": 363861,
+  "date": "18/03/2026",
+  "time": "22:30",
+  "home": "Athletico-PR",
+  "away": "Cruzeiro-MG",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 7,
+  "upstream": 363862,
+  "date": "18/03/2026",
+  "time": "23:00",
+  "home": "Atlético-MG",
+  "away": "São Paulo-SP",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 7,
+  "upstream": 363863,
+  "date": "18/03/2026",
+  "time": "23:00",
+  "home": "Mirassol-SP",
+  "away": "Coritiba-PR",
+  "played": true,
+  "score": [
+   0,
+   1
+  ]
+ },
+ {
+  "round": 7,
+  "upstream": 363864,
+  "date": "19/03/2026",
+  "time": "00:30",
+  "home": "Santos-SP",
+  "away": "Internacional-RS",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 7,
+  "upstream": 363865,
+  "date": "19/03/2026",
+  "time": "00:30",
+  "home": "Vasco-RJ",
+  "away": "Fluminense-RJ",
+  "played": true,
+  "score": [
+   3,
+   2
+  ]
+ },
+ {
+  "round": 7,
+  "upstream": 363866,
+  "date": "19/03/2026",
+  "time": "22:00",
+  "home": "Grêmio-RS",
+  "away": "Vitória-BA",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 7,
+  "upstream": 363867,
+  "date": "19/03/2026",
+  "time": "23:00",
+  "home": "Flamengo-RJ",
+  "away": "Remo-PA",
+  "played": true,
+  "score": [
+   3,
+   0
+  ]
+ },
+ {
+  "round": 7,
+  "upstream": 363868,
+  "date": "20/03/2026",
+  "time": "00:30",
+  "home": "Chapecoense-SC",
+  "away": "Corinthians-SP",
+  "played": true,
+  "score": [
+   0,
+   0
+  ]
+ },
+ {
+  "round": 8,
+  "upstream": 363869,
+  "date": "21/03/2026",
+  "time": "19:00",
+  "home": "Bragantino-SP",
+  "away": "Botafogo-RJ",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 8,
+  "upstream": 363870,
+  "date": "21/03/2026",
+  "time": "21:30",
+  "home": "Fluminense-RJ",
+  "away": "Atlético-MG",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 8,
+  "upstream": 363871,
+  "date": "22/03/2026",
+  "time": "00:00",
+  "home": "São Paulo-SP",
+  "away": "Palmeiras-SP",
+  "played": true,
+  "score": [
+   0,
+   1
+  ]
+ },
+ {
+  "round": 8,
+  "upstream": 363872,
+  "date": "22/03/2026",
+  "time": "19:00",
+  "home": "Athletico-PR",
+  "away": "Coritiba-PR",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 8,
+  "upstream": 363873,
+  "date": "22/03/2026",
+  "time": "19:00",
+  "home": "Cruzeiro-MG",
+  "away": "Santos-SP",
+  "played": true,
+  "score": [
+   0,
+   0
+  ]
+ },
+ {
+  "round": 8,
+  "upstream": 363874,
+  "date": "22/03/2026",
+  "time": "19:00",
+  "home": "Remo-PA",
+  "away": "Bahia-BA",
+  "played": true,
+  "score": [
+   4,
+   1
+  ]
+ },
+ {
+  "round": 8,
+  "upstream": 363875,
+  "date": "22/03/2026",
+  "time": "19:00",
+  "home": "Vasco-RJ",
+  "away": "Grêmio-RS",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 8,
+  "upstream": 363876,
+  "date": "22/03/2026",
+  "time": "21:30",
+  "home": "Internacional-RS",
+  "away": "Chapecoense-SC",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 8,
+  "upstream": 363877,
+  "date": "22/03/2026",
+  "time": "21:30",
+  "home": "Vitória-BA",
+  "away": "Mirassol-SP",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 8,
+  "upstream": 363878,
+  "date": "22/03/2026",
+  "time": "23:30",
+  "home": "Corinthians-SP",
+  "away": "Flamengo-RJ",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 9,
+  "upstream": 363880,
+  "date": "01/04/2026",
+  "time": "22:30",
+  "home": "Botafogo-RJ",
+  "away": "Mirassol-SP",
+  "played": true,
+  "score": [
+   3,
+   2
+  ]
+ },
+ {
+  "round": 9,
+  "upstream": 363885,
+  "date": "01/04/2026",
+  "time": "22:30",
+  "home": "Internacional-RS",
+  "away": "São Paulo-SP",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 9,
+  "upstream": 363879,
+  "date": "01/04/2026",
+  "time": "23:00",
+  "home": "Bahia-BA",
+  "away": "Athletico-PR",
+  "played": true,
+  "score": [
+   3,
+   0
+  ]
+ },
+ {
+  "round": 9,
+  "upstream": 363883,
+  "date": "01/04/2026",
+  "time": "23:00",
+  "home": "Cruzeiro-MG",
+  "away": "Vitória-BA",
+  "played": true,
+  "score": [
+   3,
+   0
+  ]
+ },
+ {
+  "round": 9,
+  "upstream": 363882,
+  "date": "01/04/2026",
+  "time": "23:30",
+  "home": "Coritiba-PR",
+  "away": "Vasco-RJ",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 9,
+  "upstream": 363884,
+  "date": "02/04/2026",
+  "time": "00:30",
+  "home": "Fluminense-RJ",
+  "away": "Corinthians-SP",
+  "played": true,
+  "score": [
+   3,
+   1
+  ]
+ },
+ {
+  "round": 9,
+  "upstream": 363881,
+  "date": "02/04/2026",
+  "time": "22:00",
+  "home": "Chapecoense-SC",
+  "away": "Atlético-MG",
+  "played": true,
+  "score": [
+   0,
+   4
+  ]
+ },
+ {
+  "round": 9,
+  "upstream": 363888,
+  "date": "02/04/2026",
+  "time": "22:00",
+  "home": "Santos-SP",
+  "away": "Remo-PA",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 9,
+  "upstream": 363887,
+  "date": "03/04/2026",
+  "time": "00:30",
+  "home": "Bragantino-SP",
+  "away": "Flamengo-RJ",
+  "played": true,
+  "score": [
+   3,
+   0
+  ]
+ },
+ {
+  "round": 9,
+  "upstream": 363886,
+  "date": "03/04/2026",
+  "time": "00:30",
+  "home": "Palmeiras-SP",
+  "away": "Grêmio-RS",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 10,
+  "upstream": 363897,
+  "date": "04/04/2026",
+  "time": "21:30",
+  "home": "São Paulo-SP",
+  "away": "Cruzeiro-MG",
+  "played": true,
+  "score": [
+   4,
+   1
+  ]
+ },
+ {
+  "round": 10,
+  "upstream": 363893,
+  "date": "04/04/2026",
+  "time": "23:30",
+  "home": "Coritiba-PR",
+  "away": "Fluminense-RJ",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 10,
+  "upstream": 363898,
+  "date": "05/04/2026",
+  "time": "00:00",
+  "home": "Vasco-RJ",
+  "away": "Botafogo-RJ",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 10,
+  "upstream": 363891,
+  "date": "05/04/2026",
+  "time": "19:00",
+  "home": "Chapecoense-SC",
+  "away": "Vitória-BA",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 10,
+  "upstream": 363889,
+  "date": "05/04/2026",
+  "time": "20:30",
+  "home": "Atlético-MG",
+  "away": "Athletico-PR",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 10,
+  "upstream": 363894,
+  "date": "05/04/2026",
+  "time": "20:30",
+  "home": "Flamengo-RJ",
+  "away": "Santos-SP",
+  "played": true,
+  "score": [
+   3,
+   1
+  ]
+ },
+ {
+  "round": 10,
+  "upstream": 363890,
+  "date": "05/04/2026",
+  "time": "22:30",
+  "home": "Bahia-BA",
+  "away": "Palmeiras-SP",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 10,
+  "upstream": 363892,
+  "date": "05/04/2026",
+  "time": "22:30",
+  "home": "Corinthians-SP",
+  "away": "Internacional-RS",
+  "played": true,
+  "score": [
+   0,
+   1
+  ]
+ },
+ {
+  "round": 10,
+  "upstream": 363896,
+  "date": "05/04/2026",
+  "time": "23:00",
+  "home": "Mirassol-SP",
+  "away": "Bragantino-SP",
+  "played": true,
+  "score": [
+   0,
+   1
+  ]
+ },
+ {
+  "round": 10,
+  "upstream": 363895,
+  "date": "05/04/2026",
+  "time": "23:30",
+  "home": "Grêmio-RS",
+  "away": "Remo-PA",
+  "played": true,
+  "score": [
+   0,
+   0
+  ]
+ },
+ {
+  "round": 11,
+  "upstream": 363906,
+  "date": "11/04/2026",
+  "time": "19:30",
+  "home": "Remo-PA",
+  "away": "Vasco-RJ",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 11,
+  "upstream": 363908,
+  "date": "11/04/2026",
+  "time": "19:30",
+  "home": "Vitória-BA",
+  "away": "São Paulo-SP",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 11,
+  "upstream": 363905,
+  "date": "11/04/2026",
+  "time": "21:30",
+  "home": "Mirassol-SP",
+  "away": "Bahia-BA",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 11,
+  "upstream": 363907,
+  "date": "11/04/2026",
+  "time": "23:00",
+  "home": "Santos-SP",
+  "away": "Atlético-MG",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 11,
+  "upstream": 363904,
+  "date": "11/04/2026",
+  "time": "23:30",
+  "home": "Internacional-RS",
+  "away": "Grêmio-RS",
+  "played": true,
+  "score": [
+   0,
+   0
+  ]
+ },
+ {
+  "round": 11,
+  "upstream": 363899,
+  "date": "12/04/2026",
+  "time": "14:00",
+  "home": "Athletico-PR",
+  "away": "Chapecoense-SC",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 11,
+  "upstream": 363900,
+  "date": "12/04/2026",
+  "time": "19:00",
+  "home": "Botafogo-RJ",
+  "away": "Coritiba-PR",
+  "played": true,
+  "score": [
+   2,
+   2
+  ]
+ },
+ {
+  "round": 11,
+  "upstream": 363903,
+  "date": "12/04/2026",
+  "time": "21:00",
+  "home": "Fluminense-RJ",
+  "away": "Flamengo-RJ",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 11,
+  "upstream": 363901,
+  "date": "12/04/2026",
+  "time": "21:30",
+  "home": "Corinthians-SP",
+  "away": "Palmeiras-SP",
+  "played": true,
+  "score": [
+   0,
+   0
+  ]
+ },
+ {
+  "round": 11,
+  "upstream": 363902,
+  "date": "12/04/2026",
+  "time": "21:30",
+  "home": "Cruzeiro-MG",
+  "away": "Bragantino-SP",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 12,
+  "upstream": 363909,
+  "date": "18/04/2026",
+  "time": "21:30",
+  "home": "Chapecoense-SC",
+  "away": "Botafogo-RJ",
+  "played": true,
+  "score": [
+   1,
+   4
+  ]
+ },
+ {
+  "round": 12,
+  "upstream": 363917,
+  "date": "18/04/2026",
+  "time": "21:30",
+  "home": "Vasco-RJ",
+  "away": "São Paulo-SP",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 12,
+  "upstream": 363918,
+  "date": "18/04/2026",
+  "time": "23:00",
+  "home": "Vitória-BA",
+  "away": "Corinthians-SP",
+  "played": true,
+  "score": [
+   0,
+   0
+  ]
+ },
+ {
+  "round": 12,
+  "upstream": 363911,
+  "date": "18/04/2026",
+  "time": "23:30",
+  "home": "Cruzeiro-MG",
+  "away": "Grêmio-RS",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 12,
+  "upstream": 363913,
+  "date": "19/04/2026",
+  "time": "14:00",
+  "home": "Internacional-RS",
+  "away": "Mirassol-SP",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 12,
+  "upstream": 363910,
+  "date": "19/04/2026",
+  "time": "19:00",
+  "home": "Coritiba-PR",
+  "away": "Atlético-MG",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 12,
+  "upstream": 363916,
+  "date": "19/04/2026",
+  "time": "19:00",
+  "home": "Santos-SP",
+  "away": "Fluminense-RJ",
+  "played": true,
+  "score": [
+   2,
+   3
+  ]
+ },
+ {
+  "round": 12,
+  "upstream": 363915,
+  "date": "19/04/2026",
+  "time": "21:30",
+  "home": "Bragantino-SP",
+  "away": "Remo-PA",
+  "played": true,
+  "score": [
+   4,
+   2
+  ]
+ },
+ {
+  "round": 12,
+  "upstream": 363914,
+  "date": "19/04/2026",
+  "time": "21:30",
+  "home": "Palmeiras-SP",
+  "away": "Athletico-PR",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 12,
+  "upstream": 363912,
+  "date": "19/04/2026",
+  "time": "22:30",
+  "home": "Flamengo-RJ",
+  "away": "Bahia-BA",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 13,
+  "upstream": 363921,
+  "date": "25/04/2026",
+  "time": "21:30",
+  "home": "Bahia-BA",
+  "away": "Santos-SP",
+  "played": true,
+  "score": [
+   2,
+   2
+  ]
+ },
+ {
+  "round": 13,
+  "upstream": 363922,
+  "date": "25/04/2026",
+  "time": "21:30",
+  "home": "Botafogo-RJ",
+  "away": "Internacional-RS",
+  "played": true,
+  "score": [
+   2,
+   2
+  ]
+ },
+ {
+  "round": 13,
+  "upstream": 363927,
+  "date": "25/04/2026",
+  "time": "21:30",
+  "home": "Remo-PA",
+  "away": "Cruzeiro-MG",
+  "played": true,
+  "score": [
+   0,
+   1
+  ]
+ },
+ {
+  "round": 13,
+  "upstream": 363928,
+  "date": "26/04/2026",
+  "time": "00:00",
+  "home": "São Paulo-SP",
+  "away": "Mirassol-SP",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 13,
+  "upstream": 363923,
+  "date": "26/04/2026",
+  "time": "19:00",
+  "home": "Corinthians-SP",
+  "away": "Vasco-RJ",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 13,
+  "upstream": 363925,
+  "date": "26/04/2026",
+  "time": "19:00",
+  "home": "Grêmio-RS",
+  "away": "Coritiba-PR",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 13,
+  "upstream": 363919,
+  "date": "26/04/2026",
+  "time": "21:30",
+  "home": "Athletico-PR",
+  "away": "Vitória-BA",
+  "played": true,
+  "score": [
+   3,
+   1
+  ]
+ },
+ {
+  "round": 13,
+  "upstream": 363926,
+  "date": "26/04/2026",
+  "time": "21:30",
+  "home": "Bragantino-SP",
+  "away": "Palmeiras-SP",
+  "played": true,
+  "score": [
+   0,
+   1
+  ]
+ },
+ {
+  "round": 13,
+  "upstream": 363920,
+  "date": "26/04/2026",
+  "time": "23:30",
+  "home": "Atlético-MG",
+  "away": "Flamengo-RJ",
+  "played": true,
+  "score": [
+   0,
+   4
+  ]
+ },
+ {
+  "round": 13,
+  "upstream": 363924,
+  "date": "26/04/2026",
+  "time": "23:30",
+  "home": "Fluminense-RJ",
+  "away": "Chapecoense-SC",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 14,
+  "upstream": 363930,
+  "date": "02/05/2026",
+  "time": "19:00",
+  "home": "Botafogo-RJ",
+  "away": "Remo-PA",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 14,
+  "upstream": 363936,
+  "date": "02/05/2026",
+  "time": "21:30",
+  "home": "Palmeiras-SP",
+  "away": "Santos-SP",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 14,
+  "upstream": 363938,
+  "date": "02/05/2026",
+  "time": "21:30",
+  "home": "Vitória-BA",
+  "away": "Coritiba-PR",
+  "played": true,
+  "score": [
+   4,
+   1
+  ]
+ },
+ {
+  "round": 14,
+  "upstream": 363929,
+  "date": "02/05/2026",
+  "time": "23:30",
+  "home": "Athletico-PR",
+  "away": "Grêmio-RS",
+  "played": true,
+  "score": [
+   0,
+   0
+  ]
+ },
+ {
+  "round": 14,
+  "upstream": 363932,
+  "date": "03/05/2026",
+  "time": "00:00",
+  "home": "Cruzeiro-MG",
+  "away": "Atlético-MG",
+  "played": true,
+  "score": [
+   1,
+   3
+  ]
+ },
+ {
+  "round": 14,
+  "upstream": 363933,
+  "date": "03/05/2026",
+  "time": "19:00",
+  "home": "Flamengo-RJ",
+  "away": "Vasco-RJ",
+  "played": true,
+  "score": [
+   2,
+   2
+  ]
+ },
+ {
+  "round": 14,
+  "upstream": 363937,
+  "date": "03/05/2026",
+  "time": "19:00",
+  "home": "São Paulo-SP",
+  "away": "Bahia-BA",
+  "played": true,
+  "score": [
+   2,
+   2
+  ]
+ },
+ {
+  "round": 14,
+  "upstream": 363931,
+  "date": "03/05/2026",
+  "time": "21:30",
+  "home": "Chapecoense-SC",
+  "away": "Bragantino-SP",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 14,
+  "upstream": 363934,
+  "date": "03/05/2026",
+  "time": "21:30",
+  "home": "Internacional-RS",
+  "away": "Fluminense-RJ",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 14,
+  "upstream": 363935,
+  "date": "03/05/2026",
+  "time": "23:30",
+  "home": "Mirassol-SP",
+  "away": "Corinthians-SP",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 15,
+  "upstream": 363942,
+  "date": "09/05/2026",
+  "time": "19:00",
+  "home": "Coritiba-PR",
+  "away": "Internacional-RS",
+  "played": true,
+  "score": [
+   2,
+   2
+  ]
+ },
+ {
+  "round": 15,
+  "upstream": 363943,
+  "date": "09/05/2026",
+  "time": "21:00",
+  "home": "Fluminense-RJ",
+  "away": "Vitória-BA",
+  "played": true,
+  "score": [
+   2,
+   2
+  ]
+ },
+ {
+  "round": 15,
+  "upstream": 363940,
+  "date": "10/05/2026",
+  "time": "00:00",
+  "home": "Bahia-BA",
+  "away": "Cruzeiro-MG",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 15,
+  "upstream": 363939,
+  "date": "10/05/2026",
+  "time": "19:00",
+  "home": "Atlético-MG",
+  "away": "Botafogo-RJ",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 15,
+  "upstream": 363946,
+  "date": "10/05/2026",
+  "time": "20:40",
+  "home": "Remo-PA",
+  "away": "Palmeiras-SP",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 15,
+  "upstream": 363941,
+  "date": "10/05/2026",
+  "time": "21:30",
+  "home": "Corinthians-SP",
+  "away": "São Paulo-SP",
+  "played": true,
+  "score": [
+   3,
+   2
+  ]
+ },
+ {
+  "round": 15,
+  "upstream": 363945,
+  "date": "10/05/2026",
+  "time": "21:30",
+  "home": "Mirassol-SP",
+  "away": "Chapecoense-SC",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 15,
+  "upstream": 363947,
+  "date": "10/05/2026",
+  "time": "21:30",
+  "home": "Santos-SP",
+  "away": "Bragantino-SP",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 15,
+  "upstream": 363944,
+  "date": "10/05/2026",
+  "time": "22:30",
+  "home": "Grêmio-RS",
+  "away": "Flamengo-RJ",
+  "played": true,
+  "score": [
+   0,
+   1
+  ]
+ },
+ {
+  "round": 15,
+  "upstream": 363948,
+  "date": "10/05/2026",
+  "time": "23:30",
+  "home": "Vasco-RJ",
+  "away": "Athletico-PR",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 16,
+  "upstream": 363950,
+  "date": "16/05/2026",
+  "time": "21:30",
+  "home": "Atlético-MG",
+  "away": "Mirassol-SP",
+  "played": true,
+  "score": [
+   3,
+   1
+  ]
+ },
+ {
+  "round": 16,
+  "upstream": 363955,
+  "date": "16/05/2026",
+  "time": "21:30",
+  "home": "Internacional-RS",
+  "away": "Vasco-RJ",
+  "played": true,
+  "score": [
+   4,
+   1
+  ]
+ },
+ {
+  "round": 16,
+  "upstream": 363954,
+  "date": "16/05/2026",
+  "time": "22:00",
+  "home": "Fluminense-RJ",
+  "away": "São Paulo-SP",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 16,
+  "upstream": 363956,
+  "date": "17/05/2026",
+  "time": "00:00",
+  "home": "Palmeiras-SP",
+  "away": "Cruzeiro-MG",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 16,
+  "upstream": 363958,
+  "date": "17/05/2026",
+  "time": "14:00",
+  "home": "Santos-SP",
+  "away": "Coritiba-PR",
+  "played": true,
+  "score": [
+   0,
+   3
+  ]
+ },
+ {
+  "round": 16,
+  "upstream": 363951,
+  "date": "17/05/2026",
+  "time": "19:00",
+  "home": "Bahia-BA",
+  "away": "Grêmio-RS",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 16,
+  "upstream": 363952,
+  "date": "17/05/2026",
+  "time": "19:00",
+  "home": "Botafogo-RJ",
+  "away": "Corinthians-SP",
+  "played": true,
+  "score": [
+   3,
+   1
+  ]
+ },
+ {
+  "round": 16,
+  "upstream": 363957,
+  "date": "17/05/2026",
+  "time": "21:30",
+  "home": "Bragantino-SP",
+  "away": "Vitória-BA",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 16,
+  "upstream": 363953,
+  "date": "17/05/2026",
+  "time": "21:30",
+  "home": "Chapecoense-SC",
+  "away": "Remo-PA",
+  "played": true,
+  "score": [
+   2,
+   3
+  ]
+ },
+ {
+  "round": 16,
+  "upstream": 363949,
+  "date": "17/05/2026",
+  "time": "22:30",
+  "home": "Athletico-PR",
+  "away": "Flamengo-RJ",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 17,
+  "upstream": 363966,
+  "date": "23/05/2026",
+  "time": "20:00",
+  "home": "São Paulo-SP",
+  "away": "Botafogo-RJ",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 17,
+  "upstream": 363968,
+  "date": "23/05/2026",
+  "time": "20:00",
+  "home": "Vitória-BA",
+  "away": "Internacional-RS",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 17,
+  "upstream": 363963,
+  "date": "23/05/2026",
+  "time": "22:00",
+  "home": "Grêmio-RS",
+  "away": "Santos-SP",
+  "played": true,
+  "score": [
+   3,
+   2
+  ]
+ },
+ {
+  "round": 17,
+  "upstream": 363964,
+  "date": "23/05/2026",
+  "time": "22:00",
+  "home": "Mirassol-SP",
+  "away": "Fluminense-RJ",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 17,
+  "upstream": 363962,
+  "date": "24/05/2026",
+  "time": "00:00",
+  "home": "Flamengo-RJ",
+  "away": "Palmeiras-SP",
+  "played": true,
+  "score": [
+   0,
+   3
+  ]
+ },
+ {
+  "round": 17,
+  "upstream": 363961,
+  "date": "24/05/2026",
+  "time": "19:00",
+  "home": "Cruzeiro-MG",
+  "away": "Chapecoense-SC",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 17,
+  "upstream": 363965,
+  "date": "24/05/2026",
+  "time": "19:00",
+  "home": "Remo-PA",
+  "away": "Athletico-PR",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 17,
+  "upstream": 363959,
+  "date": "24/05/2026",
+  "time": "21:30",
+  "home": "Corinthians-SP",
+  "away": "Atlético-MG",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 17,
+  "upstream": 363967,
+  "date": "24/05/2026",
+  "time": "23:30",
+  "home": "Vasco-RJ",
+  "away": "Bragantino-SP",
+  "played": true,
+  "score": [
+   0,
+   3
+  ]
+ },
+ {
+  "round": 17,
+  "upstream": 363960,
+  "date": "25/05/2026",
+  "time": "23:00",
+  "home": "Coritiba-PR",
+  "away": "Bahia-BA",
+  "played": true,
+  "score": [
+   3,
+   2
+  ]
+ },
+ {
+  "round": 18,
+  "upstream": 363969,
+  "date": "30/05/2026",
+  "time": "19:00",
+  "home": "Athletico-PR",
+  "away": "Mirassol-SP",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 18,
+  "upstream": 363972,
+  "date": "30/05/2026",
+  "time": "19:00",
+  "home": "Flamengo-RJ",
+  "away": "Coritiba-PR",
+  "played": true,
+  "score": [
+   3,
+   0
+  ]
+ },
+ {
+  "round": 18,
+  "upstream": 363970,
+  "date": "30/05/2026",
+  "time": "20:30",
+  "home": "Bahia-BA",
+  "away": "Botafogo-RJ",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 18,
+  "upstream": 363973,
+  "date": "30/05/2026",
+  "time": "20:30",
+  "home": "Grêmio-RS",
+  "away": "Corinthians-SP",
+  "played": true,
+  "score": [
+   1,
+   3
+  ]
+ },
+ {
+  "round": 18,
+  "upstream": 363977,
+  "date": "30/05/2026",
+  "time": "23:00",
+  "home": "Santos-SP",
+  "away": "Vitória-BA",
+  "played": true,
+  "score": [
+   3,
+   1
+  ]
+ },
+ {
+  "round": 18,
+  "upstream": 363975,
+  "date": "31/05/2026",
+  "time": "14:00",
+  "home": "Bragantino-SP",
+  "away": "Internacional-RS",
+  "played": true,
+  "score": [
+   3,
+   1
+  ]
+ },
+ {
+  "round": 18,
+  "upstream": 363974,
+  "date": "31/05/2026",
+  "time": "19:00",
+  "home": "Palmeiras-SP",
+  "away": "Chapecoense-SC",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 18,
+  "upstream": 363978,
+  "date": "31/05/2026",
+  "time": "19:00",
+  "home": "Vasco-RJ",
+  "away": "Atlético-MG",
+  "played": true,
+  "score": [
+   0,
+   1
+  ]
+ },
+ {
+  "round": 18,
+  "upstream": 363971,
+  "date": "31/05/2026",
+  "time": "23:30",
+  "home": "Cruzeiro-MG",
+  "away": "Fluminense-RJ",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 18,
+  "upstream": 363976,
+  "date": "31/05/2026",
+  "time": "23:30",
+  "home": "Remo-PA",
+  "away": "São Paulo-SP",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 19,
+  "upstream": 363980,
+  "date": "16/07/2026",
+  "time": "22:30",
+  "home": "Botafogo-RJ",
+  "away": "Santos-SP",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 19,
+  "upstream": 363988,
+  "date": "16/07/2026",
+  "time": "22:30",
+  "home": "Vitória-BA",
+  "away": "Vasco-RJ",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 19,
+  "upstream": 363984,
+  "date": "17/07/2026",
+  "time": "23:00",
+  "home": "Fluminense-RJ",
+  "away": "Bragantino-SP",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 19,
+  "upstream": 363986,
+  "date": "17/07/2026",
+  "time": "23:00",
+  "home": "Mirassol-SP",
+  "away": "Grêmio-RS",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 19,
+  "upstream": 363979,
+  "date": "21/07/2026",
+  "time": "22:30",
+  "home": "Atlético-MG",
+  "away": "Bahia-BA",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 19,
+  "upstream": 363983,
+  "date": "22/07/2026",
+  "time": "22:30",
+  "home": "Coritiba-PR",
+  "away": "Palmeiras-SP",
+  "played": true,
+  "score": [
+   1,
+   3
+  ]
+ },
+ {
+  "round": 19,
+  "upstream": 363981,
+  "date": "23/07/2026",
+  "time": "00:30",
+  "home": "Chapecoense-SC",
+  "away": "Flamengo-RJ",
+  "played": true,
+  "score": [
+   0,
+   4
+  ]
+ },
+ {
+  "round": 19,
+  "upstream": 363985,
+  "date": "23/07/2026",
+  "time": "00:30",
+  "home": "Internacional-RS",
+  "away": "Cruzeiro-MG",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 19,
+  "upstream": 363987,
+  "date": "23/07/2026",
+  "time": "00:30",
+  "home": "São Paulo-SP",
+  "away": "Athletico-PR",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 19,
+  "upstream": 363982,
+  "date": "23/07/2026",
+  "time": "22:30",
+  "home": "Corinthians-SP",
+  "away": "Remo-PA",
+  "played": true,
+  "score": [
+   3,
+   0
+  ]
+ },
+ {
+  "round": 20,
+  "upstream": 363989,
+  "date": "25/07/2026",
+  "time": "21:30",
+  "home": "Athletico-PR",
+  "away": "Internacional-RS",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 20,
+  "upstream": 363997,
+  "date": "25/07/2026",
+  "time": "21:30",
+  "home": "Santos-SP",
+  "away": "Chapecoense-SC",
+  "played": true,
+  "score": [
+   2,
+   2
+  ]
+ },
+ {
+  "round": 20,
+  "upstream": 363998,
+  "date": "25/07/2026",
+  "time": "23:30",
+  "home": "Vasco-RJ",
+  "away": "Mirassol-SP",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 20,
+  "upstream": 363990,
+  "date": "26/07/2026",
+  "time": "19:00",
+  "home": "Bahia-BA",
+  "away": "Corinthians-SP",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 20,
+  "upstream": 363991,
+  "date": "26/07/2026",
+  "time": "19:00",
+  "home": "Cruzeiro-MG",
+  "away": "Botafogo-RJ",
+  "played": true,
+  "score": [
+   0,
+   1
+  ]
+ },
+ {
+  "round": 20,
+  "upstream": 363995,
+  "date": "26/07/2026",
+  "time": "21:30",
+  "home": "Bragantino-SP",
+  "away": "Coritiba-PR",
+  "played": true,
+  "score": [
+   0,
+   0
+  ]
+ },
+ {
+  "round": 20,
+  "upstream": 363992,
+  "date": "26/07/2026",
+  "time": "21:30",
+  "home": "Flamengo-RJ",
+  "away": "São Paulo-SP",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 20,
+  "upstream": 363993,
+  "date": "26/07/2026",
+  "time": "21:30",
+  "home": "Grêmio-RS",
+  "away": "Fluminense-RJ",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 20,
+  "upstream": 363994,
+  "date": "26/07/2026",
+  "time": "22:30",
+  "home": "Palmeiras-SP",
+  "away": "Atlético-MG",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 20,
+  "upstream": 363996,
+  "date": "26/07/2026",
+  "time": "22:30",
+  "home": "Remo-PA",
+  "away": "Vitória-BA",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 21,
+  "upstream": 364005,
+  "date": "29/07/2026",
+  "time": "22:30",
+  "home": "Internacional-RS",
+  "away": "Flamengo-RJ",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 21,
+  "upstream": 364006,
+  "date": "29/07/2026",
+  "time": "22:30",
+  "home": "Mirassol-SP",
+  "away": "Remo-PA",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 21,
+  "upstream": 364004,
+  "date": "30/07/2026",
+  "time": "00:30",
+  "home": "Fluminense-RJ",
+  "away": "Bahia-BA",
+  "played": true,
+  "score": [
+   0,
+   0
+  ]
+ },
+ {
+  "round": 21,
+  "upstream": 364008,
+  "date": "30/07/2026",
+  "time": "00:30",
+  "home": "Vitória-BA",
+  "away": "Palmeiras-SP",
+  "played": true,
+  "score": [
+   0,
+   4
+  ]
+ },
+ {
+  "round": 21,
+  "upstream": 364001,
+  "date": "30/07/2026",
+  "time": "",
+  "home": "Chapecoense-SC",
+  "away": "Vasco-RJ",
+  "played": false,
+  "chances": [
+   36.91,
+   25.56,
+   37.53
+  ]
+ },
+ {
+  "round": 21,
+  "upstream": 364002,
+  "date": "30/07/2026",
+  "time": "22:30",
+  "home": "Corinthians-SP",
+  "away": "Athletico-PR",
+  "played": true,
+  "score": [
+   0,
+   0
+  ]
+ },
+ {
+  "round": 21,
+  "upstream": 364003,
+  "date": "31/07/2026",
+  "time": "00:30",
+  "home": "Coritiba-PR",
+  "away": "Cruzeiro-MG",
+  "played": true,
+  "score": [
+   0,
+   1
+  ]
+ },
+ {
+  "round": 21,
+  "upstream": 364000,
+  "date": "16/09/2026",
+  "time": "22:30",
+  "home": "Botafogo-RJ",
+  "away": "Grêmio-RS",
+  "played": true,
+  "score": [
+   3,
+   2
+  ]
+ },
+ {
+  "round": 21,
+  "upstream": 364007,
+  "date": "02/10/2026",
+  "time": "23:00",
+  "home": "São Paulo-SP",
+  "away": "Santos-SP",
+  "played": false,
+  "chances": [
+   47.76,
+   26.59,
+   25.66
+  ]
+ },
+ {
+  "round": 21,
+  "upstream": 363999,
+  "date": "03/10/2026",
+  "time": "21:30",
+  "home": "Atlético-MG",
+  "away": "Bragantino-SP",
+  "played": false,
+  "chances": [
+   50.44,
+   26.06,
+   23.49
+  ]
+ },
+ {
+  "round": 22,
+  "upstream": 364014,
+  "date": "08/08/2026",
+  "time": "19:00",
+  "home": "Grêmio-RS",
+  "away": "São Paulo-SP",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 22,
+  "upstream": 364017,
+  "date": "08/08/2026",
+  "time": "21:30",
+  "home": "Remo-PA",
+  "away": "Atlético-MG",
+  "played": true,
+  "score": [
+   2,
+   2
+  ]
+ },
+ {
+  "round": 22,
+  "upstream": 364011,
+  "date": "08/08/2026",
+  "time": "23:30",
+  "home": "Coritiba-PR",
+  "away": "Chapecoense-SC",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 22,
+  "upstream": 364010,
+  "date": "09/08/2026",
+  "time": "00:00",
+  "home": "Botafogo-RJ",
+  "away": "Fluminense-RJ",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 22,
+  "upstream": 364012,
+  "date": "09/08/2026",
+  "time": "14:00",
+  "home": "Cruzeiro-MG",
+  "away": "Mirassol-SP",
+  "played": true,
+  "score": [
+   3,
+   1
+  ]
+ },
+ {
+  "round": 22,
+  "upstream": 364009,
+  "date": "09/08/2026",
+  "time": "19:00",
+  "home": "Bahia-BA",
+  "away": "Vasco-RJ",
+  "played": true,
+  "score": [
+   0,
+   0
+  ]
+ },
+ {
+  "round": 22,
+  "upstream": 364015,
+  "date": "09/08/2026",
+  "time": "19:00",
+  "home": "Palmeiras-SP",
+  "away": "Internacional-RS",
+  "played": true,
+  "score": [
+   0,
+   0
+  ]
+ },
+ {
+  "round": 22,
+  "upstream": 364016,
+  "date": "09/08/2026",
+  "time": "21:30",
+  "home": "Bragantino-SP",
+  "away": "Corinthians-SP",
+  "played": true,
+  "score": [
+   0,
+   2
+  ]
+ },
+ {
+  "round": 22,
+  "upstream": 364018,
+  "date": "09/08/2026",
+  "time": "21:30",
+  "home": "Santos-SP",
+  "away": "Athletico-PR",
+  "played": true,
+  "score": [
+   0,
+   2
+  ]
+ },
+ {
+  "round": 22,
+  "upstream": 364013,
+  "date": "09/08/2026",
+  "time": "22:30",
+  "home": "Flamengo-RJ",
+  "away": "Vitória-BA",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 23,
+  "upstream": 364023,
+  "date": "15/08/2026",
+  "time": "19:30",
+  "home": "Fluminense-RJ",
+  "away": "Palmeiras-SP",
+  "played": true,
+  "score": [
+   3,
+   2
+  ]
+ },
+ {
+  "round": 23,
+  "upstream": 364019,
+  "date": "15/08/2026",
+  "time": "21:30",
+  "home": "Athletico-PR",
+  "away": "Bragantino-SP",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 23,
+  "upstream": 364026,
+  "date": "16/08/2026",
+  "time": "00:00",
+  "home": "São Paulo-SP",
+  "away": "Coritiba-PR",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 23,
+  "upstream": 364021,
+  "date": "16/08/2026",
+  "time": "14:00",
+  "home": "Chapecoense-SC",
+  "away": "Bahia-BA",
+  "played": true,
+  "score": [
+   3,
+   3
+  ]
+ },
+ {
+  "round": 23,
+  "upstream": 364020,
+  "date": "16/08/2026",
+  "time": "19:00",
+  "home": "Atlético-MG",
+  "away": "Grêmio-RS",
+  "played": true,
+  "score": [
+   3,
+   0
+  ]
+ },
+ {
+  "round": 23,
+  "upstream": 364027,
+  "date": "16/08/2026",
+  "time": "19:00",
+  "home": "Vasco-RJ",
+  "away": "Santos-SP",
+  "played": true,
+  "score": [
+   0,
+   3
+  ]
+ },
+ {
+  "round": 23,
+  "upstream": 364025,
+  "date": "16/08/2026",
+  "time": "21:30",
+  "home": "Mirassol-SP",
+  "away": "Flamengo-RJ",
+  "played": true,
+  "score": [
+   1,
+   5
+  ]
+ },
+ {
+  "round": 23,
+  "upstream": 364028,
+  "date": "16/08/2026",
+  "time": "21:30",
+  "home": "Vitória-BA",
+  "away": "Botafogo-RJ",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 23,
+  "upstream": 364022,
+  "date": "16/08/2026",
+  "time": "22:30",
+  "home": "Corinthians-SP",
+  "away": "Cruzeiro-MG",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 23,
+  "upstream": 364024,
+  "date": "17/08/2026",
+  "time": "23:00",
+  "home": "Internacional-RS",
+  "away": "Remo-PA",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 24,
+  "upstream": 364033,
+  "date": "22/08/2026",
+  "time": "19:00",
+  "home": "Fluminense-RJ",
+  "away": "Remo-PA",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 24,
+  "upstream": 364034,
+  "date": "22/08/2026",
+  "time": "21:30",
+  "home": "Internacional-RS",
+  "away": "Atlético-MG",
+  "played": true,
+  "score": [
+   0,
+   0
+  ]
+ },
+ {
+  "round": 24,
+  "upstream": 364032,
+  "date": "22/08/2026",
+  "time": "23:30",
+  "home": "Cruzeiro-MG",
+  "away": "Flamengo-RJ",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 24,
+  "upstream": 364036,
+  "date": "23/08/2026",
+  "time": "19:00",
+  "home": "Bragantino-SP",
+  "away": "Grêmio-RS",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 24,
+  "upstream": 364035,
+  "date": "23/08/2026",
+  "time": "19:00",
+  "home": "Palmeiras-SP",
+  "away": "Vasco-RJ",
+  "played": true,
+  "score": [
+   4,
+   1
+  ]
+ },
+ {
+  "round": 24,
+  "upstream": 364038,
+  "date": "23/08/2026",
+  "time": "19:00",
+  "home": "Vitória-BA",
+  "away": "Bahia-BA",
+  "played": true,
+  "score": [
+   0,
+   2
+  ]
+ },
+ {
+  "round": 24,
+  "upstream": 364030,
+  "date": "23/08/2026",
+  "time": "21:30",
+  "home": "Chapecoense-SC",
+  "away": "São Paulo-SP",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 24,
+  "upstream": 364037,
+  "date": "23/08/2026",
+  "time": "21:30",
+  "home": "Santos-SP",
+  "away": "Mirassol-SP",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 24,
+  "upstream": 364031,
+  "date": "23/08/2026",
+  "time": "22:30",
+  "home": "Coritiba-PR",
+  "away": "Corinthians-SP",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 24,
+  "upstream": 364029,
+  "date": "24/08/2026",
+  "time": "23:00",
+  "home": "Botafogo-RJ",
+  "away": "Athletico-PR",
+  "played": true,
+  "score": [
+   2,
+   3
+  ]
+ },
+ {
+  "round": 25,
+  "upstream": 364040,
+  "date": "29/08/2026",
+  "time": "21:30",
+  "home": "Atlético-MG",
+  "away": "Vitória-BA",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 25,
+  "upstream": 364047,
+  "date": "29/08/2026",
+  "time": "23:00",
+  "home": "São Paulo-SP",
+  "away": "Bragantino-SP",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 25,
+  "upstream": 364048,
+  "date": "30/08/2026",
+  "time": "00:20",
+  "home": "Vasco-RJ",
+  "away": "Cruzeiro-MG",
+  "played": true,
+  "score": [
+   3,
+   1
+  ]
+ },
+ {
+  "round": 25,
+  "upstream": 364039,
+  "date": "30/08/2026",
+  "time": "14:00",
+  "home": "Athletico-PR",
+  "away": "Fluminense-RJ",
+  "played": true,
+  "score": [
+   3,
+   3
+  ]
+ },
+ {
+  "round": 25,
+  "upstream": 364042,
+  "date": "30/08/2026",
+  "time": "19:00",
+  "home": "Corinthians-SP",
+  "away": "Santos-SP",
+  "played": true,
+  "score": [
+   0,
+   1
+  ]
+ },
+ {
+  "round": 25,
+  "upstream": 364043,
+  "date": "30/08/2026",
+  "time": "19:00",
+  "home": "Flamengo-RJ",
+  "away": "Botafogo-RJ",
+  "played": true,
+  "score": [
+   3,
+   0
+  ]
+ },
+ {
+  "round": 25,
+  "upstream": 364044,
+  "date": "30/08/2026",
+  "time": "21:30",
+  "home": "Grêmio-RS",
+  "away": "Chapecoense-SC",
+  "played": true,
+  "score": [
+   3,
+   1
+  ]
+ },
+ {
+  "round": 25,
+  "upstream": 364045,
+  "date": "30/08/2026",
+  "time": "21:30",
+  "home": "Mirassol-SP",
+  "away": "Palmeiras-SP",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 25,
+  "upstream": 364041,
+  "date": "30/08/2026",
+  "time": "22:30",
+  "home": "Bahia-BA",
+  "away": "Internacional-RS",
+  "played": true,
+  "score": [
+   3,
+   2
+  ]
+ },
+ {
+  "round": 25,
+  "upstream": 364046,
+  "date": "31/08/2026",
+  "time": "23:00",
+  "home": "Remo-PA",
+  "away": "Coritiba-PR",
+  "played": true,
+  "score": [
+   2,
+   3
+  ]
+ },
+ {
+  "round": 26,
+  "upstream": 364055,
+  "date": "05/09/2026",
+  "time": "19:00",
+  "home": "Bragantino-SP",
+  "away": "Bahia-BA",
+  "played": true,
+  "score": [
+   2,
+   3
+  ]
+ },
+ {
+  "round": 26,
+  "upstream": 364057,
+  "date": "05/09/2026",
+  "time": "21:30",
+  "home": "São Paulo-SP",
+  "away": "Atlético-MG",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 26,
+  "upstream": 364053,
+  "date": "06/09/2026",
+  "time": "00:00",
+  "home": "Fluminense-RJ",
+  "away": "Vasco-RJ",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 26,
+  "upstream": 364051,
+  "date": "06/09/2026",
+  "time": "14:00",
+  "home": "Coritiba-PR",
+  "away": "Mirassol-SP",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 26,
+  "upstream": 364052,
+  "date": "06/09/2026",
+  "time": "19:00",
+  "home": "Cruzeiro-MG",
+  "away": "Athletico-PR",
+  "played": true,
+  "score": [
+   3,
+   1
+  ]
+ },
+ {
+  "round": 26,
+  "upstream": 364054,
+  "date": "06/09/2026",
+  "time": "19:00",
+  "home": "Internacional-RS",
+  "away": "Santos-SP",
+  "played": true,
+  "score": [
+   2,
+   3
+  ]
+ },
+ {
+  "round": 26,
+  "upstream": 364056,
+  "date": "06/09/2026",
+  "time": "19:00",
+  "home": "Remo-PA",
+  "away": "Flamengo-RJ",
+  "played": true,
+  "score": [
+   0,
+   1
+  ]
+ },
+ {
+  "round": 26,
+  "upstream": 364049,
+  "date": "06/09/2026",
+  "time": "21:30",
+  "home": "Botafogo-RJ",
+  "away": "Palmeiras-SP",
+  "played": true,
+  "score": [
+   0,
+   0
+  ]
+ },
+ {
+  "round": 26,
+  "upstream": 364050,
+  "date": "06/09/2026",
+  "time": "22:30",
+  "home": "Corinthians-SP",
+  "away": "Chapecoense-SC",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 26,
+  "upstream": 364058,
+  "date": "07/09/2026",
+  "time": "23:00",
+  "home": "Vitória-BA",
+  "away": "Grêmio-RS",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 27,
+  "upstream": 364063,
+  "date": "12/09/2026",
+  "time": "00:00",
+  "home": "Coritiba-PR",
+  "away": "Athletico-PR",
+  "played": true,
+  "score": [
+   3,
+   3
+  ]
+ },
+ {
+  "round": 27,
+  "upstream": 364059,
+  "date": "12/09/2026",
+  "time": "19:00",
+  "home": "Atlético-MG",
+  "away": "Fluminense-RJ",
+  "played": true,
+  "score": [
+   3,
+   1
+  ]
+ },
+ {
+  "round": 27,
+  "upstream": 364065,
+  "date": "12/09/2026",
+  "time": "19:00",
+  "home": "Grêmio-RS",
+  "away": "Vasco-RJ",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 27,
+  "upstream": 364062,
+  "date": "12/09/2026",
+  "time": "20:00",
+  "home": "Chapecoense-SC",
+  "away": "Internacional-RS",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 27,
+  "upstream": 364067,
+  "date": "12/09/2026",
+  "time": "21:30",
+  "home": "Palmeiras-SP",
+  "away": "São Paulo-SP",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 27,
+  "upstream": 364061,
+  "date": "12/09/2026",
+  "time": "23:30",
+  "home": "Botafogo-RJ",
+  "away": "Bragantino-SP",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 27,
+  "upstream": 364068,
+  "date": "13/09/2026",
+  "time": "00:00",
+  "home": "Santos-SP",
+  "away": "Cruzeiro-MG",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 27,
+  "upstream": 364066,
+  "date": "13/09/2026",
+  "time": "19:00",
+  "home": "Mirassol-SP",
+  "away": "Vitória-BA",
+  "played": true,
+  "score": [
+   2,
+   2
+  ]
+ },
+ {
+  "round": 27,
+  "upstream": 364064,
+  "date": "13/09/2026",
+  "time": "20:30",
+  "home": "Flamengo-RJ",
+  "away": "Corinthians-SP",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 27,
+  "upstream": 364060,
+  "date": "14/09/2026",
+  "time": "23:00",
+  "home": "Bahia-BA",
+  "away": "Remo-PA",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 28,
+  "upstream": 364070,
+  "date": "19/09/2026",
+  "time": "19:00",
+  "home": "Atlético-MG",
+  "away": "Chapecoense-SC",
+  "played": true,
+  "score": [
+   1,
+   1
+  ]
+ },
+ {
+  "round": 28,
+  "upstream": 364074,
+  "date": "19/09/2026",
+  "time": "20:00",
+  "home": "Mirassol-SP",
+  "away": "Botafogo-RJ",
+  "played": true,
+  "score": [
+   2,
+   0
+  ]
+ },
+ {
+  "round": 28,
+  "upstream": 364075,
+  "date": "19/09/2026",
+  "time": "21:30",
+  "home": "Remo-PA",
+  "away": "Santos-SP",
+  "played": true,
+  "score": [
+   1,
+   2
+  ]
+ },
+ {
+  "round": 28,
+  "upstream": 364077,
+  "date": "19/09/2026",
+  "time": "23:30",
+  "home": "Vasco-RJ",
+  "away": "Coritiba-PR",
+  "played": true,
+  "score": [
+   5,
+   0
+  ]
+ },
+ {
+  "round": 28,
+  "upstream": 364076,
+  "date": "20/09/2026",
+  "time": "00:00",
+  "home": "São Paulo-SP",
+  "away": "Internacional-RS",
+  "played": true,
+  "score": [
+   1,
+   0
+  ]
+ },
+ {
+  "round": 28,
+  "upstream": 364073,
+  "date": "20/09/2026",
+  "time": "14:00",
+  "home": "Grêmio-RS",
+  "away": "Palmeiras-SP",
+  "played": true,
+  "score": [
+   0,
+   0
+  ]
+ },
+ {
+  "round": 28,
+  "upstream": 364071,
+  "date": "20/09/2026",
+  "time": "19:00",
+  "home": "Corinthians-SP",
+  "away": "Fluminense-RJ",
+  "played": true,
+  "score": [
+   1,
+   3
+  ]
+ },
+ {
+  "round": 28,
+  "upstream": 364078,
+  "date": "20/09/2026",
+  "time": "19:00",
+  "home": "Vitória-BA",
+  "away": "Cruzeiro-MG",
+  "played": true,
+  "score": [
+   1,
+   3
+  ]
+ },
+ {
+  "round": 28,
+  "upstream": 364072,
+  "date": "20/09/2026",
+  "time": "21:30",
+  "home": "Flamengo-RJ",
+  "away": "Bragantino-SP",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 28,
+  "upstream": 364069,
+  "date": "20/09/2026",
+  "time": "22:30",
+  "home": "Athletico-PR",
+  "away": "Bahia-BA",
+  "played": true,
+  "score": [
+   2,
+   1
+  ]
+ },
+ {
+  "round": 29,
+  "upstream": 364085,
+  "date": "07/10/2026",
+  "time": "22:30",
+  "home": "Bragantino-SP",
+  "away": "Mirassol-SP",
+  "played": false,
+  "chances": [
+   39.56,
+   27.24,
+   33.2
+  ]
+ },
+ {
+  "round": 29,
+  "upstream": 364083,
+  "date": "07/10/2026",
+  "time": "22:30",
+  "home": "Internacional-RS",
+  "away": "Corinthians-SP",
+  "played": false,
+  "chances": [
+   39.69,
+   28.23,
+   32.08
+  ]
+ },
+ {
+  "round": 29,
+  "upstream": 364086,
+  "date": "07/10/2026",
+  "time": "22:30",
+  "home": "Remo-PA",
+  "away": "Grêmio-RS",
+  "played": false,
+  "chances": [
+   35.81,
+   26.16,
+   38.03
+  ]
+ },
+ {
+  "round": 29,
+  "upstream": 364088,
+  "date": "07/10/2026",
+  "time": "23:00",
+  "home": "Vitória-BA",
+  "away": "Chapecoense-SC",
+  "played": false,
+  "chances": [
+   49.92,
+   26.31,
+   23.77
+  ]
+ },
+ {
+  "round": 29,
+  "upstream": 364080,
+  "date": "07/10/2026",
+  "time": "23:30",
+  "home": "Botafogo-RJ",
+  "away": "Vasco-RJ",
+  "played": false,
+  "chances": [
+   52.28,
+   23.57,
+   24.14
+  ]
+ },
+ {
+  "round": 29,
+  "upstream": 364081,
+  "date": "08/10/2026",
+  "time": "00:30",
+  "home": "Cruzeiro-MG",
+  "away": "São Paulo-SP",
+  "played": false,
+  "chances": [
+   50.56,
+   27.18,
+   22.26
+  ]
+ },
+ {
+  "round": 29,
+  "upstream": 364087,
+  "date": "08/10/2026",
+  "time": "22:30",
+  "home": "Santos-SP",
+  "away": "Flamengo-RJ",
+  "played": false,
+  "chances": [
+   23.75,
+   24.26,
+   51.99
+  ]
+ },
+ {
+  "round": 29,
+  "upstream": 364079,
+  "date": "08/10/2026",
+  "time": "23:00",
+  "home": "Athletico-PR",
+  "away": "Atlético-MG",
+  "played": false,
+  "chances": [
+   41.09,
+   26.9,
+   32.0
+  ]
+ },
+ {
+  "round": 29,
+  "upstream": 364082,
+  "date": "09/10/2026",
+  "time": "00:30",
+  "home": "Fluminense-RJ",
+  "away": "Coritiba-PR",
+  "played": false,
+  "chances": [
+   57.75,
+   24.62,
+   17.63
+  ]
+ },
+ {
+  "round": 29,
+  "upstream": 364084,
+  "date": "09/10/2026",
+  "time": "00:30",
+  "home": "Palmeiras-SP",
+  "away": "Bahia-BA",
+  "played": false,
+  "chances": [
+   66.11,
+   20.28,
+   13.61
+  ]
+ },
+ {
+  "round": 30,
+  "upstream": 364098,
+  "date": "10/10/2026",
+  "time": "20:00",
+  "home": "Vasco-RJ",
+  "away": "Remo-PA",
+  "played": false,
+  "chances": [
+   54.03,
+   23.3,
+   22.67
+  ]
+ },
+ {
+  "round": 30,
+  "upstream": 364097,
+  "date": "11/10/2026",
+  "time": "00:00",
+  "home": "São Paulo-SP",
+  "away": "Vitória-BA",
+  "played": false,
+  "chances": [
+   53.22,
+   26.95,
+   19.84
+  ]
+ },
+ {
+  "round": 30,
+  "upstream": 364089,
+  "date": "11/10/2026",
+  "time": "19:00",
+  "home": "Atlético-MG",
+  "away": "Santos-SP",
+  "played": false,
+  "chances": [
+   50.0,
+   25.45,
+   24.55
+  ]
+ },
+ {
+  "round": 30,
+  "upstream": 364093,
+  "date": "11/10/2026",
+  "time": "20:30",
+  "home": "Flamengo-RJ",
+  "away": "Fluminense-RJ",
+  "played": false,
+  "chances": [
+   63.89,
+   21.99,
+   14.11
+  ]
+ },
+ {
+  "round": 30,
+  "upstream": 364094,
+  "date": "11/10/2026",
+  "time": "20:30",
+  "home": "Grêmio-RS",
+  "away": "Internacional-RS",
+  "played": false,
+  "chances": [
+   46.93,
+   25.9,
+   27.17
+  ]
+ },
+ {
+  "round": 30,
+  "upstream": 364095,
+  "date": "11/10/2026",
+  "time": "20:30",
+  "home": "Palmeiras-SP",
+  "away": "Corinthians-SP",
+  "played": false,
+  "chances": [
+   63.11,
+   23.23,
+   13.66
+  ]
+ },
+ {
+  "round": 30,
+  "upstream": 364090,
+  "date": "11/10/2026",
+  "time": "22:30",
+  "home": "Bahia-BA",
+  "away": "Mirassol-SP",
+  "played": false,
+  "chances": [
+   41.82,
+   26.11,
+   32.07
+  ]
+ },
+ {
+  "round": 30,
+  "upstream": 364092,
+  "date": "12/10/2026",
+  "time": "19:00",
+  "home": "Coritiba-PR",
+  "away": "Botafogo-RJ",
+  "played": false,
+  "chances": [
+   32.42,
+   26.62,
+   40.96
+  ]
+ },
+ {
+  "round": 30,
+  "upstream": 364091,
+  "date": "12/10/2026",
+  "time": "22:30",
+  "home": "Chapecoense-SC",
+  "away": "Athletico-PR",
+  "played": false,
+  "chances": [
+   32.26,
+   26.21,
+   41.53
+  ]
+ },
+ {
+  "round": 30,
+  "upstream": 364096,
+  "date": "13/10/2026",
+  "time": "00:00",
+  "home": "Bragantino-SP",
+  "away": "Cruzeiro-MG",
+  "played": false,
+  "chances": [
+   35.62,
+   27.31,
+   37.07
+  ]
+ },
+ {
+  "round": 31,
+  "upstream": 364106,
+  "date": "16/10/2026",
+  "time": "23:00",
+  "home": "Mirassol-SP",
+  "away": "Internacional-RS",
+  "played": false,
+  "chances": [
+   51.23,
+   25.52,
+   23.24
+  ]
+ },
+ {
+  "round": 31,
+  "upstream": 364102,
+  "date": "17/10/2026",
+  "time": "21:00",
+  "home": "Botafogo-RJ",
+  "away": "Chapecoense-SC",
+  "played": false,
+  "chances": [
+   63.24,
+   21.35,
+   15.41
+  ]
+ },
+ {
+  "round": 31,
+  "upstream": 364100,
+  "date": "17/10/2026",
+  "time": "21:30",
+  "home": "Atlético-MG",
+  "away": "Coritiba-PR",
+  "played": false,
+  "chances": [
+   56.15,
+   25.31,
+   18.54
+  ]
+ },
+ {
+  "round": 31,
+  "upstream": 364099,
+  "date": "17/10/2026",
+  "time": "22:30",
+  "home": "Athletico-PR",
+  "away": "Palmeiras-SP",
+  "played": false,
+  "chances": [
+   26.7,
+   25.36,
+   47.94
+  ]
+ },
+ {
+  "round": 31,
+  "upstream": 364108,
+  "date": "18/10/2026",
+  "time": "00:00",
+  "home": "São Paulo-SP",
+  "away": "Vasco-RJ",
+  "played": false,
+  "chances": [
+   48.24,
+   26.22,
+   25.53
+  ]
+ },
+ {
+  "round": 31,
+  "upstream": 364104,
+  "date": "18/10/2026",
+  "time": "19:00",
+  "home": "Fluminense-RJ",
+  "away": "Santos-SP",
+  "played": false,
+  "chances": [
+   51.61,
+   24.92,
+   23.47
+  ]
+ },
+ {
+  "round": 31,
+  "upstream": 364105,
+  "date": "18/10/2026",
+  "time": "19:00",
+  "home": "Grêmio-RS",
+  "away": "Cruzeiro-MG",
+  "played": false,
+  "chances": [
+   36.72,
+   27.35,
+   35.93
+  ]
+ },
+ {
+  "round": 31,
+  "upstream": 364101,
+  "date": "18/10/2026",
+  "time": "21:30",
+  "home": "Bahia-BA",
+  "away": "Flamengo-RJ",
+  "played": false,
+  "chances": [
+   24.67,
+   24.31,
+   51.02
+  ]
+ },
+ {
+  "round": 31,
+  "upstream": 364107,
+  "date": "18/10/2026",
+  "time": "22:30",
+  "home": "Remo-PA",
+  "away": "Bragantino-SP",
+  "played": false,
+  "chances": [
+   36.85,
+   26.16,
+   36.99
+  ]
+ },
+ {
+  "round": 31,
+  "upstream": 364103,
+  "date": "19/10/2026",
+  "time": "23:00",
+  "home": "Corinthians-SP",
+  "away": "Vitória-BA",
+  "played": false,
+  "chances": [
+   53.36,
+   27.25,
+   19.39
+  ]
+ },
+ {
+  "round": 32,
+  "upstream": 364111,
+  "date": "23/10/2026",
+  "time": "23:00",
+  "home": "Cruzeiro-MG",
+  "away": "Remo-PA",
+  "played": false,
+  "chances": [
+   62.86,
+   21.99,
+   15.15
+  ]
+ },
+ {
+  "round": 32,
+  "upstream": 364113,
+  "date": "24/10/2026",
+  "time": "19:30",
+  "home": "Internacional-RS",
+  "away": "Botafogo-RJ",
+  "played": false,
+  "chances": [
+   38.03,
+   25.81,
+   36.16
+  ]
+ },
+ {
+  "round": 32,
+  "upstream": 364114,
+  "date": "24/10/2026",
+  "time": "19:30",
+  "home": "Mirassol-SP",
+  "away": "São Paulo-SP",
+  "played": false,
+  "chances": [
+   46.15,
+   27.98,
+   25.87
+  ]
+ },
+ {
+  "round": 32,
+  "upstream": 364118,
+  "date": "24/10/2026",
+  "time": "19:30",
+  "home": "Vitória-BA",
+  "away": "Athletico-PR",
+  "played": false,
+  "chances": [
+   37.6,
+   27.34,
+   35.06
+  ]
+ },
+ {
+  "round": 32,
+  "upstream": 364115,
+  "date": "24/10/2026",
+  "time": "21:30",
+  "home": "Palmeiras-SP",
+  "away": "Bragantino-SP",
+  "played": false,
+  "chances": [
+   67.4,
+   20.39,
+   12.21
+  ]
+ },
+ {
+  "round": 32,
+  "upstream": 364117,
+  "date": "24/10/2026",
+  "time": "21:30",
+  "home": "Vasco-RJ",
+  "away": "Corinthians-SP",
+  "played": false,
+  "chances": [
+   41.29,
+   27.21,
+   31.5
+  ]
+ },
+ {
+  "round": 32,
+  "upstream": 364109,
+  "date": "24/10/2026",
+  "time": "22:30",
+  "home": "Chapecoense-SC",
+  "away": "Fluminense-RJ",
+  "played": false,
+  "chances": [
+   27.35,
+   26.28,
+   46.37
+  ]
+ },
+ {
+  "round": 32,
+  "upstream": 364116,
+  "date": "25/10/2026",
+  "time": "00:00",
+  "home": "Santos-SP",
+  "away": "Bahia-BA",
+  "played": false,
+  "chances": [
+   44.6,
+   24.84,
+   30.56
+  ]
+ },
+ {
+  "round": 32,
+  "upstream": 364110,
+  "date": "26/10/2026",
+  "time": "22:30",
+  "home": "Coritiba-PR",
+  "away": "Grêmio-RS",
+  "played": false,
+  "chances": [
+   37.23,
+   27.68,
+   35.09
+  ]
+ },
+ {
+  "round": 32,
+  "upstream": 364112,
+  "date": "26/10/2026",
+  "time": "23:00",
+  "home": "Flamengo-RJ",
+  "away": "Atlético-MG",
+  "played": false,
+  "chances": [
+   65.13,
+   21.7,
+   13.17
+  ]
+ },
+ {
+  "round": 33,
+  "upstream": 364125,
+  "date": "28/10/2026",
+  "time": "22:30",
+  "home": "Bragantino-SP",
+  "away": "Chapecoense-SC",
+  "played": false,
+  "chances": [
+   56.02,
+   24.17,
+   19.81
+  ]
+ },
+ {
+  "round": 33,
+  "upstream": 364123,
+  "date": "28/10/2026",
+  "time": "22:30",
+  "home": "Fluminense-RJ",
+  "away": "Internacional-RS",
+  "played": false,
+  "chances": [
+   52.94,
+   25.07,
+   21.99
+  ]
+ },
+ {
+  "round": 33,
+  "upstream": 364127,
+  "date": "28/10/2026",
+  "time": "22:30",
+  "home": "Santos-SP",
+  "away": "Palmeiras-SP",
+  "played": false,
+  "chances": [
+   26.16,
+   24.81,
+   49.02
+  ]
+ },
+ {
+  "round": 33,
+  "upstream": 364120,
+  "date": "29/10/2026",
+  "time": "00:30",
+  "home": "Bahia-BA",
+  "away": "São Paulo-SP",
+  "played": false,
+  "chances": [
+   43.09,
+   26.86,
+   30.05
+  ]
+ },
+ {
+  "round": 33,
+  "upstream": 364126,
+  "date": "29/10/2026",
+  "time": "00:30",
+  "home": "Remo-PA",
+  "away": "Botafogo-RJ",
+  "played": false,
+  "chances": [
+   31.01,
+   25.02,
+   43.97
+  ]
+ },
+ {
+  "round": 33,
+  "upstream": 364119,
+  "date": "29/10/2026",
+  "time": "22:30",
+  "home": "Atlético-MG",
+  "away": "Cruzeiro-MG",
+  "played": false,
+  "chances": [
+   40.94,
+   27.82,
+   31.24
+  ]
+ },
+ {
+  "round": 33,
+  "upstream": 364122,
+  "date": "29/10/2026",
+  "time": "22:30",
+  "home": "Coritiba-PR",
+  "away": "Vitória-BA",
+  "played": false,
+  "chances": [
+   43.21,
+   28.14,
+   28.65
+  ]
+ },
+ {
+  "round": 33,
+  "upstream": 364128,
+  "date": "29/10/2026",
+  "time": "23:00",
+  "home": "Vasco-RJ",
+  "away": "Flamengo-RJ",
+  "played": false,
+  "chances": [
+   23.53,
+   23.89,
+   52.58
+  ]
+ },
+ {
+  "round": 33,
+  "upstream": 364124,
+  "date": "30/10/2026",
+  "time": "00:30",
+  "home": "Grêmio-RS",
+  "away": "Athletico-PR",
+  "played": false,
+  "chances": [
+   44.7,
+   26.09,
+   29.22
+  ]
+ },
+ {
+  "round": 33,
+  "upstream": 364121,
+  "date": "30/10/2026",
+  "time": "23:00",
+  "home": "Corinthians-SP",
+  "away": "Mirassol-SP",
+  "played": false,
+  "chances": [
+   42.89,
+   28.86,
+   28.24
+  ]
+ },
+ {
+  "round": 34,
+  "upstream": 364129,
+  "date": "04/11/2026",
+  "time": "18:00",
+  "home": "Athletico-PR",
+  "away": "Vasco-RJ",
+  "played": false,
+  "chances": [
+   46.66,
+   24.87,
+   28.47
+  ]
+ },
+ {
+  "round": 34,
+  "upstream": 364130,
+  "date": "04/11/2026",
+  "time": "18:00",
+  "home": "Botafogo-RJ",
+  "away": "Atlético-MG",
+  "played": false,
+  "chances": [
+   46.67,
+   25.88,
+   27.46
+  ]
+ },
+ {
+  "round": 34,
+  "upstream": 364136,
+  "date": "04/11/2026",
+  "time": "18:00",
+  "home": "Bragantino-SP",
+  "away": "Santos-SP",
+  "played": false,
+  "chances": [
+   44.43,
+   25.73,
+   29.83
+  ]
+ },
+ {
+  "round": 34,
+  "upstream": 364131,
+  "date": "04/11/2026",
+  "time": "18:00",
+  "home": "Chapecoense-SC",
+  "away": "Mirassol-SP",
+  "played": false,
+  "chances": [
+   28.65,
+   26.6,
+   44.75
+  ]
+ },
+ {
+  "round": 34,
+  "upstream": 364132,
+  "date": "04/11/2026",
+  "time": "18:00",
+  "home": "Cruzeiro-MG",
+  "away": "Bahia-BA",
+  "played": false,
+  "chances": [
+   53.37,
+   24.49,
+   22.14
+  ]
+ },
+ {
+  "round": 34,
+  "upstream": 364133,
+  "date": "04/11/2026",
+  "time": "18:00",
+  "home": "Flamengo-RJ",
+  "away": "Grêmio-RS",
+  "played": false,
+  "chances": [
+   69.29,
+   19.67,
+   11.04
+  ]
+ },
+ {
+  "round": 34,
+  "upstream": 364134,
+  "date": "04/11/2026",
+  "time": "18:00",
+  "home": "Internacional-RS",
+  "away": "Coritiba-PR",
+  "played": false,
+  "chances": [
+   49.91,
+   26.01,
+   24.08
+  ]
+ },
+ {
+  "round": 34,
+  "upstream": 364135,
+  "date": "04/11/2026",
+  "time": "18:00",
+  "home": "Palmeiras-SP",
+  "away": "Remo-PA",
+  "played": false,
+  "chances": [
+   74.61,
+   16.86,
+   8.53
+  ]
+ },
+ {
+  "round": 34,
+  "upstream": 364137,
+  "date": "04/11/2026",
+  "time": "18:00",
+  "home": "São Paulo-SP",
+  "away": "Corinthians-SP",
+  "played": false,
+  "chances": [
+   43.5,
+   29.82,
+   26.68
+  ]
+ },
+ {
+  "round": 34,
+  "upstream": 364138,
+  "date": "04/11/2026",
+  "time": "18:00",
+  "home": "Vitória-BA",
+  "away": "Fluminense-RJ",
+  "played": false,
+  "chances": [
+   32.35,
+   27.95,
+   39.7
+  ]
+ },
+ {
+  "round": 35,
+  "upstream": 364139,
+  "date": "18/11/2026",
+  "time": "18:00",
+  "home": "Corinthians-SP",
+  "away": "Botafogo-RJ",
+  "played": false,
+  "chances": [
+   42.14,
+   27.6,
+   30.26
+  ]
+ },
+ {
+  "round": 35,
+  "upstream": 364140,
+  "date": "18/11/2026",
+  "time": "18:00",
+  "home": "Coritiba-PR",
+  "away": "Santos-SP",
+  "played": false,
+  "chances": [
+   37.86,
+   26.85,
+   35.29
+  ]
+ },
+ {
+  "round": 35,
+  "upstream": 364141,
+  "date": "18/11/2026",
+  "time": "18:00",
+  "home": "Cruzeiro-MG",
+  "away": "Palmeiras-SP",
+  "played": false,
+  "chances": [
+   33.86,
+   27.19,
+   38.95
+  ]
+ },
+ {
+  "round": 35,
+  "upstream": 364142,
+  "date": "18/11/2026",
+  "time": "18:00",
+  "home": "Flamengo-RJ",
+  "away": "Athletico-PR",
+  "played": false,
+  "chances": [
+   69.06,
+   19.52,
+   11.42
+  ]
+ },
+ {
+  "round": 35,
+  "upstream": 364143,
+  "date": "18/11/2026",
+  "time": "18:00",
+  "home": "Grêmio-RS",
+  "away": "Bahia-BA",
+  "played": false,
+  "chances": [
+   44.65,
+   25.56,
+   29.79
+  ]
+ },
+ {
+  "round": 35,
+  "upstream": 364144,
+  "date": "18/11/2026",
+  "time": "18:00",
+  "home": "Mirassol-SP",
+  "away": "Atlético-MG",
+  "played": false,
+  "chances": [
+   44.71,
+   27.4,
+   27.89
+  ]
+ },
+ {
+  "round": 35,
+  "upstream": 364145,
+  "date": "18/11/2026",
+  "time": "18:00",
+  "home": "Remo-PA",
+  "away": "Chapecoense-SC",
+  "played": false,
+  "chances": [
+   47.78,
+   25.29,
+   26.93
+  ]
+ },
+ {
+  "round": 35,
+  "upstream": 364146,
+  "date": "18/11/2026",
+  "time": "18:00",
+  "home": "São Paulo-SP",
+  "away": "Fluminense-RJ",
+  "played": false,
+  "chances": [
+   41.26,
+   28.55,
+   30.19
+  ]
+ },
+ {
+  "round": 35,
+  "upstream": 364147,
+  "date": "18/11/2026",
+  "time": "18:00",
+  "home": "Vasco-RJ",
+  "away": "Internacional-RS",
+  "played": false,
+  "chances": [
+   46.63,
+   24.93,
+   28.44
+  ]
+ },
+ {
+  "round": 35,
+  "upstream": 364148,
+  "date": "18/11/2026",
+  "time": "18:00",
+  "home": "Vitória-BA",
+  "away": "Bragantino-SP",
+  "played": false,
+  "chances": [
+   38.9,
+   27.71,
+   33.39
+  ]
+ },
+ {
+  "round": 36,
+  "upstream": 364149,
+  "date": "22/11/2026",
+  "time": "18:00",
+  "home": "Athletico-PR",
+  "away": "Remo-PA",
+  "played": false,
+  "chances": [
+   54.93,
+   23.65,
+   21.42
+  ]
+ },
+ {
+  "round": 36,
+  "upstream": 364150,
+  "date": "22/11/2026",
+  "time": "18:00",
+  "home": "Atlético-MG",
+  "away": "Corinthians-SP",
+  "played": false,
+  "chances": [
+   45.81,
+   28.55,
+   25.65
+  ]
+ },
+ {
+  "round": 36,
+  "upstream": 364151,
+  "date": "22/11/2026",
+  "time": "18:00",
+  "home": "Bahia-BA",
+  "away": "Coritiba-PR",
+  "played": false,
+  "chances": [
+   52.95,
+   24.72,
+   22.33
+  ]
+ },
+ {
+  "round": 36,
+  "upstream": 364152,
+  "date": "22/11/2026",
+  "time": "18:00",
+  "home": "Botafogo-RJ",
+  "away": "São Paulo-SP",
+  "played": false,
+  "chances": [
+   48.15,
+   26.34,
+   25.51
+  ]
+ },
+ {
+  "round": 36,
+  "upstream": 364157,
+  "date": "22/11/2026",
+  "time": "18:00",
+  "home": "Bragantino-SP",
+  "away": "Vasco-RJ",
+  "played": false,
+  "chances": [
+   44.9,
+   25.42,
+   29.68
+  ]
+ },
+ {
+  "round": 36,
+  "upstream": 364153,
+  "date": "22/11/2026",
+  "time": "18:00",
+  "home": "Chapecoense-SC",
+  "away": "Cruzeiro-MG",
+  "played": false,
+  "chances": [
+   25.18,
+   25.95,
+   48.87
+  ]
+ },
+ {
+  "round": 36,
+  "upstream": 364154,
+  "date": "22/11/2026",
+  "time": "18:00",
+  "home": "Fluminense-RJ",
+  "away": "Mirassol-SP",
+  "played": false,
+  "chances": [
+   46.63,
+   26.89,
+   26.48
+  ]
+ },
+ {
+  "round": 36,
+  "upstream": 364155,
+  "date": "22/11/2026",
+  "time": "18:00",
+  "home": "Internacional-RS",
+  "away": "Vitória-BA",
+  "played": false,
+  "chances": [
+   49.25,
+   26.2,
+   24.55
+  ]
+ },
+ {
+  "round": 36,
+  "upstream": 364156,
+  "date": "22/11/2026",
+  "time": "18:00",
+  "home": "Palmeiras-SP",
+  "away": "Flamengo-RJ",
+  "played": false,
+  "chances": [
+   43.62,
+   26.42,
+   29.96
+  ]
+ },
+ {
+  "round": 36,
+  "upstream": 364158,
+  "date": "22/11/2026",
+  "time": "18:00",
+  "home": "Santos-SP",
+  "away": "Grêmio-RS",
+  "played": false,
+  "chances": [
+   44.94,
+   25.65,
+   29.42
+  ]
+ },
+ {
+  "round": 37,
+  "upstream": 364159,
+  "date": "29/11/2026",
+  "time": "18:00",
+  "home": "Atlético-MG",
+  "away": "Vasco-RJ",
+  "played": false,
+  "chances": [
+   50.47,
+   25.11,
+   24.42
+  ]
+ },
+ {
+  "round": 37,
+  "upstream": 364160,
+  "date": "29/11/2026",
+  "time": "18:00",
+  "home": "Botafogo-RJ",
+  "away": "Bahia-BA",
+  "played": false,
+  "chances": [
+   50.86,
+   23.93,
+   25.21
+  ]
+ },
+ {
+  "round": 37,
+  "upstream": 364161,
+  "date": "29/11/2026",
+  "time": "18:00",
+  "home": "Chapecoense-SC",
+  "away": "Palmeiras-SP",
+  "played": false,
+  "chances": [
+   16.53,
+   22.28,
+   61.2
+  ]
+ },
+ {
+  "round": 37,
+  "upstream": 364162,
+  "date": "29/11/2026",
+  "time": "18:00",
+  "home": "Corinthians-SP",
+  "away": "Grêmio-RS",
+  "played": false,
+  "chances": [
+   47.23,
+   27.81,
+   24.97
+  ]
+ },
+ {
+  "round": 37,
+  "upstream": 364163,
+  "date": "29/11/2026",
+  "time": "18:00",
+  "home": "Coritiba-PR",
+  "away": "Flamengo-RJ",
+  "played": false,
+  "chances": [
+   17.9,
+   23.89,
+   58.22
+  ]
+ },
+ {
+  "round": 37,
+  "upstream": 364164,
+  "date": "29/11/2026",
+  "time": "18:00",
+  "home": "Fluminense-RJ",
+  "away": "Cruzeiro-MG",
+  "played": false,
+  "chances": [
+   42.53,
+   27.43,
+   30.04
+  ]
+ },
+ {
+  "round": 37,
+  "upstream": 364165,
+  "date": "29/11/2026",
+  "time": "18:00",
+  "home": "Internacional-RS",
+  "away": "Bragantino-SP",
+  "played": false,
+  "chances": [
+   44.19,
+   26.21,
+   29.6
+  ]
+ },
+ {
+  "round": 37,
+  "upstream": 364166,
+  "date": "29/11/2026",
+  "time": "18:00",
+  "home": "Mirassol-SP",
+  "away": "Athletico-PR",
+  "played": false,
+  "chances": [
+   48.99,
+   25.85,
+   25.16
+  ]
+ },
+ {
+  "round": 37,
+  "upstream": 364167,
+  "date": "29/11/2026",
+  "time": "18:00",
+  "home": "São Paulo-SP",
+  "away": "Remo-PA",
+  "played": false,
+  "chances": [
+   56.47,
+   24.72,
+   18.81
+  ]
+ },
+ {
+  "round": 37,
+  "upstream": 364168,
+  "date": "29/11/2026",
+  "time": "18:00",
+  "home": "Vitória-BA",
+  "away": "Santos-SP",
+  "played": false,
+  "chances": [
+   38.47,
+   26.92,
+   34.61
+  ]
+ },
+ {
+  "round": 38,
+  "upstream": 364169,
+  "date": "02/12/2026",
+  "time": "18:00",
+  "home": "Athletico-PR",
+  "away": "São Paulo-SP",
+  "played": false,
+  "chances": [
+   42.54,
+   27.55,
+   29.91
+  ]
+ },
+ {
+  "round": 38,
+  "upstream": 364170,
+  "date": "02/12/2026",
+  "time": "18:00",
+  "home": "Bahia-BA",
+  "away": "Atlético-MG",
+  "played": false,
+  "chances": [
+   41.62,
+   26.26,
+   32.12
+  ]
+ },
+ {
+  "round": 38,
+  "upstream": 364175,
+  "date": "02/12/2026",
+  "time": "18:00",
+  "home": "Bragantino-SP",
+  "away": "Fluminense-RJ",
+  "played": false,
+  "chances": [
+   38.09,
+   27.19,
+   34.71
+  ]
+ },
+ {
+  "round": 38,
+  "upstream": 364171,
+  "date": "02/12/2026",
+  "time": "18:00",
+  "home": "Cruzeiro-MG",
+  "away": "Internacional-RS",
+  "played": false,
+  "chances": [
+   55.63,
+   24.52,
+   19.85
+  ]
+ },
+ {
+  "round": 38,
+  "upstream": 364172,
+  "date": "02/12/2026",
+  "time": "18:00",
+  "home": "Flamengo-RJ",
+  "away": "Chapecoense-SC",
+  "played": false,
+  "chances": [
+   79.36,
+   14.78,
+   5.854
+  ]
+ },
+ {
+  "round": 38,
+  "upstream": 364173,
+  "date": "02/12/2026",
+  "time": "18:00",
+  "home": "Grêmio-RS",
+  "away": "Mirassol-SP",
+  "played": false,
+  "chances": [
+   40.69,
+   27.2,
+   32.11
+  ]
+ },
+ {
+  "round": 38,
+  "upstream": 364174,
+  "date": "02/12/2026",
+  "time": "18:00",
+  "home": "Palmeiras-SP",
+  "away": "Coritiba-PR",
+  "played": false,
+  "chances": [
+   72.48,
+   18.64,
+   8.885
+  ]
+ },
+ {
+  "round": 38,
+  "upstream": 364176,
+  "date": "02/12/2026",
+  "time": "18:00",
+  "home": "Remo-PA",
+  "away": "Corinthians-SP",
+  "played": false,
+  "chances": [
+   32.61,
+   27.68,
+   39.71
+  ]
+ },
+ {
+  "round": 38,
+  "upstream": 364177,
+  "date": "02/12/2026",
+  "time": "18:00",
+  "home": "Santos-SP",
+  "away": "Botafogo-RJ",
+  "played": false,
+  "chances": [
+   39.81,
+   25.28,
+   34.92
+  ]
+ },
+ {
+  "round": 38,
+  "upstream": 364178,
+  "date": "02/12/2026",
+  "time": "18:00",
+  "home": "Vasco-RJ",
+  "away": "Vitória-BA",
+  "played": false,
+  "chances": [
+   50.87,
+   25.12,
+   24.01
+  ]
+ }
+]

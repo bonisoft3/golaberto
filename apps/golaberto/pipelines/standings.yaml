@@ -1,0 +1,237 @@
+# The tables, recounted absolutely. A change to a game, a phase, a
+# championship, a team, a group's membership or its zones names the groups it
+# can move; the stream re-reads everything those groups' tables are made of and
+# posts every row, upserting on <group>:<team>, one group per message. A
+# replayed event posts the same rows, so at-least-once delivery is harmless. A
+# recount that fails — a read or the post — is rejected, so the event is
+# delivered again and re-reads the tables as they are then: whatever lands last
+# is the newest read. Recounts run one at a time. One recount of every group
+# runs at start, because rows seeded before change capture began were never
+# heard.
+#
+# The sink is live, off the CDC publication, so it cannot re-feed this stream.
+input:
+  broker:
+    inputs:
+      - redis_streams:
+          url: ${REDIS_URL}
+          streams:
+            - cdc-events
+          body_key: data
+          consumer_group: golaberto-standings
+      - generate:
+          count: 1
+          interval: ""
+          mapping: 'root = {"boot": true}'
+pipeline:
+  threads: 1
+  processors:
+    # Which groups this event can move, as the PostgREST read that lists them;
+    # an event that can move none is dropped here.
+    - mapping: |
+        let row = if this.exists("data") && this.data.type() == "string" && this.data.length() > 0 { this.data.parse_json() } else { {} }
+        let table = $row.__table.or("")
+        let scope = match {
+          this.boot.or(false) => "stage_group?select=id,phase_id",
+          $table == "game" => "stage_group?select=id,phase_id&phase_id=eq." + $row.phase_id,
+          $table == "phase" => "stage_group?select=id,phase_id&phase_id=eq." + $row.id,
+          $table == "stage_group" => "stage_group?select=id,phase_id&id=eq." + $row.id,
+          $table == "team_group" => "stage_group?select=id,phase_id&id=eq." + $row.group_id,
+          $table == "zone" => "stage_group?select=id,phase_id&id=eq." + $row.group_id,
+          $table == "championship" => "stage_group?select=id,phase_id,phase!inner(championship_id)&phase.championship_id=eq." + $row.id,
+          $table == "team" => "stage_group?select=id,phase_id,team_group!inner(team_id)&team_group.team_id=eq." + $row.id,
+          _ => null,
+        }
+        root = if $scope == null { deleted() } else { {"scope": $scope} }
+    # A failing step skips the rest, and the output rejects the message.
+    - try:
+        - branch:
+            processors:
+              - http:
+                  url: ${CRUD_URL}/${! this.scope }
+                  verb: GET
+                  retries: 30
+                  retry_period: 2s
+                  headers:
+                    Authorization: Bearer ${SERVICE_JWT}
+            result_map: root.groups = this
+        # One message per group, so no read or post grows with the archive.
+        - mapping: |
+            root = if this.groups.length() == 0 { deleted() } else { this.groups.map_each(g -> {"group": g}) }
+        - unarchive:
+            format: json_array
+        - branch:
+            processors:
+              - http:
+                  url: ${CRUD_URL}/team_group?select=group_id,team_id,add_sub,bias,team(name)&group_id=eq.${! this.group.id }
+                  verb: GET
+                  headers:
+                    Authorization: Bearer ${SERVICE_JWT}
+            result_map: root.members = this
+        - branch:
+            processors:
+              - http:
+                  url: ${CRUD_URL}/game?select=phase_id,home_id,away_id,home_score,away_score,home_aet,away_aet,home_pen,away_pen,day,kickoff&played=is.true&phase_id=eq.${! this.group.phase_id }&order=day.asc,kickoff.asc.nullsfirst
+                  verb: GET
+                  headers:
+                    Authorization: Bearer ${SERVICE_JWT}
+            result_map: root.games = this
+        - branch:
+            processors:
+              - http:
+                  url: ${CRUD_URL}/phase?select=id,sort,bonus_points,bonus_points_threshold,championship(point_win,point_draw,point_loss)&id=eq.${! this.group.phase_id }
+                  verb: GET
+                  headers:
+                    Authorization: Bearer ${SERVICE_JWT}
+            result_map: root.phases = this
+        - branch:
+            processors:
+              - http:
+                  url: ${CRUD_URL}/zone?select=group_id,color,first,last&group_id=eq.${! this.group.id }
+                  verb: GET
+                  headers:
+                    Authorization: Bearer ${SERVICE_JWT}
+            result_map: root.zones = this
+        - bloblang: |
+            # A key that sorts descending, as a fixed-width string that sorts
+            # ascending: every ladder key but the name becomes one of these, so one
+            # string comparison is upstream's whole comparator.
+            # Every value a ladder key reaches lies well inside -999999..7999999,
+            # so each encodes to thirteen digits and the strings compare as the
+            # numbers do; a millionth separates any two goal averages.
+            map desc {
+              root = (9000000000000 - (this * 1000000).round().int64()).string()
+            }
+
+            # One side of one played game, from the side's own point of view.
+            map side {
+              let home = this.game.home_id == this.team
+              let mine = if $home { this.game.home_score } else { this.game.away_score }
+              let theirs = if $home { this.game.away_score } else { this.game.home_score }
+              root.result = if $mine > $theirs { "w" } else if $mine < $theirs { "l" } else { "d" }
+              root.for = $mine
+              root.against = $theirs
+              root.away = if $home { 0 } else { $mine }
+              root.aet = (if $home { this.game.home_aet } else { this.game.away_aet }).or(0)
+              root.pen = (if $home { this.game.home_pen } else { this.game.away_pen }).or(0)
+              root.opponent = if $home { this.game.away_id } else { this.game.home_id }
+              root.margin = $mine - $theirs
+            }
+
+            map points {
+              let rule = this.rule
+              root = this.sides.fold(0, t -> t.tally + match t.value.result {
+                "w" => $rule.win + if $rule.bonus > 0 && t.value.margin >= $rule.threshold { $rule.bonus } else { 0 },
+                "d" => $rule.draw,
+                _ => $rule.loss,
+              })
+            }
+
+            map campaign {
+              let team = this.member.team_id
+              let sides = this.games.filter(g -> g.home_id == $team || g.away_id == $team).map_each(g -> {"game": g, "team": $team}.apply("side"))
+              let goals_for = $sides.fold(0, t -> t.tally + t.value.for)
+              let goals_against = $sides.fold(0, t -> t.tally + t.value.against)
+              let form = $sides.map_each(s -> s.result)
+              root.team_id = this.member.team_id
+              root.name = this.member.team.name
+              root.bias = this.member.bias
+              root.add_sub = this.member.add_sub
+              root.sides = $sides
+              root.played = $sides.length()
+              root.wins = $sides.filter(s -> s.result == "w").length()
+              root.draws = $sides.filter(s -> s.result == "d").length()
+              root.losses = $sides.filter(s -> s.result == "l").length()
+              root.goals_for = $goals_for
+              root.goals_against = $goals_against
+              root.goal_diff = $goals_for - $goals_against
+              root.goals_away = $sides.fold(0, t -> t.tally + t.value.away)
+              root.goals_aet = $sides.fold(0, t -> t.tally + t.value.aet)
+              root.goals_pen = $sides.fold(0, t -> t.tally + t.value.pen)
+              root.points = {"sides": $sides, "rule": this.rule}.apply("points") + this.member.add_sub
+              root.form = $form
+            }
+
+            # Head to head is the mini-league among the teams level on points:
+            # the points each earned in its games against the others, add_sub
+            # included. It separates no one in a group of two or when every team
+            # is level.
+            map head {
+              let me = this.me
+              let level = this.all.filter(o -> o.points == $me.points && o.team_id != $me.team_id).map_each(o -> o.team_id)
+              root = if this.all.length() <= 2 || $level.length() == this.all.length() - 1 { 0 } else {
+                {"sides": $me.sides.filter(s -> $level.contains(s.opponent)), "rule": this.rule}.apply("points") + $me.add_sub
+              }
+            }
+
+            # A team that conceded nothing outranks every ratio, by goals scored,
+            # as upstream's near-zero divisor makes it.
+            map sort_key {
+              let c = this.c
+              root = this.ladder.map_each(k -> match k {
+                "pt" => $c.points.apply("desc"),
+                "w" => $c.wins.apply("desc"),
+                "gd" => $c.goal_diff.apply("desc"),
+                "gf" => $c.goals_for.apply("desc"),
+                "g_away" => $c.goals_away.apply("desc"),
+                "gp" => $c.goals_pen.apply("desc"),
+                "g_aet" => $c.goals_aet.apply("desc"),
+                "bias" => $c.bias.apply("desc"),
+                "g_average" => (if $c.goals_against == 0 && $c.goals_for > 0 { 1000 + $c.goals_for } else { $c.goals_for / ($c.goals_against + 0.0000001) }).apply("desc"),
+                "head" => $c.head.apply("desc"),
+                "name" => $c.name,
+                _ => "",
+              }).join("\u0000")
+            }
+
+            map table {
+              let group = this.group
+              let phase = this.phases.filter(p -> p.id == $group.phase_id).index(0)
+              let rule = {"win": $phase.championship.point_win, "draw": $phase.championship.point_draw, "loss": $phase.championship.point_loss, "bonus": $phase.bonus_points, "threshold": $phase.bonus_points_threshold}
+              let members = this.members.filter(m -> m.group_id == $group.id)
+              let ids = $members.map_each(m -> m.team_id)
+              let games = this.games.filter(g -> g.phase_id == $group.phase_id && ($ids.contains(g.home_id) || $ids.contains(g.away_id)))
+              let campaigns = $members.map_each(m -> {"member": m, "games": $games, "rule": $rule}.apply("campaign"))
+              let ladder = $phase.sort.split(",")
+              let headed = if $ladder.contains("head") { $campaigns.map_each(c -> c.merge({"head": {"me": c, "all": $campaigns, "rule": $rule}.apply("head")})) } else { $campaigns }
+              let keyed = $headed.map_each(c -> c.merge({"key": {"c": c, "ladder": $ladder}.apply("sort_key")}))
+              let zones = this.zones.filter(z -> z.group_id == $group.id).sort_by(z -> z.last - z.first)
+              let group_id = $group.id
+              root = $keyed.sort_by(c -> c.key).enumerated().map_each(e -> {
+                "id": $group_id + ":" + e.value.team_id,
+                "group_id": $group_id,
+                "team_id": e.value.team_id,
+                "team_name": e.value.name,
+                "position": e.index + 1,
+                "points": e.value.points,
+                "played": e.value.played,
+                "wins": e.value.wins,
+                "draws": e.value.draws,
+                "losses": e.value.losses,
+                "goals_for": e.value.goals_for,
+                "goals_against": e.value.goals_against,
+                "goal_diff": e.value.goal_diff,
+                "form1": e.value.form.index(-5).catch(""),
+                "form2": e.value.form.index(-4).catch(""),
+                "form3": e.value.form.index(-3).catch(""),
+                "form4": e.value.form.index(-2).catch(""),
+                "form5": e.value.form.index(-1).catch(""),
+                "zone": $zones.filter(z -> z.first <= e.index + 1 && e.index + 1 <= z.last).map_each(z -> z.color).index(0).catch(""),
+              })
+            }
+
+            root = this.apply("table")
+        - mapping: 'root = if this.length() == 0 { deleted() } else { this }'
+output:
+  reject_errored:
+    http_client:
+      url: ${CRUD_URL}/standing?on_conflict=id
+      verb: POST
+      max_in_flight: 1
+      headers:
+        Content-Type: application/json
+        Prefer: resolution=merge-duplicates
+        Authorization: Bearer ${SERVICE_JWT}
+      successful_on:
+        - 200
+        - 201

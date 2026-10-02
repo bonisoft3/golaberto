@@ -1,0 +1,101 @@
+# The rounds a phase's page opens on, recounted absolutely. A change to a game
+# or a phase names the phase it can move; the stream re-reads that phase's
+# numbered games and posts its row, upserting on the phase id, one phase per
+# message. The current round is the latest with a played game, or the phase's
+# first while none is played; the next is the smallest numbered round after it,
+# when there is one. A phase with no numbered game has no row, and a row left
+# from before is deleted. A replayed event posts the same row, so at-least-once
+# delivery is harmless; a recount that fails is rejected and delivered again.
+# Recounts run one at a time, and one of every phase runs at start.
+#
+# The sink is live, off the CDC publication, so it cannot re-feed this stream.
+input:
+  broker:
+    inputs:
+      - redis_streams:
+          url: ${REDIS_URL}
+          streams:
+            - cdc-events
+          body_key: data
+          consumer_group: golaberto-rounds
+      - generate:
+          count: 1
+          interval: ""
+          mapping: 'root = {"boot": true}'
+pipeline:
+  threads: 1
+  processors:
+    - mapping: |
+        let row = if this.exists("data") && this.data.type() == "string" && this.data.length() > 0 { this.data.parse_json() } else { {} }
+        let table = $row.__table.or("")
+        # An event names its phase; only the boot recount has to list them.
+        root = match {
+          this.boot.or(false) => {"scope": "phase?select=id"},
+          $table == "game" => {"phases": [{"id": $row.phase_id}]},
+          $table == "phase" => {"phases": [{"id": $row.id}]},
+          _ => deleted(),
+        }
+    # A failing step skips the rest, and the output rejects the message.
+    - try:
+        - branch:
+            request_map: 'root = if this.exists("scope") { this } else { deleted() }'
+            processors:
+              - http:
+                  url: ${CRUD_URL}/${! this.scope }
+                  verb: GET
+                  retries: 30
+                  retry_period: 2s
+                  headers:
+                    Authorization: Bearer ${SERVICE_JWT}
+            result_map: root.phases = this
+        - mapping: |
+            root = if this.phases.length() == 0 { deleted() } else { this.phases.map_each(p -> {"phase": p.id}) }
+        - unarchive:
+            format: json_array
+        - branch:
+            processors:
+              - http:
+                  url: ${CRUD_URL}/game?select=round,played&round=not.is.null&phase_id=eq.${! this.phase }
+                  verb: GET
+                  retries: 30
+                  retry_period: 2s
+                  headers:
+                    Authorization: Bearer ${SERVICE_JWT}
+            result_map: root.games = this
+        - bloblang: |
+            let rounds = this.games.map_each(g -> g.round).unique().sort()
+            let played = this.games.filter(g -> g.played).map_each(g -> g.round)
+            let current = if $played.length() > 0 { $played.sort().index(-1) } else { $rounds.index(0).catch(null) }
+            let next = $rounds.filter(r -> r > $current.or(0)).index(0).catch(null)
+            meta sink = if $current == null { "delete" } else { "upsert" }
+            root = if $current == null { {"id": this.phase} } else {
+              {"id": this.phase, "phase_id": this.phase, "current": $current, "next": $next}
+            }
+output:
+  reject_errored:
+    switch:
+      cases:
+        - check: '@sink == "upsert"'
+          output:
+            http_client:
+              url: ${CRUD_URL}/phase_round?on_conflict=id
+              verb: POST
+              max_in_flight: 1
+              headers:
+                Content-Type: application/json
+                Prefer: resolution=merge-duplicates
+                Authorization: Bearer ${SERVICE_JWT}
+              successful_on:
+                - 200
+                - 201
+        - check: '@sink == "delete"'
+          output:
+            http_client:
+              url: ${CRUD_URL}/phase_round?id=eq.${! this.id }
+              verb: DELETE
+              max_in_flight: 1
+              headers:
+                Authorization: Bearer ${SERVICE_JWT}
+              successful_on:
+                - 200
+                - 204

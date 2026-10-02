@@ -1,0 +1,49 @@
+FROM scratch AS goreleaser
+COPY sayt /sayt
+ENTRYPOINT ["/sayt"]
+
+FROM chainguard/wolfi-base:latest@sha256:9925d3017788558fa8f27e8bb160b791e56202b60c91fbcc5c867de3175986c8 AS test
+RUN apk add --no-cache nushell bash curl libstdc++ coreutils
+ENV PATH="/root/.local/bin:$PATH"
+RUN curl -fsSL https://mise.run | MISE_INSTALL_PATH=/root/.local/bin/mise sh
+WORKDIR /monorepo/plugins/sayt/
+COPY . ./
+RUN [ ! -e .mise.toml ] || nu sayt.nu setup
+RUN nu sayt.nu test
+RUN --network=none nu sayt.nu test
+CMD ["true"]
+
+FROM docker:29.7.1-cli@sha256:27a51d5ab1cd38d9eeaba7b415b8c07bc10c31e1cf1ec8d78f6413fcfab3f44f AS ci
+USER root
+WORKDIR /monorepo/plugins/sayt/
+RUN apk add --no-cache socat curl
+COPY --chmod=755 dind.sh /usr/local/bin/
+COPY . ./
+RUN (cd /tmp && /monorepo/plugins/sayt/sayt.sh --help) && ln -sf /root/.cache/sayt/mise-*/mise /usr/local/bin/mise
+ENV PATH="/monorepo/plugins/sayt/stubs:/usr/local/bin:$PATH"
+ENV MISE_TRUSTED_CONFIG_PATHS="/monorepo/plugins/sayt/.mise.toml"
+ENV DOCKER_BUILDKIT=1
+ENV COMPOSE_DOCKER_CLI_BUILD=1
+ENV COMPOSE_BAKE=1
+RUN --mount=type=secret,id=host.env,required dind.sh ./sayt.sh integrate --target integrate --progress plain
+CMD ["true"]
+
+FROM ci AS integrate
+
+FROM chainguard/wolfi-base:latest@sha256:9925d3017788558fa8f27e8bb160b791e56202b60c91fbcc5c867de3175986c8 AS test-docker-image-build
+RUN apk add --no-cache zig
+WORKDIR /src
+COPY . ./
+RUN zig build -Doptimize=ReleaseSmall
+
+FROM scratch AS test-docker-image
+ENV HOME="/root"
+COPY --from=test-docker-image-build /src/zig-out/bin/sayt /workdir/sayt
+COPY . /workdir/
+RUN ["/workdir/sayt", "--help"]
+RUN ["/workdir/sayt", "-d", "/workdir", "setup"]
+COPY --from=busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 /bin/sh /bin/sh
+COPY --from=busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 /bin/sh /usr/bin/env
+ENV PATH="/root/.local/share/mise/shims:$PATH"
+ENTRYPOINT ["/workdir/sayt"]
+CMD ["-d", "/workdir", "build"]

@@ -1,0 +1,2153 @@
+[
+ {
+  "upstream": 4,
+  "name": "Atlético-MG",
+  "full_name": "Clube Atlético Mineiro",
+  "city": "Belo Horizonte-MG",
+  "country": "Brasil",
+  "founded": "25 de Março de 1908",
+  "stadium": {
+   "upstream": 1118,
+   "name": "Arena MRV"
+  },
+  "lat": -19.9227318,
+  "lng": -43.9450948
+ },
+ {
+  "upstream": 5,
+  "name": "Athletico-PR",
+  "full_name": "Club Athletico Paranaense",
+  "city": "Curitiba",
+  "country": "Brasil",
+  "founded": "26 de Março de 1924",
+  "stadium": {
+   "upstream": 5,
+   "name": "Arena da Baixada"
+  },
+  "lat": -25.4295963,
+  "lng": -49.2712724
+ },
+ {
+  "upstream": 6,
+  "name": "Santos-SP",
+  "full_name": "Santos Futebol Clube",
+  "city": "Santos-SP",
+  "country": "Brasil",
+  "founded": "14 de Abril de 1912",
+  "stadium": {
+   "upstream": 12,
+   "name": "Vila Belmiro"
+  },
+  "lat": -23.9335988,
+  "lng": -46.3286399
+ },
+ {
+  "upstream": 7,
+  "name": "Botafogo-RJ",
+  "full_name": "Botafogo de Futebol e Regatas",
+  "city": "Rio de Janeiro",
+  "country": "Brasil",
+  "founded": "12 de Agosto de 1904",
+  "stadium": {
+   "upstream": 296,
+   "name": "Engenhão"
+  },
+  "lat": -22.9110137,
+  "lng": -43.2093727
+ },
+ {
+  "upstream": 8,
+  "name": "Fluminense-RJ",
+  "full_name": "Fluminense Football Club",
+  "city": "Rio de Janeiro-RJ",
+  "country": "Brasil",
+  "founded": "21 de Julho de 1902",
+  "stadium": {
+   "upstream": 7,
+   "name": "Maracanã"
+  },
+  "lat": -22.9110137,
+  "lng": -43.2093727
+ },
+ {
+  "upstream": 9,
+  "name": "Ponte Preta-SP",
+  "full_name": "Associação Atlética Ponte Preta",
+  "city": "Campinas-SP",
+  "country": "Brasil",
+  "founded": "11 de Agosto de 1900",
+  "stadium": {
+   "upstream": 18,
+   "name": "Moisés Lucarelli"
+  },
+  "lat": -22.9056391,
+  "lng": -47.059564
+ },
+ {
+  "upstream": 10,
+  "name": "Coritiba-PR",
+  "full_name": "Coritiba Foot Ball Club",
+  "city": "Curitiba-PR",
+  "country": "Brasil",
+  "founded": "12 de Novembro de 1909",
+  "stadium": {
+   "upstream": 21,
+   "name": "Couto Pereira"
+  },
+  "lat": -25.4295963,
+  "lng": -49.2712724
+ },
+ {
+  "upstream": 11,
+  "name": "Goiás-GO",
+  "full_name": "Goiás Esporte Clube",
+  "city": "Goiânia-GO",
+  "country": "Brasil",
+  "founded": "06 de Abril de 1943",
+  "stadium": {
+   "upstream": 17,
+   "name": "Serra Dourada"
+  },
+  "lat": -16.680882,
+  "lng": -49.2532691
+ },
+ {
+  "upstream": 12,
+  "name": "Juventude-RS",
+  "full_name": "Esporte Clube Juventude",
+  "city": "Caxias do Sul-RS",
+  "country": "Brasil",
+  "founded": "29 de Junho de 1913",
+  "stadium": {
+   "upstream": 16,
+   "name": "Alfredo Jaconi"
+  },
+  "lat": -29.1685045,
+  "lng": -51.1796385
+ },
+ {
+  "upstream": 14,
+  "name": "São Paulo-SP",
+  "full_name": "São Paulo Futebol Clube",
+  "city": "São Paulo-SP",
+  "country": "Brasil",
+  "founded": "16 de Dezembro de 1935",
+  "stadium": {
+   "upstream": 14,
+   "name": "Morumbi"
+  },
+  "lat": -23.5506507,
+  "lng": -46.6333824
+ },
+ {
+  "upstream": 15,
+  "name": "Cruzeiro-MG",
+  "full_name": "Cruzeiro Esporte Clube",
+  "city": "Belo Horizonte-MG",
+  "country": "Brasil",
+  "founded": "02 de Janeiro de 1921",
+  "stadium": {
+   "upstream": 1,
+   "name": "Mineirão"
+  },
+  "lat": -19.9227318,
+  "lng": -43.9450948
+ },
+ {
+  "upstream": 16,
+  "name": "Palmeiras-SP",
+  "full_name": "Sociedade Esportiva Palmeiras",
+  "city": "Sao Paulo-SP",
+  "country": "Brasil",
+  "founded": "26 de Agosto de 1914",
+  "stadium": {
+   "upstream": 19,
+   "name": "Parque Antártica"
+  },
+  "lat": -23.5506507,
+  "lng": -46.6333824
+ },
+ {
+  "upstream": 17,
+  "name": "Flamengo-RJ",
+  "full_name": "Clube de Regatas Flamengo",
+  "city": "Rio de Janeiro-RJ",
+  "country": "Brasil",
+  "founded": "17 de Novembro de 1895",
+  "stadium": {
+   "upstream": 7,
+   "name": "Maracanã"
+  },
+  "lat": -22.9110137,
+  "lng": -43.2093727
+ },
+ {
+  "upstream": 18,
+  "name": "Vasco-RJ",
+  "full_name": "Club de Regatas Vasco da Gama",
+  "city": "Rio de Janeiro-RJ",
+  "country": "Brasil",
+  "founded": "21 de Agosto de 1898",
+  "stadium": {
+   "upstream": 11,
+   "name": "São Januário"
+  },
+  "lat": -22.9110137,
+  "lng": -43.2093727
+ },
+ {
+  "upstream": 20,
+  "name": "Internacional-RS",
+  "full_name": "Sport Club Internacional",
+  "city": "Porto Alegre-RS",
+  "country": "Brasil",
+  "founded": "09 de Abril de 1909",
+  "stadium": {
+   "upstream": 8,
+   "name": "Beira-Rio - José Pinheiro Borba"
+  },
+  "lat": -30.0324999,
+  "lng": -51.2303767
+ },
+ {
+  "upstream": 22,
+  "name": "Fortaleza-CE",
+  "full_name": "Fortaleza Esporte Clube",
+  "city": "Fortaleza-CE",
+  "country": "Brasil",
+  "founded": "18 de Outubro de 1918",
+  "stadium": {
+   "upstream": 24,
+   "name": "Castelão"
+  },
+  "lat": -3.7304512,
+  "lng": -38.5217989
+ },
+ {
+  "upstream": 24,
+  "name": "Corinthians-SP",
+  "full_name": "Sport Club Corinthians Paulista",
+  "city": "São Paulo-SP",
+  "country": "Brasil",
+  "founded": "01 de Setembro de 1910",
+  "stadium": {
+   "upstream": 1103,
+   "name": "Arena Corinthians"
+  },
+  "lat": -23.5506507,
+  "lng": -46.6333824
+ },
+ {
+  "upstream": 26,
+  "name": "Arsenal",
+  "full_name": "Arsenal Football Club",
+  "city": "Londres",
+  "country": "Inglaterra",
+  "founded": "01 de Janeiro de 1886",
+  "stadium": null,
+  "lat": 51.5074456,
+  "lng": -0.1277653
+ },
+ {
+  "upstream": 27,
+  "name": "Aston Villa",
+  "full_name": "Aston Villa Football Club",
+  "city": "Birmingham",
+  "country": "Inglaterra",
+  "founded": "01 de Janeiro de 1874",
+  "stadium": {
+   "upstream": 621,
+   "name": "Villa Park"
+  },
+  "lat": 52.4796992,
+  "lng": -1.9026911
+ },
+ {
+  "upstream": 32,
+  "name": "Chelsea",
+  "full_name": "Chelsea Football Club",
+  "city": "Londres",
+  "country": "Inglaterra",
+  "founded": "14 de Março de 1905",
+  "stadium": {
+   "upstream": 608,
+   "name": "Stamford Bridge"
+  },
+  "lat": 51.5074456,
+  "lng": -0.1277653
+ },
+ {
+  "upstream": 33,
+  "name": "Crystal Palace",
+  "full_name": "Crystal Palace Football Club",
+  "city": "London",
+  "country": "Inglaterra",
+  "founded": "10 de Setembro de 1905",
+  "stadium": null,
+  "lat": 51.5074456,
+  "lng": -0.1277653
+ },
+ {
+  "upstream": 34,
+  "name": "Everton",
+  "full_name": "Everton Football Club",
+  "city": "Liverpool",
+  "country": "Inglaterra",
+  "founded": "01 de Janeiro de 1878",
+  "stadium": {
+   "upstream": 625,
+   "name": "Goodison Park"
+  },
+  "lat": 53.4071991,
+  "lng": -2.99168
+ },
+ {
+  "upstream": 35,
+  "name": "Fulham",
+  "full_name": "Fulham Football Club",
+  "city": "Fulham",
+  "country": "Inglaterra",
+  "founded": "01 de Janeiro de 1879",
+  "stadium": {
+   "upstream": 613,
+   "name": "Craven Cottage"
+  },
+  "lat": 51.4744221,
+  "lng": -0.2060772
+ },
+ {
+  "upstream": 36,
+  "name": "Liverpool",
+  "full_name": "Liverpool Football Club",
+  "city": "Liverpool",
+  "country": "Inglaterra",
+  "founded": "01 de Janeiro de 1892",
+  "stadium": {
+   "upstream": 609,
+   "name": "Anfield Park"
+  },
+  "lat": 53.4071991,
+  "lng": -2.99168
+ },
+ {
+  "upstream": 37,
+  "name": "Manchester City",
+  "full_name": "Manchester City Football Club",
+  "city": "Manchester",
+  "country": "Inglaterra",
+  "founded": "01 de Janeiro de 1880",
+  "stadium": {
+   "upstream": 610,
+   "name": "City of Manchester Stadium"
+  },
+  "lat": 53.4794892,
+  "lng": -2.2451148
+ },
+ {
+  "upstream": 38,
+  "name": "Manchester United",
+  "full_name": "Manchester United Football Club",
+  "city": "Manchester",
+  "country": "Inglaterra",
+  "founded": "01 de Janeiro de 1878",
+  "stadium": {
+   "upstream": 615,
+   "name": "Old Trafford"
+  },
+  "lat": 53.4794892,
+  "lng": -2.2451148
+ },
+ {
+  "upstream": 40,
+  "name": "Newcastle United",
+  "full_name": "Newcastle United Football Club",
+  "city": "Newcastle",
+  "country": "Inglaterra",
+  "founded": "01 de Dezembro de 1892",
+  "stadium": null,
+  "lat": 54.9738474,
+  "lng": -1.6131572
+ },
+ {
+  "upstream": 44,
+  "name": "Tottenham Hotspur",
+  "full_name": "Tottenham Hotspur Football Club",
+  "city": "Londres",
+  "country": "Inglaterra",
+  "founded": "01 de Janeiro de 1882",
+  "stadium": {
+   "upstream": 607,
+   "name": "White Hart Lane"
+  },
+  "lat": 51.5074456,
+  "lng": -0.1277653
+ },
+ {
+  "upstream": 47,
+  "name": "Celtic",
+  "full_name": "The Celtic Football Club",
+  "city": "Glasgow",
+  "country": "Escócia",
+  "founded": "06 de Novembro de 1887",
+  "stadium": null,
+  "lat": 55.861155,
+  "lng": -4.2501687
+ },
+ {
+  "upstream": 51,
+  "name": "Heart of Midlothian",
+  "full_name": "Heart of Midlothian Football Club",
+  "city": "Edinburgh",
+  "country": "Escócia",
+  "founded": "01 de Janeiro de 1874",
+  "stadium": null,
+  "lat": 55.9533456,
+  "lng": -3.1883749
+ },
+ {
+  "upstream": 67,
+  "name": "Vitória-BA",
+  "full_name": "Esporte Clube Vitória",
+  "city": "Salvador-BA",
+  "country": "Brasil",
+  "founded": "13 de Maio de 1899",
+  "stadium": {
+   "upstream": 46,
+   "name": "Barradão"
+  },
+  "lat": -12.9822499,
+  "lng": -38.4812772
+ },
+ {
+  "upstream": 68,
+  "name": "Avaí-SC",
+  "full_name": "Avaí Futebol Clube",
+  "city": "Florianópolis",
+  "country": "Brasil",
+  "founded": "01 de Setembro de 1923",
+  "stadium": {
+   "upstream": 45,
+   "name": "Ressacada"
+  },
+  "lat": -27.5973002,
+  "lng": -48.5496098
+ },
+ {
+  "upstream": 69,
+  "name": "Ceará-CE",
+  "full_name": "Ceará Sporting Club",
+  "city": "Fortaleza",
+  "country": "Brasil",
+  "founded": "02 de Junho de 1914",
+  "stadium": {
+   "upstream": 24,
+   "name": "Castelão"
+  },
+  "lat": -3.7304512,
+  "lng": -38.5217989
+ },
+ {
+  "upstream": 70,
+  "name": "Vila Nova-GO",
+  "full_name": "Vila Nova Futebol Clube",
+  "city": "Goiânia",
+  "country": "Brasil",
+  "founded": "29 de Julho de 1943",
+  "stadium": {
+   "upstream": 17,
+   "name": "Serra Dourada"
+  },
+  "lat": -16.680882,
+  "lng": -49.2532691
+ },
+ {
+  "upstream": 73,
+  "name": "Criciúma-SC",
+  "full_name": "Criciúma Esporte Clube",
+  "city": "Criciúma-SC",
+  "country": "Brasil",
+  "founded": "13 de Maio de 1947",
+  "stadium": {
+   "upstream": 40,
+   "name": "Heriberto Hülse"
+  },
+  "lat": -28.6789941,
+  "lng": -49.3695627
+ },
+ {
+  "upstream": 74,
+  "name": "Bahia-BA",
+  "full_name": "Esporte Clube Bahia",
+  "city": "Salvador",
+  "country": "Brasil",
+  "founded": "01 de Janeiro de 1931",
+  "stadium": {
+   "upstream": 464,
+   "name": "Pituaçu"
+  },
+  "lat": -12.9822499,
+  "lng": -38.4812772
+ },
+ {
+  "upstream": 77,
+  "name": "Sport-PE",
+  "full_name": "Sport Club do Recife",
+  "city": "Recife-PE",
+  "country": "Brasil",
+  "founded": "13 de Maio de 1905",
+  "stadium": {
+   "upstream": 41,
+   "name": "Ilha do Retiro"
+  },
+  "lat": -8.0584933,
+  "lng": -34.8848193
+ },
+ {
+  "upstream": 79,
+  "name": "Grêmio-RS",
+  "full_name": "Grêmio Foot-Ball Porto Alegrense",
+  "city": "Porto Alegre-RS",
+  "country": "Brasil",
+  "founded": "15 de Setembro de 1903",
+  "stadium": {
+   "upstream": 48,
+   "name": "Olímpico Monumental"
+  },
+  "lat": -30.0324999,
+  "lng": -51.2303767
+ },
+ {
+  "upstream": 80,
+  "name": "CRB-AL",
+  "full_name": "Clube de Regatas Brasil",
+  "city": "Maceió",
+  "country": "Brasil",
+  "founded": "20 de Setembro de 1912",
+  "stadium": {
+   "upstream": 34,
+   "name": "Rei Pelé"
+  },
+  "lat": -9.6476843,
+  "lng": -35.7339264
+ },
+ {
+  "upstream": 87,
+  "name": "Náutico-PE",
+  "full_name": "Clube Naútico Capibaribe",
+  "city": "Recife-PE",
+  "country": "Brasil",
+  "founded": "07 de Abril de 1901",
+  "stadium": {
+   "upstream": 47,
+   "name": "Aflitos"
+  },
+  "lat": -8.0584933,
+  "lng": -34.8848193
+ },
+ {
+  "upstream": 95,
+  "name": "Londrina-PR",
+  "full_name": "Londrina Esporte Clube",
+  "city": "Londrina-PR",
+  "country": "Brasil",
+  "founded": "05 de Abril de 1956",
+  "stadium": {
+   "upstream": 510,
+   "name": "Estádio do Café"
+  },
+  "lat": -23.3112878,
+  "lng": -51.1595023
+ },
+ {
+  "upstream": 96,
+  "name": "Cuiabá-MT",
+  "full_name": "Cuiabá Esporte Clube",
+  "city": "Cuiabá-MT",
+  "country": "Brasil",
+  "founded": "10 de Dezembro de 2001",
+  "stadium": {
+   "upstream": 280,
+   "name": "Presidente Dutra"
+  },
+  "lat": -15.5986686,
+  "lng": -56.0991301
+ },
+ {
+  "upstream": 110,
+  "name": "Remo-PA",
+  "full_name": "Clube do Remo",
+  "city": "Belém-PA",
+  "country": "Brasil",
+  "founded": null,
+  "stadium": {
+   "upstream": 71,
+   "name": "Evandro Almeida"
+  },
+  "lat": -1.45056,
+  "lng": -48.4682453
+ },
+ {
+  "upstream": 125,
+  "name": "América-MG",
+  "full_name": "América Futebol Clube",
+  "city": "Belo Horizonte",
+  "country": "Brasil",
+  "founded": "30 de Abril de 1912",
+  "stadium": {
+   "upstream": 25,
+   "name": "Independência"
+  },
+  "lat": -19.9227318,
+  "lng": -43.9450948
+ },
+ {
+  "upstream": 173,
+  "name": "Sunderland",
+  "full_name": "Sunderland Association Football Club",
+  "city": "Sunderland",
+  "country": "Inglaterra",
+  "founded": "01 de Janeiro de 1879",
+  "stadium": {
+   "upstream": 616,
+   "name": "Stadium of Light"
+  },
+  "lat": 54.9058512,
+  "lng": -1.3828727
+ },
+ {
+  "upstream": 175,
+  "name": "Bayern Munich",
+  "full_name": "Fußball-Club Bayern München",
+  "city": "München",
+  "country": "Alemanha",
+  "founded": "27 de Fevereiro de 1900",
+  "stadium": {
+   "upstream": 650,
+   "name": "Allianz Arena"
+  },
+  "lat": 48.1371079,
+  "lng": 11.5753822
+ },
+ {
+  "upstream": 177,
+  "name": "Club Brugge",
+  "full_name": "${name}",
+  "city": "Bruges",
+  "country": "Bélgica",
+  "founded": null,
+  "stadium": null,
+  "lat": 51.2085526,
+  "lng": 3.226772
+ },
+ {
+  "upstream": 191,
+  "name": "Universitario",
+  "full_name": "${name}",
+  "city": "Lima",
+  "country": "Peru",
+  "founded": null,
+  "stadium": null,
+  "lat": -12.0621065,
+  "lng": -77.0365256
+ },
+ {
+  "upstream": 193,
+  "name": "Santa Fe",
+  "full_name": "Club Independiente Santa Fe",
+  "city": "Bogotá",
+  "country": "Colômbia",
+  "founded": "28 de Fevereiro de 1941",
+  "stadium": {
+   "upstream": 783,
+   "name": "Nemesio Camacho El Campín"
+  },
+  "lat": 4.6529539,
+  "lng": -74.0835643
+ },
+ {
+  "upstream": 198,
+  "name": "Deportivo Tachira",
+  "full_name": "${name}",
+  "city": null,
+  "country": "Venezuela",
+  "founded": null,
+  "stadium": null,
+  "lat": 8.0018709,
+  "lng": -66.1109318
+ },
+ {
+  "upstream": 202,
+  "name": "Bolivar",
+  "full_name": "Fútbol Club Bolívar",
+  "city": "La Paz",
+  "country": "Bolívia",
+  "founded": "12 de Abril de 1925",
+  "stadium": null,
+  "lat": -16.4955455,
+  "lng": -68.1336229
+ },
+ {
+  "upstream": 203,
+  "name": "Estudiantes",
+  "full_name": "Club Estudiantes de La Plata",
+  "city": "La Plata",
+  "country": "Argentina",
+  "founded": "04 de Agosto de 1905",
+  "stadium": {
+   "upstream": 404,
+   "name": "Ciudad de La Plata"
+  },
+  "lat": -34.9206797,
+  "lng": -57.9537638
+ },
+ {
+  "upstream": 204,
+  "name": "Sporting Cristal",
+  "full_name": "Club Sporting Cristal S.A.",
+  "city": "Lima",
+  "country": "Peru",
+  "founded": "13 de Dezembro de 1955",
+  "stadium": null,
+  "lat": -12.0621065,
+  "lng": -77.0365256
+ },
+ {
+  "upstream": 206,
+  "name": "The Strongest",
+  "full_name": "Club The Strongest",
+  "city": "La Paz",
+  "country": "Bolívia",
+  "founded": "08 de Abril de 1908",
+  "stadium": null,
+  "lat": -16.4955455,
+  "lng": -68.1336229
+ },
+ {
+  "upstream": 210,
+  "name": "Universidad Católica",
+  "full_name": "Club Deportivo Universidad Católica",
+  "city": "Santiago",
+  "country": "Chile",
+  "founded": "21 de Abril de 1937",
+  "stadium": null,
+  "lat": -33.4377756,
+  "lng": -70.6504502
+ },
+ {
+  "upstream": 211,
+  "name": "LDU",
+  "full_name": "Liga Deportiva Universitaria",
+  "city": "Quito",
+  "country": "Equador",
+  "founded": "11 de Janeiro de 1930",
+  "stadium": {
+   "upstream": 393,
+   "name": "Casa Blanca"
+  },
+  "lat": -0.2201641,
+  "lng": -78.5123274
+ },
+ {
+  "upstream": 216,
+  "name": "Nacional-URU",
+  "full_name": "${name}",
+  "city": "Montevideo",
+  "country": "Uruguai",
+  "founded": null,
+  "stadium": null,
+  "lat": -34.9058916,
+  "lng": -56.1913095
+ },
+ {
+  "upstream": 220,
+  "name": "Cerro Porteño",
+  "full_name": "Club Cerro Porteño",
+  "city": "Asunción",
+  "country": "Paraguai",
+  "founded": "01 de Outubro de 1912",
+  "stadium": {
+   "upstream": 395,
+   "name": "General Pablo Rojas"
+  },
+  "lat": -25.2800459,
+  "lng": -57.6343814
+ },
+ {
+  "upstream": 221,
+  "name": "Rosario Central",
+  "full_name": "Club Atlético Rosario Central",
+  "city": "Rosario",
+  "country": "Argentina",
+  "founded": "24 de Dezembro de 1889",
+  "stadium": {
+   "upstream": 459,
+   "name": "Gigante de Arroyito"
+  },
+  "lat": -32.9593609,
+  "lng": -60.6617024
+ },
+ {
+  "upstream": 223,
+  "name": "Libertad",
+  "full_name": "Club Libertad",
+  "city": "Asunción",
+  "country": "Paraguai",
+  "founded": "30 de Julho de 1905",
+  "stadium": {
+   "upstream": 599,
+   "name": "Nicolás Leoz"
+  },
+  "lat": -25.2800459,
+  "lng": -57.6343814
+ },
+ {
+  "upstream": 225,
+  "name": "Bragantino-SP",
+  "full_name": "Clube Atlético Bragantino",
+  "city": "Bragança Paulista-SP",
+  "country": "Brasil",
+  "founded": "08 de Janeiro de 1928",
+  "stadium": {
+   "upstream": 170,
+   "name": "Marcelo Stefani"
+  },
+  "lat": -22.9520235,
+  "lng": -46.5418586
+ },
+ {
+  "upstream": 279,
+  "name": "Atlético-GO",
+  "full_name": "Atlético Clube Goianiense",
+  "city": "Goiânia",
+  "country": "Brasil",
+  "founded": "02 de Abril de 1937",
+  "stadium": {
+   "upstream": 17,
+   "name": "Serra Dourada"
+  },
+  "lat": -16.680882,
+  "lng": -49.2532691
+ },
+ {
+  "upstream": 290,
+  "name": "Barcelona",
+  "full_name": "Fútbol Club Barcelona",
+  "city": "Barcelona",
+  "country": "Espanha",
+  "founded": "29 de Novembro de 1899",
+  "stadium": {
+   "upstream": 660,
+   "name": "Camp Nou"
+  },
+  "lat": 41.3828939,
+  "lng": 2.1774322
+ },
+ {
+  "upstream": 318,
+  "name": "Chapecoense-SC",
+  "full_name": "Associação Chapecoense de Futebol",
+  "city": "Chapecó-SC",
+  "country": "Brasil",
+  "founded": "10 de Maio de 1973",
+  "stadium": {
+   "upstream": 163,
+   "name": "Índio Condá"
+  },
+  "lat": -27.0922364,
+  "lng": -52.6166878
+ },
+ {
+  "upstream": 361,
+  "name": "Sparta Praha",
+  "full_name": "Atetický Club Sparta Praha",
+  "city": "Praga",
+  "country": "República Checa",
+  "founded": "01 de Janeiro de 1893",
+  "stadium": {
+   "upstream": 798,
+   "name": "Generali Arena"
+  },
+  "lat": 50.0874654,
+  "lng": 14.4212535
+ },
+ {
+  "upstream": 363,
+  "name": "FC Thun",
+  "full_name": "${name}",
+  "city": null,
+  "country": "Suíça",
+  "founded": null,
+  "stadium": null,
+  "lat": 46.7985624,
+  "lng": 8.2319736
+ },
+ {
+  "upstream": 369,
+  "name": "Villarreal",
+  "full_name": "Villarreal Club de Fútbol",
+  "city": "Villarreal",
+  "country": "Espanha",
+  "founded": "01 de Janeiro de 1923",
+  "stadium": {
+   "upstream": 677,
+   "name": "El Madrigal"
+  },
+  "lat": 39.9372616,
+  "lng": -0.1004465
+ },
+ {
+  "upstream": 386,
+  "name": "Carabobo",
+  "full_name": "${name}",
+  "city": null,
+  "country": "Venezuela",
+  "founded": null,
+  "stadium": null,
+  "lat": 8.0018709,
+  "lng": -66.1109318
+ },
+ {
+  "upstream": 393,
+  "name": "Lanús",
+  "full_name": "Club Atlético Lanús",
+  "city": "Lanús",
+  "country": "Argentina",
+  "founded": "03 de Janeiro de 1915",
+  "stadium": {
+   "upstream": 405,
+   "name": "Néstor Díaz Pérez"
+  },
+  "lat": -34.7033363,
+  "lng": -58.3953235
+ },
+ {
+  "upstream": 395,
+  "name": "Lille",
+  "full_name": "Lille Olympique Sporting Club Lille Métropole",
+  "city": "Lille",
+  "country": "França",
+  "founded": "23 de Setembro de 1944",
+  "stadium": null,
+  "lat": 50.6365654,
+  "lng": 3.0635282
+ },
+ {
+  "upstream": 397,
+  "name": "Fenerbahçe",
+  "full_name": "Fenerbahçe Spor Kulübü",
+  "city": "Istanbul",
+  "country": "Turquia",
+  "founded": "03 de Maio de 1907",
+  "stadium": null,
+  "lat": 41.006381,
+  "lng": 28.9758715
+ },
+ {
+  "upstream": 398,
+  "name": "PSV Eindhoven",
+  "full_name": "Philips Sport Vereniging NV",
+  "city": "Eindhoven",
+  "country": "Holanda",
+  "founded": "31 de Agosto de 1913",
+  "stadium": null,
+  "lat": 51.44855695,
+  "lng": 5.450122521857143
+ },
+ {
+  "upstream": 400,
+  "name": "Lyon",
+  "full_name": "Olympique Lyonnais",
+  "city": "Lyon",
+  "country": "França",
+  "founded": "01 de Janeiro de 1899",
+  "stadium": {
+   "upstream": 843,
+   "name": "Stade de Gerland"
+  },
+  "lat": 45.7578137,
+  "lng": 4.8320114
+ },
+ {
+  "upstream": 401,
+  "name": "Real Madrid",
+  "full_name": "Real Madrid Club de Fútbol",
+  "city": "Madrid",
+  "country": "Espanha",
+  "founded": "06 de Março de 1902",
+  "stadium": {
+   "upstream": 661,
+   "name": "Santiago Bernabéu"
+  },
+  "lat": 40.4167047,
+  "lng": -3.7035825
+ },
+ {
+  "upstream": 402,
+  "name": "Olympiacos",
+  "full_name": "Olympiacos Club of Fans of Piraeus F.C.",
+  "city": "Athens",
+  "country": "Grécia",
+  "founded": "10 de Março de 1925",
+  "stadium": null,
+  "lat": 37.9755648,
+  "lng": 23.7348324
+ },
+ {
+  "upstream": 404,
+  "name": "Betis",
+  "full_name": "Real Betis Balompié, S.A.D.",
+  "city": "Sevilla",
+  "country": "Espanha",
+  "founded": "12 de Setembro de 1907",
+  "stadium": null,
+  "lat": 37.3886303,
+  "lng": -5.9953403
+ },
+ {
+  "upstream": 406,
+  "name": "Porto",
+  "full_name": "Futebol Clube do Porto",
+  "city": "Porto",
+  "country": "Portugal",
+  "founded": "28 de Setembro de 1893",
+  "stadium": null,
+  "lat": 41.1494512,
+  "lng": -8.6107884
+ },
+ {
+  "upstream": 408,
+  "name": "Internazionale",
+  "full_name": "Football Club Internazionale Milano",
+  "city": "Milão",
+  "country": "Itália",
+  "founded": "09 de Março de 1908",
+  "stadium": {
+   "upstream": 683,
+   "name": "Giuseppe Meazza"
+  },
+  "lat": 45.4641943,
+  "lng": 9.1896346
+ },
+ {
+  "upstream": 429,
+  "name": "São Bernardo-SP",
+  "full_name": "São Bernardo Futebol Clube Ltda.",
+  "city": "São Bernardo do Campo-SP",
+  "country": "Brasil",
+  "founded": "20 de Dezembro de 2004",
+  "stadium": {
+   "upstream": 591,
+   "name": "Primeiro de Maio"
+  },
+  "lat": -23.7080345,
+  "lng": -46.5506747
+ },
+ {
+  "upstream": 437,
+  "name": "Boca Juniors",
+  "full_name": "Club Atlético Boca Juniors",
+  "city": "Buenos Aires",
+  "country": "Argentina",
+  "founded": "03 de Abril de 1905",
+  "stadium": {
+   "upstream": 396,
+   "name": "La Bombonera"
+  },
+  "lat": -34.6037002,
+  "lng": -58.3815153
+ },
+ {
+  "upstream": 457,
+  "name": "Botafogo-SP",
+  "full_name": "Botafogo Futebol Clube",
+  "city": "Ribeirão Preto-SP",
+  "country": "Brasil",
+  "founded": "12 de Novembro de 1918",
+  "stadium": {
+   "upstream": 347,
+   "name": "Santa Cruz"
+  },
+  "lat": -21.1776315,
+  "lng": -47.8100983
+ },
+ {
+  "upstream": 505,
+  "name": "Tolima",
+  "full_name": "Deportes Tolima",
+  "city": "Ibagué",
+  "country": "Colômbia",
+  "founded": "18 de Dezembro de 1954",
+  "stadium": {
+   "upstream": 786,
+   "name": "Manuel Murillo Toro"
+  },
+  "lat": 4.43917,
+  "lng": -75.2113267
+ },
+ {
+  "upstream": 511,
+  "name": "Alianza Lima",
+  "full_name": "Club Alianza Lima",
+  "city": "Lima",
+  "country": "Peru",
+  "founded": "15 de Fevereiro de 1901",
+  "stadium": null,
+  "lat": -12.0621065,
+  "lng": -77.0365256
+ },
+ {
+  "upstream": 550,
+  "name": "Athletic-MG",
+  "full_name": "Athletic Club",
+  "city": "São João del-Rei",
+  "country": "Brasil",
+  "founded": "27 de Junho de 1909",
+  "stadium": {
+   "upstream": 218,
+   "name": "Joaquim Portugal"
+  },
+  "lat": -21.1335755,
+  "lng": -44.2588086
+ },
+ {
+  "upstream": 584,
+  "name": "Mirassol-SP",
+  "full_name": "Mirassol Futebol Clube",
+  "city": "Mirassol-SP",
+  "country": "Brasil",
+  "founded": "09 de Outubro de 1925",
+  "stadium": {
+   "upstream": 342,
+   "name": "José Maria de Campos Maia"
+  },
+  "lat": -20.8141411,
+  "lng": -49.507449
+ },
+ {
+  "upstream": 588,
+  "name": "Operário-PR",
+  "full_name": "Operário Ferroviário Esporte Clube",
+  "city": "Ponta Grossa-PR",
+  "country": "Brasil",
+  "founded": "01 de Maio de 1912",
+  "stadium": {
+   "upstream": 758,
+   "name": "Germano Krügger"
+  },
+  "lat": -25.0891685,
+  "lng": -50.1601812
+ },
+ {
+  "upstream": 630,
+  "name": "Argentinos Juniors",
+  "full_name": "Asociación Atlética Argentinos Juniors",
+  "city": "Buenos Aires",
+  "country": "Argentina",
+  "founded": "15 de Agosto de 1904",
+  "stadium": {
+   "upstream": 448,
+   "name": "Diego Armando Maradona"
+  },
+  "lat": -34.6037002,
+  "lng": -58.3815153
+ },
+ {
+  "upstream": 632,
+  "name": "Hull City",
+  "full_name": "Hull City Association Football Club",
+  "city": "Kingston upon Hull",
+  "country": "Inglaterra",
+  "founded": "01 de Janeiro de 1904",
+  "stadium": {
+   "upstream": 624,
+   "name": "KC Stadium"
+  },
+  "lat": 53.76238625,
+  "lng": -0.3301213755327681
+ },
+ {
+  "upstream": 637,
+  "name": "Stuttgart",
+  "full_name": "Verein für Bewegungsspiele Stuttgart 1893 e. V.",
+  "city": "Stuttgart",
+  "country": "Alemanha",
+  "founded": "09 de Setembro de 1893",
+  "stadium": {
+   "upstream": 656,
+   "name": "Mercedes-Benz Arena"
+  },
+  "lat": 48.7784485,
+  "lng": 9.1800132
+ },
+ {
+  "upstream": 645,
+  "name": "Borussia Dortmund",
+  "full_name": "Ballspiel-Verein Borussia 1909 e. V. Dortmund",
+  "city": "Dortmund",
+  "country": "Alemanha",
+  "founded": "19 de Dezembro de 1909",
+  "stadium": {
+   "upstream": 654,
+   "name": "Signal Iduna Park"
+  },
+  "lat": 51.5142273,
+  "lng": 7.4652789
+ },
+ {
+  "upstream": 666,
+  "name": "Napoli",
+  "full_name": "Società Sportiva Calcio Napoli SpA",
+  "city": "Naples",
+  "country": "Itália",
+  "founded": "01 de Janeiro de 1904",
+  "stadium": {
+   "upstream": 691,
+   "name": "San Paolo"
+  },
+  "lat": 40.8358846,
+  "lng": 14.2487679
+ },
+ {
+  "upstream": 672,
+  "name": "Roma",
+  "full_name": "Associazione Sportiva Roma",
+  "city": "Rome",
+  "country": "Itália",
+  "founded": "22 de Julho de 1927",
+  "stadium": {
+   "upstream": 687,
+   "name": "Olímpico de Roma"
+  },
+  "lat": 41.8933203,
+  "lng": 12.4829321
+ },
+ {
+  "upstream": 678,
+  "name": "Atlético de Madrid",
+  "full_name": "Club Atlético de Madrid S.A.D.",
+  "city": "Madrid",
+  "country": "Espanha",
+  "founded": "02 de Outubro de 1966",
+  "stadium": {
+   "upstream": 678,
+   "name": "Vicente Calderón"
+  },
+  "lat": 40.4167047,
+  "lng": -3.7035825
+ },
+ {
+  "upstream": 748,
+  "name": "Independiente Medellín",
+  "full_name": "Corporación Deportiva Independiente Medellín",
+  "city": "Medellín",
+  "country": "Colômbia",
+  "founded": "15 de Abril de 1913",
+  "stadium": null,
+  "lat": 6.2697018,
+  "lng": -75.60252574475943
+ },
+ {
+  "upstream": 749,
+  "name": "Peñarol",
+  "full_name": "Club Atlético Peñarol",
+  "city": "Montevideo",
+  "country": "Uruguai",
+  "founded": "28 de Setembro de 1891",
+  "stadium": {
+   "upstream": 264,
+   "name": "Centenário - Montevideo"
+  },
+  "lat": -34.9058916,
+  "lng": -56.1913095
+ },
+ {
+  "upstream": 752,
+  "name": "Club Guaraní",
+  "full_name": "Club Guaraní",
+  "city": "Asunción",
+  "country": "Paraguai",
+  "founded": "12 de Outubro de 1903",
+  "stadium": {
+   "upstream": 644,
+   "name": "Rogelio Livieres"
+  },
+  "lat": -25.2800459,
+  "lng": -57.6343814
+ },
+ {
+  "upstream": 806,
+  "name": "Feyenoord",
+  "full_name": "Feyenoord Rotterdam",
+  "city": "Rotterdam",
+  "country": "Holanda",
+  "founded": "19 de Julho de 1908",
+  "stadium": null,
+  "lat": 51.9244424,
+  "lng": 4.47775
+ },
+ {
+  "upstream": 811,
+  "name": "NEC Nijmegen",
+  "full_name": "Nijmegen Eendracht Combinatie",
+  "city": "Nijmegen",
+  "country": "Holanda",
+  "founded": "15 de Novembro de 1900",
+  "stadium": null,
+  "lat": 51.8474946,
+  "lng": 5.8637771
+ },
+ {
+  "upstream": 855,
+  "name": "Paris Saint-Germain",
+  "full_name": "Paris Saint-Germain Football Club",
+  "city": "Paris",
+  "country": "França",
+  "founded": "21 de Junho de 1904",
+  "stadium": null,
+  "lat": 48.8588897,
+  "lng": 2.3200410217200766
+ },
+ {
+  "upstream": 975,
+  "name": "Lens",
+  "full_name": "Racing Club de Lens",
+  "city": "Lens",
+  "country": "França",
+  "founded": "01 de Janeiro de 1906",
+  "stadium": null,
+  "lat": 50.4291723,
+  "lng": 2.8319805
+ },
+ {
+  "upstream": 1003,
+  "name": "Liverpool-URU",
+  "full_name": "Liverpool Fútbol Club",
+  "city": "Montevideo",
+  "country": "Uruguai",
+  "founded": "15 de Fevereiro de 1915",
+  "stadium": {
+   "upstream": 604,
+   "name": "Belvedere"
+  },
+  "lat": -34.9058916,
+  "lng": -56.1913095
+ },
+ {
+  "upstream": 1005,
+  "name": "2 de Mayo",
+  "full_name": "Club Sportivo 2 de Mayo",
+  "city": "Pedro Juan Caballero",
+  "country": "Paraguai",
+  "founded": "06 de Dezembro de 1935",
+  "stadium": {
+   "upstream": 640,
+   "name": "Río Parapití"
+  },
+  "lat": -22.5497781,
+  "lng": -55.7384312
+ },
+ {
+  "upstream": 1033,
+  "name": "Sporting CP",
+  "full_name": "Sporting Clube de Portugal",
+  "city": "Lisboa",
+  "country": "Portugal",
+  "founded": "01 de Julho de 1906",
+  "stadium": null,
+  "lat": 38.7077507,
+  "lng": -9.1365919
+ },
+ {
+  "upstream": 1040,
+  "name": "Levski Sofia",
+  "full_name": "PFC Levski Sofia",
+  "city": "Sofia",
+  "country": "Bulgária",
+  "founded": "24 de Maio de 1914",
+  "stadium": null,
+  "lat": 42.6977028,
+  "lng": 23.3217359
+ },
+ {
+  "upstream": 1042,
+  "name": "Galatasaray",
+  "full_name": "Galatasaray Spor Kulübü",
+  "city": "Istanbul",
+  "country": "Turquia",
+  "founded": "20 de Outubro de 1905",
+  "stadium": null,
+  "lat": 41.006381,
+  "lng": 28.9758715
+ },
+ {
+  "upstream": 1043,
+  "name": "Shakhtar Donetsk",
+  "full_name": "FC Shakhtar Donetsk",
+  "city": "Donetsk",
+  "country": "Ucrânia",
+  "founded": "24 de Maio de 1936",
+  "stadium": null,
+  "lat": 48.0158753,
+  "lng": 37.8013407
+ },
+ {
+  "upstream": 1048,
+  "name": "AEK Athens",
+  "full_name": "AEK Athens F.C.",
+  "city": "Athens",
+  "country": "Grécia",
+  "founded": "13 de Abril de 1924",
+  "stadium": null,
+  "lat": 37.9755648,
+  "lng": 23.7348324
+ },
+ {
+  "upstream": 1050,
+  "name": "Slavia Praha",
+  "full_name": "Sportovní klub Slavia Praha",
+  "city": "Prague",
+  "country": "República Checa",
+  "founded": "01 de Janeiro de 1892",
+  "stadium": null,
+  "lat": 50.0874654,
+  "lng": 14.4212535
+ },
+ {
+  "upstream": 1094,
+  "name": "Dinamo Zagreb",
+  "full_name": "Nogometni klub Dinamo Zagreb",
+  "city": "Zagreb",
+  "country": "Croácia",
+  "founded": "09 de Junho de 1945",
+  "stadium": {
+   "upstream": 809,
+   "name": "Maksimir"
+  },
+  "lat": 45.8130967,
+  "lng": 15.9772795
+ },
+ {
+  "upstream": 1100,
+  "name": "Sturm Graz",
+  "full_name": "Sportklub Puntigamer Sturm Graz",
+  "city": "Graz",
+  "country": "Áustria",
+  "founded": "01 de Janeiro de 1909",
+  "stadium": null,
+  "lat": 47.0708678,
+  "lng": 15.4382786
+ },
+ {
+  "upstream": 1106,
+  "name": "Lech Poznań",
+  "full_name": "KKS Lech Poznań",
+  "city": "Poznań",
+  "country": "Polônia",
+  "founded": "19 de Março de 1922",
+  "stadium": {
+   "upstream": 797,
+   "name": "Stadion Miejski"
+  },
+  "lat": 52.4082663,
+  "lng": 16.9335199
+ },
+ {
+  "upstream": 1112,
+  "name": "Red Star Belgrade",
+  "full_name": "Fudbalski klub Crvena zvezda",
+  "city": "Belgrade",
+  "country": "Sérvia",
+  "founded": "04 de Março de 1945",
+  "stadium": null,
+  "lat": 44.8178131,
+  "lng": 20.4568974
+ },
+ {
+  "upstream": 1121,
+  "name": "Viking",
+  "full_name": "Viking Fotballklubb",
+  "city": "Stavanger",
+  "country": "Noruega",
+  "founded": "10 de Agosto de 1899",
+  "stadium": null,
+  "lat": 58.9699675,
+  "lng": 5.7318101
+ },
+ {
+  "upstream": 1137,
+  "name": "Celje",
+  "full_name": "Nogometni klub Celje",
+  "city": "Celje",
+  "country": "Eslovênia",
+  "founded": "28 de Dezembro de 1919",
+  "stadium": null,
+  "lat": 46.2293889,
+  "lng": 15.2616828
+ },
+ {
+  "upstream": 1145,
+  "name": "Junior Barranquilla",
+  "full_name": "Corporación Popular Deportiva Junior",
+  "city": "Barranquilla",
+  "country": "Colômbia",
+  "founded": "01 de Janeiro de 1924",
+  "stadium": null,
+  "lat": 11.0101922,
+  "lng": -74.8231794084391
+ },
+ {
+  "upstream": 1149,
+  "name": "Barcelona de Guayaquil",
+  "full_name": "Barcelona Sporting Club",
+  "city": "Guayaquil",
+  "country": "Equador",
+  "founded": "01 de Maio de 1925",
+  "stadium": null,
+  "lat": -2.1900563,
+  "lng": -79.8868741
+ },
+ {
+  "upstream": 1174,
+  "name": "The New Saints",
+  "full_name": "The New Saints of Oswestry Town & Llansantffraid Football Club",
+  "city": "Llansantffraid-ym-Mechain",
+  "country": "País de Gales",
+  "founded": "01 de Janeiro de 1959",
+  "stadium": {
+   "upstream": 810,
+   "name": "Park Hall"
+  },
+  "lat": 52.7745894,
+  "lng": -3.1554135
+ },
+ {
+  "upstream": 1176,
+  "name": "Klaksvíkar Ítróttarfelag",
+  "full_name": "Klaksvíkar Ítróttarfelag",
+  "city": "Klaksvík",
+  "country": "Ilhas Feroe",
+  "founded": "24 de Agosto de 1904",
+  "stadium": null,
+  "lat": 62.2254921,
+  "lng": -6.5837755
+ },
+ {
+  "upstream": 1212,
+  "name": "Vardar",
+  "full_name": "Fudbalski Klub Vardar Skopje",
+  "city": "Skopje",
+  "country": "Macedônia",
+  "founded": "01 de Janeiro de 1947",
+  "stadium": null,
+  "lat": 41.9961816,
+  "lng": 21.4319213
+ },
+ {
+  "upstream": 1237,
+  "name": "Shamrock Rovers",
+  "full_name": "Shamrock Rovers Football Club",
+  "city": "Dublin",
+  "country": "Irlanda",
+  "founded": "01 de Janeiro de 1901",
+  "stadium": null,
+  "lat": 53.3493795,
+  "lng": -6.2605593
+ },
+ {
+  "upstream": 1244,
+  "name": "Kairat Almaty",
+  "full_name": "Football Club Kairat Almaty",
+  "city": "Almaty",
+  "country": "Cazaquistão",
+  "founded": "01 de Janeiro de 1952",
+  "stadium": null,
+  "lat": 43.2363924,
+  "lng": 76.9457275
+ },
+ {
+  "upstream": 1252,
+  "name": "Ipswich Town",
+  "full_name": "Ipswich Town Football Club",
+  "city": "Ipswich",
+  "country": "Inglaterra",
+  "founded": "01 de Janeiro de 1878",
+  "stadium": null,
+  "lat": 52.0579324,
+  "lng": 1.1528095
+ },
+ {
+  "upstream": 1260,
+  "name": "Leeds United",
+  "full_name": "Leeds United Association Football Club",
+  "city": "Leeds",
+  "country": "Inglaterra",
+  "founded": "01 de Janeiro de 1919",
+  "stadium": null,
+  "lat": 53.7974185,
+  "lng": -1.5437941
+ },
+ {
+  "upstream": 1400,
+  "name": "Flora Tallinn",
+  "full_name": "Mittetulundusühing Jalgpalliklubi Football Club Flora",
+  "city": "Tallinn",
+  "country": "Estônia",
+  "founded": "10 de Março de 1990",
+  "stadium": null,
+  "lat": 59.437242,
+  "lng": 24.7572693
+ },
+ {
+  "upstream": 1402,
+  "name": "Győri ETO",
+  "full_name": "Győri Egyetértés Torna Osztály Football Club",
+  "city": "Győr",
+  "country": "Hungria",
+  "founded": "01 de Janeiro de 1904",
+  "stadium": null,
+  "lat": 47.687609,
+  "lng": 17.6346815
+ },
+ {
+  "upstream": 1408,
+  "name": "Borac Banja Luka",
+  "full_name": "Fudbalski Klub Borac Banja Luka",
+  "city": "Banja Luka",
+  "country": "Bósnia e Herzegovina",
+  "founded": "04 de Julho de 1926",
+  "stadium": null,
+  "lat": 44.7720845,
+  "lng": 17.1917651
+ },
+ {
+  "upstream": 1435,
+  "name": "Tre Fiori",
+  "full_name": "Società Polisportiva Tre Fiori",
+  "city": "Fiorentino",
+  "country": "San Marino",
+  "founded": "01 de Janeiro de 1949",
+  "stadium": null,
+  "lat": 43.9103157,
+  "lng": 12.4575556
+ },
+ {
+  "upstream": 1441,
+  "name": "Omonia",
+  "full_name": "Athletic Club Omonia",
+  "city": "Nicosia",
+  "country": "Chipre",
+  "founded": "17 de Junho de 1948",
+  "stadium": null,
+  "lat": 35.1746503,
+  "lng": 33.3638783
+ },
+ {
+  "upstream": 1455,
+  "name": "Slovan Bratislava",
+  "full_name": "ŠK Slovan Bratislava futbal a.s.",
+  "city": "Bratislava",
+  "country": "Eslováquia",
+  "founded": "03 de Maio de 1919",
+  "stadium": null,
+  "lat": 48.15926025,
+  "lng": 17.139658691421687
+ },
+ {
+  "upstream": 1526,
+  "name": "Coventry City",
+  "full_name": "Coventry City Football Club",
+  "city": "Coventry",
+  "country": "Inglaterra",
+  "founded": "13 de Agosto de 1883",
+  "stadium": null,
+  "lat": 52.4081812,
+  "lng": -1.510477
+ },
+ {
+  "upstream": 1528,
+  "name": "Nottingham Forest",
+  "full_name": "Nottingham Forest Football Club",
+  "city": "West Bridgford",
+  "country": "Inglaterra",
+  "founded": "01 de Janeiro de 1865",
+  "stadium": null,
+  "lat": 52.9310754,
+  "lng": -1.1256663
+ },
+ {
+  "upstream": 1553,
+  "name": "Brighton & Hove Albion",
+  "full_name": "Brighton and Hove Albion Football Club",
+  "city": "Brighton and Hove",
+  "country": "Inglaterra",
+  "founded": "01 de Janeiro de 1901",
+  "stadium": null,
+  "lat": 50.8453169,
+  "lng": -0.14974689789029522
+ },
+ {
+  "upstream": 1554,
+  "name": "Bournemouth",
+  "full_name": "AFC Bournemouth",
+  "city": "Bournemouth",
+  "country": "Inglaterra",
+  "founded": "01 de Janeiro de 1899",
+  "stadium": null,
+  "lat": 50.7201514,
+  "lng": -1.8799118
+ },
+ {
+  "upstream": 1558,
+  "name": "Brentford",
+  "full_name": "Brentford Football Club",
+  "city": "Brentford",
+  "country": "Inglaterra",
+  "founded": "01 de Janeiro de 1889",
+  "stadium": null,
+  "lat": 51.4863958,
+  "lng": -0.3216623
+ },
+ {
+  "upstream": 1623,
+  "name": "KuPS",
+  "full_name": "Kuopion Palloseura",
+  "city": "Kuopio",
+  "country": "Finlândia",
+  "founded": "01 de Janeiro de 1923",
+  "stadium": null,
+  "lat": 62.8924601,
+  "lng": 27.6781839
+ },
+ {
+  "upstream": 1627,
+  "name": "Floriana",
+  "full_name": "Floriana Football Club",
+  "city": "Floriana",
+  "country": "Malta",
+  "founded": "01 de Janeiro de 1894",
+  "stadium": null,
+  "lat": 35.8929838,
+  "lng": 14.5052716
+ },
+ {
+  "upstream": 1700,
+  "name": "Mjällby",
+  "full_name": "Mjällby AIF",
+  "city": "Hällevik",
+  "country": "Suécia",
+  "founded": null,
+  "stadium": {
+   "upstream": 890,
+   "name": "Strandvallen"
+  },
+  "lat": 56.0137816,
+  "lng": 14.6969686
+ },
+ {
+  "upstream": 1777,
+  "name": "AGF Aarhus",
+  "full_name": "Aarhus Gymnastikforening",
+  "city": "Aarhus",
+  "country": "Dinamarca",
+  "founded": "01 de Janeiro de 1880",
+  "stadium": null,
+  "lat": 56.1496278,
+  "lng": 10.2134046
+ },
+ {
+  "upstream": 1825,
+  "name": "Cusco",
+  "full_name": "Cusco Fútbol Club",
+  "city": "Cusco",
+  "country": "Peru",
+  "founded": "28 de Julho de 2009",
+  "stadium": null,
+  "lat": -13.5170887,
+  "lng": -71.9785356
+ },
+ {
+  "upstream": 1826,
+  "name": "Huachipato",
+  "full_name": "Club Deportivo Huachipato",
+  "city": "Talcahuano",
+  "country": "Chile",
+  "founded": "07 de Junho de 1947",
+  "stadium": null,
+  "lat": -36.7144863,
+  "lng": -73.1141087
+ },
+ {
+  "upstream": 1915,
+  "name": "Sutjeska Nikšić",
+  "full_name": "Sutjeska Football Club",
+  "city": "Nikšić",
+  "country": "Montenegro",
+  "founded": "05 de Setembro de 1927",
+  "stadium": null,
+  "lat": 42.7739388,
+  "lng": 18.9488097
+ },
+ {
+  "upstream": 2064,
+  "name": "Novorizontino-SP",
+  "full_name": "Grêmio Esportivo Novorizontino",
+  "city": "Novo Horizonte-SP",
+  "country": "Brasil",
+  "founded": "13 de Março de 1973",
+  "stadium": null,
+  "lat": -21.4674564,
+  "lng": -49.2235377
+ },
+ {
+  "upstream": 2083,
+  "name": "Lincoln Red Imps",
+  "full_name": "Lincoln Red Imps Football Club",
+  "city": "Gibraltar",
+  "country": "Gibraltar",
+  "founded": "01 de Janeiro de 1976",
+  "stadium": null,
+  "lat": 36.140807,
+  "lng": -5.3541295
+ },
+ {
+  "upstream": 2107,
+  "name": "Hapoel Be'er Sheva",
+  "full_name": "Hapoel Be'er Sheva Football Club",
+  "city": "Beersheba",
+  "country": "Israel",
+  "founded": "01 de Janeiro de 1949",
+  "stadium": null,
+  "lat": 31.2457442,
+  "lng": 34.7925181
+ },
+ {
+  "upstream": 2156,
+  "name": "RB Leipzig",
+  "full_name": "RasenBallsport Leipzig e.V,",
+  "city": "Leipzig",
+  "country": "Alemanha",
+  "founded": "19 de Maio de 2009",
+  "stadium": null,
+  "lat": 51.3406321,
+  "lng": 12.3747329
+ },
+ {
+  "upstream": 2187,
+  "name": "Víkingur Reykjavik",
+  "full_name": "Knattspyrnufélagið Víkingur",
+  "city": "Reykjavik",
+  "country": "Islândia",
+  "founded": "21 de Abril de 1908",
+  "stadium": null,
+  "lat": 64.145981,
+  "lng": -21.9422367
+ },
+ {
+  "upstream": 2217,
+  "name": "Independiente del Valle",
+  "full_name": "Club Social y Deportivo Independiente",
+  "city": "Sangolquí",
+  "country": "Equador",
+  "founded": "01 de Março de 1958",
+  "stadium": null,
+  "lat": -0.3288822,
+  "lng": -78.4483476
+ },
+ {
+  "upstream": 2218,
+  "name": "O'Higgins",
+  "full_name": "O'Higgins Fútbol Club",
+  "city": "Rancagua",
+  "country": "Chile",
+  "founded": "07 de Abril de 1955",
+  "stadium": null,
+  "lat": -34.170249,
+  "lng": -70.7407427
+ },
+ {
+  "upstream": 2231,
+  "name": "Universidad Católica-ECU",
+  "full_name": "Club Deportivo de la Pontificia Universidad Católica del Ecuador",
+  "city": "Quito",
+  "country": "Equador",
+  "founded": "26 de Junho de 1963",
+  "stadium": null,
+  "lat": -0.2201641,
+  "lng": -78.5123274
+ },
+ {
+  "upstream": 2236,
+  "name": "La Guaira",
+  "full_name": "Deportivo La Guaira",
+  "city": "La Guaira",
+  "country": "Venezuela",
+  "founded": "21 de Junho de 2008",
+  "stadium": null,
+  "lat": 10.6000384,
+  "lng": -66.9296405
+ },
+ {
+  "upstream": 2237,
+  "name": "Nacional Potosí",
+  "full_name": "Club Atlético Nacional Potosí",
+  "city": "Potosí",
+  "country": "Bolívia",
+  "founded": "24 de Março de 1942",
+  "stadium": null,
+  "lat": -20.666667,
+  "lng": -66.666667
+ },
+ {
+  "upstream": 2239,
+  "name": "Juventud",
+  "full_name": "Club Atlético Juventud de Las Piedras",
+  "city": "Las Piedras",
+  "country": "Uruguai",
+  "founded": "24 de Dezembro de 1935",
+  "stadium": null,
+  "lat": -34.7274904,
+  "lng": -56.2164982
+ },
+ {
+  "upstream": 2334,
+  "name": "Górnik Zabrze",
+  "full_name": "Klub Sportowy Górnik Zabrze",
+  "city": "Zabrze",
+  "country": "Polônia",
+  "founded": "14 de Dezembro de 1948",
+  "stadium": null,
+  "lat": 50.3086154,
+  "lng": 18.7863749
+ },
+ {
+  "upstream": 2378,
+  "name": "CS U Craiova",
+  "full_name": "Clubul Sportiv Universitatea Craiova",
+  "city": "Craiova",
+  "country": "Romênia",
+  "founded": "01 de Janeiro de 1948",
+  "stadium": null,
+  "lat": 44.3190159,
+  "lng": 23.7965614
+ },
+ {
+  "upstream": 2740,
+  "name": "Como",
+  "full_name": "Calcio Como S.r.l.",
+  "city": "Como, Como",
+  "country": "Itália",
+  "founded": "01 de Janeiro de 1907",
+  "stadium": null,
+  "lat": 45.8115623,
+  "lng": 9.0830353
+ },
+ {
+  "upstream": 2824,
+  "name": "Petrocub Hîncești",
+  "full_name": "Fotbal Club Petrocub Hîncești",
+  "city": "Hîncești",
+  "country": "Moldávia",
+  "founded": "01 de Janeiro de 1994",
+  "stadium": null,
+  "lat": 46.8302002,
+  "lng": 28.5871433
+ },
+ {
+  "upstream": 3053,
+  "name": "LASK Linz",
+  "full_name": "Linzer Athletik-Sport-Klub",
+  "city": "Linz",
+  "country": "Áustria",
+  "founded": "07 de Agosto de 1908",
+  "stadium": null,
+  "lat": 48.3059078,
+  "lng": 14.286198
+ },
+ {
+  "upstream": 3091,
+  "name": "FC Drita",
+  "full_name": "Football Club Drita",
+  "city": "Gjilan",
+  "country": "Kosovo",
+  "founded": "01 de Janeiro de 1947",
+  "stadium": null,
+  "lat": 42.463515,
+  "lng": 21.4693599
+ },
+ {
+  "upstream": 3117,
+  "name": "Sabah FK",
+  "full_name": "Sabah Futbol Klubu",
+  "city": "Baku, Baku",
+  "country": "Azerbeijão",
+  "founded": "01 de Janeiro de 2017",
+  "stadium": null,
+  "lat": 40.3854743,
+  "lng": 49.8288102
+ },
+ {
+  "upstream": 3138,
+  "name": "Ararat-Armenia",
+  "full_name": "Football Club Ararat-Armenia",
+  "city": "Yerevan",
+  "country": "Armênia",
+  "founded": "30 de Junho de 2017",
+  "stadium": null,
+  "lat": 40.1777112,
+  "lng": 44.5126233
+ },
+ {
+  "upstream": 3139,
+  "name": "Iberia 1999",
+  "full_name": "FC Iberia 1999",
+  "city": "Tbilisi",
+  "country": "Geórgia",
+  "founded": "20 de Agosto de 1999",
+  "stadium": null,
+  "lat": 41.6934591,
+  "lng": 44.8014495
+ },
+ {
+  "upstream": 3143,
+  "name": "Kauno Žalgiris",
+  "full_name": "Futbolo klubas Kauno Žalgiris",
+  "city": "Kauno",
+  "country": "Lituânia",
+  "founded": "01 de Janeiro de 2004",
+  "stadium": null,
+  "lat": 54.8982139,
+  "lng": 23.9044817
+ },
+ {
+  "upstream": 3144,
+  "name": "Riga FC",
+  "full_name": "Riga Football Club",
+  "city": "Riga",
+  "country": "Letônia",
+  "founded": "01 de Abril de 2014",
+  "stadium": null,
+  "lat": 56.9493977,
+  "lng": 24.1051846
+ },
+ {
+  "upstream": 3169,
+  "name": "Union Saint-Gilloise",
+  "full_name": "Royale Union Saint-Gilloise",
+  "city": "Saint-Gilles",
+  "country": "Bélgica",
+  "founded": "01 de Novembro de 1897",
+  "stadium": null,
+  "lat": 50.8249958,
+  "lng": 4.3454841
+ },
+ {
+  "upstream": 3220,
+  "name": "Coquimbo Unido",
+  "full_name": "Club de Deportes Coquimbo Unido",
+  "city": "Coquimbo",
+  "country": "Chile",
+  "founded": "30 de Agosto de 1958",
+  "stadium": null,
+  "lat": -30.7546652,
+  "lng": -70.9005536
+ },
+ {
+  "upstream": 3227,
+  "name": "Always Ready",
+  "full_name": "Club Always Ready",
+  "city": "La Paz",
+  "country": "Bolívia",
+  "founded": "13 de Abril de 1933",
+  "stadium": null,
+  "lat": -16.4955455,
+  "lng": -68.1336229
+ },
+ {
+  "upstream": 3280,
+  "name": "Larne",
+  "full_name": "Larne Football Club",
+  "city": "Larne",
+  "country": "Irlanda do Norte",
+  "founded": "01 de Janeiro de 1889",
+  "stadium": null,
+  "lat": 54.8508458,
+  "lng": -5.8183116
+ },
+ {
+  "upstream": 3298,
+  "name": "Inter Club d'Escaldes",
+  "full_name": "Inter Club d'Escaldes",
+  "city": "Escaldes-Engordany",
+  "country": "Andorra",
+  "founded": "01 de Janeiro de 1991",
+  "stadium": null,
+  "lat": 42.48691275,
+  "lng": 1.6070001140292214
+ },
+ {
+  "upstream": 3386,
+  "name": "Egnatia Rrogozhinë",
+  "full_name": "Klubi i Futbollit Egnatia",
+  "city": "Rrogozhinë",
+  "country": "Albânia",
+  "founded": "01 de Janeiro de 1934",
+  "stadium": null,
+  "lat": 41.0758988,
+  "lng": 19.6649775
+ },
+ {
+  "upstream": 3396,
+  "name": "Platense",
+  "full_name": "Club Atlético Platense",
+  "city": "Florida (Vicente López)",
+  "country": "Argentina",
+  "founded": "25 de Maio de 1905",
+  "stadium": null,
+  "lat": -34.5322058,
+  "lng": -58.4937312
+ },
+ {
+  "upstream": 3407,
+  "name": "Independiente Rivadavia",
+  "full_name": "Club Sportivo Independiente Rivadavia",
+  "city": "Ciudad de Mendoza",
+  "country": "Argentina",
+  "founded": "24 de Janeiro de 1913",
+  "stadium": null,
+  "lat": -32.8894155,
+  "lng": -68.8446177
+ },
+ {
+  "upstream": 3466,
+  "name": "Universidad Central",
+  "full_name": "Universidad Central de Venezuela Fútbol Club",
+  "city": "Caracas",
+  "country": "Venezuela",
+  "founded": "01 de Janeiro de 1950",
+  "stadium": null,
+  "lat": 10.5060934,
+  "lng": -66.9146008
+ },
+ {
+  "upstream": 3467,
+  "name": "ML Vitebsk",
+  "full_name": "Football Club Maxline Vitebsk",
+  "city": "Vitebsk",
+  "country": "Bielorrússia",
+  "founded": null,
+  "stadium": null,
+  "lat": 55.1930197,
+  "lng": 30.2070437
+ },
+ {
+  "upstream": 3468,
+  "name": "Atert Bissen",
+  "full_name": "Football Club Atert Bissen",
+  "city": "Bissen",
+  "country": "Luxemburgo",
+  "founded": "24 de Junho de 1945",
+  "stadium": null,
+  "lat": 49.7891516,
+  "lng": 6.0662981
+ }
+]

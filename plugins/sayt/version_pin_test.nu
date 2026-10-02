@@ -1,0 +1,239 @@
+#!/usr/bin/env nu
+# Tests for version pinning: VERSION file reading, re-exec behavior
+# Run with: nu version_pin_test.nu (from plugins/sayt directory)
+
+use std/assert
+
+def main [] {
+	print "Running version pin tests...\n"
+
+	test_no_pin_no_reexec
+	test_pin_matches_dist_no_reexec
+	test_pin_differs_reexec
+	test_pin_fires_on_direct_verb_dispatch
+	test_reexec_does_not_run_verb_locally
+	test_empty_sayt_version_uses_default
+	test_saytw_not_found_aborts
+
+	print "\nAll version pin tests passed!"
+}
+
+def make-test-dir [] {
+	let tmpdir = (mktemp -d)
+	$tmpdir
+}
+
+# Mirrors sayt.nu's own wrapper selection.
+def saytw-name []: nothing -> string {
+	if $nu.os-info.name == "windows" { "saytw.ps1" } else { "saytw" }
+}
+
+# Must cover the platform's wrapper: the real one answers a pin miss by
+# downloading that release, and a unit test must never reach the network.
+def install-fake-saytw [sayt_dir: path, backup: path, --argv]: nothing -> path {
+	let windows = ($nu.os-info.name == "windows")
+	let target = ($sayt_dir | path join (saytw-name))
+	cp $target $backup
+	if $windows {
+		let tail = if $argv { " argv=$args" } else { "" }
+		$"Write-Output \"REEXEC_VERSION=$env:SAYT_VERSION($tail)\"\n" | save -f $target
+	} else {
+		let tail = if $argv { " argv=$*" } else { "" }
+		$"#!/bin/sh\necho \"REEXEC_VERSION=$SAYT_VERSION($tail)\"\n" | save -f $target
+		chmod +x $target
+	}
+	$target
+}
+
+# No pin configured → no re-exec, verb runs normally
+def test_no_pin_no_reexec [] {
+	print "test no pin configured → no re-exec, verb runs normally..."
+	let tmpdir = (make-test-dir)
+	# Add a simple verify rule so we get observable output
+	'say:
+  verify:
+    rulemap:
+      custom:
+        priority: -1
+        cmds:
+          - do: "echo NO_PIN_OK"
+' | save ($tmpdir | path join ".say.yaml")
+	let result = (do { nu sayt.nu -d $tmpdir verify } | complete)
+	assert ($result.exit_code == 0) $"should exit 0, got ($result.exit_code): ($result.stderr)"
+	assert ($result.stdout | str contains "NO_PIN_OK") $"expected NO_PIN_OK, got: ($result.stdout)"
+	rm -rf $tmpdir
+}
+
+# Pin matches distribution version → no re-exec
+def test_pin_matches_dist_no_reexec [] {
+	print "test pin matches dist version → no re-exec..."
+	let tmpdir = (make-test-dir)
+	let dist_version = open VERSION | str trim
+	# Pin to the same version as distribution
+	$'say:
+  self:
+    version: "($dist_version)"
+  verify:
+    rulemap:
+      custom:
+        priority: -1
+        cmds:
+          - do: "echo MATCH_OK"
+' | save ($tmpdir | path join ".say.yaml")
+	let result = (do { nu sayt.nu -d $tmpdir verify } | complete)
+	assert ($result.exit_code == 0) $"should exit 0, got ($result.exit_code): ($result.stderr)"
+	assert ($result.stdout | str contains "MATCH_OK") $"expected MATCH_OK, got: ($result.stdout)"
+	rm -rf $tmpdir
+}
+
+# Pin differs → re-exec with SAYT_VERSION set (fake saytw echoes env)
+def test_pin_differs_reexec [] {
+	print "test pin differs → re-exec with SAYT_VERSION set..."
+	let tmpdir = (make-test-dir)
+	# Pin to a different version
+	'say:
+  self:
+    version: "v99.99.99"
+' | save ($tmpdir | path join ".say.yaml")
+
+	# The wrapper must be colocated with sayt.nu (FILE_PWD), not in the target dir.
+	let sayt_dir = $env.FILE_PWD? | default (pwd)
+	let backup_saytw = $tmpdir | path join "saytw.backup"
+	let saytw_path = (install-fake-saytw $sayt_dir $backup_saytw)
+
+	let result = try {
+		do { nu sayt.nu -d $tmpdir verify } | complete
+	} catch { |e|
+		# Restore real saytw before propagating
+		cp $backup_saytw $saytw_path
+		error make { msg: $"test failed: ($e)" }
+	}
+
+	# Restore real saytw
+	cp $backup_saytw $saytw_path
+
+	assert ($result.stdout | str contains "REEXEC_VERSION=v99.99.99") $"expected SAYT_VERSION=v99.99.99, got: ($result.stdout)($result.stderr)"
+	rm -rf $tmpdir
+}
+
+# Pin fires on direct verb dispatch — `sayt <verb>` goes straight to
+# `def "main <verb>"` (bare main never runs), so the check must live in
+# run-verb, not bare main.
+def test_pin_fires_on_direct_verb_dispatch [] {
+	print "test pin fires on direct verb dispatch (no flags)..."
+	let tmpdir = (make-test-dir)
+	'say:
+  self:
+    version: "v99.99.99"
+' | save ($tmpdir | path join ".say.yaml")
+
+	let sayt_dir = $env.FILE_PWD? | default (pwd)
+	let backup_saytw = $tmpdir | path join "saytw.backup"
+	let saytw_path = (install-fake-saytw $sayt_dir $backup_saytw --argv)
+
+	let sayt_nu = $sayt_dir | path join "sayt.nu"
+	let result = try {
+		do { cd $tmpdir; nu $sayt_nu verify } | complete
+	} catch { |e|
+		cp $backup_saytw $saytw_path
+		error make { msg: $"test failed: ($e)" }
+	}
+	cp $backup_saytw $saytw_path
+
+	assert ($result.exit_code == 0) $"should exit 0, got ($result.exit_code): ($result.stderr)"
+	assert ($result.stdout | str contains "REEXEC_VERSION=v99.99.99") $"expected re-exec on direct dispatch, got: ($result.stdout)($result.stderr)"
+	assert ($result.stdout | str contains "argv=verify") $"expected verb forwarded to re-exec, got: ($result.stdout)"
+	rm -rf $tmpdir
+}
+
+# Re-exec replaces local execution — the verb must not ALSO run locally
+# on the mismatched distribution after the pinned child returns.
+def test_reexec_does_not_run_verb_locally [] {
+	print "test re-exec does not also run the verb locally..."
+	let tmpdir = (make-test-dir)
+	'say:
+  self:
+    version: "v99.99.99"
+  verify:
+    rulemap:
+      custom:
+        priority: -1
+        cmds:
+          - do: "echo LOCAL_RUN_LEAKED"
+' | save ($tmpdir | path join ".say.yaml")
+
+	let sayt_dir = $env.FILE_PWD? | default (pwd)
+	let backup_saytw = $tmpdir | path join "saytw.backup"
+	let saytw_path = (install-fake-saytw $sayt_dir $backup_saytw)
+
+	let result = try {
+		do { nu sayt.nu -d $tmpdir verify } | complete
+	} catch { |e|
+		cp $backup_saytw $saytw_path
+		error make { msg: $"test failed: ($e)" }
+	}
+	cp $backup_saytw $saytw_path
+
+	assert ($result.exit_code == 0) $"should exit 0, got ($result.exit_code): ($result.stderr)"
+	assert ($result.stdout | str contains "REEXEC_VERSION=v99.99.99") $"expected re-exec, got: ($result.stdout)($result.stderr)"
+	assert (not ($result.stdout | str contains "LOCAL_RUN_LEAKED")) $"verb ran locally after re-exec: ($result.stdout)"
+	rm -rf $tmpdir
+}
+
+# Empty SAYT_VERSION means "use the built-in default" — one rule across
+# saytw, saytw.ps1, the zig launcher, and sayt/install. Hermetic: the
+# default version's cache slot is pre-seeded with a fake binary, so a
+# leaked empty version misses the slot and fails the assert.
+def test_empty_sayt_version_uses_default [] {
+	print "test empty SAYT_VERSION resolves to the wrapper default..."
+	if ($nu.os-info.name == "windows") {
+		print "    SKIP (saytw is POSIX; pwsh deletes empty env vars)"
+		return
+	}
+	let tmpdir = (mktemp -d)
+	let dist_version = (open VERSION | str trim)
+	let arch = (if $nu.os-info.arch == "x86_64" { "x64" } else if $nu.os-info.arch == "aarch64" { "arm64" } else { $nu.os-info.arch })
+	let bin_name = $"sayt-($nu.os-info.name)-($arch)"
+	let slot = $tmpdir | path join "sayt" $dist_version
+	mkdir $slot
+	"#!/bin/sh\necho FAKE_DEFAULT_OK\n" | save ($slot | path join $bin_name)
+	chmod +x ($slot | path join $bin_name)
+
+	let result = (do { with-env { XDG_CACHE_HOME: $tmpdir, SAYT_VERSION: "" } { ^./saytw --help } } | complete)
+	assert ($result.exit_code == 0) $"should exit 0, got ($result.exit_code): ($result.stderr)"
+	assert ($result.stdout | str contains "FAKE_DEFAULT_OK") $"expected default-version cache hit, got: ($result.stdout)($result.stderr)"
+	rm -rf $tmpdir
+}
+
+# saytw not found → aborts with error
+def test_saytw_not_found_aborts [] {
+	print "test saytw not found → aborts with error..."
+	let tmpdir = (make-test-dir)
+	# Pin to a different version but don't provide saytw
+	'say:
+  self:
+    version: "v99.99.99"
+' | save ($tmpdir | path join ".say.yaml")
+
+	# Temporarily rename the real saytw so it's not found
+	let sayt_dir = $env.FILE_PWD? | default (pwd)
+	let saytw_path = $sayt_dir | path join (saytw-name)
+	let saytw_backup = $sayt_dir | path join "saytw.pin_test_backup"
+	mv $saytw_path $saytw_backup
+
+	let result = try {
+		do { nu sayt.nu -d $tmpdir verify } | complete
+	} catch { |e|
+		mv $saytw_backup $saytw_path
+		{ exit_code: 1, stderr: $"($e)" }
+	}
+
+	# Restore
+	if ($saytw_backup | path exists) {
+		mv $saytw_backup $saytw_path
+	}
+
+	assert ($result.exit_code != 0) $"should fail when saytw not found, got exit ($result.exit_code)"
+	assert ($result.stderr | str contains "version pin requires saytw") $"expected error about saytw, got: ($result.stderr)"
+	rm -rf $tmpdir
+}

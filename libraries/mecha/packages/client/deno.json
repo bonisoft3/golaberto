@@ -1,0 +1,16 @@
+{
+  "name": "@mecha/client",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./carriers": "./src/types.ts"
+  },
+  "imports": {
+    "@tanstack/db": "npm:@tanstack/db@0.8.0",
+    "@tanstack/electric-db-collection": "npm:@tanstack/electric-db-collection@0.4.0",
+    "@tanstack/offline-transactions": "npm:@tanstack/offline-transactions@1.0.46",
+    "@electric-sql/client": "npm:@electric-sql/client@1.5.27",
+    "@mecha/collections": "../collections/src/index.ts"
+  }
+}

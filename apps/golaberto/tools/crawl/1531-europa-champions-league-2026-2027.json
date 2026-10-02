@@ -1,0 +1,4289 @@
+{
+ "path": "/championship/show/1531-europa-champions-league-2026-2027",
+ "phases": [
+  {
+   "upstream": 4511,
+   "name": "1st Qualifying Round",
+   "position": 0,
+   "groups": [
+    {
+     "upstream": 16773,
+     "name": "Group 1",
+     "teams": [
+      {
+       "upstream": 3117,
+       "name": "Sabah FK"
+      },
+      {
+       "upstream": 1174,
+       "name": "The New Saints"
+      }
+     ],
+     "zones": [
+      {
+       "name": "2nd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16774,
+     "name": "Group 2",
+     "teams": [
+      {
+       "upstream": 1237,
+       "name": "Shamrock Rovers"
+      },
+      {
+       "upstream": 1627,
+       "name": "Floriana"
+      }
+     ],
+     "zones": [
+      {
+       "name": "2nd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16775,
+     "name": "Group 3",
+     "teams": [
+      {
+       "upstream": 3139,
+       "name": "Iberia 1999"
+      },
+      {
+       "upstream": 1400,
+       "name": "Flora Tallinn"
+      }
+     ],
+     "zones": [
+      {
+       "name": "2nd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16776,
+     "name": "Group 4",
+     "teams": [
+      {
+       "upstream": 2083,
+       "name": "Lincoln Red Imps"
+      },
+      {
+       "upstream": 3298,
+       "name": "Inter Club d'Escaldes"
+      }
+     ],
+     "zones": [
+      {
+       "name": "2nd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16777,
+     "name": "Group 5",
+     "teams": [
+      {
+       "upstream": 3280,
+       "name": "Larne"
+      },
+      {
+       "upstream": 1435,
+       "name": "Tre Fiori"
+      }
+     ],
+     "zones": [
+      {
+       "name": "2nd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16778,
+     "name": "Group 6",
+     "teams": [
+      {
+       "upstream": 3138,
+       "name": "Ararat-Armenia"
+      },
+      {
+       "upstream": 3144,
+       "name": "Riga FC"
+      }
+     ],
+     "zones": [
+      {
+       "name": "2nd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16779,
+     "name": "Group 7",
+     "teams": [
+      {
+       "upstream": 1623,
+       "name": "KuPS"
+      },
+      {
+       "upstream": 1212,
+       "name": "Vardar"
+      }
+     ],
+     "zones": [
+      {
+       "name": "2nd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16780,
+     "name": "Group 8",
+     "teams": [
+      {
+       "upstream": 3143,
+       "name": "Kauno Žalgiris"
+      },
+      {
+       "upstream": 3091,
+       "name": "FC Drita"
+      }
+     ],
+     "zones": [
+      {
+       "name": "2nd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16781,
+     "name": "Group 9",
+     "teams": [
+      {
+       "upstream": 2378,
+       "name": "CS U Craiova"
+      },
+      {
+       "upstream": 3467,
+       "name": "ML Vitebsk"
+      }
+     ],
+     "zones": [
+      {
+       "name": "2nd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16782,
+     "name": "Group 10",
+     "teams": [
+      {
+       "upstream": 3386,
+       "name": "Egnatia Rrogozhinë"
+      },
+      {
+       "upstream": 2824,
+       "name": "Petrocub Hîncești"
+      }
+     ],
+     "zones": [
+      {
+       "name": "2nd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16783,
+     "name": "Group 11",
+     "teams": [
+      {
+       "upstream": 1040,
+       "name": "Levski Sofia"
+      },
+      {
+       "upstream": 1408,
+       "name": "Borac Banja Luka"
+      }
+     ],
+     "zones": [
+      {
+       "name": "2nd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16784,
+     "name": "Group 12",
+     "teams": [
+      {
+       "upstream": 2187,
+       "name": "Víkingur Reykjavik"
+      },
+      {
+       "upstream": 1402,
+       "name": "Győri ETO"
+      }
+     ],
+     "zones": [
+      {
+       "name": "2nd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16785,
+     "name": "Group 13",
+     "teams": [
+      {
+       "upstream": 1244,
+       "name": "Kairat Almaty"
+      },
+      {
+       "upstream": 1915,
+       "name": "Sutjeska Nikšić"
+      }
+     ],
+     "zones": [
+      {
+       "name": "2nd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16786,
+     "name": "Group 14",
+     "teams": [
+      {
+       "upstream": 1176,
+       "name": "Klaksvíkar Ítróttarfelag"
+      },
+      {
+       "upstream": 3468,
+       "name": "Atert Bissen"
+      }
+     ],
+     "zones": [
+      {
+       "name": "2nd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    }
+   ],
+   "games": [
+    {
+     "upstream": 365764,
+     "round": 1,
+     "date": "07/07/2026",
+     "time": "16:00",
+     "home": "Ararat-Armenia",
+     "away": "Riga FC",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 365765,
+     "round": 1,
+     "date": "07/07/2026",
+     "time": "16:00",
+     "home": "Kauno Žalgiris",
+     "away": "FC Drita",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365766,
+     "round": 1,
+     "date": "07/07/2026",
+     "time": "16:00",
+     "home": "Lincoln Red Imps",
+     "away": "Inter Club d'Escaldes",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 365767,
+     "round": 1,
+     "date": "07/07/2026",
+     "time": "16:00",
+     "home": "Sabah FK",
+     "away": "The New Saints",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 365768,
+     "round": 1,
+     "date": "07/07/2026",
+     "time": "17:00",
+     "home": "Vardar",
+     "away": "KuPS",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 365769,
+     "round": 1,
+     "date": "07/07/2026",
+     "time": "17:30",
+     "home": "Floriana",
+     "away": "Shamrock Rovers",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 365770,
+     "round": 1,
+     "date": "07/07/2026",
+     "time": "18:30",
+     "home": "Borac Banja Luka",
+     "away": "Levski Sofia",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365771,
+     "round": 1,
+     "date": "07/07/2026",
+     "time": "18:30",
+     "home": "Tre Fiori",
+     "away": "Larne",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 365797,
+     "round": 1,
+     "date": "07/07/2026",
+     "time": "18:45",
+     "home": "Klaksvíkar Ítróttarfelag",
+     "away": "Atert Bissen",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 365773,
+     "round": 1,
+     "date": "07/07/2026",
+     "time": "19:00",
+     "home": "Víkingur Reykjavik",
+     "away": "Győri ETO",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365774,
+     "round": 1,
+     "date": "08/07/2026",
+     "time": "15:00",
+     "home": "Kairat Almaty",
+     "away": "Sutjeska Nikšić",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 365775,
+     "round": 1,
+     "date": "08/07/2026",
+     "time": "16:00",
+     "home": "Flora Tallinn",
+     "away": "Iberia 1999",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 365777,
+     "round": 1,
+     "date": "08/07/2026",
+     "time": "17:00",
+     "home": "ML Vitebsk",
+     "away": "CS U Craiova",
+     "played": true,
+     "score": [
+      1,
+      4
+     ]
+    },
+    {
+     "upstream": 365776,
+     "round": 1,
+     "date": "08/07/2026",
+     "time": "17:00",
+     "home": "Petrocub Hîncești",
+     "away": "Egnatia Rrogozhinë",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365778,
+     "round": 1,
+     "date": "14/07/2026",
+     "time": "15:00",
+     "home": "KuPS",
+     "away": "Vardar",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 365779,
+     "round": 1,
+     "date": "14/07/2026",
+     "time": "16:00",
+     "home": "Iberia 1999",
+     "away": "Flora Tallinn",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 365780,
+     "round": 1,
+     "date": "14/07/2026",
+     "time": "16:00",
+     "home": "Inter Club d'Escaldes",
+     "away": "Lincoln Red Imps",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365781,
+     "round": 1,
+     "date": "14/07/2026",
+     "time": "17:00",
+     "home": "Győri ETO",
+     "away": "Víkingur Reykjavik",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 365782,
+     "round": 1,
+     "date": "14/07/2026",
+     "time": "17:00",
+     "home": "Riga FC",
+     "away": "Ararat-Armenia",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 365783,
+     "round": 1,
+     "date": "14/07/2026",
+     "time": "17:30",
+     "home": "Levski Sofia",
+     "away": "Borac Banja Luka",
+     "played": true,
+     "score": [
+      4,
+      0
+     ]
+    },
+    {
+     "upstream": 365784,
+     "round": 1,
+     "date": "14/07/2026",
+     "time": "17:30",
+     "home": "The New Saints",
+     "away": "Sabah FK",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 365785,
+     "round": 1,
+     "date": "14/07/2026",
+     "time": "18:00",
+     "home": "FC Drita",
+     "away": "Kauno Žalgiris",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 365786,
+     "round": 1,
+     "date": "14/07/2026",
+     "time": "19:00",
+     "home": "Larne",
+     "away": "Tre Fiori",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 365787,
+     "round": 1,
+     "date": "14/07/2026",
+     "time": "19:00",
+     "home": "Shamrock Rovers",
+     "away": "Floriana",
+     "played": true,
+     "score": [
+      5,
+      1
+     ]
+    },
+    {
+     "upstream": 365788,
+     "round": 1,
+     "date": "15/07/2026",
+     "time": "17:30",
+     "home": "CS U Craiova",
+     "away": "ML Vitebsk",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365798,
+     "round": 1,
+     "date": "15/07/2026",
+     "time": "18:15",
+     "home": "Atert Bissen",
+     "away": "Klaksvíkar Ítróttarfelag",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 365791,
+     "round": 1,
+     "date": "15/07/2026",
+     "time": "19:00",
+     "home": "Egnatia Rrogozhinë",
+     "away": "Petrocub Hîncești",
+     "played": true,
+     "score": [
+      6,
+      1
+     ]
+    },
+    {
+     "upstream": 365790,
+     "round": 1,
+     "date": "15/07/2026",
+     "time": "19:00",
+     "home": "Sutjeska Nikšić",
+     "away": "Kairat Almaty",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    }
+   ]
+  },
+  {
+   "upstream": 4515,
+   "name": "2nd Qualifying Round",
+   "position": 1,
+   "groups": [
+    {
+     "upstream": 16821,
+     "name": "Group 1",
+     "teams": [
+      {
+       "upstream": 1700,
+       "name": "Mjällby"
+      },
+      {
+       "upstream": 2083,
+       "name": "Lincoln Red Imps"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3rd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16822,
+     "name": "Group 2",
+     "teams": [
+      {
+       "upstream": 1112,
+       "name": "Red Star Belgrade"
+      },
+      {
+       "upstream": 3280,
+       "name": "Larne"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3rd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16823,
+     "name": "Group 3",
+     "teams": [
+      {
+       "upstream": 3117,
+       "name": "Sabah FK"
+      },
+      {
+       "upstream": 1623,
+       "name": "KuPS"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3rd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16824,
+     "name": "Group 4",
+     "teams": [
+      {
+       "upstream": 3143,
+       "name": "Kauno Žalgiris"
+      },
+      {
+       "upstream": 1176,
+       "name": "Klaksvíkar Ítróttarfelag"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3rd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16825,
+     "name": "Group 5",
+     "teams": [
+      {
+       "upstream": 1777,
+       "name": "AGF Aarhus"
+      },
+      {
+       "upstream": 1106,
+       "name": "Lech Poznań"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3rd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16826,
+     "name": "Group 6",
+     "teams": [
+      {
+       "upstream": 3138,
+       "name": "Ararat-Armenia"
+      },
+      {
+       "upstream": 1237,
+       "name": "Shamrock Rovers"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3rd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16827,
+     "name": "Group 7",
+     "teams": [
+      {
+       "upstream": 1040,
+       "name": "Levski Sofia"
+      },
+      {
+       "upstream": 2378,
+       "name": "CS U Craiova"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3rd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16828,
+     "name": "Group 8",
+     "teams": [
+      {
+       "upstream": 1244,
+       "name": "Kairat Almaty"
+      },
+      {
+       "upstream": 1441,
+       "name": "Omonia"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3rd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16829,
+     "name": "Group 9",
+     "teams": [
+      {
+       "upstream": 1094,
+       "name": "Dinamo Zagreb"
+      },
+      {
+       "upstream": 363,
+       "name": "FC Thun"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3rd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16830,
+     "name": "Group 10",
+     "teams": [
+      {
+       "upstream": 2107,
+       "name": "Hapoel Be'er Sheva"
+      },
+      {
+       "upstream": 2187,
+       "name": "Víkingur Reykjavik"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3rd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16831,
+     "name": "Group 11",
+     "teams": [
+      {
+       "upstream": 1455,
+       "name": "Slovan Bratislava"
+      },
+      {
+       "upstream": 3139,
+       "name": "Iberia 1999"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3rd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16832,
+     "name": "Group 12",
+     "teams": [
+      {
+       "upstream": 1137,
+       "name": "Celje"
+      },
+      {
+       "upstream": 3386,
+       "name": "Egnatia Rrogozhinë"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3rd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16833,
+     "name": "Group 13",
+     "teams": [
+      {
+       "upstream": 397,
+       "name": "Fenerbahçe"
+      },
+      {
+       "upstream": 2334,
+       "name": "Górnik Zabrze"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3rd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16834,
+     "name": "Group 14",
+     "teams": [
+      {
+       "upstream": 1100,
+       "name": "Sturm Graz"
+      },
+      {
+       "upstream": 51,
+       "name": "Heart of Midlothian"
+      }
+     ],
+     "zones": [
+      {
+       "name": "3rd Qualifying Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    }
+   ],
+   "games": [
+    {
+     "upstream": 365875,
+     "round": 2,
+     "date": "21/07/2026",
+     "time": "16:00",
+     "home": "Ararat-Armenia",
+     "away": "Shamrock Rovers",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 365876,
+     "round": 2,
+     "date": "21/07/2026",
+     "time": "16:00",
+     "home": "Iberia 1999",
+     "away": "Slovan Bratislava",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 365882,
+     "round": 2,
+     "date": "21/07/2026",
+     "time": "16:00",
+     "home": "Mjällby",
+     "away": "Lincoln Red Imps",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 365884,
+     "round": 2,
+     "date": "21/07/2026",
+     "time": "16:00",
+     "home": "Sabah FK",
+     "away": "KuPS",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365874,
+     "round": 2,
+     "date": "21/07/2026",
+     "time": "17:00",
+     "home": "AGF Aarhus",
+     "away": "Lech Poznań",
+     "played": true,
+     "score": [
+      1,
+      4
+     ]
+    },
+    {
+     "upstream": 365886,
+     "round": 2,
+     "date": "21/07/2026",
+     "time": "18:00",
+     "home": "FC Thun",
+     "away": "Dinamo Zagreb",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365877,
+     "round": 2,
+     "date": "21/07/2026",
+     "time": "18:00",
+     "home": "Fenerbahçe",
+     "away": "Górnik Zabrze",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365887,
+     "round": 2,
+     "date": "21/07/2026",
+     "time": "18:30",
+     "home": "Sturm Graz",
+     "away": "Heart of Midlothian",
+     "played": true,
+     "score": [
+      4,
+      0
+     ]
+    },
+    {
+     "upstream": 365879,
+     "round": 2,
+     "date": "21/07/2026",
+     "time": "18:45",
+     "home": "Klaksvíkar Ítróttarfelag",
+     "away": "Kauno Žalgiris",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 365880,
+     "round": 2,
+     "date": "21/07/2026",
+     "time": "19:00",
+     "home": "Larne",
+     "away": "Red Star Belgrade",
+     "played": true,
+     "score": [
+      0,
+      4
+     ]
+    },
+    {
+     "upstream": 365885,
+     "round": 2,
+     "date": "21/07/2026",
+     "time": "19:00",
+     "home": "Víkingur Reykjavik",
+     "away": "Hapoel Be'er Sheva",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 365883,
+     "round": 2,
+     "date": "22/07/2026",
+     "time": "17:00",
+     "home": "Omonia",
+     "away": "Kairat Almaty",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365881,
+     "round": 2,
+     "date": "22/07/2026",
+     "time": "17:30",
+     "home": "Levski Sofia",
+     "away": "CS U Craiova",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365878,
+     "round": 2,
+     "date": "22/07/2026",
+     "time": "19:00",
+     "home": "Egnatia Rrogozhinë",
+     "away": "Celje",
+     "played": true,
+     "score": [
+      3,
+      3
+     ]
+    },
+    {
+     "upstream": 365894,
+     "round": 2,
+     "date": "28/07/2026",
+     "time": "15:00",
+     "home": "KuPS",
+     "away": "Sabah FK",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 365896,
+     "round": 2,
+     "date": "28/07/2026",
+     "time": "16:00",
+     "home": "Lincoln Red Imps",
+     "away": "Mjällby",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 365901,
+     "round": 2,
+     "date": "28/07/2026",
+     "time": "18:00",
+     "home": "Dinamo Zagreb",
+     "away": "FC Thun",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 365892,
+     "round": 2,
+     "date": "28/07/2026",
+     "time": "18:45",
+     "home": "Heart of Midlothian",
+     "away": "Sturm Graz",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 365898,
+     "round": 2,
+     "date": "28/07/2026",
+     "time": "19:00",
+     "home": "Shamrock Rovers",
+     "away": "Ararat-Armenia",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 365889,
+     "round": 2,
+     "date": "29/07/2026",
+     "time": "16:00",
+     "home": "Kauno Žalgiris",
+     "away": "Klaksvíkar Ítróttarfelag",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 365899,
+     "round": 2,
+     "date": "29/07/2026",
+     "time": "17:30",
+     "home": "CS U Craiova",
+     "away": "Levski Sofia",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 365891,
+     "round": 2,
+     "date": "29/07/2026",
+     "time": "17:30",
+     "home": "Hapoel Be'er Sheva",
+     "away": "Víkingur Reykjavik",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 365890,
+     "round": 2,
+     "date": "29/07/2026",
+     "time": "18:00",
+     "home": "Górnik Zabrze",
+     "away": "Fenerbahçe",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 365888,
+     "round": 2,
+     "date": "29/07/2026",
+     "time": "18:00",
+     "home": "Red Star Belgrade",
+     "away": "Larne",
+     "played": true,
+     "score": [
+      5,
+      0
+     ]
+    },
+    {
+     "upstream": 365900,
+     "round": 2,
+     "date": "29/07/2026",
+     "time": "18:15",
+     "home": "Slovan Bratislava",
+     "away": "Iberia 1999",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "upstream": 4524,
+   "name": "3rd Qualifying Round",
+   "position": 2,
+   "groups": [
+    {
+     "upstream": 16927,
+     "name": "Group 1",
+     "teams": [
+      {
+       "upstream": 1094,
+       "name": "Dinamo Zagreb"
+      },
+      {
+       "upstream": 3143,
+       "name": "Kauno Žalgiris"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Playoff Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16928,
+     "name": "Group 2",
+     "teams": [
+      {
+       "upstream": 1455,
+       "name": "Slovan Bratislava"
+      },
+      {
+       "upstream": 1700,
+       "name": "Mjällby"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Playoff Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16929,
+     "name": "Group 3",
+     "teams": [
+      {
+       "upstream": 1040,
+       "name": "Levski Sofia"
+      },
+      {
+       "upstream": 1244,
+       "name": "Kairat Almaty"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Playoff Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16930,
+     "name": "Group 4",
+     "teams": [
+      {
+       "upstream": 3117,
+       "name": "Sabah FK"
+      },
+      {
+       "upstream": 1777,
+       "name": "AGF Aarhus"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Playoff Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16931,
+     "name": "Group 5",
+     "teams": [
+      {
+       "upstream": 1137,
+       "name": "Celje"
+      },
+      {
+       "upstream": 3138,
+       "name": "Ararat-Armenia"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Playoff Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16932,
+     "name": "Group 6",
+     "teams": [
+      {
+       "upstream": 2107,
+       "name": "Hapoel Be'er Sheva"
+      },
+      {
+       "upstream": 1112,
+       "name": "Red Star Belgrade"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Playoff Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16933,
+     "name": "Group 7",
+     "teams": [
+      {
+       "upstream": 811,
+       "name": "NEC Nijmegen"
+      },
+      {
+       "upstream": 402,
+       "name": "Olympiacos"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Playoff Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16934,
+     "name": "Group 8",
+     "teams": [
+      {
+       "upstream": 3169,
+       "name": "Union Saint-Gilloise"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Playoff Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16935,
+     "name": "Group 9",
+     "teams": [
+      {
+       "upstream": 397,
+       "name": "Fenerbahçe"
+      },
+      {
+       "upstream": 1100,
+       "name": "Sturm Graz"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Playoff Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16936,
+     "name": "Group 10",
+     "teams": [
+      {
+       "upstream": 400,
+       "name": "Lyon"
+      },
+      {
+       "upstream": 361,
+       "name": "Sparta Praha"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Playoff Round",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    }
+   ],
+   "games": [
+    {
+     "upstream": 366090,
+     "round": 3,
+     "date": "04/08/2026",
+     "time": "16:00",
+     "home": "Ararat-Armenia",
+     "away": "Celje",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 366091,
+     "round": 3,
+     "date": "04/08/2026",
+     "time": "16:00",
+     "home": "Mjällby",
+     "away": "Slovan Bratislava",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 366092,
+     "round": 3,
+     "date": "04/08/2026",
+     "time": "17:30",
+     "home": "Hapoel Be'er Sheva",
+     "away": "Red Star Belgrade",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 366093,
+     "round": 3,
+     "date": "04/08/2026",
+     "time": "17:30",
+     "home": "Levski Sofia",
+     "away": "Kairat Almaty",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 366095,
+     "round": 3,
+     "date": "04/08/2026",
+     "time": "18:00",
+     "home": "Dinamo Zagreb",
+     "away": "Kauno Žalgiris",
+     "played": true,
+     "score": [
+      5,
+      0
+     ]
+    },
+    {
+     "upstream": 366096,
+     "round": 3,
+     "date": "04/08/2026",
+     "time": "18:00",
+     "home": "Olympiacos",
+     "away": "NEC Nijmegen",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 366094,
+     "round": 3,
+     "date": "04/08/2026",
+     "time": "18:00",
+     "home": "Sparta Praha",
+     "away": "Lyon",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 366097,
+     "round": 3,
+     "date": "04/08/2026",
+     "time": "18:00",
+     "home": "Union Saint-Gilloise",
+     "away": "Bodø/Glimt",
+     "played": true,
+     "score": [
+      3,
+      3
+     ]
+    },
+    {
+     "upstream": 366098,
+     "round": 3,
+     "date": "05/08/2026",
+     "time": "17:10",
+     "home": "AGF Aarhus",
+     "away": "Sabah FK",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 366099,
+     "round": 3,
+     "date": "05/08/2026",
+     "time": "18:00",
+     "home": "Fenerbahçe",
+     "away": "Sturm Graz",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 366100,
+     "round": 3,
+     "date": "11/08/2026",
+     "time": "15:00",
+     "home": "Kairat Almaty",
+     "away": "Levski Sofia",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 366101,
+     "round": 3,
+     "date": "11/08/2026",
+     "time": "16:00",
+     "home": "Bodø/Glimt",
+     "away": "Union Saint-Gilloise",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 366102,
+     "round": 3,
+     "date": "11/08/2026",
+     "time": "16:00",
+     "home": "Sabah FK",
+     "away": "AGF Aarhus",
+     "played": true,
+     "score": [
+      4,
+      0
+     ]
+    },
+    {
+     "upstream": 366103,
+     "round": 3,
+     "date": "11/08/2026",
+     "time": "17:00",
+     "home": "Kauno Žalgiris",
+     "away": "Dinamo Zagreb",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 366104,
+     "round": 3,
+     "date": "11/08/2026",
+     "time": "17:30",
+     "home": "NEC Nijmegen",
+     "away": "Olympiacos",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 370030,
+     "round": 3,
+     "date": "11/08/2026",
+     "time": "18:00",
+     "home": "Red Star Belgrade",
+     "away": "Hapoel Be'er Sheva",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 366106,
+     "round": 3,
+     "date": "11/08/2026",
+     "time": "18:15",
+     "home": "Celje",
+     "away": "Ararat-Armenia",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 366107,
+     "round": 3,
+     "date": "11/08/2026",
+     "time": "18:15",
+     "home": "Slovan Bratislava",
+     "away": "Mjällby",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 366108,
+     "round": 3,
+     "date": "11/08/2026",
+     "time": "18:30",
+     "home": "Sturm Graz",
+     "away": "Fenerbahçe",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 366109,
+     "round": 3,
+     "date": "11/08/2026",
+     "time": "19:00",
+     "home": "Lyon",
+     "away": "Sparta Praha",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    }
+   ]
+  },
+  {
+   "upstream": 4537,
+   "name": "Play-off round",
+   "position": 3,
+   "groups": [
+    {
+     "upstream": 16990,
+     "name": "Group 1",
+     "teams": [
+      {
+       "upstream": 1048,
+       "name": "AEK Athens"
+      },
+      {
+       "upstream": 1040,
+       "name": "Levski Sofia"
+      }
+     ],
+     "zones": [
+      {
+       "name": "League phase",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16991,
+     "name": "Group 2",
+     "teams": [
+      {
+       "upstream": 3053,
+       "name": "LASK Linz"
+      },
+      {
+       "upstream": 47,
+       "name": "Celtic"
+      }
+     ],
+     "zones": [
+      {
+       "name": "League phase",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16992,
+     "name": "Group 3",
+     "teams": [
+      {
+       "upstream": 1121,
+       "name": "Viking"
+      },
+      {
+       "upstream": 1094,
+       "name": "Dinamo Zagreb"
+      }
+     ],
+     "zones": [
+      {
+       "name": "League phase",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16993,
+     "name": "Group 4",
+     "teams": [
+      {
+       "upstream": 1455,
+       "name": "Slovan Bratislava"
+      },
+      {
+       "upstream": 1137,
+       "name": "Celje"
+      }
+     ],
+     "zones": [
+      {
+       "name": "League phase",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16994,
+     "name": "Group 5",
+     "teams": [
+      {
+       "upstream": 3117,
+       "name": "Sabah FK"
+      },
+      {
+       "upstream": 2107,
+       "name": "Hapoel Be'er Sheva"
+      }
+     ],
+     "zones": [
+      {
+       "name": "League phase",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16995,
+     "name": "Group 6",
+     "teams": [
+      {
+       "upstream": 397,
+       "name": "Fenerbahçe"
+      },
+      {
+       "upstream": 400,
+       "name": "Lyon"
+      }
+     ],
+     "zones": [
+      {
+       "name": "League phase",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    },
+    {
+     "upstream": 16996,
+     "name": "Group 7",
+     "teams": [
+      {
+       "upstream": 811,
+       "name": "NEC Nijmegen"
+      }
+     ],
+     "zones": [
+      {
+       "name": "League phase",
+       "first": 1,
+       "last": 1
+      }
+     ]
+    }
+   ],
+   "games": [
+    {
+     "upstream": 370032,
+     "round": 636,
+     "date": "18/08/2026",
+     "time": "19:00",
+     "home": "Dinamo Zagreb",
+     "away": "Viking",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 370031,
+     "round": 636,
+     "date": "18/08/2026",
+     "time": "19:00",
+     "home": "Fenerbahçe",
+     "away": "Lyon",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 370034,
+     "round": 636,
+     "date": "18/08/2026",
+     "time": "19:00",
+     "home": "Levski Sofia",
+     "away": "AEK Athens",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 370037,
+     "round": 636,
+     "date": "19/08/2026",
+     "time": "19:00",
+     "home": "Celtic",
+     "away": "LASK Linz",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 370033,
+     "round": 636,
+     "date": "19/08/2026",
+     "time": "19:00",
+     "home": "Hapoel Be'er Sheva",
+     "away": "Sabah FK",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 370035,
+     "round": 636,
+     "date": "19/08/2026",
+     "time": "19:00",
+     "home": "NEC Nijmegen",
+     "away": "Bodø/Glimt",
+     "played": true,
+     "score": [
+      1,
+      3
+     ]
+    },
+    {
+     "upstream": 370036,
+     "round": 636,
+     "date": "19/08/2026",
+     "time": "19:00",
+     "home": "Slovan Bratislava",
+     "away": "Celje",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 370043,
+     "round": 636,
+     "date": "25/08/2026",
+     "time": "16:45",
+     "home": "Sabah FK",
+     "away": "Hapoel Be'er Sheva",
+     "played": true,
+     "score": [
+      5,
+      2
+     ]
+    },
+    {
+     "upstream": 370039,
+     "round": 636,
+     "date": "25/08/2026",
+     "time": "19:00",
+     "home": "Bodø/Glimt",
+     "away": "NEC Nijmegen",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 370040,
+     "round": 636,
+     "date": "25/08/2026",
+     "time": "19:00",
+     "home": "LASK Linz",
+     "away": "Celtic",
+     "played": true,
+     "score": [
+      5,
+      1
+     ]
+    },
+    {
+     "upstream": 370038,
+     "round": 636,
+     "date": "26/08/2026",
+     "time": "19:00",
+     "home": "AEK Athens",
+     "away": "Levski Sofia",
+     "played": true,
+     "score": [
+      4,
+      0
+     ]
+    },
+    {
+     "upstream": 370041,
+     "round": 636,
+     "date": "26/08/2026",
+     "time": "19:00",
+     "home": "Celje",
+     "away": "Slovan Bratislava",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 370042,
+     "round": 636,
+     "date": "26/08/2026",
+     "time": "19:00",
+     "home": "Lyon",
+     "away": "Fenerbahçe",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 370044,
+     "round": 636,
+     "date": "26/08/2026",
+     "time": "19:00",
+     "home": "Viking",
+     "away": "Dinamo Zagreb",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    }
+   ]
+  },
+  {
+   "upstream": 4543,
+   "name": "League Phase",
+   "position": 4,
+   "groups": [
+    {
+     "upstream": 17045,
+     "name": "Only",
+     "teams": [
+      {
+       "upstream": 855,
+       "name": "Paris Saint-Germain"
+      },
+      {
+       "upstream": 175,
+       "name": "Bayern Munich"
+      },
+      {
+       "upstream": 290,
+       "name": "Barcelona"
+      },
+      {
+       "upstream": 38,
+       "name": "Manchester United"
+      },
+      {
+       "upstream": 2740,
+       "name": "Como"
+      },
+      {
+       "upstream": 1033,
+       "name": "Sporting CP"
+      },
+      {
+       "upstream": 637,
+       "name": "Stuttgart"
+      },
+      {
+       "upstream": 37,
+       "name": "Manchester City"
+      },
+      {
+       "upstream": 27,
+       "name": "Aston Villa"
+      },
+      {
+       "upstream": 404,
+       "name": "Betis"
+      },
+      {
+       "upstream": 975,
+       "name": "Lens"
+      },
+      {
+       "upstream": 645,
+       "name": "Borussia Dortmund"
+      },
+      {
+       "upstream": 36,
+       "name": "Liverpool"
+      },
+      {
+       "upstream": 401,
+       "name": "Real Madrid"
+      },
+      {
+       "upstream": 26,
+       "name": "Arsenal"
+      },
+      {
+       "upstream": 1048,
+       "name": "AEK Athens"
+      },
+      {
+       "upstream": 672,
+       "name": "Roma"
+      },
+      {
+       "upstream": 1043,
+       "name": "Shakhtar Donetsk"
+      },
+      {
+       "upstream": 397,
+       "name": "Fenerbahçe"
+      },
+      {
+       "upstream": 398,
+       "name": "PSV Eindhoven"
+      },
+      {
+       "upstream": 369,
+       "name": "Villarreal"
+      },
+      {
+       "upstream": 177,
+       "name": "Club Brugge"
+      },
+      {
+       "upstream": 395,
+       "name": "Lille"
+      },
+      {
+       "upstream": 1050,
+       "name": "Slavia Praha"
+      },
+      {
+       "upstream": 678,
+       "name": "Atlético de Madrid"
+      },
+      {
+       "upstream": 408,
+       "name": "Internazionale"
+      },
+      {
+       "upstream": 3053,
+       "name": "LASK Linz"
+      },
+      {
+       "upstream": 666,
+       "name": "Napoli"
+      },
+      {
+       "upstream": 1042,
+       "name": "Galatasaray"
+      },
+      {
+       "upstream": 1121,
+       "name": "Viking"
+      },
+      {
+       "upstream": 406,
+       "name": "Porto"
+      },
+      {
+       "upstream": 2156,
+       "name": "RB Leipzig"
+      },
+      {
+       "upstream": 806,
+       "name": "Feyenoord"
+      },
+      {
+       "upstream": 3117,
+       "name": "Sabah FK"
+      },
+      {
+       "upstream": 1455,
+       "name": "Slovan Bratislava"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Round of 16",
+       "first": 1,
+       "last": 8
+      },
+      {
+       "name": "Knockout (seeded)",
+       "first": 9,
+       "last": 16
+      },
+      {
+       "name": "Knockout (unseeded)",
+       "first": 17,
+       "last": 24
+      },
+      {
+       "name": "Knockout",
+       "first": 9,
+       "last": 24
+      },
+      {
+       "name": "Eliminated",
+       "first": 25,
+       "last": 36
+      }
+     ]
+    }
+   ],
+   "games": [
+    {
+     "upstream": 370144,
+     "round": 1,
+     "date": "08/09/2026",
+     "time": "16:45",
+     "home": "AEK Athens",
+     "away": "LASK Linz",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 370170,
+     "round": 1,
+     "date": "08/09/2026",
+     "time": "16:45",
+     "home": "Club Brugge",
+     "away": "Aston Villa",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 370167,
+     "round": 1,
+     "date": "08/09/2026",
+     "time": "19:00",
+     "home": "Borussia Dortmund",
+     "away": "Villarreal",
+     "played": true,
+     "score": [
+      3,
+      2
+     ]
+    },
+    {
+     "upstream": 370210,
+     "round": 1,
+     "date": "08/09/2026",
+     "time": "19:00",
+     "home": "Lille",
+     "away": "Betis",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 370185,
+     "round": 1,
+     "date": "08/09/2026",
+     "time": "19:00",
+     "home": "Porto",
+     "away": "Manchester City",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 370245,
+     "round": 1,
+     "date": "08/09/2026",
+     "time": "19:00",
+     "home": "Real Madrid",
+     "away": "Internazionale",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 370179,
+     "round": 1,
+     "date": "09/09/2026",
+     "time": "16:45",
+     "home": "Barcelona",
+     "away": "Feyenoord",
+     "played": true,
+     "score": [
+      5,
+      1
+     ]
+    },
+    {
+     "upstream": 370272,
+     "round": 1,
+     "date": "09/09/2026",
+     "time": "16:45",
+     "home": "Stuttgart",
+     "away": "Viking",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 370213,
+     "round": 1,
+     "date": "09/09/2026",
+     "time": "19:00",
+     "home": "Liverpool",
+     "away": "Atlético de Madrid",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 370253,
+     "round": 1,
+     "date": "09/09/2026",
+     "time": "19:00",
+     "home": "Napoli",
+     "away": "Arsenal",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 370232,
+     "round": 1,
+     "date": "09/09/2026",
+     "time": "19:00",
+     "home": "Paris Saint-Germain",
+     "away": "Slovan Bratislava",
+     "played": true,
+     "score": [
+      6,
+      1
+     ]
+    },
+    {
+     "upstream": 370267,
+     "round": 1,
+     "date": "09/09/2026",
+     "time": "19:00",
+     "home": "Sporting CP",
+     "away": "Galatasaray",
+     "played": true,
+     "score": [
+      3,
+      1
+     ]
+    },
+    {
+     "upstream": 370190,
+     "round": 1,
+     "date": "10/09/2026",
+     "time": "16:45",
+     "home": "Fenerbahçe",
+     "away": "Roma",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 370227,
+     "round": 1,
+     "date": "10/09/2026",
+     "time": "16:45",
+     "home": "PSV Eindhoven",
+     "away": "Shakhtar Donetsk",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 370181,
+     "round": 1,
+     "date": "10/09/2026",
+     "time": "19:00",
+     "home": "Bayern Munich",
+     "away": "Bodø/Glimt",
+     "played": true,
+     "score": [
+      5,
+      0
+     ]
+    },
+    {
+     "upstream": 370175,
+     "round": 1,
+     "date": "10/09/2026",
+     "time": "19:00",
+     "home": "Como",
+     "away": "RB Leipzig",
+     "played": true,
+     "score": [
+      4,
+      1
+     ]
+    },
+    {
+     "upstream": 370224,
+     "round": 1,
+     "date": "10/09/2026",
+     "time": "19:00",
+     "home": "Manchester United",
+     "away": "Sabah FK",
+     "played": true,
+     "score": [
+      4,
+      0
+     ]
+    },
+    {
+     "upstream": 370252,
+     "round": 1,
+     "date": "10/09/2026",
+     "time": "19:00",
+     "home": "Slavia Praha",
+     "away": "Lens",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 370238,
+     "round": 2,
+     "date": "13/10/2026",
+     "time": "16:45",
+     "home": "Lens",
+     "away": "Sporting CP",
+     "played": false,
+     "chances": [
+      34.17,
+      23.08,
+      42.76
+     ]
+    },
+    {
+     "upstream": 370260,
+     "round": 2,
+     "date": "13/10/2026",
+     "time": "16:45",
+     "home": "Sabah FK",
+     "away": "Slavia Praha",
+     "played": false,
+     "chances": [
+      50.56,
+      21.66,
+      27.78
+     ]
+    },
+    {
+     "upstream": 370151,
+     "round": 2,
+     "date": "13/10/2026",
+     "time": "19:00",
+     "home": "Arsenal",
+     "away": "Lille",
+     "played": false,
+     "chances": [
+      79.92,
+      15.78,
+      4.299
+     ]
+    },
+    {
+     "upstream": 370158,
+     "round": 2,
+     "date": "13/10/2026",
+     "time": "19:00",
+     "home": "Atlético de Madrid",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      43.39,
+      23.1,
+      33.51
+     ]
+    },
+    {
+     "upstream": 370197,
+     "round": 2,
+     "date": "13/10/2026",
+     "time": "19:00",
+     "home": "Galatasaray",
+     "away": "Barcelona",
+     "played": false,
+     "chances": [
+      22.54,
+      17.98,
+      59.48
+     ]
+    },
+    {
+     "upstream": 370202,
+     "round": 2,
+     "date": "13/10/2026",
+     "time": "19:00",
+     "home": "Internazionale",
+     "away": "Club Brugge",
+     "played": false,
+     "chances": [
+      66.55,
+      17.26,
+      16.19
+     ]
+    },
+    {
+     "upstream": 370234,
+     "round": 2,
+     "date": "13/10/2026",
+     "time": "19:00",
+     "home": "RB Leipzig",
+     "away": "PSV Eindhoven",
+     "played": false,
+     "chances": [
+      44.91,
+      20.08,
+      35.01
+     ]
+    },
+    {
+     "upstream": 370273,
+     "round": 2,
+     "date": "13/10/2026",
+     "time": "19:00",
+     "home": "Viking",
+     "away": "Bayern Munich",
+     "played": false,
+     "chances": [
+      1.19,
+      2.804,
+      96.01
+     ]
+    },
+    {
+     "upstream": 370279,
+     "round": 2,
+     "date": "13/10/2026",
+     "time": "19:00",
+     "home": "Villarreal",
+     "away": "Napoli",
+     "played": false,
+     "chances": [
+      43.13,
+      24.21,
+      32.66
+     ]
+    },
+    {
+     "upstream": 370196,
+     "round": 2,
+     "date": "14/10/2026",
+     "time": "16:45",
+     "home": "Feyenoord",
+     "away": "Como",
+     "played": false,
+     "chances": [
+      32.83,
+      23.27,
+      43.9
+     ]
+    },
+    {
+     "upstream": 370205,
+     "round": 2,
+     "date": "14/10/2026",
+     "time": "16:45",
+     "home": "LASK Linz",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      1.452,
+      5.146,
+      93.4
+     ]
+    },
+    {
+     "upstream": 370155,
+     "round": 2,
+     "date": "14/10/2026",
+     "time": "19:00",
+     "home": "Aston Villa",
+     "away": "Fenerbahçe",
+     "played": false,
+     "chances": [
+      64.91,
+      19.0,
+      16.08
+     ]
+    },
+    {
+     "upstream": 370242,
+     "round": 2,
+     "date": "14/10/2026",
+     "time": "19:00",
+     "home": "Betis",
+     "away": "Porto",
+     "played": false,
+     "chances": [
+      37.22,
+      26.46,
+      36.33
+     ]
+    },
+    {
+     "upstream": 370162,
+     "round": 2,
+     "date": "14/10/2026",
+     "time": "19:00",
+     "home": "Bodø/Glimt",
+     "away": "Borussia Dortmund",
+     "played": false,
+     "chances": [
+      38.95,
+      21.22,
+      39.83
+     ]
+    },
+    {
+     "upstream": 370217,
+     "round": 2,
+     "date": "14/10/2026",
+     "time": "19:00",
+     "home": "Manchester City",
+     "away": "Paris Saint-Germain",
+     "played": false,
+     "chances": [
+      56.52,
+      20.7,
+      22.78
+     ]
+    },
+    {
+     "upstream": 370145,
+     "round": 2,
+     "date": "14/10/2026",
+     "time": "19:00",
+     "home": "Roma",
+     "away": "Real Madrid",
+     "played": false,
+     "chances": [
+      37.03,
+      24.66,
+      38.31
+     ]
+    },
+    {
+     "upstream": 370264,
+     "round": 2,
+     "date": "14/10/2026",
+     "time": "19:00",
+     "home": "Shakhtar Donetsk",
+     "away": "AEK Athens",
+     "played": false,
+     "chances": [
+      43.17,
+      26.5,
+      30.32
+     ]
+    },
+    {
+     "upstream": 370284,
+     "round": 2,
+     "date": "14/10/2026",
+     "time": "19:00",
+     "home": "Slovan Bratislava",
+     "away": "Stuttgart",
+     "played": false,
+     "chances": [
+      16.7,
+      18.53,
+      64.76
+     ]
+    },
+    {
+     "upstream": 370192,
+     "round": 3,
+     "date": "20/10/2026",
+     "time": "16:45",
+     "home": "Fenerbahçe",
+     "away": "Slavia Praha",
+     "played": false,
+     "chances": [
+      74.21,
+      15.44,
+      10.35
+     ]
+    },
+    {
+     "upstream": 370258,
+     "round": 3,
+     "date": "20/10/2026",
+     "time": "16:45",
+     "home": "Sabah FK",
+     "away": "Borussia Dortmund",
+     "played": false,
+     "chances": [
+      14.65,
+      16.49,
+      68.86
+     ]
+    },
+    {
+     "upstream": 370215,
+     "round": 3,
+     "date": "20/10/2026",
+     "time": "19:00",
+     "home": "Liverpool",
+     "away": "Villarreal",
+     "played": false,
+     "chances": [
+      71.54,
+      16.28,
+      12.18
+     ]
+    },
+    {
+     "upstream": 370220,
+     "round": 3,
+     "date": "20/10/2026",
+     "time": "19:00",
+     "home": "Manchester City",
+     "away": "AEK Athens",
+     "played": false,
+     "chances": [
+      83.06,
+      11.74,
+      5.198
+     ]
+    },
+    {
+     "upstream": 370255,
+     "round": 3,
+     "date": "20/10/2026",
+     "time": "19:00",
+     "home": "Napoli",
+     "away": "Bodø/Glimt",
+     "played": false,
+     "chances": [
+      48.41,
+      22.88,
+      28.71
+     ]
+    },
+    {
+     "upstream": 370229,
+     "round": 3,
+     "date": "20/10/2026",
+     "time": "19:00",
+     "home": "Paris Saint-Germain",
+     "away": "Barcelona",
+     "played": false,
+     "chances": [
+      48.86,
+      20.09,
+      31.05
+     ]
+    },
+    {
+     "upstream": 370186,
+     "round": 3,
+     "date": "20/10/2026",
+     "time": "19:00",
+     "home": "Porto",
+     "away": "PSV Eindhoven",
+     "played": false,
+     "chances": [
+      51.43,
+      21.09,
+      27.48
+     ]
+    },
+    {
+     "upstream": 370148,
+     "round": 3,
+     "date": "20/10/2026",
+     "time": "19:00",
+     "home": "Roma",
+     "away": "Slovan Bratislava",
+     "played": false,
+     "chances": [
+      83.56,
+      11.91,
+      4.528
+     ]
+    },
+    {
+     "upstream": 370269,
+     "round": 3,
+     "date": "20/10/2026",
+     "time": "19:00",
+     "home": "Stuttgart",
+     "away": "Atlético de Madrid",
+     "played": false,
+     "chances": [
+      37.82,
+      22.65,
+      39.52
+     ]
+    },
+    {
+     "upstream": 370174,
+     "round": 3,
+     "date": "21/10/2026",
+     "time": "16:45",
+     "home": "Como",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      39.0,
+      24.39,
+      36.62
+     ]
+    },
+    {
+     "upstream": 370211,
+     "round": 3,
+     "date": "21/10/2026",
+     "time": "16:45",
+     "home": "Lille",
+     "away": "Galatasaray",
+     "played": false,
+     "chances": [
+      49.07,
+      23.92,
+      27.02
+     ]
+    },
+    {
+     "upstream": 370156,
+     "round": 3,
+     "date": "21/10/2026",
+     "time": "19:00",
+     "home": "Aston Villa",
+     "away": "Viking",
+     "played": false,
+     "chances": [
+      94.99,
+      3.88,
+      1.127
+     ]
+    },
+    {
+     "upstream": 370182,
+     "round": 3,
+     "date": "21/10/2026",
+     "time": "19:00",
+     "home": "Bayern Munich",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      45.71,
+      22.51,
+      31.78
+     ]
+    },
+    {
+     "upstream": 370243,
+     "round": 3,
+     "date": "21/10/2026",
+     "time": "19:00",
+     "home": "Betis",
+     "away": "Feyenoord",
+     "played": false,
+     "chances": [
+      53.3,
+      21.95,
+      24.75
+     ]
+    },
+    {
+     "upstream": 370172,
+     "round": 3,
+     "date": "21/10/2026",
+     "time": "19:00",
+     "home": "Club Brugge",
+     "away": "Lens",
+     "played": false,
+     "chances": [
+      47.7,
+      22.03,
+      30.27
+     ]
+    },
+    {
+     "upstream": 370203,
+     "round": 3,
+     "date": "21/10/2026",
+     "time": "19:00",
+     "home": "Internazionale",
+     "away": "Shakhtar Donetsk",
+     "played": false,
+     "chances": [
+      73.98,
+      16.37,
+      9.649
+     ]
+    },
+    {
+     "upstream": 370247,
+     "round": 3,
+     "date": "21/10/2026",
+     "time": "19:00",
+     "home": "Real Madrid",
+     "away": "RB Leipzig",
+     "played": false,
+     "chances": [
+      66.98,
+      17.89,
+      15.13
+     ]
+    },
+    {
+     "upstream": 370268,
+     "round": 3,
+     "date": "21/10/2026",
+     "time": "19:00",
+     "home": "Sporting CP",
+     "away": "LASK Linz",
+     "played": false,
+     "chances": [
+      95.37,
+      3.747,
+      0.8792
+     ]
+    },
+    {
+     "upstream": 370200,
+     "round": 4,
+     "date": "03/11/2026",
+     "time": "17:45",
+     "home": "Galatasaray",
+     "away": "Stuttgart",
+     "played": false,
+     "chances": [
+      44.61,
+      21.58,
+      33.81
+     ]
+    },
+    {
+     "upstream": 370262,
+     "round": 4,
+     "date": "03/11/2026",
+     "time": "17:45",
+     "home": "Shakhtar Donetsk",
+     "away": "Sporting CP",
+     "played": false,
+     "chances": [
+      24.69,
+      23.15,
+      52.15
+     ]
+    },
+    {
+     "upstream": 370157,
+     "round": 4,
+     "date": "03/11/2026",
+     "time": "20:00",
+     "home": "Atlético de Madrid",
+     "away": "Bayern Munich",
+     "played": false,
+     "chances": [
+      29.12,
+      20.07,
+      50.82
+     ]
+    },
+    {
+     "upstream": 370178,
+     "round": 4,
+     "date": "03/11/2026",
+     "time": "20:00",
+     "home": "Barcelona",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      59.85,
+      18.86,
+      21.29
+     ]
+    },
+    {
+     "upstream": 370163,
+     "round": 4,
+     "date": "03/11/2026",
+     "time": "20:00",
+     "home": "Bodø/Glimt",
+     "away": "Lille",
+     "played": false,
+     "chances": [
+      49.83,
+      22.55,
+      27.62
+     ]
+    },
+    {
+     "upstream": 370193,
+     "round": 4,
+     "date": "03/11/2026",
+     "time": "20:00",
+     "home": "Feyenoord",
+     "away": "Internazionale",
+     "played": false,
+     "chances": [
+      23.92,
+      20.08,
+      56.0
+     ]
+    },
+    {
+     "upstream": 370208,
+     "round": 4,
+     "date": "03/11/2026",
+     "time": "20:00",
+     "home": "LASK Linz",
+     "away": "Slovan Bratislava",
+     "played": false,
+     "chances": [
+      25.22,
+      22.56,
+      52.22
+     ]
+    },
+    {
+     "upstream": 370222,
+     "round": 4,
+     "date": "03/11/2026",
+     "time": "20:00",
+     "home": "Manchester United",
+     "away": "Roma",
+     "played": false,
+     "chances": [
+      54.23,
+      22.91,
+      22.87
+     ]
+    },
+    {
+     "upstream": 370277,
+     "round": 4,
+     "date": "03/11/2026",
+     "time": "20:00",
+     "home": "Villarreal",
+     "away": "Paris Saint-Germain",
+     "played": false,
+     "chances": [
+      25.11,
+      20.26,
+      54.63
+     ]
+    },
+    {
+     "upstream": 370141,
+     "round": 4,
+     "date": "04/11/2026",
+     "time": "17:45",
+     "home": "AEK Athens",
+     "away": "Real Madrid",
+     "played": false,
+     "chances": [
+      21.63,
+      21.59,
+      56.79
+     ]
+    },
+    {
+     "upstream": 370189,
+     "round": 4,
+     "date": "04/11/2026",
+     "time": "17:45",
+     "home": "Fenerbahçe",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      24.48,
+      21.4,
+      54.13
+     ]
+    },
+    {
+     "upstream": 370166,
+     "round": 4,
+     "date": "04/11/2026",
+     "time": "20:00",
+     "home": "Borussia Dortmund",
+     "away": "Betis",
+     "played": false,
+     "chances": [
+      60.89,
+      20.58,
+      18.53
+     ]
+    },
+    {
+     "upstream": 370240,
+     "round": 4,
+     "date": "04/11/2026",
+     "time": "20:00",
+     "home": "Lens",
+     "away": "Como",
+     "played": false,
+     "chances": [
+      39.67,
+      25.12,
+      35.21
+     ]
+    },
+    {
+     "upstream": 370187,
+     "round": 4,
+     "date": "04/11/2026",
+     "time": "20:00",
+     "home": "Porto",
+     "away": "Napoli",
+     "played": false,
+     "chances": [
+      50.11,
+      26.69,
+      23.19
+     ]
+    },
+    {
+     "upstream": 370226,
+     "round": 4,
+     "date": "04/11/2026",
+     "time": "20:00",
+     "home": "PSV Eindhoven",
+     "away": "Club Brugge",
+     "played": false,
+     "chances": [
+      53.86,
+      18.3,
+      27.84
+     ]
+    },
+    {
+     "upstream": 370233,
+     "round": 4,
+     "date": "04/11/2026",
+     "time": "20:00",
+     "home": "RB Leipzig",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      20.98,
+      20.24,
+      58.78
+     ]
+    },
+    {
+     "upstream": 370249,
+     "round": 4,
+     "date": "04/11/2026",
+     "time": "20:00",
+     "home": "Slavia Praha",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      3.003,
+      9.881,
+      87.12
+     ]
+    },
+    {
+     "upstream": 370276,
+     "round": 4,
+     "date": "04/11/2026",
+     "time": "20:00",
+     "home": "Viking",
+     "away": "Sabah FK",
+     "played": false,
+     "chances": [
+      23.85,
+      18.57,
+      57.58
+     ]
+    },
+    {
+     "upstream": 370164,
+     "round": 5,
+     "date": "24/11/2026",
+     "time": "17:45",
+     "home": "Bodø/Glimt",
+     "away": "LASK Linz",
+     "played": false,
+     "chances": [
+      91.69,
+      5.956,
+      2.355
+     ]
+    },
+    {
+     "upstream": 370198,
+     "round": 5,
+     "date": "24/11/2026",
+     "time": "17:45",
+     "home": "Galatasaray",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      30.48,
+      22.3,
+      47.22
+     ]
+    },
+    {
+     "upstream": 370150,
+     "round": 5,
+     "date": "24/11/2026",
+     "time": "20:00",
+     "home": "Arsenal",
+     "away": "Borussia Dortmund",
+     "played": false,
+     "chances": [
+      71.62,
+      18.26,
+      10.11
+     ]
+    },
+    {
+     "upstream": 370176,
+     "round": 5,
+     "date": "24/11/2026",
+     "time": "20:00",
+     "home": "Como",
+     "away": "AEK Athens",
+     "played": false,
+     "chances": [
+      61.29,
+      21.89,
+      16.83
+     ]
+    },
+    {
+     "upstream": 370194,
+     "round": 5,
+     "date": "24/11/2026",
+     "time": "20:00",
+     "home": "Feyenoord",
+     "away": "Porto",
+     "played": false,
+     "chances": [
+      31.83,
+      23.96,
+      44.2
+     ]
+    },
+    {
+     "upstream": 370219,
+     "round": 5,
+     "date": "24/11/2026",
+     "time": "20:00",
+     "home": "Manchester City",
+     "away": "Napoli",
+     "played": false,
+     "chances": [
+      74.23,
+      16.64,
+      9.125
+     ]
+    },
+    {
+     "upstream": 370236,
+     "round": 5,
+     "date": "24/11/2026",
+     "time": "20:00",
+     "home": "RB Leipzig",
+     "away": "Lens",
+     "played": false,
+     "chances": [
+      48.55,
+      22.95,
+      28.5
+     ]
+    },
+    {
+     "upstream": 370246,
+     "round": 5,
+     "date": "24/11/2026",
+     "time": "20:00",
+     "home": "Real Madrid",
+     "away": "PSV Eindhoven",
+     "played": false,
+     "chances": [
+      65.0,
+      16.62,
+      18.38
+     ]
+    },
+    {
+     "upstream": 370282,
+     "round": 5,
+     "date": "24/11/2026",
+     "time": "20:00",
+     "home": "Slovan Bratislava",
+     "away": "Betis",
+     "played": false,
+     "chances": [
+      17.81,
+      20.7,
+      61.49
+     ]
+    },
+    {
+     "upstream": 370257,
+     "round": 5,
+     "date": "25/11/2026",
+     "time": "17:45",
+     "home": "Sabah FK",
+     "away": "Barcelona",
+     "played": false,
+     "chances": [
+      7.955,
+      10.63,
+      81.41
+     ]
+    },
+    {
+     "upstream": 370251,
+     "round": 5,
+     "date": "25/11/2026",
+     "time": "17:45",
+     "home": "Slavia Praha",
+     "away": "Villarreal",
+     "played": false,
+     "chances": [
+      19.1,
+      19.44,
+      61.47
+     ]
+    },
+    {
+     "upstream": 370160,
+     "round": 5,
+     "date": "25/11/2026",
+     "time": "20:00",
+     "home": "Atlético de Madrid",
+     "away": "Viking",
+     "played": false,
+     "chances": [
+      93.46,
+      4.832,
+      1.708
+     ]
+    },
+    {
+     "upstream": 370169,
+     "round": 5,
+     "date": "25/11/2026",
+     "time": "20:00",
+     "home": "Club Brugge",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      25.97,
+      20.91,
+      53.12
+     ]
+    },
+    {
+     "upstream": 370204,
+     "round": 5,
+     "date": "25/11/2026",
+     "time": "20:00",
+     "home": "Internazionale",
+     "away": "Stuttgart",
+     "played": false,
+     "chances": [
+      65.57,
+      17.9,
+      16.54
+     ]
+    },
+    {
+     "upstream": 370209,
+     "round": 5,
+     "date": "25/11/2026",
+     "time": "20:00",
+     "home": "Lille",
+     "away": "Bayern Munich",
+     "played": false,
+     "chances": [
+      19.82,
+      19.62,
+      60.56
+     ]
+    },
+    {
+     "upstream": 370230,
+     "round": 5,
+     "date": "25/11/2026",
+     "time": "20:00",
+     "home": "Paris Saint-Germain",
+     "away": "Roma",
+     "played": false,
+     "chances": [
+      63.52,
+      20.04,
+      16.44
+     ]
+    },
+    {
+     "upstream": 370263,
+     "round": 5,
+     "date": "25/11/2026",
+     "time": "20:00",
+     "home": "Shakhtar Donetsk",
+     "away": "Fenerbahçe",
+     "played": false,
+     "chances": [
+      37.71,
+      24.93,
+      37.36
+     ]
+    },
+    {
+     "upstream": 370266,
+     "round": 5,
+     "date": "25/11/2026",
+     "time": "20:00",
+     "home": "Sporting CP",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      46.46,
+      22.12,
+      31.42
+     ]
+    },
+    {
+     "upstream": 370275,
+     "round": 6,
+     "date": "08/12/2026",
+     "time": "17:45",
+     "home": "Viking",
+     "away": "Feyenoord",
+     "played": false,
+     "chances": [
+      11.87,
+      13.86,
+      74.26
+     ]
+    },
+    {
+     "upstream": 370280,
+     "round": 6,
+     "date": "08/12/2026",
+     "time": "17:45",
+     "home": "Villarreal",
+     "away": "Sabah FK",
+     "played": false,
+     "chances": [
+      72.34,
+      15.13,
+      12.53
+     ]
+    },
+    {
+     "upstream": 370143,
+     "round": 6,
+     "date": "08/12/2026",
+     "time": "20:00",
+     "home": "AEK Athens",
+     "away": "Galatasaray",
+     "played": false,
+     "chances": [
+      40.96,
+      23.49,
+      35.55
+     ]
+    },
+    {
+     "upstream": 370153,
+     "round": 6,
+     "date": "08/12/2026",
+     "time": "20:00",
+     "home": "Aston Villa",
+     "away": "Paris Saint-Germain",
+     "played": false,
+     "chances": [
+      39.86,
+      23.26,
+      36.88
+     ]
+    },
+    {
+     "upstream": 370177,
+     "round": 6,
+     "date": "08/12/2026",
+     "time": "20:00",
+     "home": "Barcelona",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      44.69,
+      20.69,
+      34.62
+     ]
+    },
+    {
+     "upstream": 370184,
+     "round": 6,
+     "date": "08/12/2026",
+     "time": "20:00",
+     "home": "Bayern Munich",
+     "away": "Slavia Praha",
+     "played": false,
+     "chances": [
+      94.66,
+      3.958,
+      1.378
+     ]
+    },
+    {
+     "upstream": 370223,
+     "round": 6,
+     "date": "08/12/2026",
+     "time": "20:00",
+     "home": "Manchester United",
+     "away": "RB Leipzig",
+     "played": false,
+     "chances": [
+      62.55,
+      19.38,
+      18.07
+     ]
+    },
+    {
+     "upstream": 370254,
+     "round": 6,
+     "date": "08/12/2026",
+     "time": "20:00",
+     "home": "Napoli",
+     "away": "Club Brugge",
+     "played": false,
+     "chances": [
+      50.75,
+      23.13,
+      26.12
+     ]
+    },
+    {
+     "upstream": 370146,
+     "round": 6,
+     "date": "08/12/2026",
+     "time": "20:00",
+     "home": "Roma",
+     "away": "Sporting CP",
+     "played": false,
+     "chances": [
+      43.28,
+      24.17,
+      32.54
+     ]
+    },
+    {
+     "upstream": 370244,
+     "round": 6,
+     "date": "09/12/2026",
+     "time": "17:45",
+     "home": "Betis",
+     "away": "Como",
+     "played": false,
+     "chances": [
+      38.36,
+      25.54,
+      36.1
+     ]
+    },
+    {
+     "upstream": 370283,
+     "round": 6,
+     "date": "09/12/2026",
+     "time": "17:45",
+     "home": "Slovan Bratislava",
+     "away": "Shakhtar Donetsk",
+     "played": false,
+     "chances": [
+      23.8,
+      24.06,
+      52.14
+     ]
+    },
+    {
+     "upstream": 370149,
+     "round": 6,
+     "date": "09/12/2026",
+     "time": "20:00",
+     "home": "Arsenal",
+     "away": "Real Madrid",
+     "played": false,
+     "chances": [
+      64.66,
+      20.96,
+      14.39
+     ]
+    },
+    {
+     "upstream": 370165,
+     "round": 6,
+     "date": "09/12/2026",
+     "time": "20:00",
+     "home": "Borussia Dortmund",
+     "away": "Internazionale",
+     "played": false,
+     "chances": [
+      42.62,
+      22.47,
+      34.91
+     ]
+    },
+    {
+     "upstream": 370207,
+     "round": 6,
+     "date": "09/12/2026",
+     "time": "20:00",
+     "home": "LASK Linz",
+     "away": "Fenerbahçe",
+     "played": false,
+     "chances": [
+      7.073,
+      12.28,
+      80.65
+     ]
+    },
+    {
+     "upstream": 370239,
+     "round": 6,
+     "date": "09/12/2026",
+     "time": "20:00",
+     "home": "Lens",
+     "away": "Bodø/Glimt",
+     "played": false,
+     "chances": [
+      44.89,
+      21.85,
+      33.26
+     ]
+    },
+    {
+     "upstream": 370214,
+     "round": 6,
+     "date": "09/12/2026",
+     "time": "20:00",
+     "home": "Liverpool",
+     "away": "Porto",
+     "played": false,
+     "chances": [
+      63.23,
+      21.22,
+      15.55
+     ]
+    },
+    {
+     "upstream": 370225,
+     "round": 6,
+     "date": "09/12/2026",
+     "time": "20:00",
+     "home": "PSV Eindhoven",
+     "away": "Atlético de Madrid",
+     "played": false,
+     "chances": [
+      42.58,
+      20.25,
+      37.17
+     ]
+    },
+    {
+     "upstream": 370271,
+     "round": 6,
+     "date": "09/12/2026",
+     "time": "20:00",
+     "home": "Stuttgart",
+     "away": "Lille",
+     "played": false,
+     "chances": [
+      47.4,
+      24.11,
+      28.49
+     ]
+    },
+    {
+     "upstream": 370161,
+     "round": 7,
+     "date": "19/01/2027",
+     "time": "17:45",
+     "home": "Bodø/Glimt",
+     "away": "Atlético de Madrid",
+     "played": false,
+     "chances": [
+      40.02,
+      21.53,
+      38.45
+     ]
+    },
+    {
+     "upstream": 370199,
+     "round": 7,
+     "date": "19/01/2027",
+     "time": "17:45",
+     "home": "Galatasaray",
+     "away": "Feyenoord",
+     "played": false,
+     "chances": [
+      53.06,
+      20.49,
+      26.45
+     ]
+    },
+    {
+     "upstream": 370142,
+     "round": 7,
+     "date": "19/01/2027",
+     "time": "20:00",
+     "home": "AEK Athens",
+     "away": "Roma",
+     "played": false,
+     "chances": [
+      29.7,
+      25.76,
+      44.54
+     ]
+    },
+    {
+     "upstream": 370154,
+     "round": 7,
+     "date": "19/01/2027",
+     "time": "20:00",
+     "home": "Aston Villa",
+     "away": "Borussia Dortmund",
+     "played": false,
+     "chances": [
+      51.81,
+      22.42,
+      25.77
+     ]
+    },
+    {
+     "upstream": 370201,
+     "round": 7,
+     "date": "19/01/2027",
+     "time": "20:00",
+     "home": "Internazionale",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      43.24,
+      22.94,
+      33.82
+     ]
+    },
+    {
+     "upstream": 370212,
+     "round": 7,
+     "date": "19/01/2027",
+     "time": "20:00",
+     "home": "Lille",
+     "away": "Slovan Bratislava",
+     "played": false,
+     "chances": [
+      76.52,
+      16.01,
+      7.467
+     ]
+    },
+    {
+     "upstream": 370188,
+     "round": 7,
+     "date": "19/01/2027",
+     "time": "20:00",
+     "home": "Porto",
+     "away": "Slavia Praha",
+     "played": false,
+     "chances": [
+      80.88,
+      13.61,
+      5.515
+     ]
+    },
+    {
+     "upstream": 370248,
+     "round": 7,
+     "date": "19/01/2027",
+     "time": "20:00",
+     "home": "Real Madrid",
+     "away": "LASK Linz",
+     "played": false,
+     "chances": [
+      96.98,
+      2.601,
+      0.4224
+     ]
+    },
+    {
+     "upstream": 370270,
+     "round": 7,
+     "date": "19/01/2027",
+     "time": "20:00",
+     "home": "Stuttgart",
+     "away": "Club Brugge",
+     "played": false,
+     "chances": [
+      48.8,
+      20.91,
+      30.29
+     ]
+    },
+    {
+     "upstream": 370191,
+     "round": 7,
+     "date": "20/01/2027",
+     "time": "17:45",
+     "home": "Fenerbahçe",
+     "away": "Villarreal",
+     "played": false,
+     "chances": [
+      46.24,
+      21.7,
+      32.06
+     ]
+    },
+    {
+     "upstream": 370259,
+     "round": 7,
+     "date": "20/01/2027",
+     "time": "17:45",
+     "home": "Sabah FK",
+     "away": "Napoli",
+     "played": false,
+     "chances": [
+      19.78,
+      20.96,
+      59.26
+     ]
+    },
+    {
+     "upstream": 370241,
+     "round": 7,
+     "date": "20/01/2027",
+     "time": "20:00",
+     "home": "Betis",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      15.05,
+      22.13,
+      62.82
+     ]
+    },
+    {
+     "upstream": 370173,
+     "round": 7,
+     "date": "20/01/2027",
+     "time": "20:00",
+     "home": "Como",
+     "away": "Paris Saint-Germain",
+     "played": false,
+     "chances": [
+      31.1,
+      23.5,
+      45.4
+     ]
+    },
+    {
+     "upstream": 370237,
+     "round": 7,
+     "date": "20/01/2027",
+     "time": "20:00",
+     "home": "Lens",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      19.77,
+      20.62,
+      59.61
+     ]
+    },
+    {
+     "upstream": 370221,
+     "round": 7,
+     "date": "20/01/2027",
+     "time": "20:00",
+     "home": "Manchester United",
+     "away": "Bayern Munich",
+     "played": false,
+     "chances": [
+      33.76,
+      20.4,
+      45.84
+     ]
+    },
+    {
+     "upstream": 370235,
+     "round": 7,
+     "date": "20/01/2027",
+     "time": "20:00",
+     "home": "RB Leipzig",
+     "away": "Shakhtar Donetsk",
+     "played": false,
+     "chances": [
+      57.66,
+      22.37,
+      19.97
+     ]
+    },
+    {
+     "upstream": 370265,
+     "round": 7,
+     "date": "20/01/2027",
+     "time": "20:00",
+     "home": "Sporting CP",
+     "away": "Barcelona",
+     "played": false,
+     "chances": [
+      37.23,
+      20.47,
+      42.3
+     ]
+    },
+    {
+     "upstream": 370274,
+     "round": 7,
+     "date": "20/01/2027",
+     "time": "20:00",
+     "home": "Viking",
+     "away": "PSV Eindhoven",
+     "played": false,
+     "chances": [
+      6.449,
+      8.595,
+      84.96
+     ]
+    },
+    {
+     "upstream": 370152,
+     "round": 8,
+     "date": "27/01/2027",
+     "time": "20:00",
+     "home": "Arsenal",
+     "away": "Sabah FK",
+     "played": false,
+     "chances": [
+      94.21,
+      4.937,
+      0.8526
+     ]
+    },
+    {
+     "upstream": 370159,
+     "round": 8,
+     "date": "27/01/2027",
+     "time": "20:00",
+     "home": "Atlético de Madrid",
+     "away": "Fenerbahçe",
+     "played": false,
+     "chances": [
+      60.27,
+      20.04,
+      19.69
+     ]
+    },
+    {
+     "upstream": 370180,
+     "round": 8,
+     "date": "27/01/2027",
+     "time": "20:00",
+     "home": "Barcelona",
+     "away": "Como",
+     "played": false,
+     "chances": [
+      67.7,
+      17.04,
+      15.26
+     ]
+    },
+    {
+     "upstream": 370183,
+     "round": 8,
+     "date": "27/01/2027",
+     "time": "20:00",
+     "home": "Bayern Munich",
+     "away": "Betis",
+     "played": false,
+     "chances": [
+      79.9,
+      12.04,
+      8.068
+     ]
+    },
+    {
+     "upstream": 370168,
+     "round": 8,
+     "date": "27/01/2027",
+     "time": "20:00",
+     "home": "Borussia Dortmund",
+     "away": "AEK Athens",
+     "played": false,
+     "chances": [
+      66.99,
+      18.78,
+      14.23
+     ]
+    },
+    {
+     "upstream": 370171,
+     "round": 8,
+     "date": "27/01/2027",
+     "time": "20:00",
+     "home": "Club Brugge",
+     "away": "Bodø/Glimt",
+     "played": false,
+     "chances": [
+      45.62,
+      20.27,
+      34.1
+     ]
+    },
+    {
+     "upstream": 370195,
+     "round": 8,
+     "date": "27/01/2027",
+     "time": "20:00",
+     "home": "Feyenoord",
+     "away": "RB Leipzig",
+     "played": false,
+     "chances": [
+      38.49,
+      22.26,
+      39.25
+     ]
+    },
+    {
+     "upstream": 370206,
+     "round": 8,
+     "date": "27/01/2027",
+     "time": "20:00",
+     "home": "LASK Linz",
+     "away": "Porto",
+     "played": false,
+     "chances": [
+      3.948,
+      10.66,
+      85.39
+     ]
+    },
+    {
+     "upstream": 370216,
+     "round": 8,
+     "date": "27/01/2027",
+     "time": "20:00",
+     "home": "Liverpool",
+     "away": "Lens",
+     "played": false,
+     "chances": [
+      70.96,
+      17.37,
+      11.67
+     ]
+    },
+    {
+     "upstream": 370218,
+     "round": 8,
+     "date": "27/01/2027",
+     "time": "20:00",
+     "home": "Manchester City",
+     "away": "Sporting CP",
+     "played": false,
+     "chances": [
+      66.84,
+      17.84,
+      15.31
+     ]
+    },
+    {
+     "upstream": 370256,
+     "round": 8,
+     "date": "27/01/2027",
+     "time": "20:00",
+     "home": "Napoli",
+     "away": "Viking",
+     "played": false,
+     "chances": [
+      89.92,
+      7.468,
+      2.614
+     ]
+    },
+    {
+     "upstream": 370231,
+     "round": 8,
+     "date": "27/01/2027",
+     "time": "20:00",
+     "home": "Paris Saint-Germain",
+     "away": "Galatasaray",
+     "played": false,
+     "chances": [
+      74.45,
+      14.62,
+      10.93
+     ]
+    },
+    {
+     "upstream": 370228,
+     "round": 8,
+     "date": "27/01/2027",
+     "time": "20:00",
+     "home": "PSV Eindhoven",
+     "away": "Stuttgart",
+     "played": false,
+     "chances": [
+      52.86,
+      18.78,
+      28.36
+     ]
+    },
+    {
+     "upstream": 370147,
+     "round": 8,
+     "date": "27/01/2027",
+     "time": "20:00",
+     "home": "Roma",
+     "away": "Lille",
+     "played": false,
+     "chances": [
+      54.94,
+      25.29,
+      19.76
+     ]
+    },
+    {
+     "upstream": 370261,
+     "round": 8,
+     "date": "27/01/2027",
+     "time": "20:00",
+     "home": "Shakhtar Donetsk",
+     "away": "Real Madrid",
+     "played": false,
+     "chances": [
+      19.79,
+      21.96,
+      58.25
+     ]
+    },
+    {
+     "upstream": 370250,
+     "round": 8,
+     "date": "27/01/2027",
+     "time": "20:00",
+     "home": "Slavia Praha",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      9.886,
+      15.65,
+      74.47
+     ]
+    },
+    {
+     "upstream": 370281,
+     "round": 8,
+     "date": "27/01/2027",
+     "time": "20:00",
+     "home": "Slovan Bratislava",
+     "away": "Internazionale",
+     "played": false,
+     "chances": [
+      7.937,
+      13.05,
+      79.01
+     ]
+    },
+    {
+     "upstream": 370278,
+     "round": 8,
+     "date": "27/01/2027",
+     "time": "20:00",
+     "home": "Villarreal",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      32.55,
+      21.9,
+      45.55
+     ]
+    }
+   ]
+  }
+ ]
+}

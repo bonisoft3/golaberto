@@ -1,0 +1,22 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "command": "mise x -- sh",
+      "args": [
+        "-c",
+        "deno run --allow-read=. --allow-run check-build.ts"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "label": "build",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/plugins/pronto"
+      }
+    }
+  ]
+}

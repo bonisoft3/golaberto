@@ -1,0 +1,369 @@
+syntax = "proto3";
+package pronto.entities;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/struct.proto";
+
+message AppUser {
+  optional string id = 1 [json_name = "id"];
+  optional string handle = 2 [json_name = "handle"];
+  google.protobuf.Timestamp created_at = 3 [json_name = "created_at"];
+}
+
+message CatalogFilter {
+  optional string id = 1 [json_name = "id"];
+  optional string q = 2 [json_name = "q"];
+  optional string region = 3 [json_name = "region"];
+  optional string state = 4 [json_name = "state"];
+}
+
+message Category {
+  optional string id = 1 [json_name = "id"];
+  optional string name = 2 [json_name = "name"];
+}
+
+message Championship {
+  optional string id = 1 [json_name = "id"];
+  optional string name = 2 [json_name = "name"];
+  optional string category_id = 3 [json_name = "category_id"];
+  optional string region = 4 [json_name = "region"];
+  optional string region_name = 5 [json_name = "region_name"];
+  optional string begins = 6 [json_name = "begins"];
+  optional string ends = 7 [json_name = "ends"];
+  optional int32 point_win = 8 [json_name = "point_win"];
+  optional int32 point_draw = 9 [json_name = "point_draw"];
+  optional int32 point_loss = 10 [json_name = "point_loss"];
+  optional bool show_country = 11 [json_name = "show_country"];
+  optional string season = 12 [json_name = "season"];
+  optional string full_name = 13 [json_name = "full_name"];
+  optional bool featured = 14 [json_name = "featured"];
+}
+
+message Comment {
+  optional string id = 1 [json_name = "id"];
+  optional string game_id = 2 [json_name = "game_id"];
+  optional string app_user_id = 3 [json_name = "app_user_id"];
+  optional string body = 4 [json_name = "body"];
+  google.protobuf.Timestamp created_at = 5 [json_name = "created_at"];
+}
+
+message CommentDraft {
+  optional string id = 1 [json_name = "id"];
+  optional string body = 2 [json_name = "body"];
+  optional string state = 3 [json_name = "state"];
+}
+
+message DirectoryFilter {
+  optional string id = 1 [json_name = "id"];
+  optional string q = 2 [json_name = "q"];
+  optional string state = 3 [json_name = "state"];
+}
+
+message Editor {
+  optional string id = 1 [json_name = "id"];
+  optional string app_user_id = 2 [json_name = "app_user_id"];
+}
+
+message Game {
+  optional string id = 1 [json_name = "id"];
+  optional string phase_id = 2 [json_name = "phase_id"];
+  optional int32 round = 3 [json_name = "round"];
+  optional string day = 4 [json_name = "day"];
+  google.protobuf.Timestamp kickoff = 5 [json_name = "kickoff"];
+  optional string home_id = 6 [json_name = "home_id"];
+  optional string away_id = 7 [json_name = "away_id"];
+  optional string home_field = 8 [json_name = "home_field"];
+  optional bool played = 9 [json_name = "played"];
+  optional int32 home_score = 10 [json_name = "home_score"];
+  optional int32 away_score = 11 [json_name = "away_score"];
+  optional int32 home_aet = 12 [json_name = "home_aet"];
+  optional int32 away_aet = 13 [json_name = "away_aet"];
+  optional int32 home_pen = 14 [json_name = "home_pen"];
+  optional int32 away_pen = 15 [json_name = "away_pen"];
+  optional string stadium_id = 16 [json_name = "stadium_id"];
+  optional string referee_id = 17 [json_name = "referee_id"];
+  optional int32 attendance = 18 [json_name = "attendance"];
+  optional string day_display = 19 [json_name = "day_display"];
+  optional string kickoff_local = 20 [json_name = "kickoff_local"];
+}
+
+message GameCard {
+  optional string id = 1 [json_name = "id"];
+  optional string phase_id = 2 [json_name = "phase_id"];
+  optional string championship_id = 3 [json_name = "championship_id"];
+  optional int32 round = 4 [json_name = "round"];
+  optional string day = 5 [json_name = "day"];
+  google.protobuf.Timestamp kickoff = 6 [json_name = "kickoff"];
+  optional bool played = 7 [json_name = "played"];
+  optional string home_id = 8 [json_name = "home_id"];
+  optional string away_id = 9 [json_name = "away_id"];
+  optional string home_name = 10 [json_name = "home_name"];
+  optional string away_name = 11 [json_name = "away_name"];
+  optional int32 home_score = 12 [json_name = "home_score"];
+  optional int32 away_score = 13 [json_name = "away_score"];
+  optional int32 home_aet = 14 [json_name = "home_aet"];
+  optional int32 away_aet = 15 [json_name = "away_aet"];
+  optional int32 home_pen = 16 [json_name = "home_pen"];
+  optional int32 away_pen = 17 [json_name = "away_pen"];
+  optional string championship_name = 18 [json_name = "championship_name"];
+  optional string phase_name = 19 [json_name = "phase_name"];
+  optional string stadium_name = 20 [json_name = "stadium_name"];
+  optional string referee_name = 21 [json_name = "referee_name"];
+  optional int32 attendance = 22 [json_name = "attendance"];
+  optional string day_display = 23 [json_name = "day_display"];
+  optional string kickoff_local = 24 [json_name = "kickoff_local"];
+  optional string stadium_id = 25 [json_name = "stadium_id"];
+  optional string referee_id = 26 [json_name = "referee_id"];
+}
+
+message GameEdit {
+  optional string id = 1 [json_name = "id"];
+  optional string state = 2 [json_name = "state"];
+  optional bool played = 3 [json_name = "played"];
+  optional int32 home_score = 4 [json_name = "home_score"];
+  optional int32 away_score = 5 [json_name = "away_score"];
+  optional int32 attendance = 6 [json_name = "attendance"];
+  optional string stadium_id = 7 [json_name = "stadium_id"];
+  optional string referee_id = 8 [json_name = "referee_id"];
+  optional int32 goal_minute = 9 [json_name = "goal_minute"];
+  optional string goal_player_id = 10 [json_name = "goal_player_id"];
+  optional string home_name = 11 [json_name = "home_name"];
+  optional string away_name = 12 [json_name = "away_name"];
+}
+
+message GameImportance {
+  optional string id = 1 [json_name = "id"];
+  optional double home = 2 [json_name = "home"];
+  optional double away = 3 [json_name = "away"];
+}
+
+message GamesView {
+  optional string id = 1 [json_name = "id"];
+  optional string state = 2 [json_name = "state"];
+}
+
+message Goal {
+  optional string id = 1 [json_name = "id"];
+  optional string game_id = 2 [json_name = "game_id"];
+  optional string player_id = 3 [json_name = "player_id"];
+  optional string side = 4 [json_name = "side"];
+  optional int32 minute = 5 [json_name = "minute"];
+  optional bool penalty = 6 [json_name = "penalty"];
+  optional bool own_goal = 7 [json_name = "own_goal"];
+  optional bool aet = 8 [json_name = "aet"];
+}
+
+message Group {
+  optional string id = 1 [json_name = "id"];
+  optional string phase_id = 2 [json_name = "phase_id"];
+  optional string name = 3 [json_name = "name"];
+  optional int32 position = 4 [json_name = "position"];
+}
+
+message Phase {
+  optional string id = 1 [json_name = "id"];
+  optional string championship_id = 2 [json_name = "championship_id"];
+  optional string name = 3 [json_name = "name"];
+  optional int32 position = 4 [json_name = "position"];
+  optional string sort = 5 [json_name = "sort"];
+  optional int32 bonus_points = 6 [json_name = "bonus_points"];
+  optional int32 bonus_points_threshold = 7 [json_name = "bonus_points_threshold"];
+}
+
+message PhaseRound {
+  optional string id = 1 [json_name = "id"];
+  optional string phase_id = 2 [json_name = "phase_id"];
+  optional int32 current = 3 [json_name = "current"];
+  optional int32 next = 4 [json_name = "next"];
+}
+
+message Player {
+  optional string id = 1 [json_name = "id"];
+  optional string name = 2 [json_name = "name"];
+  optional string full_name = 3 [json_name = "full_name"];
+  optional string birth = 4 [json_name = "birth"];
+  optional string country = 5 [json_name = "country"];
+  optional int32 height = 6 [json_name = "height"];
+  optional string position = 7 [json_name = "position"];
+}
+
+message PlayerGame {
+  optional string id = 1 [json_name = "id"];
+  optional string game_id = 2 [json_name = "game_id"];
+  optional string player_id = 3 [json_name = "player_id"];
+  optional string side = 4 [json_name = "side"];
+  optional int32 on_minute = 5 [json_name = "on_minute"];
+  optional int32 off_minute = 6 [json_name = "off_minute"];
+  optional bool yellow = 7 [json_name = "yellow"];
+  optional bool red = 8 [json_name = "red"];
+  optional bool bench = 9 [json_name = "bench"];
+  optional string day = 10 [json_name = "day"];
+  optional string day_display = 11 [json_name = "day_display"];
+}
+
+message PlayerRating {
+  optional string id = 1 [json_name = "id"];
+  optional double rating = 2 [json_name = "rating"];
+}
+
+message PlayerStat {
+  optional string id = 1 [json_name = "id"];
+  optional string championship_id = 2 [json_name = "championship_id"];
+  optional string team_id = 3 [json_name = "team_id"];
+  optional string player_id = 4 [json_name = "player_id"];
+  optional string player_name = 5 [json_name = "player_name"];
+  optional string position = 6 [json_name = "position"];
+  optional int32 played = 7 [json_name = "played"];
+  optional int32 started = 8 [json_name = "started"];
+  optional int32 came_on = 9 [json_name = "came_on"];
+  optional int32 bench = 10 [json_name = "bench"];
+  optional int32 minutes = 11 [json_name = "minutes"];
+  optional int32 goals = 12 [json_name = "goals"];
+  optional int32 penalties = 13 [json_name = "penalties"];
+  optional int32 own_goals = 14 [json_name = "own_goals"];
+  optional int32 yellow = 15 [json_name = "yellow"];
+  optional int32 red = 16 [json_name = "red"];
+  optional string championship_name = 17 [json_name = "championship_name"];
+  optional string team_name = 18 [json_name = "team_name"];
+}
+
+message PositionChance {
+  optional string id = 1 [json_name = "id"];
+  optional string group_id = 2 [json_name = "group_id"];
+  optional string team_id = 3 [json_name = "team_id"];
+  optional int32 position = 4 [json_name = "position"];
+  optional double percent = 5 [json_name = "percent"];
+  optional int32 band = 6 [json_name = "band"];
+  optional bool current = 7 [json_name = "current"];
+  optional string reach = 8 [json_name = "reach"];
+}
+
+message RatingEval {
+  optional string id = 1 [json_name = "id"];
+  optional double rps = 2 [json_name = "rps"];
+}
+
+message Referee {
+  optional string id = 1 [json_name = "id"];
+  optional string name = 2 [json_name = "name"];
+  optional string location = 3 [json_name = "location"];
+}
+
+message Stadium {
+  optional string id = 1 [json_name = "id"];
+  optional string name = 2 [json_name = "name"];
+  optional string full_name = 3 [json_name = "full_name"];
+  optional string city = 4 [json_name = "city"];
+  optional string country = 5 [json_name = "country"];
+}
+
+message Standing {
+  optional string id = 1 [json_name = "id"];
+  optional string group_id = 2 [json_name = "group_id"];
+  optional string team_id = 3 [json_name = "team_id"];
+  optional string team_name = 4 [json_name = "team_name"];
+  optional int32 position = 5 [json_name = "position"];
+  optional int32 points = 6 [json_name = "points"];
+  optional int32 played = 7 [json_name = "played"];
+  optional int32 wins = 8 [json_name = "wins"];
+  optional int32 draws = 9 [json_name = "draws"];
+  optional int32 losses = 10 [json_name = "losses"];
+  optional int32 goals_for = 11 [json_name = "goals_for"];
+  optional int32 goals_against = 12 [json_name = "goals_against"];
+  optional int32 goal_diff = 13 [json_name = "goal_diff"];
+  optional string form1 = 14 [json_name = "form1"];
+  optional string form2 = 15 [json_name = "form2"];
+  optional string form3 = 16 [json_name = "form3"];
+  optional string form4 = 17 [json_name = "form4"];
+  optional string form5 = 18 [json_name = "form5"];
+  optional string zone = 19 [json_name = "zone"];
+}
+
+message Team {
+  optional string id = 1 [json_name = "id"];
+  optional string name = 2 [json_name = "name"];
+  optional string full_name = 3 [json_name = "full_name"];
+  optional string city = 4 [json_name = "city"];
+  optional string country = 5 [json_name = "country"];
+  optional string foundation = 6 [json_name = "foundation"];
+  optional string stadium_id = 7 [json_name = "stadium_id"];
+  optional string team_type = 8 [json_name = "team_type"];
+  optional string foundation_display = 9 [json_name = "foundation_display"];
+}
+
+message TeamChance {
+  optional string id = 1 [json_name = "id"];
+  optional string group_id = 2 [json_name = "group_id"];
+  optional string team_id = 3 [json_name = "team_id"];
+  optional string team_name = 4 [json_name = "team_name"];
+  optional int32 rank = 5 [json_name = "rank"];
+  optional int32 points = 6 [json_name = "points"];
+  optional int32 played = 7 [json_name = "played"];
+}
+
+message TeamGame {
+  optional string id = 1 [json_name = "id"];
+  optional string team_id = 2 [json_name = "team_id"];
+  optional string game_id = 3 [json_name = "game_id"];
+  optional string side = 4 [json_name = "side"];
+  optional string opponent_id = 5 [json_name = "opponent_id"];
+  optional string opponent_name = 6 [json_name = "opponent_name"];
+  optional string championship_id = 7 [json_name = "championship_id"];
+  optional string championship_name = 8 [json_name = "championship_name"];
+  optional string day = 9 [json_name = "day"];
+  google.protobuf.Timestamp kickoff = 10 [json_name = "kickoff"];
+  optional bool played = 11 [json_name = "played"];
+  optional int32 goals_for = 12 [json_name = "goals_for"];
+  optional int32 goals_against = 13 [json_name = "goals_against"];
+  optional string result = 14 [json_name = "result"];
+  optional string day_display = 15 [json_name = "day_display"];
+  optional string kickoff_local = 16 [json_name = "kickoff_local"];
+}
+
+message TeamGroup {
+  optional string id = 1 [json_name = "id"];
+  optional string group_id = 2 [json_name = "group_id"];
+  optional string team_id = 3 [json_name = "team_id"];
+  optional int32 add_sub = 4 [json_name = "add_sub"];
+  optional int32 bias = 5 [json_name = "bias"];
+  optional string comment = 6 [json_name = "comment"];
+}
+
+message TeamPlayer {
+  optional string id = 1 [json_name = "id"];
+  optional string championship_id = 2 [json_name = "championship_id"];
+  optional string team_id = 3 [json_name = "team_id"];
+  optional string player_id = 4 [json_name = "player_id"];
+}
+
+message TeamRating {
+  optional string id = 1 [json_name = "id"];
+  optional string team_id = 2 [json_name = "team_id"];
+  optional string measure_date = 3 [json_name = "measure_date"];
+  optional double offense = 4 [json_name = "offense"];
+  optional double defense = 5 [json_name = "defense"];
+  optional double rating = 6 [json_name = "rating"];
+}
+
+message Zone {
+  optional string id = 1 [json_name = "id"];
+  optional string group_id = 2 [json_name = "group_id"];
+  optional string name = 3 [json_name = "name"];
+  optional string color = 4 [json_name = "color"];
+  optional int32 first = 5 [json_name = "first"];
+  optional int32 last = 6 [json_name = "last"];
+}
+
+message ZoneChance {
+  optional string id = 1 [json_name = "id"];
+  optional string group_id = 2 [json_name = "group_id"];
+  optional string team_id = 3 [json_name = "team_id"];
+  optional string zone_id = 4 [json_name = "zone_id"];
+  optional int32 first = 5 [json_name = "first"];
+  optional double percent = 6 [json_name = "percent"];
+  optional string color = 7 [json_name = "color"];
+  optional int32 band = 8 [json_name = "band"];
+  optional int32 last = 9 [json_name = "last"];
+  optional string reach = 10 [json_name = "reach"];
+}

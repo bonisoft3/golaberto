@@ -1,0 +1,33 @@
+# The card and the two team lines one game yields: the regression rationale
+# for each case is its name.
+tests:
+  - name: a played game's card carries its names, and each team's line its own result
+    target_processors: /pipeline/processors/1/try/3
+    input_batch:
+      - content: '{"id": "g", "phase_id": "p", "round": 28, "day": "2026-09-20", "kickoff": "2026-09-21T01:30:00+00:00", "played": true, "home_id": "h", "away_id": "a", "home_score": 2, "away_score": 1, "home_aet": null, "away_aet": null, "home_pen": null, "away_pen": null, "attendance": null, "home": {"name": "Athletico-PR"}, "away": {"name": "Bahia-BA"}, "stadium": null, "referee": null, "phase": {"name": "Turno e Returno", "championship_id": "c", "championship": {"full_name": "Brasil - Campeonato Brasileiro 2026"}}}'
+    output_batches:
+      - - bloblang: 'this.index(0).sink == "game_card" && this.index(0).rows.index(0).home_name == "Athletico-PR" && this.index(0).rows.index(0).championship_name == "Brasil - Campeonato Brasileiro 2026" && this.index(0).rows.index(0).stadium_name == null'
+  - name: each team sees the game from its own side
+    target_processors: /pipeline/processors/1/try/3
+    input_batch:
+      - content: '{"id": "g", "phase_id": "p", "round": 28, "day": "2026-09-20", "kickoff": null, "played": true, "home_id": "h", "away_id": "a", "home_score": 2, "away_score": 1, "home_aet": null, "away_aet": null, "home_pen": null, "away_pen": null, "attendance": null, "home": {"name": "Athletico-PR"}, "away": {"name": "Bahia-BA"}, "stadium": null, "referee": null, "phase": {"name": "Turno e Returno", "championship_id": "c", "championship": {"full_name": "Brasileiro"}}}'
+    output_batches:
+      - - bloblang: 'this.index(1).rows.map_each(r -> [r.id, r.opponent_name, r.goals_for, r.goals_against, r.result]) == [["h:g", "Bahia-BA", 2, 1, "w"], ["a:g", "Athletico-PR", 1, 2, "l"]]'
+  - name: an unplayed game has no result for either side
+    target_processors: /pipeline/processors/1/try/3
+    input_batch:
+      - content: '{"id": "g", "phase_id": "p", "round": 29, "day": "2026-10-07", "kickoff": null, "played": false, "home_id": "h", "away_id": "a", "home_score": null, "away_score": null, "home_aet": null, "away_aet": null, "home_pen": null, "away_pen": null, "attendance": null, "home": {"name": "H"}, "away": {"name": "A"}, "stadium": {"name": "Arena"}, "referee": null, "phase": {"name": "P", "championship_id": "c", "championship": {"full_name": "C"}}}'
+    output_batches:
+      - - bloblang: 'this.index(1).rows.map_each(r -> r.result) == ["", ""] && this.index(0).rows.index(0).stadium_name == "Arena"'
+  - name: a team the game no longer has loses its line, on the game's own change
+    target_processors: /pipeline/processors/1/try/3
+    input_batch:
+      - content: '{"own": true, "id": "g", "phase_id": "p", "round": 1, "day": "2026-10-07", "kickoff": null, "played": false, "home_id": "h", "away_id": "a", "home_score": null, "away_score": null, "home_aet": null, "away_aet": null, "home_pen": null, "away_pen": null, "attendance": null, "home": {"name": "H"}, "away": {"name": "A"}, "stadium": null, "referee": null, "phase": {"name": "P", "championship_id": "c", "championship": {"full_name": "C"}}}'
+    output_batches:
+      - - bloblang: 'this.index(2) == {"sink": "delete", "filter": "team_game?game_id=eq.g&team_id=not.in.(h,a)"}'
+  - name: a renamed team names the games it played, home or away
+    target_processors: /pipeline/processors/0
+    input_batch:
+      - content: '{"data": "{\"__table\": \"team\", \"id\": \"t\"}"}'
+    output_batches:
+      - - bloblang: 'this.scope.has_suffix("&or=(home_id.eq.t,away_id.eq.t)") && !this.exists("own")'

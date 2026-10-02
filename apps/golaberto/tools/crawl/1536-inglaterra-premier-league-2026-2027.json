@@ -1,0 +1,5392 @@
+{
+ "path": "/championship/show/1536-inglaterra-premier-league-2026-2027",
+ "phases": [
+  {
+   "upstream": 4529,
+   "name": "Turno e Returno",
+   "position": 0,
+   "groups": [
+    {
+     "upstream": 16982,
+     "name": "Grupo Único",
+     "teams": [
+      {
+       "upstream": 37,
+       "name": "Manchester City"
+      },
+      {
+       "upstream": 26,
+       "name": "Arsenal"
+      },
+      {
+       "upstream": 1553,
+       "name": "Brighton & Hove Albion"
+      },
+      {
+       "upstream": 1558,
+       "name": "Brentford"
+      },
+      {
+       "upstream": 1260,
+       "name": "Leeds United"
+      },
+      {
+       "upstream": 36,
+       "name": "Liverpool"
+      },
+      {
+       "upstream": 34,
+       "name": "Everton"
+      },
+      {
+       "upstream": 632,
+       "name": "Hull City"
+      },
+      {
+       "upstream": 40,
+       "name": "Newcastle United"
+      },
+      {
+       "upstream": 32,
+       "name": "Chelsea"
+      },
+      {
+       "upstream": 1252,
+       "name": "Ipswich Town"
+      },
+      {
+       "upstream": 38,
+       "name": "Manchester United"
+      },
+      {
+       "upstream": 1528,
+       "name": "Nottingham Forest"
+      },
+      {
+       "upstream": 173,
+       "name": "Sunderland"
+      },
+      {
+       "upstream": 33,
+       "name": "Crystal Palace"
+      },
+      {
+       "upstream": 27,
+       "name": "Aston Villa"
+      },
+      {
+       "upstream": 1554,
+       "name": "Bournemouth"
+      },
+      {
+       "upstream": 1526,
+       "name": "Coventry City"
+      },
+      {
+       "upstream": 35,
+       "name": "Fulham"
+      },
+      {
+       "upstream": 44,
+       "name": "Tottenham Hotspur"
+      }
+     ],
+     "zones": [
+      {
+       "name": "Champions",
+       "first": 1,
+       "last": 1
+      },
+      {
+       "name": "Champions League",
+       "first": 1,
+       "last": 4
+      },
+      {
+       "name": "Europa League",
+       "first": 5,
+       "last": 5
+      },
+      {
+       "name": "Relegation",
+       "first": 18,
+       "last": 20
+      }
+     ]
+    }
+   ],
+   "games": [
+    {
+     "upstream": 366808,
+     "round": 1,
+     "date": "21/08/2026",
+     "time": "19:00",
+     "home": "Arsenal",
+     "away": "Coventry City",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 366809,
+     "round": 1,
+     "date": "22/08/2026",
+     "time": "11:30",
+     "home": "Hull City",
+     "away": "Manchester United",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 366810,
+     "round": 1,
+     "date": "22/08/2026",
+     "time": "14:00",
+     "home": "Everton",
+     "away": "Crystal Palace",
+     "played": true,
+     "score": [
+      2,
+      0
+     ]
+    },
+    {
+     "upstream": 366811,
+     "round": 1,
+     "date": "22/08/2026",
+     "time": "14:00",
+     "home": "Ipswich Town",
+     "away": "Sunderland",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 366812,
+     "round": 1,
+     "date": "22/08/2026",
+     "time": "14:00",
+     "home": "Nottingham Forest",
+     "away": "Leeds United",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 366813,
+     "round": 1,
+     "date": "22/08/2026",
+     "time": "16:30",
+     "home": "Brentford",
+     "away": "Tottenham Hotspur",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 366814,
+     "round": 1,
+     "date": "23/08/2026",
+     "time": "13:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Aston Villa",
+     "played": true,
+     "score": [
+      4,
+      0
+     ]
+    },
+    {
+     "upstream": 366815,
+     "round": 1,
+     "date": "23/08/2026",
+     "time": "13:00",
+     "home": "Manchester City",
+     "away": "Bournemouth",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 366816,
+     "round": 1,
+     "date": "23/08/2026",
+     "time": "15:30",
+     "home": "Newcastle United",
+     "away": "Liverpool",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 366817,
+     "round": 1,
+     "date": "24/08/2026",
+     "time": "19:00",
+     "home": "Fulham",
+     "away": "Chelsea",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 366818,
+     "round": 2,
+     "date": "28/08/2026",
+     "time": "19:00",
+     "home": "Crystal Palace",
+     "away": "Manchester City",
+     "played": true,
+     "score": [
+      1,
+      4
+     ]
+    },
+    {
+     "upstream": 366819,
+     "round": 2,
+     "date": "29/08/2026",
+     "time": "11:30",
+     "home": "Liverpool",
+     "away": "Nottingham Forest",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 366821,
+     "round": 2,
+     "date": "29/08/2026",
+     "time": "14:00",
+     "home": "Bournemouth",
+     "away": "Everton",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 366822,
+     "round": 2,
+     "date": "29/08/2026",
+     "time": "14:00",
+     "home": "Coventry City",
+     "away": "Hull City",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 366823,
+     "round": 2,
+     "date": "29/08/2026",
+     "time": "16:30",
+     "home": "Tottenham Hotspur",
+     "away": "Newcastle United",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 366824,
+     "round": 2,
+     "date": "30/08/2026",
+     "time": "13:00",
+     "home": "Chelsea",
+     "away": "Brighton & Hove Albion",
+     "played": true,
+     "score": [
+      4,
+      3
+     ]
+    },
+    {
+     "upstream": 366825,
+     "round": 2,
+     "date": "30/08/2026",
+     "time": "13:00",
+     "home": "Leeds United",
+     "away": "Brentford",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 366826,
+     "round": 2,
+     "date": "30/08/2026",
+     "time": "13:00",
+     "home": "Sunderland",
+     "away": "Fulham",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 366827,
+     "round": 2,
+     "date": "30/08/2026",
+     "time": "15:30",
+     "home": "Manchester United",
+     "away": "Ipswich Town",
+     "played": true,
+     "score": [
+      5,
+      2
+     ]
+    },
+    {
+     "upstream": 366820,
+     "round": 2,
+     "date": "31/08/2026",
+     "time": "19:00",
+     "home": "Aston Villa",
+     "away": "Arsenal",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 366828,
+     "round": 3,
+     "date": "04/09/2026",
+     "time": "19:00",
+     "home": "Ipswich Town",
+     "away": "Liverpool",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 366829,
+     "round": 3,
+     "date": "05/09/2026",
+     "time": "11:30",
+     "home": "Newcastle United",
+     "away": "Bournemouth",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 366830,
+     "round": 3,
+     "date": "05/09/2026",
+     "time": "14:00",
+     "home": "Brentford",
+     "away": "Sunderland",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 366831,
+     "round": 3,
+     "date": "05/09/2026",
+     "time": "14:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Leeds United",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 366832,
+     "round": 3,
+     "date": "05/09/2026",
+     "time": "14:00",
+     "home": "Fulham",
+     "away": "Crystal Palace",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 366833,
+     "round": 3,
+     "date": "05/09/2026",
+     "time": "14:00",
+     "home": "Manchester City",
+     "away": "Coventry City",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 366834,
+     "round": 3,
+     "date": "05/09/2026",
+     "time": "14:00",
+     "home": "Nottingham Forest",
+     "away": "Tottenham Hotspur",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 366835,
+     "round": 3,
+     "date": "05/09/2026",
+     "time": "16:30",
+     "home": "Hull City",
+     "away": "Aston Villa",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 366836,
+     "round": 3,
+     "date": "06/09/2026",
+     "time": "13:00",
+     "home": "Everton",
+     "away": "Manchester United",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 366837,
+     "round": 3,
+     "date": "06/09/2026",
+     "time": "15:30",
+     "home": "Arsenal",
+     "away": "Chelsea",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 366838,
+     "round": 4,
+     "date": "12/09/2026",
+     "time": "14:00",
+     "home": "Aston Villa",
+     "away": "Nottingham Forest",
+     "played": true,
+     "score": [
+      1,
+      2
+     ]
+    },
+    {
+     "upstream": 366839,
+     "round": 4,
+     "date": "12/09/2026",
+     "time": "14:00",
+     "home": "Bournemouth",
+     "away": "Brentford",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 366840,
+     "round": 4,
+     "date": "12/09/2026",
+     "time": "14:00",
+     "home": "Chelsea",
+     "away": "Hull City",
+     "played": true,
+     "score": [
+      2,
+      2
+     ]
+    },
+    {
+     "upstream": 366841,
+     "round": 4,
+     "date": "12/09/2026",
+     "time": "14:00",
+     "home": "Crystal Palace",
+     "away": "Ipswich Town",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 366842,
+     "round": 4,
+     "date": "12/09/2026",
+     "time": "14:00",
+     "home": "Liverpool",
+     "away": "Fulham",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 366843,
+     "round": 4,
+     "date": "12/09/2026",
+     "time": "16:30",
+     "home": "Tottenham Hotspur",
+     "away": "Everton",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 366844,
+     "round": 4,
+     "date": "12/09/2026",
+     "time": "19:00",
+     "home": "Sunderland",
+     "away": "Arsenal",
+     "played": true,
+     "score": [
+      0,
+      2
+     ]
+    },
+    {
+     "upstream": 366845,
+     "round": 4,
+     "date": "13/09/2026",
+     "time": "13:00",
+     "home": "Coventry City",
+     "away": "Brighton & Hove Albion",
+     "played": true,
+     "score": [
+      0,
+      5
+     ]
+    },
+    {
+     "upstream": 366846,
+     "round": 4,
+     "date": "13/09/2026",
+     "time": "15:30",
+     "home": "Manchester United",
+     "away": "Manchester City",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 366847,
+     "round": 4,
+     "date": "14/09/2026",
+     "time": "19:00",
+     "home": "Leeds United",
+     "away": "Newcastle United",
+     "played": true,
+     "score": [
+      4,
+      1
+     ]
+    },
+    {
+     "upstream": 366848,
+     "round": 5,
+     "date": "18/09/2026",
+     "time": "19:00",
+     "home": "Brentford",
+     "away": "Chelsea",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 366849,
+     "round": 5,
+     "date": "19/09/2026",
+     "time": "11:30",
+     "home": "Tottenham Hotspur",
+     "away": "Aston Villa",
+     "played": true,
+     "score": [
+      2,
+      3
+     ]
+    },
+    {
+     "upstream": 366850,
+     "round": 5,
+     "date": "19/09/2026",
+     "time": "14:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Arsenal",
+     "played": true,
+     "score": [
+      3,
+      0
+     ]
+    },
+    {
+     "upstream": 366851,
+     "round": 5,
+     "date": "19/09/2026",
+     "time": "14:00",
+     "home": "Everton",
+     "away": "Ipswich Town",
+     "played": true,
+     "score": [
+      1,
+      0
+     ]
+    },
+    {
+     "upstream": 366854,
+     "round": 5,
+     "date": "19/09/2026",
+     "time": "14:00",
+     "home": "Newcastle United",
+     "away": "Hull City",
+     "played": true,
+     "score": [
+      2,
+      1
+     ]
+    },
+    {
+     "upstream": 366855,
+     "round": 5,
+     "date": "19/09/2026",
+     "time": "16:30",
+     "home": "Nottingham Forest",
+     "away": "Coventry City",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 366856,
+     "round": 5,
+     "date": "20/09/2026",
+     "time": "13:00",
+     "home": "Bournemouth",
+     "away": "Liverpool",
+     "played": true,
+     "score": [
+      0,
+      1
+     ]
+    },
+    {
+     "upstream": 366852,
+     "round": 5,
+     "date": "20/09/2026",
+     "time": "13:00",
+     "home": "Leeds United",
+     "away": "Crystal Palace",
+     "played": true,
+     "score": [
+      0,
+      0
+     ]
+    },
+    {
+     "upstream": 366853,
+     "round": 5,
+     "date": "20/09/2026",
+     "time": "13:00",
+     "home": "Manchester City",
+     "away": "Sunderland",
+     "played": true,
+     "score": [
+      5,
+      3
+     ]
+    },
+    {
+     "upstream": 366857,
+     "round": 5,
+     "date": "20/09/2026",
+     "time": "15:30",
+     "home": "Fulham",
+     "away": "Manchester United",
+     "played": true,
+     "score": [
+      1,
+      1
+     ]
+    },
+    {
+     "upstream": 366858,
+     "round": 6,
+     "date": "10/10/2026",
+     "time": "11:30",
+     "home": "Arsenal",
+     "away": "Leeds United",
+     "played": false,
+     "chances": [
+      72.36,
+      19.3,
+      8.341
+     ]
+    },
+    {
+     "upstream": 366859,
+     "round": 6,
+     "date": "10/10/2026",
+     "time": "14:00",
+     "home": "Aston Villa",
+     "away": "Brentford",
+     "played": false,
+     "chances": [
+      49.03,
+      23.5,
+      27.47
+     ]
+    },
+    {
+     "upstream": 366860,
+     "round": 6,
+     "date": "10/10/2026",
+     "time": "14:00",
+     "home": "Chelsea",
+     "away": "Bournemouth",
+     "played": false,
+     "chances": [
+      49.44,
+      22.7,
+      27.86
+     ]
+    },
+    {
+     "upstream": 366864,
+     "round": 6,
+     "date": "10/10/2026",
+     "time": "14:00",
+     "home": "Ipswich Town",
+     "away": "Fulham",
+     "played": false,
+     "chances": [
+      31.33,
+      24.6,
+      44.06
+     ]
+    },
+    {
+     "upstream": 366867,
+     "round": 6,
+     "date": "10/10/2026",
+     "time": "14:00",
+     "home": "Sunderland",
+     "away": "Brighton & Hove Albion",
+     "played": false,
+     "chances": [
+      26.09,
+      25.53,
+      48.38
+     ]
+    },
+    {
+     "upstream": 366866,
+     "round": 6,
+     "date": "10/10/2026",
+     "time": "16:30",
+     "home": "Manchester United",
+     "away": "Tottenham Hotspur",
+     "played": false,
+     "chances": [
+      56.57,
+      21.4,
+      22.02
+     ]
+    },
+    {
+     "upstream": 366862,
+     "round": 6,
+     "date": "11/10/2026",
+     "time": "13:00",
+     "home": "Crystal Palace",
+     "away": "Nottingham Forest",
+     "played": false,
+     "chances": [
+      42.44,
+      27.33,
+      30.23
+     ]
+    },
+    {
+     "upstream": 366863,
+     "round": 6,
+     "date": "11/10/2026",
+     "time": "13:00",
+     "home": "Hull City",
+     "away": "Everton",
+     "played": false,
+     "chances": [
+      20.14,
+      25.51,
+      54.35
+     ]
+    },
+    {
+     "upstream": 366865,
+     "round": 6,
+     "date": "11/10/2026",
+     "time": "15:30",
+     "home": "Liverpool",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      41.6,
+      23.5,
+      34.9
+     ]
+    },
+    {
+     "upstream": 366861,
+     "round": 6,
+     "date": "12/10/2026",
+     "time": "19:00",
+     "home": "Coventry City",
+     "away": "Newcastle United",
+     "played": false,
+     "chances": [
+      26.45,
+      22.26,
+      51.29
+     ]
+    },
+    {
+     "upstream": 366871,
+     "round": 7,
+     "date": "17/10/2026",
+     "time": "11:30",
+     "home": "Everton",
+     "away": "Chelsea",
+     "played": false,
+     "chances": [
+      43.09,
+      25.86,
+      31.05
+     ]
+    },
+    {
+     "upstream": 366869,
+     "round": 7,
+     "date": "17/10/2026",
+     "time": "14:00",
+     "home": "Brentford",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      39.47,
+      24.08,
+      36.45
+     ]
+    },
+    {
+     "upstream": 366872,
+     "round": 7,
+     "date": "17/10/2026",
+     "time": "14:00",
+     "home": "Fulham",
+     "away": "Hull City",
+     "played": false,
+     "chances": [
+      70.82,
+      18.82,
+      10.36
+     ]
+    },
+    {
+     "upstream": 366874,
+     "round": 7,
+     "date": "17/10/2026",
+     "time": "14:00",
+     "home": "Manchester City",
+     "away": "Ipswich Town",
+     "played": false,
+     "chances": [
+      83.21,
+      11.27,
+      5.518
+     ]
+    },
+    {
+     "upstream": 366875,
+     "round": 7,
+     "date": "17/10/2026",
+     "time": "16:30",
+     "home": "Newcastle United",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      48.71,
+      22.63,
+      28.67
+     ]
+    },
+    {
+     "upstream": 366868,
+     "round": 7,
+     "date": "18/10/2026",
+     "time": "13:00",
+     "home": "Bournemouth",
+     "away": "Sunderland",
+     "played": false,
+     "chances": [
+      62.42,
+      22.37,
+      15.21
+     ]
+    },
+    {
+     "upstream": 366870,
+     "round": 7,
+     "date": "18/10/2026",
+     "time": "13:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Crystal Palace",
+     "played": false,
+     "chances": [
+      60.36,
+      21.75,
+      17.88
+     ]
+    },
+    {
+     "upstream": 366873,
+     "round": 7,
+     "date": "18/10/2026",
+     "time": "13:00",
+     "home": "Leeds United",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      42.25,
+      24.65,
+      33.1
+     ]
+    },
+    {
+     "upstream": 366876,
+     "round": 7,
+     "date": "18/10/2026",
+     "time": "15:30",
+     "home": "Nottingham Forest",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      22.24,
+      27.29,
+      50.47
+     ]
+    },
+    {
+     "upstream": 366877,
+     "round": 7,
+     "date": "19/10/2026",
+     "time": "19:00",
+     "home": "Tottenham Hotspur",
+     "away": "Coventry City",
+     "played": false,
+     "chances": [
+      60.36,
+      21.13,
+      18.51
+     ]
+    },
+    {
+     "upstream": 366878,
+     "round": 8,
+     "date": "24/10/2026",
+     "time": "14:00",
+     "home": "Arsenal",
+     "away": "Everton",
+     "played": false,
+     "chances": [
+      71.9,
+      20.7,
+      7.406
+     ]
+    },
+    {
+     "upstream": 366879,
+     "round": 8,
+     "date": "24/10/2026",
+     "time": "14:00",
+     "home": "Aston Villa",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      33.53,
+      23.57,
+      42.9
+     ]
+    },
+    {
+     "upstream": 366880,
+     "round": 8,
+     "date": "24/10/2026",
+     "time": "14:00",
+     "home": "Chelsea",
+     "away": "Tottenham Hotspur",
+     "played": false,
+     "chances": [
+      55.11,
+      21.5,
+      23.4
+     ]
+    },
+    {
+     "upstream": 366881,
+     "round": 8,
+     "date": "24/10/2026",
+     "time": "14:00",
+     "home": "Coventry City",
+     "away": "Fulham",
+     "played": false,
+     "chances": [
+      32.57,
+      25.41,
+      42.02
+     ]
+    },
+    {
+     "upstream": 366882,
+     "round": 8,
+     "date": "24/10/2026",
+     "time": "14:00",
+     "home": "Crystal Palace",
+     "away": "Newcastle United",
+     "played": false,
+     "chances": [
+      37.31,
+      24.45,
+      38.24
+     ]
+    },
+    {
+     "upstream": 366883,
+     "round": 8,
+     "date": "24/10/2026",
+     "time": "14:00",
+     "home": "Hull City",
+     "away": "Brentford",
+     "played": false,
+     "chances": [
+      17.86,
+      21.35,
+      60.79
+     ]
+    },
+    {
+     "upstream": 366884,
+     "round": 8,
+     "date": "24/10/2026",
+     "time": "14:00",
+     "home": "Ipswich Town",
+     "away": "Nottingham Forest",
+     "played": false,
+     "chances": [
+      30.03,
+      25.15,
+      44.82
+     ]
+    },
+    {
+     "upstream": 366885,
+     "round": 8,
+     "date": "24/10/2026",
+     "time": "14:00",
+     "home": "Liverpool",
+     "away": "Brighton & Hove Albion",
+     "played": false,
+     "chances": [
+      53.84,
+      22.36,
+      23.8
+     ]
+    },
+    {
+     "upstream": 366886,
+     "round": 8,
+     "date": "24/10/2026",
+     "time": "14:00",
+     "home": "Manchester United",
+     "away": "Bournemouth",
+     "played": false,
+     "chances": [
+      50.92,
+      22.72,
+      26.35
+     ]
+    },
+    {
+     "upstream": 366887,
+     "round": 8,
+     "date": "24/10/2026",
+     "time": "14:00",
+     "home": "Sunderland",
+     "away": "Leeds United",
+     "played": false,
+     "chances": [
+      32.46,
+      28.14,
+      39.4
+     ]
+    },
+    {
+     "upstream": 366888,
+     "round": 9,
+     "date": "31/10/2026",
+     "time": "15:00",
+     "home": "Aston Villa",
+     "away": "Fulham",
+     "played": false,
+     "chances": [
+      55.0,
+      23.38,
+      21.62
+     ]
+    },
+    {
+     "upstream": 366889,
+     "round": 9,
+     "date": "31/10/2026",
+     "time": "15:00",
+     "home": "Bournemouth",
+     "away": "Leeds United",
+     "played": false,
+     "chances": [
+      49.92,
+      24.57,
+      25.51
+     ]
+    },
+    {
+     "upstream": 366890,
+     "round": 9,
+     "date": "31/10/2026",
+     "time": "15:00",
+     "home": "Brentford",
+     "away": "Nottingham Forest",
+     "played": false,
+     "chances": [
+      52.49,
+      24.43,
+      23.07
+     ]
+    },
+    {
+     "upstream": 366891,
+     "round": 9,
+     "date": "31/10/2026",
+     "time": "15:00",
+     "home": "Chelsea",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      47.04,
+      22.26,
+      30.7
+     ]
+    },
+    {
+     "upstream": 366892,
+     "round": 9,
+     "date": "31/10/2026",
+     "time": "15:00",
+     "home": "Coventry City",
+     "away": "Sunderland",
+     "played": false,
+     "chances": [
+      42.61,
+      26.68,
+      30.71
+     ]
+    },
+    {
+     "upstream": 366893,
+     "round": 9,
+     "date": "31/10/2026",
+     "time": "15:00",
+     "home": "Hull City",
+     "away": "Ipswich Town",
+     "played": false,
+     "chances": [
+      35.92,
+      24.84,
+      39.25
+     ]
+    },
+    {
+     "upstream": 366894,
+     "round": 9,
+     "date": "31/10/2026",
+     "time": "15:00",
+     "home": "Liverpool",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      36.12,
+      26.56,
+      37.31
+     ]
+    },
+    {
+     "upstream": 366895,
+     "round": 9,
+     "date": "31/10/2026",
+     "time": "15:00",
+     "home": "Manchester City",
+     "away": "Brighton & Hove Albion",
+     "played": false,
+     "chances": [
+      61.97,
+      20.0,
+      18.03
+     ]
+    },
+    {
+     "upstream": 366896,
+     "round": 9,
+     "date": "31/10/2026",
+     "time": "15:00",
+     "home": "Newcastle United",
+     "away": "Everton",
+     "played": false,
+     "chances": [
+      53.21,
+      23.97,
+      22.82
+     ]
+    },
+    {
+     "upstream": 366897,
+     "round": 9,
+     "date": "31/10/2026",
+     "time": "15:00",
+     "home": "Tottenham Hotspur",
+     "away": "Crystal Palace",
+     "played": false,
+     "chances": [
+      48.59,
+      24.53,
+      26.88
+     ]
+    },
+    {
+     "upstream": 366898,
+     "round": 10,
+     "date": "07/11/2026",
+     "time": "15:00",
+     "home": "Arsenal",
+     "away": "Hull City",
+     "played": false,
+     "chances": [
+      90.71,
+      8.21,
+      1.082
+     ]
+    },
+    {
+     "upstream": 366899,
+     "round": 10,
+     "date": "07/11/2026",
+     "time": "15:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Brentford",
+     "played": false,
+     "chances": [
+      52.08,
+      22.78,
+      25.14
+     ]
+    },
+    {
+     "upstream": 366900,
+     "round": 10,
+     "date": "07/11/2026",
+     "time": "15:00",
+     "home": "Crystal Palace",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      30.2,
+      24.85,
+      44.95
+     ]
+    },
+    {
+     "upstream": 366901,
+     "round": 10,
+     "date": "07/11/2026",
+     "time": "15:00",
+     "home": "Everton",
+     "away": "Coventry City",
+     "played": false,
+     "chances": [
+      62.19,
+      22.83,
+      14.98
+     ]
+    },
+    {
+     "upstream": 366902,
+     "round": 10,
+     "date": "07/11/2026",
+     "time": "15:00",
+     "home": "Fulham",
+     "away": "Newcastle United",
+     "played": false,
+     "chances": [
+      39.83,
+      24.43,
+      35.74
+     ]
+    },
+    {
+     "upstream": 366903,
+     "round": 10,
+     "date": "07/11/2026",
+     "time": "15:00",
+     "home": "Ipswich Town",
+     "away": "Bournemouth",
+     "played": false,
+     "chances": [
+      27.43,
+      23.08,
+      49.49
+     ]
+    },
+    {
+     "upstream": 366904,
+     "round": 10,
+     "date": "07/11/2026",
+     "time": "15:00",
+     "home": "Leeds United",
+     "away": "Tottenham Hotspur",
+     "played": false,
+     "chances": [
+      50.18,
+      24.34,
+      25.47
+     ]
+    },
+    {
+     "upstream": 366905,
+     "round": 10,
+     "date": "07/11/2026",
+     "time": "15:00",
+     "home": "Manchester United",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      48.32,
+      22.98,
+      28.71
+     ]
+    },
+    {
+     "upstream": 366906,
+     "round": 10,
+     "date": "07/11/2026",
+     "time": "15:00",
+     "home": "Nottingham Forest",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      27.14,
+      24.63,
+      48.23
+     ]
+    },
+    {
+     "upstream": 366907,
+     "round": 10,
+     "date": "07/11/2026",
+     "time": "15:00",
+     "home": "Sunderland",
+     "away": "Chelsea",
+     "played": false,
+     "chances": [
+      29.92,
+      25.23,
+      44.84
+     ]
+    },
+    {
+     "upstream": 366908,
+     "round": 11,
+     "date": "21/11/2026",
+     "time": "15:00",
+     "home": "Aston Villa",
+     "away": "Sunderland",
+     "played": false,
+     "chances": [
+      65.2,
+      21.23,
+      13.57
+     ]
+    },
+    {
+     "upstream": 366909,
+     "round": 11,
+     "date": "21/11/2026",
+     "time": "15:00",
+     "home": "Bournemouth",
+     "away": "Nottingham Forest",
+     "played": false,
+     "chances": [
+      50.57,
+      25.1,
+      24.33
+     ]
+    },
+    {
+     "upstream": 366910,
+     "round": 11,
+     "date": "21/11/2026",
+     "time": "15:00",
+     "home": "Brentford",
+     "away": "Everton",
+     "played": false,
+     "chances": [
+      51.41,
+      25.41,
+      23.19
+     ]
+    },
+    {
+     "upstream": 366911,
+     "round": 11,
+     "date": "21/11/2026",
+     "time": "15:00",
+     "home": "Chelsea",
+     "away": "Leeds United",
+     "played": false,
+     "chances": [
+      51.72,
+      23.07,
+      25.2
+     ]
+    },
+    {
+     "upstream": 366912,
+     "round": 11,
+     "date": "21/11/2026",
+     "time": "15:00",
+     "home": "Coventry City",
+     "away": "Crystal Palace",
+     "played": false,
+     "chances": [
+      34.78,
+      25.58,
+      39.64
+     ]
+    },
+    {
+     "upstream": 366913,
+     "round": 11,
+     "date": "21/11/2026",
+     "time": "15:00",
+     "home": "Hull City",
+     "away": "Brighton & Hove Albion",
+     "played": false,
+     "chances": [
+      15.49,
+      20.06,
+      64.44
+     ]
+    },
+    {
+     "upstream": 366914,
+     "round": 11,
+     "date": "21/11/2026",
+     "time": "15:00",
+     "home": "Liverpool",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      56.72,
+      21.32,
+      21.95
+     ]
+    },
+    {
+     "upstream": 366915,
+     "round": 11,
+     "date": "21/11/2026",
+     "time": "15:00",
+     "home": "Manchester City",
+     "away": "Fulham",
+     "played": false,
+     "chances": [
+      70.81,
+      17.76,
+      11.42
+     ]
+    },
+    {
+     "upstream": 366916,
+     "round": 11,
+     "date": "21/11/2026",
+     "time": "15:00",
+     "home": "Newcastle United",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      29.14,
+      24.85,
+      46.02
+     ]
+    },
+    {
+     "upstream": 366917,
+     "round": 11,
+     "date": "21/11/2026",
+     "time": "15:00",
+     "home": "Tottenham Hotspur",
+     "away": "Ipswich Town",
+     "played": false,
+     "chances": [
+      62.05,
+      20.22,
+      17.73
+     ]
+    },
+    {
+     "upstream": 366918,
+     "round": 12,
+     "date": "28/11/2026",
+     "time": "15:00",
+     "home": "Arsenal",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      54.0,
+      24.36,
+      21.64
+     ]
+    },
+    {
+     "upstream": 366919,
+     "round": 12,
+     "date": "28/11/2026",
+     "time": "15:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Newcastle United",
+     "played": false,
+     "chances": [
+      51.17,
+      22.14,
+      26.69
+     ]
+    },
+    {
+     "upstream": 366920,
+     "round": 12,
+     "date": "28/11/2026",
+     "time": "15:00",
+     "home": "Crystal Palace",
+     "away": "Hull City",
+     "played": false,
+     "chances": [
+      68.51,
+      19.8,
+      11.69
+     ]
+    },
+    {
+     "upstream": 366921,
+     "round": 12,
+     "date": "28/11/2026",
+     "time": "15:00",
+     "home": "Everton",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      34.0,
+      26.99,
+      39.02
+     ]
+    },
+    {
+     "upstream": 366922,
+     "round": 12,
+     "date": "28/11/2026",
+     "time": "15:00",
+     "home": "Fulham",
+     "away": "Bournemouth",
+     "played": false,
+     "chances": [
+      42.23,
+      25.59,
+      32.18
+     ]
+    },
+    {
+     "upstream": 366923,
+     "round": 12,
+     "date": "28/11/2026",
+     "time": "15:00",
+     "home": "Ipswich Town",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      25.27,
+      22.45,
+      52.29
+     ]
+    },
+    {
+     "upstream": 366924,
+     "round": 12,
+     "date": "28/11/2026",
+     "time": "15:00",
+     "home": "Leeds United",
+     "away": "Coventry City",
+     "played": false,
+     "chances": [
+      62.97,
+      21.28,
+      15.75
+     ]
+    },
+    {
+     "upstream": 366925,
+     "round": 12,
+     "date": "28/11/2026",
+     "time": "15:00",
+     "home": "Manchester United",
+     "away": "Brentford",
+     "played": false,
+     "chances": [
+      49.33,
+      22.75,
+      27.92
+     ]
+    },
+    {
+     "upstream": 366926,
+     "round": 12,
+     "date": "28/11/2026",
+     "time": "15:00",
+     "home": "Nottingham Forest",
+     "away": "Chelsea",
+     "played": false,
+     "chances": [
+      42.56,
+      25.05,
+      32.38
+     ]
+    },
+    {
+     "upstream": 366927,
+     "round": 12,
+     "date": "28/11/2026",
+     "time": "15:00",
+     "home": "Sunderland",
+     "away": "Tottenham Hotspur",
+     "played": false,
+     "chances": [
+      35.72,
+      26.81,
+      37.46
+     ]
+    },
+    {
+     "upstream": 366928,
+     "round": 13,
+     "date": "02/12/2026",
+     "time": "20:00",
+     "home": "Aston Villa",
+     "away": "Everton",
+     "played": false,
+     "chances": [
+      52.41,
+      25.3,
+      22.29
+     ]
+    },
+    {
+     "upstream": 366929,
+     "round": 13,
+     "date": "02/12/2026",
+     "time": "20:00",
+     "home": "Bournemouth",
+     "away": "Brighton & Hove Albion",
+     "played": false,
+     "chances": [
+      42.48,
+      24.22,
+      33.29
+     ]
+    },
+    {
+     "upstream": 366930,
+     "round": 13,
+     "date": "02/12/2026",
+     "time": "20:00",
+     "home": "Brentford",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      27.61,
+      25.87,
+      46.52
+     ]
+    },
+    {
+     "upstream": 366931,
+     "round": 13,
+     "date": "02/12/2026",
+     "time": "20:00",
+     "home": "Chelsea",
+     "away": "Crystal Palace",
+     "played": false,
+     "chances": [
+      56.28,
+      22.13,
+      21.59
+     ]
+    },
+    {
+     "upstream": 366932,
+     "round": 13,
+     "date": "02/12/2026",
+     "time": "20:00",
+     "home": "Coventry City",
+     "away": "Ipswich Town",
+     "played": false,
+     "chances": [
+      48.0,
+      23.44,
+      28.56
+     ]
+    },
+    {
+     "upstream": 366933,
+     "round": 13,
+     "date": "02/12/2026",
+     "time": "20:00",
+     "home": "Hull City",
+     "away": "Nottingham Forest",
+     "played": false,
+     "chances": [
+      21.0,
+      24.79,
+      54.22
+     ]
+    },
+    {
+     "upstream": 366934,
+     "round": 13,
+     "date": "02/12/2026",
+     "time": "20:00",
+     "home": "Liverpool",
+     "away": "Sunderland",
+     "played": false,
+     "chances": [
+      72.76,
+      17.93,
+      9.303
+     ]
+    },
+    {
+     "upstream": 366935,
+     "round": 13,
+     "date": "02/12/2026",
+     "time": "20:00",
+     "home": "Manchester City",
+     "away": "Leeds United",
+     "played": false,
+     "chances": [
+      68.9,
+      18.51,
+      12.58
+     ]
+    },
+    {
+     "upstream": 366936,
+     "round": 13,
+     "date": "02/12/2026",
+     "time": "20:00",
+     "home": "Newcastle United",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      48.92,
+      22.0,
+      29.08
+     ]
+    },
+    {
+     "upstream": 366937,
+     "round": 13,
+     "date": "02/12/2026",
+     "time": "20:00",
+     "home": "Tottenham Hotspur",
+     "away": "Fulham",
+     "played": false,
+     "chances": [
+      46.19,
+      24.85,
+      28.96
+     ]
+    },
+    {
+     "upstream": 366938,
+     "round": 14,
+     "date": "05/12/2026",
+     "time": "15:00",
+     "home": "Aston Villa",
+     "away": "Crystal Palace",
+     "played": false,
+     "chances": [
+      57.38,
+      22.79,
+      19.83
+     ]
+    },
+    {
+     "upstream": 366939,
+     "round": 14,
+     "date": "05/12/2026",
+     "time": "15:00",
+     "home": "Bournemouth",
+     "away": "Hull City",
+     "played": false,
+     "chances": [
+      75.5,
+      16.1,
+      8.406
+     ]
+    },
+    {
+     "upstream": 366940,
+     "round": 14,
+     "date": "05/12/2026",
+     "time": "15:00",
+     "home": "Brentford",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      32.59,
+      23.38,
+      44.03
+     ]
+    },
+    {
+     "upstream": 366941,
+     "round": 14,
+     "date": "05/12/2026",
+     "time": "15:00",
+     "home": "Chelsea",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      39.27,
+      23.15,
+      37.58
+     ]
+    },
+    {
+     "upstream": 366942,
+     "round": 14,
+     "date": "05/12/2026",
+     "time": "15:00",
+     "home": "Everton",
+     "away": "Fulham",
+     "played": false,
+     "chances": [
+      48.01,
+      27.62,
+      24.37
+     ]
+    },
+    {
+     "upstream": 366943,
+     "round": 14,
+     "date": "05/12/2026",
+     "time": "15:00",
+     "home": "Leeds United",
+     "away": "Ipswich Town",
+     "played": false,
+     "chances": [
+      64.64,
+      20.28,
+      15.09
+     ]
+    },
+    {
+     "upstream": 366944,
+     "round": 14,
+     "date": "05/12/2026",
+     "time": "15:00",
+     "home": "Manchester United",
+     "away": "Coventry City",
+     "played": false,
+     "chances": [
+      68.97,
+      17.84,
+      13.19
+     ]
+    },
+    {
+     "upstream": 366945,
+     "round": 14,
+     "date": "05/12/2026",
+     "time": "15:00",
+     "home": "Newcastle United",
+     "away": "Sunderland",
+     "played": false,
+     "chances": [
+      65.95,
+      20.05,
+      14.0
+     ]
+    },
+    {
+     "upstream": 366946,
+     "round": 14,
+     "date": "05/12/2026",
+     "time": "15:00",
+     "home": "Nottingham Forest",
+     "away": "Brighton & Hove Albion",
+     "played": false,
+     "chances": [
+      38.21,
+      26.1,
+      35.69
+     ]
+    },
+    {
+     "upstream": 366947,
+     "round": 14,
+     "date": "05/12/2026",
+     "time": "15:00",
+     "home": "Tottenham Hotspur",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      21.36,
+      24.25,
+      54.39
+     ]
+    },
+    {
+     "upstream": 366948,
+     "round": 15,
+     "date": "12/12/2026",
+     "time": "15:00",
+     "home": "Arsenal",
+     "away": "Bournemouth",
+     "played": false,
+     "chances": [
+      70.49,
+      19.49,
+      10.03
+     ]
+    },
+    {
+     "upstream": 366949,
+     "round": 15,
+     "date": "12/12/2026",
+     "time": "15:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Everton",
+     "played": false,
+     "chances": [
+      55.45,
+      24.33,
+      20.22
+     ]
+    },
+    {
+     "upstream": 366950,
+     "round": 15,
+     "date": "12/12/2026",
+     "time": "15:00",
+     "home": "Coventry City",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      26.43,
+      23.35,
+      50.22
+     ]
+    },
+    {
+     "upstream": 366951,
+     "round": 15,
+     "date": "12/12/2026",
+     "time": "15:00",
+     "home": "Crystal Palace",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      37.44,
+      24.78,
+      37.77
+     ]
+    },
+    {
+     "upstream": 366952,
+     "round": 15,
+     "date": "12/12/2026",
+     "time": "15:00",
+     "home": "Fulham",
+     "away": "Brentford",
+     "played": false,
+     "chances": [
+      40.69,
+      25.41,
+      33.9
+     ]
+    },
+    {
+     "upstream": 366953,
+     "round": 15,
+     "date": "12/12/2026",
+     "time": "15:00",
+     "home": "Hull City",
+     "away": "Tottenham Hotspur",
+     "played": false,
+     "chances": [
+      23.13,
+      23.27,
+      53.6
+     ]
+    },
+    {
+     "upstream": 366954,
+     "round": 15,
+     "date": "12/12/2026",
+     "time": "15:00",
+     "home": "Ipswich Town",
+     "away": "Newcastle United",
+     "played": false,
+     "chances": [
+      25.25,
+      21.41,
+      53.34
+     ]
+    },
+    {
+     "upstream": 366955,
+     "round": 15,
+     "date": "12/12/2026",
+     "time": "15:00",
+     "home": "Liverpool",
+     "away": "Leeds United",
+     "played": false,
+     "chances": [
+      61.18,
+      21.51,
+      17.31
+     ]
+    },
+    {
+     "upstream": 366956,
+     "round": 15,
+     "date": "12/12/2026",
+     "time": "15:00",
+     "home": "Manchester City",
+     "away": "Chelsea",
+     "played": false,
+     "chances": [
+      66.2,
+      18.19,
+      15.61
+     ]
+    },
+    {
+     "upstream": 366957,
+     "round": 15,
+     "date": "12/12/2026",
+     "time": "15:00",
+     "home": "Sunderland",
+     "away": "Nottingham Forest",
+     "played": false,
+     "chances": [
+      32.97,
+      29.11,
+      37.92
+     ]
+    },
+    {
+     "upstream": 366958,
+     "round": 16,
+     "date": "19/12/2026",
+     "time": "15:00",
+     "home": "Arsenal",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      68.49,
+      19.65,
+      11.86
+     ]
+    },
+    {
+     "upstream": 366959,
+     "round": 16,
+     "date": "19/12/2026",
+     "time": "15:00",
+     "home": "Bournemouth",
+     "away": "Coventry City",
+     "played": false,
+     "chances": [
+      65.97,
+      19.56,
+      14.48
+     ]
+    },
+    {
+     "upstream": 366960,
+     "round": 16,
+     "date": "19/12/2026",
+     "time": "15:00",
+     "home": "Brentford",
+     "away": "Newcastle United",
+     "played": false,
+     "chances": [
+      47.09,
+      22.81,
+      30.1
+     ]
+    },
+    {
+     "upstream": 366961,
+     "round": 16,
+     "date": "19/12/2026",
+     "time": "15:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Ipswich Town",
+     "played": false,
+     "chances": [
+      72.86,
+      16.31,
+      10.83
+     ]
+    },
+    {
+     "upstream": 366962,
+     "round": 16,
+     "date": "19/12/2026",
+     "time": "15:00",
+     "home": "Chelsea",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      46.83,
+      22.9,
+      30.27
+     ]
+    },
+    {
+     "upstream": 366963,
+     "round": 16,
+     "date": "19/12/2026",
+     "time": "15:00",
+     "home": "Leeds United",
+     "away": "Fulham",
+     "played": false,
+     "chances": [
+      48.88,
+      25.73,
+      25.39
+     ]
+    },
+    {
+     "upstream": 366964,
+     "round": 16,
+     "date": "19/12/2026",
+     "time": "15:00",
+     "home": "Liverpool",
+     "away": "Tottenham Hotspur",
+     "played": false,
+     "chances": [
+      64.46,
+      19.64,
+      15.89
+     ]
+    },
+    {
+     "upstream": 366965,
+     "round": 16,
+     "date": "19/12/2026",
+     "time": "15:00",
+     "home": "Manchester City",
+     "away": "Hull City",
+     "played": false,
+     "chances": [
+      88.6,
+      8.608,
+      2.792
+     ]
+    },
+    {
+     "upstream": 366966,
+     "round": 16,
+     "date": "19/12/2026",
+     "time": "15:00",
+     "home": "Nottingham Forest",
+     "away": "Everton",
+     "played": false,
+     "chances": [
+      44.85,
+      28.88,
+      26.27
+     ]
+    },
+    {
+     "upstream": 366967,
+     "round": 16,
+     "date": "19/12/2026",
+     "time": "15:00",
+     "home": "Sunderland",
+     "away": "Crystal Palace",
+     "played": false,
+     "chances": [
+      36.7,
+      28.31,
+      34.99
+     ]
+    },
+    {
+     "upstream": 366968,
+     "round": 17,
+     "date": "26/12/2026",
+     "time": "15:00",
+     "home": "Aston Villa",
+     "away": "Leeds United",
+     "played": false,
+     "chances": [
+      52.85,
+      23.85,
+      23.3
+     ]
+    },
+    {
+     "upstream": 366969,
+     "round": 17,
+     "date": "26/12/2026",
+     "time": "15:00",
+     "home": "Coventry City",
+     "away": "Chelsea",
+     "played": false,
+     "chances": [
+      27.89,
+      22.6,
+      49.51
+     ]
+    },
+    {
+     "upstream": 366970,
+     "round": 17,
+     "date": "26/12/2026",
+     "time": "15:00",
+     "home": "Crystal Palace",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      19.61,
+      25.32,
+      55.07
+     ]
+    },
+    {
+     "upstream": 366971,
+     "round": 17,
+     "date": "26/12/2026",
+     "time": "15:00",
+     "home": "Everton",
+     "away": "Sunderland",
+     "played": false,
+     "chances": [
+      58.36,
+      26.26,
+      15.38
+     ]
+    },
+    {
+     "upstream": 366972,
+     "round": 17,
+     "date": "26/12/2026",
+     "time": "15:00",
+     "home": "Fulham",
+     "away": "Brighton & Hove Albion",
+     "played": false,
+     "chances": [
+      37.18,
+      25.33,
+      37.49
+     ]
+    },
+    {
+     "upstream": 366973,
+     "round": 17,
+     "date": "26/12/2026",
+     "time": "15:00",
+     "home": "Hull City",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      12.58,
+      18.36,
+      69.06
+     ]
+    },
+    {
+     "upstream": 366974,
+     "round": 17,
+     "date": "26/12/2026",
+     "time": "15:00",
+     "home": "Ipswich Town",
+     "away": "Brentford",
+     "played": false,
+     "chances": [
+      26.09,
+      22.54,
+      51.38
+     ]
+    },
+    {
+     "upstream": 366975,
+     "round": 17,
+     "date": "26/12/2026",
+     "time": "15:00",
+     "home": "Manchester United",
+     "away": "Nottingham Forest",
+     "played": false,
+     "chances": [
+      53.86,
+      23.48,
+      22.67
+     ]
+    },
+    {
+     "upstream": 366976,
+     "round": 17,
+     "date": "26/12/2026",
+     "time": "15:00",
+     "home": "Newcastle United",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      34.07,
+      22.53,
+      43.4
+     ]
+    },
+    {
+     "upstream": 366977,
+     "round": 17,
+     "date": "26/12/2026",
+     "time": "15:00",
+     "home": "Tottenham Hotspur",
+     "away": "Bournemouth",
+     "played": false,
+     "chances": [
+      41.82,
+      24.36,
+      33.82
+     ]
+    },
+    {
+     "upstream": 366978,
+     "round": 18,
+     "date": "30/12/2026",
+     "time": "20:00",
+     "home": "Aston Villa",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      40.46,
+      24.16,
+      35.37
+     ]
+    },
+    {
+     "upstream": 366979,
+     "round": 18,
+     "date": "30/12/2026",
+     "time": "20:00",
+     "home": "Coventry City",
+     "away": "Brentford",
+     "played": false,
+     "chances": [
+      27.28,
+      23.42,
+      49.31
+     ]
+    },
+    {
+     "upstream": 366980,
+     "round": 18,
+     "date": "30/12/2026",
+     "time": "20:00",
+     "home": "Crystal Palace",
+     "away": "Bournemouth",
+     "played": false,
+     "chances": [
+      39.68,
+      25.73,
+      34.59
+     ]
+    },
+    {
+     "upstream": 366981,
+     "round": 18,
+     "date": "30/12/2026",
+     "time": "20:00",
+     "home": "Everton",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      27.59,
+      25.68,
+      46.73
+     ]
+    },
+    {
+     "upstream": 366982,
+     "round": 18,
+     "date": "30/12/2026",
+     "time": "20:00",
+     "home": "Fulham",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      21.53,
+      26.01,
+      52.46
+     ]
+    },
+    {
+     "upstream": 366983,
+     "round": 18,
+     "date": "30/12/2026",
+     "time": "20:00",
+     "home": "Hull City",
+     "away": "Leeds United",
+     "played": false,
+     "chances": [
+      20.54,
+      23.78,
+      55.68
+     ]
+    },
+    {
+     "upstream": 366984,
+     "round": 18,
+     "date": "30/12/2026",
+     "time": "20:00",
+     "home": "Ipswich Town",
+     "away": "Chelsea",
+     "played": false,
+     "chances": [
+      26.66,
+      21.77,
+      51.57
+     ]
+    },
+    {
+     "upstream": 366985,
+     "round": 18,
+     "date": "30/12/2026",
+     "time": "20:00",
+     "home": "Manchester United",
+     "away": "Sunderland",
+     "played": false,
+     "chances": [
+      65.56,
+      20.45,
+      13.99
+     ]
+    },
+    {
+     "upstream": 366986,
+     "round": 18,
+     "date": "30/12/2026",
+     "time": "20:00",
+     "home": "Newcastle United",
+     "away": "Nottingham Forest",
+     "played": false,
+     "chances": [
+      54.27,
+      23.07,
+      22.66
+     ]
+    },
+    {
+     "upstream": 366987,
+     "round": 18,
+     "date": "30/12/2026",
+     "time": "20:00",
+     "home": "Tottenham Hotspur",
+     "away": "Brighton & Hove Albion",
+     "played": false,
+     "chances": [
+      36.75,
+      24.05,
+      39.2
+     ]
+    },
+    {
+     "upstream": 366988,
+     "round": 19,
+     "date": "02/01/2027",
+     "time": "15:00",
+     "home": "Arsenal",
+     "away": "Ipswich Town",
+     "played": false,
+     "chances": [
+      85.76,
+      11.04,
+      3.203
+     ]
+    },
+    {
+     "upstream": 366989,
+     "round": 19,
+     "date": "02/01/2027",
+     "time": "15:00",
+     "home": "Bournemouth",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      45.1,
+      24.23,
+      30.67
+     ]
+    },
+    {
+     "upstream": 366990,
+     "round": 19,
+     "date": "02/01/2027",
+     "time": "15:00",
+     "home": "Brentford",
+     "away": "Crystal Palace",
+     "played": false,
+     "chances": [
+      56.39,
+      22.95,
+      20.66
+     ]
+    },
+    {
+     "upstream": 366991,
+     "round": 19,
+     "date": "02/01/2027",
+     "time": "15:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      51.31,
+      22.38,
+      26.31
+     ]
+    },
+    {
+     "upstream": 366992,
+     "round": 19,
+     "date": "02/01/2027",
+     "time": "15:00",
+     "home": "Chelsea",
+     "away": "Newcastle United",
+     "played": false,
+     "chances": [
+      46.88,
+      22.02,
+      31.1
+     ]
+    },
+    {
+     "upstream": 366993,
+     "round": 19,
+     "date": "02/01/2027",
+     "time": "15:00",
+     "home": "Leeds United",
+     "away": "Everton",
+     "played": false,
+     "chances": [
+      46.22,
+      27.76,
+      26.02
+     ]
+    },
+    {
+     "upstream": 366994,
+     "round": 19,
+     "date": "02/01/2027",
+     "time": "15:00",
+     "home": "Liverpool",
+     "away": "Coventry City",
+     "played": false,
+     "chances": [
+      75.87,
+      15.33,
+      8.808
+     ]
+    },
+    {
+     "upstream": 366995,
+     "round": 19,
+     "date": "02/01/2027",
+     "time": "15:00",
+     "home": "Manchester City",
+     "away": "Tottenham Hotspur",
+     "played": false,
+     "chances": [
+      71.94,
+      16.64,
+      11.42
+     ]
+    },
+    {
+     "upstream": 366996,
+     "round": 19,
+     "date": "02/01/2027",
+     "time": "15:00",
+     "home": "Nottingham Forest",
+     "away": "Fulham",
+     "played": false,
+     "chances": [
+      47.57,
+      26.73,
+      25.7
+     ]
+    },
+    {
+     "upstream": 366997,
+     "round": 19,
+     "date": "02/01/2027",
+     "time": "15:00",
+     "home": "Sunderland",
+     "away": "Hull City",
+     "played": false,
+     "chances": [
+      59.21,
+      24.21,
+      16.58
+     ]
+    },
+    {
+     "upstream": 366998,
+     "round": 20,
+     "date": "06/01/2027",
+     "time": "20:00",
+     "home": "Arsenal",
+     "away": "Brentford",
+     "played": false,
+     "chances": [
+      69.11,
+      19.88,
+      11.0
+     ]
+    },
+    {
+     "upstream": 366999,
+     "round": 20,
+     "date": "06/01/2027",
+     "time": "20:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Bournemouth",
+     "played": false,
+     "chances": [
+      53.66,
+      22.7,
+      23.65
+     ]
+    },
+    {
+     "upstream": 367000,
+     "round": 20,
+     "date": "06/01/2027",
+     "time": "20:00",
+     "home": "Crystal Palace",
+     "away": "Chelsea",
+     "played": false,
+     "chances": [
+      38.94,
+      24.5,
+      36.56
+     ]
+    },
+    {
+     "upstream": 367001,
+     "round": 20,
+     "date": "06/01/2027",
+     "time": "20:00",
+     "home": "Everton",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      41.23,
+      27.19,
+      31.59
+     ]
+    },
+    {
+     "upstream": 367002,
+     "round": 20,
+     "date": "06/01/2027",
+     "time": "20:00",
+     "home": "Fulham",
+     "away": "Tottenham Hotspur",
+     "played": false,
+     "chances": [
+      47.84,
+      24.72,
+      27.44
+     ]
+    },
+    {
+     "upstream": 367003,
+     "round": 20,
+     "date": "06/01/2027",
+     "time": "20:00",
+     "home": "Ipswich Town",
+     "away": "Coventry City",
+     "played": false,
+     "chances": [
+      44.9,
+      23.75,
+      31.35
+     ]
+    },
+    {
+     "upstream": 367004,
+     "round": 20,
+     "date": "06/01/2027",
+     "time": "20:00",
+     "home": "Leeds United",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      28.19,
+      24.03,
+      47.77
+     ]
+    },
+    {
+     "upstream": 367005,
+     "round": 20,
+     "date": "06/01/2027",
+     "time": "20:00",
+     "home": "Manchester United",
+     "away": "Newcastle United",
+     "played": false,
+     "chances": [
+      48.39,
+      22.08,
+      29.53
+     ]
+    },
+    {
+     "upstream": 367006,
+     "round": 20,
+     "date": "06/01/2027",
+     "time": "20:00",
+     "home": "Nottingham Forest",
+     "away": "Hull City",
+     "played": false,
+     "chances": [
+      71.72,
+      18.92,
+      9.357
+     ]
+    },
+    {
+     "upstream": 367007,
+     "round": 20,
+     "date": "06/01/2027",
+     "time": "20:00",
+     "home": "Sunderland",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      22.12,
+      24.49,
+      53.39
+     ]
+    },
+    {
+     "upstream": 367008,
+     "round": 21,
+     "date": "16/01/2027",
+     "time": "15:00",
+     "home": "Aston Villa",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      48.26,
+      23.04,
+      28.7
+     ]
+    },
+    {
+     "upstream": 367009,
+     "round": 21,
+     "date": "16/01/2027",
+     "time": "15:00",
+     "home": "Bournemouth",
+     "away": "Ipswich Town",
+     "played": false,
+     "chances": [
+      67.59,
+      18.59,
+      13.82
+     ]
+    },
+    {
+     "upstream": 367010,
+     "round": 21,
+     "date": "16/01/2027",
+     "time": "15:00",
+     "home": "Brentford",
+     "away": "Brighton & Hove Albion",
+     "played": false,
+     "chances": [
+      44.37,
+      23.82,
+      31.81
+     ]
+    },
+    {
+     "upstream": 367011,
+     "round": 21,
+     "date": "16/01/2027",
+     "time": "15:00",
+     "home": "Chelsea",
+     "away": "Sunderland",
+     "played": false,
+     "chances": [
+      64.2,
+      20.7,
+      15.09
+     ]
+    },
+    {
+     "upstream": 367012,
+     "round": 21,
+     "date": "16/01/2027",
+     "time": "15:00",
+     "home": "Coventry City",
+     "away": "Everton",
+     "played": false,
+     "chances": [
+      30.25,
+      26.85,
+      42.9
+     ]
+    },
+    {
+     "upstream": 367013,
+     "round": 21,
+     "date": "16/01/2027",
+     "time": "15:00",
+     "home": "Hull City",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      6.51,
+      15.92,
+      77.57
+     ]
+    },
+    {
+     "upstream": 367014,
+     "round": 21,
+     "date": "16/01/2027",
+     "time": "15:00",
+     "home": "Liverpool",
+     "away": "Crystal Palace",
+     "played": false,
+     "chances": [
+      65.51,
+      20.1,
+      14.39
+     ]
+    },
+    {
+     "upstream": 367015,
+     "round": 21,
+     "date": "16/01/2027",
+     "time": "15:00",
+     "home": "Manchester City",
+     "away": "Nottingham Forest",
+     "played": false,
+     "chances": [
+      69.48,
+      18.72,
+      11.81
+     ]
+    },
+    {
+     "upstream": 367016,
+     "round": 21,
+     "date": "16/01/2027",
+     "time": "15:00",
+     "home": "Newcastle United",
+     "away": "Fulham",
+     "played": false,
+     "chances": [
+      55.75,
+      22.21,
+      22.05
+     ]
+    },
+    {
+     "upstream": 367017,
+     "round": 21,
+     "date": "16/01/2027",
+     "time": "15:00",
+     "home": "Tottenham Hotspur",
+     "away": "Leeds United",
+     "played": false,
+     "chances": [
+      44.05,
+      25.07,
+      30.88
+     ]
+    },
+    {
+     "upstream": 367018,
+     "round": 22,
+     "date": "23/01/2027",
+     "time": "15:00",
+     "home": "Arsenal",
+     "away": "Newcastle United",
+     "played": false,
+     "chances": [
+      68.4,
+      19.45,
+      12.16
+     ]
+    },
+    {
+     "upstream": 367019,
+     "round": 22,
+     "date": "23/01/2027",
+     "time": "15:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      36.36,
+      23.5,
+      40.14
+     ]
+    },
+    {
+     "upstream": 367020,
+     "round": 22,
+     "date": "23/01/2027",
+     "time": "15:00",
+     "home": "Crystal Palace",
+     "away": "Tottenham Hotspur",
+     "played": false,
+     "chances": [
+      45.24,
+      25.06,
+      29.7
+     ]
+    },
+    {
+     "upstream": 367021,
+     "round": 22,
+     "date": "23/01/2027",
+     "time": "15:00",
+     "home": "Everton",
+     "away": "Brentford",
+     "played": false,
+     "chances": [
+      42.22,
+      26.99,
+      30.78
+     ]
+    },
+    {
+     "upstream": 367022,
+     "round": 22,
+     "date": "23/01/2027",
+     "time": "15:00",
+     "home": "Fulham",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      39.71,
+      25.55,
+      34.74
+     ]
+    },
+    {
+     "upstream": 367023,
+     "round": 22,
+     "date": "23/01/2027",
+     "time": "15:00",
+     "home": "Ipswich Town",
+     "away": "Hull City",
+     "played": false,
+     "chances": [
+      55.89,
+      22.57,
+      21.55
+     ]
+    },
+    {
+     "upstream": 367024,
+     "round": 22,
+     "date": "23/01/2027",
+     "time": "15:00",
+     "home": "Leeds United",
+     "away": "Chelsea",
+     "played": false,
+     "chances": [
+      43.79,
+      24.27,
+      31.94
+     ]
+    },
+    {
+     "upstream": 367025,
+     "round": 22,
+     "date": "23/01/2027",
+     "time": "15:00",
+     "home": "Manchester United",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      40.72,
+      23.4,
+      35.88
+     ]
+    },
+    {
+     "upstream": 367026,
+     "round": 22,
+     "date": "23/01/2027",
+     "time": "15:00",
+     "home": "Nottingham Forest",
+     "away": "Bournemouth",
+     "played": false,
+     "chances": [
+      43.27,
+      26.27,
+      30.46
+     ]
+    },
+    {
+     "upstream": 367027,
+     "round": 22,
+     "date": "23/01/2027",
+     "time": "15:00",
+     "home": "Sunderland",
+     "away": "Coventry City",
+     "played": false,
+     "chances": [
+      48.39,
+      26.11,
+      25.5
+     ]
+    },
+    {
+     "upstream": 367028,
+     "round": 23,
+     "date": "30/01/2027",
+     "time": "15:00",
+     "home": "Aston Villa",
+     "away": "Ipswich Town",
+     "played": false,
+     "chances": [
+      70.22,
+      17.5,
+      12.27
+     ]
+    },
+    {
+     "upstream": 367029,
+     "round": 23,
+     "date": "30/01/2027",
+     "time": "15:00",
+     "home": "Bournemouth",
+     "away": "Fulham",
+     "played": false,
+     "chances": [
+      52.08,
+      24.17,
+      23.75
+     ]
+    },
+    {
+     "upstream": 367030,
+     "round": 23,
+     "date": "30/01/2027",
+     "time": "15:00",
+     "home": "Brentford",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      47.24,
+      23.07,
+      29.69
+     ]
+    },
+    {
+     "upstream": 367031,
+     "round": 23,
+     "date": "30/01/2027",
+     "time": "15:00",
+     "home": "Chelsea",
+     "away": "Nottingham Forest",
+     "played": false,
+     "chances": [
+      52.4,
+      23.51,
+      24.09
+     ]
+    },
+    {
+     "upstream": 367032,
+     "round": 23,
+     "date": "30/01/2027",
+     "time": "15:00",
+     "home": "Coventry City",
+     "away": "Leeds United",
+     "played": false,
+     "chances": [
+      30.63,
+      25.2,
+      44.17
+     ]
+    },
+    {
+     "upstream": 367033,
+     "round": 23,
+     "date": "30/01/2027",
+     "time": "15:00",
+     "home": "Hull City",
+     "away": "Crystal Palace",
+     "played": false,
+     "chances": [
+      24.03,
+      24.9,
+      51.07
+     ]
+    },
+    {
+     "upstream": 367034,
+     "round": 23,
+     "date": "30/01/2027",
+     "time": "15:00",
+     "home": "Liverpool",
+     "away": "Everton",
+     "played": false,
+     "chances": [
+      60.75,
+      22.82,
+      16.44
+     ]
+    },
+    {
+     "upstream": 367035,
+     "round": 23,
+     "date": "30/01/2027",
+     "time": "15:00",
+     "home": "Manchester City",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      44.14,
+      25.7,
+      30.17
+     ]
+    },
+    {
+     "upstream": 367036,
+     "round": 23,
+     "date": "30/01/2027",
+     "time": "15:00",
+     "home": "Newcastle United",
+     "away": "Brighton & Hove Albion",
+     "played": false,
+     "chances": [
+      46.04,
+      22.74,
+      31.21
+     ]
+    },
+    {
+     "upstream": 367037,
+     "round": 23,
+     "date": "30/01/2027",
+     "time": "15:00",
+     "home": "Tottenham Hotspur",
+     "away": "Sunderland",
+     "played": false,
+     "chances": [
+      56.71,
+      23.86,
+      19.43
+     ]
+    },
+    {
+     "upstream": 367038,
+     "round": 24,
+     "date": "06/02/2027",
+     "time": "15:00",
+     "home": "Arsenal",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      61.08,
+      22.79,
+      16.12
+     ]
+    },
+    {
+     "upstream": 367039,
+     "round": 24,
+     "date": "06/02/2027",
+     "time": "15:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Hull City",
+     "played": false,
+     "chances": [
+      80.09,
+      13.61,
+      6.298
+     ]
+    },
+    {
+     "upstream": 367040,
+     "round": 24,
+     "date": "06/02/2027",
+     "time": "15:00",
+     "home": "Crystal Palace",
+     "away": "Coventry City",
+     "played": false,
+     "chances": [
+      58.17,
+      22.75,
+      19.08
+     ]
+    },
+    {
+     "upstream": 367041,
+     "round": 24,
+     "date": "06/02/2027",
+     "time": "15:00",
+     "home": "Everton",
+     "away": "Newcastle United",
+     "played": false,
+     "chances": [
+      41.43,
+      25.92,
+      32.65
+     ]
+    },
+    {
+     "upstream": 367042,
+     "round": 24,
+     "date": "06/02/2027",
+     "time": "15:00",
+     "home": "Fulham",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      26.21,
+      23.65,
+      50.13
+     ]
+    },
+    {
+     "upstream": 367043,
+     "round": 24,
+     "date": "06/02/2027",
+     "time": "15:00",
+     "home": "Ipswich Town",
+     "away": "Tottenham Hotspur",
+     "played": false,
+     "chances": [
+      32.39,
+      23.54,
+      44.07
+     ]
+    },
+    {
+     "upstream": 367044,
+     "round": 24,
+     "date": "06/02/2027",
+     "time": "15:00",
+     "home": "Leeds United",
+     "away": "Bournemouth",
+     "played": false,
+     "chances": [
+      44.54,
+      25.39,
+      30.07
+     ]
+    },
+    {
+     "upstream": 367045,
+     "round": 24,
+     "date": "06/02/2027",
+     "time": "15:00",
+     "home": "Manchester United",
+     "away": "Chelsea",
+     "played": false,
+     "chances": [
+      50.1,
+      21.9,
+      28.0
+     ]
+    },
+    {
+     "upstream": 367046,
+     "round": 24,
+     "date": "06/02/2027",
+     "time": "15:00",
+     "home": "Nottingham Forest",
+     "away": "Brentford",
+     "played": false,
+     "chances": [
+      41.74,
+      26.1,
+      32.16
+     ]
+    },
+    {
+     "upstream": 367047,
+     "round": 24,
+     "date": "06/02/2027",
+     "time": "15:00",
+     "home": "Sunderland",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      28.29,
+      26.25,
+      45.46
+     ]
+    },
+    {
+     "upstream": 367048,
+     "round": 25,
+     "date": "10/02/2027",
+     "time": "20:00",
+     "home": "Aston Villa",
+     "away": "Bournemouth",
+     "played": false,
+     "chances": [
+      50.61,
+      23.48,
+      25.91
+     ]
+    },
+    {
+     "upstream": 367049,
+     "round": 25,
+     "date": "10/02/2027",
+     "time": "20:00",
+     "home": "Coventry City",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      20.45,
+      21.42,
+      58.12
+     ]
+    },
+    {
+     "upstream": 367050,
+     "round": 25,
+     "date": "10/02/2027",
+     "time": "20:00",
+     "home": "Crystal Palace",
+     "away": "Brentford",
+     "played": false,
+     "chances": [
+      38.17,
+      25.48,
+      36.35
+     ]
+    },
+    {
+     "upstream": 367051,
+     "round": 25,
+     "date": "10/02/2027",
+     "time": "20:00",
+     "home": "Everton",
+     "away": "Leeds United",
+     "played": false,
+     "chances": [
+      45.86,
+      27.97,
+      26.17
+     ]
+    },
+    {
+     "upstream": 367052,
+     "round": 25,
+     "date": "10/02/2027",
+     "time": "20:00",
+     "home": "Fulham",
+     "away": "Nottingham Forest",
+     "played": false,
+     "chances": [
+      45.02,
+      27.04,
+      27.95
+     ]
+    },
+    {
+     "upstream": 367053,
+     "round": 25,
+     "date": "10/02/2027",
+     "time": "20:00",
+     "home": "Hull City",
+     "away": "Sunderland",
+     "played": false,
+     "chances": [
+      30.87,
+      27.61,
+      41.51
+     ]
+    },
+    {
+     "upstream": 367054,
+     "round": 25,
+     "date": "10/02/2027",
+     "time": "20:00",
+     "home": "Ipswich Town",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      11.51,
+      18.76,
+      69.73
+     ]
+    },
+    {
+     "upstream": 367055,
+     "round": 25,
+     "date": "10/02/2027",
+     "time": "20:00",
+     "home": "Manchester United",
+     "away": "Brighton & Hove Albion",
+     "played": false,
+     "chances": [
+      45.66,
+      23.08,
+      31.26
+     ]
+    },
+    {
+     "upstream": 367056,
+     "round": 25,
+     "date": "10/02/2027",
+     "time": "20:00",
+     "home": "Newcastle United",
+     "away": "Chelsea",
+     "played": false,
+     "chances": [
+      50.48,
+      21.57,
+      27.95
+     ]
+    },
+    {
+     "upstream": 367057,
+     "round": 25,
+     "date": "10/02/2027",
+     "time": "20:00",
+     "home": "Tottenham Hotspur",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      25.78,
+      22.28,
+      51.94
+     ]
+    },
+    {
+     "upstream": 367058,
+     "round": 26,
+     "date": "20/02/2027",
+     "time": "15:00",
+     "home": "Arsenal",
+     "away": "Fulham",
+     "played": false,
+     "chances": [
+      74.18,
+      18.4,
+      7.414
+     ]
+    },
+    {
+     "upstream": 367059,
+     "round": 26,
+     "date": "20/02/2027",
+     "time": "15:00",
+     "home": "Bournemouth",
+     "away": "Crystal Palace",
+     "played": false,
+     "chances": [
+      54.47,
+      23.66,
+      21.86
+     ]
+    },
+    {
+     "upstream": 367060,
+     "round": 26,
+     "date": "20/02/2027",
+     "time": "15:00",
+     "home": "Brentford",
+     "away": "Coventry City",
+     "played": false,
+     "chances": [
+      67.74,
+      18.73,
+      13.53
+     ]
+    },
+    {
+     "upstream": 367061,
+     "round": 26,
+     "date": "20/02/2027",
+     "time": "15:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Tottenham Hotspur",
+     "played": false,
+     "chances": [
+      59.26,
+      21.17,
+      19.57
+     ]
+    },
+    {
+     "upstream": 367062,
+     "round": 26,
+     "date": "20/02/2027",
+     "time": "15:00",
+     "home": "Chelsea",
+     "away": "Ipswich Town",
+     "played": false,
+     "chances": [
+      69.24,
+      17.23,
+      13.53
+     ]
+    },
+    {
+     "upstream": 367063,
+     "round": 26,
+     "date": "20/02/2027",
+     "time": "15:00",
+     "home": "Leeds United",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      42.0,
+      25.43,
+      32.57
+     ]
+    },
+    {
+     "upstream": 367064,
+     "round": 26,
+     "date": "20/02/2027",
+     "time": "15:00",
+     "home": "Liverpool",
+     "away": "Hull City",
+     "played": false,
+     "chances": [
+      83.79,
+      11.62,
+      4.588
+     ]
+    },
+    {
+     "upstream": 367065,
+     "round": 26,
+     "date": "20/02/2027",
+     "time": "15:00",
+     "home": "Manchester City",
+     "away": "Newcastle United",
+     "played": false,
+     "chances": [
+      64.62,
+      18.66,
+      16.73
+     ]
+    },
+    {
+     "upstream": 367066,
+     "round": 26,
+     "date": "20/02/2027",
+     "time": "15:00",
+     "home": "Nottingham Forest",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      41.03,
+      25.43,
+      33.54
+     ]
+    },
+    {
+     "upstream": 367067,
+     "round": 26,
+     "date": "20/02/2027",
+     "time": "15:00",
+     "home": "Sunderland",
+     "away": "Everton",
+     "played": false,
+     "chances": [
+      31.85,
+      30.18,
+      37.97
+     ]
+    },
+    {
+     "upstream": 367068,
+     "round": 27,
+     "date": "27/02/2027",
+     "time": "15:00",
+     "home": "Aston Villa",
+     "away": "Chelsea",
+     "played": false,
+     "chances": [
+      49.82,
+      22.59,
+      27.59
+     ]
+    },
+    {
+     "upstream": 367069,
+     "round": 27,
+     "date": "27/02/2027",
+     "time": "15:00",
+     "home": "Coventry City",
+     "away": "Bournemouth",
+     "played": false,
+     "chances": [
+      28.64,
+      23.94,
+      47.43
+     ]
+    },
+    {
+     "upstream": 367070,
+     "round": 27,
+     "date": "27/02/2027",
+     "time": "15:00",
+     "home": "Crystal Palace",
+     "away": "Sunderland",
+     "played": false,
+     "chances": [
+      54.4,
+      25.75,
+      19.85
+     ]
+    },
+    {
+     "upstream": 367071,
+     "round": 27,
+     "date": "27/02/2027",
+     "time": "15:00",
+     "home": "Everton",
+     "away": "Nottingham Forest",
+     "played": false,
+     "chances": [
+      46.42,
+      28.73,
+      24.86
+     ]
+    },
+    {
+     "upstream": 367072,
+     "round": 27,
+     "date": "27/02/2027",
+     "time": "15:00",
+     "home": "Fulham",
+     "away": "Leeds United",
+     "played": false,
+     "chances": [
+      44.4,
+      26.36,
+      29.23
+     ]
+    },
+    {
+     "upstream": 367073,
+     "round": 27,
+     "date": "27/02/2027",
+     "time": "15:00",
+     "home": "Hull City",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      9.011,
+      15.25,
+      75.74
+     ]
+    },
+    {
+     "upstream": 367074,
+     "round": 27,
+     "date": "27/02/2027",
+     "time": "15:00",
+     "home": "Ipswich Town",
+     "away": "Brighton & Hove Albion",
+     "played": false,
+     "chances": [
+      23.14,
+      21.66,
+      55.2
+     ]
+    },
+    {
+     "upstream": 367075,
+     "round": 27,
+     "date": "27/02/2027",
+     "time": "15:00",
+     "home": "Manchester United",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      28.79,
+      25.2,
+      46.01
+     ]
+    },
+    {
+     "upstream": 367076,
+     "round": 27,
+     "date": "27/02/2027",
+     "time": "15:00",
+     "home": "Newcastle United",
+     "away": "Brentford",
+     "played": false,
+     "chances": [
+      49.72,
+      22.41,
+      27.88
+     ]
+    },
+    {
+     "upstream": 367077,
+     "round": 27,
+     "date": "27/02/2027",
+     "time": "15:00",
+     "home": "Tottenham Hotspur",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      32.11,
+      23.76,
+      44.12
+     ]
+    },
+    {
+     "upstream": 367078,
+     "round": 28,
+     "date": "03/03/2027",
+     "time": "20:00",
+     "home": "Arsenal",
+     "away": "Crystal Palace",
+     "played": false,
+     "chances": [
+      76.14,
+      17.4,
+      6.459
+     ]
+    },
+    {
+     "upstream": 367079,
+     "round": 28,
+     "date": "03/03/2027",
+     "time": "20:00",
+     "home": "Bournemouth",
+     "away": "Tottenham Hotspur",
+     "played": false,
+     "chances": [
+      53.34,
+      22.89,
+      23.77
+     ]
+    },
+    {
+     "upstream": 367080,
+     "round": 28,
+     "date": "03/03/2027",
+     "time": "20:00",
+     "home": "Brentford",
+     "away": "Ipswich Town",
+     "played": false,
+     "chances": [
+      69.33,
+      17.78,
+      12.89
+     ]
+    },
+    {
+     "upstream": 367081,
+     "round": 28,
+     "date": "03/03/2027",
+     "time": "20:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Fulham",
+     "played": false,
+     "chances": [
+      58.02,
+      22.41,
+      19.58
+     ]
+    },
+    {
+     "upstream": 367082,
+     "round": 28,
+     "date": "03/03/2027",
+     "time": "20:00",
+     "home": "Chelsea",
+     "away": "Coventry City",
+     "played": false,
+     "chances": [
+      67.65,
+      18.13,
+      14.22
+     ]
+    },
+    {
+     "upstream": 367083,
+     "round": 28,
+     "date": "03/03/2027",
+     "time": "20:00",
+     "home": "Leeds United",
+     "away": "Hull City",
+     "played": false,
+     "chances": [
+      72.84,
+      17.92,
+      9.242
+     ]
+    },
+    {
+     "upstream": 367084,
+     "round": 28,
+     "date": "03/03/2027",
+     "time": "20:00",
+     "home": "Liverpool",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      56.47,
+      21.96,
+      21.57
+     ]
+    },
+    {
+     "upstream": 367085,
+     "round": 28,
+     "date": "03/03/2027",
+     "time": "20:00",
+     "home": "Manchester City",
+     "away": "Everton",
+     "played": false,
+     "chances": [
+      68.5,
+      19.62,
+      11.87
+     ]
+    },
+    {
+     "upstream": 367086,
+     "round": 28,
+     "date": "03/03/2027",
+     "time": "20:00",
+     "home": "Nottingham Forest",
+     "away": "Newcastle United",
+     "played": false,
+     "chances": [
+      40.91,
+      25.09,
+      34.0
+     ]
+    },
+    {
+     "upstream": 367087,
+     "round": 28,
+     "date": "03/03/2027",
+     "time": "20:00",
+     "home": "Sunderland",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      28.56,
+      25.35,
+      46.09
+     ]
+    },
+    {
+     "upstream": 367088,
+     "round": 29,
+     "date": "13/03/2027",
+     "time": "15:00",
+     "home": "Aston Villa",
+     "away": "Hull City",
+     "played": false,
+     "chances": [
+      77.81,
+      14.89,
+      7.302
+     ]
+    },
+    {
+     "upstream": 367089,
+     "round": 29,
+     "date": "13/03/2027",
+     "time": "15:00",
+     "home": "Bournemouth",
+     "away": "Newcastle United",
+     "played": false,
+     "chances": [
+      45.19,
+      23.24,
+      31.57
+     ]
+    },
+    {
+     "upstream": 367090,
+     "round": 29,
+     "date": "13/03/2027",
+     "time": "15:00",
+     "home": "Chelsea",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      27.53,
+      24.63,
+      47.83
+     ]
+    },
+    {
+     "upstream": 367091,
+     "round": 29,
+     "date": "13/03/2027",
+     "time": "15:00",
+     "home": "Coventry City",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      15.51,
+      18.83,
+      65.65
+     ]
+    },
+    {
+     "upstream": 367092,
+     "round": 29,
+     "date": "13/03/2027",
+     "time": "15:00",
+     "home": "Crystal Palace",
+     "away": "Fulham",
+     "played": false,
+     "chances": [
+      43.96,
+      26.43,
+      29.62
+     ]
+    },
+    {
+     "upstream": 367093,
+     "round": 29,
+     "date": "13/03/2027",
+     "time": "15:00",
+     "home": "Leeds United",
+     "away": "Brighton & Hove Albion",
+     "played": false,
+     "chances": [
+      39.43,
+      25.31,
+      35.26
+     ]
+    },
+    {
+     "upstream": 367094,
+     "round": 29,
+     "date": "13/03/2027",
+     "time": "15:00",
+     "home": "Liverpool",
+     "away": "Ipswich Town",
+     "played": false,
+     "chances": [
+      77.26,
+      14.4,
+      8.339
+     ]
+    },
+    {
+     "upstream": 367095,
+     "round": 29,
+     "date": "13/03/2027",
+     "time": "15:00",
+     "home": "Manchester United",
+     "away": "Everton",
+     "played": false,
+     "chances": [
+      52.79,
+      24.4,
+      22.81
+     ]
+    },
+    {
+     "upstream": 367096,
+     "round": 29,
+     "date": "13/03/2027",
+     "time": "15:00",
+     "home": "Sunderland",
+     "away": "Brentford",
+     "played": false,
+     "chances": [
+      29.17,
+      26.26,
+      44.57
+     ]
+    },
+    {
+     "upstream": 367097,
+     "round": 29,
+     "date": "13/03/2027",
+     "time": "15:00",
+     "home": "Tottenham Hotspur",
+     "away": "Nottingham Forest",
+     "played": false,
+     "chances": [
+      44.7,
+      25.68,
+      29.62
+     ]
+    },
+    {
+     "upstream": 367098,
+     "round": 30,
+     "date": "20/03/2027",
+     "time": "15:00",
+     "home": "Arsenal",
+     "away": "Sunderland",
+     "played": false,
+     "chances": [
+      82.22,
+      14.62,
+      3.165
+     ]
+    },
+    {
+     "upstream": 367099,
+     "round": 30,
+     "date": "20/03/2027",
+     "time": "15:00",
+     "home": "Brentford",
+     "away": "Bournemouth",
+     "played": false,
+     "chances": [
+      49.6,
+      23.55,
+      26.86
+     ]
+    },
+    {
+     "upstream": 367100,
+     "round": 30,
+     "date": "20/03/2027",
+     "time": "15:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Coventry City",
+     "played": false,
+     "chances": [
+      71.35,
+      17.26,
+      11.39
+     ]
+    },
+    {
+     "upstream": 367101,
+     "round": 30,
+     "date": "20/03/2027",
+     "time": "15:00",
+     "home": "Everton",
+     "away": "Tottenham Hotspur",
+     "played": false,
+     "chances": [
+      49.39,
+      26.03,
+      24.58
+     ]
+    },
+    {
+     "upstream": 367102,
+     "round": 30,
+     "date": "20/03/2027",
+     "time": "15:00",
+     "home": "Fulham",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      32.54,
+      25.11,
+      42.35
+     ]
+    },
+    {
+     "upstream": 367103,
+     "round": 30,
+     "date": "20/03/2027",
+     "time": "15:00",
+     "home": "Hull City",
+     "away": "Chelsea",
+     "played": false,
+     "chances": [
+      18.38,
+      20.58,
+      61.03
+     ]
+    },
+    {
+     "upstream": 367104,
+     "round": 30,
+     "date": "20/03/2027",
+     "time": "15:00",
+     "home": "Ipswich Town",
+     "away": "Crystal Palace",
+     "played": false,
+     "chances": [
+      33.52,
+      24.82,
+      41.66
+     ]
+    },
+    {
+     "upstream": 367105,
+     "round": 30,
+     "date": "20/03/2027",
+     "time": "15:00",
+     "home": "Manchester City",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      64.73,
+      18.83,
+      16.44
+     ]
+    },
+    {
+     "upstream": 367106,
+     "round": 30,
+     "date": "20/03/2027",
+     "time": "15:00",
+     "home": "Newcastle United",
+     "away": "Leeds United",
+     "played": false,
+     "chances": [
+      53.59,
+      22.66,
+      23.74
+     ]
+    },
+    {
+     "upstream": 367107,
+     "round": 30,
+     "date": "20/03/2027",
+     "time": "15:00",
+     "home": "Nottingham Forest",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      40.75,
+      26.28,
+      32.97
+     ]
+    },
+    {
+     "upstream": 367108,
+     "round": 31,
+     "date": "10/04/2027",
+     "time": "14:00",
+     "home": "Aston Villa",
+     "away": "Brighton & Hove Albion",
+     "played": false,
+     "chances": [
+      45.38,
+      23.83,
+      30.79
+     ]
+    },
+    {
+     "upstream": 367109,
+     "round": 31,
+     "date": "10/04/2027",
+     "time": "14:00",
+     "home": "Bournemouth",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      30.89,
+      23.46,
+      45.65
+     ]
+    },
+    {
+     "upstream": 367110,
+     "round": 31,
+     "date": "10/04/2027",
+     "time": "14:00",
+     "home": "Chelsea",
+     "away": "Fulham",
+     "played": false,
+     "chances": [
+      53.88,
+      22.66,
+      23.46
+     ]
+    },
+    {
+     "upstream": 367111,
+     "round": 31,
+     "date": "10/04/2027",
+     "time": "14:00",
+     "home": "Coventry City",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      12.18,
+      19.99,
+      67.83
+     ]
+    },
+    {
+     "upstream": 367112,
+     "round": 31,
+     "date": "10/04/2027",
+     "time": "14:00",
+     "home": "Crystal Palace",
+     "away": "Everton",
+     "played": false,
+     "chances": [
+      41.32,
+      28.36,
+      30.31
+     ]
+    },
+    {
+     "upstream": 367113,
+     "round": 31,
+     "date": "10/04/2027",
+     "time": "14:00",
+     "home": "Leeds United",
+     "away": "Nottingham Forest",
+     "played": false,
+     "chances": [
+      47.35,
+      26.7,
+      25.96
+     ]
+    },
+    {
+     "upstream": 367114,
+     "round": 31,
+     "date": "10/04/2027",
+     "time": "14:00",
+     "home": "Liverpool",
+     "away": "Newcastle United",
+     "played": false,
+     "chances": [
+      56.59,
+      21.11,
+      22.3
+     ]
+    },
+    {
+     "upstream": 367115,
+     "round": 31,
+     "date": "10/04/2027",
+     "time": "14:00",
+     "home": "Manchester United",
+     "away": "Hull City",
+     "played": false,
+     "chances": [
+      78.09,
+      14.34,
+      7.567
+     ]
+    },
+    {
+     "upstream": 367116,
+     "round": 31,
+     "date": "10/04/2027",
+     "time": "14:00",
+     "home": "Sunderland",
+     "away": "Ipswich Town",
+     "played": false,
+     "chances": [
+      50.17,
+      25.17,
+      24.66
+     ]
+    },
+    {
+     "upstream": 367117,
+     "round": 31,
+     "date": "10/04/2027",
+     "time": "14:00",
+     "home": "Tottenham Hotspur",
+     "away": "Brentford",
+     "played": false,
+     "chances": [
+      40.27,
+      24.17,
+      35.56
+     ]
+    },
+    {
+     "upstream": 367118,
+     "round": 32,
+     "date": "17/04/2027",
+     "time": "14:00",
+     "home": "Arsenal",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      68.2,
+      20.34,
+      11.46
+     ]
+    },
+    {
+     "upstream": 367119,
+     "round": 32,
+     "date": "17/04/2027",
+     "time": "14:00",
+     "home": "Brentford",
+     "away": "Leeds United",
+     "played": false,
+     "chances": [
+      51.84,
+      23.95,
+      24.21
+     ]
+    },
+    {
+     "upstream": 367120,
+     "round": 32,
+     "date": "17/04/2027",
+     "time": "14:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Chelsea",
+     "played": false,
+     "chances": [
+      52.87,
+      21.89,
+      25.24
+     ]
+    },
+    {
+     "upstream": 367121,
+     "round": 32,
+     "date": "17/04/2027",
+     "time": "14:00",
+     "home": "Everton",
+     "away": "Bournemouth",
+     "played": false,
+     "chances": [
+      43.75,
+      27.16,
+      29.1
+     ]
+    },
+    {
+     "upstream": 367122,
+     "round": 32,
+     "date": "17/04/2027",
+     "time": "14:00",
+     "home": "Fulham",
+     "away": "Sunderland",
+     "played": false,
+     "chances": [
+      56.99,
+      25.02,
+      17.99
+     ]
+    },
+    {
+     "upstream": 367123,
+     "round": 32,
+     "date": "17/04/2027",
+     "time": "14:00",
+     "home": "Hull City",
+     "away": "Coventry City",
+     "played": false,
+     "chances": [
+      34.3,
+      25.39,
+      40.31
+     ]
+    },
+    {
+     "upstream": 367124,
+     "round": 32,
+     "date": "17/04/2027",
+     "time": "14:00",
+     "home": "Ipswich Town",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      25.4,
+      21.75,
+      52.86
+     ]
+    },
+    {
+     "upstream": 367125,
+     "round": 32,
+     "date": "17/04/2027",
+     "time": "14:00",
+     "home": "Manchester City",
+     "away": "Crystal Palace",
+     "played": false,
+     "chances": [
+      72.88,
+      16.9,
+      10.21
+     ]
+    },
+    {
+     "upstream": 367126,
+     "round": 32,
+     "date": "17/04/2027",
+     "time": "14:00",
+     "home": "Newcastle United",
+     "away": "Tottenham Hotspur",
+     "played": false,
+     "chances": [
+      56.97,
+      21.05,
+      21.98
+     ]
+    },
+    {
+     "upstream": 367127,
+     "round": 32,
+     "date": "17/04/2027",
+     "time": "14:00",
+     "home": "Nottingham Forest",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      33.53,
+      25.98,
+      40.49
+     ]
+    },
+    {
+     "upstream": 367128,
+     "round": 33,
+     "date": "24/04/2027",
+     "time": "14:00",
+     "home": "Aston Villa",
+     "away": "Coventry City",
+     "played": false,
+     "chances": [
+      68.65,
+      18.46,
+      12.89
+     ]
+    },
+    {
+     "upstream": 367129,
+     "round": 33,
+     "date": "24/04/2027",
+     "time": "14:00",
+     "home": "Bournemouth",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      25.99,
+      25.9,
+      48.11
+     ]
+    },
+    {
+     "upstream": 367130,
+     "round": 33,
+     "date": "24/04/2027",
+     "time": "14:00",
+     "home": "Brentford",
+     "away": "Fulham",
+     "played": false,
+     "chances": [
+      54.0,
+      23.51,
+      22.49
+     ]
+    },
+    {
+     "upstream": 367131,
+     "round": 33,
+     "date": "24/04/2027",
+     "time": "14:00",
+     "home": "Chelsea",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      32.35,
+      22.42,
+      45.22
+     ]
+    },
+    {
+     "upstream": 367132,
+     "round": 33,
+     "date": "24/04/2027",
+     "time": "14:00",
+     "home": "Everton",
+     "away": "Brighton & Hove Albion",
+     "played": false,
+     "chances": [
+      38.7,
+      27.03,
+      34.27
+     ]
+    },
+    {
+     "upstream": 367133,
+     "round": 33,
+     "date": "24/04/2027",
+     "time": "14:00",
+     "home": "Leeds United",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      34.7,
+      25.26,
+      40.05
+     ]
+    },
+    {
+     "upstream": 367134,
+     "round": 33,
+     "date": "24/04/2027",
+     "time": "14:00",
+     "home": "Manchester United",
+     "away": "Crystal Palace",
+     "played": false,
+     "chances": [
+      57.72,
+      22.02,
+      20.25
+     ]
+    },
+    {
+     "upstream": 367135,
+     "round": 33,
+     "date": "24/04/2027",
+     "time": "14:00",
+     "home": "Newcastle United",
+     "away": "Ipswich Town",
+     "played": false,
+     "chances": [
+      70.89,
+      16.59,
+      12.52
+     ]
+    },
+    {
+     "upstream": 367136,
+     "round": 33,
+     "date": "24/04/2027",
+     "time": "14:00",
+     "home": "Nottingham Forest",
+     "away": "Sunderland",
+     "played": false,
+     "chances": [
+      57.97,
+      25.47,
+      16.56
+     ]
+    },
+    {
+     "upstream": 367137,
+     "round": 33,
+     "date": "24/04/2027",
+     "time": "14:00",
+     "home": "Tottenham Hotspur",
+     "away": "Hull City",
+     "played": false,
+     "chances": [
+      70.54,
+      18.11,
+      11.36
+     ]
+    },
+    {
+     "upstream": 367138,
+     "round": 34,
+     "date": "01/05/2027",
+     "time": "14:00",
+     "home": "Arsenal",
+     "away": "Tottenham Hotspur",
+     "played": false,
+     "chances": [
+      75.29,
+      17.05,
+      7.66
+     ]
+    },
+    {
+     "upstream": 367139,
+     "round": 34,
+     "date": "01/05/2027",
+     "time": "14:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Nottingham Forest",
+     "played": false,
+     "chances": [
+      56.53,
+      23.36,
+      20.11
+     ]
+    },
+    {
+     "upstream": 367140,
+     "round": 34,
+     "date": "01/05/2027",
+     "time": "14:00",
+     "home": "Coventry City",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      26.59,
+      22.61,
+      50.79
+     ]
+    },
+    {
+     "upstream": 367141,
+     "round": 34,
+     "date": "01/05/2027",
+     "time": "14:00",
+     "home": "Crystal Palace",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      37.2,
+      25.59,
+      37.21
+     ]
+    },
+    {
+     "upstream": 367142,
+     "round": 34,
+     "date": "01/05/2027",
+     "time": "14:00",
+     "home": "Fulham",
+     "away": "Everton",
+     "played": false,
+     "chances": [
+      43.89,
+      28.09,
+      28.02
+     ]
+    },
+    {
+     "upstream": 367143,
+     "round": 34,
+     "date": "01/05/2027",
+     "time": "14:00",
+     "home": "Hull City",
+     "away": "Bournemouth",
+     "played": false,
+     "chances": [
+      18.95,
+      22.11,
+      58.94
+     ]
+    },
+    {
+     "upstream": 367144,
+     "round": 34,
+     "date": "01/05/2027",
+     "time": "14:00",
+     "home": "Ipswich Town",
+     "away": "Leeds United",
+     "played": false,
+     "chances": [
+      29.42,
+      24.34,
+      46.24
+     ]
+    },
+    {
+     "upstream": 367145,
+     "round": 34,
+     "date": "01/05/2027",
+     "time": "14:00",
+     "home": "Liverpool",
+     "away": "Chelsea",
+     "played": false,
+     "chances": [
+      58.27,
+      20.76,
+      20.98
+     ]
+    },
+    {
+     "upstream": 367146,
+     "round": 34,
+     "date": "01/05/2027",
+     "time": "14:00",
+     "home": "Manchester City",
+     "away": "Brentford",
+     "played": false,
+     "chances": [
+      65.43,
+      19.02,
+      15.55
+     ]
+    },
+    {
+     "upstream": 367147,
+     "round": 34,
+     "date": "01/05/2027",
+     "time": "14:00",
+     "home": "Sunderland",
+     "away": "Newcastle United",
+     "played": false,
+     "chances": [
+      28.45,
+      24.95,
+      46.6
+     ]
+    },
+    {
+     "upstream": 367148,
+     "round": 35,
+     "date": "08/05/2027",
+     "time": "14:00",
+     "home": "Bournemouth",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      45.34,
+      23.52,
+      31.15
+     ]
+    },
+    {
+     "upstream": 367149,
+     "round": 35,
+     "date": "08/05/2027",
+     "time": "14:00",
+     "home": "Brentford",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      47.0,
+      23.76,
+      29.23
+     ]
+    },
+    {
+     "upstream": 367150,
+     "round": 35,
+     "date": "08/05/2027",
+     "time": "14:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Sunderland",
+     "played": false,
+     "chances": [
+      68.02,
+      19.95,
+      12.03
+     ]
+    },
+    {
+     "upstream": 367151,
+     "round": 35,
+     "date": "08/05/2027",
+     "time": "14:00",
+     "home": "Everton",
+     "away": "Hull City",
+     "played": false,
+     "chances": [
+      72.13,
+      19.34,
+      8.533
+     ]
+    },
+    {
+     "upstream": 367152,
+     "round": 35,
+     "date": "08/05/2027",
+     "time": "14:00",
+     "home": "Fulham",
+     "away": "Ipswich Town",
+     "played": false,
+     "chances": [
+      62.42,
+      21.01,
+      16.57
+     ]
+    },
+    {
+     "upstream": 367153,
+     "round": 35,
+     "date": "08/05/2027",
+     "time": "14:00",
+     "home": "Leeds United",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      23.34,
+      26.55,
+      50.1
+     ]
+    },
+    {
+     "upstream": 367154,
+     "round": 35,
+     "date": "08/05/2027",
+     "time": "14:00",
+     "home": "Manchester City",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      57.09,
+      21.29,
+      21.62
+     ]
+    },
+    {
+     "upstream": 367155,
+     "round": 35,
+     "date": "08/05/2027",
+     "time": "14:00",
+     "home": "Newcastle United",
+     "away": "Coventry City",
+     "played": false,
+     "chances": [
+      69.34,
+      17.49,
+      13.17
+     ]
+    },
+    {
+     "upstream": 367156,
+     "round": 35,
+     "date": "08/05/2027",
+     "time": "14:00",
+     "home": "Nottingham Forest",
+     "away": "Crystal Palace",
+     "played": false,
+     "chances": [
+      49.97,
+      26.31,
+      23.72
+     ]
+    },
+    {
+     "upstream": 367157,
+     "round": 35,
+     "date": "08/05/2027",
+     "time": "14:00",
+     "home": "Tottenham Hotspur",
+     "away": "Chelsea",
+     "played": false,
+     "chances": [
+      41.0,
+      23.29,
+      35.71
+     ]
+    },
+    {
+     "upstream": 367158,
+     "round": 36,
+     "date": "15/05/2027",
+     "time": "14:00",
+     "home": "Arsenal",
+     "away": "Nottingham Forest",
+     "played": false,
+     "chances": [
+      72.88,
+      19.56,
+      7.559
+     ]
+    },
+    {
+     "upstream": 367159,
+     "round": 36,
+     "date": "15/05/2027",
+     "time": "14:00",
+     "home": "Aston Villa",
+     "away": "Newcastle United",
+     "played": false,
+     "chances": [
+      48.12,
+      22.78,
+      29.11
+     ]
+    },
+    {
+     "upstream": 367160,
+     "round": 36,
+     "date": "15/05/2027",
+     "time": "14:00",
+     "home": "Chelsea",
+     "away": "Everton",
+     "played": false,
+     "chances": [
+      51.34,
+      24.4,
+      24.26
+     ]
+    },
+    {
+     "upstream": 367161,
+     "round": 36,
+     "date": "15/05/2027",
+     "time": "14:00",
+     "home": "Coventry City",
+     "away": "Tottenham Hotspur",
+     "played": false,
+     "chances": [
+      33.68,
+      24.27,
+      42.05
+     ]
+    },
+    {
+     "upstream": 367162,
+     "round": 36,
+     "date": "15/05/2027",
+     "time": "14:00",
+     "home": "Crystal Palace",
+     "away": "Brighton & Hove Albion",
+     "played": false,
+     "chances": [
+      34.72,
+      25.26,
+      40.02
+     ]
+    },
+    {
+     "upstream": 367163,
+     "round": 36,
+     "date": "15/05/2027",
+     "time": "14:00",
+     "home": "Hull City",
+     "away": "Fulham",
+     "played": false,
+     "chances": [
+      22.16,
+      24.34,
+      53.5
+     ]
+    },
+    {
+     "upstream": 367164,
+     "round": 36,
+     "date": "15/05/2027",
+     "time": "14:00",
+     "home": "Ipswich Town",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      14.62,
+      17.79,
+      67.58
+     ]
+    },
+    {
+     "upstream": 367165,
+     "round": 36,
+     "date": "15/05/2027",
+     "time": "14:00",
+     "home": "Liverpool",
+     "away": "Brentford",
+     "played": false,
+     "chances": [
+      57.47,
+      21.65,
+      20.89
+     ]
+    },
+    {
+     "upstream": 367166,
+     "round": 36,
+     "date": "15/05/2027",
+     "time": "14:00",
+     "home": "Manchester United",
+     "away": "Leeds United",
+     "played": false,
+     "chances": [
+      53.19,
+      23.05,
+      23.76
+     ]
+    },
+    {
+     "upstream": 367167,
+     "round": 36,
+     "date": "15/05/2027",
+     "time": "14:00",
+     "home": "Sunderland",
+     "away": "Bournemouth",
+     "played": false,
+     "chances": [
+      30.54,
+      26.78,
+      42.69
+     ]
+    },
+    {
+     "upstream": 367168,
+     "round": 37,
+     "date": "23/05/2027",
+     "time": "14:00",
+     "home": "Bournemouth",
+     "away": "Chelsea",
+     "played": false,
+     "chances": [
+      46.89,
+      23.11,
+      30.0
+     ]
+    },
+    {
+     "upstream": 367169,
+     "round": 37,
+     "date": "23/05/2027",
+     "time": "14:00",
+     "home": "Brentford",
+     "away": "Hull City",
+     "played": false,
+     "chances": [
+      77.03,
+      15.21,
+      7.758
+     ]
+    },
+    {
+     "upstream": 367170,
+     "round": 37,
+     "date": "23/05/2027",
+     "time": "14:00",
+     "home": "Brighton & Hove Albion",
+     "away": "Liverpool",
+     "played": false,
+     "chances": [
+      43.44,
+      23.78,
+      32.77
+     ]
+    },
+    {
+     "upstream": 367171,
+     "round": 37,
+     "date": "23/05/2027",
+     "time": "14:00",
+     "home": "Everton",
+     "away": "Arsenal",
+     "played": false,
+     "chances": [
+      22.47,
+      28.69,
+      48.84
+     ]
+    },
+    {
+     "upstream": 367172,
+     "round": 37,
+     "date": "23/05/2027",
+     "time": "14:00",
+     "home": "Fulham",
+     "away": "Coventry City",
+     "played": false,
+     "chances": [
+      60.72,
+      22.0,
+      17.28
+     ]
+    },
+    {
+     "upstream": 367173,
+     "round": 37,
+     "date": "23/05/2027",
+     "time": "14:00",
+     "home": "Leeds United",
+     "away": "Sunderland",
+     "played": false,
+     "chances": [
+      59.29,
+      24.31,
+      16.41
+     ]
+    },
+    {
+     "upstream": 367174,
+     "round": 37,
+     "date": "23/05/2027",
+     "time": "14:00",
+     "home": "Manchester City",
+     "away": "Aston Villa",
+     "played": false,
+     "chances": [
+      64.48,
+      19.39,
+      16.13
+     ]
+    },
+    {
+     "upstream": 367175,
+     "round": 37,
+     "date": "23/05/2027",
+     "time": "14:00",
+     "home": "Newcastle United",
+     "away": "Crystal Palace",
+     "played": false,
+     "chances": [
+      58.13,
+      21.64,
+      20.24
+     ]
+    },
+    {
+     "upstream": 367176,
+     "round": 37,
+     "date": "23/05/2027",
+     "time": "14:00",
+     "home": "Nottingham Forest",
+     "away": "Ipswich Town",
+     "played": false,
+     "chances": [
+      63.42,
+      21.22,
+      15.35
+     ]
+    },
+    {
+     "upstream": 367177,
+     "round": 37,
+     "date": "23/05/2027",
+     "time": "14:00",
+     "home": "Tottenham Hotspur",
+     "away": "Manchester United",
+     "played": false,
+     "chances": [
+      39.5,
+      23.57,
+      36.93
+     ]
+    },
+    {
+     "upstream": 367178,
+     "round": 38,
+     "date": "30/05/2027",
+     "time": "15:00",
+     "home": "Arsenal",
+     "away": "Brighton & Hove Albion",
+     "played": false,
+     "chances": [
+      65.8,
+      21.11,
+      13.09
+     ]
+    },
+    {
+     "upstream": 367179,
+     "round": 38,
+     "date": "30/05/2027",
+     "time": "15:00",
+     "home": "Aston Villa",
+     "away": "Tottenham Hotspur",
+     "played": false,
+     "chances": [
+      56.26,
+      22.11,
+      21.63
+     ]
+    },
+    {
+     "upstream": 367180,
+     "round": 38,
+     "date": "30/05/2027",
+     "time": "15:00",
+     "home": "Chelsea",
+     "away": "Brentford",
+     "played": false,
+     "chances": [
+      47.84,
+      22.7,
+      29.46
+     ]
+    },
+    {
+     "upstream": 367181,
+     "round": 38,
+     "date": "30/05/2027",
+     "time": "15:00",
+     "home": "Coventry City",
+     "away": "Nottingham Forest",
+     "played": false,
+     "chances": [
+      31.22,
+      26.03,
+      42.75
+     ]
+    },
+    {
+     "upstream": 367182,
+     "round": 38,
+     "date": "30/05/2027",
+     "time": "15:00",
+     "home": "Crystal Palace",
+     "away": "Leeds United",
+     "played": false,
+     "chances": [
+      41.83,
+      26.61,
+      31.56
+     ]
+    },
+    {
+     "upstream": 367183,
+     "round": 38,
+     "date": "30/05/2027",
+     "time": "15:00",
+     "home": "Hull City",
+     "away": "Newcastle United",
+     "played": false,
+     "chances": [
+      17.24,
+      20.03,
+      62.73
+     ]
+    },
+    {
+     "upstream": 367184,
+     "round": 38,
+     "date": "30/05/2027",
+     "time": "15:00",
+     "home": "Ipswich Town",
+     "away": "Everton",
+     "played": false,
+     "chances": [
+      29.1,
+      25.9,
+      45.0
+     ]
+    },
+    {
+     "upstream": 367185,
+     "round": 38,
+     "date": "30/05/2027",
+     "time": "15:00",
+     "home": "Liverpool",
+     "away": "Bournemouth",
+     "played": false,
+     "chances": [
+      59.01,
+      21.45,
+      19.54
+     ]
+    },
+    {
+     "upstream": 367186,
+     "round": 38,
+     "date": "30/05/2027",
+     "time": "15:00",
+     "home": "Manchester United",
+     "away": "Fulham",
+     "played": false,
+     "chances": [
+      55.34,
+      22.59,
+      22.07
+     ]
+    },
+    {
+     "upstream": 367187,
+     "round": 38,
+     "date": "30/05/2027",
+     "time": "15:00",
+     "home": "Sunderland",
+     "away": "Manchester City",
+     "played": false,
+     "chances": [
+      16.99,
+      21.9,
+      61.11
+     ]
+    }
+   ]
+  }
+ ]
+}

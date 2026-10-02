@@ -1,0 +1,318 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "compose": {
+    "up": false,
+    "manual": false,
+    "environment": {
+      "CRUD_URL": "http://crud:3000",
+      "DATABASE_URL": "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
+      "LAKE_DIR": "/lake",
+      "COMPUTATIONS": "[{\"name\":\"golaberto-ratings\",\"file\":\"/app/computations/golaberto-ratings.js\",\"every\":300,\"to\":[\"team_rating\",\"player_rating\",\"rating_eval\"],\"wasm\":[\"/app/computations/golaberto-odds.wasm\"]},{\"name\":\"golaberto-chances\",\"file\":\"/app/computations/golaberto-chances.js\",\"every\":30,\"to\":[\"team_chance\",\"zone_chance\",\"position_chance\",\"game_importance\"],\"wasm\":[\"/app/computations/golaberto-odds.wasm\"]}]",
+      "SERVICE_JWT": "${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}"
+    },
+    "ports": [],
+    "volumes": [],
+    "depends_on": {
+      "apps_golaberto-crud": {
+        "condition": "service_healthy"
+      },
+      "apps_golaberto-database": {
+        "condition": "service_healthy"
+      }
+    },
+    "networks": {
+      "default": {
+        "aliases": [
+          "compute"
+        ]
+      }
+    },
+    "restart": "on-failure",
+    "develop": {
+      "watch": [
+        {
+          "action": "sync+restart",
+          "path": "../computations/ratings.js",
+          "target": "/app/computations/golaberto-ratings.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../computations/chances.js",
+          "target": "/app/computations/golaberto-chances.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../computations/golaberto-odds.wasm",
+          "target": "/app/computations/golaberto-odds.wasm"
+        }
+      ]
+    }
+  },
+  "dockerfile": {
+    "preamble": [],
+    "preambleCopyContexts": [],
+    "from": {
+      "ref": "libraries_mecha:compute-image",
+      "name": "libraries_mecha-compute-image"
+    },
+    "add": [],
+    "mounts": [],
+    "secrets": {},
+    "extra_hosts": [],
+    "epilogue": [],
+    "copy": [
+      {
+        "from": null,
+        "srcs": [
+          "computations/ratings.js"
+        ],
+        "dst": "/app/computations/golaberto-ratings.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "computations/chances.js"
+        ],
+        "dst": "/app/computations/golaberto-chances.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "computations/golaberto-odds.wasm"
+        ],
+        "dst": "/app/computations/golaberto-odds.wasm",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      }
+    ],
+    "healthcheck": null,
+    "expose": [],
+    "entrypoint": null,
+    "incremental": false,
+    "cmd": null
+  },
+  "name": "compute",
+  "project": "apps_golaberto",
+  "dir": "apps/golaberto",
+  "activate": "",
+  "srcs": {
+    "globs": [
+      "computations/ratings.js",
+      "computations/chances.js",
+      "computations/golaberto-odds.wasm"
+    ],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {},
+  "synthetics": {
+    "bayt": {
+      "name": "compute_bayt",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.compute.yaml",
+          ".bayt/Dockerfile.compute",
+          ".bayt/bayt.compute.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "apps/golaberto/.bayt/compose.compute.yaml",
+        "apps/golaberto/.bayt/compose.crud.yaml",
+        "apps/golaberto/.bayt/compose.database.yaml",
+        "libraries/mecha/.bayt/compose.database-image.yaml",
+        "libraries/mecha/.bayt/compose.compute-image.yaml"
+      ]
+    },
+    "outs": {
+      "name": "compute_outs",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "apps/golaberto/.bayt/compose.compute.yaml",
+        "apps/golaberto/.bayt/compose.crud.yaml",
+        "apps/golaberto/.bayt/compose.database.yaml",
+        "libraries/mecha/.bayt/compose.database-image.yaml",
+        "libraries/mecha/.bayt/compose.compute-image.yaml"
+      ]
+    },
+    "srcs": {
+      "name": "compute_srcs",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          "computations/ratings.js",
+          "computations/chances.js",
+          "computations/golaberto-odds.wasm"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [
+        "crud_outs_srcs",
+        "database_outs_srcs"
+      ],
+      "transitiveCrossDeps": [
+        {
+          "name": "compute-image_srcs",
+          "project": "libraries_mecha",
+          "dir": "libraries/mecha",
+          "outs": {
+            "globs": [
+              "services/compute/deno.json",
+              "services/compute/deno.lock",
+              "services/compute/main.ts",
+              "services/compute/workers.ts",
+              "services/compute/cage.ts",
+              "services/compute/language.ts",
+              "services/compute/job.ts",
+              "services/compute/wasi.ts",
+              "services/compute/install.ts"
+            ],
+            "exclude": []
+          }
+        }
+      ],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "apps/golaberto/.bayt/compose.compute.yaml",
+        "apps/golaberto/.bayt/compose.crud.yaml",
+        "apps/golaberto/.bayt/compose.database.yaml",
+        "libraries/mecha/.bayt/compose.database-image.yaml",
+        "libraries/mecha/.bayt/compose.compute-image.yaml"
+      ]
+    }
+  },
+  "visibility": "internal",
+  "emitsSrcs": true,
+  "deps": [
+    "crud_outs",
+    "database_outs"
+  ],
+  "sameProjectDeps": [
+    "crud_outs",
+    "database_outs"
+  ],
+  "transitiveDeps": [
+    "crud_outs",
+    "database_outs"
+  ],
+  "transitiveCrossDeps": [
+    {
+      "name": "compute-image",
+      "project": "libraries_mecha",
+      "dir": "libraries/mecha",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "upClosure": [
+    "apps/golaberto/.bayt/compose.compute.yaml",
+    "apps/golaberto/.bayt/compose.crud.yaml",
+    "apps/golaberto/.bayt/compose.database.yaml",
+    "libraries/mecha/.bayt/compose.database-image.yaml",
+    "libraries/mecha/.bayt/compose.compute-image.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "compute-image",
+      "project": "libraries_mecha",
+      "dir": "libraries/mecha",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "crud_outs",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "database_outs",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

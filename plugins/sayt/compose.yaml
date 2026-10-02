@@ -1,0 +1,199 @@
+x-sayt-version: &sayt_version v0.40.0
+
+services:
+  release-build:
+    build:
+      context: .
+      args:
+        SAYT_VERSION: *sayt_version
+      dockerfile_inline: |
+        FROM chainguard/wolfi-base:latest@sha256:d59fd2d1d21e913b12a8d56064e9aaf61f818289bd18b17132a0c4fde2358cea
+        RUN apk add --no-cache zig 7zip
+        WORKDIR /src
+        COPY . ./
+        ARG SAYT_VERSION
+        RUN set -e; \
+            version="$${SAYT_VERSION}"; \
+            zig build release -Drelease-version="$${version}"; \
+            out="/srv/releases/download/$${version}"; \
+            mkdir -p "$${out}"; \
+            cp -a "zig-out/release/$${version}/." "$${out}/"
+    command: ["/bin/sh", "-c", "true"]
+
+  release-server:
+    depends_on:
+      release-build:
+        condition: service_completed_successfully
+    build:
+      context: .
+      additional_contexts:
+        release-build: service:release-build
+      dockerfile_inline: |
+        FROM caddy:2.10.2-alpine@sha256:953131cfea8e12bfe1c631a36308e9660e4389f0c3dfb3be957044d3ac92d446
+        COPY --from=release-build /srv /srv
+        COPY Caddyfile /etc/caddy/Caddyfile
+        EXPOSE 8080 8443
+        CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-check-certificate -q -O /dev/null https://release-server:8443/"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+
+  integrate-it:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM chainguard/wolfi-base:latest@sha256:d59fd2d1d21e913b12a8d56064e9aaf61f818289bd18b17132a0c4fde2358cea
+        RUN apk add --no-cache nushell git docker-cli docker-cli-buildx
+        # Pinned plugin (see compose.toml) — the apk package floats with
+        # the distro.
+        COPY --from=docker/compose-bin:v2.40.3@sha256:e39da8206cc48c6e2c99ce371935eef9d7eff7db600a993fd357de8b75621edf /docker-compose /usr/lib/docker/cli-plugins/docker-compose
+        WORKDIR /app
+        COPY *.nu VERSION ./
+        CMD ["nu", "integrate_it.nu"]
+    volumes:
+      - //var/run/docker.sock:/var/run/docker.sock
+
+  test-alpine:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM alpine:3.23@sha256:865b95f46d98cf867a156fe4a135ad3fe50d2056aa3f25ed31662dff6da4eb62
+        COPY --chmod=755 saytw /saytw
+        CMD ["sh", "-c", "export SAYT_RELEASE_BASE=\"https://release-server:8443/releases/download/$${SAYT_VERSION}\"; /saytw --help"]
+    environment:
+      SAYT_VERSION: *sayt_version
+      SAYT_INSECURE: "1"
+    depends_on:
+      release-server:
+        condition: service_healthy
+
+  test-curlimages:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM curlimages/curl:8.5.0@sha256:08e466006f0860e54fc299378de998935333e0e130a15f6f98482e9f8dab3058
+        WORKDIR /home/curl_user/sayt
+        COPY --chmod=755 saytw /saytw
+        CMD ["sh", "-c", "export SAYT_RELEASE_BASE=\"https://release-server:8443/releases/download/$${SAYT_VERSION}\"; /saytw --help"]
+    environment:
+      SAYT_VERSION: *sayt_version
+      SAYT_INSECURE: "1"
+    depends_on:
+      release-server:
+        condition: service_healthy
+
+  test-wolfi:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM chainguard/wolfi-base:latest@sha256:d59fd2d1d21e913b12a8d56064e9aaf61f818289bd18b17132a0c4fde2358cea
+        COPY --chmod=755 saytw /saytw
+        CMD ["sh", "-c", "export SAYT_RELEASE_BASE=\"https://release-server:8443/releases/download/$${SAYT_VERSION}\"; /saytw --help"]
+    environment:
+      SAYT_VERSION: *sayt_version
+      SAYT_INSECURE: "1"
+    depends_on:
+      release-server:
+        condition: service_healthy
+
+  test-wolfi-nonroot:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM chainguard/wolfi-base:latest@sha256:d59fd2d1d21e913b12a8d56064e9aaf61f818289bd18b17132a0c4fde2358cea
+        RUN adduser -D testuser
+        COPY --chmod=755 saytw /saytw
+        USER testuser
+        CMD ["sh", "-c", "export SAYT_RELEASE_BASE=\"https://release-server:8443/releases/download/$${SAYT_VERSION}\"; /saytw --help"]
+    environment:
+      SAYT_VERSION: *sayt_version
+      SAYT_INSECURE: "1"
+    depends_on:
+      release-server:
+        condition: service_healthy
+
+  test-ubuntu:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM ubuntu:24.04@sha256:c35e29c9450151419d9448b0fd75374fec4fff364a27f176fb458d472dfc9e54
+        COPY --chmod=755 saytw /saytw
+        CMD ["sh", "-c", "export SAYT_RELEASE_BASE=\"https://release-server:8443/releases/download/$${SAYT_VERSION}\"; /saytw --help"]
+    environment:
+      SAYT_VERSION: *sayt_version
+      SAYT_INSECURE: "1"
+    depends_on:
+      release-server:
+        condition: service_healthy
+
+  test-ubuntu-nonroot:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM ubuntu:24.04@sha256:c35e29c9450151419d9448b0fd75374fec4fff364a27f176fb458d472dfc9e54
+        RUN apt-get update -qq && apt-get install -y -qq --no-install-recommends sudo && rm -rf /var/lib/apt/lists/*
+        RUN useradd -m testuser && echo "testuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+        COPY --chmod=755 saytw /saytw
+        USER testuser
+        CMD ["sh", "-c", "export SAYT_RELEASE_BASE=\"https://release-server:8443/releases/download/$${SAYT_VERSION}\"; /saytw --help"]
+    environment:
+      SAYT_VERSION: *sayt_version
+      SAYT_INSECURE: "1"
+    depends_on:
+      release-server:
+        condition: service_healthy
+
+  test-powershell:
+    build:
+      context: .
+      dockerfile_inline: |
+        # PowerShell has no multiplatform arm64 image; use multistage to select by arch
+        FROM --platform=linux/amd64 mcr.microsoft.com/powershell:7.4-mariner-2.0@sha256:d16ef2a53ccf83e4a5361c9dbff09f723352c15a38e507b734701a78b6d838e9 AS base-amd64
+        FROM --platform=linux/arm64 mcr.microsoft.com/powershell:7.4-mariner-2.0-arm64@sha256:2c21f3fda52e3562910aab93def4c8d039ee2f78d8d6033cc6678991e0fb7759 AS base-arm64
+        ARG TARGETARCH
+        FROM base-$${TARGETARCH}
+        COPY --chmod=755 saytw.ps1 /saytw.ps1
+        CMD ["pwsh", "-Command", "$$env:SAYT_RELEASE_BASE = \"https://release-server:8443/releases/download/$$env:SAYT_VERSION\"; ./saytw.ps1 --help"]
+    environment:
+      SAYT_VERSION: *sayt_version
+      SAYT_INSECURE: "1"
+    depends_on:
+      release-server:
+        condition: service_healthy
+
+  test-docker-image:
+    build:
+      context: .
+      target: test-docker-image
+
+  test:
+    build:
+      context: .
+      target: test
+    command: ["true"]
+
+  integrate:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM alpine:3.23@sha256:865b95f46d98cf867a156fe4a135ad3fe50d2056aa3f25ed31662dff6da4eb62
+        CMD ["echo", "All integration tests passed!"]
+    depends_on:
+      integrate-it:
+        condition: service_completed_successfully
+      test-alpine:
+        condition: service_completed_successfully
+      test-curlimages:
+        condition: service_completed_successfully
+      test-wolfi:
+        condition: service_completed_successfully
+      test-wolfi-nonroot:
+        condition: service_completed_successfully
+      test-ubuntu:
+        condition: service_completed_successfully
+      test-ubuntu-nonroot:
+        condition: service_completed_successfully
+      test-powershell:
+        condition: service_completed_successfully

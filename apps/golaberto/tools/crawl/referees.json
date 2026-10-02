@@ -1,0 +1,1342 @@
+[
+ {
+  "upstream": 1,
+  "name": "Alício Pena Júnior",
+  "place": "MG",
+  "games": [
+   {
+    "upstream": 87506,
+    "championship": "Brasil - Campeonato Mineiro Segunda Divisão 2012",
+    "date": "04/11/2012",
+    "time": "12:30",
+    "home": "Ituiutabana-MG",
+    "away": "União Luziense-MG",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 86674,
+    "championship": "Brasil - Taça Minas Gerais 2012",
+    "date": "29/09/2012",
+    "time": "19:00",
+    "home": "Uberaba-MG",
+    "away": "Boa Esporte-MG",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 56062,
+    "championship": "Brasil - Taça Minas Gerais 2010",
+    "date": "26/09/2010",
+    "time": "13:00",
+    "home": "Funorte-MG",
+    "away": "Mamoré",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 50479,
+    "championship": "Brasil - Campeonato Mineiro Módulo II 2010",
+    "date": "16/05/2010",
+    "time": "19:00",
+    "home": "Guarani-MG",
+    "away": "Poços de Caldas",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 50463,
+    "championship": "Brasil - Campeonato Mineiro Módulo II 2010",
+    "date": "21/04/2010",
+    "time": "19:00",
+    "home": "Guarani-MG",
+    "away": "URT-MG",
+    "score": [
+     5,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 2,
+  "name": "Carlos Eugênio Simon",
+  "place": "RS",
+  "games": [
+   {
+    "upstream": 26198,
+    "championship": "América do Sul - Copa Libertadores 2009",
+    "date": "22/04/2009",
+    "time": "01:30",
+    "home": "Universidad San Martin",
+    "away": "Nacional-URU",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 26221,
+    "championship": "América do Sul - Copa Libertadores 2009",
+    "date": "19/03/2009",
+    "time": "22:15",
+    "home": "Estudiantes",
+    "away": "Deportivo Quito",
+    "score": [
+     4,
+     0
+    ]
+   },
+   {
+    "upstream": 26432,
+    "championship": "Brasil - Campeonato Cearense 2009",
+    "date": "01/03/2009",
+    "time": "19:00",
+    "home": "Ceará-CE",
+    "away": "Ferroviário-CE",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 10492,
+    "championship": "América do Sul - World Cup Qualifying 2007/2009",
+    "date": "17/10/2007",
+    "time": "00:40",
+    "home": "Venezuela",
+    "away": "Argentina",
+    "score": [
+     0,
+     2
+    ]
+   },
+   {
+    "upstream": 10490,
+    "championship": "América do Sul - World Cup Qualifying 2007/2009",
+    "date": "14/10/2007",
+    "time": "01:00",
+    "home": "Peru",
+    "away": "Paraguay",
+    "score": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 4,
+  "name": "Cléber Wellington Abade",
+  "place": "SP",
+  "games": [
+   {
+    "upstream": 69363,
+    "championship": "Brasil - Campeonato Brasileiro - Série C 2011",
+    "date": "31/07/2011",
+    "time": "23:00",
+    "home": "Rio Branco-AC",
+    "away": "Luverdense-MT",
+    "score": [
+     2,
+     3
+    ]
+   },
+   {
+    "upstream": 3902,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "24/09/2006",
+    "time": "19:00",
+    "home": "Palmeiras-SP",
+    "away": "São Paulo-SP",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 3869,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "09/09/2006",
+    "time": "21:10",
+    "home": "Vasco-RJ",
+    "away": "Grêmio-RS",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 3850,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "30/08/2006",
+    "time": "22:30",
+    "home": "Goiás-GO",
+    "away": "Fluminense-RJ",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 3823,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "24/08/2006",
+    "time": "23:30",
+    "home": "Grêmio-RS",
+    "away": "Fortaleza-CE",
+    "score": [
+     4,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 5,
+  "name": "Cléver Assunção Gonçalves",
+  "place": "MG",
+  "games": [
+   {
+    "upstream": 6520,
+    "championship": "Brasil - Campeonato Brasileiro 2007",
+    "date": "05/08/2007",
+    "time": "21:10",
+    "home": "Vasco-RJ",
+    "away": "Figueirense-SC",
+    "score": [
+     2,
+     2
+    ]
+   },
+   {
+    "upstream": 8783,
+    "championship": "Brasil - Campeonato Mineiro Módulo II 2007",
+    "date": "22/07/2007",
+    "time": "13:30",
+    "home": "URT-MG",
+    "away": "Valeriodoce-MG",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 8759,
+    "championship": "Brasil - Campeonato Mineiro Módulo II 2007",
+    "date": "03/06/2007",
+    "time": "19:00",
+    "home": "Uberaba-MG",
+    "away": "Uberlândia-MG",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 6771,
+    "championship": "Brasil - Campeonato Mineiro 2007",
+    "date": "29/04/2007",
+    "time": "19:00",
+    "home": "Atlético-MG",
+    "away": "Cruzeiro-MG",
+    "score": [
+     4,
+     0
+    ]
+   },
+   {
+    "upstream": 6747,
+    "championship": "Brasil - Campeonato Mineiro 2007",
+    "date": "14/04/2007",
+    "time": "19:00",
+    "home": "Tupi-MG",
+    "away": "Cruzeiro-MG",
+    "score": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 9,
+  "name": "Elvécio Zequetto",
+  "place": "MS",
+  "games": [
+   {
+    "upstream": 6374,
+    "championship": "Brasil - Campeonato Brasileiro 2007",
+    "date": "26/05/2007",
+    "time": "21:10",
+    "home": "Corinthians-SP",
+    "away": "Atlético-MG",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 4017,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "03/12/2006",
+    "time": "18:00",
+    "home": "Ponte Preta-SP",
+    "away": "Athletico-PR",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 3920,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "08/10/2006",
+    "time": "19:00",
+    "home": "Goiás-GO",
+    "away": "Corinthians-SP",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 3875,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "17/09/2006",
+    "time": "19:00",
+    "home": "Juventude-RS",
+    "away": "São Caetano-SP",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 3715,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "27/05/2006",
+    "time": "21:10",
+    "home": "Athletico-PR",
+    "away": "Juventude-RS",
+    "score": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 11,
+  "name": "Héber Roberto Lopes",
+  "place": "PR",
+  "games": [
+   {
+    "upstream": 26323,
+    "championship": "Brasil - Campeonato Cearense 2009",
+    "date": "19/02/2009",
+    "time": "23:30",
+    "home": "Ferroviário-CE",
+    "away": "Ceará-CE",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 26191,
+    "championship": "América do Sul - Copa Libertadores 2009",
+    "date": "12/02/2009",
+    "time": "23:15",
+    "home": "River Plate",
+    "away": "Nacional-PAR",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 25934,
+    "championship": "América do Sul - Copa Libertadores 2009",
+    "date": "28/01/2009",
+    "time": "22:00",
+    "home": "Universidad de Chile",
+    "away": "Pachuca",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 6522,
+    "championship": "Brasil - Campeonato Brasileiro 2007",
+    "date": "05/08/2007",
+    "time": "21:10",
+    "home": "Grêmio-RS",
+    "away": "São Paulo-SP",
+    "score": [
+     0,
+     2
+    ]
+   },
+   {
+    "upstream": 4013,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "03/12/2006",
+    "time": "18:00",
+    "home": "Fluminense-RJ",
+    "away": "Palmeiras-SP",
+    "score": [
+     1,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 12,
+  "name": "Leonardo Gaciba da Silva",
+  "place": "RS",
+  "games": [
+   {
+    "upstream": 50526,
+    "championship": "Brasil - Campeonato Brasileiro 2010",
+    "date": "08/05/2010",
+    "time": "21:30",
+    "home": "Botafogo-RJ",
+    "away": "Santos-SP",
+    "score": [
+     3,
+     3
+    ]
+   },
+   {
+    "upstream": 26192,
+    "championship": "América do Sul - Copa Libertadores 2009",
+    "date": "18/02/2009",
+    "time": "22:30",
+    "home": "Nacional-PAR",
+    "away": "Nacional-URU",
+    "score": [
+     0,
+     3
+    ]
+   },
+   {
+    "upstream": 26251,
+    "championship": "América do Sul - Copa Libertadores 2009",
+    "date": "11/02/2009",
+    "time": "22:30",
+    "home": "San Lorenzo",
+    "away": "San Luis",
+    "score": [
+     4,
+     1
+    ]
+   },
+   {
+    "upstream": 25941,
+    "championship": "América do Sul - Copa Libertadores 2009",
+    "date": "04/02/2009",
+    "time": "22:30",
+    "home": "Estudiantes",
+    "away": "Sporting Cristal",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 6516,
+    "championship": "Brasil - Campeonato Brasileiro 2007",
+    "date": "05/08/2007",
+    "time": "19:00",
+    "home": "Fluminense-RJ",
+    "away": "Palmeiras-SP",
+    "score": [
+     0,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 13,
+  "name": "Lourival Lima Dias Filho",
+  "place": "BA",
+  "games": [
+   {
+    "upstream": 3971,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "05/11/2006",
+    "time": "18:00",
+    "home": "Fortaleza-CE",
+    "away": "Goiás-GO",
+    "score": [
+     0,
+     3
+    ]
+   },
+   {
+    "upstream": 3951,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "26/10/2006",
+    "time": "23:30",
+    "home": "Santa Cruz-PE",
+    "away": "Fortaleza-CE",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 3903,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "05/10/2006",
+    "time": "23:30",
+    "home": "Botafogo-RJ",
+    "away": "Santa Cruz-PE",
+    "score": [
+     3,
+     0
+    ]
+   },
+   {
+    "upstream": 3871,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "10/09/2006",
+    "time": "21:10",
+    "home": "Fortaleza-CE",
+    "away": "Santos-SP",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 3835,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "27/08/2006",
+    "time": "21:10",
+    "home": "Figueirense-SC",
+    "away": "Santa Cruz-PE",
+    "score": [
+     2,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 16,
+  "name": "Luiz Antônio Silva Santos",
+  "place": "RJ",
+  "games": [
+   {
+    "upstream": 6508,
+    "championship": "Brasil - Campeonato Brasileiro 2007",
+    "date": "02/08/2007",
+    "time": "00:45",
+    "home": "Atlético-MG",
+    "away": "Santos-SP",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 3984,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "11/11/2006",
+    "time": "20:10",
+    "home": "Internacional-RS",
+    "away": "Fortaleza-CE",
+    "score": [
+     3,
+     0
+    ]
+   },
+   {
+    "upstream": 3978,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "08/11/2006",
+    "time": "23:45",
+    "home": "Athletico-PR",
+    "away": "Corinthians-SP",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 3937,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "21/10/2006",
+    "time": "21:10",
+    "home": "Ponte Preta-SP",
+    "away": "Internacional-RS",
+    "score": [
+     0,
+     2
+    ]
+   },
+   {
+    "upstream": 3904,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "05/10/2006",
+    "time": "01:00",
+    "home": "Grêmio-RS",
+    "away": "Palmeiras-SP",
+    "score": [
+     2,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 17,
+  "name": "Márcio Rezende de Freitas",
+  "place": "MG",
+  "games": [
+   {
+    "upstream": 2729,
+    "championship": "Brasil - Campeonato Brasileiro 2005",
+    "date": "20/11/2005",
+    "time": "",
+    "home": "Corinthians-SP",
+    "away": "Internacional-RS",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 2703,
+    "championship": "Brasil - Campeonato Brasileiro 2005",
+    "date": "13/11/2005",
+    "time": "",
+    "home": "Vasco-RJ",
+    "away": "Fluminense-RJ",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 2697,
+    "championship": "Brasil - Campeonato Brasileiro 2005",
+    "date": "06/11/2005",
+    "time": "",
+    "home": "Brasiliense-DF",
+    "away": "Coritiba-PR",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 2683,
+    "championship": "Brasil - Campeonato Brasileiro 2005",
+    "date": "03/11/2005",
+    "time": "",
+    "home": "Botafogo-RJ",
+    "away": "São Caetano-SP",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 2671,
+    "championship": "Brasil - Campeonato Brasileiro 2005",
+    "date": "30/10/2005",
+    "time": "",
+    "home": "Athletico-PR",
+    "away": "Paraná-PR",
+    "score": [
+     2,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 18,
+  "name": "Paulo César de Oliveira",
+  "place": "SP",
+  "games": [
+   {
+    "upstream": 50533,
+    "championship": "Brasil - Campeonato Brasileiro 2010",
+    "date": "09/05/2010",
+    "time": "21:30",
+    "home": "Ceará-CE",
+    "away": "Fluminense-RJ",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 26196,
+    "championship": "América do Sul - Copa Libertadores 2009",
+    "date": "07/04/2009",
+    "time": "22:00",
+    "home": "Nacional-PAR",
+    "away": "Universidad San Martin",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 27423,
+    "championship": "Brasil - Campeonato Mineiro 2009",
+    "date": "28/03/2009",
+    "time": "19:10",
+    "home": "Cruzeiro-MG",
+    "away": "Tupi-MG",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 26233,
+    "championship": "América do Sul - Copa Libertadores 2009",
+    "date": "17/03/2009",
+    "time": "23:45",
+    "home": "Lanús",
+    "away": "Everton de Viña del Mar",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 26179,
+    "championship": "América do Sul - Copa Libertadores 2009",
+    "date": "18/02/2009",
+    "time": "00:15",
+    "home": "Boca Juniors",
+    "away": "Deportivo Cuenca",
+    "score": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 22,
+  "name": "Sálvio Spínola Fagundes Filho",
+  "place": "SP",
+  "games": [
+   {
+    "upstream": 50527,
+    "championship": "Brasil - Campeonato Brasileiro 2010",
+    "date": "08/05/2010",
+    "time": "21:30",
+    "home": "Atlético-GO",
+    "away": "Grêmio-RS",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 26197,
+    "championship": "América do Sul - Copa Libertadores 2009",
+    "date": "08/04/2009",
+    "time": "00:15",
+    "home": "River Plate",
+    "away": "Nacional-URU",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 26252,
+    "championship": "América do Sul - Copa Libertadores 2009",
+    "date": "20/02/2009",
+    "time": "00:30",
+    "home": "Universitario",
+    "away": "San Lorenzo",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 10532,
+    "championship": "América do Sul - World Cup Qualifying 2007/2009",
+    "date": "20/11/2007",
+    "time": "22:40",
+    "home": "Venezuela",
+    "away": "Bolivia",
+    "score": [
+     5,
+     3
+    ]
+   },
+   {
+    "upstream": 4015,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "03/12/2006",
+    "time": "18:00",
+    "home": "Figueirense-SC",
+    "away": "Vasco-RJ",
+    "score": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 25,
+  "name": "Wágner Tardeli Azevedo",
+  "place": "RJ",
+  "games": [
+   {
+    "upstream": 26320,
+    "championship": "Brasil - Campeonato Cearense 2009",
+    "date": "12/02/2009",
+    "time": "22:30",
+    "home": "Fortaleza-CE",
+    "away": "Ceará-CE",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 6638,
+    "championship": "Brasil - Campeonato Brasileiro 2007",
+    "date": "04/10/2007",
+    "time": "00:45",
+    "home": "Cruzeiro-MG",
+    "away": "Santos-SP",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 4006,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "26/11/2006",
+    "time": "18:00",
+    "home": "São Paulo-SP",
+    "away": "Cruzeiro-MG",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 3998,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "19/11/2006",
+    "time": "18:00",
+    "home": "Paraná-PR",
+    "away": "Internacional-RS",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 3985,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "12/11/2006",
+    "time": "18:00",
+    "home": "Figueirense-SC",
+    "away": "Corinthians-SP",
+    "score": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 26,
+  "name": "Wilson de Souza Mendonça",
+  "place": "PE",
+  "games": [
+   {
+    "upstream": 6517,
+    "championship": "Brasil - Campeonato Brasileiro 2007",
+    "date": "05/08/2007",
+    "time": "19:00",
+    "home": "Cruzeiro-MG",
+    "away": "Internacional-RS",
+    "score": [
+     3,
+     2
+    ]
+   },
+   {
+    "upstream": 3953,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "02/11/2006",
+    "time": "23:30",
+    "home": "Botafogo-RJ",
+    "away": "Internacional-RS",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 3944,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "26/10/2006",
+    "time": "23:30",
+    "home": "Internacional-RS",
+    "away": "Juventude-RS",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 3941,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "22/10/2006",
+    "time": "19:00",
+    "home": "Fortaleza-CE",
+    "away": "Athletico-PR",
+    "score": [
+     3,
+     4
+    ]
+   },
+   {
+    "upstream": 3910,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "04/10/2006",
+    "time": "23:30",
+    "home": "Cruzeiro-MG",
+    "away": "Internacional-RS",
+    "score": [
+     2,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 27,
+  "name": "Wilson Luis Seneme",
+  "place": "SP",
+  "games": [
+   {
+    "upstream": 50531,
+    "championship": "Brasil - Campeonato Brasileiro 2010",
+    "date": "09/05/2010",
+    "time": "19:00",
+    "home": "Internacional-RS",
+    "away": "Cruzeiro-MG",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 51307,
+    "championship": "América do Sul - Copa Libertadores 2010",
+    "date": "05/05/2010",
+    "time": "00:50",
+    "home": "Vélez Sarsfield",
+    "away": "Chivas Guadalajara",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 27954,
+    "championship": "Brasil - Campeonato Mineiro 2009",
+    "date": "14/04/2009",
+    "time": "23:30",
+    "home": "Boa Esporte-MG",
+    "away": "Cruzeiro-MG",
+    "score": [
+     1,
+     4
+    ]
+   },
+   {
+    "upstream": 3967,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "05/11/2006",
+    "time": "18:00",
+    "home": "Ponte Preta-SP",
+    "away": "São Caetano-SP",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 3938,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "22/10/2006",
+    "time": "19:00",
+    "home": "Paraná-PR",
+    "away": "Flamengo-RJ",
+    "score": [
+     0,
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 28,
+  "name": "Evandro Rogério Roman",
+  "place": "PR",
+  "games": [
+   {
+    "upstream": 14810,
+    "championship": "Brasil - Campeonato Brasileiro 2008",
+    "date": "18/05/2008",
+    "time": "21:10",
+    "home": "Santos-SP",
+    "away": "Ipatinga-MG",
+    "score": [
+     4,
+     0
+    ]
+   },
+   {
+    "upstream": 6518,
+    "championship": "Brasil - Campeonato Brasileiro 2007",
+    "date": "05/08/2007",
+    "time": "19:00",
+    "home": "Santos-SP",
+    "away": "Flamengo-RJ",
+    "score": [
+     3,
+     0
+    ]
+   },
+   {
+    "upstream": 6367,
+    "championship": "Brasil - Campeonato Brasileiro 2007",
+    "date": "20/05/2007",
+    "time": "19:00",
+    "home": "Botafogo-RJ",
+    "away": "Atlético-MG",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 4003,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "26/11/2006",
+    "time": "18:00",
+    "home": "Botafogo-RJ",
+    "away": "Corinthians-SP",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 3976,
+    "championship": "Brasil - Campeonato Brasileiro 2006",
+    "date": "09/11/2006",
+    "time": "22:30",
+    "home": "São Paulo-SP",
+    "away": "Botafogo-RJ",
+    "score": [
+     3,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 67,
+  "name": "Álvaro Azeredo Quelhas",
+  "place": "MG",
+  "games": [
+   {
+    "upstream": 13046,
+    "championship": "Brasil - Campeonato Mineiro Módulo II 2008",
+    "date": "20/04/2008",
+    "time": "13:30",
+    "home": "Valeriodoce-MG",
+    "away": "Caldense-MG",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 12389,
+    "championship": "Brasil - Campeonato Mineiro 2008",
+    "date": "06/04/2008",
+    "time": "19:00",
+    "home": "Atlético-MG",
+    "away": "Guarani-MG",
+    "score": [
+     2,
+     3
+    ]
+   },
+   {
+    "upstream": 12378,
+    "championship": "Brasil - Campeonato Mineiro 2008",
+    "date": "23/03/2008",
+    "time": "19:00",
+    "home": "Guarani-MG",
+    "away": "Democrata-SL-MG",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 12376,
+    "championship": "Brasil - Campeonato Mineiro 2008",
+    "date": "20/03/2008",
+    "time": "22:30",
+    "home": "Social-MG",
+    "away": "Ipatinga-MG",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 12370,
+    "championship": "Brasil - Campeonato Mineiro 2008",
+    "date": "16/03/2008",
+    "time": "13:00",
+    "home": "Boa Esporte-MG",
+    "away": "Democrata-GV-MG",
+    "score": [
+     3,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 95,
+  "name": "Luiz Carlos da Silva",
+  "place": "MG",
+  "games": [
+   {
+    "upstream": 41660,
+    "championship": "Brasil - Campeonato Mineiro Segunda Divisão 2009",
+    "date": "17/10/2009",
+    "time": "19:00",
+    "home": "Mamoré",
+    "away": "Tricordiano-MG",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 34748,
+    "championship": "Brasil - Campeonato Mineiro Segunda Divisão 2009",
+    "date": "06/09/2009",
+    "time": "13:30",
+    "home": "Lavras",
+    "away": "Contagem-MG",
+    "score": [
+     2,
+     2
+    ]
+   },
+   {
+    "upstream": 24383,
+    "championship": "Brasil - Campeonato Mineiro Módulo II 2009",
+    "date": "26/04/2009",
+    "time": "18:00",
+    "home": "Democrata-SL-MG",
+    "away": "Funorte-MG",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 24362,
+    "championship": "Brasil - Campeonato Mineiro Módulo II 2009",
+    "date": "15/04/2009",
+    "time": "23:30",
+    "home": "Ideal de Ipatinga",
+    "away": "Funorte-MG",
+    "score": [
+     2,
+     2
+    ]
+   },
+   {
+    "upstream": 24359,
+    "championship": "Brasil - Campeonato Mineiro Módulo II 2009",
+    "date": "12/04/2009",
+    "time": "13:00",
+    "home": "Democrata-SL-MG",
+    "away": "Itaúna-MG",
+    "score": [
+     2,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 179,
+  "name": "Renato Cardoso Conceição",
+  "place": "MG",
+  "games": [
+   {
+    "upstream": 57090,
+    "championship": "Brasil - Campeonato Mineiro Segunda Divisão 2010",
+    "date": "24/11/2010",
+    "time": "21:30",
+    "home": "Democrata-SL-MG",
+    "away": "SE Patrocinense",
+    "score": [
+     0,
+     2
+    ]
+   },
+   {
+    "upstream": 57164,
+    "championship": "Brasil - Taça Minas Gerais 2010",
+    "date": "21/11/2010",
+    "time": "19:00",
+    "home": "Uberaba-MG",
+    "away": "Uberlândia-MG",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 56065,
+    "championship": "Brasil - Taça Minas Gerais 2010",
+    "date": "09/10/2010",
+    "time": "19:00",
+    "home": "Villa Nova-MG",
+    "away": "Funorte-MG",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 56060,
+    "championship": "Brasil - Taça Minas Gerais 2010",
+    "date": "18/09/2010",
+    "time": "19:00",
+    "home": "Mamoré",
+    "away": "Funorte-MG",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 50477,
+    "championship": "Brasil - Campeonato Mineiro Módulo II 2010",
+    "date": "16/05/2010",
+    "time": "19:00",
+    "home": "Funorte-MG",
+    "away": "Tombense-MG",
+    "score": [
+     1,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 211,
+  "name": "Joel Tolentino Damata Júnior",
+  "place": "MG",
+  "games": [
+   {
+    "upstream": 86680,
+    "championship": "Brasil - Taça Minas Gerais 2012",
+    "date": "25/10/2012",
+    "time": "22:00",
+    "home": "Uberlândia-MG",
+    "away": "Villa Nova-MG",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 87490,
+    "championship": "Brasil - Campeonato Mineiro Segunda Divisão 2012",
+    "date": "14/10/2012",
+    "time": "13:30",
+    "home": "Ituiutabana-MG",
+    "away": "Coimbra-MG",
+    "score": [
+     4,
+     0
+    ]
+   },
+   {
+    "upstream": 86677,
+    "championship": "Brasil - Taça Minas Gerais 2012",
+    "date": "10/10/2012",
+    "time": "23:00",
+    "home": "Nacional EC-MG",
+    "away": "Boa Esporte-MG",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 57108,
+    "championship": "Brasil - Taça Minas Gerais 2010",
+    "date": "07/11/2010",
+    "time": "12:30",
+    "home": "Tricordiano-MG",
+    "away": "Uberlândia-MG",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 56068,
+    "championship": "Brasil - Taça Minas Gerais 2010",
+    "date": "09/10/2010",
+    "time": "19:00",
+    "home": "Uberlândia-MG",
+    "away": "Mamoré",
+    "score": [
+     2,
+     1
+    ]
+   }
+  ]
+ }
+]

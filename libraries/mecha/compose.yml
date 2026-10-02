@@ -1,0 +1,5 @@
+# The stack is bayt's, under .bayt/ (bayt.cue states it); this root exists
+# for what resolves a project by its nearest compose file — every
+# `docker compose` run from this directory.
+include:
+  - path: ./.bayt/compose.yaml

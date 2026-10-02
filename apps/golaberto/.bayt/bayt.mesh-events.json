@@ -1,0 +1,234 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "compose": {
+    "up": false,
+    "manual": false,
+    "environment": {},
+    "ports": [],
+    "volumes": [],
+    "depends_on": {
+      "apps_golaberto-caddy": {
+        "condition": "service_started"
+      },
+      "apps_golaberto-redis": {
+        "condition": "service_started"
+      }
+    },
+    "networks": {
+      "default": {
+        "aliases": [
+          "mesh-events"
+        ]
+      }
+    },
+    "restart": "on-failure",
+    "healthcheck": {
+      "test": [
+        "CMD",
+        "portcheck",
+        "--port",
+        "3500"
+      ],
+      "interval": "5s",
+      "timeout": "5s",
+      "retries": 30,
+      "start_period": "30s",
+      "start_interval": "500ms"
+    }
+  },
+  "dockerfile": {
+    "preamble": [],
+    "preambleCopyContexts": [],
+    "from": {
+      "ref": "libraries_mecha:mesh-image",
+      "name": "libraries_mecha-mesh-image"
+    },
+    "add": [],
+    "mounts": [],
+    "secrets": {},
+    "extra_hosts": [],
+    "epilogue": [],
+    "copy": [
+      {
+        "from": {
+          "name": "tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa"
+        },
+        "srcs": [
+          "/bin/portcheck"
+        ],
+        "dst": "/usr/local/bin/portcheck",
+        "chmod": "755",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      }
+    ],
+    "healthcheck": {
+      "test": [
+        "CMD",
+        "portcheck",
+        "--port",
+        "3500"
+      ],
+      "interval": "5s",
+      "timeout": "5s",
+      "retries": 30,
+      "start_period": "30s"
+    },
+    "expose": [],
+    "entrypoint": null,
+    "incremental": false,
+    "cmd": null
+  },
+  "name": "mesh-events",
+  "project": "apps_golaberto",
+  "dir": "apps/golaberto",
+  "activate": "",
+  "srcs": {
+    "globs": [],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {},
+  "synthetics": {
+    "bayt": {
+      "name": "mesh-events_bayt",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.mesh-events.yaml",
+          ".bayt/Dockerfile.mesh-events",
+          ".bayt/bayt.mesh-events.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "apps/golaberto/.bayt/compose.mesh-events.yaml",
+        "apps/golaberto/.bayt/compose.caddy.yaml",
+        "apps/golaberto/.bayt/compose.redis.yaml",
+        "libraries/mecha/.bayt/compose.mesh-image.yaml"
+      ]
+    },
+    "outs": {
+      "name": "mesh-events_outs",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "apps/golaberto/.bayt/compose.mesh-events.yaml",
+        "apps/golaberto/.bayt/compose.caddy.yaml",
+        "apps/golaberto/.bayt/compose.redis.yaml",
+        "libraries/mecha/.bayt/compose.mesh-image.yaml"
+      ]
+    }
+  },
+  "visibility": "internal",
+  "emitsSrcs": false,
+  "deps": [
+    "caddy_outs",
+    "redis_outs"
+  ],
+  "sameProjectDeps": [
+    "caddy_outs",
+    "redis_outs"
+  ],
+  "transitiveDeps": [
+    "caddy_outs",
+    "redis_outs"
+  ],
+  "transitiveCrossDeps": [
+    {
+      "name": "mesh-image",
+      "project": "libraries_mecha",
+      "dir": "libraries/mecha",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "upClosure": [
+    "apps/golaberto/.bayt/compose.mesh-events.yaml",
+    "apps/golaberto/.bayt/compose.caddy.yaml",
+    "apps/golaberto/.bayt/compose.redis.yaml",
+    "libraries/mecha/.bayt/compose.mesh-image.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "mesh-image",
+      "project": "libraries_mecha",
+      "dir": "libraries/mecha",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "caddy_outs",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "redis_outs",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

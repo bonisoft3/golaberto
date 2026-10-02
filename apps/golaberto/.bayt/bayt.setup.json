@@ -1,0 +1,162 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "dockerfile": {
+    "preamble": [],
+    "preambleCopyContexts": [],
+    "from": {
+      "ref": "workspaceroot:setup",
+      "name": "workspaceroot-setup"
+    },
+    "add": [],
+    "mounts": [],
+    "secrets": {},
+    "extra_hosts": [],
+    "epilogue": [],
+    "copy": [],
+    "healthcheck": null,
+    "expose": [],
+    "entrypoint": null,
+    "incremental": false,
+    "cmd": null
+  },
+  "name": "setup",
+  "project": "apps_golaberto",
+  "dir": "apps/golaberto",
+  "activate": "mise x --",
+  "srcs": {
+    "globs": [],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {},
+  "synthetics": {
+    "bayt": {
+      "name": "setup_bayt",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.setup.yaml",
+          ".bayt/Dockerfile.setup",
+          ".bayt/bayt.setup.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/Taskfile.setup.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "apps/golaberto/.bayt/compose.setup.yaml",
+        ".bayt/compose.setup.yaml"
+      ]
+    },
+    "outs": {
+      "name": "setup_outs",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "apps/golaberto/.bayt/compose.setup.yaml",
+        ".bayt/compose.setup.yaml"
+      ]
+    }
+  },
+  "taskfile": {
+    "run": "when_changed",
+    "incremental": true,
+    "preconditions": []
+  },
+  "visibility": "internal",
+  "emitsSrcs": false,
+  "deps": [],
+  "sameProjectDeps": [],
+  "transitiveDeps": [],
+  "transitiveCrossDeps": [
+    {
+      "name": "setup",
+      "project": "workspaceroot",
+      "dir": "",
+      "outs": {
+        "globs": [
+          "[m]ise.toml",
+          "[.]mise.toml",
+          "[m]ise.lock",
+          "[.]tool-versions",
+          "gradle/libs.versions.toml",
+          "plugins/devserver/dind.sh",
+          ".task/bayt/setup.hash"
+        ],
+        "exclude": []
+      }
+    }
+  ],
+  "upClosure": [
+    "apps/golaberto/.bayt/compose.setup.yaml",
+    ".bayt/compose.setup.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "setup",
+      "project": "workspaceroot",
+      "dir": "",
+      "outs": {
+        "globs": [
+          "[m]ise.toml",
+          "[.]mise.toml",
+          "[m]ise.lock",
+          "[.]tool-versions",
+          "gradle/libs.versions.toml",
+          "plugins/devserver/dind.sh",
+          ".task/bayt/setup.hash"
+        ],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

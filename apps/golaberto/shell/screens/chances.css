@@ -1,0 +1,76 @@
+@import url("shared/chrome.css");
+@import url("shared/games.css");
+/* A group's chances, as its canvas draws them: the zones as columns tinted in
+   each zone's own colour by how likely the team is to end there, then the final
+   positions as a heat map in the archive's greens. Rows are grids so a row's
+   list of cells sits beside its fixed cells (screens.cue says why). */
+.chances-page {
+  /* Band 0 is the row's own ground: no chance, no mark. */
+  --heat-0: var(--row);
+  --heat-1: var(--surface-muted);
+  --heat-2: light-dark(var(--strip), var(--masthead));
+  --heat-3: light-dark(var(--masthead), var(--strip));
+  --heat-4: light-dark(var(--band), var(--secondary));
+}
+.chances-head { display: flex; flex-direction: column; gap: var(--sp-sm); }
+.chances-head h2, .chances-head p { margin: 0; }
+.chances-head p { font-size: var(--type-caption); color: var(--secondary); }
+.chances-tables { display: flex; flex-direction: column; gap: var(--sp-md); }
+.chances-tables h3 { margin: var(--sp-md) 0 0; }
+.table-wrap:focus-visible { outline: var(--border-size-2) solid var(--accent); outline-offset: var(--border-size-2); }
+
+.grid-table { display: flex; flex-direction: column; min-width: min-content; font-variant-numeric: tabular-nums; }
+.grid-table .row {
+  --row: var(--surface);
+  display: grid; grid-template-rows: auto; grid-auto-flow: column; align-items: stretch;
+  background: var(--row);
+}
+.grid-table .rows { display: contents; }
+.grid-table .rows .row:nth-child(odd) { --row: var(--surface-muted); }
+.grid-table .cells { display: contents; }
+.grid-table .row > :not(.cells), .grid-table .cells > * { display: flex; align-items: center; padding: var(--sp-sm); box-sizing: border-box; }
+.grid-table .head { background: var(--table-head); color: var(--table-head-ink); font-weight: 700; font-size: var(--type-caption); }
+.grid-table .pos { justify-content: center; }
+.grid-table .name { white-space: nowrap; color: var(--primary); }
+.grid-table .head .name, .grid-table .name a { color: inherit; }
+/* The team stays in view while its columns scroll. */
+.grid-table .pos, .grid-table .name { position: sticky; z-index: 1; background: inherit; }
+.grid-table .pos { inset-inline-start: 0; }
+.grid-table .name { inset-inline-start: 2.5rem; }
+
+.zone-odds .row { grid-template-columns: 2.5rem max-content 3rem; grid-auto-columns: minmax(6rem, 1fr); }
+.zone-odds .name { min-width: 10rem; }
+.zone-odds .pts { justify-content: center; font-weight: 700; }
+.zone-odds .zone { flex-direction: column; justify-content: flex-end; align-items: center; text-align: center; line-height: var(--type-leading-title); }
+.zone-odds .zone i { width: 10px; height: 10px; background: var(--zone); border: var(--border-size-1) solid var(--table-head-ink); }
+.zone-odds .zone small { font-size: var(--type-label); font-weight: 400; }
+.zone-odds .pct { justify-content: flex-end; padding-inline-end: var(--sp-md); background: color-mix(in srgb, var(--zone) var(--tint), var(--row)); }
+.zone-odds [data-band="0"] { --tint: 0%; color: var(--secondary); }
+.zone-odds [data-band="1"] { --tint: 20%; }
+.zone-odds [data-band="2"] { --tint: 40%; }
+.zone-odds [data-band="3"] { --tint: 70%; }
+.zone-odds [data-band="4"] { --tint: 100%; font-weight: 700; }
+
+.heat .row { grid-template-columns: 2.5rem minmax(10rem, max-content); grid-auto-columns: minmax(1.25rem, 1fr); }
+.heat .at { justify-content: center; padding-inline: 0; }
+.heat .heat-cell { background: var(--heat); padding: 0; min-height: var(--sp-xl); border: var(--border-size-1) solid var(--row); }
+.heat [data-band="0"], .heat-legend [data-band="0"] { --heat: var(--heat-0); }
+.heat [data-band="1"], .heat-legend [data-band="1"] { --heat: var(--heat-1); }
+.heat [data-band="2"], .heat-legend [data-band="2"] { --heat: var(--heat-2); }
+.heat [data-band="3"], .heat-legend [data-band="3"] { --heat: var(--heat-3); }
+.heat [data-band="4"], .heat-legend [data-band="4"] { --heat: var(--heat-4); }
+.heat .heat-cell[data-current="true"] { box-shadow: inset 0 0 0 var(--border-size-2) var(--primary), inset 0 0 0 3px var(--surface); }
+.heat-legend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--sp-sm) var(--sp-lg); font-size: var(--type-label); }
+.heat-legend li { display: flex; align-items: center; gap: var(--sp-sm); }
+.heat-legend i { width: 14px; height: 14px; box-sizing: border-box; background: var(--heat); border: var(--border-size-1) solid var(--secondary); }
+.heat-legend i.current { background: var(--surface); border: 0; box-shadow: inset 0 0 0 var(--border-size-2) var(--primary); }
+/* A 0's mark stands alone in its cell and in the legend, at the swatch's width. */
+.heat .heat-cell { justify-content: center; }
+.heat .reach::after, .heat-legend .reach::after { vertical-align: baseline; line-height: 1; }
+.heat-legend .reach { width: 14px; text-align: center; font-weight: 700; }
+
+@media (max-width: 720px) {
+  .grid-table .name { box-shadow: inset calc(-1 * var(--border-size-1)) 0 0 var(--border); }
+  .zone-odds .row { grid-auto-columns: 5.5rem; }
+  .zone-odds .name { min-width: 8rem; }
+}

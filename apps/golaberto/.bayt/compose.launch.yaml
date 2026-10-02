@@ -1,0 +1,83 @@
+# generated from bayt.cue — do not edit
+services:
+  apps_golaberto-launch:
+    build:
+      additional_contexts:
+        apps_golaberto-caddy: service:apps_golaberto-caddy
+        apps_golaberto-database: service:apps_golaberto-database
+        apps_golaberto-crud: service:apps_golaberto-crud
+        apps_golaberto-electric: service:apps_golaberto-electric
+        apps_golaberto-redis: service:apps_golaberto-redis
+        apps_golaberto-mesh-events: service:apps_golaberto-mesh-events
+        apps_golaberto-conduit: service:apps_golaberto-conduit
+        apps_golaberto-transform: service:apps_golaberto-transform
+        apps_golaberto-compute: service:apps_golaberto-compute
+        apps_golaberto-auth: service:apps_golaberto-auth
+      context: ..
+      dockerfile: .bayt/Dockerfile.launch
+      target: launch
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    depends_on:
+      apps_golaberto-caddy:
+        condition: service_healthy
+        restart: true
+      apps_golaberto-database:
+        condition: service_healthy
+        restart: true
+      apps_golaberto-crud:
+        condition: service_healthy
+        restart: true
+      apps_golaberto-electric:
+        condition: service_healthy
+        restart: true
+      apps_golaberto-redis:
+        condition: service_healthy
+        restart: true
+      apps_golaberto-mesh-events:
+        condition: service_healthy
+        restart: true
+      apps_golaberto-conduit:
+        condition: service_healthy
+        restart: true
+      apps_golaberto-transform:
+        condition: service_started
+      apps_golaberto-compute:
+        condition: service_started
+      apps_golaberto-auth:
+        condition: service_started
+    healthcheck:
+      test:
+      - CMD
+      - echo
+      - golaberto is healthy
+      interval: 5s
+      timeout: 2s
+      retries: 3
+    image: bayt-apps_golaberto-launch:${BAYT_IMAGE_TAG:-latest}
+    networks:
+      default:
+        aliases:
+        - launch
+  apps_golaberto-launch_bayt:
+    build:
+      additional_contexts:
+        apps_golaberto-caddy_bayt: service:apps_golaberto-caddy_bayt
+        apps_golaberto-database_bayt: service:apps_golaberto-database_bayt
+        apps_golaberto-crud_bayt: service:apps_golaberto-crud_bayt
+        apps_golaberto-electric_bayt: service:apps_golaberto-electric_bayt
+        apps_golaberto-redis_bayt: service:apps_golaberto-redis_bayt
+        apps_golaberto-mesh-events_bayt: service:apps_golaberto-mesh-events_bayt
+        apps_golaberto-conduit_bayt: service:apps_golaberto-conduit_bayt
+        apps_golaberto-transform_bayt: service:apps_golaberto-transform_bayt
+        apps_golaberto-compute_bayt: service:apps_golaberto-compute_bayt
+        apps_golaberto-auth_bayt: service:apps_golaberto-auth_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.launch
+      target: launch_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-apps_golaberto-launch_bayt:latest
+    scale: 0

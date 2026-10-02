@@ -1,0 +1,205 @@
+diff --git a/odds-rust/Cargo.toml b/odds-rust/Cargo.toml
+index ff6b718..b78c98b 100644
+--- a/odds-rust/Cargo.toml
++++ b/odds-rust/Cargo.toml
+@@ -9,11 +9,16 @@ publish = false
+ serde = { version = "1", features = ["derive"] }
+ serde_json = { version = "1", features = ["float_roundtrip"] }
+ chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
+-mysql = { version = "26", default-features = false, features = ["minimal-rust"] }
+-tiny_http = "0.12"
++mysql = { version = "26", default-features = false, features = ["minimal-rust"], optional = true }
++tiny_http = { version = "0.12", optional = true }
+ smallvec = "1.10.0"
+ player-ratings = { package = "golaberto-player-ratings", path = "../stats/core" }
+ 
++[features]
++default = ["service"]
++# The HTTP server and its MySQL persistence; without them the library builds for wasm32-wasip1.
++service = ["dep:mysql", "dep:tiny_http"]
++
+ [profile.release]
+ lto = "thin"
+ codegen-units = 1
+@@ -26,3 +31,20 @@ path = "src/lib.rs"
+ [[bin]]
+ name = "golaberto-odds"
+ path = "src/main.rs"
++required-features = ["service"]
++
++[[example]]
++name = "player_ratings_dry_run"
++required-features = ["service"]
++
++[[test]]
++name = "database"
++required-features = ["service"]
++
++[[test]]
++name = "http"
++required-features = ["service"]
++
++[[test]]
++name = "player_ratings"
++required-features = ["service"]
+diff --git a/odds-rust/src/lib.rs b/odds-rust/src/lib.rs
+index 04031aa..673fbdc 100644
+--- a/odds-rust/src/lib.rs
++++ b/odds-rust/src/lib.rs
+@@ -1,15 +1,18 @@
+ pub mod api;
+ pub mod conditioned;
++#[cfg(feature = "service")]
+ pub mod database;
+ pub mod domains;
+ pub mod goal_completion;
+ pub mod goal_tilt;
++#[cfg(feature = "service")]
+ pub mod http;
+ pub mod joint_caps;
+ pub mod logging;
+ pub mod lookahead;
+ pub mod model;
+ pub mod neighbors;
++#[cfg(feature = "service")]
+ pub mod player_ratings;
+ pub mod pool;
+ pub mod proof;
+diff --git a/odds-rust/src/pool.rs b/odds-rust/src/pool.rs
+index 558824f..e74e738 100644
+--- a/odds-rust/src/pool.rs
++++ b/odds-rust/src/pool.rs
+@@ -134,29 +134,30 @@ pub fn batched_scout(
+     let mut rng = Rng::new(seed);
+     let seeds: Vec<_> = (0..10).map(|_| rng.int63()).collect();
+     let next = AtomicUsize::new(0);
+-    let mut results = std::thread::scope(|scope| {
+-        let mut handles = Vec::new();
+-        for _ in 0..workers.clamp(1, 4) {
+-            let next = &next;
+-            let seeds = &seeds;
+-            handles.push(scope.spawn(move || {
+-                let mut local = Vec::new();
+-                loop {
+-                    let batch = next.fetch_add(1, Ordering::Relaxed);
+-                    if batch >= 10 {
+-                        break;
+-                    }
+-                    let count = (batch + 1) * samples / 10 - batch * samples / 10;
+-                    local.push((batch, scout(model, count, seeds[batch])));
+-                }
+-                local
+-            }));
++    let work = || {
++        let mut local = Vec::new();
++        loop {
++            let batch = next.fetch_add(1, Ordering::Relaxed);
++            if batch >= 10 {
++                break;
++            }
++            let count = (batch + 1) * samples / 10 - batch * samples / 10;
++            local.push((batch, scout(model, count, seeds[batch])));
+         }
+-        handles
+-            .into_iter()
+-            .flat_map(|h| h.join().unwrap())
+-            .collect::<Vec<_>>()
+-    });
++        local
++    };
++    // One worker runs inline: targets without threads (wasm32-wasip1) cannot spawn.
++    let mut results = if workers <= 1 {
++        work()
++    } else {
++        std::thread::scope(|scope| {
++            let handles: Vec<_> = (0..workers.min(4)).map(|_| scope.spawn(&work)).collect();
++            handles
++                .into_iter()
++                .flat_map(|h| h.join().unwrap())
++                .collect::<Vec<_>>()
++        })
++    };
+     results.sort_by_key(|(i, _)| *i);
+     let parts: Vec<_> = results.into_iter().map(|(_, r)| r).collect();
+     let mut total = Scout::new(model, samples);
+diff --git a/odds-rust/src/search.rs b/odds-rust/src/search.rs
+index 097e5dd..c9806db 100644
+--- a/odds-rust/src/search.rs
++++ b/odds-rust/src/search.rs
+@@ -23,28 +23,31 @@ pub fn enabled(name: &str) -> bool {
+ }
+ pub fn parallel<T: Send, F: Fn(usize) -> T + Sync>(count: usize, workers: usize, f: F) -> Vec<T> {
+     let next = AtomicUsize::new(0);
+-    let mut results = std::thread::scope(|scope| {
+-        let f = &f;
+-        let next = &next;
+-        let mut handles = Vec::new();
+-        for _ in 0..workers.clamp(1, 4).min(count) {
+-            handles.push(scope.spawn(move || {
+-                let mut result = Vec::new();
+-                loop {
+-                    let i = next.fetch_add(1, Ordering::Relaxed);
+-                    if i >= count {
+-                        break;
+-                    }
+-                    result.push((i, f(i)));
+-                }
+-                result
+-            }));
++    let work = || {
++        let mut result = Vec::new();
++        loop {
++            let i = next.fetch_add(1, Ordering::Relaxed);
++            if i >= count {
++                break;
++            }
++            result.push((i, f(i)));
+         }
+-        handles
+-            .into_iter()
+-            .flat_map(|h| h.join().unwrap())
+-            .collect::<Vec<_>>()
+-    });
++        result
++    };
++    // One worker runs inline: targets without threads (wasm32-wasip1) cannot spawn.
++    let mut results = if workers <= 1 || count <= 1 {
++        work()
++    } else {
++        std::thread::scope(|scope| {
++            let handles: Vec<_> = (0..workers.min(4).min(count))
++                .map(|_| scope.spawn(&work))
++                .collect();
++            handles
++                .into_iter()
++                .flat_map(|h| h.join().unwrap())
++                .collect::<Vec<_>>()
++        })
++    };
+     results.sort_by_key(|(i, _)| *i);
+     results.into_iter().map(|(_, r)| r).collect()
+ }
+diff --git a/odds-rust/tests/ratings.rs b/odds-rust/tests/ratings.rs
+index e0e52bd..c944565 100644
+--- a/odds-rust/tests/ratings.rs
++++ b/odds-rust/tests/ratings.rs
+@@ -1,8 +1,6 @@
+-use golaberto_odds::{
+-    http,
+-    logging::RequestLog,
+-    ratings::{self, Game, Request, TeamRating},
+-};
++use golaberto_odds::ratings::{self, Game, Request, TeamRating};
++#[cfg(feature = "service")]
++use golaberto_odds::{http, logging::RequestLog};
+ use serde_json::{json, Value};
+ 
+ fn fixture() -> Request {
+@@ -110,6 +108,7 @@ fn invalid_rating_requests_are_rejected_before_computation() {
+     assert!(ratings::evaluate(&request).is_err());
+ }
+ 
++#[cfg(feature = "service")]
+ #[test]
+ fn empty_historical_request_needs_no_database_and_unknown_route_is_absent() {
+     let log = RequestLog::new();

@@ -1,0 +1,17 @@
+@import url("shared/chrome.css");
+@import url("shared/games.css");
+/* A team's games from its own side: the venue before the opponent, its goals
+   first, and the result as a form dot. */
+.team-games .venue { color: var(--secondary); font-size: var(--type-label); text-transform: uppercase; letter-spacing: .04em; }
+.team-games .away { display: flex; align-items: center; }
+.team-games .outcome { width: 10px; height: 10px; border-radius: 50%; border: var(--border-size-1) solid var(--form-rim); }
+.team-games [data-result="w"] .outcome { background: var(--form-win); }
+.team-games [data-result="d"] .outcome { background: var(--form-draw); }
+.team-games [data-result="l"] .outcome { background: var(--form-loss); }
+.squads { overflow-x: auto; }
+.squad-table td.champ { color: var(--secondary); white-space: nowrap; }
+.squad-table { font-variant-numeric: tabular-nums; }
+.squad-table .name a { font-weight: 700; }
+@media (max-width: 720px) {
+  .squad-table .wide, .squad-table .champ { display: none; }
+}

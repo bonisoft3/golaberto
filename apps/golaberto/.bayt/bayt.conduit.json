@@ -1,0 +1,314 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "compose": {
+    "up": false,
+    "manual": false,
+    "environment": {
+      "DATABASE_URL": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
+      "CONDUIT_PIPELINES_PATH": "/conduit/pipelines",
+      "CONDUIT_DB_TYPE": "inmemory"
+    },
+    "ports": [],
+    "volumes": [],
+    "depends_on": {
+      "apps_golaberto-database": {
+        "condition": "service_healthy"
+      },
+      "apps_golaberto-mesh-events": {
+        "condition": "service_started"
+      }
+    },
+    "networks": {
+      "default": {
+        "aliases": [
+          "conduit"
+        ]
+      }
+    },
+    "restart": "on-failure",
+    "healthcheck": {
+      "test": [
+        "CMD",
+        "httpcheck",
+        "http://127.0.0.1:8080/healthz"
+      ],
+      "interval": "5s",
+      "timeout": "5s",
+      "retries": 20,
+      "start_period": "120s",
+      "start_interval": "500ms"
+    },
+    "develop": {
+      "watch": [
+        {
+          "action": "sync+restart",
+          "path": "../docker/conduit-pipeline.yaml",
+          "target": "/conduit/cdc-to-bus.yaml.tmpl"
+        }
+      ]
+    }
+  },
+  "dockerfile": {
+    "preamble": [],
+    "preambleCopyContexts": [],
+    "from": {
+      "ref": "libraries_mecha:conduit-image",
+      "name": "libraries_mecha-conduit-image"
+    },
+    "workdir": "/app",
+    "add": [],
+    "mounts": [],
+    "secrets": {},
+    "extra_hosts": [],
+    "epilogue": [],
+    "copy": [
+      {
+        "from": {
+          "name": "tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa"
+        },
+        "srcs": [
+          "/bin/httpcheck"
+        ],
+        "dst": "/usr/local/bin/httpcheck",
+        "chmod": "755",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "docker/conduit-pipeline.yaml"
+        ],
+        "dst": "/conduit/cdc-to-bus.yaml.tmpl",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      }
+    ],
+    "healthcheck": {
+      "test": [
+        "CMD",
+        "httpcheck",
+        "http://127.0.0.1:8080/healthz"
+      ],
+      "interval": "5s",
+      "timeout": "5s",
+      "retries": 20,
+      "start_period": "120s"
+    },
+    "expose": [],
+    "entrypoint": null,
+    "incremental": false,
+    "cmd": [
+      "sh",
+      "-c",
+      "mkdir -p /conduit/pipelines && envsubst < /conduit/cdc-to-bus.yaml.tmpl > /conduit/pipelines/cdc-to-bus.yaml && exec /app/conduit run"
+    ]
+  },
+  "name": "conduit",
+  "project": "apps_golaberto",
+  "dir": "apps/golaberto",
+  "activate": "",
+  "srcs": {
+    "globs": [
+      "docker/conduit-pipeline.yaml"
+    ],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {},
+  "synthetics": {
+    "bayt": {
+      "name": "conduit_bayt",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.conduit.yaml",
+          ".bayt/Dockerfile.conduit",
+          ".bayt/bayt.conduit.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "apps/golaberto/.bayt/compose.conduit.yaml",
+        "apps/golaberto/.bayt/compose.database.yaml",
+        "libraries/mecha/.bayt/compose.database-image.yaml",
+        "apps/golaberto/.bayt/compose.mesh-events.yaml",
+        "apps/golaberto/.bayt/compose.caddy.yaml",
+        "apps/golaberto/.bayt/compose.redis.yaml",
+        "libraries/mecha/.bayt/compose.mesh-image.yaml",
+        "libraries/mecha/.bayt/compose.conduit-image.yaml"
+      ]
+    },
+    "outs": {
+      "name": "conduit_outs",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "apps/golaberto/.bayt/compose.conduit.yaml",
+        "apps/golaberto/.bayt/compose.database.yaml",
+        "libraries/mecha/.bayt/compose.database-image.yaml",
+        "apps/golaberto/.bayt/compose.mesh-events.yaml",
+        "apps/golaberto/.bayt/compose.caddy.yaml",
+        "apps/golaberto/.bayt/compose.redis.yaml",
+        "libraries/mecha/.bayt/compose.mesh-image.yaml",
+        "libraries/mecha/.bayt/compose.conduit-image.yaml"
+      ]
+    },
+    "srcs": {
+      "name": "conduit_srcs",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          "docker/conduit-pipeline.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [
+        "database_outs_srcs",
+        "mesh-events_outs_srcs"
+      ],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "apps/golaberto/.bayt/compose.conduit.yaml",
+        "apps/golaberto/.bayt/compose.database.yaml",
+        "libraries/mecha/.bayt/compose.database-image.yaml",
+        "apps/golaberto/.bayt/compose.mesh-events.yaml",
+        "apps/golaberto/.bayt/compose.caddy.yaml",
+        "apps/golaberto/.bayt/compose.redis.yaml",
+        "libraries/mecha/.bayt/compose.mesh-image.yaml",
+        "libraries/mecha/.bayt/compose.conduit-image.yaml"
+      ]
+    }
+  },
+  "visibility": "internal",
+  "emitsSrcs": true,
+  "deps": [
+    "database_outs",
+    "mesh-events_outs"
+  ],
+  "sameProjectDeps": [
+    "database_outs",
+    "mesh-events_outs"
+  ],
+  "transitiveDeps": [
+    "database_outs",
+    "mesh-events_outs"
+  ],
+  "transitiveCrossDeps": [
+    {
+      "name": "conduit-image",
+      "project": "libraries_mecha",
+      "dir": "libraries/mecha",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "upClosure": [
+    "apps/golaberto/.bayt/compose.conduit.yaml",
+    "apps/golaberto/.bayt/compose.database.yaml",
+    "libraries/mecha/.bayt/compose.database-image.yaml",
+    "apps/golaberto/.bayt/compose.mesh-events.yaml",
+    "apps/golaberto/.bayt/compose.caddy.yaml",
+    "apps/golaberto/.bayt/compose.redis.yaml",
+    "libraries/mecha/.bayt/compose.mesh-image.yaml",
+    "libraries/mecha/.bayt/compose.conduit-image.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "conduit-image",
+      "project": "libraries_mecha",
+      "dir": "libraries/mecha",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "database_outs",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "mesh-events_outs",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

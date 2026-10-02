@@ -1,0 +1,4910 @@
+[
+ {
+  "upstream": 1,
+  "name": "Mineirão",
+  "games": [
+   {
+    "upstream": 360502,
+    "championship": "Brasil - Copa do Brasil 2025",
+    "date": "11/09/2025",
+    "time": "22:30",
+    "home": "Cruzeiro-MG",
+    "away": "Atlético-MG",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 356314,
+    "championship": "Brasil - Copa do Brasil 2025",
+    "date": "30/07/2025",
+    "time": "22:30",
+    "home": "Cruzeiro-MG",
+    "away": "CRB-AL",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 352866,
+    "championship": "América do Sul - Copa Sudamericana 2024",
+    "date": "23/10/2024",
+    "time": "22:00",
+    "home": "Cruzeiro-MG",
+    "away": "Lanús",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 344815,
+    "championship": "América do Sul - Copa Sudamericana 2024",
+    "date": "17/05/2024",
+    "time": "00:00",
+    "home": "Cruzeiro-MG",
+    "away": "Unión La Calera",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 344766,
+    "championship": "América do Sul - Copa Sudamericana 2024",
+    "date": "12/04/2024",
+    "time": "00:00",
+    "home": "Cruzeiro-MG",
+    "away": "Alianza Petrolera",
+    "score": [
+     3,
+     3
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 5,
+  "name": "Arena da Baixada",
+  "games": [
+   {
+    "upstream": 344808,
+    "championship": "América do Sul - Copa Sudamericana 2024",
+    "date": "15/05/2024",
+    "time": "22:00",
+    "home": "Athletico-PR",
+    "away": "Danubio",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 334808,
+    "championship": "América do Sul - Copa Libertadores 2023",
+    "date": "06/06/2023",
+    "time": "22:00",
+    "home": "Athletico-PR",
+    "away": "Libertad",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 320036,
+    "championship": "Brasil - Campeonato Brasileiro 2021",
+    "date": "17/10/2021",
+    "time": "19:00",
+    "home": "Athletico-PR",
+    "away": "Fluminense-RJ",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 291837,
+    "championship": "América do Sul - Copa Libertadores 2020/2021",
+    "date": "04/03/2020",
+    "time": "00:30",
+    "home": "Athletico-PR",
+    "away": "Peñarol",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 289369,
+    "championship": "Brasil - Copa do Brasil 2019",
+    "date": "12/09/2019",
+    "time": "00:30",
+    "home": "Athletico-PR",
+    "away": "Internacional-RS",
+    "score": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 7,
+  "name": "Maracanã",
+  "games": [
+   {
+    "upstream": 360501,
+    "championship": "Brasil - Copa do Brasil 2025",
+    "date": "10/09/2025",
+    "time": "22:00",
+    "home": "Fluminense-RJ",
+    "away": "Bahia-BA",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 352879,
+    "championship": "Brasil - Copa do Brasil 2024",
+    "date": "03/11/2024",
+    "time": "19:00",
+    "home": "Flamengo-RJ",
+    "away": "Atlético-MG",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 352853,
+    "championship": "Brasil - Copa do Brasil 2024",
+    "date": "03/10/2024",
+    "time": "00:45",
+    "home": "Flamengo-RJ",
+    "away": "Corinthians-SP",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 344621,
+    "championship": "América do Sul - Copa Libertadores 2024",
+    "date": "16/05/2024",
+    "time": "22:00",
+    "home": "Fluminense-RJ",
+    "away": "Cerro Porteño",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 339818,
+    "championship": "América do Sul - Copa Libertadores 2023",
+    "date": "04/11/2023",
+    "time": "20:00",
+    "home": "Boca Juniors",
+    "away": "Fluminense-RJ",
+    "score": [
+     1,
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 8,
+  "name": "Beira-Rio - José Pinheiro Borba",
+  "games": [
+   {
+    "upstream": 333869,
+    "championship": "Brasil - Campeonato Brasileiro 2023",
+    "date": "28/05/2023",
+    "time": "19:00",
+    "home": "Internacional-RS",
+    "away": "Bahia-BA",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 333809,
+    "championship": "Brasil - Campeonato Brasileiro 2023",
+    "date": "23/04/2023",
+    "time": "14:00",
+    "home": "Internacional-RS",
+    "away": "Flamengo-RJ",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 331609,
+    "championship": "América do Sul - Copa Sudamericana 2022",
+    "date": "11/08/2022",
+    "time": "22:15",
+    "home": "Internacional-RS",
+    "away": "Melgar",
+    "score": null
+   },
+   {
+    "upstream": 320043,
+    "championship": "Brasil - Campeonato Brasileiro 2021",
+    "date": "24/10/2021",
+    "time": "19:00",
+    "home": "Internacional-RS",
+    "away": "Corinthians-SP",
+    "score": [
+     2,
+     2
+    ]
+   },
+   {
+    "upstream": 319983,
+    "championship": "Brasil - Campeonato Brasileiro 2021",
+    "date": "26/09/2021",
+    "time": "19:00",
+    "home": "Internacional-RS",
+    "away": "Bahia-BA",
+    "score": [
+     2,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 11,
+  "name": "São Januário",
+  "games": [
+   {
+    "upstream": 355261,
+    "championship": "América do Sul - Copa Sudamericana 2025",
+    "date": "27/05/2025",
+    "time": "22:00",
+    "home": "Vasco-RJ",
+    "away": "Melgar",
+    "score": [
+     3,
+     0
+    ]
+   },
+   {
+    "upstream": 355382,
+    "championship": "Brasil - Copa do Brasil 2025",
+    "date": "20/05/2025",
+    "time": "22:00",
+    "home": "Vasco-RJ",
+    "away": "Operário-PR",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 326621,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2022",
+    "date": "08/04/2022",
+    "time": "22:00",
+    "home": "Vasco-RJ",
+    "away": "Vila Nova-GO",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 314758,
+    "championship": "América do Sul - Copa Sudamericana 2020/2021",
+    "date": "29/10/2020",
+    "time": "00:30",
+    "home": "Vasco-RJ",
+    "away": "Caracas",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 304100,
+    "championship": "Brasil - Copa do Brasil 2020/2021",
+    "date": "24/09/2020",
+    "time": "00:30",
+    "home": "Vasco-RJ",
+    "away": "Botafogo-RJ",
+    "score": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 12,
+  "name": "Vila Belmiro",
+  "games": [
+   {
+    "upstream": 331593,
+    "championship": "América do Sul - Copa Sudamericana 2022",
+    "date": "07/07/2022",
+    "time": "00:30",
+    "home": "Santos-SP",
+    "away": "Deportivo Tachira",
+    "score": null
+   },
+   {
+    "upstream": 291850,
+    "championship": "América do Sul - Copa Libertadores 2020/2021",
+    "date": "10/03/2020",
+    "time": "22:15",
+    "home": "Santos-SP",
+    "away": "Delfín",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 247657,
+    "championship": "América do Sul - Copa Libertadores 2018",
+    "date": "28/08/2018",
+    "time": "22:30",
+    "home": "Santos-SP",
+    "away": "Independiente",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 244218,
+    "championship": "Brasil - Copa do Brasil 2018",
+    "date": "01/08/2018",
+    "time": "22:30",
+    "home": "Santos-SP",
+    "away": "Cruzeiro-MG",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 232447,
+    "championship": "América do Sul - Copa Libertadores 2017",
+    "date": "21/09/2017",
+    "time": "00:45",
+    "home": "Santos-SP",
+    "away": "Barcelona de Guayaquil",
+    "score": [
+     0,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 14,
+  "name": "Morumbi",
+  "games": [
+   {
+    "upstream": 355164,
+    "championship": "América do Sul - Copa Libertadores 2025",
+    "date": "27/05/2025",
+    "time": "22:00",
+    "home": "São Paulo-SP",
+    "away": "Talleres",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 331613,
+    "championship": "América do Sul - Copa Sudamericana 2022",
+    "date": "09/09/2022",
+    "time": "00:30",
+    "home": "São Paulo-SP",
+    "away": "Atlético-GO",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 319971,
+    "championship": "Brasil - Campeonato Brasileiro 2021",
+    "date": "19/09/2021",
+    "time": "19:00",
+    "home": "São Paulo-SP",
+    "away": "Atlético-GO",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 247740,
+    "championship": "América do Sul - Copa Sudamericana 2018",
+    "date": "02/08/2018",
+    "time": "22:30",
+    "home": "São Paulo-SP",
+    "away": "Colón",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 208740,
+    "championship": "Brasil - Campeonato Paulista 2017",
+    "date": "16/04/2017",
+    "time": "22:00",
+    "home": "São Paulo-SP",
+    "away": "Corinthians-SP",
+    "score": [
+     0,
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 16,
+  "name": "Alfredo Jaconi",
+  "games": [
+   {
+    "upstream": 319987,
+    "championship": "Brasil - Campeonato Brasileiro 2021",
+    "date": "26/09/2021",
+    "time": "19:00",
+    "home": "Juventude-RS",
+    "away": "Santos-SP",
+    "score": [
+     3,
+     0
+    ]
+   },
+   {
+    "upstream": 319917,
+    "championship": "Brasil - Campeonato Brasileiro 2021",
+    "date": "08/08/2021",
+    "time": "19:00",
+    "home": "Juventude-RS",
+    "away": "Atlético-MG",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 304097,
+    "championship": "Brasil - Copa do Brasil 2020/2021",
+    "date": "17/09/2020",
+    "time": "19:00",
+    "home": "Juventude-RS",
+    "away": "CRB-AL",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 293850,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2020/2021",
+    "date": "29/08/2020",
+    "time": "14:00",
+    "home": "Juventude-RS",
+    "away": "Botafogo-SP",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 292047,
+    "championship": "Brasil - Copa do Brasil 2020/2021",
+    "date": "11/03/2020",
+    "time": "22:15",
+    "home": "Juventude-RS",
+    "away": "América-RN",
+    "score": [
+     1,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 17,
+  "name": "Serra Dourada",
+  "games": [
+   {
+    "upstream": 365705,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2026",
+    "date": "12/06/2026",
+    "time": "22:00",
+    "home": "Atlético-GO",
+    "away": "CRB-AL",
+    "score": [
+     3,
+     3
+    ]
+   },
+   {
+    "upstream": 354735,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2025",
+    "date": "23/08/2025",
+    "time": "21:00",
+    "home": "Goiás-GO",
+    "away": "América-MG",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 354725,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2025",
+    "date": "16/08/2025",
+    "time": "21:30",
+    "home": "Vila Nova-GO",
+    "away": "Goiás-GO",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 331601,
+    "championship": "América do Sul - Copa Sudamericana 2022",
+    "date": "08/07/2022",
+    "time": "00:30",
+    "home": "Atlético-GO",
+    "away": "Olimpia",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 304096,
+    "championship": "Brasil - Copa do Brasil 2020/2021",
+    "date": "24/09/2020",
+    "time": "23:00",
+    "home": "Atlético-GO",
+    "away": "Fluminense-RJ",
+    "score": [
+     3,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 18,
+  "name": "Moisés Lucarelli",
+  "games": [
+   {
+    "upstream": 304091,
+    "championship": "Brasil - Copa do Brasil 2020/2021",
+    "date": "16/09/2020",
+    "time": "22:00",
+    "home": "Ponte Preta-SP",
+    "away": "América-MG",
+    "score": [
+     2,
+     2
+    ]
+   },
+   {
+    "upstream": 292059,
+    "championship": "Brasil - Copa do Brasil 2020/2021",
+    "date": "12/03/2020",
+    "time": "22:15",
+    "home": "Ponte Preta-SP",
+    "away": "Afogados-PE",
+    "score": [
+     3,
+     0
+    ]
+   },
+   {
+    "upstream": 244145,
+    "championship": "Brasil - Copa do Brasil 2018",
+    "date": "22/02/2018",
+    "time": "00:45",
+    "home": "Ponte Preta-SP",
+    "away": "Internacional-SP",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 209211,
+    "championship": "Brasil - Campeonato Paulista 2017",
+    "date": "30/04/2017",
+    "time": "19:00",
+    "home": "Ponte Preta-SP",
+    "away": "Corinthians-SP",
+    "score": [
+     0,
+     3
+    ]
+   },
+   {
+    "upstream": 208738,
+    "championship": "Brasil - Campeonato Paulista 2017",
+    "date": "16/04/2017",
+    "time": "19:00",
+    "home": "Ponte Preta-SP",
+    "away": "Palmeiras-SP",
+    "score": [
+     3,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 19,
+  "name": "Parque Antártica",
+  "games": [
+   {
+    "upstream": 344575,
+    "championship": "América do Sul - Copa Libertadores 2024",
+    "date": "12/04/2024",
+    "time": "00:00",
+    "home": "Palmeiras-SP",
+    "away": "Liverpool-URU",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 331263,
+    "championship": "América do Sul - Copa Libertadores 2022",
+    "date": "11/08/2022",
+    "time": "00:30",
+    "home": "Palmeiras-SP",
+    "away": "Atlético-MG",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 320030,
+    "championship": "Brasil - Campeonato Brasileiro 2021",
+    "date": "17/10/2021",
+    "time": "19:00",
+    "home": "Palmeiras-SP",
+    "away": "Internacional-RS",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 319859,
+    "championship": "Brasil - Campeonato Brasileiro 2021",
+    "date": "07/07/2021",
+    "time": "22:00",
+    "home": "Palmeiras-SP",
+    "away": "Grêmio-RS",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 318627,
+    "championship": "Brasil - Copa do Brasil 2020/2021",
+    "date": "07/03/2021",
+    "time": "21:00",
+    "home": "Palmeiras-SP",
+    "away": "Grêmio-RS",
+    "score": [
+     2,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 21,
+  "name": "Couto Pereira",
+  "games": [
+   {
+    "upstream": 293524,
+    "championship": "Brasil - Campeonato Brasileiro 2020/2021",
+    "date": "20/09/2020",
+    "time": "19:00",
+    "home": "Coritiba-PR",
+    "away": "Vasco-RJ",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 251906,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2019",
+    "date": "29/04/2019",
+    "time": "23:00",
+    "home": "Coritiba-PR",
+    "away": "Ponte Preta-SP",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 209226,
+    "championship": "Brasil - Campeonato Paranaense 2017",
+    "date": "07/05/2017",
+    "time": "19:00",
+    "home": "Coritiba-PR",
+    "away": "Athletico-PR",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 208771,
+    "championship": "Brasil - Campeonato Paranaense 2017",
+    "date": "23/04/2017",
+    "time": "19:00",
+    "home": "Coritiba-PR",
+    "away": "Cianorte-PR",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 208436,
+    "championship": "Brasil - Campeonato Paranaense 2017",
+    "date": "12/04/2017",
+    "time": "23:00",
+    "home": "Coritiba-PR",
+    "away": "Cascavel-PR",
+    "score": [
+     4,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 24,
+  "name": "Castelão",
+  "games": [
+   {
+    "upstream": 355362,
+    "championship": "Brasil - Copa do Brasil 2025",
+    "date": "21/05/2025",
+    "time": "22:00",
+    "home": "Fortaleza-CE",
+    "away": "Retrô-PE",
+    "score": null
+   },
+   {
+    "upstream": 344781,
+    "championship": "América do Sul - Copa Sudamericana 2024",
+    "date": "26/04/2024",
+    "time": "00:00",
+    "home": "Fortaleza-CE",
+    "away": "Boca Juniors",
+    "score": [
+     4,
+     2
+    ]
+   },
+   {
+    "upstream": 344759,
+    "championship": "América do Sul - Copa Sudamericana 2024",
+    "date": "10/04/2024",
+    "time": "22:00",
+    "home": "Fortaleza-CE",
+    "away": "Nacional Potosí",
+    "score": [
+     5,
+     0
+    ]
+   },
+   {
+    "upstream": 339817,
+    "championship": "América do Sul - Copa Sudamericana 2023",
+    "date": "28/10/2023",
+    "time": "20:00",
+    "home": "Fortaleza-CE",
+    "away": "LDU",
+    "score": null
+   },
+   {
+    "upstream": 333875,
+    "championship": "Brasil - Campeonato Brasileiro 2023",
+    "date": "03/06/2023",
+    "time": "19:00",
+    "home": "Fortaleza-CE",
+    "away": "Bahia-BA",
+    "score": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 25,
+  "name": "Independência",
+  "games": [
+   {
+    "upstream": 333878,
+    "championship": "Brasil - Campeonato Brasileiro 2023",
+    "date": "03/06/2023",
+    "time": "21:30",
+    "home": "América-MG",
+    "away": "Corinthians-SP",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 333870,
+    "championship": "Brasil - Campeonato Brasileiro 2023",
+    "date": "28/05/2023",
+    "time": "21:30",
+    "home": "Atlético-MG",
+    "away": "Palmeiras-SP",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 334793,
+    "championship": "América do Sul - Copa Libertadores 2023",
+    "date": "23/05/2023",
+    "time": "22:00",
+    "home": "Atlético-MG",
+    "away": "Athletico-PR",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 319847,
+    "championship": "Brasil - Campeonato Brasileiro 2021",
+    "date": "01/07/2021",
+    "time": "22:00",
+    "home": "Atlético-MG",
+    "away": "Atlético-GO",
+    "score": [
+     4,
+     1
+    ]
+   },
+   {
+    "upstream": 304092,
+    "championship": "Brasil - Copa do Brasil 2020/2021",
+    "date": "23/09/2020",
+    "time": "00:30",
+    "home": "América-MG",
+    "away": "Ponte Preta-SP",
+    "score": [
+     3,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 34,
+  "name": "Rei Pelé",
+  "games": [
+   {
+    "upstream": 365710,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2026",
+    "date": "12/07/2026",
+    "time": "22:00",
+    "home": "CRB-AL",
+    "away": "Goiás-GO",
+    "score": [
+     2,
+     2
+    ]
+   },
+   {
+    "upstream": 365706,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2026",
+    "date": "21/06/2026",
+    "time": "19:00",
+    "home": "CRB-AL",
+    "away": "Fortaleza-CE",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 365704,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2026",
+    "date": "07/06/2026",
+    "time": "19:00",
+    "home": "CRB-AL",
+    "away": "São Bernardo-SP",
+    "score": [
+     2,
+     3
+    ]
+   },
+   {
+    "upstream": 356312,
+    "championship": "Brasil - Copa do Brasil 2025",
+    "date": "30/07/2025",
+    "time": "22:00",
+    "home": "CSA-AL",
+    "away": "Vasco-RJ",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 355386,
+    "championship": "Brasil - Copa do Brasil 2025",
+    "date": "23/05/2025",
+    "time": "00:30",
+    "home": "CRB-AL",
+    "away": "Santos-SP",
+    "score": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 40,
+  "name": "Heriberto Hülse",
+  "games": [
+   {
+    "upstream": 281345,
+    "championship": "Brasil - Copa do Brasil 2019",
+    "date": "21/02/2019",
+    "time": "22:15",
+    "home": "Criciúma-SC",
+    "away": "Oeste-SP",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 244134,
+    "championship": "Brasil - Copa do Brasil 2018",
+    "date": "21/02/2018",
+    "time": "23:30",
+    "home": "Criciúma-SC",
+    "away": "Cianorte-PR",
+    "score": null
+   },
+   {
+    "upstream": 207632,
+    "championship": "Brasil - Copa do Brasil 2017",
+    "date": "09/03/2017",
+    "time": "22:15",
+    "home": "Criciúma-SC",
+    "away": "Fluminense-RJ",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 206378,
+    "championship": "Brasil - Copa do Brasil 2017",
+    "date": "22/02/2017",
+    "time": "22:30",
+    "home": "Criciúma-SC",
+    "away": "Altos-PI",
+    "score": [
+     2,
+     2
+    ]
+   },
+   {
+    "upstream": 119476,
+    "championship": "Brasil - Copa do Brasil 2015",
+    "date": "22/07/2015",
+    "time": "00:00",
+    "home": "Criciúma-SC",
+    "away": "Grêmio-RS",
+    "score": null
+   }
+  ]
+ },
+ {
+  "upstream": 41,
+  "name": "Ilha do Retiro",
+  "games": [
+   {
+    "upstream": 326977,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2022",
+    "date": "28/10/2022",
+    "time": "22:00",
+    "home": "Sport-PE",
+    "away": "Operário-PR",
+    "score": [
+     5,
+     1
+    ]
+   },
+   {
+    "upstream": 326647,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2022",
+    "date": "26/04/2022",
+    "time": "22:00",
+    "home": "Sport-PE",
+    "away": "Ituano-SP",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 244128,
+    "championship": "Brasil - Copa do Brasil 2018",
+    "date": "15/02/2018",
+    "time": "21:15",
+    "home": "Sport-PE",
+    "away": "Ferroviário-CE",
+    "score": null
+   },
+   {
+    "upstream": 208918,
+    "championship": "Brasil - Copa do Brasil 2017",
+    "date": "01/06/2017",
+    "time": "00:45",
+    "home": "Sport-PE",
+    "away": "Botafogo-RJ",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 209348,
+    "championship": "Brasil - Copa do Nordeste 2017",
+    "date": "18/05/2017",
+    "time": "00:45",
+    "home": "Sport-PE",
+    "away": "Bahia-BA",
+    "score": [
+     1,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 45,
+  "name": "Ressacada",
+  "games": [
+   {
+    "upstream": 320496,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2021",
+    "date": "08/11/2021",
+    "time": "23:00",
+    "home": "Avaí-SC",
+    "away": "CSA-AL",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 320456,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2021",
+    "date": "23/10/2021",
+    "time": "00:30",
+    "home": "Avaí-SC",
+    "away": "Cruzeiro-MG",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 320346,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2021",
+    "date": "20/08/2021",
+    "time": "22:00",
+    "home": "Avaí-SC",
+    "away": "Coritiba-PR",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 209227,
+    "championship": "Brasil - Campeonato Catarinense 2017",
+    "date": "30/04/2017",
+    "time": "19:00",
+    "home": "Avaí-SC",
+    "away": "Chapecoense-SC",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 206385,
+    "championship": "Brasil - Copa do Brasil 2017",
+    "date": "01/03/2017",
+    "time": "22:30",
+    "home": "Avaí-SC",
+    "away": "Luverdense-MT",
+    "score": null
+   }
+  ]
+ },
+ {
+  "upstream": 46,
+  "name": "Barradão",
+  "games": [
+   {
+    "upstream": 320507,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2021",
+    "date": "14/11/2021",
+    "time": "22:00",
+    "home": "Vitória-BA",
+    "away": "Cruzeiro-MG",
+    "score": [
+     3,
+     0
+    ]
+   },
+   {
+    "upstream": 293852,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2020/2021",
+    "date": "29/08/2020",
+    "time": "19:30",
+    "home": "Vitória-BA",
+    "away": "Paraná-PR",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 291792,
+    "championship": "Brasil - Copa do Brasil 2020/2021",
+    "date": "05/03/2020",
+    "time": "22:15",
+    "home": "Vitória-BA",
+    "away": "Lagarto-SE",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 244199,
+    "championship": "Brasil - Copa do Brasil 2018",
+    "date": "19/04/2018",
+    "time": "22:15",
+    "home": "Vitória-BA",
+    "away": "Internacional-RS",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 209224,
+    "championship": "Brasil - Campeonato Baiano 2017",
+    "date": "07/05/2017",
+    "time": "19:00",
+    "home": "Vitória-BA",
+    "away": "Bahia-BA",
+    "score": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 47,
+  "name": "Aflitos",
+  "games": [
+   {
+    "upstream": 326887,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2022",
+    "date": "02/09/2022",
+    "time": "22:00",
+    "home": "Náutico-PE",
+    "away": "Ituano-SP",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 291409,
+    "championship": "Brasil - Copa do Brasil 2020/2021",
+    "date": "20/02/2020",
+    "time": "00:30",
+    "home": "Náutico-PE",
+    "away": "Botafogo-RJ",
+    "score": null
+   },
+   {
+    "upstream": 289552,
+    "championship": "Brasil - Campeonato Brasileiro - Série C 2019",
+    "date": "29/09/2019",
+    "time": "19:00",
+    "home": "Náutico-PE",
+    "away": "Sampaio Corrêa-MA",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 289551,
+    "championship": "Brasil - Campeonato Brasileiro - Série C 2019",
+    "date": "22/09/2019",
+    "time": "21:00",
+    "home": "Náutico-PE",
+    "away": "Juventude-RS",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 289026,
+    "championship": "Brasil - Campeonato Brasileiro - Série C 2019",
+    "date": "08/09/2019",
+    "time": "21:00",
+    "home": "Náutico-PE",
+    "away": "Paysandu-PA",
+    "score": [
+     2,
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 48,
+  "name": "Olímpico Monumental",
+  "games": [
+   {
+    "upstream": 344632,
+    "championship": "América do Sul - Copa Libertadores 2024",
+    "date": "29/05/2024",
+    "time": "22:00",
+    "home": "Grêmio-RS",
+    "away": "The Strongest",
+    "score": [
+     4,
+     0
+    ]
+   },
+   {
+    "upstream": 326841,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2022",
+    "date": "09/08/2022",
+    "time": "22:00",
+    "home": "Grêmio-RS",
+    "away": "Operário-PR",
+    "score": [
+     5,
+     1
+    ]
+   },
+   {
+    "upstream": 318626,
+    "championship": "Brasil - Copa do Brasil 2020/2021",
+    "date": "01/03/2021",
+    "time": "00:00",
+    "home": "Grêmio-RS",
+    "away": "Palmeiras-SP",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 293522,
+    "championship": "Brasil - Campeonato Brasileiro 2020/2021",
+    "date": "20/09/2020",
+    "time": "19:00",
+    "home": "Grêmio-RS",
+    "away": "Palmeiras-SP",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 291863,
+    "championship": "América do Sul - Copa Libertadores 2020/2021",
+    "date": "13/03/2020",
+    "time": "00:00",
+    "home": "Grêmio-RS",
+    "away": "Internacional-RS",
+    "score": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 71,
+  "name": "Evandro Almeida",
+  "games": [
+   {
+    "upstream": 354727,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2025",
+    "date": "16/08/2025",
+    "time": "19:00",
+    "home": "Remo-PA",
+    "away": "Botafogo-SP",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 317731,
+    "championship": "Brasil - Campeonato Brasileiro - Série C 2020/2021",
+    "date": "16/01/2021",
+    "time": "20:00",
+    "home": "Remo-PA",
+    "away": "Londrina-PR",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 209236,
+    "championship": "Brasil - Campeonato Paraense 2017",
+    "date": "30/04/2017",
+    "time": "19:00",
+    "home": "Remo-PA",
+    "away": "Paysandu-PA",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 208767,
+    "championship": "Brasil - Campeonato Paraense 2017",
+    "date": "23/04/2017",
+    "time": "19:00",
+    "home": "Remo-PA",
+    "away": "Independente-PA",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 112582,
+    "championship": "Brasil - Campeonato Brasileiro - Série C 2016",
+    "date": "10/07/2016",
+    "time": "21:30",
+    "home": "Remo-PA",
+    "away": "Fortaleza-CE",
+    "score": [
+     2,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 163,
+  "name": "Índio Condá",
+  "games": [
+   {
+    "upstream": 326774,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2022",
+    "date": "01/07/2022",
+    "time": "22:00",
+    "home": "Chapecoense-SC",
+    "away": "Sampaio Corrêa-MA",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 319997,
+    "championship": "Brasil - Campeonato Brasileiro 2021",
+    "date": "03/10/2021",
+    "time": "19:00",
+    "home": "Chapecoense-SC",
+    "away": "São Paulo-SP",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 293825,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2020/2021",
+    "date": "16/08/2020",
+    "time": "14:00",
+    "home": "Chapecoense-SC",
+    "away": "Sampaio Corrêa-MA",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 244221,
+    "championship": "Brasil - Copa do Brasil 2018",
+    "date": "16/08/2018",
+    "time": "00:45",
+    "home": "Chapecoense-SC",
+    "away": "Corinthians-SP",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 244209,
+    "championship": "Brasil - Copa do Brasil 2018",
+    "date": "16/05/2018",
+    "time": "22:30",
+    "home": "Chapecoense-SC",
+    "away": "Atlético-MG",
+    "score": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 170,
+  "name": "Marcelo Stefani",
+  "games": [
+   {
+    "upstream": 363763,
+    "championship": "Brasil - Campeonato Brasileiro 2025",
+    "date": "03/12/2025",
+    "time": "22:00",
+    "home": "Bragantino-SP",
+    "away": "Vitória-BA",
+    "score": [
+     4,
+     0
+    ]
+   },
+   {
+    "upstream": 319846,
+    "championship": "Brasil - Campeonato Brasileiro 2021",
+    "date": "01/07/2021",
+    "time": "19:00",
+    "home": "Bragantino-SP",
+    "away": "Ceará-CE",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 251919,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2019",
+    "date": "10/05/2019",
+    "time": "22:15",
+    "home": "Bragantino-SP",
+    "away": "Atlético-GO",
+    "score": [
+     3,
+     0
+    ]
+   },
+   {
+    "upstream": 251916,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2019",
+    "date": "06/05/2019",
+    "time": "23:00",
+    "home": "Bragantino-SP",
+    "away": "Sport-PE",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 250365,
+    "championship": "Brasil - Campeonato Brasileiro - Série C 2018",
+    "date": "01/09/2018",
+    "time": "19:00",
+    "home": "Bragantino-SP",
+    "away": "Operário-PR",
+    "score": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 218,
+  "name": "Joaquim Portugal",
+  "games": [
+   {
+    "upstream": 352877,
+    "championship": "Brasil - Campeonato Brasileiro - Série C 2024",
+    "date": "19/10/2024",
+    "time": "20:30",
+    "home": "Athletic-MG",
+    "away": "Volta Redonda-RJ",
+    "score": [
+     0,
+     2
+    ]
+   },
+   {
+    "upstream": 342905,
+    "championship": "Brasil - Copa do Brasil 2024",
+    "date": "27/02/2024",
+    "time": "22:15",
+    "home": "Athletic-MG",
+    "away": "Volta Redonda-RJ",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 40773,
+    "championship": "Brasil - Campeonato Mineiro 2009 - Sub-20",
+    "date": "23/09/2009",
+    "time": "18:00",
+    "home": "Athletic-MG",
+    "away": "Atlético-MG",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 40751,
+    "championship": "Brasil - Campeonato Mineiro 2009 - Sub-20",
+    "date": "13/09/2009",
+    "time": "13:30",
+    "home": "Athletic-MG",
+    "away": "Vila Nova de Itabira-MG",
+    "score": [
+     4,
+     2
+    ]
+   },
+   {
+    "upstream": 40724,
+    "championship": "Brasil - Campeonato Mineiro 2009 - Sub-20",
+    "date": "02/09/2009",
+    "time": "18:00",
+    "home": "Athletic-MG",
+    "away": "Divinópolis-MG",
+    "score": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 264,
+  "name": "Centenário - Montevideo",
+  "games": [
+   {
+    "upstream": 344611,
+    "championship": "América do Sul - Copa Libertadores 2024",
+    "date": "14/05/2024",
+    "time": "22:00",
+    "home": "Peñarol",
+    "away": "Atlético-MG",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 318748,
+    "championship": "Uruguai - Primera División 2020",
+    "date": "28/01/2021",
+    "time": "00:00",
+    "home": "Peñarol",
+    "away": "Defensor Sporting",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 312944,
+    "championship": "Uruguai - Primera División 2020",
+    "date": "06/10/2020",
+    "time": "21:00",
+    "home": "Peñarol",
+    "away": "Progreso",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 289869,
+    "championship": "Uruguai - Primera División 2019",
+    "date": "11/12/2019",
+    "time": "23:30",
+    "home": "Peñarol",
+    "away": "Nacional-URU",
+    "score": [
+     0,
+     2
+    ]
+   },
+   {
+    "upstream": 247733,
+    "championship": "América do Sul - Copa Sudamericana 2018",
+    "date": "07/08/2018",
+    "time": "22:30",
+    "home": "Peñarol",
+    "away": "Athletico-PR",
+    "score": [
+     1,
+     4
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 280,
+  "name": "Presidente Dutra",
+  "games": [
+   {
+    "upstream": 344743,
+    "championship": "América do Sul - Copa Sudamericana 2024",
+    "date": "03/04/2024",
+    "time": "22:00",
+    "home": "Cuiabá-MT",
+    "away": "Lanús",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 319848,
+    "championship": "Brasil - Campeonato Brasileiro 2021",
+    "date": "01/07/2021",
+    "time": "23:00",
+    "home": "Cuiabá-MT",
+    "away": "Flamengo-RJ",
+    "score": [
+     0,
+     2
+    ]
+   },
+   {
+    "upstream": 250577,
+    "championship": "Brasil - Campeonato Brasileiro - Série C 2018",
+    "date": "22/09/2018",
+    "time": "23:00",
+    "home": "Cuiabá-MT",
+    "away": "Operário-PR",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 250367,
+    "championship": "Brasil - Campeonato Brasileiro - Série C 2018",
+    "date": "02/09/2018",
+    "time": "22:00",
+    "home": "Cuiabá-MT",
+    "away": "Botafogo-SP",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 209279,
+    "championship": "Brasil - Campeonato Matogrossense 2017",
+    "date": "30/04/2017",
+    "time": "19:00",
+    "home": "Cuiabá-MT",
+    "away": "Sinop-MT",
+    "score": [
+     2,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 296,
+  "name": "Engenhão",
+  "games": [
+   {
+    "upstream": 360447,
+    "championship": "América do Sul - Copa Libertadores 2025",
+    "date": "14/08/2025",
+    "time": "22:00",
+    "home": "Botafogo-RJ",
+    "away": "LDU",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 356311,
+    "championship": "Brasil - Copa do Brasil 2025",
+    "date": "29/07/2025",
+    "time": "22:00",
+    "home": "Botafogo-RJ",
+    "away": "Bragantino-SP",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 355100,
+    "championship": "América do Sul - Copa Libertadores 2025",
+    "date": "08/04/2025",
+    "time": "22:00",
+    "home": "Botafogo-RJ",
+    "away": "Carabobo",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 352860,
+    "championship": "América do Sul - Copa Libertadores 2024",
+    "date": "24/10/2024",
+    "time": "00:45",
+    "home": "Botafogo-RJ",
+    "away": "Peñarol",
+    "score": [
+     5,
+     0
+    ]
+   },
+   {
+    "upstream": 344602,
+    "championship": "América do Sul - Copa Libertadores 2024",
+    "date": "09/05/2024",
+    "time": "00:30",
+    "home": "Botafogo-RJ",
+    "away": "LDU",
+    "score": [
+     2,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 342,
+  "name": "José Maria de Campos Maia",
+  "games": [
+   {
+    "upstream": 204860,
+    "championship": "Brasil - Campeonato Paulista - Série A2 2016",
+    "date": "07/05/2016",
+    "time": "22:00",
+    "home": "Mirassol-SP",
+    "away": "Santo André-SP",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 82824,
+    "championship": "Brasil - Campeonato Brasileiro - Série D 2012",
+    "date": "19/08/2012",
+    "time": "18:00",
+    "home": "Mirassol-SP",
+    "away": "Arapongas-PR",
+    "score": [
+     4,
+     1
+    ]
+   },
+   {
+    "upstream": 82820,
+    "championship": "Brasil - Campeonato Brasileiro - Série D 2012",
+    "date": "05/08/2012",
+    "time": "18:00",
+    "home": "Mirassol-SP",
+    "away": "Metropolitano-SC",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 82814,
+    "championship": "Brasil - Campeonato Brasileiro - Série D 2012",
+    "date": "15/07/2012",
+    "time": "18:00",
+    "home": "Mirassol-SP",
+    "away": "Brasil de Pelotas-RS",
+    "score": [
+     2,
+     2
+    ]
+   },
+   {
+    "upstream": 82812,
+    "championship": "Brasil - Campeonato Brasileiro - Série D 2012",
+    "date": "08/07/2012",
+    "time": "18:00",
+    "home": "Mirassol-SP",
+    "away": "Juventude-RS",
+    "score": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 347,
+  "name": "Santa Cruz",
+  "games": [
+   {
+    "upstream": 365708,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2026",
+    "date": "30/06/2026",
+    "time": "23:00",
+    "home": "Botafogo-SP",
+    "away": "CRB-AL",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 327209,
+    "championship": "Brasil - Campeonato Brasileiro - Série C 2022",
+    "date": "11/09/2022",
+    "time": "14:00",
+    "home": "Botafogo-SP",
+    "away": "Aparecidense-GO",
+    "score": [
+     2,
+     3
+    ]
+   },
+   {
+    "upstream": 250368,
+    "championship": "Brasil - Campeonato Brasileiro - Série C 2018",
+    "date": "08/09/2018",
+    "time": "20:00",
+    "home": "Botafogo-SP",
+    "away": "Cuiabá-MT",
+    "score": [
+     0,
+     3
+    ]
+   },
+   {
+    "upstream": 208427,
+    "championship": "Brasil - Campeonato Paulista 2017",
+    "date": "01/04/2017",
+    "time": "21:30",
+    "home": "Botafogo-SP",
+    "away": "Corinthians-SP",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 163228,
+    "championship": "Brasil - Campeonato Brasileiro - Série C 2016",
+    "date": "30/09/2016",
+    "time": "22:00",
+    "home": "Botafogo-SP",
+    "away": "ABC-RN",
+    "score": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 393,
+  "name": "Casa Blanca",
+  "games": [
+   {
+    "upstream": 360495,
+    "championship": "América do Sul - Copa Libertadores 2025",
+    "date": "21/08/2025",
+    "time": "22:00",
+    "home": "LDU",
+    "away": "Botafogo-RJ",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 344610,
+    "championship": "América do Sul - Copa Libertadores 2024",
+    "date": "14/05/2024",
+    "time": "22:00",
+    "home": "LDU",
+    "away": "Junior Barranquilla",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 344574,
+    "championship": "América do Sul - Copa Libertadores 2024",
+    "date": "11/04/2024",
+    "time": "22:00",
+    "home": "LDU",
+    "away": "Botafogo-RJ",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 291011,
+    "championship": "Equador - Serie A 2019",
+    "date": "12/12/2019",
+    "time": "00:30",
+    "home": "LDU",
+    "away": "Delfín",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 289834,
+    "championship": "Equador - Serie A 2019",
+    "date": "08/12/2019",
+    "time": "00:00",
+    "home": "LDU",
+    "away": "Aucas",
+    "score": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 395,
+  "name": "General Pablo Rojas",
+  "games": [
+   {
+    "upstream": 353733,
+    "championship": "América do Sul - Copa Libertadores 2025",
+    "date": "27/02/2025",
+    "time": "22:00",
+    "home": "Cerro Porteño",
+    "away": "Monagas",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 344590,
+    "championship": "América do Sul - Copa Libertadores 2024",
+    "date": "25/04/2024",
+    "time": "22:00",
+    "home": "Cerro Porteño",
+    "away": "Fluminense-RJ",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 344567,
+    "championship": "América do Sul - Copa Libertadores 2024",
+    "date": "10/04/2024",
+    "time": "22:00",
+    "home": "Cerro Porteño",
+    "away": "Alianza Lima",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 291384,
+    "championship": "América do Sul - Copa Libertadores 2020/2021",
+    "date": "26/02/2020",
+    "time": "22:15",
+    "home": "Cerro Porteño",
+    "away": "Barcelona de Guayaquil",
+    "score": [
+     0,
+     4
+    ]
+   },
+   {
+    "upstream": 291270,
+    "championship": "América do Sul - Copa Libertadores 2020/2021",
+    "date": "12/02/2020",
+    "time": "22:15",
+    "home": "Cerro Porteño",
+    "away": "Universitario",
+    "score": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 396,
+  "name": "La Bombonera",
+  "games": [
+   {
+    "upstream": 331235,
+    "championship": "América do Sul - Copa Libertadores 2022",
+    "date": "06/07/2022",
+    "time": "00:30",
+    "home": "Boca Juniors",
+    "away": "Corinthians-SP",
+    "score": null
+   },
+   {
+    "upstream": 317804,
+    "championship": "América do Sul - Copa Libertadores 2020/2021",
+    "date": "24/12/2020",
+    "time": "00:30",
+    "home": "Boca Juniors",
+    "away": "Racing Club",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 291852,
+    "championship": "América do Sul - Copa Libertadores 2020/2021",
+    "date": "11/03/2020",
+    "time": "00:30",
+    "home": "Boca Juniors",
+    "away": "Independiente Medellín",
+    "score": [
+     3,
+     0
+    ]
+   },
+   {
+    "upstream": 289185,
+    "championship": "América do Sul - Copa Libertadores 2019",
+    "date": "23/10/2019",
+    "time": "00:30",
+    "home": "Boca Juniors",
+    "away": "River Plate",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 274706,
+    "championship": "Argentina - Copa de la Superliga 2019",
+    "date": "17/05/2019",
+    "time": "00:10",
+    "home": "Boca Juniors",
+    "away": "Vélez Sarsfield",
+    "score": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 404,
+  "name": "Ciudad de La Plata",
+  "games": [
+   {
+    "upstream": 344631,
+    "championship": "América do Sul - Copa Libertadores 2024",
+    "date": "29/05/2024",
+    "time": "22:00",
+    "home": "Estudiantes",
+    "away": "Huachipato",
+    "score": [
+     3,
+     4
+    ]
+   },
+   {
+    "upstream": 345814,
+    "championship": "Argentina - Liga Profesional 2024",
+    "date": "05/05/2024",
+    "time": "18:30",
+    "home": "Estudiantes",
+    "away": "Vélez Sarsfield",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 344846,
+    "championship": "Argentina - Liga Profesional 2024",
+    "date": "20/04/2024",
+    "time": "21:30",
+    "home": "Estudiantes",
+    "away": "Barracas Central",
+    "score": [
+     3,
+     0
+    ]
+   },
+   {
+    "upstream": 343025,
+    "championship": "Argentina - Liga Profesional 2024",
+    "date": "29/02/2024",
+    "time": "22:00",
+    "home": "Gimnasia y Esgrima",
+    "away": "Instituto",
+    "score": [
+     1,
+     3
+    ]
+   },
+   {
+    "upstream": 247642,
+    "championship": "América do Sul - Copa Libertadores 2018",
+    "date": "08/08/2018",
+    "time": "00:45",
+    "home": "Estudiantes",
+    "away": "Grêmio-RS",
+    "score": [
+     2,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 405,
+  "name": "Néstor Díaz Pérez",
+  "games": [
+   {
+    "upstream": 355260,
+    "championship": "América do Sul - Copa Sudamericana 2025",
+    "date": "27/05/2025",
+    "time": "22:00",
+    "home": "Lanús",
+    "away": "Academia Puerto Cabello",
+    "score": [
+     2,
+     2
+    ]
+   },
+   {
+    "upstream": 352867,
+    "championship": "América do Sul - Copa Sudamericana 2024",
+    "date": "30/10/2024",
+    "time": "22:00",
+    "home": "Lanús",
+    "away": "Cruzeiro-MG",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 344823,
+    "championship": "América do Sul - Copa Sudamericana 2024",
+    "date": "29/05/2024",
+    "time": "22:00",
+    "home": "Lanús",
+    "away": "Cuiabá-MT",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 344806,
+    "championship": "América do Sul - Copa Sudamericana 2024",
+    "date": "15/05/2024",
+    "time": "22:00",
+    "home": "Lanús",
+    "away": "Metropolitanos",
+    "score": [
+     5,
+     0
+    ]
+   },
+   {
+    "upstream": 344764,
+    "championship": "América do Sul - Copa Sudamericana 2024",
+    "date": "11/04/2024",
+    "time": "22:00",
+    "home": "Lanús",
+    "away": "Deportivo Garcilaso",
+    "score": [
+     2,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 448,
+  "name": "Diego Armando Maradona",
+  "games": [
+   {
+    "upstream": 344845,
+    "championship": "Argentina - Liga Profesional 2024",
+    "date": "20/04/2024",
+    "time": "18:30",
+    "home": "Argentinos Juniors",
+    "away": "Defensa y Justicia",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 334814,
+    "championship": "América do Sul - Copa Libertadores 2023",
+    "date": "07/06/2023",
+    "time": "22:00",
+    "home": "Argentinos Juniors",
+    "away": "Liverpool-URU",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 291301,
+    "championship": "América do Sul - Copa Sudamericana 2020/2021",
+    "date": "11/02/2020",
+    "time": "22:15",
+    "home": "Argentinos Juniors",
+    "away": "Sport Huancayo",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 72474,
+    "championship": "América do Sul - Copa Sudamericana 2011",
+    "date": "01/09/2011",
+    "time": "23:15",
+    "home": "Argentinos Juniors",
+    "away": "Vélez Sarsfield",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 66317,
+    "championship": "Argentina - Campeonato Argentino 2010/2011",
+    "date": "18/06/2011",
+    "time": "18:00",
+    "home": "Argentinos Juniors",
+    "away": "Tigre",
+    "score": [
+     1,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 459,
+  "name": "Gigante de Arroyito",
+  "games": [
+   {
+    "upstream": 344620,
+    "championship": "América do Sul - Copa Libertadores 2024",
+    "date": "16/05/2024",
+    "time": "22:00",
+    "home": "Rosario Central",
+    "away": "Caracas",
+    "score": [
+     4,
+     1
+    ]
+   },
+   {
+    "upstream": 344594,
+    "championship": "América do Sul - Copa Libertadores 2024",
+    "date": "07/05/2024",
+    "time": "22:00",
+    "home": "Rosario Central",
+    "away": "Atlético-MG",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 344557,
+    "championship": "América do Sul - Copa Libertadores 2024",
+    "date": "04/04/2024",
+    "time": "22:00",
+    "home": "Rosario Central",
+    "away": "Peñarol",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 49362,
+    "championship": "Argentina - Campeonato Argentino 2009/2010",
+    "date": "15/05/2010",
+    "time": "23:30",
+    "home": "Rosario Central",
+    "away": "Vélez Sarsfield",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 49340,
+    "championship": "Argentina - Campeonato Argentino 2009/2010",
+    "date": "30/04/2010",
+    "time": "21:20",
+    "home": "Rosario Central",
+    "away": "Godoy Cruz",
+    "score": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 464,
+  "name": "Pituaçu",
+  "games": [
+   {
+    "upstream": 356313,
+    "championship": "Brasil - Copa do Brasil 2025",
+    "date": "30/07/2025",
+    "time": "22:30",
+    "home": "Bahia-BA",
+    "away": "Retrô-PE",
+    "score": [
+     3,
+     2
+    ]
+   },
+   {
+    "upstream": 326982,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2022",
+    "date": "28/10/2022",
+    "time": "22:00",
+    "home": "Bahia-BA",
+    "away": "Guarani-SP",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 291369,
+    "championship": "América do Sul - Copa Sudamericana 2020/2021",
+    "date": "13/02/2020",
+    "time": "00:30",
+    "home": "Bahia-BA",
+    "away": "Nacional-PAR",
+    "score": [
+     3,
+     0
+    ]
+   },
+   {
+    "upstream": 244224,
+    "championship": "Brasil - Copa do Brasil 2018",
+    "date": "02/08/2018",
+    "time": "22:15",
+    "home": "Bahia-BA",
+    "away": "Palmeiras-SP",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 209349,
+    "championship": "Brasil - Copa do Nordeste 2017",
+    "date": "25/05/2017",
+    "time": "00:45",
+    "home": "Bahia-BA",
+    "away": "Sport-PE",
+    "score": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 510,
+  "name": "Estádio do Café",
+  "games": [
+   {
+    "upstream": 365709,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2026",
+    "date": "04/07/2026",
+    "time": "19:00",
+    "home": "Londrina-PR",
+    "away": "CRB-AL",
+    "score": [
+     5,
+     0
+    ]
+   },
+   {
+    "upstream": 326980,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2022",
+    "date": "28/10/2022",
+    "time": "22:00",
+    "home": "Londrina-PR",
+    "away": "Ituano-SP",
+    "score": [
+     0,
+     2
+    ]
+   },
+   {
+    "upstream": 326880,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2022",
+    "date": "30/08/2022",
+    "time": "22:00",
+    "home": "Londrina-PR",
+    "away": "CRB-AL",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 320483,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2021",
+    "date": "06/11/2021",
+    "time": "00:30",
+    "home": "Londrina-PR",
+    "away": "Cruzeiro-MG",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 320227,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2021",
+    "date": "30/06/2021",
+    "time": "22:00",
+    "home": "Londrina-PR",
+    "away": "Avaí-SC",
+    "score": [
+     1,
+     3
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 591,
+  "name": "Primeiro de Maio",
+  "games": [
+   {
+    "upstream": 228500,
+    "championship": "Brasil - Campeonato Brasileiro - Série D 2017",
+    "date": "29/07/2017",
+    "time": "18:00",
+    "home": "São Bernardo-SP",
+    "away": "São José-RS",
+    "score": null
+   },
+   {
+    "upstream": 220817,
+    "championship": "Brasil - Campeonato Brasileiro - Série D 2017",
+    "date": "15/07/2017",
+    "time": "18:00",
+    "home": "São Bernardo-SP",
+    "away": "Metropolitano-SC",
+    "score": [
+     3,
+     2
+    ]
+   },
+   {
+    "upstream": 88626,
+    "championship": "Brasil - Copa do Brasil 2013",
+    "date": "07/05/2013",
+    "time": "",
+    "home": "São Bernardo-SP",
+    "away": "Criciúma-SC",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 87761,
+    "championship": "Brasil - Copa do Brasil 2013",
+    "date": "12/04/2013",
+    "time": "00:30",
+    "home": "São Bernardo-SP",
+    "away": "Paraná-PR",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 80464,
+    "championship": "Brasil - Campeonato Paulista - Série A2 2012",
+    "date": "13/05/2012",
+    "time": "19:00",
+    "home": "São Bernardo-SP",
+    "away": "União Barbarense-SP",
+    "score": [
+     2,
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 599,
+  "name": "Nicolás Leoz",
+  "games": [
+   {
+    "upstream": 355165,
+    "championship": "América do Sul - Copa Libertadores 2025",
+    "date": "27/05/2025",
+    "time": "22:30",
+    "home": "Libertad",
+    "away": "Alianza Lima",
+    "score": [
+     2,
+     2
+    ]
+   },
+   {
+    "upstream": 334790,
+    "championship": "América do Sul - Copa Libertadores 2023",
+    "date": "05/05/2023",
+    "time": "00:00",
+    "home": "Libertad",
+    "away": "Athletico-PR",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 291853,
+    "championship": "América do Sul - Copa Libertadores 2020/2021",
+    "date": "11/03/2020",
+    "time": "00:30",
+    "home": "Libertad",
+    "away": "Caracas",
+    "score": [
+     3,
+     2
+    ]
+   },
+   {
+    "upstream": 275044,
+    "championship": "América do Sul - Copa Libertadores 2019",
+    "date": "02/08/2019",
+    "time": "00:30",
+    "home": "Libertad",
+    "away": "Grêmio-RS",
+    "score": [
+     0,
+     3
+    ]
+   },
+   {
+    "upstream": 247645,
+    "championship": "América do Sul - Copa Libertadores 2018",
+    "date": "30/08/2018",
+    "time": "22:30",
+    "home": "Libertad",
+    "away": "Boca Juniors",
+    "score": [
+     2,
+     4
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 604,
+  "name": "Belvedere",
+  "games": [
+   {
+    "upstream": 344606,
+    "championship": "América do Sul - Copa Libertadores 2024",
+    "date": "09/05/2024",
+    "time": "22:00",
+    "home": "Liverpool-URU",
+    "away": "Palmeiras-SP",
+    "score": [
+     0,
+     5
+    ]
+   },
+   {
+    "upstream": 334776,
+    "championship": "América do Sul - Copa Libertadores 2023",
+    "date": "02/05/2023",
+    "time": "22:00",
+    "home": "Liverpool-URU",
+    "away": "Argentinos Juniors",
+    "score": [
+     2,
+     2
+    ]
+   },
+   {
+    "upstream": 291314,
+    "championship": "América do Sul - Copa Sudamericana 2020/2021",
+    "date": "26/02/2020",
+    "time": "22:15",
+    "home": "Liverpool-URU",
+    "away": "Llaneros de Guanare",
+    "score": [
+     5,
+     0
+    ]
+   },
+   {
+    "upstream": 62192,
+    "championship": "América do Sul - Copa Libertadores 2011",
+    "date": "27/01/2011",
+    "time": "00:00",
+    "home": "Liverpool-URU",
+    "away": "Grêmio-RS",
+    "score": [
+     2,
+     2
+    ]
+   },
+   {
+    "upstream": 40205,
+    "championship": "América do Sul - Copa Sudamericana 2009",
+    "date": "14/08/2009",
+    "time": "00:30",
+    "home": "Liverpool-URU",
+    "away": "Cienciano",
+    "score": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 607,
+  "name": "White Hart Lane",
+  "games": [
+   {
+    "upstream": 352074,
+    "championship": "Europa - Europa League 2024/2025",
+    "date": "26/09/2024",
+    "time": "19:35",
+    "home": "Tottenham Hotspur",
+    "away": "Qarabağ",
+    "score": [
+     3,
+     0
+    ]
+   },
+   {
+    "upstream": 335324,
+    "championship": "Inglaterra - Premier League 2023/2024",
+    "date": "10/02/2024",
+    "time": "15:00",
+    "home": "Tottenham Hotspur",
+    "away": "Brighton & Hove Albion",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 327566,
+    "championship": "Inglaterra - Premier League 2022/2023",
+    "date": "06/05/2023",
+    "time": "14:00",
+    "home": "Tottenham Hotspur",
+    "away": "Crystal Palace",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 306430,
+    "championship": "Europa - Europa League 2020/2021",
+    "date": "01/10/2020",
+    "time": "19:00",
+    "home": "Tottenham Hotspur",
+    "away": "Maccabi Haifa",
+    "score": [
+     7,
+     2
+    ]
+   },
+   {
+    "upstream": 291032,
+    "championship": "Europa - Champions League 2019/2020",
+    "date": "19/02/2020",
+    "time": "20:00",
+    "home": "Tottenham Hotspur",
+    "away": "RB Leipzig",
+    "score": [
+     0,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 608,
+  "name": "Stamford Bridge",
+  "games": [
+   {
+    "upstream": 355287,
+    "championship": "Europa - Conference League 2024/2025",
+    "date": "08/05/2025",
+    "time": "19:00",
+    "home": "Chelsea",
+    "away": "Djurgårdens",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 352534,
+    "championship": "Europa - Conference League 2024/2025",
+    "date": "07/11/2024",
+    "time": "20:00",
+    "home": "Chelsea",
+    "away": "Noah",
+    "score": [
+     8,
+     0
+    ]
+   },
+   {
+    "upstream": 320935,
+    "championship": "Inglaterra - Premier League 2021/2022",
+    "date": "25/09/2021",
+    "time": "11:30",
+    "home": "Chelsea",
+    "away": "Manchester City",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 325162,
+    "championship": "Europa - Champions League 2021/2022",
+    "date": "14/09/2021",
+    "time": "19:00",
+    "home": "Chelsea",
+    "away": "Zenit",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 318984,
+    "championship": "Europa - Champions League 2020/2021",
+    "date": "13/04/2021",
+    "time": "19:00",
+    "home": "Chelsea",
+    "away": "Porto",
+    "score": [
+     0,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 609,
+  "name": "Anfield Park",
+  "games": [
+   {
+    "upstream": 353766,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "11/03/2025",
+    "time": "20:00",
+    "home": "Liverpool",
+    "away": "Paris Saint-Germain",
+    "score": null
+   },
+   {
+    "upstream": 346833,
+    "championship": "Inglaterra - Premier League 2024/2025",
+    "date": "02/11/2024",
+    "time": "15:00",
+    "home": "Liverpool",
+    "away": "Brighton & Hove Albion",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 352270,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "02/10/2024",
+    "time": "19:00",
+    "home": "Liverpool",
+    "away": "Bologna",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 335320,
+    "championship": "Inglaterra - Premier League 2023/2024",
+    "date": "10/02/2024",
+    "time": "15:00",
+    "home": "Liverpool",
+    "away": "Burnley",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 327582,
+    "championship": "Inglaterra - Premier League 2022/2023",
+    "date": "20/05/2023",
+    "time": "14:00",
+    "home": "Liverpool",
+    "away": "Aston Villa",
+    "score": [
+     1,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 610,
+  "name": "City of Manchester Stadium",
+  "games": [
+   {
+    "upstream": 353688,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "11/02/2025",
+    "time": "20:00",
+    "home": "Manchester City",
+    "away": "Real Madrid",
+    "score": [
+     2,
+     3
+    ]
+   },
+   {
+    "upstream": 352315,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "26/11/2024",
+    "time": "20:00",
+    "home": "Manchester City",
+    "away": "Feyenoord",
+    "score": [
+     3,
+     3
+    ]
+   },
+   {
+    "upstream": 352247,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "18/09/2024",
+    "time": "19:00",
+    "home": "Manchester City",
+    "away": "Internazionale",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 294687,
+    "championship": "Inglaterra - Premier League 2020/2021",
+    "date": "20/01/2021",
+    "time": "18:00",
+    "home": "Manchester City",
+    "away": "Aston Villa",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 308945,
+    "championship": "Europa - Champions League 2020/2021",
+    "date": "21/10/2020",
+    "time": "19:00",
+    "home": "Manchester City",
+    "away": "Porto",
+    "score": [
+     3,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 613,
+  "name": "Craven Cottage",
+  "games": [
+   {
+    "upstream": 335319,
+    "championship": "Inglaterra - Premier League 2023/2024",
+    "date": "10/02/2024",
+    "time": "15:00",
+    "home": "Fulham",
+    "away": "Bournemouth",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 335298,
+    "championship": "Inglaterra - Premier League 2023/2024",
+    "date": "30/01/2024",
+    "time": "19:45",
+    "home": "Fulham",
+    "away": "Everton",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 327581,
+    "championship": "Inglaterra - Premier League 2022/2023",
+    "date": "20/05/2023",
+    "time": "14:00",
+    "home": "Fulham",
+    "away": "Crystal Palace",
+    "score": [
+     2,
+     2
+    ]
+   },
+   {
+    "upstream": 293416,
+    "championship": "Inglaterra - Championship 2019/2020",
+    "date": "30/07/2020",
+    "time": "18:45",
+    "home": "Fulham",
+    "away": "Cardiff City",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 238693,
+    "championship": "Inglaterra - Championship 2017/2018",
+    "date": "14/05/2018",
+    "time": "18:45",
+    "home": "Fulham",
+    "away": "Derby County",
+    "score": [
+     2,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 615,
+  "name": "Old Trafford",
+  "games": [
+   {
+    "upstream": 352125,
+    "championship": "Europa - Europa League 2024/2025",
+    "date": "07/11/2024",
+    "time": "20:00",
+    "home": "Manchester United",
+    "away": "PAOK",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 335344,
+    "championship": "Inglaterra - Premier League 2023/2024",
+    "date": "24/02/2024",
+    "time": "15:00",
+    "home": "Manchester United",
+    "away": "Fulham",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 291051,
+    "championship": "Europa - Europa League 2019/2020",
+    "date": "27/02/2020",
+    "time": "20:00",
+    "home": "Manchester United",
+    "away": "Club Brugge",
+    "score": [
+     5,
+     0
+    ]
+   },
+   {
+    "upstream": 289334,
+    "championship": "Europa - Europa League 2019/2020",
+    "date": "12/12/2019",
+    "time": "20:00",
+    "home": "Manchester United",
+    "away": "AZ Alkmaar",
+    "score": [
+     4,
+     0
+    ]
+   },
+   {
+    "upstream": 289287,
+    "championship": "Europa - Europa League 2019/2020",
+    "date": "07/11/2019",
+    "time": "20:00",
+    "home": "Manchester United",
+    "away": "Partizan Belgrade",
+    "score": [
+     3,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 616,
+  "name": "Stadium of Light",
+  "games": [
+   {
+    "upstream": 252701,
+    "championship": "Inglaterra - League One 2018/2019",
+    "date": "26/05/2019",
+    "time": "14:00",
+    "home": "Sunderland",
+    "away": "Charlton Athletic",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 252687,
+    "championship": "Inglaterra - League One 2018/2019",
+    "date": "11/05/2019",
+    "time": "18:30",
+    "home": "Sunderland",
+    "away": "Portsmouth",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 113203,
+    "championship": "Inglaterra - Premier League 2016/2017",
+    "date": "21/08/2016",
+    "time": "12:30",
+    "home": "Sunderland",
+    "away": "Middlesbrough",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 106002,
+    "championship": "Inglaterra - Premier League 2014/2015",
+    "date": "16/05/2015",
+    "time": "14:00",
+    "home": "Sunderland",
+    "away": "Leicester City",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 105983,
+    "championship": "Inglaterra - Premier League 2014/2015",
+    "date": "02/05/2015",
+    "time": "14:00",
+    "home": "Sunderland",
+    "away": "Southampton",
+    "score": [
+     2,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 621,
+  "name": "Villa Park",
+  "games": [
+   {
+    "upstream": 353754,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "12/03/2025",
+    "time": "20:00",
+    "home": "Aston Villa",
+    "away": "Club Brugge",
+    "score": [
+     3,
+     0
+    ]
+   },
+   {
+    "upstream": 352275,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "22/10/2024",
+    "time": "19:00",
+    "home": "Aston Villa",
+    "away": "Bologna",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 352266,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "02/10/2024",
+    "time": "19:00",
+    "home": "Aston Villa",
+    "away": "Bayern Munich",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 335339,
+    "championship": "Inglaterra - Premier League 2023/2024",
+    "date": "24/02/2024",
+    "time": "15:00",
+    "home": "Aston Villa",
+    "away": "Nottingham Forest",
+    "score": [
+     4,
+     2
+    ]
+   },
+   {
+    "upstream": 252695,
+    "championship": "Inglaterra - Championship 2018/2019",
+    "date": "27/05/2019",
+    "time": "14:00",
+    "home": "Aston Villa",
+    "away": "Derby County",
+    "score": [
+     2,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 624,
+  "name": "KC Stadium",
+  "games": [
+   {
+    "upstream": 350176,
+    "championship": "Inglaterra - Championship 2024/2025",
+    "date": "10/11/2024",
+    "time": "13:00",
+    "home": "Hull City",
+    "away": "West Bromwich Albion",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 192015,
+    "championship": "Inglaterra - EFL Cup 2016/2017",
+    "date": "26/01/2017",
+    "time": "19:45",
+    "home": "Hull City",
+    "away": "Manchester United",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 197118,
+    "championship": "Inglaterra - FA Cup 2016/2017",
+    "date": "07/01/2017",
+    "time": "15:00",
+    "home": "Hull City",
+    "away": "Swansea City",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 188870,
+    "championship": "Inglaterra - EFL Cup 2016/2017",
+    "date": "29/11/2016",
+    "time": "19:45",
+    "home": "Hull City",
+    "away": "Newcastle United",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 113178,
+    "championship": "Inglaterra - Premier League 2016/2017",
+    "date": "06/11/2016",
+    "time": "14:15",
+    "home": "Hull City",
+    "away": "Southampton",
+    "score": [
+     2,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 625,
+  "name": "Goodison Park",
+  "games": [
+   {
+    "upstream": 327413,
+    "championship": "Inglaterra - Premier League 2022/2023",
+    "date": "14/01/2023",
+    "time": "15:00",
+    "home": "Everton",
+    "away": "Southampton",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 294719,
+    "championship": "Inglaterra - Premier League 2020/2021",
+    "date": "03/10/2020",
+    "time": "14:00",
+    "home": "Everton",
+    "away": "Brighton & Hove Albion",
+    "score": [
+     4,
+     2
+    ]
+   },
+   {
+    "upstream": 113208,
+    "championship": "Inglaterra - Premier League 2016/2017",
+    "date": "27/08/2016",
+    "time": "14:00",
+    "home": "Everton",
+    "away": "Stoke City",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 113188,
+    "championship": "Inglaterra - Premier League 2016/2017",
+    "date": "13/08/2016",
+    "time": "14:00",
+    "home": "Everton",
+    "away": "Tottenham Hotspur",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 106011,
+    "championship": "Inglaterra - Premier League 2014/2015",
+    "date": "24/05/2015",
+    "time": "14:00",
+    "home": "Everton",
+    "away": "Tottenham Hotspur",
+    "score": [
+     0,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 640,
+  "name": "Río Parapití",
+  "games": [
+   {
+    "upstream": 41454,
+    "championship": "Paraguai - Primera División 2009",
+    "date": "09/12/2009",
+    "time": "22:00",
+    "home": "2 de Mayo",
+    "away": "Cerro Porteño",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 41443,
+    "championship": "Paraguai - Primera División 2009",
+    "date": "29/11/2009",
+    "time": "21:00",
+    "home": "2 de Mayo",
+    "away": "Libertad",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 41432,
+    "championship": "Paraguai - Primera División 2009",
+    "date": "18/11/2009",
+    "time": "22:00",
+    "home": "2 de Mayo",
+    "away": "12 de Octubre",
+    "score": [
+     3,
+     0
+    ]
+   },
+   {
+    "upstream": 41420,
+    "championship": "Paraguai - Primera División 2009",
+    "date": "07/11/2009",
+    "time": "22:00",
+    "home": "2 de Mayo",
+    "away": "Sol de América",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 41408,
+    "championship": "Paraguai - Primera División 2009",
+    "date": "24/10/2009",
+    "time": "22:00",
+    "home": "2 de Mayo",
+    "away": "Nacional-PAR",
+    "score": [
+     2,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 644,
+  "name": "Rogelio Livieres",
+  "games": [
+   {
+    "upstream": 353747,
+    "championship": "América do Sul - Copa Sudamericana 2025",
+    "date": "06/03/2025",
+    "time": "22:00",
+    "home": "Club Guaraní",
+    "away": "2 de Mayo",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 331131,
+    "championship": "América do Sul - Copa Libertadores 2022",
+    "date": "02/03/2022",
+    "time": "22:15",
+    "home": "Club Guaraní",
+    "away": "América-MG",
+    "score": null
+   },
+   {
+    "upstream": 291388,
+    "championship": "América do Sul - Copa Libertadores 2020/2021",
+    "date": "27/02/2020",
+    "time": "22:15",
+    "home": "Club Guaraní",
+    "away": "Palestino",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 291273,
+    "championship": "América do Sul - Copa Libertadores 2020/2021",
+    "date": "06/02/2020",
+    "time": "00:30",
+    "home": "Club Guaraní",
+    "away": "Corinthians-SP",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 291258,
+    "championship": "América do Sul - Copa Libertadores 2020/2021",
+    "date": "29/01/2020",
+    "time": "22:15",
+    "home": "Club Guaraní",
+    "away": "CD San José",
+    "score": [
+     4,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 650,
+  "name": "Allianz Arena",
+  "games": [
+   {
+    "upstream": 363219,
+    "championship": "Europa - Champions League 2025/2026",
+    "date": "09/12/2025",
+    "time": "17:45",
+    "home": "Bayern Munich",
+    "away": "Sporting CP",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 356829,
+    "championship": "Alemanha - Bundesliga 2025/2026",
+    "date": "22/08/2025",
+    "time": "18:30",
+    "home": "Bayern Munich",
+    "away": "RB Leipzig",
+    "score": [
+     6,
+     0
+    ]
+   },
+   {
+    "upstream": 353767,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "05/03/2025",
+    "time": "20:00",
+    "home": "Bayern Munich",
+    "away": "Bayer Leverkusen",
+    "score": [
+     3,
+     0
+    ]
+   },
+   {
+    "upstream": 353697,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "18/02/2025",
+    "time": "20:00",
+    "home": "Bayern Munich",
+    "away": "Celtic",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 352313,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "26/11/2024",
+    "time": "20:00",
+    "home": "Bayern Munich",
+    "away": "Paris Saint-Germain",
+    "score": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 654,
+  "name": "Signal Iduna Park",
+  "games": [
+   {
+    "upstream": 353685,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "19/02/2025",
+    "time": "17:45",
+    "home": "Borussia Dortmund",
+    "away": "Sporting CP",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 352339,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "11/12/2024",
+    "time": "20:00",
+    "home": "Borussia Dortmund",
+    "away": "Barcelona",
+    "score": [
+     2,
+     3
+    ]
+   },
+   {
+    "upstream": 352259,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "01/10/2024",
+    "time": "19:00",
+    "home": "Borussia Dortmund",
+    "away": "Celtic",
+    "score": [
+     7,
+     1
+    ]
+   },
+   {
+    "upstream": 344835,
+    "championship": "Europa - Champions League 2023/2024",
+    "date": "01/05/2024",
+    "time": "19:00",
+    "home": "Borussia Dortmund",
+    "away": "Paris Saint-Germain",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 339172,
+    "championship": "Europa - Champions League 2023/2024",
+    "date": "07/11/2023",
+    "time": "17:45",
+    "home": "Borussia Dortmund",
+    "away": "Newcastle United",
+    "score": [
+     2,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 656,
+  "name": "Mercedes-Benz Arena",
+  "games": [
+   {
+    "upstream": 352343,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "11/12/2024",
+    "time": "20:00",
+    "home": "Stuttgart",
+    "away": "Young Boys",
+    "score": [
+     5,
+     1
+    ]
+   },
+   {
+    "upstream": 352308,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "06/11/2024",
+    "time": "20:00",
+    "home": "Stuttgart",
+    "away": "Atalanta",
+    "score": [
+     0,
+     2
+    ]
+   },
+   {
+    "upstream": 352256,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "01/10/2024",
+    "time": "16:45",
+    "home": "Stuttgart",
+    "away": "Sparta Praha",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 96672,
+    "championship": "Europa - Europa League 2013/2014",
+    "date": "29/08/2013",
+    "time": "16:00",
+    "home": "Stuttgart",
+    "away": "Rijeka",
+    "score": [
+     2,
+     2
+    ]
+   },
+   {
+    "upstream": 96626,
+    "championship": "Europa - Europa League 2013/2014",
+    "date": "08/08/2013",
+    "time": "18:20",
+    "home": "Stuttgart",
+    "away": "Botev Plovdiv",
+    "score": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 660,
+  "name": "Camp Nou",
+  "games": [
+   {
+    "upstream": 357323,
+    "championship": "Espanha - La Liga 2025/2026",
+    "date": "02/12/2025",
+    "time": "20:00",
+    "home": "Barcelona",
+    "away": "Atlético de Madrid",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 355278,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "30/04/2025",
+    "time": "19:00",
+    "home": "Barcelona",
+    "away": "Internazionale",
+    "score": [
+     3,
+     3
+    ]
+   },
+   {
+    "upstream": 353815,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "09/04/2025",
+    "time": "19:00",
+    "home": "Barcelona",
+    "away": "Borussia Dortmund",
+    "score": [
+     4,
+     0
+    ]
+   },
+   {
+    "upstream": 353764,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "11/03/2025",
+    "time": "17:45",
+    "home": "Barcelona",
+    "away": "Benfica",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 352311,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "26/11/2024",
+    "time": "20:00",
+    "home": "Barcelona",
+    "away": "Brest",
+    "score": [
+     3,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 661,
+  "name": "Santiago Bernabéu",
+  "games": [
+   {
+    "upstream": 357144,
+    "championship": "Espanha - La Liga 2025/2026",
+    "date": "19/08/2025",
+    "time": "19:00",
+    "home": "Real Madrid",
+    "away": "Osasuna",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 353689,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "19/02/2025",
+    "time": "20:00",
+    "home": "Real Madrid",
+    "away": "Manchester City",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 352362,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "22/01/2025",
+    "time": "20:00",
+    "home": "Real Madrid",
+    "away": "Red Bull Salzburg",
+    "score": [
+     5,
+     1
+    ]
+   },
+   {
+    "upstream": 352281,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "22/10/2024",
+    "time": "19:00",
+    "home": "Real Madrid",
+    "away": "Borussia Dortmund",
+    "score": [
+     5,
+     2
+    ]
+   },
+   {
+    "upstream": 352242,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "17/09/2024",
+    "time": "19:00",
+    "home": "Real Madrid",
+    "away": "Stuttgart",
+    "score": [
+     3,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 677,
+  "name": "El Madrigal",
+  "games": [
+   {
+    "upstream": 363227,
+    "championship": "Europa - Champions League 2025/2026",
+    "date": "10/12/2025",
+    "time": "17:45",
+    "home": "Villarreal",
+    "away": "FC Copenhagen",
+    "score": [
+     2,
+     3
+    ]
+   },
+   {
+    "upstream": 343208,
+    "championship": "Europa - Europa League 2023/2024",
+    "date": "14/03/2024",
+    "time": "17:45",
+    "home": "Villarreal",
+    "away": "Olympique de Marseille",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 250868,
+    "championship": "Europa - Europa League 2018/2019",
+    "date": "11/04/2019",
+    "time": "19:00",
+    "home": "Villarreal",
+    "away": "Valencia",
+    "score": [
+     1,
+     3
+    ]
+   },
+   {
+    "upstream": 250851,
+    "championship": "Europa - Europa League 2018/2019",
+    "date": "14/03/2019",
+    "time": "20:00",
+    "home": "Villarreal",
+    "away": "Zenit",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 250839,
+    "championship": "Europa - Europa League 2018/2019",
+    "date": "21/02/2019",
+    "time": "17:55",
+    "home": "Villarreal",
+    "away": "Sporting CP",
+    "score": [
+     1,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 678,
+  "name": "Vicente Calderón",
+  "games": [
+   {
+    "upstream": 353758,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "12/03/2025",
+    "time": "20:00",
+    "home": "Atlético de Madrid",
+    "away": "Real Madrid",
+    "score": null
+   },
+   {
+    "upstream": 352336,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "11/12/2024",
+    "time": "17:45",
+    "home": "Atlético de Madrid",
+    "away": "Slovan Bratislava",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 352252,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "19/09/2024",
+    "time": "19:00",
+    "home": "Atlético de Madrid",
+    "away": "RB Leipzig",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 339148,
+    "championship": "Europa - Champions League 2023/2024",
+    "date": "04/10/2023",
+    "time": "16:45",
+    "home": "Atlético de Madrid",
+    "away": "Feyenoord",
+    "score": [
+     3,
+     2
+    ]
+   },
+   {
+    "upstream": 329654,
+    "championship": "Europa - Champions League 2022/2023",
+    "date": "12/10/2022",
+    "time": "16:45",
+    "home": "Atlético de Madrid",
+    "away": "Club Brugge",
+    "score": [
+     0,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 683,
+  "name": "Giuseppe Meazza",
+  "games": [
+   {
+    "upstream": 355279,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "06/05/2025",
+    "time": "19:00",
+    "home": "Internazionale",
+    "away": "Barcelona",
+    "score": [
+     4,
+     3
+    ]
+   },
+   {
+    "upstream": 353762,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "11/03/2025",
+    "time": "20:00",
+    "home": "Internazionale",
+    "away": "Feyenoord",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 352314,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "26/11/2024",
+    "time": "20:00",
+    "home": "Internazionale",
+    "away": "RB Leipzig",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 352305,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "06/11/2024",
+    "time": "20:00",
+    "home": "Internazionale",
+    "away": "Arsenal",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 352260,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "01/10/2024",
+    "time": "19:00",
+    "home": "Internazionale",
+    "away": "Red Star Belgrade",
+    "score": [
+     4,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 687,
+  "name": "Olímpico de Roma",
+  "games": [
+   {
+    "upstream": 353778,
+    "championship": "Europa - Europa League 2024/2025",
+    "date": "13/03/2025",
+    "time": "17:45",
+    "home": "Lazio",
+    "away": "Viktoria Plzeň",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 353783,
+    "championship": "Europa - Europa League 2024/2025",
+    "date": "06/03/2025",
+    "time": "20:00",
+    "home": "Roma",
+    "away": "Athletic de Bilbao",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 353707,
+    "championship": "Europa - Europa League 2024/2025",
+    "date": "20/02/2025",
+    "time": "17:45",
+    "home": "Roma",
+    "away": "Porto",
+    "score": [
+     3,
+     2
+    ]
+   },
+   {
+    "upstream": 352620,
+    "championship": "Europa - Europa League 2024/2025",
+    "date": "12/12/2024",
+    "time": "17:45",
+    "home": "Roma",
+    "away": "Braga",
+    "score": [
+     3,
+     0
+    ]
+   },
+   {
+    "upstream": 352124,
+    "championship": "Europa - Europa League 2024/2025",
+    "date": "07/11/2024",
+    "time": "20:00",
+    "home": "Lazio",
+    "away": "Porto",
+    "score": [
+     2,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 691,
+  "name": "San Paolo",
+  "games": [
+   {
+    "upstream": 339180,
+    "championship": "Europa - Champions League 2023/2024",
+    "date": "08/11/2023",
+    "time": "17:45",
+    "home": "Napoli",
+    "away": "Union Berlin",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 329653,
+    "championship": "Europa - Champions League 2022/2023",
+    "date": "12/10/2022",
+    "time": "16:45",
+    "home": "Napoli",
+    "away": "Ajax",
+    "score": [
+     4,
+     2
+    ]
+   },
+   {
+    "upstream": 296505,
+    "championship": "Itália - Serie A 2020/2021",
+    "date": "23/05/2021",
+    "time": "18:45",
+    "home": "Napoli",
+    "away": "Verona",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 309351,
+    "championship": "Europa - Europa League 2020/2021",
+    "date": "22/10/2020",
+    "time": "16:55",
+    "home": "Napoli",
+    "away": "AZ Alkmaar",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 291036,
+    "championship": "Europa - Champions League 2019/2020",
+    "date": "25/02/2020",
+    "time": "20:00",
+    "home": "Napoli",
+    "away": "Barcelona",
+    "score": [
+     1,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 758,
+  "name": "Germano Krügger",
+  "games": [
+   {
+    "upstream": 326830,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2022",
+    "date": "05/08/2022",
+    "time": "22:00",
+    "home": "Operário-PR",
+    "away": "Náutico-PE",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 320465,
+    "championship": "Brasil - Campeonato Brasileiro - Série B 2021",
+    "date": "29/10/2021",
+    "time": "22:00",
+    "home": "Operário-PR",
+    "away": "Avaí-SC",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 250576,
+    "championship": "Brasil - Campeonato Brasileiro - Série C 2018",
+    "date": "16/09/2018",
+    "time": "18:30",
+    "home": "Operário-PR",
+    "away": "Cuiabá-MT",
+    "score": [
+     3,
+     3
+    ]
+   },
+   {
+    "upstream": 250366,
+    "championship": "Brasil - Campeonato Brasileiro - Série C 2018",
+    "date": "09/09/2018",
+    "time": "18:30",
+    "home": "Operário-PR",
+    "away": "Bragantino-SP",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 236315,
+    "championship": "Brasil - Campeonato Brasileiro - Série D 2017",
+    "date": "10/09/2017",
+    "time": "22:00",
+    "home": "Operário-PR",
+    "away": "Globo-RN",
+    "score": [
+     0,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 783,
+  "name": "Nemesio Camacho El Campín",
+  "games": [
+   {
+    "upstream": 250711,
+    "championship": "América do Sul - Copa Sudamericana 2018",
+    "date": "09/11/2018",
+    "time": "00:45",
+    "home": "Santa Fe",
+    "away": "Junior Barranquilla",
+    "score": [
+     0,
+     2
+    ]
+   },
+   {
+    "upstream": 247725,
+    "championship": "América do Sul - Copa Sudamericana 2018",
+    "date": "01/08/2018",
+    "time": "00:45",
+    "home": "Santa Fe",
+    "away": "Rampla Juniors",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 206770,
+    "championship": "América do Sul - Copa Libertadores 2017",
+    "date": "24/05/2017",
+    "time": "00:45",
+    "home": "Santa Fe",
+    "away": "The Strongest",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 206724,
+    "championship": "América do Sul - Copa Libertadores 2017",
+    "date": "19/04/2017",
+    "time": "23:45",
+    "home": "Santa Fe",
+    "away": "Santos-SP",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 206705,
+    "championship": "América do Sul - Copa Libertadores 2017",
+    "date": "17/03/2017",
+    "time": "00:45",
+    "home": "Santa Fe",
+    "away": "Sporting Cristal",
+    "score": [
+     3,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 786,
+  "name": "Manuel Murillo Toro",
+  "games": [
+   {
+    "upstream": 334872,
+    "championship": "América do Sul - Copa Sudamericana 2023",
+    "date": "02/05/2023",
+    "time": "22:00",
+    "home": "Tolima",
+    "away": "São Paulo-SP",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 313270,
+    "championship": "Colômbia - Categoría Primera A 2020",
+    "date": "06/10/2020",
+    "time": "23:05",
+    "home": "Tolima",
+    "away": "Millonarios",
+    "score": [
+     2,
+     2
+    ]
+   },
+   {
+    "upstream": 291385,
+    "championship": "América do Sul - Copa Libertadores 2020/2021",
+    "date": "20/02/2020",
+    "time": "00:30",
+    "home": "Tolima",
+    "away": "Internacional-RS",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 291266,
+    "championship": "América do Sul - Copa Libertadores 2020/2021",
+    "date": "12/02/2020",
+    "time": "00:30",
+    "home": "Tolima",
+    "away": "Macará",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 277070,
+    "championship": "Colômbia - Categoría Primera A 2018",
+    "date": "18/11/2018",
+    "time": "01:00",
+    "home": "Tolima",
+    "away": "Santa Fe",
+    "score": [
+     0,
+     1
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 797,
+  "name": "Stadion Miejski",
+  "games": [
+   {
+    "upstream": 309348,
+    "championship": "Europa - Europa League 2020/2021",
+    "date": "22/10/2020",
+    "time": "16:55",
+    "home": "Lech Poznań",
+    "away": "Benfica",
+    "score": [
+     2,
+     4
+    ]
+   },
+   {
+    "upstream": 295125,
+    "championship": "Europa - Europa League 2020/2021",
+    "date": "27/08/2020",
+    "time": "19:00",
+    "home": "Lech Poznań",
+    "away": "Valmiera",
+    "score": [
+     3,
+     0
+    ]
+   },
+   {
+    "upstream": 247813,
+    "championship": "Europa - Europa League 2018/2019",
+    "date": "16/08/2018",
+    "time": "18:15",
+    "home": "Lech Poznań",
+    "away": "Genk",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 244295,
+    "championship": "Europa - Europa League 2018/2019",
+    "date": "02/08/2018",
+    "time": "18:45",
+    "home": "Lech Poznań",
+    "away": "Shakhtyor Salihorsk",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 239020,
+    "championship": "Europa - Europa League 2018/2019",
+    "date": "12/07/2018",
+    "time": "18:45",
+    "home": "Lech Poznań",
+    "away": "Gandzasar",
+    "score": [
+     2,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 798,
+  "name": "Generali Arena",
+  "games": [
+   {
+    "upstream": 352360,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "22/01/2025",
+    "time": "20:00",
+    "home": "Sparta Praha",
+    "away": "Internazionale",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 352310,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "26/11/2024",
+    "time": "17:45",
+    "home": "Sparta Praha",
+    "away": "Atlético de Madrid",
+    "score": [
+     0,
+     6
+    ]
+   },
+   {
+    "upstream": 352307,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "06/11/2024",
+    "time": "20:00",
+    "home": "Sparta Praha",
+    "away": "Brest",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 352244,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "18/09/2024",
+    "time": "16:45",
+    "home": "Sparta Praha",
+    "away": "Red Bull Salzburg",
+    "score": [
+     3,
+     0
+    ]
+   },
+   {
+    "upstream": 339287,
+    "championship": "Europa - Europa League 2023/2024",
+    "date": "30/11/2023",
+    "time": "17:45",
+    "home": "Sparta Praha",
+    "away": "Betis",
+    "score": [
+     1,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 809,
+  "name": "Maksimir",
+  "games": [
+   {
+    "upstream": 352327,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "10/12/2024",
+    "time": "17:45",
+    "home": "Dinamo Zagreb",
+    "away": "Celtic",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 352268,
+    "championship": "Europa - Champions League 2024/2025",
+    "date": "02/10/2024",
+    "time": "19:00",
+    "home": "Dinamo Zagreb",
+    "away": "Monaco",
+    "score": [
+     2,
+     2
+    ]
+   },
+   {
+    "upstream": 255209,
+    "championship": "Croácia - First Football League 2019/2020",
+    "date": "23/02/2020",
+    "time": "14:00",
+    "home": "Dinamo Zagreb",
+    "away": "Inter Zaprešić",
+    "score": [
+     3,
+     2
+    ]
+   },
+   {
+    "upstream": 273774,
+    "championship": "Europa - Champions League 2019/2020",
+    "date": "06/08/2019",
+    "time": "18:00",
+    "home": "Dinamo Zagreb",
+    "away": "Ferencváros",
+    "score": [
+     1,
+     1
+    ]
+   },
+   {
+    "upstream": 250829,
+    "championship": "Europa - Europa League 2018/2019",
+    "date": "21/02/2019",
+    "time": "17:55",
+    "home": "Dinamo Zagreb",
+    "away": "Viktoria Plzeň",
+    "score": [
+     3,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 810,
+  "name": "Park Hall",
+  "games": [
+   {
+    "upstream": 295108,
+    "championship": "Europa - Europa League 2020/2021",
+    "date": "27/08/2020",
+    "time": "17:30",
+    "home": "The New Saints",
+    "away": "MŠK Žilina",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 253016,
+    "championship": "Europa - Champions League 2019/2020",
+    "date": "09/07/2019",
+    "time": "18:00",
+    "home": "The New Saints",
+    "away": "Feronikeli",
+    "score": [
+     2,
+     2
+    ]
+   },
+   {
+    "upstream": 244308,
+    "championship": "Europa - Europa League 2018/2019",
+    "date": "26/07/2018",
+    "time": "18:00",
+    "home": "The New Saints",
+    "away": "Lincoln Red Imps",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 238906,
+    "championship": "Europa - Champions League 2018/2019",
+    "date": "17/07/2018",
+    "time": "18:00",
+    "home": "The New Saints",
+    "away": "Shkëndija",
+    "score": [
+     4,
+     0
+    ]
+   },
+   {
+    "upstream": 95149,
+    "championship": "Europa - Champions League 2013/2014",
+    "date": "17/07/2013",
+    "time": "18:15",
+    "home": "The New Saints",
+    "away": "Legia Warsaw",
+    "score": [
+     1,
+     3
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 843,
+  "name": "Stade de Gerland",
+  "games": [
+   {
+    "upstream": 352071,
+    "championship": "Europa - Europa League 2024/2025",
+    "date": "26/09/2024",
+    "time": "19:00",
+    "home": "Lyon",
+    "away": "Olympiacos",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 291040,
+    "championship": "Europa - Champions League 2019/2020",
+    "date": "26/02/2020",
+    "time": "20:00",
+    "home": "Lyon",
+    "away": "Juventus",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 250770,
+    "championship": "Europa - Champions League 2018/2019",
+    "date": "19/02/2019",
+    "time": "20:00",
+    "home": "Lyon",
+    "away": "Barcelona",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 250193,
+    "championship": "Europa - Champions League 2018/2019",
+    "date": "27/11/2018",
+    "time": "20:00",
+    "home": "Lyon",
+    "away": "Manchester City",
+    "score": [
+     2,
+     2
+    ]
+   },
+   {
+    "upstream": 250185,
+    "championship": "Europa - Champions League 2018/2019",
+    "date": "07/11/2018",
+    "time": "20:00",
+    "home": "Lyon",
+    "away": "Hoffenheim",
+    "score": [
+     2,
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 890,
+  "name": "Strandvallen",
+  "games": [
+   {
+    "upstream": 79995,
+    "championship": "Suécia - Allsvenskan 2012",
+    "date": "01/11/2012",
+    "time": "17:00",
+    "home": "Mjällby",
+    "away": "Elfsborg",
+    "score": [
+     2,
+     3
+    ]
+   },
+   {
+    "upstream": 79982,
+    "championship": "Suécia - Allsvenskan 2012",
+    "date": "20/10/2012",
+    "time": "14:00",
+    "home": "Mjällby",
+    "away": "Häcken",
+    "score": [
+     1,
+     2
+    ]
+   },
+   {
+    "upstream": 79973,
+    "championship": "Suécia - Allsvenskan 2012",
+    "date": "07/10/2012",
+    "time": "13:00",
+    "home": "Mjällby",
+    "away": "Helsingborg",
+    "score": [
+     0,
+     2
+    ]
+   },
+   {
+    "upstream": 79957,
+    "championship": "Suécia - Allsvenskan 2012",
+    "date": "26/09/2012",
+    "time": "17:00",
+    "home": "Mjällby",
+    "away": "Kalmar",
+    "score": [
+     1,
+     0
+    ]
+   },
+   {
+    "upstream": 79936,
+    "championship": "Suécia - Allsvenskan 2012",
+    "date": "15/09/2012",
+    "time": "12:00",
+    "home": "Mjällby",
+    "away": "GAIS",
+    "score": [
+     4,
+     0
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 1103,
+  "name": "Arena Corinthians",
+  "games": [
+   {
+    "upstream": 352854,
+    "championship": "Brasil - Copa do Brasil 2024",
+    "date": "20/10/2024",
+    "time": "19:00",
+    "home": "Corinthians-SP",
+    "away": "Flamengo-RJ",
+    "score": [
+     0,
+     0
+    ]
+   },
+   {
+    "upstream": 333868,
+    "championship": "Brasil - Campeonato Brasileiro 2023",
+    "date": "28/05/2023",
+    "time": "19:00",
+    "home": "Corinthians-SP",
+    "away": "Fluminense-RJ",
+    "score": [
+     2,
+     0
+    ]
+   },
+   {
+    "upstream": 319900,
+    "championship": "Brasil - Campeonato Brasileiro 2021",
+    "date": "01/08/2021",
+    "time": "19:00",
+    "home": "Corinthians-SP",
+    "away": "Flamengo-RJ",
+    "score": [
+     1,
+     3
+    ]
+   },
+   {
+    "upstream": 291274,
+    "championship": "América do Sul - Copa Libertadores 2020/2021",
+    "date": "13/02/2020",
+    "time": "00:30",
+    "home": "Corinthians-SP",
+    "away": "Club Guaraní",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 289190,
+    "championship": "América do Sul - Copa Sudamericana 2019",
+    "date": "19/09/2019",
+    "time": "00:30",
+    "home": "Corinthians-SP",
+    "away": "Independiente del Valle",
+    "score": [
+     0,
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "upstream": 1118,
+  "name": "Arena MRV",
+  "games": [
+   {
+    "upstream": 363764,
+    "championship": "Brasil - Campeonato Brasileiro 2025",
+    "date": "04/12/2025",
+    "time": "00:30",
+    "home": "Atlético-MG",
+    "away": "Palmeiras-SP",
+    "score": [
+     0,
+     3
+    ]
+   },
+   {
+    "upstream": 356341,
+    "championship": "América do Sul - Copa Sudamericana 2025",
+    "date": "14/08/2025",
+    "time": "22:00",
+    "home": "Atlético-MG",
+    "away": "Godoy Cruz",
+    "score": [
+     2,
+     1
+    ]
+   },
+   {
+    "upstream": 355257,
+    "championship": "América do Sul - Copa Sudamericana 2025",
+    "date": "16/05/2025",
+    "time": "00:30",
+    "home": "Atlético-MG",
+    "away": "Caracas",
+    "score": [
+     3,
+     1
+    ]
+   },
+   {
+    "upstream": 352878,
+    "championship": "Brasil - Copa do Brasil 2024",
+    "date": "10/11/2024",
+    "time": "19:00",
+    "home": "Atlético-MG",
+    "away": "Flamengo-RJ",
+    "score": [
+     0,
+     1
+    ]
+   },
+   {
+    "upstream": 344568,
+    "championship": "América do Sul - Copa Libertadores 2024",
+    "date": "10/04/2024",
+    "time": "22:00",
+    "home": "Atlético-MG",
+    "away": "Rosario Central",
+    "score": [
+     2,
+     1
+    ]
+   }
+  ]
+ }
+]

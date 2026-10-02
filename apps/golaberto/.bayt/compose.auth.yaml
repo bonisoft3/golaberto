@@ -1,0 +1,41 @@
+# generated from bayt.cue — do not edit
+services:
+  apps_golaberto-auth:
+    build:
+      additional_contexts:
+        libraries_mecha-auth-image: service:libraries_mecha-auth-image
+        apps_golaberto-database: service:apps_golaberto-database
+      context: ..
+      dockerfile: .bayt/Dockerfile.auth
+      target: auth
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    depends_on:
+      apps_golaberto-database:
+        condition: service_healthy
+        restart: true
+    environment:
+      DATABASE_URL: >-
+        postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}
+      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
+      WEBAUTHN_RP_ID: ${WEBAUTHN_RP_ID:-localhost}
+      WEBAUTHN_ORIGIN: ${WEBAUTHN_ORIGIN:-https://localhost:*}
+    image: bayt-apps_golaberto-auth:${BAYT_IMAGE_TAG:-latest}
+    networks:
+      default:
+        aliases:
+        - auth
+  apps_golaberto-auth_bayt:
+    build:
+      additional_contexts:
+        libraries_mecha-auth-image_bayt: service:libraries_mecha-auth-image_bayt
+        apps_golaberto-database_bayt: service:apps_golaberto-database_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.auth
+      target: auth_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-apps_golaberto-auth_bayt:latest
+    scale: 0

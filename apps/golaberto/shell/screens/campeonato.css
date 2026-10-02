@@ -1,0 +1,17 @@
+@import url("shared/chrome.css");
+@import url("shared/games.css");
+/* One championship: its facts, its phases, each phase's groups. */
+.facts { display: flex; flex-wrap: wrap; gap: var(--sp-md); align-items: center; margin: 0; }
+.points { font-size: var(--type-caption); color: var(--secondary); }
+.phase-chips { display: flex; flex-wrap: wrap; gap: var(--sp-sm); }
+.phases { display: flex; flex-direction: column; gap: var(--sp-xl); }
+.phase { display: flex; flex-direction: column; gap: var(--sp-md); scroll-margin-top: var(--control-h-lg); }
+.phase h2 { background: var(--table-head); color: var(--table-head-ink); padding: var(--sp-sm) var(--sp-md); }
+.groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--sp-lg); }
+.group { display: flex; flex-direction: column; gap: var(--sp-sm); }
+.group-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-md); flex-wrap: wrap; }
+.group-head h3 { margin: 0; }
+.zones { list-style: none; margin: 0; padding: 0; font-size: var(--type-label); display: flex; flex-direction: column; gap: var(--sp-sm); }
+.zones li { display: flex; align-items: center; gap: var(--sp-sm); }
+.zones i { width: 10px; height: 10px; background: var(--zone); border: var(--border-size-1) solid var(--secondary); }
+.zones .range { color: var(--secondary); }

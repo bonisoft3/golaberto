@@ -1,0 +1,70 @@
+# generated from bayt.cue — do not edit
+services:
+  apps_golaberto-conduit:
+    build:
+      additional_contexts:
+        libraries_mecha-conduit-image: service:libraries_mecha-conduit-image
+        apps_golaberto-database: service:apps_golaberto-database
+        apps_golaberto-mesh-events: service:apps_golaberto-mesh-events
+      context: ..
+      dockerfile: .bayt/Dockerfile.conduit
+      target: conduit
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    depends_on:
+      apps_golaberto-database:
+        condition: service_healthy
+        restart: true
+      apps_golaberto-mesh-events:
+        condition: service_started
+    develop:
+      watch:
+      - action: sync+restart
+        path: ../docker/conduit-pipeline.yaml
+        target: /conduit/cdc-to-bus.yaml.tmpl
+    environment:
+      DATABASE_URL: >-
+        postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}
+      CONDUIT_PIPELINES_PATH: /conduit/pipelines
+      CONDUIT_DB_TYPE: inmemory
+    healthcheck:
+      test:
+      - CMD
+      - httpcheck
+      - http://127.0.0.1:8080/healthz
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 120s
+      start_interval: 500ms
+    image: bayt-apps_golaberto-conduit:${BAYT_IMAGE_TAG:-latest}
+    networks:
+      default:
+        aliases:
+        - conduit
+    restart: on-failure
+  apps_golaberto-conduit_bayt:
+    build:
+      additional_contexts:
+        libraries_mecha-conduit-image_bayt: service:libraries_mecha-conduit-image_bayt
+        apps_golaberto-database_bayt: service:apps_golaberto-database_bayt
+        apps_golaberto-mesh-events_bayt: service:apps_golaberto-mesh-events_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.conduit
+      target: conduit_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-apps_golaberto-conduit_bayt:latest
+    scale: 0
+  apps_golaberto-conduit_srcs:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.conduit
+      target: conduit_srcs
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-apps_golaberto-conduit_srcs:latest
+    scale: 0

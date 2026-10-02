@@ -99,3 +99,10 @@ services:
     profiles:
     - compute
     scale: 1
+  migrate:
+    extends:
+      file: ./compose.migrate.yaml
+      service: apps_golaberto-migrate
+    profiles:
+    - migrate
+    scale: 1

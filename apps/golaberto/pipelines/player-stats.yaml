@@ -22,6 +22,25 @@ input:
           count: 1
           interval: ""
           mapping: 'root = {"boot": true}'
+        # Enumerate small championship scopes before the normal event path.
+        processors:
+          - try:
+              - branch:
+                  processors:
+                    - http:
+                        url: ${CRUD_URL}/championship?select=id&order=id
+                        verb: GET
+                        retries: 30
+                        retry_period: 2s
+                        headers:
+                          Authorization: Bearer ${SERVICE_JWT}
+                  result_map: root.championships = this
+              - mapping: |
+                  root = this.championships.map_each(c -> {"data": {"__table": "championship", "id": c.id}.format_json()})
+              - unarchive:
+                  format: json_array
+          - split:
+              size: 1
 pipeline:
   threads: 1
   processors:
@@ -36,7 +55,8 @@ pipeline:
         let table = $row.__table.or("")
         let via = "select=player_id,game!inner(phase!inner(championship_id))"
         let scopes = match {
-          this.boot.or(false) => ["player_game?" + $via, "goal?" + $via],
+          this.boot.or(false) => throw("Championship bootstrap failed"),
+          $table == "championship" => ["player_game?" + $via + "&game.phase.championship_id=eq." + $row.id, "goal?" + $via + "&game.phase.championship_id=eq." + $row.id],
           $table == "player_game" || $table == "goal" => ["game?select=phase!inner(championship_id)&id=eq." + $row.game_id, "player_stat?select=player_id,championship_id&player_id=eq." + $row.player_id],
           $table == "player" => ["player_game?" + $via + "&player_id=eq." + $row.id, "goal?" + $via + "&player_id=eq." + $row.id, "player_stat?select=player_id,championship_id&player_id=eq." + $row.id],
           $table == "game" => ["player_game?" + $via + "&game_id=eq." + $row.id, "goal?" + $via + "&game_id=eq." + $row.id],

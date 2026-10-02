@@ -160,3 +160,5 @@ are recorded, for every reader at once.
 - Maps of where teams are from and how far they travel: they need a map
   service outside the platform.
 - Importing games from other sites.
+
+The homepage leads with the most important upcoming fixtures and recently played games across competitions, following the original GolAberto home selection. Each feed names a championship once above its compact match rows, making every game’s competition clear without repeated labels or introductory copy. It keeps the featured table and championship links below those feeds.

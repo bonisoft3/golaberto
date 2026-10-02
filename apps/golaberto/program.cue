@@ -7,10 +7,18 @@ package golaberto
 
 import (
 	pronto "bonisoft.org/plugins/pronto"
+	"strings"
 )
 
 _designMd: _ @embed(file="DESIGN.md", type=text)
 _catalogues: _ @embed(glob="messages/*.json")
+_homeGamesSql: string @embed(file="services/database/sql/013_home_games.sql", type=text)
+_homeGamesUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeGamesSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_homeChampionshipsSql: string @embed(file="services/database/sql/014_home_championships.sql", type=text)
+_homeChampionshipsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeChampionshipsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
+_homePerformanceSql: string @embed(file="services/database/sql/015_home_performance.sql", type=text)
+_homePerformanceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homePerformanceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
 // "2026" or "2026/2027", in immutable SQL: to_char is only STABLE.
 _season: "extract(year from begins)::int::text || CASE WHEN extract(year from begins) = extract(year from ends) THEN '' ELSE '/' || extract(year from ends)::int::text END"
@@ -75,7 +83,7 @@ code: pronto.#App & {
 				{ordinal: 11, name: "show_country", type: "bool", default: "false"},
 				{ordinal: 12, name: "season", type: "string", generated: _season},
 				{ordinal: 13, name: "full_name", type: "string", generated: "region_name || ' - ' || name || ' ' || \(_season)"},
-				// The championship the home page leads with: an editor's pick.
+				// The championship table highlighted below the home game feeds.
 				{ordinal: 14, name: "featured", type: "bool", default: "false"},
 			]
 			invariant: {cel: "this.ends >= this.begins"}
@@ -490,8 +498,53 @@ code: pronto.#App & {
 				{ordinal: 24, name: "kickoff_local", type: "string", generated: _hm},
 				{ordinal: 25, name: "stadium_id", type: "uuid", required: false, ref: "stadium"},
 				{ordinal: 26, name: "referee_id", type: "uuid", required: false, ref: "referee"},
+				{ordinal: 27, name: "home_upcoming_rank", type: "int32", default: "0", cel: "this >= 0 && this <= 20"},
+				{ordinal: 28, name: "home_recent_rank", type: "int32", default: "0", cel: "this >= 0 && this <= 20"},
+				{ordinal: 29, name: "home_upcoming_group", type: "bool", default: "false"},
+				{ordinal: 30, name: "home_recent_group", type: "bool", default: "false"},
 			]
 			indexes: [{on: "phase_id"}, {on: "day"}, {on: "stadium_id"}, {on: "referee_id"}]
+		}
+		// The selected forty cards only: the home page never syncs the archive.
+		HomeGameCard: {
+			id: "0x86cf93d86b91d654"
+			table:      "home_game_card"
+			durability: "live"
+			writers:    "pipeline"
+			access: {scope: "public"}
+			fields: [
+				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "game"},
+				{ordinal: 2, name: "phase_id", type: "uuid", ref: "phase"},
+				{ordinal: 3, name: "championship_id", type: "uuid", ref: "championship"},
+				{ordinal: 4, name: "round", type: "int32", required: false, cel: "this >= 1 && this <= 99"},
+				{ordinal: 5, name: "day", type: "date"},
+				{ordinal: 6, name: "kickoff", type: "timestamp", required: false},
+				{ordinal: 7, name: "played", type: "bool"},
+				{ordinal: 8, name: "home_id", type: "uuid", ref: "team"},
+				{ordinal: 9, name: "away_id", type: "uuid", ref: "team"},
+				{ordinal: 10, name: "home_name", type: "string"},
+				{ordinal: 11, name: "away_name", type: "string"},
+				{ordinal: 12, name: "home_score", type: "int32", required: false, cel: _score},
+				{ordinal: 13, name: "away_score", type: "int32", required: false, cel: _score},
+				{ordinal: 14, name: "home_aet", type: "int32", required: false, cel: _score},
+				{ordinal: 15, name: "away_aet", type: "int32", required: false, cel: _score},
+				{ordinal: 16, name: "home_pen", type: "int32", required: false, cel: _score},
+				{ordinal: 17, name: "away_pen", type: "int32", required: false, cel: _score},
+				{ordinal: 18, name: "championship_name", type: "string"},
+				{ordinal: 19, name: "phase_name", type: "string"},
+				{ordinal: 20, name: "stadium_name", type: "string", required: false},
+				{ordinal: 21, name: "referee_name", type: "string", required: false},
+				{ordinal: 22, name: "attendance", type: "int32", required: false, cel: "this >= 0 && this <= 250000"},
+				{ordinal: 23, name: "day_display", type: "string", generated: _dmy},
+				{ordinal: 24, name: "kickoff_local", type: "string", generated: _hm},
+				{ordinal: 25, name: "stadium_id", type: "uuid", required: false, ref: "stadium"},
+				{ordinal: 26, name: "referee_id", type: "uuid", required: false, ref: "referee"},
+				{ordinal: 27, name: "home_upcoming_rank", type: "int32", default: "0", cel: "this >= 0 && this <= 20"},
+				{ordinal: 28, name: "home_recent_rank", type: "int32", default: "0", cel: "this >= 0 && this <= 20"},
+				{ordinal: 29, name: "home_upcoming_group", type: "bool", default: "false"},
+				{ordinal: 30, name: "home_recent_group", type: "bool", default: "false"},
+			]
+			indexes: [{on: "championship_id"}]
 		}
 		// One game from one of its teams' side: the opponent, where, and how it
 		// went for this team (ir decision-local-reads).
@@ -696,7 +749,18 @@ code: pronto.#App & {
 		{name: "010_game_days.sql", src: "services/database/sql/010_game_days.sql"},
 		{name: "011_comment_writes.sql", src: "services/database/sql/011_comment_writes.sql"},
 		{name: "012_editor_writes.sql", src: "services/database/sql/012_editor_writes.sql"},
+		{name: "013_home_games.sql", src: "services/database/sql/013_home_games.sql"},
+		{name: "014_home_championships.sql", src: "services/database/sql/014_home_championships.sql"},
+		{name: "015_home_performance.sql", src: "services/database/sql/015_home_performance.sql"},
+		// Large archive fixtures are copied at build, never expanded through CUE.
+		{name: "900_seed.sql", src: "services/database/sql/900_seed.sql"},
 	]
+	// Initdb serves fresh volumes; the ledger carries this same additive SQL
+	// into existing volumes before readers and pipelines start. The guarded
+	// columns also allow a fresh generated baseline to run the upgrade.
+	state: migrations: "013_home_games": {operations: [{sql: {up: _homeGamesUpgrade, onComplete: true}}]}
+	state: migrations: "014_home_championships": {operations: [{sql: {up: _homeChampionshipsUpgrade, onComplete: true}}]}
+	state: migrations: "015_home_performance": {operations: [{sql: {up: _homePerformanceUpgrade, onComplete: true}}]}
 	// The numeric stage (ir decision-chances).
 	// The chances read each game's power from team_rating, so they rerun
 	// whenever the ratings change.
@@ -715,6 +779,12 @@ code: pronto.#App & {
 		from:  "Game"
 		to:    "GameCard"
 		group: "golaberto-game-cards"
+	}
+	state: pipelines: "home-games": {
+		raw: true
+		from: "Game"
+		to: "HomeGameCard"
+		group: "golaberto-home-games"
 	}
 	state: pipelines: "player-stats": {
 		raw:   true
@@ -743,9 +813,10 @@ code: pronto.#App & {
 			prerender: true
 			markup:    _principalMarkup
 			forms: []
-			states: ["loading", "populated", "populated-dark"]
+			states: ["loading", "populated", "no-games", "populated-dark"]
 			paths: {
-				arrive: {states: ["loading", "populated"], accepts: ["accept-home-levels", "accept-home-featured"]}
+				arrive: {states: ["loading", "populated"], accepts: ["accept-home-levels", "accept-home-featured", "accept-home-games"]}
+				quiet: {states: ["populated", "no-games", "populated"], accepts: ["accept-home-games"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
@@ -994,7 +1065,7 @@ code: pronto.#App & {
 			}
 			catalogues: _catalogues
 		}
-		ir: sha256: "b14cb2cf7aeeec0d22ffdc358b2205440fd4bdf54628cb7bef3082c9e08533bd"
+		ir: sha256: "c5d5c36c82d469a0d8a3f13e05af380395d3717be489fdff03bceba0f34eb290"
 		targets: []
 		decisions: {
 			"decision-uuid-keys": {}
@@ -1209,10 +1280,17 @@ code: pronto.#App & {
 			}
 			"test-home-featured": {
 				of:    "principal"
-				says:  "the front page leads with the featured 2026 Brasileirão: its top six, Flamengo first, and the current round"
+				says:  "the front page retains the featured 2026 Brasileirão: its top six, Flamengo first, below the game feeds"
 				given: {featured: "Campeonato Brasileiro 2026"}
 				when:  "open"
-				then:  "output.top[0].team == \"Flamengo-RJ\" && output.top.size() == 6 && output.results.size() > 0"
+				then:  "output.top[0].team == \"Flamengo-RJ\" && output.top.size() == 6"
+			}
+			"test-home-games": {
+				of: "principal"
+				says: "upcoming fixtures and recent results across competitions lead the home page and open their games"
+				given: {upcoming: true, recent: true}
+				when: "arrive"
+				then: "output.upcoming.size() > 0 && output.recent.size() > 0"
 			}
 			"test-home-levels": {
 				of:    "principal"
@@ -1583,8 +1661,16 @@ code: pronto.#App & {
 }
 
 cluster:  (pronto.#DefaultCluster & {"code": code, statics: terminal.surface.statics}).out
+// Keep the archive in PostgreSQL's mounted volume when launch recreates services.
+cluster: meta: databaseDataDir: "/var/lib/postgresql/18/docker"
+cluster: meta: databaseVolume: "golaberto-archive"
 terminal: (pronto.#DefaultTerminal & {"code": code}).out
 loop:     (pronto.#DefaultLoop & {"code": code, "cluster": cluster, "terminal": terminal}).out
+loop: surface: checks: "seed-data": {
+	verb: "test"
+	cmds: ["python3 -m unittest discover -s tools -p seed_sql_test.py"]
+	note: "the SQL fixture is reproducible from crawled records and stays outside CUE compilation"
+}
 // The archive's constraints live in Postgres, so they are graded there.
 loop: surface: checks: "constraints": {
 	verb:     "integrate"
@@ -1599,6 +1685,20 @@ loop: surface: checks: "standings": {
 	verb: "test"
 	cmds: ["mise exec -- redpanda-connect test pipelines/standings.yaml pipelines/rounds.yaml pipelines/game-cards.yaml pipelines/player-stats.yaml"]
 	note: "the derived streams over crawled data: the 2026 Serie A's table and its 885 players' seasons as golaberto.com.br shows them, a phase's current and next rounds, and a game's card and team lines"
+}
+
+loop: surface: checks: "home-games": {
+	verb: "integrate"
+	priority: 1
+	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker tests/home-games.ts tests/home-upgrade.ts"]
+	note: "the home selection's quality, time windows, cap, stable ordering and refresh in rolled-back Postgres transactions"
+}
+
+loop: surface: checks: "archive-refresh": {
+	verb: "integrate"
+	priority: 1
+	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker,python3 tests/archive-refresh.ts"]
+	note: "a public-data refresh preserves local details and unknown times, converts UTC dates, replays without writes and rejects unmapped seed databases"
 }
 
 // The screens' invariants, walked in a browser against the running archive.

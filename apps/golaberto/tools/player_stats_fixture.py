@@ -71,6 +71,20 @@ with open("pipelines/player-stats_benthos_test.yaml", "w") as f:
                       "game": {"home_id": "h", "away_id": "a", "home": {"name": "H"}, "away": {"name": "A"}}}], "goals": []})}],
         "output_batches": [[{"bloblang": 'this.index(0).rows.index(0).minutes == 0 && this.index(0).rows.index(0).team_name == "H"'}]],
     }, {
+        "name": "startup enumerates separate championship events instead of appearances",
+        "target_processors": "/input/broker/inputs/1/processors",
+        "mocks": {"/input/broker/inputs/1/processors/0/try/0/branch/processors/0": {"mapping": 'root = [{"id": "c1"}, {"id": "c2"}]'}},
+        "input_batch": [{"content": '{"boot": true}'}],
+        "output_batches": [
+            [{"bloblang": 'this.data.parse_json() == {"__table": "championship", "id": "c1"}'}],
+            [{"bloblang": 'this.data.parse_json() == {"__table": "championship", "id": "c2"}'}],
+        ],
+    }, {
+        "name": "a startup championship bounds both appearance and goal reads",
+        "target_processors": "/pipeline/processors/0",
+        "input_batch": [{"content": json.dumps({"data": json.dumps({"__table": "championship", "id": "c"})})}],
+        "output_batches": [[{"bloblang": 'this.scopes.length() == 2 && this.scopes.all(s -> s.has_suffix("&game.phase.championship_id=eq.c"))'}]],
+    }, {
         "name": "a deleted game's players are found through their own lines",
         "target_processors": "/pipeline/processors/0",
         "input_batch": [{"content": json.dumps({"data": json.dumps({"__table": "player_game", "id": "x", "player_id": "p", "game_id": "g"})})}],

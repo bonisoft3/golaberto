@@ -28,6 +28,8 @@ include:
   required: false
 - path: ./compose.compute.yaml
   required: false
+- path: ./compose.migrate.yaml
+  required: false
 - path: ../../../.bayt/compose.bayt.yaml
   required: false
 - path: ../../../libraries/mecha/.bayt/compose.bayt.yaml

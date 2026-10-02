@@ -230,5 +230,11 @@
   "home_top6": "Le prime sei",
   "home_recent": "Campionati recenti",
   "col_title_chance": "Titolo",
-  "col_title_chance_long": "Probabilità di vincere il titolo, dalle probabilità del girone"
+  "col_title_chance_long": "Probabilità di vincere il titolo, dalle probabilità del girone",
+  "home_best_upcoming": "Prossime partite in evidenza",
+  "home_best_results": "Risultati recenti",
+  "home_selection": "Fino a 20 partite dei prossimi e ultimi sette giorni, scelte per forza delle squadre, importanza e vicinanza della partita. Ora di Brasília.",
+  "home_no_upcoming": "Nessuna partita con orario nei prossimi sette giorni.",
+  "home_no_results": "Nessun risultato con orario registrato negli ultimi sette giorni.",
+  "home_all_games": "Tutte le partite ›"
 }

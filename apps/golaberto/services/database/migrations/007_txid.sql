@@ -82,6 +82,9 @@ CREATE TRIGGER restamp_txid BEFORE UPDATE ON rating_eval
 DROP TRIGGER IF EXISTS restamp_txid ON game_card;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON game_card
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+DROP TRIGGER IF EXISTS restamp_txid ON home_game_card;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON home_game_card
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON team_game;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_game
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();

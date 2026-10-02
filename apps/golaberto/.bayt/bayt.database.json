@@ -4,6 +4,7 @@
     "up": false,
     "manual": false,
     "environment": {
+      "PGDATA": "/var/lib/postgresql/18/docker",
       "POSTGRES_USER": "${POSTGRES_USER:-postgres}",
       "POSTGRES_PASSWORD": "${POSTGRES_PASSWORD:-postgres}",
       "POSTGRES_DB": "${POSTGRES_DB:-golaberto}",
@@ -12,7 +13,9 @@
     "ports": [
       "5432"
     ],
-    "volumes": [],
+    "volumes": [
+      "golaberto-archive:/var/lib/postgresql"
+    ],
     "depends_on": {},
     "networks": {
       "default": {
@@ -99,6 +102,21 @@
         },
         {
           "action": "rebuild",
+          "path": "../services/database/migrations/013_home_games.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
+          "path": "../services/database/migrations/014_home_championships.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
+          "path": "../services/database/migrations/015_home_performance.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
           "path": "../services/database/migrations/900_seed.sql",
           "target": "/docker-entrypoint-initdb.d"
         }
@@ -132,6 +150,9 @@
           "services/database/migrations/010_game_days.sql",
           "services/database/migrations/011_comment_writes.sql",
           "services/database/migrations/012_editor_writes.sql",
+          "services/database/migrations/013_home_games.sql",
+          "services/database/migrations/014_home_championships.sql",
+          "services/database/migrations/015_home_performance.sql",
           "services/database/migrations/900_seed.sql"
         ],
         "dst": "/docker-entrypoint-initdb.d/",
@@ -180,6 +201,9 @@
       "services/database/migrations/010_game_days.sql",
       "services/database/migrations/011_comment_writes.sql",
       "services/database/migrations/012_editor_writes.sql",
+      "services/database/migrations/013_home_games.sql",
+      "services/database/migrations/014_home_championships.sql",
+      "services/database/migrations/015_home_performance.sql",
       "services/database/migrations/900_seed.sql"
     ],
     "exclude": []
@@ -279,6 +303,9 @@
           "services/database/migrations/010_game_days.sql",
           "services/database/migrations/011_comment_writes.sql",
           "services/database/migrations/012_editor_writes.sql",
+          "services/database/migrations/013_home_games.sql",
+          "services/database/migrations/014_home_championships.sql",
+          "services/database/migrations/015_home_performance.sql",
           "services/database/migrations/900_seed.sql"
         ],
         "exclude": []

@@ -1,0 +1,22 @@
+# Clock-owned ranks and bounded homepage cards stay outside the CDC publication.
+# Repeating the refresh changes only ranks that moved, in one transaction.
+input:
+  generate:
+    interval: 30s
+    auto_replay_nacks: false
+    mapping: 'root = {}'
+pipeline:
+  threads: 1
+output:
+  http_client:
+    url: ${CRUD_URL}/rpc/refresh_home_games
+    verb: POST
+    max_in_flight: 1
+    # PostgREST hoists the RPC's 20s statement timeout. The advisory lock also
+    # protects against an orphaned request; the next clock tick retries.
+    timeout: 35s
+    retries: 0
+    headers:
+      Content-Type: application/json
+      Authorization: Bearer ${SERVICE_JWT}
+    successful_on: [200, 204]

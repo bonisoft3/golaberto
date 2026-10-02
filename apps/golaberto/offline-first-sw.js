@@ -1,6 +1,6 @@
 // Precached immutable shell assets required for cold offline boot.
-const STATIC_CACHE = "pronto-static-v3";
-const RUNTIME_CACHE = "pronto-runtime-v3";
+const STATIC_CACHE = "pronto-static-v4";
+const RUNTIME_CACHE = "pronto-runtime-v4";
 
 const PRECACHE_ASSETS = [
   "/shell/index.html",
@@ -49,6 +49,8 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       caches.open(STATIC_CACHE).then(async (cache) => {
         const cached = await cache.match(req);
+        // respondWith consumes the original body before revalidation finishes.
+        const previous = cached?.clone();
 
         const revalidatePromise = fetch(req)
           .then(async (res) => {
@@ -59,7 +61,7 @@ self.addEventListener("fetch", (event) => {
             if (!cached) {
               changed = true;
             } else {
-              const oldText = await cached.clone().text();
+              const oldText = await previous.text();
               if (oldText !== newText) {
                 changed = true;
               }
@@ -92,6 +94,10 @@ self.addEventListener("fetch", (event) => {
             // Network failure / offline: cached response already served
           });
 
+        // Returning a cached response finishes respondWith; keep the worker
+        // alive until the replacement asset has actually reached the cache.
+        event.waitUntil(revalidatePromise);
+
         if (cached) {
           return cached;
         }
@@ -110,10 +116,11 @@ self.addEventListener("fetch", (event) => {
         const fetchPromise = fetch(req).then((res) => {
           const cc = res.headers.get("Cache-Control") || "";
           if (res.ok && !cc.includes("no-store") && !cc.includes("private")) {
-            cache.put(req, res.clone());
+            return cache.put(req, res.clone()).then(() => res);
           }
           return res;
         });
+        event.waitUntil(fetchPromise.catch(() => {}));
         if (cached) {
           fetchPromise.catch(() => {});
           return cached;

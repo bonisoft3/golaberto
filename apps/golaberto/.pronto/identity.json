@@ -1076,6 +1076,181 @@
         "name": "referee_id",
         "type": "uuid",
         "retired": false
+      },
+      "27": {
+        "name": "home_upcoming_rank",
+        "type": "int32",
+        "retired": false
+      },
+      "28": {
+        "name": "home_recent_rank",
+        "type": "int32",
+        "retired": false
+      },
+      "29": {
+        "name": "home_upcoming_group",
+        "type": "bool",
+        "retired": false
+      },
+      "30": {
+        "name": "home_recent_group",
+        "type": "bool",
+        "retired": false
+      }
+    }
+  },
+  "0x86cf93d86b91d654": {
+    "name": "home_game_card",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "uuid",
+        "retired": false
+      },
+      "2": {
+        "name": "phase_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "championship_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "4": {
+        "name": "round",
+        "type": "int32",
+        "retired": false
+      },
+      "5": {
+        "name": "day",
+        "type": "date",
+        "retired": false
+      },
+      "6": {
+        "name": "kickoff",
+        "type": "timestamp",
+        "retired": false
+      },
+      "7": {
+        "name": "played",
+        "type": "bool",
+        "retired": false
+      },
+      "8": {
+        "name": "home_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "9": {
+        "name": "away_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "10": {
+        "name": "home_name",
+        "type": "string",
+        "retired": false
+      },
+      "11": {
+        "name": "away_name",
+        "type": "string",
+        "retired": false
+      },
+      "12": {
+        "name": "home_score",
+        "type": "int32",
+        "retired": false
+      },
+      "13": {
+        "name": "away_score",
+        "type": "int32",
+        "retired": false
+      },
+      "14": {
+        "name": "home_aet",
+        "type": "int32",
+        "retired": false
+      },
+      "15": {
+        "name": "away_aet",
+        "type": "int32",
+        "retired": false
+      },
+      "16": {
+        "name": "home_pen",
+        "type": "int32",
+        "retired": false
+      },
+      "17": {
+        "name": "away_pen",
+        "type": "int32",
+        "retired": false
+      },
+      "18": {
+        "name": "championship_name",
+        "type": "string",
+        "retired": false
+      },
+      "19": {
+        "name": "phase_name",
+        "type": "string",
+        "retired": false
+      },
+      "20": {
+        "name": "stadium_name",
+        "type": "string",
+        "retired": false
+      },
+      "21": {
+        "name": "referee_name",
+        "type": "string",
+        "retired": false
+      },
+      "22": {
+        "name": "attendance",
+        "type": "int32",
+        "retired": false
+      },
+      "23": {
+        "name": "day_display",
+        "type": "string",
+        "retired": false
+      },
+      "24": {
+        "name": "kickoff_local",
+        "type": "string",
+        "retired": false
+      },
+      "25": {
+        "name": "stadium_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "26": {
+        "name": "referee_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "27": {
+        "name": "home_upcoming_rank",
+        "type": "int32",
+        "retired": false
+      },
+      "28": {
+        "name": "home_recent_rank",
+        "type": "int32",
+        "retired": false
+      },
+      "29": {
+        "name": "home_upcoming_group",
+        "type": "bool",
+        "retired": false
+      },
+      "30": {
+        "name": "home_recent_group",
+        "type": "bool",
+        "retired": false
       }
     }
   },

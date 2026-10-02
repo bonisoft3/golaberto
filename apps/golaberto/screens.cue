@@ -98,6 +98,7 @@ _catalogMachine: json.Marshal({
 // beside it (ir decision-local-reads); a list inside one championship leaves
 // the championship out.
 #GameList: G={
+	table: *"game_card" | string
 	filter: string
 	order:  string
 	empty:  string
@@ -105,7 +106,7 @@ _catalogMachine: json.Marshal({
 	where:  *true | bool
 	_where: [if G.where {"\n      <span class=\"where\" data-text=\"{championship_name}\"></span>"}, ""][0]
 	out:    """
-		<ol class="\(G.cls)" data-live="game_card" data-filter="\(G.filter)" data-order="\(G.order)" data-empty="\(G.empty)">
+		<ol class="\(G.cls)" data-live="\(G.table)" data-filter="\(G.filter)" data-order="\(G.order)" data-empty="\(G.empty)">
 		  <template data-item>
 		    <li><a class="game-row" data-route="jogo" data-param-id="{id}" data-played="{played}">
 		      <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>\(G._where)
@@ -115,6 +116,24 @@ _catalogMachine: json.Marshal({
 		    </a></li>
 		  </template>
 		</ol>
+		"""
+}
+
+// A selected card marks each championship once; its nested list reads only
+// that championship's already-selected games, retaining the global feed cap.
+#HomeGameFeed: H={
+	feed: "upcoming" | "recent"
+	played: string
+	empty: string
+	out: """
+		<div class="home-championships" data-live="home_game_card" data-filter="home_\(H.feed)_group=is.true&amp;limit=20" data-order="home_\(H.feed)_rank.asc" data-empty="\(H.empty)" data-exit-motion="none">
+		  <template data-item>
+		    <section class="home-championship" data-championship="{championship_id}">
+		      <h3><a data-route="campeonato" data-param-id="{championship_id}" data-text="{championship_name}"></a></h3>
+		\((#GameList & {table: "home_game_card", filter: "championship_id=eq.{championship_id}&played=is.\(H.played)&home_\(H.feed)_rank=gt.0&limit=20", order: "home_\(H.feed)_rank.asc", empty: "", where: false}).out)
+		    </section>
+		  </template>
+		</div>
 		"""
 }
 
@@ -465,7 +484,17 @@ _principalMarkup: """
 	<h1 class="band" data-text="{msg.home_title}"></h1>
 	<div class="page">
 	  <div class="content">
-	    <p class="lead" data-text="{msg.home_lead}"></p>
+	    <div class="home-games">
+	      <section class="home-upcoming" aria-labelledby="home-upcoming-heading">
+	        <h2 id="home-upcoming-heading" class="home-games-title" data-text="{msg.games_upcoming}"></h2>
+	\((#HomeGameFeed & {feed: "upcoming", played: "false", empty: "{msg.home_no_upcoming}"}).out)
+	      </section>
+	      <section class="home-results" aria-labelledby="home-results-heading">
+	        <h2 id="home-results-heading" class="home-games-title" data-text="{msg.games_results}"></h2>
+	\((#HomeGameFeed & {feed: "recent", played: "true", empty: "{msg.home_no_results}"}).out)
+	      </section>
+	      <p class="more"><a data-route="jogos" data-text="{msg.home_all_games}"></a></p>
+	    </div>
 	    <section class="feature" data-live="championship" data-filter="featured=is.true&limit=1" data-order="begins.desc" data-empty="">
 	      <template data-item>
 	        <div class="feature-body">
@@ -476,24 +505,6 @@ _principalMarkup: """
 	          <div class="feature-phase" data-live="phase" data-filter="championship_id=eq.{id}&limit=1" data-order="position.asc" data-empty="">
 	            <template data-item>
 	              <div class="feature-grid">
-	                <div class="rounds" data-live="phase_round" data-filter="phase_id=eq.{id}" data-empty="">
-	                  <template data-item>
-	                    <div class="round-pair">
-	                      <section class="round">
-	                        <h3><span data-text="{msg.round}"></span> <span data-text="{current}"></span> <small data-text="{msg.home_results}"></small></h3>
-	\((#GameList & {filter: "phase_id=eq.{phase_id}&round=eq.{current}", order: "day.asc,kickoff.asc", empty: "{msg.round_empty}", where: false}).out)
-	                      </section>
-	                      <div class="round-next" data-live="phase_round" data-filter="id=eq.{id}&next=not.is.null" data-empty="">
-	                        <template data-item>
-	                          <section class="round">
-	                            <h3><span data-text="{msg.round}"></span> <span data-text="{next}"></span> <small data-text="{msg.home_upcoming}"></small></h3>
-	\((#GameList & {filter: "phase_id=eq.{phase_id}&round=eq.{next}", order: "day.asc,kickoff.asc", empty: "{msg.round_empty}", where: false}).out)
-	                          </section>
-	                        </template>
-	                      </div>
-	                    </div>
-	                  </template>
-	                </div>
 	                <div class="top" data-live="stage_group" data-filter="phase_id=eq.{id}&limit=1" data-order="position.asc,name.asc" data-empty="">
 	                  <template data-item>
 	                    <section class="top-six">

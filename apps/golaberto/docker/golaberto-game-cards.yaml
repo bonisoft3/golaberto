@@ -23,6 +23,25 @@ input:
           count: 1
           interval: ""
           mapping: 'root = {"boot": true}'
+        # Reuse championship events so no boot response contains the archive.
+        processors:
+          - try:
+              - branch:
+                  processors:
+                    - http:
+                        url: ${CRUD_URL}/championship?select=id&order=id
+                        verb: GET
+                        retries: 30
+                        retry_period: 2s
+                        headers:
+                          Authorization: Bearer ${SERVICE_JWT}
+                  result_map: root.championships = this
+              - mapping: |
+                  root = this.championships.map_each(c -> {"data": {"__table": "championship", "id": c.id}.format_json()})
+              - unarchive:
+                  format: json_array
+          - split:
+              size: 1
 pipeline:
   threads: 1
   processors:
@@ -32,7 +51,7 @@ pipeline:
         # The games and, in the same read, every name a card prints.
         let games = "game?select=*,home:home_id(name),away:away_id(name),stadium:stadium_id(name),referee:referee_id(name),phase!inner(name,championship_id,championship(full_name))"
         root = match {
-          this.boot.or(false) => {"scope": $games},
+          this.boot.or(false) => throw("Championship bootstrap failed"),
           # Only a game's own change can take a team off it.
           $table == "game" => {"scope": $games + "&id=eq." + $row.id, "own": true},
           $table == "team" => {"scope": $games + "&or=(home_id.eq." + $row.id + ",away_id.eq." + $row.id + ")"},

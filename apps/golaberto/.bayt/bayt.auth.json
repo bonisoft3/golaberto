@@ -14,6 +14,9 @@
     "depends_on": {
       "apps_golaberto-database": {
         "condition": "service_healthy"
+      },
+      "apps_golaberto-migrate": {
+        "condition": "service_completed_successfully"
       }
     },
     "networks": {
@@ -95,6 +98,8 @@
         "apps/golaberto/.bayt/compose.auth.yaml",
         "apps/golaberto/.bayt/compose.database.yaml",
         "libraries/mecha/.bayt/compose.database-image.yaml",
+        "apps/golaberto/.bayt/compose.migrate.yaml",
+        "libraries/mecha/.bayt/compose.migrate-image.yaml",
         "libraries/mecha/.bayt/compose.auth-image.yaml"
       ]
     },
@@ -126,6 +131,8 @@
         "apps/golaberto/.bayt/compose.auth.yaml",
         "apps/golaberto/.bayt/compose.database.yaml",
         "libraries/mecha/.bayt/compose.database-image.yaml",
+        "apps/golaberto/.bayt/compose.migrate.yaml",
+        "libraries/mecha/.bayt/compose.migrate-image.yaml",
         "libraries/mecha/.bayt/compose.auth-image.yaml"
       ]
     }
@@ -133,13 +140,16 @@
   "visibility": "internal",
   "emitsSrcs": false,
   "deps": [
-    "database_outs"
+    "database_outs",
+    "migrate_outs"
   ],
   "sameProjectDeps": [
-    "database_outs"
+    "database_outs",
+    "migrate_outs"
   ],
   "transitiveDeps": [
-    "database_outs"
+    "database_outs",
+    "migrate_outs"
   ],
   "transitiveCrossDeps": [
     {
@@ -156,6 +166,8 @@
     "apps/golaberto/.bayt/compose.auth.yaml",
     "apps/golaberto/.bayt/compose.database.yaml",
     "libraries/mecha/.bayt/compose.database-image.yaml",
+    "apps/golaberto/.bayt/compose.migrate.yaml",
+    "libraries/mecha/.bayt/compose.migrate-image.yaml",
     "libraries/mecha/.bayt/compose.auth-image.yaml"
   ],
   "chainedDeps": [
@@ -170,6 +182,15 @@
     },
     {
       "name": "database_outs",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "migrate_outs",
       "project": "apps_golaberto",
       "dir": "apps/golaberto",
       "outs": {

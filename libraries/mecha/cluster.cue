@@ -248,7 +248,9 @@ _devElectricSecret: "dev-electric-secret"
 					}
 					compose: {
 						ports: ["5432"]
+						volumes: [if X.meta.databaseVolume != "" {"\(X.meta.databaseVolume):/var/lib/postgresql"}]
 						environment: {
+							PGDATA:               X.meta.databaseDataDir
 							POSTGRES_USER:        "${POSTGRES_USER:-postgres}"
 							POSTGRES_PASSWORD:    "${POSTGRES_PASSWORD:-postgres}"
 							POSTGRES_DB:          "${POSTGRES_DB:-\(X.meta.app)}"
@@ -774,6 +776,9 @@ _devElectricSecret: "dev-electric-secret"
 
 	meta: {
 		app: string
+		// Consumers retaining an archive place this inside their database mount.
+		databaseDataDir: *"/postgresql-data" | string
+		databaseVolume: *"" | string
 		// The images mecha builds, one per service that carries mecha's own
 		// content (bayt.cue, the `*-image` targets). Stated by the consumer:
 		// same-project refs in mecha's own stack, cross-project refs from an

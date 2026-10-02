@@ -5,6 +5,7 @@ services:
       additional_contexts:
         libraries_mecha-auth-image: service:libraries_mecha-auth-image
         apps_golaberto-database: service:apps_golaberto-database
+        apps_golaberto-migrate: service:apps_golaberto-migrate
       context: ..
       dockerfile: .bayt/Dockerfile.auth
       target: auth
@@ -15,6 +16,8 @@ services:
       apps_golaberto-database:
         condition: service_healthy
         restart: true
+      apps_golaberto-migrate:
+        condition: service_completed_successfully
     environment:
       DATABASE_URL: >-
         postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}
@@ -31,6 +34,7 @@ services:
       additional_contexts:
         libraries_mecha-auth-image_bayt: service:libraries_mecha-auth-image_bayt
         apps_golaberto-database_bayt: service:apps_golaberto-database_bayt
+        apps_golaberto-migrate_bayt: service:apps_golaberto-migrate_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.auth
       target: auth_bayt

@@ -1,6 +1,22 @@
 # The card and the two team lines one game yields: the regression rationale
 # for each case is its name.
 tests:
+  - name: startup enumerates separate championship events instead of all games
+    target_processors: /input/broker/inputs/1/processors
+    mocks:
+      /input/broker/inputs/1/processors/0/try/0/branch/processors/0:
+        mapping: 'root = [{"id": "c1"}, {"id": "c2"}]'
+    input_batch:
+      - content: '{"boot": true}'
+    output_batches:
+      - - bloblang: 'this.data.parse_json() == {"__table": "championship", "id": "c1"}'
+      - - bloblang: 'this.data.parse_json() == {"__table": "championship", "id": "c2"}'
+  - name: a startup championship bounds its game read
+    target_processors: /pipeline/processors/0
+    input_batch:
+      - content: '{"data": "{\"__table\": \"championship\", \"id\": \"c\"}"}'
+    output_batches:
+      - - bloblang: 'this.scope.has_suffix("&phase.championship_id=eq.c") && !this.exists("own")'
   - name: a played game's card carries its names, and each team's line its own result
     target_processors: /pipeline/processors/1/try/3
     input_batch:

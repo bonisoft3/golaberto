@@ -6,6 +6,7 @@ services:
         libraries_mecha-conduit-image: service:libraries_mecha-conduit-image
         apps_golaberto-database: service:apps_golaberto-database
         apps_golaberto-mesh-events: service:apps_golaberto-mesh-events
+        apps_golaberto-migrate: service:apps_golaberto-migrate
       context: ..
       dockerfile: .bayt/Dockerfile.conduit
       target: conduit
@@ -18,6 +19,8 @@ services:
         restart: true
       apps_golaberto-mesh-events:
         condition: service_started
+      apps_golaberto-migrate:
+        condition: service_completed_successfully
     develop:
       watch:
       - action: sync+restart
@@ -50,6 +53,7 @@ services:
         libraries_mecha-conduit-image_bayt: service:libraries_mecha-conduit-image_bayt
         apps_golaberto-database_bayt: service:apps_golaberto-database_bayt
         apps_golaberto-mesh-events_bayt: service:apps_golaberto-mesh-events_bayt
+        apps_golaberto-migrate_bayt: service:apps_golaberto-migrate_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.conduit
       target: conduit_bayt

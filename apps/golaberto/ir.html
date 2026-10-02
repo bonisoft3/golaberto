@@ -137,7 +137,7 @@ graph TD
 <tr data-ordinal="11"><td>show_country</td><td>bool</td><td></td><td>default false</td></tr>
 <tr data-ordinal="12"><td>season</td><td>string</td><td></td><td>generated; 2026, or 2026/2027 across a year</td></tr>
 <tr data-ordinal="13"><td>full_name</td><td>string</td><td></td><td>generated; Brasil - Campeonato Brasileiro 2026</td></tr>
-<tr data-ordinal="14"><td>featured</td><td>bool</td><td></td><td>default false; the championship the front page leads with (<a href="#decision-home">decision-home</a>)</td></tr>
+<tr data-ordinal="14"><td>featured</td><td>bool</td><td></td><td>default false; the championship table below the home feeds (<a href="#decision-home">decision-home</a>)</td></tr>
 </table>
 <p data-extract="invariant">Row invariant: <code class="cel">this.ends &gt;= this.begins</code> — a season does not end before it begins.</p>
 </section>
@@ -405,6 +405,48 @@ graph TD
 <tr data-ordinal="24"><td>kickoff_local</td><td>string</td><td></td><td>generated: HH:MM in Brasília</td></tr>
 <tr data-ordinal="25"><td>stadium_id</td><td>uuid</td><td></td><td>optional; references stadium</td></tr>
 <tr data-ordinal="26"><td>referee_id</td><td>uuid</td><td></td><td>optional; references referee</td></tr>
+<tr data-ordinal="27"><td>home_upcoming_rank</td><td>int32</td><td><code class="cel">this &gt;= 0 &amp;&amp; this &lt;= 20</code></td><td>default 0; zero is outside the feed</td></tr>
+<tr data-ordinal="28"><td>home_recent_rank</td><td>int32</td><td><code class="cel">this &gt;= 0 &amp;&amp; this &lt;= 20</code></td><td>default 0; zero is outside the feed</td></tr>
+<tr data-ordinal="29"><td>home_upcoming_group</td><td>bool</td><td></td><td>default false; first selected game of this championship in the upcoming feed</td></tr>
+<tr data-ordinal="30"><td>home_recent_group</td><td>bool</td><td></td><td>default false; first selected game of this championship in the results feed</td></tr>
+</table>
+</section>
+
+<section id="HomeGameCard" data-kind="entity" data-durability="live" data-type-id="0x86cf93d86b91d654">
+<h3>HomeGameCard — live, pipeline-written</h3>
+<p>The forty selected homepage cards, copied atomically from GameCard by the clock refresh and kept current when a selected card changes. Public, live and pipeline-written. Unselected archive cards never enter this collection.</p>
+<table data-extract="fields">
+<tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
+<tr data-ordinal="1"><td>id</td><td>uuid</td><td></td><td>pk; references game</td></tr>
+<tr data-ordinal="2"><td>phase_id</td><td>uuid</td><td></td><td>references phase</td></tr>
+<tr data-ordinal="3"><td>championship_id</td><td>uuid</td><td></td><td>references championship</td></tr>
+<tr data-ordinal="4"><td>round</td><td>int32</td><td><code class="cel">this &gt;= 1 &amp;&amp; this &lt;= 99</code></td><td>optional</td></tr>
+<tr data-ordinal="5"><td>day</td><td>date</td><td></td><td></td></tr>
+<tr data-ordinal="6"><td>kickoff</td><td>timestamp</td><td></td><td>optional</td></tr>
+<tr data-ordinal="7"><td>played</td><td>bool</td><td></td><td></td></tr>
+<tr data-ordinal="8"><td>home_id</td><td>uuid</td><td></td><td>references team</td></tr>
+<tr data-ordinal="9"><td>away_id</td><td>uuid</td><td></td><td>references team</td></tr>
+<tr data-ordinal="10"><td>home_name</td><td>string</td><td></td><td></td></tr>
+<tr data-ordinal="11"><td>away_name</td><td>string</td><td></td><td></td></tr>
+<tr data-ordinal="12"><td>home_score</td><td>int32</td><td><code class="cel">this &gt;= 0 &amp;&amp; this &lt; 100</code></td><td>optional</td></tr>
+<tr data-ordinal="13"><td>away_score</td><td>int32</td><td><code class="cel">this &gt;= 0 &amp;&amp; this &lt; 100</code></td><td>optional</td></tr>
+<tr data-ordinal="14"><td>home_aet</td><td>int32</td><td><code class="cel">this &gt;= 0 &amp;&amp; this &lt; 100</code></td><td>optional</td></tr>
+<tr data-ordinal="15"><td>away_aet</td><td>int32</td><td><code class="cel">this &gt;= 0 &amp;&amp; this &lt; 100</code></td><td>optional</td></tr>
+<tr data-ordinal="16"><td>home_pen</td><td>int32</td><td><code class="cel">this &gt;= 0 &amp;&amp; this &lt; 100</code></td><td>optional</td></tr>
+<tr data-ordinal="17"><td>away_pen</td><td>int32</td><td><code class="cel">this &gt;= 0 &amp;&amp; this &lt; 100</code></td><td>optional</td></tr>
+<tr data-ordinal="18"><td>championship_name</td><td>string</td><td></td><td></td></tr>
+<tr data-ordinal="19"><td>phase_name</td><td>string</td><td></td><td></td></tr>
+<tr data-ordinal="20"><td>stadium_name</td><td>string</td><td></td><td>optional</td></tr>
+<tr data-ordinal="21"><td>referee_name</td><td>string</td><td></td><td>optional</td></tr>
+<tr data-ordinal="22"><td>attendance</td><td>int32</td><td><code class="cel">this &gt;= 0 &amp;&amp; this &lt;= 250000</code></td><td>optional</td></tr>
+<tr data-ordinal="23"><td>day_display</td><td>string</td><td></td><td>generated: dd/mm/yyyy</td></tr>
+<tr data-ordinal="24"><td>kickoff_local</td><td>string</td><td></td><td>generated: HH:MM in Brasília</td></tr>
+<tr data-ordinal="25"><td>stadium_id</td><td>uuid</td><td></td><td>optional; references stadium</td></tr>
+<tr data-ordinal="26"><td>referee_id</td><td>uuid</td><td></td><td>optional; references referee</td></tr>
+<tr data-ordinal="27"><td>home_upcoming_rank</td><td>int32</td><td><code class="cel">this &gt;= 0 &amp;&amp; this &lt;= 20</code></td><td>default 0; zero is outside the feed</td></tr>
+<tr data-ordinal="28"><td>home_recent_rank</td><td>int32</td><td><code class="cel">this &gt;= 0 &amp;&amp; this &lt;= 20</code></td><td>default 0; zero is outside the feed</td></tr>
+<tr data-ordinal="29"><td>home_upcoming_group</td><td>bool</td><td></td><td>default false; first selected game of this championship in the upcoming feed</td></tr>
+<tr data-ordinal="30"><td>home_recent_group</td><td>bool</td><td></td><td>default false; first selected game of this championship in the results feed</td></tr>
 </table>
 </section>
 
@@ -672,9 +714,12 @@ graph TD
 
 <p>Every screen opens with the same frame: the masthead (the wordmark and the language switcher), the terminal's strip dressed as the olive bar, and the title band (<a href="#decision-masthead">decision-masthead</a>). Below 720px the side column follows the content and the strip scrolls (<a href="#decision-screen-range">decision-screen-range</a>). Every word on a screen is a catalogue message in <code>pt-BR</code>, <code>es-AR</code> and <code>en-GB</code> (<a href="#decision-languages">decision-languages</a>).</p>
 
+<section id="home-games" data-kind="pipeline" data-from="Game" data-to="HomeGameCard">
+<h3>home-games</h3><p>A clock-driven refresh of home ranks every thirty seconds, through the service-only refresh_home_games SQL function. Selection reads seven-day GameCard candidates, seeks the latest TeamRating only for candidate teams, and reads GameImportance. The two ranks and forty-row HomeGameCard projection are updated in one transaction and only when changed; replay is idempotent. Concurrent refreshes skip under an advisory transaction lock. GameCard stays off the CDC publication. The pure home_game_order function accepts a clock for deterministic window and quality tests.</p>
+</section>
 <section id="principal" data-kind="screen" data-route="/">
 <h3>principal — the front page</h3>
-<p data-extract="reads">Reads: <a href="#Championship">Championship</a> three times, once per level — <code>region=eq.world</code>, <code>region=eq.continental</code>, <code>region=eq.national</code> — each <code>begins.desc</code>, capped at six.</p>
+<p data-extract="reads">Reads: <a href="#HomeGameCard">HomeGameCard</a> heading markers and selected games nested by championship for both feeds; <a href="#Championship">Championship</a> three times, once per level — <code>region=eq.world</code>, <code>region=eq.continental</code>, <code>region=eq.national</code> — each <code>begins.desc</code>, capped at six.</p>
 <p data-extract="mutations">Mutations: none.</p>
 <div class="storyboard frames">
 <figure id="principal-loading" data-kind="state" data-of="principal" data-state="loading">
@@ -696,51 +741,67 @@ graph TD
 </g></svg>
 <figcaption>The column and the lists are laid out before the rows arrive; nothing jumps when they do.</figcaption></figure>
 <figure id="principal-populated" data-kind="state" data-of="principal" data-state="populated">
-<svg viewBox="0 0 320 420" width="240" role="img" aria-label="Three levels, the most recent championships first, each a link to its page; the side column says how the archive is kept."><g font-family="Arial, sans-serif" font-size="9">
+<svg viewBox="0 0 320 420" width="240" role="img" aria-label="Upcoming games and recent results are grouped under one linked heading per championship, followed by the featured table and archive."><g font-family="Arial, sans-serif" font-size="9">
 <rect width="320" height="420" fill="#3b3008"/><rect x="10" width="300" height="420" fill="#e3efca"/>
 <rect x="10" width="300" height="34" fill="#8f983b"/><text x="18" y="24" font-size="18" font-weight="900" fill="#fff" stroke="#111" stroke-width=".6">GOL</text><text x="62" y="24" font-size="11" font-weight="900" fill="#f5c542">aberto</text>
 <text x="222" y="21" fill="#000000" font-weight="700">PT · ES · EN</text>
 <rect x="10" y="34" width="300" height="14" fill="#abb561"/><text x="110" y="44" fill="#000000" font-weight="700">Principal | Campeonatos</text>
 <rect x="10" y="48" width="300" height="22" fill="#474d0f"/><text x="16" y="63" font-size="12" font-weight="700" fill="#ffffff">Principal</text>
 <rect x="234" y="78" width="76" height="342" fill="#b8c26e"/>
-<text x="18" y="87" fill="#4a4a1f">O banco de dados aberto do futebol…</text>
-<text x="18" y="102" font-size="10" font-weight="700" fill="#000000">Mundial</text>
-<rect x="16" y="108" width="212" height="12" fill="#cee3a3"/><text x="20" y="117" fill="#784d1e">Mundial - Copa do Mundo FIFA 2026</text>
-<text x="18" y="135" font-size="10" font-weight="700" fill="#000000">Continental</text>
-<rect x="16" y="141" width="212" height="12" fill="#cee3a3"/><text x="20" y="150" fill="#784d1e">Europa - Champions League 2026/2027</text>
-<rect x="16" y="154" width="212" height="12" fill="#e3efca"/><text x="20" y="163" fill="#784d1e">América do Sul - Copa Sudamericana 2026</text>
-<rect x="16" y="167" width="212" height="12" fill="#cee3a3"/><text x="20" y="176" fill="#784d1e">América do Sul - Copa Libertadores 2026</text>
-<text x="18" y="194" font-size="10" font-weight="700" fill="#000000">Nacional</text>
-<rect x="16" y="200" width="212" height="12" fill="#cee3a3"/><text x="20" y="209" fill="#784d1e">Alemanha - Bundesliga 2026/2027</text>
-<rect x="16" y="213" width="212" height="12" fill="#e3efca"/><text x="20" y="222" fill="#784d1e">Itália - Serie A 2026/2027</text>
-<rect x="16" y="226" width="212" height="12" fill="#cee3a3"/><text x="20" y="235" fill="#784d1e">Inglaterra - Premier League 2026/2027</text>
-<rect x="16" y="239" width="212" height="12" fill="#e3efca"/><text x="20" y="248" fill="#784d1e">Espanha - La Liga 2026/2027</text>
-<text x="18" y="267" fill="#4a4a1f">Todos os campeonatos ›</text>
+
+<rect x="16" y="96" width="212" height="15" fill="#00008b"/><text x="20" y="106" fill="#fff" font-weight="700">Próximos jogos</text>
+<text x="20" y="121" fill="#784d1e" font-weight="700">Brasil — Campeonato Brasileiro 2026</text><rect x="16" y="127" width="212" height="16" fill="#cee3a3"/><text x="20" y="138" fill="#000000">02/10 19:00 · Equipe A x Equipe B</text>
+<rect x="16" y="146" width="212" height="15" fill="#00008b"/><text x="20" y="156" fill="#fff" font-weight="700">Resultados recentes</text>
+<text x="20" y="172" fill="#784d1e" font-weight="700">Europa — Nations League 2026/2027</text><rect x="16" y="178" width="212" height="16" fill="#cee3a3"/><text x="20" y="189" fill="#000000">01/10 21:00 · Equipe C 2 x 1 Equipe D</text>
+<text x="18" y="201" fill="#784d1e">Todos os jogos ›</text>
+<text x="18" y="227" fill="#000000" font-weight="700">Brasileirão · Primeiros seis</text>
+<rect x="16" y="235" width="212" height="12" fill="#00008b"/><text x="20" y="244" fill="#fff"># · Equipe · Pts · J · Chance de título</text>
+<text x="18" y="264" fill="#784d1e">1 Flamengo-RJ · tabela e chances</text>
+<text x="18" y="293" fill="#000000" font-weight="700">Campeonatos recentes por esfera</text>
+<text x="18" y="310" fill="#784d1e">Mundial · Continental · Nacional</text>
 </g></svg>
-<figcaption>Three levels, the most recent championships first, each a link to its page; the side column says how the archive is kept.</figcaption></figure>
+<figcaption>Championship headings group compact match rows; repeated introduction, selection copy and per-row championship labels are removed. The accepted colours and frame are retained.</figcaption></figure>
+<figure id="principal-no-games" data-kind="state" data-of="principal" data-state="no-games">
+<svg viewBox="0 0 320 420" width="240" role="img" aria-label="Both seven-day feeds say that no games are available; the archive remains accessible."><g font-family="Arial, sans-serif" font-size="9">
+<rect width="320" height="420" fill="#3b3008"/><rect x="10" width="300" height="420" fill="#e3efca"/>
+<rect x="10" width="300" height="34" fill="#8f983b"/><text x="18" y="24" font-size="18" font-weight="900" fill="#fff" stroke="#111" stroke-width=".6">GOL</text><text x="62" y="24" font-size="11" font-weight="900" fill="#f5c542">aberto</text>
+<text x="222" y="21" fill="#000000" font-weight="700">PT · ES · EN</text>
+<rect x="10" y="34" width="300" height="14" fill="#abb561"/><text x="110" y="44" fill="#000000" font-weight="700">Principal | Campeonatos</text>
+<rect x="10" y="48" width="300" height="22" fill="#474d0f"/><text x="16" y="63" font-size="12" font-weight="700" fill="#ffffff">Principal</text>
+<rect x="234" y="78" width="76" height="342" fill="#b8c26e"/>
+
+<rect x="16" y="96" width="212" height="15" fill="#00008b"/><text x="20" y="106" fill="#fff" font-weight="700">Próximos jogos</text>
+<rect x="16" y="114" width="212" height="16" fill="#cee3a3"/><text x="20" y="124" fill="#784d1e">Nenhum jogo nos próximos sete dias.</text>
+<rect x="16" y="146" width="212" height="15" fill="#00008b"/><text x="20" y="156" fill="#fff" font-weight="700">Resultados recentes</text>
+<rect x="16" y="164" width="212" height="16" fill="#cee3a3"/><text x="20" y="174" fill="#784d1e">Nenhum resultado nos últimos sete dias.</text>
+<text x="18" y="201" fill="#784d1e">Todos os jogos ›</text>
+<text x="18" y="227" fill="#000000" font-weight="700">Brasileirão · Primeiros seis</text>
+<rect x="16" y="235" width="212" height="12" fill="#00008b"/><text x="20" y="244" fill="#fff"># · Equipe · Pts · J · Chance de título</text>
+<text x="18" y="264" fill="#784d1e">1 Flamengo-RJ · tabela e chances</text>
+<text x="18" y="293" fill="#000000" font-weight="700">Campeonatos recentes por esfera</text>
+<text x="18" y="310" fill="#784d1e">Mundial · Continental · Nacional</text>
+</g></svg>
+<figcaption>When both windows are empty, each feed says so and removes stale rows; the featured table and archive links remain.</figcaption></figure>
 <figure id="principal-populated-dark" data-kind="state" data-of="principal" data-state="populated-dark">
-<svg viewBox="0 0 320 420" width="240" role="img" aria-label="The dark twin, by token resolution alone."><g font-family="Arial, sans-serif" font-size="9">
+<svg viewBox="0 0 320 420" width="240" role="img" aria-label="Upcoming games and recent results are grouped under one linked heading per championship, followed by the featured table and archive."><g font-family="Arial, sans-serif" font-size="9">
 <rect width="320" height="420" fill="#141103"/><rect x="10" width="300" height="420" fill="#23260f"/>
 <rect x="10" width="300" height="34" fill="#4a4f1d"/><text x="18" y="24" font-size="18" font-weight="900" fill="#fff" stroke="#111" stroke-width=".6">GOL</text><text x="62" y="24" font-size="11" font-weight="900" fill="#f5c542">aberto</text>
 <text x="222" y="21" fill="#e8efd6" font-weight="700">PT · ES · EN</text>
 <rect x="10" y="34" width="300" height="14" fill="#5c6230"/><text x="110" y="44" fill="#e8efd6" font-weight="700">Principal | Campeonatos</text>
 <rect x="10" y="48" width="300" height="22" fill="#0f1103"/><text x="16" y="63" font-size="12" font-weight="700" fill="#f5c542">Principal</text>
 <rect x="234" y="78" width="76" height="342" fill="#33371b"/>
-<text x="18" y="87" fill="#c3cc9a">O banco de dados aberto do futebol…</text>
-<text x="18" y="102" font-size="10" font-weight="700" fill="#e8efd6">Mundial</text>
-<rect x="16" y="108" width="212" height="12" fill="#2e3314"/><text x="20" y="117" fill="#e0b07a">Mundial - Copa do Mundo FIFA 2026</text>
-<text x="18" y="135" font-size="10" font-weight="700" fill="#e8efd6">Continental</text>
-<rect x="16" y="141" width="212" height="12" fill="#2e3314"/><text x="20" y="150" fill="#e0b07a">Europa - Champions League 2026/2027</text>
-<rect x="16" y="154" width="212" height="12" fill="#23260f"/><text x="20" y="163" fill="#e0b07a">América do Sul - Copa Sudamericana 2026</text>
-<rect x="16" y="167" width="212" height="12" fill="#2e3314"/><text x="20" y="176" fill="#e0b07a">América do Sul - Copa Libertadores 2026</text>
-<text x="18" y="194" font-size="10" font-weight="700" fill="#e8efd6">Nacional</text>
-<rect x="16" y="200" width="212" height="12" fill="#2e3314"/><text x="20" y="209" fill="#e0b07a">Alemanha - Bundesliga 2026/2027</text>
-<rect x="16" y="213" width="212" height="12" fill="#23260f"/><text x="20" y="222" fill="#e0b07a">Itália - Serie A 2026/2027</text>
-<rect x="16" y="226" width="212" height="12" fill="#2e3314"/><text x="20" y="235" fill="#e0b07a">Inglaterra - Premier League 2026/2027</text>
-<rect x="16" y="239" width="212" height="12" fill="#23260f"/><text x="20" y="248" fill="#e0b07a">Espanha - La Liga 2026/2027</text>
-<text x="18" y="267" fill="#c3cc9a">Todos os campeonatos ›</text>
+<rect x="16" y="96" width="212" height="15" fill="#1d2a6b"/><text x="20" y="106" fill="#fff" font-weight="700">Próximos jogos</text>
+<text x="20" y="121" fill="#e0b07a" font-weight="700">Brasil — Campeonato Brasileiro 2026</text><rect x="16" y="127" width="212" height="16" fill="#2e3314"/><text x="20" y="138" fill="#e8efd6">02/10 19:00 · Equipe A x Equipe B</text>
+<rect x="16" y="146" width="212" height="15" fill="#1d2a6b"/><text x="20" y="156" fill="#fff" font-weight="700">Resultados recentes</text>
+<text x="20" y="172" fill="#e0b07a" font-weight="700">Europa — Nations League 2026/2027</text><rect x="16" y="178" width="212" height="16" fill="#2e3314"/><text x="20" y="189" fill="#e8efd6">01/10 21:00 · Equipe C 2 x 1 Equipe D</text>
+<text x="18" y="201" fill="#e0b07a">Todos os jogos ›</text>
+<text x="18" y="227" fill="#e8efd6" font-weight="700">Brasileirão · Primeiros seis</text>
+<rect x="16" y="235" width="212" height="12" fill="#1d2a6b"/><text x="20" y="244" fill="#fff"># · Equipe · Pts · J · Chance de título</text>
+<text x="18" y="264" fill="#e0b07a">1 Flamengo-RJ · tabela e chances</text>
+<text x="18" y="293" fill="#e8efd6" font-weight="700">Campeonatos recentes por esfera</text>
+<text x="18" y="310" fill="#e0b07a">Mundial · Continental · Nacional</text>
 </g></svg>
-<figcaption>The dark twin, by token resolution alone.</figcaption></figure>
+<figcaption>Championship headings group compact match rows; repeated introduction, selection copy and per-row championship labels are removed. The accepted colours and frame are retained.</figcaption></figure>
 </div>
 <script type="application/json" data-kind="paths" data-of="principal">
 {
@@ -750,9 +811,10 @@ graph TD
       "populated"
     ],
     "accepts": [
-      "accept-home-levels"
+      "accept-home-levels", "accept-home-featured", "accept-home-games"
     ]
   },
+  "quiet": {"states": ["populated", "no-games", "populated"], "accepts": ["accept-home-games"]},
   "night": {
     "states": [
       "populated",
@@ -2400,8 +2462,9 @@ A key outside the vocabulary is refused: <code class="cel">input.sort == "pt,xx"
 A goal counts for home or away and nothing else: <code class="cel">input.side == "visitor"</code> gives <code class="cel">error.field == "side"</code>.
 </p>
 <p id="test-home-featured" data-kind="test" data-of="principal" data-accepts="accept-home-featured">
-The front page leads with the featured 2026 Brasileirão: its top six, Flamengo first with a title chance, and the current round's results: <code class="cel">output.top[0].team == "Flamengo-RJ" &amp;&amp; output.top.size() == 6 &amp;&amp; output.results.size() &gt; 0</code>.
+Below the game feeds, the front page keeps the featured 2026 Brasileirão: its top six, Flamengo first with a title chance: <code class="cel">output.top[0].team == "Flamengo-RJ" &amp;&amp; output.top.size() == 6</code>.
 </p>
+<p id="test-home-games" data-kind="test" data-of="principal" data-accepts="accept-home-games">Upcoming fixtures and recent results lead the home page, grouped under one linked heading per championship without repeated competition labels or introductory copy, and open their game pages. The browser also waits for a fixture to expire using the clock pipeline alone and checks both empty messages with no stale rows, then restores the fixtures: <code class="cel">output.upcoming.size() &gt; 0 &amp;&amp; output.recent.size() &gt; 0</code>.</p>
 <p id="test-home-levels" data-kind="test" data-of="principal" data-accepts="accept-home-levels">
 Over the seeded archive the front page's world list is <code class="cel">output.world[0] == "Mundial - Copa do Mundo FIFA 2026"</code>, the continental list opens <code class="cel">output.continental[0] == "Europa - Champions League 2026/2027"</code>, and the national list opens <code class="cel">output.national[0] == "Alemanha - Bundesliga 2026/2027"</code> with <code class="cel">output.national.size() == 6</code>; each entry leads to its championship's page.
 </p>
@@ -2591,7 +2654,7 @@ Filtering is a live query over the championship table interpolating the search r
 <p id="decision-phases-stacked" data-kind="decision"><strong>A championship shows every phase, stacked, with chips that jump to each.</strong>
 Upstream shows one phase at a time behind buttons. Phases are rows, and a selection machine's states are fixed when the program is written, so a tab per phase would need a machine per championship shape. Stacked sections under anchor chips show a league (one phase) and a cup (several) the same way, and a phone reads them as one scroll.</p>
 <p id="decision-seed-archive" data-kind="decision"><strong>The archive a fresh cluster starts from is real.</strong>
-The seed rows are championships, phases, clubs, stadiums and zones as golaberto.com.br records them — the 2026 Série A's twenty clubs, its zones, the 2026 World Cup final — so every screen and every screenshot reads as the archive does. The games are the next turn's, crawled from the same pages, so the table it derives can be checked against the one golaberto.com.br shows.</p>
+The seed rows are championships, phases, clubs, stadiums and zones as golaberto.com.br records them — the 2026 Série A's twenty clubs, its zones, the 2026 World Cup final — so every screen and every screenshot reads as the archive does. Games and line-ups are crawled from the same pages, so derived tables can be checked against the original. The dataset is a generated SQL fixture outside CUE compilation, copied into fresh-database migrations and inserted in batches. Database domains, constraints and validation triggers still check every record; repeated initialization preserves existing IDs. Regeneration is checked at the test gate. Retained archives are never reseeded by this fixture.</p>
 <p id="decision-standings-derived" data-kind="decision"><strong>A table is recounted from its games, never typed, and kept as rows.</strong>
 Upstream computes a table in Ruby on every request. Here the terminal cannot sort by a ladder of eleven keys or sum across a collection, and a table is read on every visit to a championship, so it earns materialization: one stream, absolute recounts, a live sink. The price is a sink that trails a game's edit by the stream's latency, a line that outlives a team removed from its group, and an old group that keeps counting a game or member moved out of it — the change event carries only the row as it now stands — until the editing turn, the first writer that can move one, gives the stream the before-image and a delete.</p>
 <p id="decision-standings-boot" data-kind="decision"><strong>The stream recounts every group once when it starts.</strong>
@@ -2622,8 +2685,13 @@ Upstream funds a last rare-position tail with a share of the wall time its earli
 A cell that shows 0 says whether it can still happen, as upstream's odds_reachability does: odds-rust labels each final position impossible (proved by points or ranks), reachable (an estimate above zero or a witness season) or undecided, and a zone is impossible when each of its positions is, reachable when any is. The computation writes that as <code>reach</code> on the PositionChance and ZoneChance rows that round to 0 — a finished group's other positions are impossible — and the chances page and the front page's title column mark a reachable 0 with * and an undecided one with ?, an impossible one unmarked, each saying its status in words. Upstream's other use of the status, a zone shown as exactly 100 only when every position outside it is proved impossible, has no counterpart: cells here are rounded to the cent, and a 100 is a rounding like any other.</p>
 <p id="decision-ratings" data-kind="decision"><strong>Ratings are upstream's, refit by a computation.</strong>
 Upstream fits SPI team ratings (an iterative fixed point with time decay and shrinkage), snapshots them per day as historic ratings, rates players from every minute they played and scores the ratings' predictions (/eval). The ratings computation asks the same Wasm module for all four and shapes the rows as upstream's writes left them — a team's last snapshot of a day, to six decimals; a player's rating per 90 minutes, in f32 — and writes <a href="#TeamRating">TeamRating</a>, <a href="#PlayerRating">PlayerRating</a> and <a href="#RatingEval">RatingEval</a>. A team's page shows its latest rating; a player's shows his.</p>
-<p id="decision-home" data-kind="decision"><strong>The front page leads with a featured season.</strong>
-Upstream's front page opens on the season its readers follow. Which one is an editor's pick, not something the data decides — the most recently played games belong to the second division, and a season still has its unplayed games from months ago — so a championship carries <code>featured</code>, set by an editor, and the front page shows the newest featured championship's main phase: its current round's results and the next round, the top six of its first group with each side's title chance, and the way to its chances. Below it, the recent championships of each level as before.</p>
+<p id="home-performance-contract">Homepage loading syncs only the forty selected HomeGameCard rows, retaining twenty fixtures and twenty results. Selection considers only candidates in the seven-day windows and seeks each candidate team’s latest rating using the covering team/date index. A refresh takes an advisory transaction lock, skips an overlapping call, and touches only cards entering or leaving the selected feeds. Unchanged refreshes do not rewrite cards; edits and deletions of selected cards update the bounded collection. The existing championship hierarchy and rows are unchanged.</p>
+<p id="decision-home" data-kind="decision"><strong>The front page leads with the most important upcoming fixtures and recent results across competitions.</strong>
+Following <a href="https://github.com/galo2099/golaberto/blob/master/app/controllers/home_controller.rb">upstream's home selection</a> and <a href="https://www.golaberto.com.br/">the live site</a>, each feed selects at most twenty games with a known kickoff in its rolling seven-day window. Upcoming games must be unplayed and in the future; recent results must be played and in the past. Quality is the harmonic mean of the latest known team ratings multiplied by one plus the mean match importance, halved for every day's distance from now. Unknown ratings or importance contribute zero. The twenty strongest candidates are presented chronologically, upcoming dates ascending and recent dates descending, with competitions ordered by their strongest game on that day; ties use the game's id. Brasília's dates and times match the rest of the archive. The <a href="#home-games">home-games</a> stream refreshes the two ranks on GameCard and the bounded HomeGameCard collection every thirty seconds, including when the clock advances without an edit. Only changed ranks and championship heading markers are written, atomically; the live sink cannot feed the CDC bus. Screens read synced rows without owning a clock or fetching. Within each feed, games are grouped by championship, with exactly one linked championship heading. Groups follow their first selected game's rank; games inside each group retain feed rank order. The global twenty-game selection is unchanged. The first selected card for each championship carries the feed's group marker; both markers clear when the championship leaves the window. Nested lists read only HomeGameCard, a maximum of forty synced cards, by championship id, played state and positive feed rank. Rows show date, time, teams and score without repeating the championship. Concise upcoming/results headings replace the repeated introduction and selection explanation. The featured season's top six and the recent championships remain below the feeds. An empty time window says so instead of presenting old games as current.</p>
+
+<p id="home-grouping-oracle">The user requested less repetition and clear championship ownership, and requested Stitch for the refinement. Stitch project <code>3684321283098058780</code>, screen <code>e13ee84a5cfe43de974e30eaf73b9e0d</code>, supplied the championship-heading and compact-row hierarchy. This refinement keeps the accepted frame and DESIGN.md tokens; generated illustrative fixtures, extra sidebar widgets, venue columns and new theme tokens are not part of the contract. Every championship is named in full, including on a phone; team names are not abbreviated. Both feeds remain independently emptyable with their existing messages.</p>
+<p>The imported archive exceeds the seed dataset. Game-card and player-statistics startup passes enumerate championships and reuse their scoped event paths, so a startup response cannot aggregate every game or appearance in the archive. The per-championship batches retain the existing absolute recount and replay behavior.</p>
+<p>When the first selected game changes, its championship heading is replaced immediately, so an outgoing animation cannot briefly repeat the same championship. The local archive's PostgreSQL data directory lives inside its mounted volume, so recreating the development services preserves the imported fixtures. The retained-volume upgrade check verifies the running data directory is covered by a mount.</p>
 <p id="decision-hatches" data-kind="decision"><strong>Escape hatches: none.</strong>
 No vendored unit, no container, no external endpoint; the one Wasm module is upstream's odds-rust, which the numeric stage runs (<a href="#decision-chances">decision-chances</a>). Everything the archive shows is rows, generated columns, pipelines and the terminal's machines; the maps upstream draws need a map service and are out of scope in the brief.</p>
 

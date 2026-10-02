@@ -288,11 +288,22 @@ pairs:
     of: principal
     accepts:
       - accept-home-featured
-    says: 'the front page leads with the featured 2026 Brasileirão: its top six, Flamengo first, and the current round'
+    says: 'the front page retains the featured 2026 Brasileirão: its top six, Flamengo first, below the game feeds'
     given:
       featured: Campeonato Brasileiro 2026
     when: open
-    then: 'output.top[0].team == "Flamengo-RJ" && output.top.size() == 6 && output.results.size() > 0'
+    then: 'output.top[0].team == "Flamengo-RJ" && output.top.size() == 6'
+  - id: test-home-games
+    ir: test-home-games
+    of: principal
+    accepts:
+      - accept-home-games
+    says: upcoming fixtures and recent results across competitions lead the home page and open their games
+    given:
+      upcoming: true
+      recent: true
+    when: arrive
+    then: output.upcoming.size() > 0 && output.recent.size() > 0
   - id: test-home-levels
     ir: test-home-levels
     of: principal

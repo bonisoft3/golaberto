@@ -14,9 +14,9 @@ agree with their results, readers who correct the record, and a serious odds eng
 
 - **The archive.** Championships, phases and groups; every game with its
   goals, line-ups, stadium, referee and crowd; teams, players, stadiums and
-  referees, each with its own page. The front page opens on the featured
-  championship: the last round's results, the next round's games, and the top
-  six with each team's chance of the title.
+  referees, each with its own page. The front page opens on
+  upcoming and recently played games across competitions, followed by the
+  featured championship's top six and title chances.
 - **Tables that recount themselves.** Standings, rounds, game cards and
   players' seasons are derived by streams from the games. Record a result and
   every open page that shows it moves, with no reload.
@@ -51,7 +51,7 @@ agree with their results, readers who correct the record, and a serious odds eng
   Italian, German and French, each with its own addresses; light and dark;
   phone to desktop. Lighthouse accessibility is 100 on every page.
 - **Proved before it ships.** Lint walks every machine state and every
-  screen in both themes; `integrate` runs 45 acceptance cases in a browser
+  screen in both themes; `integrate` runs 49 acceptance cases in a browser
   against the whole cluster, and the computations against the archive's own
   seasons.
 
@@ -62,8 +62,25 @@ With Docker:
 ```sh
 cd apps/golaberto
 ../../plugins/sayt/sayt.sh launch      # the whole cluster, served over https
-../../plugins/sayt/sayt.sh integrate   # the acceptance suite against it
+COMPOSE_PROJECT_NAME=golaberto-checks CADDY_TLS_HOST_PORT=8444 \
+  ../../plugins/sayt/sayt.sh integrate # the acceptance suite in a disposable stack
 ```
+
+The Docker daemon must be running. On macOS with Colima, run `colima start`
+first and use the `colima` Docker context (`docker context use colima`).
+Before opening the app in a browser, trust its local development certificate
+once from `apps/golaberto`:
+
+```sh
+../../plugins/sayt/sayt.sh --script tools.nu mise exec -- mkcert -install
+```
+
+Enter your macOS administrator password when prompted, then restart the browser and open
+`https://localhost:8443`. Bypassing a certificate warning does not allow the
+service worker to register.
+
+Launch preserves existing database volumes. Use `docker compose down` to
+stop the app; add `-v` only when you intend to erase its local database.
 
 ## A note from the builder
 

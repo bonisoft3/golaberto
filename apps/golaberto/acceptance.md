@@ -12,7 +12,8 @@
 - [ ] A phase's table breaks ties by the archive's own keys — points, wins, goal difference, goals for, shoot-out goals, away goals, head-to-head, name — in the order the phase states, upstream's order unless it says otherwise. {#accept-tiebreak}
 - [ ] A goal counts for the home or the away side of its game, and nothing else. {#accept-goal-side}
 - [ ] The front page lists the archive's championships in three levels — world, continental, national — most recent first, each leading to its page. {#accept-home-levels}
-- [ ] The front page leads with the season an editor features: its current round's results and the next round, its top six with each side's title chance, and the way to its chances. {#accept-home-featured}
+- [ ] The front page leads with up to twenty important upcoming fixtures and twenty recently played games across competitions in rolling seven-day windows, with competition, Brasília date/time, results and links to game details. Selection follows the reference's team strength, match importance and daily proximity decay; empty windows say so. {#accept-home-games}
+- [ ] Below the game feeds, the front page keeps the season an editor features, its top six with each side's title chance, and the way to its chances. {#accept-home-featured}
 - [ ] The catalogue lists every championship with its level and its category, "Profissional" when it names none. {#accept-catalog}
 - [ ] Typing part of a name or picking a level narrows the catalogue as the reader types, and a search that matches nothing says so. {#accept-catalog-search}
 - [ ] A championship's page shows its full name and season, its level, its category, the points for a win, a draw and a loss, and every phase in order with its groups, their teams and their zones; a phase with no groups says so. {#accept-championship-page}

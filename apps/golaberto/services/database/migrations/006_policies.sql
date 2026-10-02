@@ -172,6 +172,13 @@ CREATE POLICY game_card_app_user_select ON game_card FOR SELECT TO app_user USIN
 DROP POLICY IF EXISTS game_card_service_all ON game_card;
 CREATE POLICY game_card_service_all ON game_card FOR ALL TO service USING (true) WITH CHECK (true);
 
+CALL rls_protect('home_game_card');
+ALTER TABLE home_game_card ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS home_game_card_app_user_select ON home_game_card;
+CREATE POLICY home_game_card_app_user_select ON home_game_card FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS home_game_card_service_all ON home_game_card;
+CREATE POLICY home_game_card_service_all ON home_game_card FOR ALL TO service USING (true) WITH CHECK (true);
+
 CALL rls_protect('team_game');
 ALTER TABLE team_game ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS team_game_app_user_select ON team_game;

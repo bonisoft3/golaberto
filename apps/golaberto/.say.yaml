@@ -14,6 +14,14 @@ say:
         priority: 1
         cmds:
           - do: deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker tests/constraints.ts
+      home-games:
+        priority: 1
+        cmds:
+          - do: deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker tests/home-games.ts tests/home-upgrade.ts
+      archive-refresh:
+        priority: 1
+        cmds:
+          - do: 'deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker,python3 tests/archive-refresh.ts'
       acceptance:
         priority: 1
         cmds:
@@ -40,7 +48,7 @@ say:
           - do: mise exec -- cue vet ./...
       rpk:
         cmds:
-          - do: mise exec -- redpanda-connect lint --skip-env-var-check docker/golaberto-standings.yaml docker/golaberto-game-cards.yaml docker/golaberto-player-stats.yaml docker/golaberto-rounds.yaml
+          - do: mise exec -- redpanda-connect lint --skip-env-var-check docker/golaberto-standings.yaml docker/golaberto-game-cards.yaml docker/golaberto-home-games.yaml docker/golaberto-player-stats.yaml docker/golaberto-rounds.yaml
       facts:
         priority: 1
         cmds:
@@ -88,6 +96,9 @@ say:
         cmds:
           - do: test
             use: ./test.nu
+      seed-data:
+        cmds:
+          - do: python3 -m unittest discover -s tools -p seed_sql_test.py
       standings:
         cmds:
           - do: mise exec -- redpanda-connect test pipelines/standings.yaml pipelines/rounds.yaml pipelines/game-cards.yaml pipelines/player-stats.yaml

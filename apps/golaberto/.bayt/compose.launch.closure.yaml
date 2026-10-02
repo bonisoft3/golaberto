@@ -10,6 +10,10 @@ include:
   required: false
 - path: ../../../apps/golaberto/.bayt/compose.crud.yaml
   required: false
+- path: ../../../apps/golaberto/.bayt/compose.migrate.yaml
+  required: false
+- path: ../../../libraries/mecha/.bayt/compose.migrate-image.yaml
+  required: false
 - path: ../../../apps/golaberto/.bayt/compose.electric.yaml
   required: false
 - path: ../../../apps/golaberto/.bayt/compose.redis.yaml

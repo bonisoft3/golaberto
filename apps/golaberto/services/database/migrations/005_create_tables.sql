@@ -317,6 +317,45 @@ CREATE TABLE IF NOT EXISTS game_card (
   "kickoff_local" portable_string GENERATED ALWAYS AS (CASE WHEN kickoff IS NULL THEN '' ELSE lpad(extract(hour from (kickoff AT TIME ZONE 'America/Sao_Paulo'))::int::text, 2, '0') || ':' || lpad(extract(minute from (kickoff AT TIME ZONE 'America/Sao_Paulo'))::int::text, 2, '0') END) STORED,
   "stadium_id" uuid REFERENCES stadium(id) ON DELETE CASCADE,
   "referee_id" uuid REFERENCES referee(id) ON DELETE CASCADE,
+  "home_upcoming_rank" portable_int32 DEFAULT 0 NOT NULL CHECK (home_upcoming_rank >= 0 AND home_upcoming_rank <= 20),
+  "home_recent_rank" portable_int32 DEFAULT 0 NOT NULL CHECK (home_recent_rank >= 0 AND home_recent_rank <= 20),
+  "home_upcoming_group" portable_bool DEFAULT false NOT NULL,
+  "home_recent_group" portable_bool DEFAULT false NOT NULL,
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS home_game_card (
+  "id" uuid PRIMARY KEY REFERENCES game(id) ON DELETE CASCADE,
+  "phase_id" uuid NOT NULL REFERENCES phase(id) ON DELETE CASCADE,
+  "championship_id" uuid NOT NULL REFERENCES championship(id) ON DELETE CASCADE,
+  "round" portable_int32 CHECK (round >= 1 AND round <= 99),
+  "day" portable_date NOT NULL,
+  "kickoff" portable_timestamp,
+  "played" portable_bool NOT NULL,
+  "home_id" uuid NOT NULL REFERENCES team(id) ON DELETE CASCADE,
+  "away_id" uuid NOT NULL REFERENCES team(id) ON DELETE CASCADE,
+  "home_name" portable_string NOT NULL,
+  "away_name" portable_string NOT NULL,
+  "home_score" portable_int32 CHECK (home_score >= 0 AND home_score < 100),
+  "away_score" portable_int32 CHECK (away_score >= 0 AND away_score < 100),
+  "home_aet" portable_int32 CHECK (home_aet >= 0 AND home_aet < 100),
+  "away_aet" portable_int32 CHECK (away_aet >= 0 AND away_aet < 100),
+  "home_pen" portable_int32 CHECK (home_pen >= 0 AND home_pen < 100),
+  "away_pen" portable_int32 CHECK (away_pen >= 0 AND away_pen < 100),
+  "championship_name" portable_string NOT NULL,
+  "phase_name" portable_string NOT NULL,
+  "stadium_name" portable_string,
+  "referee_name" portable_string,
+  "attendance" portable_int32 CHECK (attendance >= 0 AND attendance <= 250000),
+  "day_display" portable_string GENERATED ALWAYS AS (lpad(extract(day from day)::int::text, 2, '0') || '/' || lpad(extract(month from day)::int::text, 2, '0') || '/' || extract(year from day)::int::text) STORED,
+  "kickoff_local" portable_string GENERATED ALWAYS AS (CASE WHEN kickoff IS NULL THEN '' ELSE lpad(extract(hour from (kickoff AT TIME ZONE 'America/Sao_Paulo'))::int::text, 2, '0') || ':' || lpad(extract(minute from (kickoff AT TIME ZONE 'America/Sao_Paulo'))::int::text, 2, '0') END) STORED,
+  "stadium_id" uuid REFERENCES stadium(id) ON DELETE CASCADE,
+  "referee_id" uuid REFERENCES referee(id) ON DELETE CASCADE,
+  "home_upcoming_rank" portable_int32 DEFAULT 0 NOT NULL CHECK (home_upcoming_rank >= 0 AND home_upcoming_rank <= 20),
+  "home_recent_rank" portable_int32 DEFAULT 0 NOT NULL CHECK (home_recent_rank >= 0 AND home_recent_rank <= 20),
+  "home_upcoming_group" portable_bool DEFAULT false NOT NULL,
+  "home_recent_group" portable_bool DEFAULT false NOT NULL,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -419,6 +458,7 @@ CREATE INDEX IF NOT EXISTS idx_game_card_phase_id ON game_card USING btree (phas
 CREATE INDEX IF NOT EXISTS idx_game_card_day ON game_card USING btree (day);
 CREATE INDEX IF NOT EXISTS idx_game_card_stadium_id ON game_card USING btree (stadium_id);
 CREATE INDEX IF NOT EXISTS idx_game_card_referee_id ON game_card USING btree (referee_id);
+CREATE INDEX IF NOT EXISTS idx_home_game_card_championship_id ON home_game_card USING btree (championship_id);
 CREATE INDEX IF NOT EXISTS idx_team_game_team_id ON team_game USING btree (team_id);
 CREATE INDEX IF NOT EXISTS idx_team_game_game_id ON team_game USING btree (game_id);
 CREATE INDEX IF NOT EXISTS idx_comment_game_id ON comment USING btree (game_id);

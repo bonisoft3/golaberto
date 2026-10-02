@@ -42,6 +42,7 @@ package bayt
 import (
 	"encoding/json"
 	"list"
+	"regexp"
 	"strings"
 )
 
@@ -1613,6 +1614,11 @@ _copyLine: {
 					let _srcsName = "\(n)_srcs"
 					let _outsName = "\(n)_outs"
 					let _baytName = "\(n)_bayt"
+					// Literal named mounts need root declarations; bind and anonymous mounts do not.
+					let _namedVolumes = [if t.compose != _|_ for mount in t.compose.volumes if regexp.Match("^[A-Za-z0-9][A-Za-z0-9_.-]*:/[^:]+(:[^/:]+)?$", mount) {strings.Split(mount, ":")[0]}]
+					if len(_namedVolumes) > 0 {
+						volumes: {for volume in _namedVolumes {(volume): {}}}
+					}
 					services: {
 						(svc): (_service & {"n": n, "t": t}).out
 						if t.emitsSrcs {

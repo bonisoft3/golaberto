@@ -60,6 +60,9 @@
     "game_card": {
       "scope": "public"
     },
+    "home_game_card": {
+      "scope": "public"
+    },
     "team_game": {
       "scope": "public"
     },
@@ -226,6 +229,7 @@
       "states": [
         "loading",
         "populated",
+        "no-games",
         "populated-dark"
       ]
     },
@@ -752,6 +756,7 @@
     "game_card",
     "game_importance",
     "goal",
+    "home_game_card",
     "phase",
     "phase_round",
     "player",
@@ -2188,6 +2193,245 @@
           "ref": "referee",
           "type": "uuid",
           "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 20
+          },
+          "default": "0",
+          "name": "home_upcoming_rank",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 20
+          },
+          "default": "0",
+          "name": "home_recent_rank",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "default": "false",
+          "name": "home_upcoming_group",
+          "type": "bool",
+          "required": true
+        },
+        {
+          "default": "false",
+          "name": "home_recent_group",
+          "type": "bool",
+          "required": true
+        }
+      ]
+    },
+    "home_game_card": {
+      "durability": "live",
+      "fields": [
+        {
+          "name": "id",
+          "pk": true,
+          "ref": "game",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "phase_id",
+          "ref": "phase",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "championship_id",
+          "ref": "championship",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 1,
+            "intMax": 99
+          },
+          "name": "round",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "name": "day",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "kickoff",
+          "type": "timestamp",
+          "required": false
+        },
+        {
+          "name": "played",
+          "type": "bool",
+          "required": true
+        },
+        {
+          "name": "home_id",
+          "ref": "team",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "away_id",
+          "ref": "team",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "home_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "away_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 99
+          },
+          "name": "home_score",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 99
+          },
+          "name": "away_score",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 99
+          },
+          "name": "home_aet",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 99
+          },
+          "name": "away_aet",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 99
+          },
+          "name": "home_pen",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 99
+          },
+          "name": "away_pen",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "name": "championship_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "phase_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "stadium_name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "referee_name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 250000
+          },
+          "name": "attendance",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "name": "day_display",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "kickoff_local",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "stadium_id",
+          "ref": "stadium",
+          "type": "uuid",
+          "required": false
+        },
+        {
+          "name": "referee_id",
+          "ref": "referee",
+          "type": "uuid",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 20
+          },
+          "default": "0",
+          "name": "home_upcoming_rank",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 20
+          },
+          "default": "0",
+          "name": "home_recent_rank",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "default": "false",
+          "name": "home_upcoming_group",
+          "type": "bool",
+          "required": true
+        },
+        {
+          "default": "false",
+          "name": "home_recent_group",
+          "type": "bool",
+          "required": true
         }
       ]
     },
@@ -3134,6 +3378,9 @@
     "services/database/migrations/010_game_days.sql",
     "services/database/migrations/011_comment_writes.sql",
     "services/database/migrations/012_editor_writes.sql",
+    "services/database/migrations/013_home_games.sql",
+    "services/database/migrations/014_home_championships.sql",
+    "services/database/migrations/015_home_performance.sql",
     "services/database/migrations/900_seed.sql"
   ],
   "pipelines": [
@@ -3145,6 +3392,11 @@
     {
       "name": "game-cards",
       "to": "game_card",
+      "raw": true
+    },
+    {
+      "name": "home-games",
+      "to": "home_game_card",
       "raw": true
     },
     {

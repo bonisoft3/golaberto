@@ -143,6 +143,9 @@ routes:
       css: shell/screens/principal.css
       handlers: []
       adapters: []
+      renderers:
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
@@ -171,6 +174,9 @@ routes:
       css: shell/screens/campeonatos.css
       handlers: []
       adapters: []
+      renderers:
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/catalog.css
@@ -206,6 +212,9 @@ routes:
       css: shell/screens/jogos.css
       handlers: []
       adapters: []
+      renderers:
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
@@ -234,6 +243,9 @@ routes:
       css: shell/screens/jogo.css
       handlers: []
       adapters: []
+      renderers:
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
@@ -265,6 +277,9 @@ routes:
       css: shell/screens/chances.css
       handlers: []
       adapters: []
+      renderers:
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
@@ -297,6 +312,9 @@ routes:
         - shell/handlers/count-or-null.js
         - shell/handlers/row-id.js
       adapters: []
+      renderers:
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
@@ -335,6 +353,9 @@ routes:
       css: shell/screens/equipes.css
       handlers: []
       adapters: []
+      renderers:
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/catalog.css
@@ -372,6 +393,9 @@ routes:
       css: shell/screens/estadios.css
       handlers: []
       adapters: []
+      renderers:
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/catalog.css
@@ -401,6 +425,9 @@ routes:
       css: shell/screens/estadio.css
       handlers: []
       adapters: []
+      renderers:
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
@@ -437,6 +464,9 @@ routes:
       css: shell/screens/arbitros.css
       handlers: []
       adapters: []
+      renderers:
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/catalog.css
@@ -466,6 +496,9 @@ routes:
       css: shell/screens/arbitro.css
       handlers: []
       adapters: []
+      renderers:
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
@@ -494,6 +527,9 @@ routes:
       css: shell/screens/equipe.css
       handlers: []
       adapters: []
+      renderers:
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
@@ -522,6 +558,9 @@ routes:
       css: shell/screens/jogador.css
       handlers: []
       adapters: []
+      renderers:
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
@@ -550,6 +589,9 @@ routes:
       css: shell/screens/campeonato.css
       handlers: []
       adapters: []
+      renderers:
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css

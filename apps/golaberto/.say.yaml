@@ -26,6 +26,9 @@ say:
         priority: 1
         cmds:
           - do: deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/acceptance.ts
+      archive-images:
+        cmds:
+          - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/archive-images.ts
       replay:
         priority: 1
         cmds:
@@ -102,6 +105,9 @@ say:
       standings:
         cmds:
           - do: mise exec -- redpanda-connect test pipelines/standings.yaml pipelines/rounds.yaml pipelines/game-cards.yaml pipelines/player-stats.yaml
+      image-renderers:
+        cmds:
+          - do: mise exec -- deno test --config tests/deno.json --no-lock tests/image-renderers.ts
       prerender:
         cmds:
           - do: 'use tools.nu [run-mise]; let pronto = "../../plugins/pronto"; let out = (mktemp -d); run-mise exec -- deno run --config ($pronto | path join deno.json) --allow-read $"--allow-write=($out)" ($pronto | path join prerender.ts) . $out https://localhost:8443; rm -rf $out'

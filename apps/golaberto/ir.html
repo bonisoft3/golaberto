@@ -214,7 +214,7 @@ graph TD
 
 <section id="Team" data-kind="entity" data-durability="server" data-type-id="0xb229052b7479a008">
 <h3>Team — server, public</h3>
-<p>A club or a national side. The short name carries the state for Brazilian clubs (Flamengo-RJ), as upstream's does; the crest is a later turn's.</p>
+<p>A club or a national side. The short name carries the state for Brazilian clubs (Flamengo-RJ), as upstream's does; the crest uses the original archive image CDN, with compact icons beside the full team name (<a href="#decision-archive-images">decision-archive-images</a>).</p>
 <table data-extract="fields">
 <tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
 <tr data-ordinal="1"><td>id</td><td>uuid</td><td></td><td>pk</td></tr>
@@ -2629,6 +2629,7 @@ Upstream stores <code>point_win</code>, <code>point_draw</code> and <code>point_
 Every page names championships as upstream's <code>full_name</code> does — region, name, season. Generated at the store, the spelling is one expression and no screen assembles it. The category suffix upstream appends is not in it, because a generated column cannot read another table; the pages show the category beside the name instead.</p>
 <p id="decision-zones" data-kind="decision"><strong>A table's zones are rows, not a serialized list on the group.</strong>
 Upstream keeps them as YAML inside <code>groups.zones</code>. A row per zone is what a form can write and a live region can read, and its colour becomes a closed role (<code>champion</code>, <code>promotion</code>, <code>qualify</code>, <code>playoff</code>, <code>relegation</code>) that the design resolves in both appearances instead of a hex an editor typed.</p>
+<p id="decision-archive-images" data-kind="decision"><strong>Restore the archive’s team badges and country flags beside their names.</strong> Use the original 15-pixel CDN assets in match lists, standings, team directories, championship headings and country facts. Imported team UUIDs retain the original numeric ID; development fixture UUIDs map to their original archive IDs, retaining the badge when a team is renamed. New teams use the original neutral badge. Pure terminal renderers produce decorative images with empty alternatives; names stay readable when images cannot load. Preserve the accepted compact layout, full names and existing colors. Stitch project 3684321283098058780, screen 3756c9310aaa459ebcbdf0385ea57c5d, confirmed the compact 15×15 crest and flag placement; only that image restoration is carried forward. No database joins or additional archive subscriptions are needed for image presentation.</p>
 <p id="decision-derived-joins" data-kind="decision"><strong>What games already say is not stored again.</strong>
 Upstream's <code>referee_champs</code> duplicates the referees of a championship's games; it is not kept. A group's games are its phase's games between its teams, as upstream derives them. Upstream's cached <code>importance</code> columns belong to the chances turn and are not modelled until then.</p>
 <p id="decision-score-whole" data-kind="decision"><strong>A result is whole or absent.</strong>

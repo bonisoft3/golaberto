@@ -220,6 +220,10 @@
         "css": "shell/screens/principal.css",
         "handlers": [],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -255,6 +259,10 @@
         "css": "shell/screens/campeonatos.css",
         "handlers": [],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/catalog.css"
@@ -298,6 +306,10 @@
         "css": "shell/screens/jogos.css",
         "handlers": [],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -333,6 +345,10 @@
         "css": "shell/screens/jogo.css",
         "handlers": [],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -371,6 +387,10 @@
         "css": "shell/screens/chances.css",
         "handlers": [],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -411,6 +431,10 @@
           "shell/handlers/row-id.js"
         ],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -457,6 +481,10 @@
         "css": "shell/screens/equipes.css",
         "handlers": [],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/catalog.css"
@@ -502,6 +530,10 @@
         "css": "shell/screens/estadios.css",
         "handlers": [],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/catalog.css"
@@ -538,6 +570,10 @@
         "css": "shell/screens/estadio.css",
         "handlers": [],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -582,6 +618,10 @@
         "css": "shell/screens/arbitros.css",
         "handlers": [],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/catalog.css"
@@ -618,6 +658,10 @@
         "css": "shell/screens/arbitro.css",
         "handlers": [],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -653,6 +697,10 @@
         "css": "shell/screens/equipe.css",
         "handlers": [],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -688,6 +736,10 @@
         "css": "shell/screens/jogador.css",
         "handlers": [],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -723,6 +775,10 @@
         "css": "shell/screens/campeonato.css",
         "handlers": [],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"

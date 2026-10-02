@@ -46,7 +46,7 @@ _locales: [
 		  <h2 data-text="{msg.\(R.region)}"></h2>
 		  <ul class="champ-list" data-live="championship" data-filter="region=eq.\(R.region)&limit=6" data-order="begins.desc" data-empty="{msg.home_empty}">
 		    <template data-item>
-		      <li><a data-route="campeonato" data-param-id="{id}" data-text="{full_name}"></a></li>
+		      <li><a data-route="campeonato" data-param-id="{id}"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}"></span></a></li>
 		    </template>
 		  </ul>
 		</section>
@@ -77,7 +77,7 @@ _standingsHead: strings.Join(list.Concat([[for c in _standings {
 
 _standingsCells: strings.Join(list.Concat([[for c in _standings {
 	[
-		if c.link != _|_ {"\t                                <td class=\"\(c.cls)\"><a data-route=\"equipe\" data-param-id=\"{\(c.link)}\" data-text=\"{\(c.bind)}\"></a></td>"},
+		if c.link != _|_ {"\t                                <td class=\"\(c.cls)\"><a data-route=\"equipe\" data-param-id=\"{\(c.link)}\"><span class=\"archive-icon\" data-text=\"{\(c.link)}|{\(c.bind)}\" data-text-format=\"team-badge\"></span><span data-text=\"{\(c.bind)}\"></span></a></td>"},
 		"\t                                <td class=\"\(c.cls)\" data-text=\"{\(c.bind)}\"></td>",
 	][0]
 }], ["\t                                <td class=\"form wide\">" + strings.Join([for i in [1, 2, 3, 4, 5] {"<i data-result=\"{form\(i)}\" title=\"{msg[form\(i)]}\"></i>"}], "") + "</td>"]]), "\n")
@@ -110,9 +110,9 @@ _catalogMachine: json.Marshal({
 		  <template data-item>
 		    <li><a class="game-row" data-route="jogo" data-param-id="{id}" data-played="{played}">
 		      <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>\(G._where)
-		      <span class="home" data-text="{home_name}"></span>
+		      <span class="home"><span class="archive-icon" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span><span data-text="{home_name}"></span></span>
 		      <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-		      <span class="away" data-text="{away_name}"></span>
+		      <span class="away"><span class="archive-icon" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span data-text="{away_name}"></span></span>
 		    </a></li>
 		  </template>
 		</ol>
@@ -129,7 +129,7 @@ _catalogMachine: json.Marshal({
 		<div class="home-championships" data-live="home_game_card" data-filter="home_\(H.feed)_group=is.true&amp;limit=20" data-order="home_\(H.feed)_rank.asc" data-empty="\(H.empty)" data-exit-motion="none">
 		  <template data-item>
 		    <section class="home-championship" data-championship="{championship_id}">
-		      <h3><a data-route="campeonato" data-param-id="{championship_id}" data-text="{championship_name}"></a></h3>
+		      <h3><a data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}"></span></a></h3>
 		\((#GameList & {table: "home_game_card", filter: "championship_id=eq.{championship_id}&played=is.\(H.played)&home_\(H.feed)_rank=gt.0&limit=20", order: "home_\(H.feed)_rank.asc", empty: "", where: false}).out)
 		    </section>
 		  </template>
@@ -245,7 +245,7 @@ _editarMarkup: """
 	<div data-live="game_card" data-filter="id=eq.{param.id}" data-exit-motion="none" data-empty="{msg.game_gone}">
 	  <template data-item>
 	    <article class="game">
-	      <h1 class="band"><a data-route="campeonato" data-param-id="{championship_id}" data-text="{championship_name}"></a></h1>
+	      <h1 class="band"><a data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}"></span></a></h1>
 	      <div class="page">
 	        <div class="content">
 	          <div data-live="game_edit" data-filter="id=eq.{id}" data-machine='\(_editMachine)'
@@ -325,7 +325,7 @@ _chancesMarkup: """
 	<div data-live="stage_group" data-select="*,phase(name,championship_id)" data-filter="id=eq.{param.id}" data-exit-motion="none" data-empty="{msg.chances_gone}">
 	  <template data-item>
 	    <article class="chances-page">
-	      <h1 class="band" data-live="championship" data-filter="id=eq.{phase.championship_id}" data-empty=""><template data-item><a data-route="campeonato" data-param-id="{id}" data-text="{full_name}"></a></template></h1>
+	      <h1 class="band" data-live="championship" data-filter="id=eq.{phase.championship_id}" data-empty=""><template data-item><a data-route="campeonato" data-param-id="{id}"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}"></span></a></template></h1>
 	      <div class="page">
 	        <div class="content">
 	          <div class="chances-head">
@@ -345,7 +345,7 @@ _chancesMarkup: """
 	                    <div class="rows" data-live="team_chance" data-filter="group_id=eq.{group_id}" data-order="rank.asc" data-empty="">
 	                      <template data-item>
 	                        <div class="row" role="row">
-	                          <span class="pos" role="cell" data-text="{rank}"></span><span class="name" role="rowheader"><a data-route="equipe" data-param-id="{team_id}" data-text="{team_name}"></a></span><span class="pts" role="cell" data-text="{points}"></span>
+	                          <span class="pos" role="cell" data-text="{rank}"></span><span class="name" role="rowheader"><a data-route="equipe" data-param-id="{team_id}"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></span><span class="pts" role="cell" data-text="{points}"></span>
 	                          <span class="cells" data-live="zone_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}" data-order="first.asc,last.asc" data-empty=""><template data-item><span class="pct" role="cell" data-zone="{color}" data-band="{band}"><span data-text="{percent}" data-text-format="number"></span>\(_reachMark)</span></template></span>
 	                        </div>
 	                      </template>
@@ -362,7 +362,7 @@ _chancesMarkup: """
 	                    <div class="rows" data-live="team_chance" data-filter="group_id=eq.{group_id}" data-order="rank.asc" data-empty="">
 	                      <template data-item>
 	                        <div class="row" role="row">
-	                          <span class="pos" role="cell" data-text="{rank}"></span><span class="name" role="rowheader"><a data-route="equipe" data-param-id="{team_id}" data-text="{team_name}"></a></span>
+	                          <span class="pos" role="cell" data-text="{rank}"></span><span class="name" role="rowheader"><a data-route="equipe" data-param-id="{team_id}"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></span>
 	                          <span class="cells" data-live="position_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}" data-order="position.asc" data-empty=""><template data-item><span class="heat-cell" role="cell" data-band="{band}" data-current="{current}" title="{percent}%"><span class="visually-hidden" data-text="{percent}" data-text-format="number"></span>\(_reachMark)</span></template></span>
 	                        </div>
 	                      </template>
@@ -399,7 +399,7 @@ _jogoMarkup: """
 	<div data-live="game_card" data-filter="id=eq.{param.id}" data-exit-motion="none" data-empty="{msg.game_gone}">
 	  <template data-item>
 	    <article class="game" data-played="{played}">
-	      <h1 class="band"><a data-route="campeonato" data-param-id="{championship_id}" data-text="{championship_name}"></a></h1>
+	      <h1 class="band"><a data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}"></span></a></h1>
 	      <div class="page">
 	        <div class="content">
 	          <div class="game-head">
@@ -407,9 +407,9 @@ _jogoMarkup: """
 	            <div class="edit-gate" data-live="editor" data-empty=""><template data-item><a class="btn-quiet edit-link" data-route="editar" data-param-id="{param.id}" data-text="{msg.edit_link}"></a></template></div>
 	          </div>
 	          <div class="scoreboard">
-	            <a class="home" data-route="equipe" data-param-id="{home_id}" data-text="{home_name}"></a>
+	            <a class="home" data-route="equipe" data-param-id="{home_id}"><span class="archive-icon" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span><span data-text="{home_name}"></span></a>
 	            <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-	            <a class="away" data-route="equipe" data-param-id="{away_id}" data-text="{away_name}"></a>
+	            <a class="away" data-route="equipe" data-param-id="{away_id}"><span class="archive-icon" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span data-text="{away_name}"></span></a>
 	          </div>
 	          <p class="extra"><span class="aet"><span data-text="{msg.game_aet}"></span> <b data-text="{home_aet}"></b>–<b data-text="{away_aet}"></b></span> <span class="pen"><span data-text="{msg.game_pen}"></span> <b data-text="{home_pen}"></b>–<b data-text="{away_pen}"></b></span></p>
 	          <dl class="game-facts">
@@ -499,7 +499,7 @@ _principalMarkup: """
 	      <template data-item>
 	        <div class="feature-body">
 	          <div class="feature-head">
-	            <h2 data-text="{full_name}"></h2>
+	            <h2><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}"></span></h2>
 	            <a data-route="campeonato" data-param-id="{id}" data-text="{msg.home_table_link}"></a>
 	          </div>
 	          <div class="feature-phase" data-live="phase" data-filter="championship_id=eq.{id}&limit=1" data-order="position.asc" data-empty="">
@@ -576,7 +576,7 @@ _campeonatosMarkup: """
 	          <tbody data-live="championship" data-filter="full_name=ilike.*{q}*&region=like.*{region}*" data-order="region_name.asc,name.asc,begins.desc" data-empty="{msg.catalog_empty}">
 	            <template data-item>
 	              <tr>
-	                <td><a data-route="campeonato" data-param-id="{id}" data-text="{full_name}"></a></td>
+	                <td><a data-route="campeonato" data-param-id="{id}"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}"></span></a></td>
 	                <td class="narrow" data-text="{msg[region]}"></td>
 	                <td class="narrow"><span data-live="category" data-filter="id=eq.{category_id}" data-empty="{msg.professional}"><template data-item><span data-text="{name}"></span></template></span></td>
 	              </tr>
@@ -597,7 +597,7 @@ _campeonatoMarkup: """
 	<div data-live="championship" data-filter="id=eq.{param.id}" data-exit-motion="none" data-empty="{msg.championship_gone}">
 	  <template data-item>
 	    <article class="championship">
-	      <h1 class="band" data-text="{full_name}"></h1>
+	      <h1 class="band"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}"></span></h1>
 	      <div class="page">
 	        <div class="content">
 	          <p class="facts">
@@ -696,7 +696,9 @@ _campeonatoMarkup: """
 	}], "\n")
 	_cells: strings.Join([for i, c in D.columns {
 		[
+			if i == 0 && D.table == "team" {"                <td><a data-route=\"\(D.route)\" data-param-id=\"{id}\"><span class=\"archive-icon\" data-text=\"{id}|{name}\" data-text-format=\"team-badge\"></span><span data-text=\"{\(c.bind)}\"></span></a></td>"},
 			if i == 0 {"                <td><a data-route=\"\(D.route)\" data-param-id=\"{id}\" data-text=\"{\(c.bind)}\"></a></td>"},
+			if c.bind == "country" {"                <td class=\"narrow\([if c.drop {" drop"}, ""][0])\"><span class=\"archive-icon\" data-text=\"{country}\" data-text-format=\"country-flag\"></span><span data-text=\"{country}\"></span></td>"},
 			"                <td class=\"narrow\([if c.drop {" drop"}, ""][0])\" data-text=\"{\(c.bind)}\"></td>",
 		][0]
 	}], "\n")
@@ -753,7 +755,7 @@ _arbitrosMarkup: (#Directory & {screen: "arbitros", row: "referees", table: "ref
 		    <li><a class="game-row" data-route="jogo" data-param-id="{game_id}" data-played="{played}" data-result="{result}">
 		      <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
 		      <span class="where" data-text="{championship_name}"></span>
-		      <span class="home"><span class="venue" data-text="{msg[side]}"></span> <span data-text="{opponent_name}"></span></span>
+		      <span class="home"><span class="venue" data-text="{msg[side]}"></span> <span class="archive-icon" data-text="{opponent_id}|{opponent_name}" data-text-format="team-badge"></span><span data-text="{opponent_name}"></span></span>
 		      <span class="score"><b data-text="{goals_for}"></b><i>x</i><b data-text="{goals_against}"></b></span>
 		      <span class="away">\(T._outcome)</span>
 		    </a></li>
@@ -791,13 +793,13 @@ _equipeMarkup: """
 	<div data-live="team" data-filter="id=eq.{param.id}" data-exit-motion="none" data-empty="{msg.team_gone}">
 	  <template data-item>
 	    <article class="team">
-	      <h1 class="band" data-text="{name}"></h1>
+	      <h1 class="band"><span class="archive-icon" data-text="{id}|{name}" data-text-format="team-badge"></span><span data-text="{name}"></span></h1>
 	      <div class="page">
 	        <div class="content">
 	          <dl class="game-facts">
 	            <dt data-text="{msg.team_full_name}"></dt><dd data-text="{full_name}"></dd>
 	            <dt data-text="{msg.team_city}"></dt><dd data-text="{city}"></dd>
-	            <dt data-text="{msg.team_country}"></dt><dd data-text="{country}"></dd>
+	            <dt data-text="{msg.team_country}"></dt><dd><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{country}"></span></dd>
 	            <dt data-text="{msg.team_founded}"></dt><dd data-text="{foundation_display}"></dd>
 	            <dt data-text="{msg.team_rating}"></dt><dd class="rating" data-live="team_rating" data-filter="team_id=eq.{id}&limit=1" data-order="measure_date.desc" data-empty=""><template data-item><abbr title="{msg.team_rating_long}" data-text="{rating}" data-text-format="number"></abbr></template></dd>
 	            <dt data-text="{msg.game_stadium}"></dt><dd data-live="stadium" data-filter="id=eq.{stadium_id}" data-empty=""><template data-item><span data-text="{name}"></span></template></dd>
@@ -815,7 +817,7 @@ _equipeMarkup: """
 	            <table class="grid squad-table">
 	              <thead><tr><th scope="col" class="champ" data-text="{msg.col_championship}"></th>\(_squadHead)</tr></thead>
 	              <tbody data-live="player_stat" data-filter="team_id=eq.{id}" data-order="championship_name.asc,played.desc,minutes.desc,player_name.asc" data-empty="{msg.team_no_squads}">
-	                <template data-item><tr><td class="champ"><a data-route="campeonato" data-param-id="{championship_id}" data-text="{championship_name}"></a></td>\(_squadCells)</tr></template>
+	                <template data-item><tr><td class="champ"><a data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}"></span></a></td>\(_squadCells)</tr></template>
 	              </tbody>
 	            </table>
 	          </section>
@@ -854,7 +856,7 @@ _jogadorMarkup: """
 	          <dl class="game-facts">
 	            <dt data-text="{msg.player_position}"></dt><dd data-text="{position}"></dd>
 	            <dt data-text="{msg.player_rating}"></dt><dd class="rating" data-live="player_rating" data-filter="id=eq.{id}" data-empty=""><template data-item><abbr title="{msg.player_rating_long}" data-text="{rating}" data-text-format="number"></abbr></template></dd>
-	            <dt data-text="{msg.team_country}"></dt><dd data-text="{country}"></dd>
+	            <dt data-text="{msg.team_country}"></dt><dd><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{country}"></span></dd>
 	          </dl>
 	          <section class="seasons">
 	            <h2 data-text="{msg.player_seasons}"></h2>
@@ -862,7 +864,7 @@ _jogadorMarkup: """
 	              <thead><tr><th scope="col" data-text="{msg.col_championship}"></th><th scope="col" data-text="{msg.col_team}"></th>\(strings.Join([for c in _seasonColumns {"<th scope=\"col\" class=\"num\"><abbr title=\"{msg.col_\(c.key)_long}\" data-text=\"{msg.col_\(c.key)}\"></abbr></th>"}], ""))</tr></thead>
 	              <tbody data-live="player_stat" data-filter="player_id=eq.{id}" data-order="championship_name.asc,team_name.asc" data-empty="{msg.player_no_seasons}">
 	                <template data-item>
-	                  <tr><td><a data-route="campeonato" data-param-id="{championship_id}" data-text="{championship_name}"></a></td><td><a data-route="equipe" data-param-id="{team_id}" data-text="{team_name}"></a></td>\(strings.Join([for c in _seasonColumns {"<td class=\"num\" data-text=\"{\(c.bind)}\"></td>"}], ""))</tr>
+	                  <tr><td><a data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}"></span></a></td><td><a data-route="equipe" data-param-id="{team_id}"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></td>\(strings.Join([for c in _seasonColumns {"<td class=\"num\" data-text=\"{\(c.bind)}\"></td>"}], ""))</tr>
 	                </template>
 	              </tbody>
 	            </table>
@@ -876,9 +878,9 @@ _jogadorMarkup: """
 	                    <a class="game-row" data-route="jogo" data-param-id="{id}" data-played="{played}">
 	                      <span class="when"><span class="day" data-text="{day_display}"></span></span>
 	                      <span class="where" data-text="{championship_name}"></span>
-	                      <span class="home" data-text="{home_name}"></span>
+	                      <span class="home"><span class="archive-icon" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span><span data-text="{home_name}"></span></span>
 	                      <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-	                      <span class="away" data-text="{away_name}"></span>
+	                      <span class="away"><span class="archive-icon" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span data-text="{away_name}"></span></span>
 	                    </a>
 	                  </template></span>
 	                  <span class="minutes"><span data-text="{on_minute}"></span>–<span data-text="{off_minute}"></span></span>
@@ -911,12 +913,12 @@ _estadioMarkup: """
 	          <dl class="game-facts">
 	            <dt data-text="{msg.team_full_name}"></dt><dd data-text="{full_name}"></dd>
 	            <dt data-text="{msg.col_city}"></dt><dd data-text="{city}"></dd>
-	            <dt data-text="{msg.col_country}"></dt><dd data-text="{country}"></dd>
+	            <dt data-text="{msg.col_country}"></dt><dd><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{country}"></span></dd>
 	          </dl>
 	          <section class="home-teams">
 	            <h2 data-text="{msg.stadium_teams}"></h2>
 	            <ul class="chips" data-live="team" data-filter="stadium_id=eq.{id}" data-order="name.asc" data-empty="{msg.stadium_no_teams}">
-	              <template data-item><li><a class="chip" data-route="equipe" data-param-id="{id}" data-text="{name}"></a></li></template>
+	              <template data-item><li><a class="chip" data-route="equipe" data-param-id="{id}"><span class="archive-icon" data-text="{id}|{name}" data-text-format="team-badge"></span><span data-text="{name}"></span></a></li></template>
 	            </ul>
 	          </section>
 	          <section class="venue-games">

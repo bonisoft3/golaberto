@@ -30,9 +30,9 @@
           <tbody data-live="team" data-filter="name=ilike.*{q}*" data-order="name.asc" data-empty="{msg.teams_empty}">
             <template data-item>
               <tr>
-                <td><a data-route="equipe" data-param-id="{id}" data-text="{name}"></a></td>
+                <td><a data-route="equipe" data-param-id="{id}"><span class="archive-icon" data-text="{id}|{name}" data-text-format="team-badge"></span><span data-text="{name}"></span></a></td>
                 <td class="narrow" data-text="{city}"></td>
-                <td class="narrow drop" data-text="{country}"></td>
+                <td class="narrow drop"><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{country}"></span></td>
               </tr>
             </template>
           </tbody>

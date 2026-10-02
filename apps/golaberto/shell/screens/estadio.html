@@ -20,12 +20,12 @@
           <dl class="game-facts">
             <dt data-text="{msg.team_full_name}"></dt><dd data-text="{full_name}"></dd>
             <dt data-text="{msg.col_city}"></dt><dd data-text="{city}"></dd>
-            <dt data-text="{msg.col_country}"></dt><dd data-text="{country}"></dd>
+            <dt data-text="{msg.col_country}"></dt><dd><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{country}"></span></dd>
           </dl>
           <section class="home-teams">
             <h2 data-text="{msg.stadium_teams}"></h2>
             <ul class="chips" data-live="team" data-filter="stadium_id=eq.{id}" data-order="name.asc" data-empty="{msg.stadium_no_teams}">
-              <template data-item><li><a class="chip" data-route="equipe" data-param-id="{id}" data-text="{name}"></a></li></template>
+              <template data-item><li><a class="chip" data-route="equipe" data-param-id="{id}"><span class="archive-icon" data-text="{id}|{name}" data-text-format="team-badge"></span><span data-text="{name}"></span></a></li></template>
             </ul>
           </section>
           <section class="venue-games">
@@ -35,9 +35,9 @@
     <li><a class="game-row" data-route="jogo" data-param-id="{id}" data-played="{played}">
       <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
       <span class="where" data-text="{championship_name}"></span>
-      <span class="home" data-text="{home_name}"></span>
+      <span class="home"><span class="archive-icon" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span><span data-text="{home_name}"></span></span>
       <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-      <span class="away" data-text="{away_name}"></span>
+      <span class="away"><span class="archive-icon" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span data-text="{away_name}"></span></span>
     </a></li>
   </template>
 </ol>

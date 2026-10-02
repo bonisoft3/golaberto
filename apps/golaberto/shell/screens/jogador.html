@@ -20,7 +20,7 @@
           <dl class="game-facts">
             <dt data-text="{msg.player_position}"></dt><dd data-text="{position}"></dd>
             <dt data-text="{msg.player_rating}"></dt><dd class="rating" data-live="player_rating" data-filter="id=eq.{id}" data-empty=""><template data-item><abbr title="{msg.player_rating_long}" data-text="{rating}" data-text-format="number"></abbr></template></dd>
-            <dt data-text="{msg.team_country}"></dt><dd data-text="{country}"></dd>
+            <dt data-text="{msg.team_country}"></dt><dd><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{country}"></span></dd>
           </dl>
           <section class="seasons">
             <h2 data-text="{msg.player_seasons}"></h2>
@@ -28,7 +28,7 @@
               <thead><tr><th scope="col" data-text="{msg.col_championship}"></th><th scope="col" data-text="{msg.col_team}"></th><th scope="col" class="num"><abbr title="{msg.col_played_long}" data-text="{msg.col_played}"></abbr></th><th scope="col" class="num"><abbr title="{msg.col_started_long}" data-text="{msg.col_started}"></abbr></th><th scope="col" class="num"><abbr title="{msg.col_came_on_long}" data-text="{msg.col_came_on}"></abbr></th><th scope="col" class="num"><abbr title="{msg.col_minutes_long}" data-text="{msg.col_minutes}"></abbr></th><th scope="col" class="num"><abbr title="{msg.col_goals_long}" data-text="{msg.col_goals}"></abbr></th><th scope="col" class="num"><abbr title="{msg.col_penalties_long}" data-text="{msg.col_penalties}"></abbr></th><th scope="col" class="num"><abbr title="{msg.col_yellow_long}" data-text="{msg.col_yellow}"></abbr></th><th scope="col" class="num"><abbr title="{msg.col_red_long}" data-text="{msg.col_red}"></abbr></th></tr></thead>
               <tbody data-live="player_stat" data-filter="player_id=eq.{id}" data-order="championship_name.asc,team_name.asc" data-empty="{msg.player_no_seasons}">
                 <template data-item>
-                  <tr><td><a data-route="campeonato" data-param-id="{championship_id}" data-text="{championship_name}"></a></td><td><a data-route="equipe" data-param-id="{team_id}" data-text="{team_name}"></a></td><td class="num" data-text="{played}"></td><td class="num" data-text="{started}"></td><td class="num" data-text="{came_on}"></td><td class="num" data-text="{minutes}"></td><td class="num" data-text="{goals}"></td><td class="num" data-text="{penalties}"></td><td class="num" data-text="{yellow}"></td><td class="num" data-text="{red}"></td></tr>
+                  <tr><td><a data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}"></span></a></td><td><a data-route="equipe" data-param-id="{team_id}"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></td><td class="num" data-text="{played}"></td><td class="num" data-text="{started}"></td><td class="num" data-text="{came_on}"></td><td class="num" data-text="{minutes}"></td><td class="num" data-text="{goals}"></td><td class="num" data-text="{penalties}"></td><td class="num" data-text="{yellow}"></td><td class="num" data-text="{red}"></td></tr>
                 </template>
               </tbody>
             </table>
@@ -42,9 +42,9 @@
                     <a class="game-row" data-route="jogo" data-param-id="{id}" data-played="{played}">
                       <span class="when"><span class="day" data-text="{day_display}"></span></span>
                       <span class="where" data-text="{championship_name}"></span>
-                      <span class="home" data-text="{home_name}"></span>
+                      <span class="home"><span class="archive-icon" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span><span data-text="{home_name}"></span></span>
                       <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-                      <span class="away" data-text="{away_name}"></span>
+                      <span class="away"><span class="archive-icon" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span data-text="{away_name}"></span></span>
                     </a>
                   </template></span>
                   <span class="minutes"><span data-text="{on_minute}"></span>–<span data-text="{off_minute}"></span></span>

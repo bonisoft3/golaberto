@@ -14,7 +14,7 @@
 <div data-live="game_card" data-filter="id=eq.{param.id}" data-exit-motion="none" data-empty="{msg.game_gone}">
   <template data-item>
     <article class="game" data-played="{played}">
-      <h1 class="band"><a data-route="campeonato" data-param-id="{championship_id}" data-text="{championship_name}"></a></h1>
+      <h1 class="band"><a data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}"></span></a></h1>
       <div class="page">
         <div class="content">
           <div class="game-head">
@@ -22,9 +22,9 @@
             <div class="edit-gate" data-live="editor" data-empty=""><template data-item><a class="btn-quiet edit-link" data-route="editar" data-param-id="{param.id}" data-text="{msg.edit_link}"></a></template></div>
           </div>
           <div class="scoreboard">
-            <a class="home" data-route="equipe" data-param-id="{home_id}" data-text="{home_name}"></a>
+            <a class="home" data-route="equipe" data-param-id="{home_id}"><span class="archive-icon" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span><span data-text="{home_name}"></span></a>
             <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-            <a class="away" data-route="equipe" data-param-id="{away_id}" data-text="{away_name}"></a>
+            <a class="away" data-route="equipe" data-param-id="{away_id}"><span class="archive-icon" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span data-text="{away_name}"></span></a>
           </div>
           <p class="extra"><span class="aet"><span data-text="{msg.game_aet}"></span> <b data-text="{home_aet}"></b>–<b data-text="{away_aet}"></b></span> <span class="pen"><span data-text="{msg.game_pen}"></span> <b data-text="{home_pen}"></b>–<b data-text="{away_pen}"></b></span></p>
           <dl class="game-facts">

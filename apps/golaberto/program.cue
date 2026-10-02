@@ -819,6 +819,7 @@ code: pronto.#App & {
 				quiet: {states: ["populated", "no-games", "populated"], accepts: ["accept-home-games"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		campeonatos: {
@@ -838,6 +839,7 @@ code: pronto.#App & {
 				search: {states: ["populated", "filtered", "no-match", "populated"], accepts: ["accept-catalog-search"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		jogos: {
@@ -853,6 +855,7 @@ code: pronto.#App & {
 				switch: {states: ["populated", "results", "populated"], accepts: ["accept-games-results"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		jogo: {
@@ -873,6 +876,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-game-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		chances: {
@@ -889,6 +893,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-chances"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		editar: {
@@ -906,6 +911,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-game-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		equipes: {
@@ -925,6 +931,7 @@ code: pronto.#App & {
 				search: {states: ["populated", "filtered", "no-match", "populated"], accepts: ["accept-teams"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		estadios: {
@@ -942,6 +949,7 @@ code: pronto.#App & {
 				search: {states: ["populated", "filtered", "no-match", "populated"], accepts: ["accept-venues"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		estadio: {
@@ -958,6 +966,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-venue-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		arbitros: {
@@ -975,6 +984,7 @@ code: pronto.#App & {
 				search: {states: ["populated", "filtered", "no-match", "populated"], accepts: ["accept-venues"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		arbitro: {
@@ -991,6 +1001,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-venue-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		equipe: {
@@ -1007,6 +1018,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-team-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		jogador: {
@@ -1023,6 +1035,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-team-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		campeonato: {
@@ -1040,6 +1053,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-championship-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 	}
@@ -1065,9 +1079,10 @@ code: pronto.#App & {
 			}
 			catalogues: _catalogues
 		}
-		ir: sha256: "c5d5c36c82d469a0d8a3f13e05af380395d3717be489fdff03bceba0f34eb290"
+		ir: sha256: "7563bc99e41b78f99adfbfe78a94195208c517dc3d302dcf1fa1b1461dc54a65"
 		targets: []
 		decisions: {
+			"decision-archive-images": {}
 			"decision-uuid-keys": {}
 			"decision-points": {}
 			"decision-generated-names": {}
@@ -1710,5 +1725,16 @@ loop: surface: checks: "acceptance": {
 }
 
 build:    (pronto.#DefaultBuild & {"code": code, "loop": loop, "cluster": cluster}).out
+
+loop: surface: checks: "archive-images": {
+  verb: "integrate"
+  cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/archive-images.ts"]
+  note: "read-only browser evidence on the running archive: real crest and flag loading, accessible names, responsive layout and team details"
+}
+loop: surface: checks: "image-renderers": {
+  verb: "test"
+  cmds: ["mise exec -- deno test --config tests/deno.json --no-lock tests/image-renderers.ts"]
+  note: "imported hexadecimal IDs, fixture mappings, country aliases and neutral badges"
+}
 
 out: pronto.#emit & {"code": code, "cluster": cluster, "terminal": terminal, "loop": loop, "build": build}

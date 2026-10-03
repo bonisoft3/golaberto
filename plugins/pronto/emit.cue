@@ -915,6 +915,9 @@ _sqlType: {
 // a database column: it exists only on the wire, so it must not collide with
 // one, hence the reserved prefix.
 _cdcTableField: "__table"
+// The HTTP sink publishes After only. Retain the previous row as encoded
+// metadata so consumers can ignore updates to fields they do not project.
+_cdcBeforeField: "__before"
 
 #rpkPipeline: R={
 	p:           #Pipeline
@@ -1284,6 +1287,10 @@ _cdcTableField: "__table"
 			}
 		}]
 		tables: list.SortStrings([for t, _ in S._tables if S._local[t] == _|_ {t}])
+		_onDemand: [for _, e in S.code.state.entities if S._tables[e.table] != _|_ if e.onDemand {e.table}]
+		if len(_onDemand) > 0 {
+			onDemand: list.SortStrings(_onDemand)
+		}
 		if len(S._local) > 0 {
 			local: S._local
 		}
@@ -2473,13 +2480,21 @@ _cdcTableField: "__table"
 									value: "{{ index .Metadata \"opencdc.collection\" }}"
 								}
 							}, {
-								id:     "stringify-after"
-								plugin: "builtin:json.encode"
-								settings: field: ".Payload.After"
-							}, {
 								id:     "stringify-before"
 								plugin: "builtin:json.encode"
 								settings: field: ".Payload.Before"
+							}, {
+								id:        "retain-before"
+								plugin:    "builtin:field.set"
+								condition: "{{ if and .Payload.After .Payload.Before }}true{{ else }}false{{ end }}"
+								settings: {
+									field: ".Payload.After.\(_cdcBeforeField)"
+									value: "{{ printf \"%s\" .Payload.Before }}"
+								}
+							}, {
+								id:     "stringify-after"
+								plugin: "builtin:json.encode"
+								settings: field: ".Payload.After"
 							}, {
 								// The http destination posts only Payload.After, and a
 								// delete's After is empty — back-fill from Before so every

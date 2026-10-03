@@ -147,12 +147,11 @@
           "dir": "",
           "outs": {
             "globs": [
-              "[m]ise.toml",
               "[.]mise.toml",
               "[m]ise.lock",
-              "[.]tool-versions",
-              "gradle/libs.versions.toml",
-              "plugins/devserver/dind.sh"
+              "cue.mod/**",
+              "plugins/**",
+              "libraries/**"
             ],
             "exclude": []
           }
@@ -193,15 +192,7 @@
       "project": "workspaceroot",
       "dir": "",
       "outs": {
-        "globs": [
-          "[m]ise.toml",
-          "[.]mise.toml",
-          "[m]ise.lock",
-          "[.]tool-versions",
-          "gradle/libs.versions.toml",
-          "plugins/devserver/dind.sh",
-          ".task/bayt/setup.hash"
-        ],
+        "globs": [],
         "exclude": []
       }
     }

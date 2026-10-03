@@ -7,6 +7,19 @@ package bayt
 
 import "strings"
 
+// Named volumes are declared in the fragment; host and anonymous paths stay mounts only.
+_persistent: #project & {
+	name: "persistent"
+	dir: "persistent"
+	targets: database: {
+		cmd: "builtin": null
+		dockerfile: busybox
+		compose: volumes: ["archive:/var/lib/postgresql", "../cache:/cache", "/anonymous", "/var/run/docker.sock:/var/run/docker.sock", "C:/Users/data:/win"]
+	}
+}
+_persistent_dc: (#dockerComposeGen & {project: _persistent, depManifests: {}})
+_persistent_dc: compose: files: database: volumes: {archive: {}, [!="archive"]: _|_}
+
 // --- D1: a single target with a dockerfile block. The federation root
 // (compose.bayt.yaml) lists the per-target file as an include with
 // `required: false`. The per-target file holds one fully-qualified

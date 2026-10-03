@@ -105,7 +105,9 @@ export function parseViewports(spec?: string): Viewport[] {
 // contexts, so the browser holds up to twice this many live pages. Past four
 // the wall clock flattens: what the lint spends is round trips to one
 // browser, not CPU it could spread wider.
-const LANES = 4
+// Each viewport has its own board; one page per board keeps the browser and
+// the shared archive responsive while preserving every check and viewport.
+const LANES = 1
 
 // A screen is ready to measure when it stops changing. This long without a
 // mutation, a moved box or a loading image means it has; past the cap it is
@@ -527,6 +529,7 @@ async function main(appDir: string, viewports: Viewport[] = DEFAULT_VIEWPORTS): 
   const lintRoute = async (context: ContextLike, viewport: Viewport, route: Route, out: Finding[]) => {
     const url = fillRoute(route.path, params.get(route.path) ?? {})
     const where = `${viewport.name} ${route.path}`
+    console.error(`check-visual: opening ${where}`)
     // Opening the page is inside the report: at eight pages in flight the
     // browser can refuse one, and a lane that threw would take every finding
     // both boards had collected with it.
@@ -611,6 +614,7 @@ async function main(appDir: string, viewports: Viewport[] = DEFAULT_VIEWPORTS): 
     }
     try {
       const { state, settled } = await openRoute(page, base, url)
+      console.error(`check-visual: auditing ${where} (${state}, settled=${settled})`)
       if (state === "gone") {
         out.push({
           severity: "major",
@@ -650,6 +654,7 @@ async function main(appDir: string, viewports: Viewport[] = DEFAULT_VIEWPORTS): 
       ).flat()
       // After the parallel batch: checkContrast says why.
       bugs.push(...await checkContrast(p))
+      console.error(`check-visual: audited ${where}`)
       bugs.push(...analyzeConsole(console_, { ignore: IGNORE }))
       // The sampler above and this settled read are one scan over one projection,
       // taken at two times: it catches braces painted during hydration, this

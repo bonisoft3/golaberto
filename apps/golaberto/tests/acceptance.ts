@@ -62,6 +62,34 @@ const visit = async (page: Page, path: string, ready = '.shell-screen:not([hidde
 const open = async (path: string, opts: { width?: number; dark?: boolean; session?: unknown } = {}) =>
   visit(await (await context(opts)).newPage(), path);
 
+test("homepage opens only the bounded home-card shape", async () => {
+  const page = await (await context()).newPage();
+  const cards = Number(await psql("SELECT count(*) FROM home_game_card"));
+  const shapeTables = new Set<string>();
+  page.on("request", (request: { url(): string }) => {
+    const url = new URL(request.url());
+    if (url.pathname.endsWith("/electric/v1/shape")) {
+      const table = url.searchParams.get("table");
+      if (table) shapeTables.add(table);
+    }
+  });
+  const started = performance.now();
+  await visit(page, "/");
+  await page.waitForFunction(() => document.querySelector(".home-championships")?.getAttribute("data-live") === "home_game_card");
+  await page.waitForFunction((expected: number) => document.querySelectorAll(".home-games .game-row").length === expected, cards);
+  const dataMs = Math.round(performance.now() - started);
+  await page.waitForFunction(() => {
+    const screen = document.querySelector(".shell-screen:not([hidden])");
+    return screen && !screen.hasAttribute("data-entering") && Number(getComputedStyle(screen).opacity) >= 0.99;
+  });
+  assert(shapeTables.has("home_game_card"), "the home-card shape must be requested");
+  assert(!shapeTables.has("game_card"), "homepage must not request the archive game-card shape");
+  assert(cards <= 40, "homepage sync is capped at forty cards");
+  console.log(`Fresh homepage: ${cards} games ready in ${dataMs} ms, visible in ${Math.round(performance.now() - started)} ms; shapes: ${[...shapeTables].join(", ")}`);
+  const capture = Deno.env.get("GOLABERTO_HOME_CAPTURE");
+  if (capture) await page.screenshot({ path: capture, fullPage: true });
+});
+
 const texts = (page: Page, selector: string): Promise<string[]> =>
   page.$$eval(selector, (els: Element[]) => els.map((e) => (e.textContent ?? "").trim()));
 
@@ -69,7 +97,7 @@ const texts = (page: Page, selector: string): Promise<string[]> =>
 const said = (page: Page, selector: string): Promise<string[]> =>
   page.$$eval(selector, (els: Element[]) => els.map((e) => (e as HTMLElement).innerText.replace(/\s+/g, " ").trim()));
 
-// The seeded championships' ids, as seed.cue mints them.
+// The seeded championships' ids, as tools/seed.py mints them.
 const BRASILEIRO_2026 = "02000000-0000-4000-8000-000000000001";
 const BRASILEIRO_1971 = "02000000-0000-4000-8000-000000000004";
 const LIBERTADORES_2026 = "02000000-0000-4000-8000-000000000006";
@@ -134,15 +162,103 @@ const championship = async (id: string) => {
   return page;
 };
 
-test("test-home-featured: the front page leads with the featured season, its top six and its round", async () => {
+test("test-home-featured: the front page keeps the featured season and its top six below the game feeds", async () => {
   const page = await open("/");
   await page.waitForSelector(".feature .standings tbody tr", { timeout: 30_000 });
   const top = await said(page, ".feature .standings tbody .name");
   assertEquals(top.length, 6);
   assertEquals(top[0], "Flamengo-RJ");
-  assert((await said(page, ".feature .round .games li")).length > 0, "the current round lists its games");
+  assert(await page.locator(".home-games + .feature").count(), "game feeds precede the featured table");
   // The title chance arrives once the chances computation has run over the lake.
   await page.waitForSelector(".feature .standings tbody tr:first-child .title-chance", { timeout: STREAM_MS });
+});
+
+test("test-home-games: fixtures and results lead the page, retain competition and open game details", async () => {
+  const upcoming = await psql("SELECT id FROM game WHERE NOT played ORDER BY id LIMIT 1");
+  const saved = JSON.parse(await psql(`SELECT json_agg(json_build_object('id', id, 'day', day, 'kickoff', kickoff)) FROM game WHERE id IN ('${upcoming}', '${WIN}')`));
+  try {
+    await psql(`UPDATE game SET kickoff = now() + interval '2 hours', day = (now() + interval '2 hours')::date WHERE id = '${upcoming}'; UPDATE game SET kickoff = now() - interval '2 hours', day = (now() - interval '2 hours')::date WHERE id = '${WIN}'`);
+    // Wait for the existing card stream, then select with the server clock.
+    for (let attempt = 0; ; attempt++) {
+      const ready = await psql(`SELECT count(*) FROM game g JOIN game_card c USING (id) WHERE g.id IN ('${upcoming}', '${WIN}') AND g.kickoff = c.kickoff`);
+      if (ready === "2") break;
+      assert(attempt < 90, "the stream did not refresh the two home fixtures");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+    const page = await open("/", { width: 390 });
+    await page.waitForSelector(`.home-upcoming a[href$="/${upcoming}"]`, { timeout: STREAM_MS });
+    await page.waitForSelector(`.home-results a[href$="/${WIN}"]`, { timeout: STREAM_MS });
+    const groups: Array<{ id: string | null; heading: string }> = await page.locator(".home-upcoming .home-championship").evaluateAll((groups: Element[]) => groups.map((group) => ({
+      id: group.getAttribute("data-championship"), heading: group.querySelector("h3 a")?.textContent?.trim() ?? "",
+    })));
+    assert(groups.length > 0 && groups.every((group) => group.heading), "each championship has a named heading");
+    assertEquals(new Set(groups.map((group) => group.id)).size, groups.length, "championships are not repeated");
+    const grouped = await page.evaluate(() => Array.from(document.querySelectorAll(".home-games .home-championship")).every((group) => {
+      const id = group.getAttribute("data-championship");
+      return group.querySelector("h3 a")?.getAttribute("href")?.endsWith(`/${id}`) &&
+        Array.from(group.querySelectorAll(".games li:not(.empty)")).every((row) => !row.querySelector(".where"));
+    }));
+    assert(grouped, "championship headings link correctly and match rows omit repeated competition labels");
+    const ownership: Array<{ id: string | undefined; championship: string | null }> = await page.evaluate(() => Array.from(document.querySelectorAll(".home-games .home-championship")).flatMap((group) =>
+      Array.from(group.querySelectorAll(".game-row")).map((row) => ({
+        id: row.getAttribute("href")?.split("/").pop(), championship: group.getAttribute("data-championship"),
+      }))));
+    assert(ownership.length > 0, "grouped game rows are populated");
+    const cardOwners = JSON.parse(await psql(`SELECT json_object_agg(id, championship_id) FROM game_card WHERE id IN (${ownership.map((row) => `'${row.id}'`).join(",")})`));
+    assert(ownership.every((row) => cardOwners[row.id!] === row.championship), "each game belongs to its displayed championship");
+    assertEquals(await page.locator(".home-games-note, .content > .lead").count(), 0);
+    assert((await texts(page, ".home-results .score b")).every(Boolean), "played games show both scores");
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "home fits a phone");
+    await page.click(`.home-results a[href$="/${WIN}"]`);
+    await page.waitForSelector(".scoreboard");
+    assert((await said(page, ".scoreboard")).join(" ").includes("Athletico-PR"));
+  } finally {
+    for (const row of saved) {
+      await psql(`UPDATE game SET day = '${row.day}', kickoff = ${row.kickoff ? `'${row.kickoff}'` : "NULL"} WHERE id = '${row.id}'`);
+    }
+    for (let attempt = 0; ; attempt++) {
+      if (await psql(`SELECT count(*) FROM game g JOIN game_card c USING (id) WHERE g.id IN ('${upcoming}', '${WIN}') AND g.kickoff IS NOT DISTINCT FROM c.kickoff`) === "2") break;
+      assert(attempt < 90, "the stream did not restore the home fixtures");
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+  }
+});
+
+// These cases deliberately leave refresh_home_games to the running clock stream.
+test("test-home-games: a fixture expires without another write or a manual refresh", async () => {
+  const id = await psql("SELECT id FROM game_card WHERE NOT played ORDER BY home_upcoming_rank > 0 DESC, id LIMIT 1");
+  const saved = await psql(`SELECT kickoff::text FROM game_card WHERE id = '${id}'`);
+  try {
+    await psql(`UPDATE game_card SET kickoff = now() + interval '70 seconds' WHERE id = '${id}'`);
+    const page = await open("/");
+    const link = `.home-upcoming a[href$="/${id}"]`;
+    await page.waitForSelector(link, { timeout: 45_000 });
+    await page.waitForSelector(link, { state: "detached", timeout: 115_000 });
+    assertEquals(await psql(`SELECT home_upcoming_rank FROM game_card WHERE id = '${id}'`), "0");
+  } finally {
+    await psql(`UPDATE game_card SET kickoff = ${saved ? `'${saved}'` : "NULL"} WHERE id = '${id}'`);
+  }
+});
+
+test("test-home-games: empty windows remove stale rows and explain both feeds", async () => {
+  // A disposable integration stack; preserve all times while exercising an empty archive window.
+  await psql("CREATE TABLE home_games_acceptance_backup AS SELECT id, kickoff FROM game_card");
+  try {
+    await psql("UPDATE game_card SET kickoff = NULL WHERE kickoff IS NOT NULL");
+    const page = await open("/", { width: 390 });
+    await page.waitForFunction(() => {
+      const upcoming = document.querySelector(".home-upcoming .home-championships");
+      const recent = document.querySelector(".home-results .home-championships");
+      return upcoming?.textContent?.includes("Nenhum jogo com horário marcado nos próximos sete dias.") &&
+        recent?.textContent?.includes("Nenhum resultado com horário registrado nos últimos sete dias.") &&
+        !document.querySelector(".home-games .games li:not(.empty)");
+    }, undefined, { timeout: 45_000 });
+    assertEquals(await page.locator(".home-games .games li:not(.empty)").count(), 0);
+    await page.waitForSelector(".feature .standings tbody tr", { timeout: 30_000 });
+    assert(await page.locator(".feature .standings tbody tr").count(), "the archive is still available");
+  } finally {
+    await psql("UPDATE game_card g SET kickoff = b.kickoff FROM home_games_acceptance_backup b WHERE g.id = b.id; DROP TABLE home_games_acceptance_backup");
+  }
 });
 
 test("test-home-levels: each level's most recent championships first", async () => {
@@ -246,6 +362,72 @@ const newestFirst = async (page: Page, selector: string) => {
   assert(days.length > 1 && days.every((d, i) => i === 0 || days[i - 1] >= d), days.join(" | "));
 };
 
+test("matches opens only the bounded chronological-card shape in both locales", async () => {
+  const counts = JSON.parse(await psql("SELECT json_build_object('upcoming', count(*) FILTER (WHERE NOT played), 'results', count(*) FILTER (WHERE played)) FROM matches_game_card"));
+  assert(counts.upcoming <= 40 && counts.results <= 40, "each matches feed is capped at forty cards");
+  for (const path of ["/en/matches", "/jogos"]) {
+    const page = await (await context()).newPage();
+    const shapes = new Set<string>();
+    page.on("request", (request: { url(): string }) => {
+      const url = new URL(request.url());
+      if (url.pathname.endsWith("/electric/v1/shape")) {
+        const table = url.searchParams.get("table");
+        if (table) shapes.add(table);
+      }
+    });
+    const started = performance.now();
+    await visit(page, path);
+    await page.waitForFunction((counts: { upcoming: number; results: number }) =>
+      document.querySelectorAll(".games.upcoming .game-row").length === counts.upcoming &&
+      document.querySelectorAll(".games.results .game-row").length === counts.results, counts, { timeout: 30_000 });
+    const dataMs = Math.round(performance.now() - started);
+    await page.waitForFunction(() => {
+      const screen = document.querySelector(".shell-screen:not([hidden])");
+      return screen && !screen.hasAttribute("data-entering") && Number(getComputedStyle(screen).opacity) >= 0.99;
+    });
+    const visibleMs = Math.round(performance.now() - started);
+    await page.click("#games-tab-results");
+    if (counts.results) await page.waitForSelector('.games-view[data-view="results"] .games.results .game-row');
+    assert(shapes.has("matches_game_card"), "matches must request its bounded card shape");
+    assert(!shapes.has("game_card"), "matches must not sync the complete game-card archive");
+    console.log(`Fresh ${path}: ${counts.upcoming}+${counts.results} games ready in ${dataMs} ms, visible in ${visibleMs} ms; shapes: ${[...shapes].join(", ")}`);
+    const capture = Deno.env.get("GOLABERTO_MATCHES_CAPTURE");
+    if (capture && path === "/en/matches") await page.screenshot({ path: capture, fullPage: true });
+    await page.close();
+  }
+});
+
+test("matches clock replaces an unselected fixture without a manual refresh", async () => {
+  assert(/(?:check|test)/.test(Deno.env.get("COMPOSE_PROJECT_NAME") ?? ""), "membership mutation requires a disposable stack");
+  // Earlier cases may have just restored selected cards; let the clock refill.
+  const deadline = Date.now() + 90_000;
+  while (await psql("SELECT count(*) FROM matches_game_card WHERE NOT played") !== "40") {
+    assert(Date.now() < deadline, "the matches clock did not fill the fixture feed");
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+  const candidate = await psql("SELECT id FROM game_card WHERE NOT played AND kickoff IS NOT NULL AND id NOT IN (SELECT id FROM matches_game_card) ORDER BY kickoff DESC,id DESC LIMIT 1");
+  assert(candidate, "the fixture archive must contain an unselected candidate");
+  const displaced = await psql("SELECT id FROM matches_game_card WHERE NOT played ORDER BY kickoff DESC,id DESC LIMIT 1");
+  const saved = JSON.parse(await psql(`SELECT json_build_object('day',day,'kickoff',kickoff) FROM game_card WHERE id='${candidate}'`));
+  const page = await open("/en/matches");
+  await page.waitForSelector(`.games.upcoming .game-row[href$="/${displaced}"]`);
+  try {
+    await psql(`UPDATE game_card SET day='1800-01-01',kickoff='1800-01-01 12:00:00+00' WHERE id='${candidate}'`);
+    await page.waitForFunction(([candidate, displaced]: string[]) => {
+      const rows = [...document.querySelectorAll(".games.upcoming .game-row")];
+      return rows.length === 40 && rows[0].getAttribute("href")?.endsWith(`/${candidate}`) &&
+        !rows.some((row) => row.getAttribute("href")?.endsWith(`/${displaced}`));
+    }, [candidate, displaced], { timeout: 90_000 });
+  } finally {
+    await psql(`UPDATE game_card SET day='${saved.day}',kickoff='${saved.kickoff}' WHERE id='${candidate}'`);
+    await page.waitForFunction(([candidate, displaced]: string[]) => {
+      const rows = [...document.querySelectorAll(".games.upcoming .game-row")];
+      return !rows.some((row) => row.getAttribute("href")?.endsWith(`/${candidate}`)) &&
+        rows.some((row) => row.getAttribute("href")?.endsWith(`/${displaced}`));
+    }, [candidate, displaced], { timeout: 90_000 });
+  }
+});
+
 test("test-games-upcoming: the games page opens on the upcoming games, soonest first", async () => {
   const page = await open("/jogos");
   await page.waitForSelector(".games.upcoming .game-row");
@@ -304,7 +486,7 @@ test("test-rounds: the championship page shows the current round and the next", 
 
 test("test-teams: part of a name narrows the teams", async () => {
   const page = await open("/equipes");
-  await page.waitForFunction(() => document.querySelectorAll(".catalog-table tbody tr").length > 40);
+  await page.waitForFunction(() => document.querySelectorAll(".catalog-table tbody tr").length === 40);
   await page.fill("#teams-q", "athletico");
   await page.waitForFunction(() => document.querySelectorAll(".catalog-table tbody tr").length === 1);
   assertEquals(await said(page, ".catalog-table tbody tr"), ["Athletico-PR Curitiba Brasil"]);
@@ -380,8 +562,9 @@ test("test-venue-home: a team's ground shows the team and the games played there
   // São Paulo-SP's ground, which the 2006 pages call Morumbi and the archive
   // now calls Morumbis: one stadium.
   const team = await open("/equipe/07000000-0000-4000-8000-000000000011");
-  await team.waitForSelector('.game-facts dd span');
-  const ground = await said(team, ".game-facts dd span");
+  const groundSelector = '.game-facts dd[data-live="stadium"] span';
+  await team.waitForSelector(groundSelector);
+  const ground = await said(team, groundSelector);
   assertEquals(ground, ["Morumbis"]);
   const stadiums = await open("/estadios");
   await stadiums.fill("#stadiums-q", "morumbi");

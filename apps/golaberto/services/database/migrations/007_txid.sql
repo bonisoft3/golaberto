@@ -34,17 +34,11 @@ CREATE TRIGGER restamp_txid BEFORE UPDATE ON stadium
 DROP TRIGGER IF EXISTS restamp_txid ON team;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON team
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
-DROP TRIGGER IF EXISTS restamp_txid ON team_group;
-CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_group
-  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON referee;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON referee
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON player;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON player
-  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
-DROP TRIGGER IF EXISTS restamp_txid ON team_player;
-CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_player
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON game;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON game
@@ -76,9 +70,6 @@ CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_rating
 DROP TRIGGER IF EXISTS restamp_txid ON player_rating;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON player_rating
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
-DROP TRIGGER IF EXISTS restamp_txid ON rating_eval;
-CREATE TRIGGER restamp_txid BEFORE UPDATE ON rating_eval
-  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON game_card;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON game_card
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
@@ -88,14 +79,29 @@ CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_game
 DROP TRIGGER IF EXISTS restamp_txid ON comment;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON comment
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
-DROP TRIGGER IF EXISTS restamp_txid ON editor;
-CREATE TRIGGER restamp_txid BEFORE UPDATE ON editor
-  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON player_stat;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON player_stat
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON phase_round;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON phase_round
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+DROP TRIGGER IF EXISTS restamp_txid ON team_group;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_group
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+DROP TRIGGER IF EXISTS restamp_txid ON team_player;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_player
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+DROP TRIGGER IF EXISTS restamp_txid ON rating_eval;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON rating_eval
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+DROP TRIGGER IF EXISTS restamp_txid ON home_game_card;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON home_game_card
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+DROP TRIGGER IF EXISTS restamp_txid ON matches_game_card;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON matches_game_card
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+DROP TRIGGER IF EXISTS restamp_txid ON editor;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON editor
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 
 COMMIT;

@@ -230,5 +230,16 @@
   "home_top6": "Les six premiers",
   "home_recent": "Championnats récents",
   "col_title_chance": "Titre",
-  "col_title_chance_long": "Chance de titre, d'après les chances du groupe"
+  "col_title_chance_long": "Chance de titre, d'après les chances du groupe",
+  "home_best_upcoming": "Prochains matchs à suivre",
+  "home_best_results": "Résultats récents",
+  "home_selection": "Jusqu’à 20 matchs des sept prochains et derniers jours, choisis selon la force des équipes, l’importance et la proximité du match. Heure de Brasília.",
+  "home_no_upcoming": "Aucun match avec horaire dans les sept prochains jours.",
+  "home_no_results": "Aucun résultat avec horaire enregistré dans les sept derniers jours.",
+  "home_all_games": "Tous les matchs ›",
+  "archive_pages": "Pagination",
+  "page_previous": "Précédente",
+  "page_next": "Suivante",
+  "page_label": "Page",
+  "choice_search": "Rechercher les options"
 }

@@ -230,5 +230,16 @@
   "home_top6": "Os seis primeiros",
   "home_recent": "Campeonatos recentes",
   "col_title_chance": "Título",
-  "col_title_chance_long": "Chance de título, das chances do grupo"
+  "col_title_chance_long": "Chance de título, das chances do grupo",
+  "home_best_upcoming": "Próximos jogos em destaque",
+  "home_best_results": "Resultados recentes em destaque",
+  "home_selection": "Até 20 jogos dos próximos e últimos sete dias, escolhidos pela força das equipes, importância e proximidade da partida. Horários de Brasília.",
+  "home_no_upcoming": "Nenhum jogo com horário marcado nos próximos sete dias.",
+  "home_no_results": "Nenhum resultado com horário registrado nos últimos sete dias.",
+  "home_all_games": "Todos os jogos ›",
+  "archive_pages": "Paginação",
+  "page_previous": "Anterior",
+  "page_next": "Próxima",
+  "page_label": "Página",
+  "choice_search": "Buscar opções"
 }

@@ -66,15 +66,21 @@
     "comment": {
       "scope": "public"
     },
-    "editor": {
-      "owner": "app_user_id",
-      "scope": "private"
-    },
     "player_stat": {
       "scope": "public"
     },
     "phase_round": {
       "scope": "public"
+    },
+    "home_game_card": {
+      "scope": "public"
+    },
+    "matches_game_card": {
+      "scope": "public"
+    },
+    "editor": {
+      "owner": "app_user_id",
+      "scope": "private"
     }
   },
   "app": "golaberto",
@@ -113,10 +119,37 @@
   "local": {
     "catalog_filter": "tab",
     "games_view": "tab",
+    "archive_page": "tab",
     "comment_draft": "tab",
     "game_edit": "tab",
     "directory_filter": "tab"
   },
+  "onDemand": [
+    "category",
+    "championship",
+    "comment",
+    "game",
+    "game_card",
+    "game_importance",
+    "goal",
+    "phase",
+    "phase_round",
+    "player",
+    "player_game",
+    "player_rating",
+    "player_stat",
+    "position_chance",
+    "referee",
+    "stadium",
+    "stage_group",
+    "standing",
+    "team",
+    "team_chance",
+    "team_game",
+    "team_rating",
+    "zone",
+    "zone_chance"
+  ],
   "optional": {
     "game_edit": [
       {
@@ -172,17 +205,26 @@
       {
         "id": "teams",
         "q": "",
-        "state": "browsing"
+        "state": "browsing",
+        "offset": 0,
+        "next_offset": 40,
+        "page": 1
       },
       {
         "id": "stadiums",
         "q": "",
-        "state": "browsing"
+        "state": "browsing",
+        "offset": 0,
+        "next_offset": 40,
+        "page": 1
       },
       {
         "id": "referees",
         "q": "",
-        "state": "browsing"
+        "state": "browsing",
+        "offset": 0,
+        "next_offset": 40,
+        "page": 1
       }
     ],
     "catalog_filter": [
@@ -190,7 +232,10 @@
         "id": "catalog",
         "q": "",
         "region": "",
-        "state": "browsing"
+        "state": "browsing",
+        "offset": 0,
+        "next_offset": 40,
+        "page": 1
       }
     ]
   },
@@ -217,6 +262,10 @@
         "css": "shell/screens/principal.css",
         "handlers": [],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -226,6 +275,7 @@
       "states": [
         "loading",
         "populated",
+        "no-games",
         "populated-dark"
       ]
     },
@@ -249,8 +299,14 @@
       "files": {
         "html": "shell/screens/campeonatos.html",
         "css": "shell/screens/campeonatos.css",
-        "handlers": [],
+        "handlers": [
+          "shell/handlers/page-value.js"
+        ],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/catalog.css"
@@ -294,6 +350,10 @@
         "css": "shell/screens/jogos.css",
         "handlers": [],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -327,8 +387,14 @@
       "files": {
         "html": "shell/screens/jogo.html",
         "css": "shell/screens/jogo.css",
-        "handlers": [],
+        "handlers": [
+          "shell/handlers/page-value.js"
+        ],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -367,6 +433,10 @@
         "css": "shell/screens/chances.css",
         "handlers": [],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -407,6 +477,10 @@
           "shell/handlers/row-id.js"
         ],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -451,8 +525,14 @@
       "files": {
         "html": "shell/screens/equipes.html",
         "css": "shell/screens/equipes.css",
-        "handlers": [],
+        "handlers": [
+          "shell/handlers/page-value.js"
+        ],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/catalog.css"
@@ -496,8 +576,14 @@
       "files": {
         "html": "shell/screens/estadios.html",
         "css": "shell/screens/estadios.css",
-        "handlers": [],
+        "handlers": [
+          "shell/handlers/page-value.js"
+        ],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/catalog.css"
@@ -532,8 +618,14 @@
       "files": {
         "html": "shell/screens/estadio.html",
         "css": "shell/screens/estadio.css",
-        "handlers": [],
+        "handlers": [
+          "shell/handlers/page-value.js"
+        ],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -576,8 +668,14 @@
       "files": {
         "html": "shell/screens/arbitros.html",
         "css": "shell/screens/arbitros.css",
-        "handlers": [],
+        "handlers": [
+          "shell/handlers/page-value.js"
+        ],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/catalog.css"
@@ -612,8 +710,14 @@
       "files": {
         "html": "shell/screens/arbitro.html",
         "css": "shell/screens/arbitro.css",
-        "handlers": [],
+        "handlers": [
+          "shell/handlers/page-value.js"
+        ],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -647,8 +751,14 @@
       "files": {
         "html": "shell/screens/equipe.html",
         "css": "shell/screens/equipe.css",
-        "handlers": [],
+        "handlers": [
+          "shell/handlers/page-value.js"
+        ],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -682,8 +792,14 @@
       "files": {
         "html": "shell/screens/jogador.html",
         "css": "shell/screens/jogador.css",
-        "handlers": [],
+        "handlers": [
+          "shell/handlers/page-value.js"
+        ],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -719,6 +835,10 @@
         "css": "shell/screens/campeonato.css",
         "handlers": [],
         "adapters": [],
+        "renderers": [
+          "shell/renderers/team-badge.js",
+          "shell/renderers/country-flag.js"
+        ],
         "shared": [
           "shell/shared/chrome.css",
           "shell/shared/games.css"
@@ -752,6 +872,8 @@
     "game_card",
     "game_importance",
     "goal",
+    "home_game_card",
+    "matches_game_card",
     "phase",
     "phase_round",
     "player",
@@ -2188,6 +2310,38 @@
           "ref": "referee",
           "type": "uuid",
           "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 20
+          },
+          "default": "0",
+          "name": "home_upcoming_rank",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 20
+          },
+          "default": "0",
+          "name": "home_recent_rank",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "default": "false",
+          "name": "home_upcoming_group",
+          "type": "bool",
+          "required": true
+        },
+        {
+          "default": "false",
+          "name": "home_recent_group",
+          "type": "bool",
+          "required": true
         }
       ]
     },
@@ -2336,128 +2490,6 @@
           "name": "created_at",
           "type": "timestamp",
           "required": true
-        }
-      ]
-    },
-    "comment_draft": {
-      "durability": "tab",
-      "fields": [
-        {
-          "name": "id",
-          "pk": true,
-          "type": "string",
-          "required": true
-        },
-        {
-          "bounds": {
-            "sizeMax": 1000
-          },
-          "default": "''",
-          "name": "body",
-          "type": "string",
-          "required": true
-        },
-        {
-          "default": "'writing'",
-          "enum": [
-            "writing",
-            "sending",
-            "refused"
-          ],
-          "name": "state",
-          "type": "string",
-          "required": true
-        }
-      ]
-    },
-    "editor": {
-      "durability": "server",
-      "fields": [
-        {
-          "default": "gen_random_uuid()",
-          "name": "id",
-          "pk": true,
-          "type": "uuid",
-          "required": true
-        },
-        {
-          "name": "app_user_id",
-          "ref": "app_user",
-          "type": "uuid",
-          "required": true,
-          "unique": true
-        }
-      ]
-    },
-    "game_edit": {
-      "durability": "tab",
-      "fields": [
-        {
-          "name": "id",
-          "pk": true,
-          "type": "string",
-          "required": true
-        },
-        {
-          "default": "'editing'",
-          "enum": [
-            "editing",
-            "saving",
-            "refused"
-          ],
-          "name": "state",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "played",
-          "type": "bool",
-          "required": false
-        },
-        {
-          "name": "home_score",
-          "type": "int32",
-          "required": false
-        },
-        {
-          "name": "away_score",
-          "type": "int32",
-          "required": false
-        },
-        {
-          "name": "attendance",
-          "type": "int32",
-          "required": false
-        },
-        {
-          "name": "stadium_id",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "referee_id",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "goal_minute",
-          "type": "int32",
-          "required": false
-        },
-        {
-          "name": "goal_player_id",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "home_name",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "away_name",
-          "type": "string",
-          "required": false
         }
       ]
     },
@@ -2634,6 +2666,560 @@
         }
       ]
     },
+    "home_game_card": {
+      "durability": "live",
+      "fields": [
+        {
+          "name": "id",
+          "pk": true,
+          "ref": "game",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "phase_id",
+          "ref": "phase",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "championship_id",
+          "ref": "championship",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 1,
+            "intMax": 99
+          },
+          "name": "round",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "name": "day",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "kickoff",
+          "type": "timestamp",
+          "required": false
+        },
+        {
+          "name": "played",
+          "type": "bool",
+          "required": true
+        },
+        {
+          "name": "home_id",
+          "ref": "team",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "away_id",
+          "ref": "team",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "home_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "away_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 99
+          },
+          "name": "home_score",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 99
+          },
+          "name": "away_score",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 99
+          },
+          "name": "home_aet",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 99
+          },
+          "name": "away_aet",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 99
+          },
+          "name": "home_pen",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 99
+          },
+          "name": "away_pen",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "name": "championship_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "phase_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "stadium_name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "referee_name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 250000
+          },
+          "name": "attendance",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "name": "day_display",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "kickoff_local",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "stadium_id",
+          "ref": "stadium",
+          "type": "uuid",
+          "required": false
+        },
+        {
+          "name": "referee_id",
+          "ref": "referee",
+          "type": "uuid",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 20
+          },
+          "default": "0",
+          "name": "home_upcoming_rank",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 20
+          },
+          "default": "0",
+          "name": "home_recent_rank",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "default": "false",
+          "name": "home_upcoming_group",
+          "type": "bool",
+          "required": true
+        },
+        {
+          "default": "false",
+          "name": "home_recent_group",
+          "type": "bool",
+          "required": true
+        }
+      ]
+    },
+    "matches_game_card": {
+      "durability": "live",
+      "fields": [
+        {
+          "name": "id",
+          "pk": true,
+          "ref": "game",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "phase_id",
+          "ref": "phase",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "championship_id",
+          "ref": "championship",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 1,
+            "intMax": 99
+          },
+          "name": "round",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "name": "day",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "kickoff",
+          "type": "timestamp",
+          "required": false
+        },
+        {
+          "name": "played",
+          "type": "bool",
+          "required": true
+        },
+        {
+          "name": "home_id",
+          "ref": "team",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "away_id",
+          "ref": "team",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "home_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "away_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 99
+          },
+          "name": "home_score",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 99
+          },
+          "name": "away_score",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 99
+          },
+          "name": "home_aet",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 99
+          },
+          "name": "away_aet",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 99
+          },
+          "name": "home_pen",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 99
+          },
+          "name": "away_pen",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "name": "championship_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "phase_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "stadium_name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "referee_name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 250000
+          },
+          "name": "attendance",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "name": "day_display",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "kickoff_local",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "stadium_id",
+          "ref": "stadium",
+          "type": "uuid",
+          "required": false
+        },
+        {
+          "name": "referee_id",
+          "ref": "referee",
+          "type": "uuid",
+          "required": false
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 20
+          },
+          "default": "0",
+          "name": "home_upcoming_rank",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 20
+          },
+          "default": "0",
+          "name": "home_recent_rank",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "default": "false",
+          "name": "home_upcoming_group",
+          "type": "bool",
+          "required": true
+        },
+        {
+          "default": "false",
+          "name": "home_recent_group",
+          "type": "bool",
+          "required": true
+        }
+      ]
+    },
+    "comment_draft": {
+      "durability": "tab",
+      "fields": [
+        {
+          "name": "id",
+          "pk": true,
+          "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "sizeMax": 1000
+          },
+          "default": "''",
+          "name": "body",
+          "type": "string",
+          "required": true
+        },
+        {
+          "default": "'writing'",
+          "enum": [
+            "writing",
+            "sending",
+            "refused"
+          ],
+          "name": "state",
+          "type": "string",
+          "required": true
+        }
+      ]
+    },
+    "editor": {
+      "durability": "server",
+      "fields": [
+        {
+          "default": "gen_random_uuid()",
+          "name": "id",
+          "pk": true,
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "app_user_id",
+          "ref": "app_user",
+          "type": "uuid",
+          "required": true,
+          "unique": true
+        }
+      ]
+    },
+    "game_edit": {
+      "durability": "tab",
+      "fields": [
+        {
+          "name": "id",
+          "pk": true,
+          "type": "string",
+          "required": true
+        },
+        {
+          "default": "'editing'",
+          "enum": [
+            "editing",
+            "saving",
+            "refused"
+          ],
+          "name": "state",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "played",
+          "type": "bool",
+          "required": false
+        },
+        {
+          "name": "home_score",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "name": "away_score",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "name": "attendance",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "name": "stadium_id",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "referee_id",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "goal_minute",
+          "type": "int32",
+          "required": false
+        },
+        {
+          "name": "goal_player_id",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "home_name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "away_name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "bounds": {
+            "sizeMax": 80
+          },
+          "default": "''",
+          "name": "stadium_q",
+          "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "sizeMax": 80
+          },
+          "default": "''",
+          "name": "referee_q",
+          "type": "string",
+          "required": true
+        }
+      ]
+    },
     "games_view": {
       "durability": "tab",
       "fields": [
@@ -2689,6 +3275,33 @@
           "name": "state",
           "type": "string",
           "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0
+          },
+          "default": "0",
+          "name": "offset",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 40
+          },
+          "default": "40",
+          "name": "next_offset",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 1
+          },
+          "default": "1",
+          "name": "page",
+          "type": "int32",
+          "required": true
         }
       ]
     },
@@ -2724,6 +3337,85 @@
           ],
           "name": "region",
           "type": "string",
+          "required": true
+        },
+        {
+          "default": "'browsing'",
+          "enum": [
+            "browsing"
+          ],
+          "name": "state",
+          "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0
+          },
+          "default": "0",
+          "name": "offset",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 40
+          },
+          "default": "40",
+          "name": "next_offset",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 1
+          },
+          "default": "1",
+          "name": "page",
+          "type": "int32",
+          "required": true
+        }
+      ]
+    },
+    "archive_page": {
+      "durability": "tab",
+      "fields": [
+        {
+          "name": "id",
+          "pk": true,
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "owner_id",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0
+          },
+          "default": "0",
+          "name": "offset",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 40
+          },
+          "default": "40",
+          "name": "next_offset",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 1
+          },
+          "default": "1",
+          "name": "page",
+          "type": "int32",
           "required": true
         },
         {
@@ -3134,6 +3826,13 @@
     "services/database/migrations/010_game_days.sql",
     "services/database/migrations/011_comment_writes.sql",
     "services/database/migrations/012_editor_writes.sql",
+    "services/database/migrations/013_home_games.sql",
+    "services/database/migrations/014_home_championships.sql",
+    "services/database/migrations/015_home_performance.sql",
+    "services/database/migrations/016_matches_performance.sql",
+    "services/database/migrations/017_game_countries.sql",
+    "services/database/migrations/018_route_performance.sql",
+    "services/database/migrations/019_normalized_game_flags.sql",
     "services/database/migrations/900_seed.sql"
   ],
   "pipelines": [
@@ -3148,6 +3847,16 @@
       "raw": true
     },
     {
+      "name": "home-games",
+      "to": "home_game_card",
+      "raw": true
+    },
+    {
+      "name": "matches-games",
+      "to": "matches_game_card",
+      "raw": true
+    },
+    {
       "name": "player-stats",
       "to": "player_stat",
       "raw": true
@@ -3159,6 +3868,12 @@
     }
   ],
   "uniques": {
+    "player_game": [
+      [
+        "game_id",
+        "player_id"
+      ]
+    ],
     "team_group": [
       [
         "group_id",
@@ -3169,12 +3884,6 @@
       [
         "championship_id",
         "team_id",
-        "player_id"
-      ]
-    ],
-    "player_game": [
-      [
-        "game_id",
         "player_id"
       ]
     ]

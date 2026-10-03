@@ -16,6 +16,9 @@
       },
       "apps_golaberto-mesh-events": {
         "condition": "service_started"
+      },
+      "apps_golaberto-migrate": {
+        "condition": "service_completed_successfully"
       }
     },
     "networks": {
@@ -163,6 +166,8 @@
         "apps/golaberto/.bayt/compose.caddy.yaml",
         "apps/golaberto/.bayt/compose.redis.yaml",
         "libraries/mecha/.bayt/compose.mesh-image.yaml",
+        "apps/golaberto/.bayt/compose.migrate.yaml",
+        "libraries/mecha/.bayt/compose.migrate-image.yaml",
         "libraries/mecha/.bayt/compose.conduit-image.yaml"
       ]
     },
@@ -198,6 +203,8 @@
         "apps/golaberto/.bayt/compose.caddy.yaml",
         "apps/golaberto/.bayt/compose.redis.yaml",
         "libraries/mecha/.bayt/compose.mesh-image.yaml",
+        "apps/golaberto/.bayt/compose.migrate.yaml",
+        "libraries/mecha/.bayt/compose.migrate-image.yaml",
         "libraries/mecha/.bayt/compose.conduit-image.yaml"
       ]
     },
@@ -221,7 +228,8 @@
       "deps": [],
       "transitiveDeps": [
         "database_outs_srcs",
-        "mesh-events_outs_srcs"
+        "mesh-events_outs_srcs",
+        "migrate_outs_srcs"
       ],
       "transitiveCrossDeps": [],
       "chainedDeps": [],
@@ -238,6 +246,8 @@
         "apps/golaberto/.bayt/compose.caddy.yaml",
         "apps/golaberto/.bayt/compose.redis.yaml",
         "libraries/mecha/.bayt/compose.mesh-image.yaml",
+        "apps/golaberto/.bayt/compose.migrate.yaml",
+        "libraries/mecha/.bayt/compose.migrate-image.yaml",
         "libraries/mecha/.bayt/compose.conduit-image.yaml"
       ]
     }
@@ -246,15 +256,18 @@
   "emitsSrcs": true,
   "deps": [
     "database_outs",
-    "mesh-events_outs"
+    "mesh-events_outs",
+    "migrate_outs"
   ],
   "sameProjectDeps": [
     "database_outs",
-    "mesh-events_outs"
+    "mesh-events_outs",
+    "migrate_outs"
   ],
   "transitiveDeps": [
     "database_outs",
-    "mesh-events_outs"
+    "mesh-events_outs",
+    "migrate_outs"
   ],
   "transitiveCrossDeps": [
     {
@@ -275,6 +288,8 @@
     "apps/golaberto/.bayt/compose.caddy.yaml",
     "apps/golaberto/.bayt/compose.redis.yaml",
     "libraries/mecha/.bayt/compose.mesh-image.yaml",
+    "apps/golaberto/.bayt/compose.migrate.yaml",
+    "libraries/mecha/.bayt/compose.migrate-image.yaml",
     "libraries/mecha/.bayt/compose.conduit-image.yaml"
   ],
   "chainedDeps": [
@@ -298,6 +313,15 @@
     },
     {
       "name": "mesh-events_outs",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "migrate_outs",
       "project": "apps_golaberto",
       "dir": "apps/golaberto",
       "outs": {

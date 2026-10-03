@@ -29,6 +29,13 @@ services:
     profiles:
     - integrate
     scale: 1
+  compute:
+    extends:
+      file: ./compose.compute.yaml
+      service: apps_golaberto-compute
+    profiles:
+    - compute
+    scale: 1
   database:
     extends:
       file: ./compose.database.yaml
@@ -92,10 +99,10 @@ services:
     profiles:
     - transform
     scale: 1
-  compute:
+  migrate:
     extends:
-      file: ./compose.compute.yaml
-      service: apps_golaberto-compute
+      file: ./compose.migrate.yaml
+      service: apps_golaberto-migrate
     profiles:
-    - compute
+    - migrate
     scale: 1

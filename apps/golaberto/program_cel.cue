@@ -65,20 +65,6 @@ code: state: entities: {
 			point_loss: {intMin: 0, intMax: 9}
 		}
 	}
-	Group: {
-		checks: {
-			name: "char_length(name) > 0 AND char_length(name) <= 40"
-			position: "position >= 0"
-		}
-		seed: [...{
-			name?: strings.MinRunes(1) & strings.MaxRunes(40)
-			position?: >=0
-		}]
-		bounds: {
-			name: {sizeMin: 1, sizeMax: 40}
-			position: {intMin: 0}
-		}
-	}
 	Phase: {
 		checks: {
 			name: "char_length(name) > 0 AND char_length(name) <= 60"
@@ -102,18 +88,41 @@ code: state: entities: {
 			bonus_points_threshold: {intMin: 0, intMax: 99}
 		}
 	}
-	Referee: {
+	Group: {
 		checks: {
-			name: "char_length(name) > 0 AND char_length(name) <= 80"
-			location: "char_length(location) <= 80"
+			name: "char_length(name) > 0 AND char_length(name) <= 40"
+			position: "position >= 0"
 		}
 		seed: [...{
-			name?: strings.MinRunes(1) & strings.MaxRunes(80)
-			location?: strings.MaxRunes(80)
+			name?: strings.MinRunes(1) & strings.MaxRunes(40)
+			position?: >=0
 		}]
 		bounds: {
-			name: {sizeMin: 1, sizeMax: 80}
-			location: {sizeMax: 80}
+			name: {sizeMin: 1, sizeMax: 40}
+			position: {intMin: 0}
+		}
+	}
+	Zone: {
+		checks: {
+			name: "char_length(name) > 0 AND char_length(name) <= 60"
+			color: "color IN ('champion', 'promotion', 'qualify', 'playoff', 'relegation')"
+			first: "first >= 1"
+			last: "last >= 1"
+		}
+		invariant: check: "last >= first"
+		seed: [...{
+			name?: strings.MinRunes(1) & strings.MaxRunes(60)
+			color?: ("champion" | "promotion" | "qualify" | "playoff" | "relegation")
+			first?: >=1
+			last?: >=1
+		}]
+		enums: {
+			color: ["champion","promotion","qualify","playoff","relegation"]
+		}
+		bounds: {
+			name: {sizeMin: 1, sizeMax: 60}
+			first: {intMin: 1}
+			last: {intMin: 1}
 		}
 	}
 	Stadium: {
@@ -161,44 +170,43 @@ code: state: entities: {
 			country: {sizeMin: 1, sizeMax: 60}
 		}
 	}
-	TeamGroup: {
+	Referee: {
 		checks: {
-			add_sub: "add_sub >= -99 AND add_sub <= 99"
-			bias: "bias >= -99 AND bias <= 99"
-			comment: "char_length(comment) <= 500"
+			name: "char_length(name) > 0 AND char_length(name) <= 80"
+			location: "char_length(location) <= 80"
 		}
 		seed: [...{
-			add_sub?: >=-99 & <=99
-			bias?: >=-99 & <=99
-			comment?: strings.MaxRunes(500)
+			name?: strings.MinRunes(1) & strings.MaxRunes(80)
+			location?: strings.MaxRunes(80)
 		}]
 		bounds: {
-			add_sub: {intMin: -99, intMax: 99}
-			bias: {intMin: -99, intMax: 99}
-			comment: {sizeMax: 500}
+			name: {sizeMin: 1, sizeMax: 80}
+			location: {sizeMax: 80}
 		}
 	}
-	Zone: {
+	Player: {
 		checks: {
 			name: "char_length(name) > 0 AND char_length(name) <= 60"
-			color: "color IN ('champion', 'promotion', 'qualify', 'playoff', 'relegation')"
-			first: "first >= 1"
-			last: "last >= 1"
+			full_name: "char_length(full_name) <= 160"
+			country: "char_length(country) <= 60"
+			height: "height >= 100 AND height <= 230"
+			position: "position IN ('g', 'dr', 'dc', 'dl', 'dm', 'cm', 'am', 'fw')"
 		}
-		invariant: check: "last >= first"
 		seed: [...{
 			name?: strings.MinRunes(1) & strings.MaxRunes(60)
-			color?: ("champion" | "promotion" | "qualify" | "playoff" | "relegation")
-			first?: >=1
-			last?: >=1
+			full_name?: strings.MaxRunes(160)
+			country?: strings.MaxRunes(60)
+			height?: >=100 & <=230
+			position?: ("g" | "dr" | "dc" | "dl" | "dm" | "cm" | "am" | "fw")
 		}]
 		enums: {
-			color: ["champion","promotion","qualify","playoff","relegation"]
+			position: ["g","dr","dc","dl","dm","cm","am","fw"]
 		}
 		bounds: {
 			name: {sizeMin: 1, sizeMax: 60}
-			first: {intMin: 1}
-			last: {intMin: 1}
+			full_name: {sizeMax: 160}
+			country: {sizeMax: 60}
+			height: {intMin: 100, intMax: 230}
 		}
 	}
 	Game: {
@@ -237,31 +245,6 @@ code: state: entities: {
 			home_pen: {intMin: 0, intMax: 99}
 			away_pen: {intMin: 0, intMax: 99}
 			attendance: {intMin: 0, intMax: 250000}
-		}
-	}
-	Player: {
-		checks: {
-			name: "char_length(name) > 0 AND char_length(name) <= 60"
-			full_name: "char_length(full_name) <= 160"
-			country: "char_length(country) <= 60"
-			height: "height >= 100 AND height <= 230"
-			position: "position IN ('g', 'dr', 'dc', 'dl', 'dm', 'cm', 'am', 'fw')"
-		}
-		seed: [...{
-			name?: strings.MinRunes(1) & strings.MaxRunes(60)
-			full_name?: strings.MaxRunes(160)
-			country?: strings.MaxRunes(60)
-			height?: >=100 & <=230
-			position?: ("g" | "dr" | "dc" | "dl" | "dm" | "cm" | "am" | "fw")
-		}]
-		enums: {
-			position: ["g","dr","dc","dl","dm","cm","am","fw"]
-		}
-		bounds: {
-			name: {sizeMin: 1, sizeMax: 60}
-			full_name: {sizeMax: 160}
-			country: {sizeMax: 60}
-			height: {intMin: 100, intMax: 230}
 		}
 	}
 	Goal: {
@@ -439,17 +422,6 @@ code: state: entities: {
 			rating: {intMin: 0, intMax: 100}
 		}
 	}
-	RatingEval: {
-		checks: {
-			rps: "rps >= 0"
-		}
-		seed: [...{
-			rps?: >=0
-		}]
-		bounds: {
-			rps: {intMin: 0}
-		}
-	}
 	GameCard: {
 		checks: {
 			round: "round >= 1 AND round <= 99"
@@ -460,6 +432,8 @@ code: state: entities: {
 			home_pen: "home_pen >= 0 AND home_pen < 100"
 			away_pen: "away_pen >= 0 AND away_pen < 100"
 			attendance: "attendance >= 0 AND attendance <= 250000"
+			home_upcoming_rank: "home_upcoming_rank >= 0 AND home_upcoming_rank <= 20"
+			home_recent_rank: "home_recent_rank >= 0 AND home_recent_rank <= 20"
 		}
 		seed: [...{
 			round?: >=1 & <=99
@@ -470,6 +444,8 @@ code: state: entities: {
 			home_pen?: >=0 & <100
 			away_pen?: >=0 & <100
 			attendance?: >=0 & <=250000
+			home_upcoming_rank?: >=0 & <=20
+			home_recent_rank?: >=0 & <=20
 		}]
 		bounds: {
 			round: {intMin: 1, intMax: 99}
@@ -480,6 +456,8 @@ code: state: entities: {
 			home_pen: {intMin: 0, intMax: 99}
 			away_pen: {intMin: 0, intMax: 99}
 			attendance: {intMin: 0, intMax: 250000}
+			home_upcoming_rank: {intMin: 0, intMax: 20}
+			home_recent_rank: {intMin: 0, intMax: 20}
 		}
 	}
 	TeamGame: {
@@ -513,26 +491,6 @@ code: state: entities: {
 		}]
 		bounds: {
 			body: {sizeMin: 1, sizeMax: 1000}
-		}
-	}
-	CommentDraft: {
-		seed: [...{
-			body?: strings.MaxRunes(1000)
-			state?: ("writing" | "sending" | "refused")
-		}]
-		enums: {
-			state: ["writing","sending","refused"]
-		}
-		bounds: {
-			body: {sizeMax: 1000}
-		}
-	}
-	GameEdit: {
-		seed: [...{
-			state?: ("editing" | "saving" | "refused")
-		}]
-		enums: {
-			state: ["editing","saving","refused"]
 		}
 	}
 	PlayerStat: {
@@ -592,6 +550,136 @@ code: state: entities: {
 			next: {intMin: 1}
 		}
 	}
+	TeamGroup: {
+		checks: {
+			add_sub: "add_sub >= -99 AND add_sub <= 99"
+			bias: "bias >= -99 AND bias <= 99"
+			comment: "char_length(comment) <= 500"
+		}
+		seed: [...{
+			add_sub?: >=-99 & <=99
+			bias?: >=-99 & <=99
+			comment?: strings.MaxRunes(500)
+		}]
+		bounds: {
+			add_sub: {intMin: -99, intMax: 99}
+			bias: {intMin: -99, intMax: 99}
+			comment: {sizeMax: 500}
+		}
+	}
+	RatingEval: {
+		checks: {
+			rps: "rps >= 0"
+		}
+		seed: [...{
+			rps?: >=0
+		}]
+		bounds: {
+			rps: {intMin: 0}
+		}
+	}
+	HomeGameCard: {
+		checks: {
+			round: "round >= 1 AND round <= 99"
+			home_score: "home_score >= 0 AND home_score < 100"
+			away_score: "away_score >= 0 AND away_score < 100"
+			home_aet: "home_aet >= 0 AND home_aet < 100"
+			away_aet: "away_aet >= 0 AND away_aet < 100"
+			home_pen: "home_pen >= 0 AND home_pen < 100"
+			away_pen: "away_pen >= 0 AND away_pen < 100"
+			attendance: "attendance >= 0 AND attendance <= 250000"
+			home_upcoming_rank: "home_upcoming_rank >= 0 AND home_upcoming_rank <= 20"
+			home_recent_rank: "home_recent_rank >= 0 AND home_recent_rank <= 20"
+		}
+		seed: [...{
+			round?: >=1 & <=99
+			home_score?: >=0 & <100
+			away_score?: >=0 & <100
+			home_aet?: >=0 & <100
+			away_aet?: >=0 & <100
+			home_pen?: >=0 & <100
+			away_pen?: >=0 & <100
+			attendance?: >=0 & <=250000
+			home_upcoming_rank?: >=0 & <=20
+			home_recent_rank?: >=0 & <=20
+		}]
+		bounds: {
+			round: {intMin: 1, intMax: 99}
+			home_score: {intMin: 0, intMax: 99}
+			away_score: {intMin: 0, intMax: 99}
+			home_aet: {intMin: 0, intMax: 99}
+			away_aet: {intMin: 0, intMax: 99}
+			home_pen: {intMin: 0, intMax: 99}
+			away_pen: {intMin: 0, intMax: 99}
+			attendance: {intMin: 0, intMax: 250000}
+			home_upcoming_rank: {intMin: 0, intMax: 20}
+			home_recent_rank: {intMin: 0, intMax: 20}
+		}
+	}
+	MatchesGameCard: {
+		checks: {
+			round: "round >= 1 AND round <= 99"
+			home_score: "home_score >= 0 AND home_score < 100"
+			away_score: "away_score >= 0 AND away_score < 100"
+			home_aet: "home_aet >= 0 AND home_aet < 100"
+			away_aet: "away_aet >= 0 AND away_aet < 100"
+			home_pen: "home_pen >= 0 AND home_pen < 100"
+			away_pen: "away_pen >= 0 AND away_pen < 100"
+			attendance: "attendance >= 0 AND attendance <= 250000"
+			home_upcoming_rank: "home_upcoming_rank >= 0 AND home_upcoming_rank <= 20"
+			home_recent_rank: "home_recent_rank >= 0 AND home_recent_rank <= 20"
+		}
+		seed: [...{
+			round?: >=1 & <=99
+			home_score?: >=0 & <100
+			away_score?: >=0 & <100
+			home_aet?: >=0 & <100
+			away_aet?: >=0 & <100
+			home_pen?: >=0 & <100
+			away_pen?: >=0 & <100
+			attendance?: >=0 & <=250000
+			home_upcoming_rank?: >=0 & <=20
+			home_recent_rank?: >=0 & <=20
+		}]
+		bounds: {
+			round: {intMin: 1, intMax: 99}
+			home_score: {intMin: 0, intMax: 99}
+			away_score: {intMin: 0, intMax: 99}
+			home_aet: {intMin: 0, intMax: 99}
+			away_aet: {intMin: 0, intMax: 99}
+			home_pen: {intMin: 0, intMax: 99}
+			away_pen: {intMin: 0, intMax: 99}
+			attendance: {intMin: 0, intMax: 250000}
+			home_upcoming_rank: {intMin: 0, intMax: 20}
+			home_recent_rank: {intMin: 0, intMax: 20}
+		}
+	}
+	CommentDraft: {
+		seed: [...{
+			body?: strings.MaxRunes(1000)
+			state?: ("writing" | "sending" | "refused")
+		}]
+		enums: {
+			state: ["writing","sending","refused"]
+		}
+		bounds: {
+			body: {sizeMax: 1000}
+		}
+	}
+	GameEdit: {
+		seed: [...{
+			state?: ("editing" | "saving" | "refused")
+			stadium_q?: strings.MaxRunes(80)
+			referee_q?: strings.MaxRunes(80)
+		}]
+		enums: {
+			state: ["editing","saving","refused"]
+		}
+		bounds: {
+			stadium_q: {sizeMax: 80}
+			referee_q: {sizeMax: 80}
+		}
+	}
 	GamesView: {
 		seed: [...{
 			id?: strings.MinRunes(1) & strings.MaxRunes(16)
@@ -609,6 +697,9 @@ code: state: entities: {
 			id?: strings.MinRunes(1) & strings.MaxRunes(16)
 			q?: strings.MaxRunes(80)
 			state?: ("browsing")
+			offset?: >=0
+			next_offset?: >=40
+			page?: >=1
 		}]
 		enums: {
 			state: ["browsing"]
@@ -616,6 +707,9 @@ code: state: entities: {
 		bounds: {
 			id: {sizeMin: 1, sizeMax: 16}
 			q: {sizeMax: 80}
+			offset: {intMin: 0}
+			next_offset: {intMin: 40}
+			page: {intMin: 1}
 		}
 	}
 	CatalogFilter: {
@@ -624,6 +718,9 @@ code: state: entities: {
 			q?: strings.MaxRunes(80)
 			region?: ("" | "world" | "continental" | "national")
 			state?: ("browsing")
+			offset?: >=0
+			next_offset?: >=40
+			page?: >=1
 		}]
 		enums: {
 			region: ["","world","continental","national"]
@@ -632,6 +729,25 @@ code: state: entities: {
 		bounds: {
 			id: {sizeMin: 1, sizeMax: 16}
 			q: {sizeMax: 80}
+			offset: {intMin: 0}
+			next_offset: {intMin: 40}
+			page: {intMin: 1}
+		}
+	}
+	ArchivePage: {
+		seed: [...{
+			offset?: >=0
+			next_offset?: >=40
+			page?: >=1
+			state?: ("browsing")
+		}]
+		enums: {
+			state: ["browsing"]
+		}
+		bounds: {
+			offset: {intMin: 0}
+			next_offset: {intMin: 40}
+			page: {intMin: 1}
 		}
 	}
 }

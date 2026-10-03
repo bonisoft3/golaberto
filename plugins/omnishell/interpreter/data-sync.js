@@ -22,17 +22,24 @@ import {
   createLiveQueryCollection,
   createMechaClient,
   eq,
+  gt,
+  gte,
+  lt,
+  lte,
+  like,
+  ilike,
+  inArray,
   isNull,
   localOnlyCollectionOptions,
   localStorageCollectionOptions,
   not,
   or,
 } from "./vendor/mecha-client.js";
-import { embedDeps, embedTables, parseFilter, parseFilterSpec, parseLimit, parseSelect } from "./fragment.js";
+import { embedDeps, embedTables, parseFilter, parseFilterSpec, parseLimit, parseOffset, parseSelect } from "./fragment.js";
 import { evaluateRole } from "./jessie.js";
 import { judge } from "./validate.js";
 
-export { embedDeps, embedTables, parseFilter, parseFilterSpec, parseLimit, parseSelect };
+export { embedDeps, embedTables, parseFilter, parseFilterSpec, parseLimit, parseOffset, parseSelect };
 
 const HEADERS = { "Content-Type": "application/json" };
 
@@ -285,6 +292,7 @@ export function createStore(base = "", cfg = {}) {
   // but built from a local factory rather than an Electric shape, so they are
   // listed apart from the tables the terminal subscribes.
   const local = cfg.local ?? {};
+  const onDemand = new Set(cfg.onDemand ?? []);
   const tables = [...(cfg.tables ?? []), ...Object.keys(local)];
   // The carrier table the shell was served with (shell.yaml `carriers`); it
   // decides what canonical is, and the client converts into it. Bound on the
@@ -313,6 +321,7 @@ export function createStore(base = "", cfg = {}) {
       fields: cfg.schema?.[t]?.fields,
       durability: local[t],
       access: cfg.access?.[t],
+      onDemand: onDemand.has(t),
     })),
     electricUrl: `${base}/electric`,
     crudUrl: `${base}/crud`,
@@ -368,7 +377,7 @@ export function createStore(base = "", cfg = {}) {
     if (list.length === 0) return;
     const collection = client.collections[table];
     if (collection === undefined) throw new Error(`validation on unsynced table: ${table}`);
-    if (!collection.isReady()) await collection.toArrayWhenReady();
+    if (!onDemand.has(table) && !collection.isReady()) await collection.toArrayWhenReady();
     const key = keyOf(table);
     const held = type !== "update"
       ? undefined
@@ -382,8 +391,16 @@ export function createStore(base = "", cfg = {}) {
       await ensurePrepared(edge.table);
       const c = client.collections[edge.table];
       if (c === undefined) throw new Error(`validation ${table}.${name}: reads unsynced table ${edge.table}`);
-      if (!c.isReady()) await c.toArrayWhenReady();
+      if (!onDemand.has(edge.table) && !c.isReady()) await c.toArrayWhenReady();
       const want = String(produced[edge.from]);
+      if (onDemand.has(edge.table)) {
+        const at = `${edge.table} ${edge.key} ${want}`;
+        if (!edgeIndex.has(at)) {
+          const rows = await withSubset(edge.table, eqFilter(edge.key, want), (rows) => rows.filter((r) => visible(edge.table, r)));
+          edgeIndex.set(at, rows);
+        }
+        return edgeIndex.get(at);
+      }
       const at = `${edge.table} ${edge.key}`;
       let index = edgeIndex.get(at);
       if (index === undefined) {
@@ -451,9 +468,15 @@ export function createStore(base = "", cfg = {}) {
     if (edits.length > 0) await client.update(table, edits);
   }
   const blank = (table, row) => {
-    const cols = cfg.optional?.[table];
-    if (cols === undefined) return row;
+    const cols = cfg.optional?.[table] ?? [];
     const filled = { ...row };
+    if (onDemand.has(table)) {
+      for (const field of cfg.schema?.[table]?.fields ?? []) {
+        if (field.type === "bool" && filled[field.name] === undefined && ["true", "false"].includes(field.default)) {
+          filled[field.name] = field.default === "true";
+        }
+      }
+    }
     for (const col of cols) if (!(col.name in filled)) filled[col.name] = unset(col.type);
     return filled;
   };
@@ -589,35 +612,86 @@ export function createStore(base = "", cfg = {}) {
   // which fell to the snapshot path, is the first question when a region
   // re-renders more than it should.
   globalThis.__prontoViews = views;
+  function readOrder(table, order, opts) {
+    if (!onDemand.has(table) || (parseLimit(opts.filter) === undefined && parseOffset(opts.filter) === undefined)) return order;
+    const keys = (order ?? "").split(",").filter(Boolean);
+    // Preserve authored priority; append a unique tie breaker only if absent.
+    return keys.some((k) => k.split(".")[0] === keyOf(table)) ? order : [...keys, `${keyOf(table)}.asc`].join(",");
+  }
+  // A null FK binding expands to `id=eq.`. No UUID/numeric key can match
+  // it; do not send an invalid typed literal or stall its parent region.
+  function emptyKeyRead(table, opts) {
+    return onDemand.has(table) && parseFilterSpec(opts.filter)?.some((s) => {
+      if (s.op !== "eq" || s.value !== "") return false;
+      const field = cfg.schema?.[table]?.fields?.find((f) => f.name === s.col);
+      return field !== undefined && (s.col === keyOf(table) || field.ref !== undefined) &&
+        carrier().canonicalType(field.type) !== "string";
+    });
+  }
+  // Electric 1.8's expression evaluator has no comparison overloads for
+  // Pronto's scalar domains (portable_string, portable_int32, ...). Native
+  // UUIDs and null tests work; PostgREST owns other domain predicates. A
+  // limited order also compares values when its cursor refills the window.
+  const domainComparison = (table, col) => {
+    const field = cfg.schema?.[table]?.fields?.find((f) => f.name === col);
+    if (field === undefined || carrier().canonicalType(field.type) === "uuid") return false;
+    const type = cfg.carriers?.types?.[carrier().canonicalType(field.type)];
+    return type?.sql?.startsWith("portable_") === true || type?.beyond?.includes("decimal-profile") === true;
+  };
   function maintainedView(table, opts = {}, create = false) {
-    const order = opts.order;
+    const demand = onDemand.has(table);
+    const limit = parseLimit(opts.filter);
+    const offset = parseOffset(opts.filter);
+    const order = readOrder(table, opts.order, opts);
     const collection = client.collections[table];
     if (collection === undefined) return null;
     const spec = parseFilterSpec(opts.filter);
     const a = access[table];
-    const embeds = parseSelect(opts.select);
-    if (!isMaintainable(spec, embeds, a, (t) => access[t])) return null;
-    if (isWhole(spec, embeds, parseLimit(opts.filter))) return null;
+    const parsed = parseSelect(opts.select);
+    const embeds = parsed?.map((e) => {
+      const field = cfg.schema?.[table]?.fields?.find((f) => f.name === e.table && f.ref);
+      return { ...e, table: field?.ref ?? e.table, foreignKey: field?.name ?? `${e.alias}_id` };
+    }) ?? null;
+    if (demand) {
+      if (spec?.length === 0 && limit === undefined && opts.keys === undefined) throw new Error(`on-demand read needs a filter or limit: ${table}`);
+      if (spec === null || embeds === null || isRestricted(a) || embeds.some((e) => isRestricted(access[e.table]))) return null;
+      if (spec.some((s) => !["null", "notnull"].includes(s.op) && domainComparison(table, s.col))) return null;
+      if ((limit !== undefined || offset !== undefined) && (order ?? "").split(",").some((k) => domainComparison(table, k.split(".")[0]))) return null;
+      if (opts.keys !== undefined && domainComparison(table, keyOf(table))) return null;
+    } else if (!isMaintainable(spec, embeds, a, (t) => access[t])) return null;
+    if (!demand && offset === undefined && isWhole(spec, embeds, limit)) return null;
     // A column the engine would order differently from the carrier — or not at
     // all — is left to the snapshot path, which sorts by carrier and refuses
     // what has no order. An untyped column keeps the engine's own comparison.
     const typeOf = (col) => col === TXID.name ? TXID.type : cfg.schema?.[table]?.fields?.find((f) => f.name === col)?.type;
     const ordered = (col) => typeOf(col) === undefined || ordersInEngine().has(typeOf(col));
     if (!(order ?? "").split(",").filter(Boolean).every((k) => ordered(k.split(".")[0]))) return null;
+    // Range predicates must use exactly the carrier's order, never lexical
+    // comparison of int64/decimal strings. Those remain server computed.
+    if (demand && spec.some((s) => ["lt", "lte", "gt", "gte"].includes(s.op) && !ordered(s.col))) return null;
     if (embeds !== null && embeds.some((e) => client.collections[e.table] === undefined)) return null;
     // Views are keyed by the read they stand for, so the many nested regions
     // that share one — every row's comment probe on a screen — enter the graph
     // once between them.
-    const key = `${table}|${order ?? ""}|${opts.filter ?? ""}|${opts.select ?? ""}`;
+    const key = `${table}|${order ?? ""}|${opts.filter ?? ""}|${opts.select ?? ""}|${JSON.stringify(opts.keys ?? null)}`;
     const held = views.get(key);
     if (held !== undefined) {
       if (create) held.refs += 1;
       return held;
     }
-    // Only a subscription opens a view; a read joins one already open, so a
-    // server-computed region cannot leave a view behind it never closes.
+    // Eager reads reuse subscribed views. On-demand reads also acquire a
+    // temporary reference, released only after their requested subset is ready.
     if (!create) return null;
     const clause = (row, { col, op, value }) => {
+      if (demand) {
+        if (op === "null") return isNull(row[col]);
+        if (op === "notnull") return not(isNull(row[col]));
+        if (op === "true" || op === "false") return eq(row[col], op === "true");
+        const field = cfg.schema?.[table]?.fields?.find((f) => f.name === col);
+        const typed = field === undefined ? value : carrier().normalizeValue(field, value, "electric");
+        if (op === "like" || op === "ilike") return (op === "like" ? like : ilike)(row[col], value.replaceAll("*", "%"));
+        return ({ eq, neq: (a, b) => not(eq(a, b)), lt, lte, gt, gte })[op](row[col], typed);
+      }
       const num = Number(value);
       const isNum = value !== "" && !Number.isNaN(num) && String(num) === value;
       const test = isNum
@@ -641,7 +715,7 @@ export function createStore(base = "", cfg = {}) {
     for (const e of embeds) ensureIndex(e.table, keyOf(e.table), BasicIndex);
     // An ordered read with a cap can stop early, but only over a sorted index;
     // without one the engine says so and loads the whole collection to sort it.
-    if (parseLimit(opts.filter) !== undefined) {
+    if (limit !== undefined || offset !== undefined) {
       for (const k of (order ?? "").split(",").filter(Boolean)) {
         ensureIndex(table, k.split(".")[0], BTreeIndex);
       }
@@ -649,14 +723,19 @@ export function createStore(base = "", cfg = {}) {
     const view = createLiveQueryCollection({
       query: (q) => {
         let built = q.from({ row: collection });
+        if (opts.keys !== undefined) {
+          const field = cfg.schema?.[table]?.fields?.find((f) => f.name === keyOf(table));
+          const keys = opts.keys.map((v) => field === undefined ? v : carrier().normalizeValue(field, v, "electric"));
+          built = built.where(({ row }) => inArray(row[keyOf(table)], keys));
+        }
         for (const s of spec) built = built.where(({ row }) => clause(row, s));
 
         for (const k of (order ?? "").split(",").filter(Boolean)) {
           const [col, dir] = k.split(".");
           built = built.orderBy(({ row }) => row[col], dir === "desc" ? "desc" : "asc");
         }
-        const limit = parseLimit(opts.filter);
         if (limit !== undefined) built = built.limit(limit);
+        if (offset !== undefined) built = built.offset(offset);
         if (embeds.length === 0) return built;
         // A flat FK embed is a left join on `<alias>_id`, and left is what
         // makes an unmatched row bind blank instead of vanishing — the same
@@ -664,7 +743,7 @@ export function createStore(base = "", cfg = {}) {
         for (const e of embeds) {
           built = built.join(
             { [e.alias]: client.collections[e.table] },
-            (refs) => eq(refs.row[`${e.alias}_id`], refs[e.alias][keyOf(e.table)]),
+            (refs) => eq(refs.row[e.foreignKey], refs[e.alias][keyOf(e.table)]),
             "left",
           );
         }
@@ -747,19 +826,48 @@ export function createStore(base = "", cfg = {}) {
   const query = async (table, order, opts = {}) =>
     project(table, await read(table, order, opts));
 
+  // Establish every changes-only stream before taking the HTTP snapshot.
+  // Otherwise a commit between the snapshot and offset=now is in neither
+  // input and leaves the displayed result stale until an unrelated change.
+  async function serverRead(table, order, opts) {
+    const deps = [...new Set([table, ...embedDeps(opts.select, table, cfg.schema), ...accessDeps(table), ...foldSourceOf(table)])]
+      .filter((t) => onDemand.has(t) && client.collections[t] !== undefined);
+    const leases = [];
+    try {
+      for (const t of deps) leases.push(client.subscribeRawChanges(t, () => {}));
+      // Collection readiness is not a transport baseline: the adapter marks
+      // ready on errors, and Electric may suppress a replayed up-to-date after
+      // idle cleanup. Await the actual successful log boundary instead.
+      await Promise.all(deps.map((t) => client.waitForRawReady(t)));
+      return await (await http(`${crud(table)}?${search(order, opts)}`)).json();
+    } finally {
+      for (const stop of leases) stop();
+    }
+  }
+
   async function read(table, order, opts = {}) {
     await ensurePrepared(table);
+    order = readOrder(table, order ?? opts.order, opts);
+    if (onDemand.has(table) && (parseLimit(opts.filter) === 0 || emptyKeyRead(table, opts))) return [];
     // A read the engine already maintains needs no re-derivation: the view is
     // the filter and the order, kept current by the deltas that woke us.
-    const held = maintainedView(table, opts);
+    // Even a standalone read holds a query lease until its subset is ready.
+    // Collection readiness says nothing about a newly requested subset.
+    const demand = onDemand.has(table);
+    const held = maintainedView(table, { ...opts, order: order ?? opts.order }, demand);
     if (held !== null) {
-      if (!held.view.isReady?.()) await held.view.toArrayWhenReady?.();
-      return held.view.toArray;
+      try {
+        if (!held.view.isReady?.()) await held.view.toArrayWhenReady?.();
+        return held.view.toArray;
+      } finally {
+        if (demand) held.release();
+      }
     }
+    if (demand) return serverRead(table, order, opts);
     const preds = parseFilter(opts.filter, orderOf(table));
     const embeds = preds !== null ? parseSelect(opts.select) : null;
     const c =
-      embeds !== null && embeds.every((e) => client.collections[e.table] !== undefined)
+      embeds !== null && embeds.every((e) => client.collections[e.table] !== undefined && !onDemand.has(e.table))
         ? client.collections[table]
         : undefined;
     if (c !== undefined) {
@@ -788,7 +896,8 @@ export function createStore(base = "", cfg = {}) {
           : all.filter((r) => visible(table, r) && preds.every((p) => p(r)));
         if (order) rows.sort(compareBy(order, orderOf(table)));
         const limit = parseLimit(opts.filter);
-        const capped = limit === undefined ? rows : rows.slice(0, limit);
+        const offset = parseOffset(opts.filter) ?? 0;
+        const capped = limit === undefined && offset === 0 ? rows : rows.slice(offset, limit === undefined ? undefined : offset + limit);
         if (embeds.length === 0) return capped;
         return capped.map((row) => {
           const out = { ...row };
@@ -810,7 +919,7 @@ export function createStore(base = "", cfg = {}) {
     }
     // Server-computed read: fts, embed-path filter, or untranslatable
     // select/filter.
-    return (await http(`${crud(table)}?${search(order, opts)}`)).json();
+    return serverRead(table, order, opts);
   }
 
   // Server-computed regions have one blind spot the collections cannot
@@ -912,6 +1021,7 @@ export function createStore(base = "", cfg = {}) {
   }
 
   function subscribe(table, fn, opts = {}) {
+    if (onDemand.has(table) && (parseLimit(opts.filter) === 0 || emptyKeyRead(table, opts))) return () => {};
     const wakes = coalesce(fn);
     // A maintained view's own changes ARE this region's input changing —
     // computed by the engine against the actual query rather than guessed
@@ -961,7 +1071,7 @@ export function createStore(base = "", cfg = {}) {
     // row a write never named (a trigger, a computed column), so it keeps
     // asking for everything to be reconsidered.
     const embeds = parseSelect(opts.select);
-    const attributable = preds !== null && Array.isArray(embeds) && embeds.length === 0;
+    const attributable = !onDemand.has(table) && preds !== null && Array.isArray(embeds) && embeds.length === 0;
     // Anything the read cannot reason about — another dependency's table, an
     // untranslatable filter — is unconditionally the region's input changing.
     // Being unsure costs a re-read, never a miss.
@@ -971,8 +1081,20 @@ export function createStore(base = "", cfg = {}) {
       else wakes.widened();
     };
     const settle = attributable ? wakes.settled : wakes.widened;
-    const stops = deps.map((t) =>
-      watch(client.collections[t], t === table && preds !== null ? wakeMatching : wakes.widened)
+    // HTTP results need not exist in the local collection. A first remote
+    // update therefore has no previousValue, and deleting an unseen row may
+    // emit no collection change. The changes-only transport signal preserves
+    // both invalidations without loading any historical rows. Also hear the
+    // collection for local optimistic changes; subset responses never emit a
+    // transport invalidation, so a read cannot wake itself indefinitely.
+    const optimisticWake = (changes) => {
+      if (!Array.isArray(changes) || changes.some((c) =>
+        c.type === "delete" || c.value?.$synced === false || c.previousValue?.$synced === false
+      )) wakes.widened();
+    };
+    const stops = deps.flatMap((t) => onDemand.has(t)
+      ? [client.subscribeRawChanges(t, wakes.widened), watch(client.collections[t], optimisticWake)]
+      : [watch(client.collections[t], t === table && preds !== null ? wakeMatching : wakes.widened)]
     );
     for (const t of deps) {
       settleListeners.set(t, (settleListeners.get(t) ?? new Set()).add(t === table ? settle : wakes.widened));
@@ -982,6 +1104,66 @@ export function createStore(base = "", cfg = {}) {
       for (const stop of stops) stop();
       for (const t of deps) settleListeners.get(t).delete(t === table ? settle : wakes.widened);
     };
+  }
+
+  // The result of one query is authoritative only after that query's lease
+  // is ready. A ready collection may contain unrelated, previously read rows.
+  async function withSubset(table, filter, run) {
+    if (!onDemand.has(table)) return run();
+    const lease = maintainedView(table, { filter }, true);
+    if (lease === null) {
+      const preds = parseFilter(filter, orderOf(table));
+      if (preds === null) throw new Error(`cannot load mutation subset: ${table}?${filter}`);
+      // PostgREST can compare a domain the Electric evaluator cannot. Read
+      // every matching key in bounded pages, then hydrate the exact targets
+      // through Electric so optimistic changes and validation use one store.
+      const key = keyOf(table);
+      if (domainComparison(table, key)) throw new Error(`cannot hydrate mutation key domain: ${table}.${key}`);
+      const keys = [];
+      let offset = 0;
+      for (;;) {
+        const page = await serverRead(table, `${key}.asc`, {
+          select: key, filter: `${filter}&limit=500&offset=${offset}`,
+        });
+        if (!Array.isArray(page)) throw new Error(`mutation subset is not a row array: ${table}`);
+        if (page.length === 0) break;
+        for (const row of page) {
+          if (row[key] === undefined) throw new Error(`mutation subset carries no ${key}: ${table}`);
+          keys.push(row[key]);
+        }
+        // A gateway may cap below our requested 500. Only an empty next page
+        // proves completeness, rather than a short page silently ending it.
+        offset += page.length;
+      }
+      return withKeys(table, keys, () => run(client.collections[table].toArray.filter(
+        (r) => visible(table, r) && preds.every((p) => p(r)),
+      )));
+    }
+    try {
+      if (!lease.view.isReady()) await lease.view.toArrayWhenReady();
+      return await run(lease.view.toArray);
+    } finally {
+      lease.release();
+    }
+  }
+  const eqFilter = (column, value) => `${column}=eq.${encodeURIComponent(String(value))}`;
+  async function withKeys(table, keys, run) {
+    if (!onDemand.has(table) || keys.length === 0) return run();
+    // Bounded key batches avoid oversized GET URLs for a large filtered
+    // delete. Keep every lease until the write has captured its target rows.
+    const unique = [...new Set(keys)];
+    const leases = [];
+    try {
+      for (let at = 0; at < unique.length; at += 50) {
+        const lease = maintainedView(table, { keys: unique.slice(at, at + 50) }, true);
+        if (lease === null) throw new Error(`cannot load mutation targets: ${table}`);
+        leases.push(lease);
+      }
+      await Promise.all(leases.map((l) => l.view.isReady() ? undefined : l.view.toArrayWhenReady()));
+      return await run();
+    } finally {
+      for (const lease of leases) lease.release();
+    }
   }
 
   /* Every mutation below takes a batch, because the collection does its work
@@ -998,7 +1180,8 @@ export function createStore(base = "", cfg = {}) {
   // Each edit is {key, row}: the key beside the row it identifies, the way
   // patch and drop already take theirs. The row need not repeat it, and the key
   // wins where it does — a caller states identity in one place.
-  async function write(table, edits, onRefused) {
+  const write = (table, edits, onRefused) => withKeys(table, edits.map((e) => e.key), () => writeLoaded(table, edits, onRefused));
+  async function writeLoaded(table, edits, onRefused) {
     if (edits.length === 0) return;
     await ensurePrepared(table);
     const key = keyOf(table);
@@ -1008,7 +1191,7 @@ export function createStore(base = "", cfg = {}) {
     });
     const collection = client.collections[table];
     if (collection === undefined) throw new Error(`write on unsynced table: ${table}`);
-    if (!collection.isReady()) await collection.toArrayWhenReady();
+    if (!onDemand.has(table) && !collection.isReady()) await collection.toArrayWhenReady();
     // Asked once for the batch. Asked per row it is a scan of the table per
     // row, which is the quadratic term this whole shape exists to remove — and
     // the standing row itself, so the judge below does not scan for it either.
@@ -1054,7 +1237,8 @@ export function createStore(base = "", cfg = {}) {
   /** Rows asserted to be new. A form's create says so, and saying so is what
    * makes a duplicate a refusal the reader can be told about rather than a
    * silent patch of somebody else's row. */
-  async function add(table, rows, onRefused) {
+  const add = (table, rows, onRefused) => withKeys(table, rows.map((r) => r[keyOf(table)]), () => addLoaded(table, rows, onRefused));
+  async function addLoaded(table, rows, onRefused) {
     if (rows.length === 0) return;
     await ensurePrepared(table);
     const key = keyOf(table);
@@ -1069,7 +1253,8 @@ export function createStore(base = "", cfg = {}) {
   }
 
   /** Named fields of rows that are already there. */
-  async function patch(table, edits, onRefused) {
+  const patch = (table, edits, onRefused) => withKeys(table, edits.map((e) => e.key), () => patchLoaded(table, edits, onRefused));
+  async function patchLoaded(table, edits, onRefused) {
     if (edits.length === 0) return;
     await ensurePrepared(table);
     const key = keyOf(table);
@@ -1103,9 +1288,13 @@ export function createStore(base = "", cfg = {}) {
     if (keys === null) {
       throw new Error(`upsert ${table}: no natural key covers ${Object.keys(values).join(",")}`);
     }
+    const filter = keys.map((c) => eqFilter(c, values[c] ?? (c === owner ? userId() : ""))).join("&");
+    return withSubset(table, filter, () => upsertLoaded(table, values, owner, keys, onRefused));
+  }
+  async function upsertLoaded(table, values, owner, keys, onRefused) {
     const collection = client.collections[table];
     if (collection === undefined) throw new Error(`upsert on unsynced table: ${table}`);
-    if (!collection.isReady()) await collection.toArrayWhenReady();
+    if (!onDemand.has(table) && !collection.isReady()) await collection.toArrayWhenReady();
     const at = (r, c) => String(r[c] ?? (c === owner ? userId() : ""));
     const wanted = keys.map((c) => at(values, c));
     const existing = collection.toArray.find(
@@ -1120,7 +1309,8 @@ export function createStore(base = "", cfg = {}) {
     return patch(table, [{ key: existing[keyOf(table)], changes: values }], onRefused);
   }
 
-  async function drop(table, keys, onRefused) {
+  const drop = (table, keys, onRefused) => withKeys(table, keys, () => dropLoaded(table, keys, onRefused));
+  async function dropLoaded(table, keys, onRefused) {
     if (keys.length === 0) return;
     await settle(
       onSettled(client.remove(table, keys), table, keys.map((k) => String(k))),
@@ -1141,11 +1331,11 @@ export function createStore(base = "", cfg = {}) {
   // every subsequent click while other sessions are unaffected. The collection
   // holds every row this reader may see (the shape is the whole table), so it
   // is the same set, read from where the optimistic state lives.
-  async function dropWhere(table, filter, onRefused) {
-    // A limit is a cap the parser reads apart from the predicates, and a
-    // DELETE has no ordering to cap against — honoring the rest of the filter
-    // would silently widen the deletion's scope.
-    if (parseLimit(filter) !== undefined) throw new Error(`delete filter carries a limit: ${filter}`);
+  const dropWhere = async (table, filter, onRefused) => {
+    if (parseLimit(filter) !== undefined || parseOffset(filter) !== undefined) throw new Error(`delete filter carries a page bound: ${filter}`);
+    return withSubset(table, filter, () => dropWhereLoaded(table, filter, onRefused));
+  };
+  async function dropWhereLoaded(table, filter, onRefused) {
     await ensurePrepared(table);
     const preds = parseFilter(filter, orderOf(table));
     const collection = client.collections[table];
@@ -1155,7 +1345,7 @@ export function createStore(base = "", cfg = {}) {
     // path that works until it doesn't.
     if (preds === null) throw new Error(`delete filter is not translatable: ${filter}`);
     if (collection === undefined) throw new Error(`delete on unsynced table: ${table}`);
-    if (!collection.isReady()) await collection.toArrayWhenReady();
+    if (!onDemand.has(table) && !collection.isReady()) await collection.toArrayWhenReady();
     const rows = collection.toArray.filter((r) => visible(table, r) && preds.every((f) => f(r)));
     // Re-check presence at the moment of the delete: resolution and mutation
     // are separated by an await, and a concurrent settle can retire a row in

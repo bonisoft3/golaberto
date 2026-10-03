@@ -139,6 +139,18 @@ type Module = {
 let module: Module;
 let inputs: unknown;
 let seed: number;
+let planner: Iterator<unknown, unknown, unknown> | undefined;
+
+// A synchronous generator keeps only its current job across the worker
+// boundary. Its next yield can use the preceding job's frozen output.
+function advance(output?: unknown) {
+  const next = planner!.next(output);
+  if (typeof next !== "object" || next === null || typeof next.done !== "boolean") {
+    throw new TypeError("a sequential plan must yield synchronous jobs");
+  }
+  if (next.done && next.value !== undefined) throw new TypeError("a sequential plan returns no value; yield its jobs");
+  postMessage({ sequential: true, done: next.done, ...(next.done ? {} : { job: next.value }) });
+}
 
 // A Compartment's global starts with SES's own powers, harden and Compartment
 // among them; the module keeps the language alone.
@@ -165,8 +177,9 @@ function compartment(file: string, source: object) {
 
 // One request, one reply: {source, file} loads the module, compiled by the
 // host (workers.ts), and answers its reads and queries; {inputs, seed} answers
-// plan's jobs before any ran; {outputs, plan: true} its jobs given those
-// outputs; {outputs} finish's sinks. A throw is answered as {error}, its stack naming the file.
+// plan's jobs before any ran; {outputs, plan: true} an array planner's jobs
+// given those outputs; {resume} a generator's next job; {outputs} finish's
+// sinks. A throw is answered as {error}, its stack naming the file.
 addEventListener("message", async (event) => {
   const { data } = event as MessageEvent;
   try {
@@ -185,7 +198,19 @@ addEventListener("message", async (event) => {
     } else if ("inputs" in data) {
       inputs = harden(data.inputs);
       seed = data.seed;
-      postMessage({ jobs: module.plan(inputs, seed, harden([])) });
+      const jobs = module.plan(inputs, seed, harden([]));
+      const iterate = typeof jobs === "object" && jobs !== null && Symbol.iterator in jobs ? jobs[Symbol.iterator] : undefined;
+      if (typeof jobs === "object" && jobs !== null && "next" in jobs && typeof jobs.next === "function" &&
+          typeof iterate === "function" && iterate.call(jobs) === jobs) {
+        planner = jobs as Iterator<unknown, unknown, unknown>;
+        advance();
+      } else {
+        planner = undefined;
+        postMessage({ jobs });
+      }
+    } else if ("resume" in data) {
+      if (!planner) throw new TypeError("only a sequential plan can resume a job");
+      advance(harden(data.resume));
     } else if (data.plan) {
       postMessage({ jobs: module.plan(inputs, seed, harden(data.outputs)) });
     } else {

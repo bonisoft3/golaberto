@@ -60,13 +60,6 @@ CREATE POLICY team_app_user_select ON team FOR SELECT TO app_user USING (true);
 DROP POLICY IF EXISTS team_service_all ON team;
 CREATE POLICY team_service_all ON team FOR ALL TO service USING (true) WITH CHECK (true);
 
-CALL rls_protect('team_group');
-ALTER TABLE team_group ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS team_group_app_user_select ON team_group;
-CREATE POLICY team_group_app_user_select ON team_group FOR SELECT TO app_user USING (true);
-DROP POLICY IF EXISTS team_group_service_all ON team_group;
-CREATE POLICY team_group_service_all ON team_group FOR ALL TO service USING (true) WITH CHECK (true);
-
 CALL rls_protect('referee');
 ALTER TABLE referee ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS referee_app_user_select ON referee;
@@ -80,13 +73,6 @@ DROP POLICY IF EXISTS player_app_user_select ON player;
 CREATE POLICY player_app_user_select ON player FOR SELECT TO app_user USING (true);
 DROP POLICY IF EXISTS player_service_all ON player;
 CREATE POLICY player_service_all ON player FOR ALL TO service USING (true) WITH CHECK (true);
-
-CALL rls_protect('team_player');
-ALTER TABLE team_player ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS team_player_app_user_select ON team_player;
-CREATE POLICY team_player_app_user_select ON team_player FOR SELECT TO app_user USING (true);
-DROP POLICY IF EXISTS team_player_service_all ON team_player;
-CREATE POLICY team_player_service_all ON team_player FOR ALL TO service USING (true) WITH CHECK (true);
 
 CALL rls_protect('game');
 ALTER TABLE game ENABLE ROW LEVEL SECURITY;
@@ -158,13 +144,6 @@ CREATE POLICY player_rating_app_user_select ON player_rating FOR SELECT TO app_u
 DROP POLICY IF EXISTS player_rating_service_all ON player_rating;
 CREATE POLICY player_rating_service_all ON player_rating FOR ALL TO service USING (true) WITH CHECK (true);
 
-CALL rls_protect('rating_eval');
-ALTER TABLE rating_eval ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS rating_eval_app_user_select ON rating_eval;
-CREATE POLICY rating_eval_app_user_select ON rating_eval FOR SELECT TO app_user USING (true);
-DROP POLICY IF EXISTS rating_eval_service_all ON rating_eval;
-CREATE POLICY rating_eval_service_all ON rating_eval FOR ALL TO service USING (true) WITH CHECK (true);
-
 CALL rls_protect('game_card');
 ALTER TABLE game_card ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS game_card_app_user_select ON game_card;
@@ -186,19 +165,6 @@ CREATE POLICY comment_app_user_select ON comment FOR SELECT TO app_user USING (t
 DROP POLICY IF EXISTS comment_service_all ON comment;
 CREATE POLICY comment_service_all ON comment FOR ALL TO service USING (true) WITH CHECK (true);
 
-CALL rls_protect('editor');
-ALTER TABLE editor ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS editor_app_user_select ON editor;
-CREATE POLICY editor_app_user_select ON editor FOR SELECT TO app_user USING (editor.app_user_id = auth_uid());
-DROP POLICY IF EXISTS editor_app_user_insert ON editor;
-CREATE POLICY editor_app_user_insert ON editor FOR INSERT TO app_user WITH CHECK (editor.app_user_id = auth_uid());
-DROP POLICY IF EXISTS editor_app_user_update ON editor;
-CREATE POLICY editor_app_user_update ON editor FOR UPDATE TO app_user USING (editor.app_user_id = auth_uid());
-DROP POLICY IF EXISTS editor_app_user_delete ON editor;
-CREATE POLICY editor_app_user_delete ON editor FOR DELETE TO app_user USING (editor.app_user_id = auth_uid());
-DROP POLICY IF EXISTS editor_service_all ON editor;
-CREATE POLICY editor_service_all ON editor FOR ALL TO service USING (true) WITH CHECK (true);
-
 CALL rls_protect('player_stat');
 ALTER TABLE player_stat ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS player_stat_app_user_select ON player_stat;
@@ -212,5 +178,53 @@ DROP POLICY IF EXISTS phase_round_app_user_select ON phase_round;
 CREATE POLICY phase_round_app_user_select ON phase_round FOR SELECT TO app_user USING (true);
 DROP POLICY IF EXISTS phase_round_service_all ON phase_round;
 CREATE POLICY phase_round_service_all ON phase_round FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('team_group');
+ALTER TABLE team_group ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS team_group_app_user_select ON team_group;
+CREATE POLICY team_group_app_user_select ON team_group FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS team_group_service_all ON team_group;
+CREATE POLICY team_group_service_all ON team_group FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('team_player');
+ALTER TABLE team_player ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS team_player_app_user_select ON team_player;
+CREATE POLICY team_player_app_user_select ON team_player FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS team_player_service_all ON team_player;
+CREATE POLICY team_player_service_all ON team_player FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('rating_eval');
+ALTER TABLE rating_eval ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS rating_eval_app_user_select ON rating_eval;
+CREATE POLICY rating_eval_app_user_select ON rating_eval FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS rating_eval_service_all ON rating_eval;
+CREATE POLICY rating_eval_service_all ON rating_eval FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('home_game_card');
+ALTER TABLE home_game_card ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS home_game_card_app_user_select ON home_game_card;
+CREATE POLICY home_game_card_app_user_select ON home_game_card FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS home_game_card_service_all ON home_game_card;
+CREATE POLICY home_game_card_service_all ON home_game_card FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('matches_game_card');
+ALTER TABLE matches_game_card ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS matches_game_card_app_user_select ON matches_game_card;
+CREATE POLICY matches_game_card_app_user_select ON matches_game_card FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS matches_game_card_service_all ON matches_game_card;
+CREATE POLICY matches_game_card_service_all ON matches_game_card FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('editor');
+ALTER TABLE editor ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS editor_app_user_select ON editor;
+CREATE POLICY editor_app_user_select ON editor FOR SELECT TO app_user USING (editor.app_user_id = auth_uid());
+DROP POLICY IF EXISTS editor_app_user_insert ON editor;
+CREATE POLICY editor_app_user_insert ON editor FOR INSERT TO app_user WITH CHECK (editor.app_user_id = auth_uid());
+DROP POLICY IF EXISTS editor_app_user_update ON editor;
+CREATE POLICY editor_app_user_update ON editor FOR UPDATE TO app_user USING (editor.app_user_id = auth_uid());
+DROP POLICY IF EXISTS editor_app_user_delete ON editor;
+CREATE POLICY editor_app_user_delete ON editor FOR DELETE TO app_user USING (editor.app_user_id = auth_uid());
+DROP POLICY IF EXISTS editor_service_all ON editor;
+CREATE POLICY editor_service_all ON editor FOR ALL TO service USING (true) WITH CHECK (true);
 
 COMMIT;

@@ -230,5 +230,16 @@
   "home_top6": "Die ersten sechs",
   "home_recent": "Aktuelle Wettbewerbe",
   "col_title_chance": "Titel",
-  "col_title_chance_long": "Chance auf den Titel, aus den Chancen der Gruppe"
+  "col_title_chance_long": "Chance auf den Titel, aus den Chancen der Gruppe",
+  "home_best_upcoming": "Die wichtigsten nächsten Spiele",
+  "home_best_results": "Aktuelle Ergebnisse",
+  "home_selection": "Bis zu 20 Spiele aus den nächsten und vergangenen sieben Tagen, ausgewählt nach Teamstärke, Bedeutung und zeitlicher Nähe. Brasília-Zeit.",
+  "home_no_upcoming": "Keine angesetzten Spiele in den nächsten sieben Tagen.",
+  "home_no_results": "Keine Ergebnisse mit erfasster Anstoßzeit in den vergangenen sieben Tagen.",
+  "home_all_games": "Alle Spiele ›",
+  "archive_pages": "Seitennavigation",
+  "page_previous": "Zurück",
+  "page_next": "Weiter",
+  "page_label": "Seite",
+  "choice_search": "Auswahl suchen"
 }

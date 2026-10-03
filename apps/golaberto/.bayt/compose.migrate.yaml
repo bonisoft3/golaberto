@@ -1,0 +1,38 @@
+# generated from bayt.cue — do not edit
+services:
+  apps_golaberto-migrate:
+    build:
+      additional_contexts:
+        libraries_mecha-migrate-image: service:libraries_mecha-migrate-image
+        apps_golaberto-database: service:apps_golaberto-database
+      context: ..
+      dockerfile: .bayt/Dockerfile.migrate
+      target: migrate
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    depends_on:
+      apps_golaberto-database:
+        condition: service_healthy
+        restart: true
+    environment:
+      DATABASE_URL: >-
+        postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}?sslmode=disable
+    image: bayt-apps_golaberto-migrate:${BAYT_IMAGE_TAG:-latest}
+    networks:
+      default:
+        aliases:
+        - migrate
+  apps_golaberto-migrate_bayt:
+    build:
+      additional_contexts:
+        libraries_mecha-migrate-image_bayt: service:libraries_mecha-migrate-image_bayt
+        apps_golaberto-database_bayt: service:apps_golaberto-database_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.migrate
+      target: migrate_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-apps_golaberto-migrate_bayt:latest
+    scale: 0

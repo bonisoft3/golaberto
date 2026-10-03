@@ -47,20 +47,16 @@ export function fillFilter(template, resolve) {
   return template.replace(PLACEHOLDERS, (_, expr) => encodeURIComponent(String(resolve(expr) ?? "")));
 }
 
-/**
- * The row cap a filter carries, as a number; undefined when it carries none.
- *
- * Slicing locally is equivalent to letting PostgREST do it because the shape
- * is the whole table — mecha subscribes `params: {table}` with no `where` — so
- * the collection holds every row the reader may see, in the same order, and
- * the cap falls in the same place. `offset` is not read here: paging by
- * offset over a set that is arriving asynchronously is not the same question,
- * and stays the server's.
- */
-export function parseLimit(filter) {
-  const m = /(?:^|&)limit=(\d+)(?:&|$)/.exec(filter ?? "");
-  return m === null ? undefined : Number(m[1]);
+/** A nonnegative safe integer page bound, separate from row predicates. */
+function pageBound(filter, name) {
+  const parts = (filter ?? "").split("&").filter((p) => p.startsWith(`${name}=`));
+  if (parts.length !== 1) return undefined;
+  const value = parts[0].slice(name.length + 1);
+  const n = Number(value);
+  return /^\d+$/.test(value) && Number.isSafeInteger(n) ? n : undefined;
 }
+export const parseLimit = (filter) => pageBound(filter, "limit");
+export const parseOffset = (filter) => pageBound(filter, "offset");
 
 /**
  * A filter as descriptors rather than closures, so one parse serves both
@@ -80,7 +76,7 @@ export function parseFilterSpec(filter) {
     const expr = part.slice(eq + 1);
     // A cap is not a predicate: parseLimit reads it, and both read paths
     // apply it after ordering.
-    if (col === "limit" && /^\d+$/.test(expr)) continue;
+    if ((col === "limit" || col === "offset") && pageBound(filter, col) !== undefined) continue;
     if (col.includes(".")) return null; // embed-path filter — server-computed
     if (expr.startsWith("eq.")) spec.push({ col, op: "eq", value: decodeURIComponent(expr.slice(3)) });
     else if (expr.startsWith("neq.")) spec.push({ col, op: "neq", value: decodeURIComponent(expr.slice(4)) });
@@ -115,7 +111,9 @@ export function parseFilterSpec(filter) {
  * than the region shows.
  */
 export function deleteSpec(filter) {
-  if (parseLimit(filter) !== undefined) throw new Error(`delete filter carries a limit: ${filter}`);
+  if (parseLimit(filter) !== undefined || parseOffset(filter) !== undefined) {
+    throw new Error(`delete filter carries a page bound: ${filter}`);
+  }
   const spec = parseFilterSpec(filter);
   if (spec === null || spec.length === 0) throw new Error(`untranslatable delete filter: ${filter}`);
   for (const p of spec) {

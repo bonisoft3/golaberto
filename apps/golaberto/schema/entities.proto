@@ -11,11 +11,23 @@ message AppUser {
   google.protobuf.Timestamp created_at = 3 [json_name = "created_at"];
 }
 
+message ArchivePage {
+  optional string id = 1 [json_name = "id"];
+  optional string owner_id = 2 [json_name = "owner_id"];
+  optional int32 offset = 3 [json_name = "offset"];
+  optional int32 next_offset = 4 [json_name = "next_offset"];
+  optional int32 page = 5 [json_name = "page"];
+  optional string state = 6 [json_name = "state"];
+}
+
 message CatalogFilter {
   optional string id = 1 [json_name = "id"];
   optional string q = 2 [json_name = "q"];
   optional string region = 3 [json_name = "region"];
   optional string state = 4 [json_name = "state"];
+  optional int32 offset = 5 [json_name = "offset"];
+  optional int32 next_offset = 6 [json_name = "next_offset"];
+  optional int32 page = 7 [json_name = "page"];
 }
 
 message Category {
@@ -58,6 +70,9 @@ message DirectoryFilter {
   optional string id = 1 [json_name = "id"];
   optional string q = 2 [json_name = "q"];
   optional string state = 3 [json_name = "state"];
+  optional int32 offset = 4 [json_name = "offset"];
+  optional int32 next_offset = 5 [json_name = "next_offset"];
+  optional int32 page = 6 [json_name = "page"];
 }
 
 message Editor {
@@ -115,6 +130,16 @@ message GameCard {
   optional string kickoff_local = 24 [json_name = "kickoff_local"];
   optional string stadium_id = 25 [json_name = "stadium_id"];
   optional string referee_id = 26 [json_name = "referee_id"];
+  optional int32 home_upcoming_rank = 27 [json_name = "home_upcoming_rank"];
+  optional int32 home_recent_rank = 28 [json_name = "home_recent_rank"];
+  optional bool home_upcoming_group = 29 [json_name = "home_upcoming_group"];
+  optional bool home_recent_group = 30 [json_name = "home_recent_group"];
+  reserved 31;
+  reserved "show_country";
+  reserved 32;
+  reserved "home_country";
+  reserved 33;
+  reserved "away_country";
 }
 
 message GameEdit {
@@ -130,6 +155,8 @@ message GameEdit {
   optional string goal_player_id = 10 [json_name = "goal_player_id"];
   optional string home_name = 11 [json_name = "home_name"];
   optional string away_name = 12 [json_name = "away_name"];
+  optional string stadium_q = 13 [json_name = "stadium_q"];
+  optional string referee_q = 14 [json_name = "referee_q"];
 }
 
 message GameImportance {
@@ -159,6 +186,84 @@ message Group {
   optional string phase_id = 2 [json_name = "phase_id"];
   optional string name = 3 [json_name = "name"];
   optional int32 position = 4 [json_name = "position"];
+}
+
+message HomeGameCard {
+  optional string id = 1 [json_name = "id"];
+  optional string phase_id = 2 [json_name = "phase_id"];
+  optional string championship_id = 3 [json_name = "championship_id"];
+  optional int32 round = 4 [json_name = "round"];
+  optional string day = 5 [json_name = "day"];
+  google.protobuf.Timestamp kickoff = 6 [json_name = "kickoff"];
+  optional bool played = 7 [json_name = "played"];
+  optional string home_id = 8 [json_name = "home_id"];
+  optional string away_id = 9 [json_name = "away_id"];
+  optional string home_name = 10 [json_name = "home_name"];
+  optional string away_name = 11 [json_name = "away_name"];
+  optional int32 home_score = 12 [json_name = "home_score"];
+  optional int32 away_score = 13 [json_name = "away_score"];
+  optional int32 home_aet = 14 [json_name = "home_aet"];
+  optional int32 away_aet = 15 [json_name = "away_aet"];
+  optional int32 home_pen = 16 [json_name = "home_pen"];
+  optional int32 away_pen = 17 [json_name = "away_pen"];
+  optional string championship_name = 18 [json_name = "championship_name"];
+  optional string phase_name = 19 [json_name = "phase_name"];
+  optional string stadium_name = 20 [json_name = "stadium_name"];
+  optional string referee_name = 21 [json_name = "referee_name"];
+  optional int32 attendance = 22 [json_name = "attendance"];
+  optional string day_display = 23 [json_name = "day_display"];
+  optional string kickoff_local = 24 [json_name = "kickoff_local"];
+  optional string stadium_id = 25 [json_name = "stadium_id"];
+  optional string referee_id = 26 [json_name = "referee_id"];
+  optional int32 home_upcoming_rank = 27 [json_name = "home_upcoming_rank"];
+  optional int32 home_recent_rank = 28 [json_name = "home_recent_rank"];
+  optional bool home_upcoming_group = 29 [json_name = "home_upcoming_group"];
+  optional bool home_recent_group = 30 [json_name = "home_recent_group"];
+  reserved 31;
+  reserved "show_country";
+  reserved 32;
+  reserved "home_country";
+  reserved 33;
+  reserved "away_country";
+}
+
+message MatchesGameCard {
+  optional string id = 1 [json_name = "id"];
+  optional string phase_id = 2 [json_name = "phase_id"];
+  optional string championship_id = 3 [json_name = "championship_id"];
+  optional int32 round = 4 [json_name = "round"];
+  optional string day = 5 [json_name = "day"];
+  google.protobuf.Timestamp kickoff = 6 [json_name = "kickoff"];
+  optional bool played = 7 [json_name = "played"];
+  optional string home_id = 8 [json_name = "home_id"];
+  optional string away_id = 9 [json_name = "away_id"];
+  optional string home_name = 10 [json_name = "home_name"];
+  optional string away_name = 11 [json_name = "away_name"];
+  optional int32 home_score = 12 [json_name = "home_score"];
+  optional int32 away_score = 13 [json_name = "away_score"];
+  optional int32 home_aet = 14 [json_name = "home_aet"];
+  optional int32 away_aet = 15 [json_name = "away_aet"];
+  optional int32 home_pen = 16 [json_name = "home_pen"];
+  optional int32 away_pen = 17 [json_name = "away_pen"];
+  optional string championship_name = 18 [json_name = "championship_name"];
+  optional string phase_name = 19 [json_name = "phase_name"];
+  optional string stadium_name = 20 [json_name = "stadium_name"];
+  optional string referee_name = 21 [json_name = "referee_name"];
+  optional int32 attendance = 22 [json_name = "attendance"];
+  optional string day_display = 23 [json_name = "day_display"];
+  optional string kickoff_local = 24 [json_name = "kickoff_local"];
+  optional string stadium_id = 25 [json_name = "stadium_id"];
+  optional string referee_id = 26 [json_name = "referee_id"];
+  optional int32 home_upcoming_rank = 27 [json_name = "home_upcoming_rank"];
+  optional int32 home_recent_rank = 28 [json_name = "home_recent_rank"];
+  optional bool home_upcoming_group = 29 [json_name = "home_upcoming_group"];
+  optional bool home_recent_group = 30 [json_name = "home_recent_group"];
+  reserved 31;
+  reserved "show_country";
+  reserved 32;
+  reserved "home_country";
+  reserved 33;
+  reserved "away_country";
 }
 
 message Phase {
@@ -319,6 +424,10 @@ message TeamGame {
   optional string result = 14 [json_name = "result"];
   optional string day_display = 15 [json_name = "day_display"];
   optional string kickoff_local = 16 [json_name = "kickoff_local"];
+  reserved 17;
+  reserved "show_country";
+  reserved 18;
+  reserved "opponent_country";
 }
 
 message TeamGroup {

@@ -130,8 +130,17 @@ services:
         path: ../shell/handlers/count-or-null.js
         target: /srv/shell/handlers/count-or-null.js
       - action: sync+restart
+        path: ../shell/handlers/page-value.js
+        target: /srv/shell/handlers/page-value.js
+      - action: sync+restart
         path: ../shell/handlers/row-id.js
         target: /srv/shell/handlers/row-id.js
+      - action: sync+restart
+        path: ../shell/renderers/country-flag.js
+        target: /srv/shell/renderers/country-flag.js
+      - action: sync+restart
+        path: ../shell/renderers/team-badge.js
+        target: /srv/shell/renderers/team-badge.js
       - action: sync+restart
         path: ../shell/shared/catalog.css
         target: /srv/shell/shared/catalog.css
@@ -216,6 +225,12 @@ services:
       - action: sync+restart
         path: ../../../plugins/omnishell/components/wallclock.js
         target: /omnishell/components/wallclock.js
+      - action: sync+restart
+        path: ../branding/favicon.svg
+        target: /srv/shell/favicon.svg
+      - action: sync+restart
+        path: ../branding/favicon.ico
+        target: /srv/shell/favicon.ico
       - action: sync+restart
         path: ../brief.html
         target: /srv/docs/brief.html

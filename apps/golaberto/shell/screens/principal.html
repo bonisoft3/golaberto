@@ -14,53 +14,59 @@
 <h1 class="band" data-text="{msg.home_title}"></h1>
 <div class="page">
   <div class="content">
-    <p class="lead" data-text="{msg.home_lead}"></p>
+    <div class="home-games">
+      <section class="home-upcoming" aria-labelledby="home-upcoming-heading">
+        <h2 id="home-upcoming-heading" class="home-games-title" data-text="{msg.games_upcoming}"></h2>
+<div class="home-championships" data-live="home_game_card" data-filter="home_upcoming_group=is.true&amp;limit=20" data-order="home_upcoming_rank.asc" data-empty="{msg.home_no_upcoming}" data-exit-motion="none">
+  <template data-item>
+    <section class="home-championship" data-championship="{championship_id}">
+      <h3><a data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}"></span></a></h3>
+<ol class="games" data-live="home_game_card" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="championship_id=eq.{championship_id}&played=is.false&home_upcoming_rank=gt.0&limit=20" data-order="home_upcoming_rank.asc" data-empty="">
+  <template data-item>
+    <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{id}" data-played="{played}">
+      <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
+      <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></span>
+      <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
+      <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>
+    </a></li>
+  </template>
+</ol>
+    </section>
+  </template>
+</div>
+      </section>
+      <section class="home-results" aria-labelledby="home-results-heading">
+        <h2 id="home-results-heading" class="home-games-title" data-text="{msg.games_results}"></h2>
+<div class="home-championships" data-live="home_game_card" data-filter="home_recent_group=is.true&amp;limit=20" data-order="home_recent_rank.asc" data-empty="{msg.home_no_results}" data-exit-motion="none">
+  <template data-item>
+    <section class="home-championship" data-championship="{championship_id}">
+      <h3><a data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}"></span></a></h3>
+<ol class="games" data-live="home_game_card" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="championship_id=eq.{championship_id}&played=is.true&home_recent_rank=gt.0&limit=20" data-order="home_recent_rank.asc" data-empty="">
+  <template data-item>
+    <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{id}" data-played="{played}">
+      <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
+      <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></span>
+      <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
+      <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>
+    </a></li>
+  </template>
+</ol>
+    </section>
+  </template>
+</div>
+      </section>
+      <p class="more"><a data-route="jogos" data-text="{msg.home_all_games}"></a></p>
+    </div>
     <section class="feature" data-live="championship" data-filter="featured=is.true&limit=1" data-order="begins.desc" data-empty="">
       <template data-item>
         <div class="feature-body">
           <div class="feature-head">
-            <h2 data-text="{full_name}"></h2>
+            <h2><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}"></span></h2>
             <a data-route="campeonato" data-param-id="{id}" data-text="{msg.home_table_link}"></a>
           </div>
           <div class="feature-phase" data-live="phase" data-filter="championship_id=eq.{id}&limit=1" data-order="position.asc" data-empty="">
             <template data-item>
               <div class="feature-grid">
-                <div class="rounds" data-live="phase_round" data-filter="phase_id=eq.{id}" data-empty="">
-                  <template data-item>
-                    <div class="round-pair">
-                      <section class="round">
-                        <h3><span data-text="{msg.round}"></span> <span data-text="{current}"></span> <small data-text="{msg.home_results}"></small></h3>
-<ol class="games" data-live="game_card" data-filter="phase_id=eq.{phase_id}&round=eq.{current}" data-order="day.asc,kickoff.asc" data-empty="{msg.round_empty}">
-  <template data-item>
-    <li><a class="game-row" data-route="jogo" data-param-id="{id}" data-played="{played}">
-      <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
-      <span class="home" data-text="{home_name}"></span>
-      <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-      <span class="away" data-text="{away_name}"></span>
-    </a></li>
-  </template>
-</ol>
-                      </section>
-                      <div class="round-next" data-live="phase_round" data-filter="id=eq.{id}&next=not.is.null" data-empty="">
-                        <template data-item>
-                          <section class="round">
-                            <h3><span data-text="{msg.round}"></span> <span data-text="{next}"></span> <small data-text="{msg.home_upcoming}"></small></h3>
-<ol class="games" data-live="game_card" data-filter="phase_id=eq.{phase_id}&round=eq.{next}" data-order="day.asc,kickoff.asc" data-empty="{msg.round_empty}">
-  <template data-item>
-    <li><a class="game-row" data-route="jogo" data-param-id="{id}" data-played="{played}">
-      <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
-      <span class="home" data-text="{home_name}"></span>
-      <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-      <span class="away" data-text="{away_name}"></span>
-    </a></li>
-  </template>
-</ol>
-                          </section>
-                        </template>
-                      </div>
-                    </div>
-                  </template>
-                </div>
                 <div class="top" data-live="stage_group" data-filter="phase_id=eq.{id}&limit=1" data-order="position.asc,name.asc" data-empty="">
                   <template data-item>
                     <section class="top-six">
@@ -85,7 +91,7 @@
                             <template data-item>
                               <tr data-zone="{zone}">
 	                                <td class="pos" data-text="{position}"></td>
-	                                <td class="name"><a data-route="equipe" data-param-id="{team_id}" data-text="{team_name}"></a></td>
+	                                <td class="name"><a data-route="equipe" data-param-id="{team_id}"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></td>
 	                                <td class="num pts" data-text="{points}"></td>
 	                                <td class="num" data-text="{played}"></td>
 	                                <td class="num wide" data-text="{wins}"></td>
@@ -117,7 +123,7 @@
   <h2 data-text="{msg.world}"></h2>
   <ul class="champ-list" data-live="championship" data-filter="region=eq.world&limit=6" data-order="begins.desc" data-empty="{msg.home_empty}">
     <template data-item>
-      <li><a data-route="campeonato" data-param-id="{id}" data-text="{full_name}"></a></li>
+      <li><a data-route="campeonato" data-param-id="{id}"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}"></span></a></li>
     </template>
   </ul>
 </section>
@@ -125,7 +131,7 @@
   <h2 data-text="{msg.continental}"></h2>
   <ul class="champ-list" data-live="championship" data-filter="region=eq.continental&limit=6" data-order="begins.desc" data-empty="{msg.home_empty}">
     <template data-item>
-      <li><a data-route="campeonato" data-param-id="{id}" data-text="{full_name}"></a></li>
+      <li><a data-route="campeonato" data-param-id="{id}"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}"></span></a></li>
     </template>
   </ul>
 </section>
@@ -133,7 +139,7 @@
   <h2 data-text="{msg.national}"></h2>
   <ul class="champ-list" data-live="championship" data-filter="region=eq.national&limit=6" data-order="begins.desc" data-empty="{msg.home_empty}">
     <template data-item>
-      <li><a data-route="campeonato" data-param-id="{id}" data-text="{full_name}"></a></li>
+      <li><a data-route="campeonato" data-param-id="{id}"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}"></span></a></li>
     </template>
   </ul>
 </section>

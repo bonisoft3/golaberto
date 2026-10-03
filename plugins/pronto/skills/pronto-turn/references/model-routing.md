@@ -13,18 +13,19 @@ running conversation's model. Phase numbers also apply to Claude's turn command.
 | 0. Bootstrap / doctor | Commands; current lead coordinates | Commands; current lead coordinates | Commands; current lead coordinates |
 | 1. Scope / design direction | Astra, high | Opus 5, high | Gemini 3.1 Pro, High |
 | 2. Sharpen the accepted oracle / architecture | Astra, high | Opus 5, high | Gemini 3.1 Pro, High |
-| 3. Focused implementation / debugging | Terra, high | Sonnet 5, high | Gemini 3.8 Flash, Medium |
-| 4. Code review / fixes | Terra, high | Sonnet 5, high | Gemini 3.8 Flash, Medium |
-| 5. Frontend / designer / UX / QA seats and finding verification | Terra, medium | Sonnet 5, medium | Gemini 3.8 Flash, Medium |
+| 3. Focused implementation / debugging | Luna, high | Sonnet 5, high | Gemini 3.8 Flash, Medium |
+| 4. Code review / fixes | Luna, high | Sonnet 5, high | Gemini 3.8 Flash, Medium |
+| 5. Frontend / designer / UX / QA seats and finding verification | Luna, medium | Sonnet 5, medium | Gemini 3.8 Flash, Medium |
 | 5. Durable data / security / RLS / migration review and verification | Astra, high | Opus 5, high | Gemini 3.1 Pro, High |
 | 5. Cross-layer platform advice | Astra, high | Opus 5, high | Gemini 3.1 Pro, High |
-| 6. Simplify a bounded diff | Terra, medium | Sonnet 5, medium | Gemini 3.8 Flash, Medium |
+| 6. Simplify a bounded diff | Luna, medium | Sonnet 5, medium | Gemini 3.8 Flash, Medium |
 | 7. Acceptance evidence / visual judgment | Astra, high; commands and browser | Opus 5, high; commands and browser | Gemini 3.1 Pro, High; commands and browser |
 | 8. Handoff / unresolved tradeoffs | Current lead | Current lead | Current lead |
 | Any phase: file map / test inventory / finding classification | Luna, medium | Haiku 4.5 | Gemini 3.8 Flash, Medium |
 | Difficult cross-layer or high-risk escalation | Astra, high | Fable 5.1, high | Gemini 3.1 Pro, High |
 
-Codex IDs are `gpt-6-astra`, `gpt-5.6-terra`, and `gpt-5.6-luna`.
+Codex IDs are `gpt-6-astra` and `gpt-6-luna`. Luna routes use the latest
+available Luna generation (currently `gpt-6-luna`); retain each phase's effort.
 Claude IDs are `claude-opus-5`, `claude-sonnet-5`,
 `claude-haiku-4-5-20251001`, and `claude-fable-5-1`.
 

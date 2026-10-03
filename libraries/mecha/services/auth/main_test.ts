@@ -314,13 +314,13 @@ Deno.test({
 });
 
 Deno.test({
-  name: "columns, replica, params and the secret stay server-owned",
+  name: "columns, shape params and the secret stay server-owned",
   ...opts,
   async fn() {
     const { res } = await mint("article");
     const { token, where } = await res.json();
     const w = encodeURIComponent(where);
-    for (const extra of ["columns=id,body", "replica=full", "params[1]=x", "secret=guessed"]) {
+    for (const extra of ["columns=id,body", "replica=default", "params[1]=x", "secret=guessed"]) {
       const uri = `/v1/shape?table=article&where=${w}&${extra}`;
       assertEquals((await handler(shapeReq(token, uri))).status, 403);
     }
@@ -381,7 +381,7 @@ Deno.test({
     // parameter added after this gate was written, and its reach is unknown.
     const paging = `/v1/shape?table=article&where=${w}&offset=-1&live=true&handle=abc&cursor=1&experimental_live_sse=true`;
     assertEquals((await handler(shapeReq(token, paging))).status, 200);
-    for (const extra of ["subset__where=true", "table[]=app_user", "schema=other"]) {
+    for (const extra of ["subset__unknown=true", "table[]=app_user", "schema=other"]) {
       const uri = `/v1/shape?table=article&where=${w}&${extra}`;
       assertEquals((await handler(shapeReq(token, uri))).status, 403, extra);
     }

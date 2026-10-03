@@ -18,6 +18,9 @@
       },
       "apps_golaberto-database": {
         "condition": "service_healthy"
+      },
+      "apps_golaberto-migrate": {
+        "condition": "service_completed_successfully"
       }
     },
     "networks": {
@@ -28,6 +31,7 @@
       }
     },
     "restart": "on-failure",
+    "scale": 0,
     "develop": {
       "watch": [
         {
@@ -154,6 +158,8 @@
         "apps/golaberto/.bayt/compose.crud.yaml",
         "apps/golaberto/.bayt/compose.database.yaml",
         "libraries/mecha/.bayt/compose.database-image.yaml",
+        "apps/golaberto/.bayt/compose.migrate.yaml",
+        "libraries/mecha/.bayt/compose.migrate-image.yaml",
         "libraries/mecha/.bayt/compose.compute-image.yaml"
       ]
     },
@@ -186,6 +192,8 @@
         "apps/golaberto/.bayt/compose.crud.yaml",
         "apps/golaberto/.bayt/compose.database.yaml",
         "libraries/mecha/.bayt/compose.database-image.yaml",
+        "apps/golaberto/.bayt/compose.migrate.yaml",
+        "libraries/mecha/.bayt/compose.migrate-image.yaml",
         "libraries/mecha/.bayt/compose.compute-image.yaml"
       ]
     },
@@ -211,7 +219,8 @@
       "deps": [],
       "transitiveDeps": [
         "crud_outs_srcs",
-        "database_outs_srcs"
+        "database_outs_srcs",
+        "migrate_outs_srcs"
       ],
       "transitiveCrossDeps": [
         {
@@ -245,6 +254,8 @@
         "apps/golaberto/.bayt/compose.crud.yaml",
         "apps/golaberto/.bayt/compose.database.yaml",
         "libraries/mecha/.bayt/compose.database-image.yaml",
+        "apps/golaberto/.bayt/compose.migrate.yaml",
+        "libraries/mecha/.bayt/compose.migrate-image.yaml",
         "libraries/mecha/.bayt/compose.compute-image.yaml"
       ]
     }
@@ -253,15 +264,18 @@
   "emitsSrcs": true,
   "deps": [
     "crud_outs",
-    "database_outs"
+    "database_outs",
+    "migrate_outs"
   ],
   "sameProjectDeps": [
     "crud_outs",
-    "database_outs"
+    "database_outs",
+    "migrate_outs"
   ],
   "transitiveDeps": [
     "crud_outs",
-    "database_outs"
+    "database_outs",
+    "migrate_outs"
   ],
   "transitiveCrossDeps": [
     {
@@ -279,6 +293,8 @@
     "apps/golaberto/.bayt/compose.crud.yaml",
     "apps/golaberto/.bayt/compose.database.yaml",
     "libraries/mecha/.bayt/compose.database-image.yaml",
+    "apps/golaberto/.bayt/compose.migrate.yaml",
+    "libraries/mecha/.bayt/compose.migrate-image.yaml",
     "libraries/mecha/.bayt/compose.compute-image.yaml"
   ],
   "chainedDeps": [
@@ -302,6 +318,15 @@
     },
     {
       "name": "database_outs",
+      "project": "apps_golaberto",
+      "dir": "apps/golaberto",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "migrate_outs",
       "project": "apps_golaberto",
       "dir": "apps/golaberto",
       "outs": {

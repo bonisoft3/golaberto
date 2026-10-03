@@ -230,5 +230,16 @@
   "home_top6": "Los seis primeros",
   "home_recent": "Campeonatos recientes",
   "col_title_chance": "Título",
-  "col_title_chance_long": "Chance de título, de las chances del grupo"
+  "col_title_chance_long": "Chance de título, de las chances del grupo",
+  "home_best_upcoming": "Próximos partidos destacados",
+  "home_best_results": "Resultados recientes destacados",
+  "home_selection": "Hasta 20 partidos de los próximos y últimos siete días, elegidos por la fuerza de los equipos, la importancia y la proximidad del partido. Hora de Brasilia.",
+  "home_no_upcoming": "No hay partidos con horario en los próximos siete días.",
+  "home_no_results": "No hay resultados con horario registrado en los últimos siete días.",
+  "home_all_games": "Todos los partidos ›",
+  "archive_pages": "Paginación",
+  "page_previous": "Anterior",
+  "page_next": "Siguiente",
+  "page_label": "Página",
+  "choice_search": "Buscar opciones"
 }

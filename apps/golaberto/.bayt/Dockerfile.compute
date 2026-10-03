@@ -23,6 +23,7 @@ COPY --parents .bayt/compose.compute.yaml .bayt/Dockerfile.compute .bayt/bayt.co
 COPY --from=libraries_mecha-compute-image_bayt /monorepo /monorepo
 COPY --from=apps_golaberto-crud_bayt /monorepo /monorepo
 COPY --from=apps_golaberto-database_bayt /monorepo /monorepo
+COPY --from=apps_golaberto-migrate_bayt /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
 RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/apps/golaberto -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && touch -hd @${SOURCE_DATE_EPOCH:-0} /monorepo /monorepo/apps; fi

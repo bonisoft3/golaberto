@@ -4,6 +4,7 @@ services:
     build:
       additional_contexts:
         apps_golaberto-database: service:apps_golaberto-database
+        apps_golaberto-migrate: service:apps_golaberto-migrate
       context: ..
       dockerfile: .bayt/Dockerfile.crud
       target: crud
@@ -14,6 +15,8 @@ services:
       apps_golaberto-database:
         condition: service_healthy
         restart: true
+      apps_golaberto-migrate:
+        condition: service_completed_successfully
     environment:
       PGRST_DB_URI: >-
         postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}
@@ -43,6 +46,7 @@ services:
     build:
       additional_contexts:
         apps_golaberto-database_bayt: service:apps_golaberto-database_bayt
+        apps_golaberto-migrate_bayt: service:apps_golaberto-migrate_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.crud
       target: crud_bayt

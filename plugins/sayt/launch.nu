@@ -4,32 +4,32 @@
 #   sayt launch            bring up launch + deps and detach. Returns 0
 #                          when ready: healthcheck passes (server mode)
 #                          or container exits 0 (CLI mode). Tear down
-#                          with `docker compose down -v`.
+#                          with `docker compose down`.
 #   sayt launch --watch    foreground + file sync for HMR (dev loop).
 #
 # Both modes go through `compose up`. --wait conflicts with --attach-
 # dependencies / --abort-on-container-failure / --exit-code-from, so
 # they're never combined.
 use compose.nu [compose-vup]
-use tools.nu [run-docker-compose]
+use docker-config.nu [with-working-docker-config]
 
 export def --wrapped main [
 	--watch    # foreground + file sync for HMR (dev loop)
 	...args
 ] {
 	with-env { CADDY_TLS_HOST_PORT: ($env.CADDY_TLS_HOST_PORT? | default "8443") } {
-		# Hard down before up: --force-recreate alone leaves anonymous
-		# volumes and orphaned services in place.
-		run-docker-compose down -v --timeout 0 --remove-orphans
-
+		# Recreate services while preserving the database's existing volumes.
+		# A data reset is an explicit `docker compose down -v` operation.
 		# compose-vup returns the exit code (run-live semantics) — propagate.
-		let exit_code = if $watch {
-			compose-vup launch --build --force-recreate --remove-orphans --attach-dependencies --watch ...$args
-		} else {
-			# --wait detaches and returns when ready: 0 once healthy for
-			# services with healthcheck; container exit code for CLI runs.
-			compose-vup launch --build --force-recreate --remove-orphans --wait ...$args
-		}
+		let exit_code = (with-working-docker-config {
+			if $watch {
+				compose-vup launch --build --force-recreate --remove-orphans --attach-dependencies --watch ...$args
+			} else {
+				# --wait detaches and returns when ready: 0 once healthy for
+				# services with healthcheck; container exit code for CLI runs.
+				compose-vup launch --build --force-recreate --remove-orphans --wait ...$args
+			}
+		})
 		if $exit_code != 0 { exit $exit_code }
 	}
 }

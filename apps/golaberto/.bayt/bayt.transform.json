@@ -40,6 +40,16 @@
         },
         {
           "action": "sync+restart",
+          "path": "../docker/golaberto-home-games.yaml",
+          "target": "/pipelines/golaberto-home-games.yaml"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../docker/golaberto-matches-games.yaml",
+          "target": "/pipelines/golaberto-matches-games.yaml"
+        },
+        {
+          "action": "sync+restart",
           "path": "../docker/golaberto-player-stats.yaml",
           "target": "/pipelines/golaberto-player-stats.yaml"
         },
@@ -86,6 +96,26 @@
       {
         "from": null,
         "srcs": [
+          "docker/golaberto-home-games.yaml"
+        ],
+        "dst": "/pipelines/golaberto-home-games.yaml",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "docker/golaberto-matches-games.yaml"
+        ],
+        "dst": "/pipelines/golaberto-matches-games.yaml",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
           "docker/golaberto-player-stats.yaml"
         ],
         "dst": "/pipelines/golaberto-player-stats.yaml",
@@ -113,6 +143,8 @@
       "--no-api",
       "/pipelines/golaberto-standings.yaml",
       "/pipelines/golaberto-game-cards.yaml",
+      "/pipelines/golaberto-home-games.yaml",
+      "/pipelines/golaberto-matches-games.yaml",
       "/pipelines/golaberto-player-stats.yaml",
       "/pipelines/golaberto-rounds.yaml"
     ]
@@ -125,6 +157,8 @@
     "globs": [
       "docker/golaberto-standings.yaml",
       "docker/golaberto-game-cards.yaml",
+      "docker/golaberto-home-games.yaml",
+      "docker/golaberto-matches-games.yaml",
       "docker/golaberto-player-stats.yaml",
       "docker/golaberto-rounds.yaml"
     ],
@@ -174,7 +208,9 @@
         "apps/golaberto/.bayt/compose.redis.yaml",
         "apps/golaberto/.bayt/compose.crud.yaml",
         "apps/golaberto/.bayt/compose.database.yaml",
-        "libraries/mecha/.bayt/compose.database-image.yaml"
+        "libraries/mecha/.bayt/compose.database-image.yaml",
+        "apps/golaberto/.bayt/compose.migrate.yaml",
+        "libraries/mecha/.bayt/compose.migrate-image.yaml"
       ]
     },
     "outs": {
@@ -206,7 +242,9 @@
         "apps/golaberto/.bayt/compose.redis.yaml",
         "apps/golaberto/.bayt/compose.crud.yaml",
         "apps/golaberto/.bayt/compose.database.yaml",
-        "libraries/mecha/.bayt/compose.database-image.yaml"
+        "libraries/mecha/.bayt/compose.database-image.yaml",
+        "apps/golaberto/.bayt/compose.migrate.yaml",
+        "libraries/mecha/.bayt/compose.migrate-image.yaml"
       ]
     },
     "srcs": {
@@ -222,6 +260,8 @@
         "globs": [
           "docker/golaberto-standings.yaml",
           "docker/golaberto-game-cards.yaml",
+          "docker/golaberto-home-games.yaml",
+          "docker/golaberto-matches-games.yaml",
           "docker/golaberto-player-stats.yaml",
           "docker/golaberto-rounds.yaml"
         ],
@@ -246,7 +286,9 @@
         "apps/golaberto/.bayt/compose.redis.yaml",
         "apps/golaberto/.bayt/compose.crud.yaml",
         "apps/golaberto/.bayt/compose.database.yaml",
-        "libraries/mecha/.bayt/compose.database-image.yaml"
+        "libraries/mecha/.bayt/compose.database-image.yaml",
+        "apps/golaberto/.bayt/compose.migrate.yaml",
+        "libraries/mecha/.bayt/compose.migrate-image.yaml"
       ]
     }
   },
@@ -270,7 +312,9 @@
     "apps/golaberto/.bayt/compose.redis.yaml",
     "apps/golaberto/.bayt/compose.crud.yaml",
     "apps/golaberto/.bayt/compose.database.yaml",
-    "libraries/mecha/.bayt/compose.database-image.yaml"
+    "libraries/mecha/.bayt/compose.database-image.yaml",
+    "apps/golaberto/.bayt/compose.migrate.yaml",
+    "libraries/mecha/.bayt/compose.migrate-image.yaml"
   ],
   "chainedDeps": [
     {

@@ -11,6 +11,11 @@
 .home-phase small { margin-inline-start: var(--sp-sm); font-size: var(--type-label); color: var(--secondary); }
 .home-championship .game-row { grid-template-columns: 3.5em minmax(0, 1fr) 4.5em minmax(0, 1fr); grid-template-areas: "when home score away"; }
 .home-championship .home, .home-championship .away { overflow-wrap: anywhere; }
+.home-championship .team-name { font-weight: 400; color: var(--secondary); }
+.home-championship [data-highlighted="true"] .team-name { font-weight: 600; color: var(--primary); }
+.home-championship .score { font-weight: 400; color: var(--secondary); }
+.home-championship [data-highlighted="true"] .score { font-weight: 700; color: var(--accent); }
+.home-championship .score b, .home-championship .score i { font-weight: inherit; color: inherit; }
 .feature-body { display: flex; flex-direction: column; gap: var(--sp-md); }
 .feature-head {
   display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--sp-sm) var(--sp-md);

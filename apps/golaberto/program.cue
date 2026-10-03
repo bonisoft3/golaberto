@@ -33,6 +33,9 @@ _normalizedGameFlagsUpgrade: strings.Join(strings.Split(strings.Join(strings.Spl
 _homeReferenceSql: string @embed(file="services/database/sql/020_home_reference_order.sql", type=text)
 _homeReferenceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeReferenceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
+_homeHighlightsSql: string @embed(file="services/database/sql/021_home_highlights.sql", type=text)
+_homeHighlightsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeHighlightsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
 _routePerformanceSql: string @embed(file="services/database/sql/018_route_performance.sql", type=text)
 _routePerformanceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_routePerformanceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
@@ -593,6 +596,7 @@ code: pronto.#App & {
 				{ordinal: 31, name: "show_country", type: "bool", default: "false", retired: true},
 				{ordinal: 32, name: "home_country", type: "string", default: "''", retired: true},
 				{ordinal: 33, name: "away_country", type: "string", default: "''", retired: true},
+				{ordinal: 34, name: "home_highlighted", type: "bool", default: "false"},
 			]
 			indexes: [{on: "championship_id"}]
 		}
@@ -874,6 +878,7 @@ code: pronto.#App & {
 		{name: "018_route_performance.sql", src: "services/database/sql/018_route_performance.sql"},
 		{name: "019_normalized_game_flags.sql", src: "services/database/sql/019_normalized_game_flags.sql"},
 		{name: "020_home_reference_order.sql", src: "services/database/sql/020_home_reference_order.sql"},
+		{name: "021_home_highlights.sql", src: "services/database/sql/021_home_highlights.sql"},
 		// Large archive fixtures are copied at build, never expanded through CUE.
 		{name: "900_seed.sql", src: "services/database/sql/900_seed.sql"},
 	]
@@ -888,6 +893,7 @@ code: pronto.#App & {
 	state: migrations: "018_route_performance": {operations: [{sql: {up: _routePerformanceUpgrade, onComplete: true}}]}
 	state: migrations: "019_normalized_game_flags": {operations: [{sql: {up: _normalizedGameFlagsUpgrade, onComplete: true}}]}
 	state: migrations: "020_home_reference_order": {operations: [{sql: {up: _homeReferenceUpgrade, onComplete: true}}]}
+	state: migrations: "021_home_highlights": {operations: [{sql: {up: _homeHighlightsUpgrade, onComplete: true}}]}
 	// The numeric stage (ir decision-chances).
 	// The chances read each game's power from team_rating, so they rerun
 	// whenever the ratings change.
@@ -1438,7 +1444,7 @@ code: pronto.#App & {
 			}
 			"test-home-games": {
 				of: "principal"
-				says: "upcoming fixtures and recent results lead the home page in server rank order under shared date headings and phase subheadings, and open their games"
+				says: "upcoming fixtures and recent results lead the home page in server rank order under shared dates and phase headings, emphasize the selected important games and open their details"
 				given: {upcoming: true, recent: true}
 				when: "arrive"
 				then: "output.upcoming.size() > 0 && output.recent.size() > 0"

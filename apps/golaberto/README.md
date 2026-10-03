@@ -63,7 +63,14 @@ competitions. It follows the original site's team-strength, match-importance
 and proximity ranking. Upcoming fixtures span three hours ago to fourteen days
 ahead; played results use fourteen days on either side of the clock shifted back
 three hours, as in the reference. Both feeds refresh every 30 seconds and retain
-global rank order under shared date headings and phase headings. Dates and
+global rank order under shared date headings and phase headings. Each feed
+highlights the union of its five displayed games with greatest raw quality
+and the greatest weighted-quality game per phase and date among eligible
+candidates. Important team names use the primary color and semibold weight,
+while scores and separators use the theme accent and bold weight. Ordinary
+names and scores use the quieter secondary color and normal weight. Highlight
+flags belong only to the bounded home projection and refresh atomically.
+Dates and
 kickoff times use Brasília time. The featured championship's
 table and the championship catalogue follow the game feeds.
 

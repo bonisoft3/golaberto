@@ -165,10 +165,11 @@ _catalogMachine: json.Marshal({
 	      <h4 class="home-phase"><span hidden data-live="home_game_card" data-filter="id=eq.{previous}" data-empty="" data-exit-motion="none" data-project='{"same_day":{"eq":["day","{day}"]},"same_phase":{"eq":["phase_id","{phase_id}"]},"is_first":{"eq":["id","{id}"]}}'><template data-item><span class="home-phase-context" data-same-day="{same_day}" data-same-phase="{same_phase}" data-first="{is_first}"></span></template></span><a class="home-phase-label" data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}"></span> <small data-text="{phase_name}"></small></a></h4>
 	"""}, ""][0]
 	_itemAttributes: [if G.homeFeed != "" {#" class="home-championship" data-championship="{championship_id}" data-phase="{phase_id}""#}, ""][0]
+	_highlightAttribute: [if G.homeFeed != "" {#" data-highlighted="{home_highlighted}""#}, ""][0]
 	out:    """
 		<ol class="\(G.cls)" data-live="\(G.table)" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="\(G.filter)" data-order="\(G.order)" data-empty="\(G.empty)"\(G._project)\(G._exitMotion)>
 		  <template data-item>
-		    <li\(G._itemAttributes)>\(G._dayHeading)\(G._phaseHeading)<a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{id}" data-played="{played}">
+		    <li\(G._itemAttributes)>\(G._dayHeading)\(G._phaseHeading)<a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{id}" data-played="{played}"\(G._highlightAttribute)>
 		      <span class="when"><span class="\(G._dayClass)" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>\(G._where)
 		      <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></span>
 		      <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>

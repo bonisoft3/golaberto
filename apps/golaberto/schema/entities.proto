@@ -225,6 +225,7 @@ message HomeGameCard {
   reserved "home_country";
   reserved 33;
   reserved "away_country";
+  optional bool home_highlighted = 34 [json_name = "home_highlighted"];
 }
 
 message MatchesGameCard {

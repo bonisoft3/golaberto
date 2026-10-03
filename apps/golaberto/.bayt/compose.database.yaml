@@ -70,6 +70,9 @@ services:
         path: ../services/database/migrations/020_home_reference_order.sql
         target: /docker-entrypoint-initdb.d
       - action: rebuild
+        path: ../services/database/migrations/021_home_highlights.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
         path: ../services/database/migrations/900_seed.sql
         target: /docker-entrypoint-initdb.d
     environment:

@@ -1526,6 +1526,11 @@
         "name": "away_country",
         "type": "string",
         "retired": true
+      },
+      "34": {
+        "name": "home_highlighted",
+        "type": "bool",
+        "retired": false
       }
     }
   },

@@ -19,7 +19,7 @@
 :is(.game-row, .scoreboard) .home:has(.team-icons) { grid-template-columns: minmax(0, 1fr) auto; }
 :is(.game-row, .scoreboard) .away:has(.team-icons) { grid-template-columns: auto minmax(0, 1fr); }
 .team-name { min-width: 0; overflow-wrap: anywhere; }
-.team-icons { display: flex; align-items: center; gap: var(--sp-xs); }
+.team-icons { display: flex; align-items: center; gap: var(--sp-sm); }
 .team-icons .archive-icon { width: 15px; height: 15px; margin: 0; }
 :is(.game-row, .scoreboard):not([data-show-country="true"]) .team-flag { display: none; }
 

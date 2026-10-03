@@ -2870,6 +2870,12 @@
           "name": "home_recent_group",
           "type": "bool",
           "required": true
+        },
+        {
+          "default": "false",
+          "name": "home_highlighted",
+          "type": "bool",
+          "required": true
         }
       ]
     },
@@ -3834,6 +3840,7 @@
     "services/database/migrations/018_route_performance.sql",
     "services/database/migrations/019_normalized_game_flags.sql",
     "services/database/migrations/020_home_reference_order.sql",
+    "services/database/migrations/021_home_highlights.sql",
     "services/database/migrations/900_seed.sql"
   ],
   "pipelines": [

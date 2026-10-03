@@ -225,6 +225,98 @@ test("test-home-games: fixtures and results lead the page, retain competition an
   }
 });
 
+test("test-home-games: important team names and accent scores update live in both feeds", async () => {
+  await psql(`CREATE TABLE home_highlight_acceptance_backup AS
+    SELECT id,kickoff,played,home_score,away_score FROM game_card;
+    CREATE TABLE home_highlight_acceptance_fixture AS
+    WITH chosen AS (SELECT phase_id FROM game_card GROUP BY phase_id HAVING count(*)>=16 ORDER BY phase_id LIMIT 1)
+    SELECT id,home_id,away_id,row_number() OVER(ORDER BY id)::int AS n FROM game_card
+      WHERE phase_id=(SELECT phase_id FROM chosen) ORDER BY id LIMIT 16;
+    CREATE TABLE home_highlight_rating_backup AS SELECT id,team_id,measure_date,offense,defense,rating FROM team_rating
+      WHERE team_id IN (SELECT home_id FROM home_highlight_acceptance_fixture UNION SELECT away_id FROM home_highlight_acceptance_fixture);
+    CREATE TABLE home_highlight_importance_backup AS SELECT id,home,away FROM game_importance
+      WHERE id IN (SELECT id FROM home_highlight_acceptance_fixture)`);
+  const verify = async (page: Page) => {
+    const expected = JSON.parse(await psql(`SELECT json_agg(json_build_object('id',id,'highlighted',home_highlighted)
+      ORDER BY played,home_upcoming_rank,home_recent_rank) FROM home_game_card`));
+    await page.waitForFunction((rows: Array<{id:string;highlighted:boolean}>) => rows.every(row =>
+      document.querySelector(`.home-games .game-row[href$='/${row.id}']`)?.getAttribute('data-highlighted')===String(row.highlighted)), expected);
+    const actual = await page.locator('.home-games .game-row').evaluateAll((rows: Element[]) => rows.map(row => ({
+      id: row.getAttribute('href')?.split('/').pop(), highlighted: row.getAttribute('data-highlighted')==='true',
+      weights: Array.from(row.querySelectorAll('.score b, .score i')).map(el => getComputedStyle(el).fontWeight),
+      colors: Array.from(row.querySelectorAll('.score b, .score i')).map(el => getComputedStyle(el).color),
+      names: Array.from(row.querySelectorAll('.team-name')).map(el => ({weight:getComputedStyle(el).fontWeight,color:getComputedStyle(el).color})),
+      appearance: (() => {
+        const score = row.querySelector('.score')!;
+        const style = getComputedStyle(score);
+        return {outline:style.outlineStyle, primary:getComputedStyle(row).color,
+          accent:getComputedStyle(document.querySelector('.home-phase a')!).color,
+          secondary:getComputedStyle(row.querySelector('.when')!).color,
+          border:style.borderTopWidth,
+          fits:score.getBoundingClientRect().left>=row.querySelector('.home')!.getBoundingClientRect().right
+            && score.getBoundingClientRect().right<=row.querySelector('.away')!.getBoundingClientRect().left};
+      })(),
+      star: row.textContent?.includes('★'),
+    })));
+    assertEquals(actual.map(({id,highlighted}: {id:string;highlighted:boolean}) => ({id,highlighted})),expected);
+    for (const row of actual) {
+      assert(row.weights.every((weight: string) => weight===(row.highlighted?'700':'400')), 'only highlighted scores and separators are bold');
+      assert(row.names.every((name: {weight:string;color:string}) =>
+        name.weight===(row.highlighted?'600':'400') && name.color===(row.highlighted?row.appearance.primary:row.appearance.secondary)),
+        'both team names follow importance in weight and color');
+      assert(row.colors.every((color: string) => color===(row.highlighted?row.appearance.accent:row.appearance.secondary)), 'the whole score, including x, follows importance');
+      assertEquals(row.appearance.outline,'none', 'scores have no outline');
+      assertEquals(row.appearance.border,'0px', 'scores have no border');
+      assert(row.appearance.fits, 'scores stay clear of the neighboring teams and badges');
+      assert(!row.star, 'score emphasis has no star');
+    }
+    for (const section of ['.home-upcoming','.home-results']) {
+      assert(await page.locator(`${section} [data-highlighted='true']`).count()>0);
+      assert(await page.locator(`${section} [data-highlighted='false']`).count()>0);
+    }
+    assert(await page.evaluate(() => document.documentElement.scrollWidth<=innerWidth), 'highlighting fits the viewport');
+  };
+  try {
+    assertEquals(await psql('SELECT count(*) FROM home_highlight_acceptance_fixture'),'16');
+    await psql(`DELETE FROM team_rating WHERE team_id IN
+        (SELECT home_id FROM home_highlight_acceptance_fixture UNION SELECT away_id FROM home_highlight_acceptance_fixture);
+      INSERT INTO team_rating(id,team_id,measure_date,offense,defense,rating)
+        SELECT gen_random_uuid(),team_id,(now() AT TIME ZONE 'America/Sao_Paulo')::date,1,1,50
+        FROM (SELECT home_id AS team_id FROM home_highlight_acceptance_fixture UNION SELECT away_id FROM home_highlight_acceptance_fixture) teams;
+      UPDATE game_card SET kickoff=NULL;
+      UPDATE game_card g SET played=f.n>8,home_score=99,away_score=99,
+        kickoff=(date_trunc('day',now() AT TIME ZONE 'America/Sao_Paulo') AT TIME ZONE 'America/Sao_Paulo')
+          +interval '12 hours'+CASE WHEN f.n<=8 THEN interval '1 day' ELSE interval '-1 day' END
+          +interval '1 minute'*f.n
+        FROM home_highlight_acceptance_fixture f WHERE f.id=g.id;
+      INSERT INTO game_importance(id,home,away) SELECT id,0,0 FROM home_highlight_acceptance_fixture
+        ON CONFLICT(id) DO UPDATE SET home=0,away=0;
+      SELECT refresh_home_games()`);
+    for (const opts of [{width:390},{width:1366,dark:true}]) {
+      const page=await open('/',opts);
+      await page.waitForFunction(() => document.querySelectorAll('.home-games .game-row').length===16);
+      await verify(page);
+      const changed=await psql('SELECT id FROM home_game_card WHERE NOT home_highlighted ORDER BY id LIMIT 1');
+      await psql(`UPDATE game_importance SET home=1000000,away=1000000 WHERE id='${changed}'; SELECT refresh_home_games()`);
+      await page.locator(`.home-games .game-row[href$='/${changed}'][data-highlighted='true']`).waitFor({timeout:STREAM_MS});
+      await verify(page);
+      await psql(`UPDATE game_importance SET home=0,away=0 WHERE id='${changed}'; SELECT refresh_home_games()`);
+      await page.locator(`.home-games .game-row[href$='/${changed}'][data-highlighted='false']`).waitFor({timeout:STREAM_MS});
+      await verify(page);
+    }
+  } finally {
+    await psql(`DELETE FROM game_importance WHERE id IN (SELECT id FROM home_highlight_acceptance_fixture);
+      INSERT INTO game_importance(id,home,away) SELECT id,home,away FROM home_highlight_importance_backup;
+      DELETE FROM team_rating WHERE team_id IN
+        (SELECT home_id FROM home_highlight_acceptance_fixture UNION SELECT away_id FROM home_highlight_acceptance_fixture);
+      INSERT INTO team_rating(id,team_id,measure_date,offense,defense,rating) SELECT * FROM home_highlight_rating_backup;
+      UPDATE game_card g SET kickoff=b.kickoff,played=b.played,home_score=b.home_score,away_score=b.away_score
+        FROM home_highlight_acceptance_backup b WHERE g.id=b.id;
+      DROP TABLE home_highlight_rating_backup,home_highlight_importance_backup,home_highlight_acceptance_fixture,home_highlight_acceptance_backup;
+      SELECT refresh_home_games()`);
+  }
+});
+
 test("test-home-games: same-day games share dates and live edits regroup both feeds", async () => {
   const fixtures: Array<{ id: string; played: boolean; championship: string }> = JSON.parse(await psql(`
     WITH candidates AS (

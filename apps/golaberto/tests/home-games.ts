@@ -211,7 +211,7 @@ Deno.test("the homepage projection contains only both selected feeds and replay 
     SELECT json_build_object('upcoming', (SELECT count(*) FROM home_game_card WHERE home_upcoming_rank > 0),
       'recent', (SELECT count(*) FROM home_game_card WHERE home_recent_rank > 0),
       'mismatch', (SELECT count(*) FROM home_game_card h JOIN game_card g USING(id)
-        WHERE (to_jsonb(h)-ARRAY['txid', 'day', 'day_display', 'show_country', 'home_country', 'away_country'])
+        WHERE (to_jsonb(h)-ARRAY['txid', 'day', 'day_display', 'show_country', 'home_country', 'away_country', 'home_highlighted'])
           IS DISTINCT FROM (to_jsonb(g)-ARRAY['txid', 'day', 'day_display', 'show_country', 'home_country', 'away_country'])),
       'badDays', (SELECT count(*) FROM home_game_card h WHERE h.day IS DISTINCT FROM (h.kickoff AT TIME ZONE 'America/Sao_Paulo')::date),
       'replayWrites', (SELECT count(*) FROM home_game_card h JOIN home_versions v USING(id) WHERE h.ctid::text<>v.version),
@@ -327,4 +327,125 @@ Deno.test("an overlapping clock refresh skips work while the first transaction o
     if (!status.success) throw new Error(await errors);
     await errors;
   }
+});
+
+Deno.test("highlights use raw top five within selected games plus one weighted phase-day winner", async () => {
+  assertEquals(await query(`
+    UPDATE game_card g SET played=false,
+      phase_id=(SELECT id FROM phase ORDER BY id LIMIT 1),
+      kickoff=CASE WHEN f.n<=5 THEN ${clock}+interval '13 days'
+        WHEN f.n<=20 THEN ${clock}+interval '1 hour'
+        ELSE ${clock}+interval '13 days' END
+      FROM fixture f WHERE f.id=g.id;
+    INSERT INTO game_importance(id,home,away)
+      SELECT id, CASE WHEN n<=5 THEN 100 ELSE 0 END, CASE WHEN n<=5 THEN 100 ELSE 0 END
+      FROM fixture;
+    SELECT json_build_object(
+      'ranked', (SELECT json_agg(f.n ORDER BY s.feed_rank) FROM home_game_selection(${clock}) s JOIN fixture f ON f.id=s.game_id),
+      'highlighted', (SELECT json_agg(f.n ORDER BY f.n) FROM home_game_selection(${clock}) s JOIN fixture f ON f.id=s.game_id WHERE s.highlighted),
+      'weightedTopFive', (SELECT json_agg(n ORDER BY feed_rank) FROM (SELECT f.n,s.feed_rank FROM home_game_selection(${clock}) s JOIN fixture f ON f.id=s.game_id ORDER BY s.feed_rank LIMIT 5) first_five));
+  `), { ranked: Array.from({ length: 15 }, (_, n) => n + 6).concat([1,2,3,4,5]), highlighted: [1,2,3,4,5,20], weightedTopFive: [6,7,8,9,10] });
+});
+
+Deno.test("phase-day winners are independent, deterministic on ties, and zero ties do not promote excluded winners", async () => {
+  assertEquals(await query(`
+    DELETE FROM team_rating;
+    UPDATE game_card g SET played=false,
+      phase_id=(SELECT id FROM phase ORDER BY id OFFSET ((f.n-1)/4) LIMIT 1),
+      kickoff=${clock}+interval '1 hour' + interval '1 day' * (((f.n-1)%4)/2)
+      FROM fixture f WHERE f.n<=8 AND f.id=g.id;
+    UPDATE game_card g SET kickoff=NULL FROM fixture f WHERE f.n>8 AND f.id=g.id;
+    SELECT json_build_object(
+      'highlights', (SELECT json_agg(f.n ORDER BY f.n) FROM home_game_selection(${clock}) s JOIN fixture f ON f.id=s.game_id WHERE s.highlighted),
+      'winners', (SELECT json_agg(f.n ORDER BY f.n) FROM home_game_selection(${clock}) s JOIN fixture f ON f.id=s.game_id WHERE s.highlighted AND f.n IN (2,4,6,8)),
+      'selected', (SELECT json_agg(f.n ORDER BY s.feed_rank) FROM home_game_selection(${clock}) s JOIN fixture f ON f.id=s.game_id));
+  `), { highlights: [1,2,3,4,5,6,8], winners: [2,4,6,8], selected: [1,2,5,6,3,4,7,8] });
+  assertEquals(await query(`
+    DELETE FROM team_rating;
+    UPDATE game_card g SET played=false,phase_id=(SELECT id FROM phase ORDER BY id LIMIT 1),kickoff=${clock}+interval '1 hour'
+      FROM fixture f WHERE f.id=g.id;
+    SELECT json_build_object('selected',count(*),
+      'winnerSelected',bool_or(s.game_id=(SELECT id FROM fixture WHERE n=30)),
+      'highlighted',json_agg(f.n ORDER BY f.n) FILTER (WHERE s.highlighted))
+      FROM home_game_selection(${clock}) s JOIN fixture f ON f.id=s.game_id;
+  `), { selected: 20, winnerSelected: false, highlighted: [1,2,3,4,5] });
+});
+
+Deno.test("played and upcoming feeds choose their raw-five sets and phase-day winners independently", async () => {
+  assertEquals(await query(`
+    UPDATE game_card g SET phase_id=(SELECT id FROM phase ORDER BY id LIMIT 1),
+      played=f.n>6,
+      kickoff=CASE WHEN f.n<=6 THEN ${clock}+interval '1 hour' ELSE ${clock}-interval '1 hour' END
+      FROM fixture f WHERE f.n<=12 AND f.id=g.id;
+    UPDATE game_card g SET kickoff=NULL FROM fixture f WHERE f.n>12 AND f.id=g.id;
+    SELECT json_build_object(
+      'upcoming', (SELECT json_agg(f.n ORDER BY f.n) FROM home_game_selection(${clock}) s JOIN fixture f ON f.id=s.game_id WHERE NOT s.is_played AND s.highlighted),
+      'played', (SELECT json_agg(f.n ORDER BY f.n) FROM home_game_selection(${clock}) s JOIN fixture f ON f.id=s.game_id WHERE s.is_played AND s.highlighted),
+      'upcomingCount', (SELECT count(*) FROM home_game_selection(${clock}) WHERE NOT is_played),
+      'playedCount', (SELECT count(*) FROM home_game_selection(${clock}) WHERE is_played));
+  `), { upcoming: [1,2,3,4,5,6], played: [7,8,9,10,11,12], upcomingCount: 6, playedCount: 6 });
+});
+
+Deno.test("live importance changes highlights without changing selected membership or feed order", async () => {
+  assertEquals(await query(`
+    UPDATE game_card g SET played=false, phase_id=(SELECT id FROM phase ORDER BY id LIMIT 1),
+      kickoff=${clock}+interval '1 hour' * f.n FROM fixture f WHERE f.n<=6 AND f.id=g.id;
+    UPDATE game_card g SET kickoff=NULL FROM fixture f WHERE f.n>6 AND f.id=g.id;
+    CREATE TEMP TABLE before_selection AS
+      SELECT game_id,feed_rank,highlighted FROM home_game_selection(${clock});
+    INSERT INTO game_importance(id,home,away)
+      SELECT id, CASE n WHEN 6 THEN 1 ELSE 0.1 END, CASE n WHEN 6 THEN 1 ELSE 0.1 END
+      FROM fixture WHERE n IN (1,6);
+    CREATE TEMP TABLE after_selection AS
+      SELECT game_id,feed_rank,highlighted FROM home_game_selection(${clock});
+    SELECT json_build_object('sameOrder', NOT EXISTS (
+        (SELECT game_id,feed_rank FROM before_selection EXCEPT SELECT game_id,feed_rank FROM after_selection)
+        UNION ALL
+        (SELECT game_id,feed_rank FROM after_selection EXCEPT SELECT game_id,feed_rank FROM before_selection)),
+      'beforeSix', (SELECT highlighted FROM before_selection s JOIN fixture f ON f.id=s.game_id WHERE f.n=6),
+      'afterSix', (SELECT highlighted FROM after_selection s JOIN fixture f ON f.id=s.game_id WHERE f.n=6),
+      'beforeFive', (SELECT highlighted FROM before_selection s JOIN fixture f ON f.id=s.game_id WHERE f.n=5),
+      'afterFive', (SELECT highlighted FROM after_selection s JOIN fixture f ON f.id=s.game_id WHERE f.n=5));
+  `), { sameOrder: true, beforeSix: false, afterSix: true, beforeFive: true, afterFive: false });
+});
+
+Deno.test("refresh writes only highlight changes, replay is a no-op, and display copying preserves the destination highlight", async () => {
+  assertEquals(await query(`
+    UPDATE game_card g SET played=false,phase_id=(SELECT id FROM phase ORDER BY id LIMIT 1),
+      kickoff=now()+interval '1 hour' * f.n FROM fixture f WHERE f.n<=6 AND f.id=g.id;
+    UPDATE game_card g SET kickoff=NULL FROM fixture f WHERE f.n>6 AND f.id=g.id;
+    SELECT refresh_home_games();
+    UPDATE home_game_card SET home_highlighted=false WHERE id=(SELECT id FROM fixture WHERE n=1);
+    CREATE TEMP TABLE home_versions AS SELECT id,ctid::text version FROM home_game_card;
+    SELECT refresh_home_games();
+    DO $$ BEGIN IF (SELECT home_highlighted FROM home_game_card WHERE id=(SELECT id FROM fixture WHERE n=1)) IS DISTINCT FROM true
+      THEN RAISE EXCEPTION 'refresh did not repair a highlight'; END IF; END $$;
+    CREATE TEMP TABLE refreshed_versions AS SELECT id,ctid::text version FROM home_game_card;
+    SELECT refresh_home_games();
+    DO $$ BEGIN IF EXISTS (SELECT 1 FROM home_game_card h JOIN refreshed_versions v USING(id) WHERE h.ctid::text<>v.version)
+      THEN RAISE EXCEPTION 'unchanged refresh rewrote home cards'; END IF; END $$;
+    CREATE TEMP TABLE refresh_write_counts AS SELECT
+      (SELECT count(*) FROM home_game_card h JOIN home_versions v USING(id) WHERE h.ctid::text<>v.version) AS old_writes,
+      (SELECT count(*) FROM home_game_card h JOIN refreshed_versions v USING(id) WHERE h.ctid::text<>v.version) AS replay_writes;
+    UPDATE home_game_card SET home_highlighted=false WHERE id=(SELECT id FROM fixture WHERE n=2);
+    UPDATE game_card SET home_name='Preserve home highlight edit' WHERE id=(SELECT id FROM fixture WHERE n=2);
+    SELECT json_build_object('preserved', (SELECT home_highlighted FROM home_game_card WHERE id=(SELECT id FROM fixture WHERE n=2)),
+      'selection', (SELECT highlighted FROM home_game_selection(now()) WHERE game_id=(SELECT id FROM fixture WHERE n=2)),
+      'oldWrites', (SELECT old_writes FROM refresh_write_counts),
+      'replayWrites', (SELECT replay_writes FROM refresh_write_counts));
+  `), { preserved: false, selection: true, oldWrites: 1, replayWrites: 0 });
+});
+
+Deno.test("selection is service-only while legacy order keeps its original result and permissions", async () => {
+  assertEquals(await query(`
+    SELECT json_build_object(
+      'selectionAnon',has_function_privilege('anon','home_game_selection(timestamptz)','EXECUTE'),
+      'selectionReader',has_function_privilege('app_user','home_game_selection(timestamptz)','EXECUTE'),
+      'selectionService',has_function_privilege('service','home_game_selection(timestamptz)','EXECUTE'),
+      'sameRows', NOT EXISTS (
+        (SELECT game_id,is_played,feed_rank FROM home_game_selection(${clock}) EXCEPT SELECT game_id,is_played,feed_rank FROM home_game_order(${clock}))
+        UNION ALL
+        (SELECT game_id,is_played,feed_rank FROM home_game_order(${clock}) EXCEPT SELECT game_id,is_played,feed_rank FROM home_game_selection(${clock}))),
+      'legacyArity', (SELECT pronargs FROM pg_proc WHERE oid='home_game_order(timestamptz)'::regprocedure));
+  `), { selectionAnon: false, selectionReader: false, selectionService: true, sameRows: true, legacyArity: 1 });
 });

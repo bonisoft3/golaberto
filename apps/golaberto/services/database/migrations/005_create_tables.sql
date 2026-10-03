@@ -427,6 +427,7 @@ CREATE TABLE IF NOT EXISTS home_game_card (
   "show_country" portable_bool DEFAULT false,
   "home_country" portable_string DEFAULT '',
   "away_country" portable_string DEFAULT '',
+  "home_highlighted" portable_bool DEFAULT false NOT NULL,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );

@@ -17,6 +17,8 @@ export {
 	gte,
 	inArray,
 	isNull,
+	ilike,
+	like,
 	liveQueryCollectionOptions,
 	localOnlyCollectionOptions,
 	localStorageCollectionOptions,

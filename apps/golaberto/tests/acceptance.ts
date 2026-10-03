@@ -362,6 +362,72 @@ const newestFirst = async (page: Page, selector: string) => {
   assert(days.length > 1 && days.every((d, i) => i === 0 || days[i - 1] >= d), days.join(" | "));
 };
 
+test("matches opens only the bounded chronological-card shape in both locales", async () => {
+  const counts = JSON.parse(await psql("SELECT json_build_object('upcoming', count(*) FILTER (WHERE NOT played), 'results', count(*) FILTER (WHERE played)) FROM matches_game_card"));
+  assert(counts.upcoming <= 40 && counts.results <= 40, "each matches feed is capped at forty cards");
+  for (const path of ["/en/matches", "/jogos"]) {
+    const page = await (await context()).newPage();
+    const shapes = new Set<string>();
+    page.on("request", (request: { url(): string }) => {
+      const url = new URL(request.url());
+      if (url.pathname.endsWith("/electric/v1/shape")) {
+        const table = url.searchParams.get("table");
+        if (table) shapes.add(table);
+      }
+    });
+    const started = performance.now();
+    await visit(page, path);
+    await page.waitForFunction((counts: { upcoming: number; results: number }) =>
+      document.querySelectorAll(".games.upcoming .game-row").length === counts.upcoming &&
+      document.querySelectorAll(".games.results .game-row").length === counts.results, counts, { timeout: 30_000 });
+    const dataMs = Math.round(performance.now() - started);
+    await page.waitForFunction(() => {
+      const screen = document.querySelector(".shell-screen:not([hidden])");
+      return screen && !screen.hasAttribute("data-entering") && Number(getComputedStyle(screen).opacity) >= 0.99;
+    });
+    const visibleMs = Math.round(performance.now() - started);
+    await page.click("#games-tab-results");
+    if (counts.results) await page.waitForSelector('.games-view[data-view="results"] .games.results .game-row');
+    assert(shapes.has("matches_game_card"), "matches must request its bounded card shape");
+    assert(!shapes.has("game_card"), "matches must not sync the complete game-card archive");
+    console.log(`Fresh ${path}: ${counts.upcoming}+${counts.results} games ready in ${dataMs} ms, visible in ${visibleMs} ms; shapes: ${[...shapes].join(", ")}`);
+    const capture = Deno.env.get("GOLABERTO_MATCHES_CAPTURE");
+    if (capture && path === "/en/matches") await page.screenshot({ path: capture, fullPage: true });
+    await page.close();
+  }
+});
+
+test("matches clock replaces an unselected fixture without a manual refresh", async () => {
+  assert(/(?:check|test)/.test(Deno.env.get("COMPOSE_PROJECT_NAME") ?? ""), "membership mutation requires a disposable stack");
+  // Earlier cases may have just restored selected cards; let the clock refill.
+  const deadline = Date.now() + 90_000;
+  while (await psql("SELECT count(*) FROM matches_game_card WHERE NOT played") !== "40") {
+    assert(Date.now() < deadline, "the matches clock did not fill the fixture feed");
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+  const candidate = await psql("SELECT id FROM game_card WHERE NOT played AND kickoff IS NOT NULL AND id NOT IN (SELECT id FROM matches_game_card) ORDER BY kickoff DESC,id DESC LIMIT 1");
+  assert(candidate, "the fixture archive must contain an unselected candidate");
+  const displaced = await psql("SELECT id FROM matches_game_card WHERE NOT played ORDER BY kickoff DESC,id DESC LIMIT 1");
+  const saved = JSON.parse(await psql(`SELECT json_build_object('day',day,'kickoff',kickoff) FROM game_card WHERE id='${candidate}'`));
+  const page = await open("/en/matches");
+  await page.waitForSelector(`.games.upcoming .game-row[href$="/${displaced}"]`);
+  try {
+    await psql(`UPDATE game_card SET day='1800-01-01',kickoff='1800-01-01 12:00:00+00' WHERE id='${candidate}'`);
+    await page.waitForFunction(([candidate, displaced]: string[]) => {
+      const rows = [...document.querySelectorAll(".games.upcoming .game-row")];
+      return rows.length === 40 && rows[0].getAttribute("href")?.endsWith(`/${candidate}`) &&
+        !rows.some((row) => row.getAttribute("href")?.endsWith(`/${displaced}`));
+    }, [candidate, displaced], { timeout: 90_000 });
+  } finally {
+    await psql(`UPDATE game_card SET day='${saved.day}',kickoff='${saved.kickoff}' WHERE id='${candidate}'`);
+    await page.waitForFunction(([candidate, displaced]: string[]) => {
+      const rows = [...document.querySelectorAll(".games.upcoming .game-row")];
+      return !rows.some((row) => row.getAttribute("href")?.endsWith(`/${candidate}`)) &&
+        rows.some((row) => row.getAttribute("href")?.endsWith(`/${displaced}`));
+    }, [candidate, displaced], { timeout: 90_000 });
+  }
+});
+
 test("test-games-upcoming: the games page opens on the upcoming games, soonest first", async () => {
   const page = await open("/jogos");
   await page.waitForSelector(".games.upcoming .game-row");
@@ -420,7 +486,7 @@ test("test-rounds: the championship page shows the current round and the next", 
 
 test("test-teams: part of a name narrows the teams", async () => {
   const page = await open("/equipes");
-  await page.waitForFunction(() => document.querySelectorAll(".catalog-table tbody tr").length > 40);
+  await page.waitForFunction(() => document.querySelectorAll(".catalog-table tbody tr").length === 40);
   await page.fill("#teams-q", "athletico");
   await page.waitForFunction(() => document.querySelectorAll(".catalog-table tbody tr").length === 1);
   assertEquals(await said(page, ".catalog-table tbody tr"), ["Athletico-PR Curitiba Brasil"]);
@@ -496,8 +562,9 @@ test("test-venue-home: a team's ground shows the team and the games played there
   // São Paulo-SP's ground, which the 2006 pages call Morumbi and the archive
   // now calls Morumbis: one stadium.
   const team = await open("/equipe/07000000-0000-4000-8000-000000000011");
-  await team.waitForSelector('.game-facts dd span');
-  const ground = await said(team, ".game-facts dd span");
+  const groundSelector = '.game-facts dd[data-live="stadium"] span';
+  await team.waitForSelector(groundSelector);
+  const ground = await said(team, groundSelector);
   assertEquals(ground, ["Morumbis"]);
   const stadiums = await open("/estadios");
   await stadiums.fill("#stadiums-q", "morumbi");

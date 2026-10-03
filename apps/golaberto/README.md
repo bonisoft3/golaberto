@@ -35,9 +35,10 @@ agree with their results, readers who correct the record, and a serious odds eng
   behind them. Everything else under `apps/golaberto` — SQL, policies,
   migrations, screens, the cluster — is emitted by `plugins/pronto/write.ts`
   and committed. There is no build step.
-- **Local-first.** Screens read tables synced into the browser and render
-  from them, so navigation is instant and a page keeps working through a
-  dropped connection.
+- **Bounded live reads.** Screens request their filtered rows instead of
+  downloading the archive. Supported queries use local synchronized subsets;
+  domain comparisons and ordered pages use bounded server reads and live
+  invalidation. Those server reads require a connection.
 - **The database is the authority.** Row-level security, column grants and
   constraints are the rules; an editor is a grant row given out of band.
   Sign-in is a passkey, and a guest's session becomes an account without
@@ -51,7 +52,7 @@ agree with their results, readers who correct the record, and a serious odds eng
   Italian, German and French, each with its own addresses; light and dark;
   phone to desktop. Lighthouse accessibility is 100 on every page.
 - **Proved before it ships.** Lint walks every machine state and every
-  screen in both themes; `integrate` runs 49 acceptance cases in a browser
+  screen in both themes; `integrate` runs 51 acceptance cases in a browser
   against the whole cluster, and the computations against the archive's own
   seasons.
 
@@ -65,6 +66,12 @@ table and the championship catalogue follow the game feeds.
 
 Launch automatically upgrades existing databases through the pgroll migration
 ledger before starting readers and pipelines, while preserving their data.
+
+The compute worker is disabled in the default development launch (zero
+replicas). Its JavaScript and WASM implementation remains available for future
+offline batching. Pages use stored ratings, odds and game importance; local
+edits do not recalculate those values while compute is disabled. The event
+pipelines that update fixtures, results and standings continue to run.
 
 With Docker:
 
@@ -161,3 +168,10 @@ rejects the small development seed's different IDs.
 Everything in `apps/golaberto` is free software under the GNU General Public
 License, version 2, as golaberto is; see `apps/golaberto/COPYING`. The odds engine's source,
 with the patch that builds it for WebAssembly, is in `apps/golaberto/tools/odds-wasm/upstream`.
+
+Archive routes fetch only the filtered rows they show. Championships, teams,
+stadiums, referees and long histories use forty-row pages; changing a search
+returns to page one. Previous and Next keep the full archive available. The
+route-loads integration check visits all fourteen route patterns in fresh
+browser contexts and verifies bounded requests and pagination. Route-query
+checks cover the supporting ordered SQL indexes.

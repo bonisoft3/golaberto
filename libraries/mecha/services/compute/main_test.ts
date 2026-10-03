@@ -8,6 +8,7 @@ import { assert, assertEquals, assertRejects } from "@std/assert";
 import {
   Computation,
   Database,
+  duckdb,
   Lake,
   type Reader,
   type Runnable,
@@ -600,6 +601,52 @@ export const finish = (inputs, outputs) => ({
   sink: outputs.slice(0, -1).map((o) => ({ id: o.id, seed: o.seed, all: outputs.at(-1).join() })),
 });
 `;
+
+const SEQUENTIAL_ROUNDS = `
+export const reads = ["game"];
+export const queries = { games: "SELECT 1" };
+export function* plan(inputs, seed) {
+  const ids = [];
+  for (const g of inputs.games) {
+    const answer = yield { wasm: "echo", input: { id: g.id, seed } };
+    ids.push(answer.id);
+  }
+  yield { wasm: "echo", input: ids };
+}
+export const finish = (inputs, outputs) => ({
+  sink: outputs.slice(0, -1).map((o) => ({ id: o.id, seed: o.seed, all: outputs.at(-1).join() })),
+});
+`;
+
+Deno.test("generator planning preserves array outputs while sending only one new job per worker turn", async () => {
+  const dir = await Deno.makeTempDir();
+  const games = Array.from({ length: 32 }, (_, i) => ({ id: `g${i}` }));
+  const runner = new Runner({ echo: await WebAssembly.compile(ECHO) });
+  const batches: number[] = [];
+  const run = runner.run.bind(runner);
+  runner.run = (jobs) => { batches.push(jobs.length); return run(jobs); };
+  const spec = { name: "same", file: `${dir}/plan.js`, every: 1, to: ["sink"], wasm: [`${dir}/echo.wasm`] };
+  try {
+    await Deno.writeTextFile(spec.file, ROUNDS);
+    const expected = await (await Computation.load(spec, runner)).run({ query: async () => games });
+    assertEquals(batches, [32, 1]);
+    batches.length = 0;
+    await Deno.writeTextFile(spec.file, SEQUENTIAL_ROUNDS);
+    const actual = await (await Computation.load(spec, runner)).run({ query: async () => games });
+    assertEquals(actual, expected);
+    assertEquals(batches, Array(33).fill(1), "no completed prefix or future payload batch is retained for replay");
+  } finally { runner.close(); await Deno.remove(dir, { recursive: true }); }
+});
+
+Deno.test("DuckDB query buffers and parallelism fit alongside workers and other services", async () => {
+  const db = await duckdb();
+  const con = await db.connect();
+  try {
+    assertEquals((await con.runAndReadAll("SELECT current_setting('memory_limit'), current_setting('threads')")).getRows(), [
+      ["512.0 MiB", 2n],
+    ]);
+  } finally { con.closeSync(); db.closeSync(); }
+});
 
 Deno.test("a run plans in rounds and finishes in job order", async () => {
   const dir = await Deno.makeTempDir();

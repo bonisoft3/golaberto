@@ -71,13 +71,13 @@ with open("pipelines/player-stats_benthos_test.yaml", "w") as f:
                       "game": {"home_id": "h", "away_id": "a", "home": {"name": "H"}, "away": {"name": "A"}}}], "goals": []})}],
         "output_batches": [[{"bloblang": 'this.index(0).rows.index(0).minutes == 0 && this.index(0).rows.index(0).team_name == "H"'}]],
     }, {
-        "name": "startup enumerates separate championship events instead of appearances",
+        "name": "startup emits string championship events accepted by the CDC router",
         "target_processors": "/input/broker/inputs/1/processors",
         "mocks": {"/input/broker/inputs/1/processors/0/try/0/branch/processors/0": {"mapping": 'root = [{"id": "c1"}, {"id": "c2"}]'}},
         "input_batch": [{"content": '{"boot": true}'}],
         "output_batches": [
-            [{"bloblang": 'this.data.parse_json() == {"__table": "championship", "id": "c1"}'}],
-            [{"bloblang": 'this.data.parse_json() == {"__table": "championship", "id": "c2"}'}],
+            [{"bloblang": 'this.data.type() == "string" && this.data.parse_json() == {"__table": "championship", "id": "c1"}'}],
+            [{"bloblang": 'this.data.type() == "string" && this.data.parse_json() == {"__table": "championship", "id": "c2"}'}],
         ],
     }, {
         "name": "a startup championship bounds both appearance and goal reads",

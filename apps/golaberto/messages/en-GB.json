@@ -236,5 +236,10 @@
   "home_selection": "Up to 20 matches from the next and past seven days, chosen by team strength, match importance and proximity. Brasília time.",
   "home_no_upcoming": "No scheduled matches in the next seven days.",
   "home_no_results": "No results with a recorded kickoff in the past seven days.",
-  "home_all_games": "All matches ›"
+  "home_all_games": "All matches ›",
+  "archive_pages": "Pagination",
+  "page_previous": "Previous",
+  "page_next": "Next",
+  "page_label": "Page",
+  "choice_search": "Search choices"
 }

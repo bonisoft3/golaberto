@@ -236,5 +236,10 @@
   "home_selection": "Hasta 20 partidos de los próximos y últimos siete días, elegidos por la fuerza de los equipos, la importancia y la proximidad del partido. Hora de Brasilia.",
   "home_no_upcoming": "No hay partidos con horario en los próximos siete días.",
   "home_no_results": "No hay resultados con horario registrado en los últimos siete días.",
-  "home_all_games": "Todos los partidos ›"
+  "home_all_games": "Todos los partidos ›",
+  "archive_pages": "Paginación",
+  "page_previous": "Anterior",
+  "page_next": "Siguiente",
+  "page_label": "Página",
+  "choice_search": "Buscar opciones"
 }

@@ -20,6 +20,12 @@ describe("the harness store", () => {
     // that answers the same question the server's does.
     expect((await store.query("note", "position.asc", { filter: "limit=2" })).map((r) => r.id))
       .toEqual(["b", "c"])
+    expect((await store.query("note", "position.asc", { filter: "offset=1&limit=1" })).map((r) => r.id))
+      .toEqual(["c"])
+    expect((await store.query("note", "position.asc", { filter: "offset=2" })).map((r) => r.id))
+      .toEqual(["a"])
+    await expect(store.removeWhere("note", "done=is.false&offset=1")).rejects.toThrow(/page bound/)
+    expect(store.rows("note").length).toBe(3)
   })
 
   it("sorts nulls last ascending and first descending", async () => {

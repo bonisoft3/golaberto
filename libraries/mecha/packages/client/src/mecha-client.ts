@@ -52,6 +52,8 @@ export interface MechaTable {
    * table is reached by a changing set of shapes rather than one.
    */
   access?: TableAccess
+  /** Public CRUD tables may load query subsets instead of their full history. */
+  onDemand?: boolean
 }
 
 export type TableAccess =
@@ -175,6 +177,10 @@ export interface MechaClient {
   collections: Record<string, Collection<any, any, any>>
   /** Resolves after storage probe, leader election, and outbox replay. */
   ready: Promise<void>
+  /** Live transport changes, including uncached rows; excludes query snapshots. */
+  subscribeRawChanges(tableId: string, listener: (messages: readonly unknown[]) => void): () => void
+  /** Wait for the active stream's real baseline; the caller holds a subscription. */
+  waitForRawReady(tableId: string): Promise<void>
   /**
    * Every mutation takes a batch, and a single write is a batch of one.
    *
@@ -263,6 +269,9 @@ export function createMechaClient(config: MechaClientConfig): MechaClient {
   type Table = Required<Omit<MechaTable, "access">> & { access?: TableAccess }
   const byId = new Map<string, Table>()
   for (const t of config.tables) {
+    if (t.onDemand && (t.access?.scope !== "public" || (t.durability ?? "crud") !== "crud")) {
+      throw new Error(`on-demand table ${t.id} must be public and CRUD-backed`)
+    }
     byId.set(t.id, {
       id: t.id,
       table: t.table,
@@ -270,10 +279,19 @@ export function createMechaClient(config: MechaClientConfig): MechaClient {
       fields: t.fields ?? [],
       durability: t.durability ?? "crud",
       access: t.access,
+      onDemand: t.onDemand ?? false,
     })
   }
 
   const phases = new Map<string, SyncPhase>()
+  const rawListeners = new Map<string, Set<(messages: readonly unknown[]) => void>>()
+  type RawBaseline = { promise: Promise<void>; resolve: () => void; reject: (error: unknown) => void; error?: unknown }
+  const rawBaselines = new Map<string, RawBaseline>()
+  function waitForRawReady(tableId: string): Promise<void> {
+    const baseline = rawBaselines.get(tableId)
+    if (!baseline) return Promise.reject(new Error(`no active on-demand stream: ${tableId}`))
+    return baseline.error === undefined ? baseline.promise : Promise.reject(baseline.error)
+  }
   const phaseListeners = new Set<() => void>()
   function setPhase(k: string, phase: SyncPhase | null) {
     if (phase === null) phases.delete(k)
@@ -293,11 +311,45 @@ export function createMechaClient(config: MechaClientConfig): MechaClient {
     const options = electricCollectionOptions({
       id: key ? `mecha:${t.id}@${key.column}=${key.value}` : `mecha:${t.id}`,
       getKey,
+      syncMode: t.onDemand ? "on-demand" : "eager",
       shapeOptions: {
         url: `${electricUrl}/v1/shape`,
+        ...(t.onDemand ? { fetchClient: async (input: RequestInfo | URL, init?: RequestInit) => {
+          const baseline = rawBaselines.get(t.id)
+          const response = await doFetch(input, init)
+          const url = new URL(input instanceof Request ? input.url : String(input))
+          // HTTP-backed query rows need not exist in the collection: its
+          // change events cannot report a delete of an unknown row, or the
+          // previous value of its first update. Observe the same live stream
+          // before those events are reduced into collection state instead.
+          // Subsets must never invalidate their own HTTP-backed readers.
+          if (response.ok && baseline &&
+              url.searchParams.get("log") === "changes_only" &&
+              ![...url.searchParams.keys()].some((name) => name.startsWith("subset__"))) {
+            void response.clone().json().then((messages) => {
+              if (rawBaselines.get(t.id) !== baseline || !Array.isArray(messages)) return
+              // client 1.5.27 suppresses a repeated cursor's up-to-date event
+              // after collection GC. The successful wire checkpoint still
+              // establishes this stream's baseline. Conversely, its adapter
+              // marks a collection ready on 401, before a baseline exists.
+              if (messages.some((message) => message?.headers?.control === "up-to-date")) baseline.resolve()
+              const changes = messages.filter((message) =>
+                ["insert", "update", "delete"].includes(message?.headers?.operation))
+              if (changes.length) rawListeners.get(t.id)?.forEach((listener) => listener(changes))
+            }, () => { /* The Electric adapter owns malformed-response errors. */ })
+          }
+          return response
+        } } : {}),
+        subsetMethod: "GET",
         // Typed as a string upstream, resolved as a supplier at runtime like
         // any other param.
-        params: { table: t.table, where: shapes.where(t.table, key) as any },
+        params: {
+          table: t.table,
+          where: shapes.where(t.table, key) as any,
+          // A changes-only stream also sees updates to rows no query has
+          // loaded yet. Full rows keep those updates usable by live queries.
+          ...(t.onDemand ? { replica: "full" as const } : {}),
+        },
         headers: { Authorization: shapes.authorization(t.table, key) },
         // A refused token is re-minted, not retried: the refresh runs ahead
         // of expiry by a margin, but a machine asleep through it resumes
@@ -307,6 +359,11 @@ export function createMechaClient(config: MechaClientConfig): MechaClient {
           if (e?.status === 401) {
             shapes.forget(t.table, key)
             return {}
+          }
+          if (t.onDemand) {
+            const baseline = rawBaselines.get(t.id)
+            if (baseline) { baseline.error = e; baseline.reject(e) }
+            return
           }
           throw e
         },
@@ -331,12 +388,21 @@ export function createMechaClient(config: MechaClientConfig): MechaClient {
     // return is an update.
     const inner = options.sync.sync
     options.sync.sync = (params) => {
+      let baseline: RawBaseline | undefined
+      if (t.onDemand) {
+        let resolve!: () => void, reject!: (error: unknown) => void
+        const promise = new Promise<void>((ok, fail) => { resolve = ok; reject = fail })
+        // A view may own the stream without a raw-read waiter.
+        void promise.catch(() => {})
+        baseline = { promise, resolve, reject }
+        rawBaselines.set(t.id, baseline)
+      }
       const sink = idempotentSink(params, getKey)
       // Electric's parsers run per SQL type, while a carrier belongs to a
       // column. Normalize here, where both the message and its field list are
       // present; this is also before a synced row can become an optimistic
       // mutation original or reach the durable outbox.
-      return inner({
+      const handle = inner({
         ...sink,
         write: (message: any) =>
           sink.write(
@@ -345,6 +411,14 @@ export function createMechaClient(config: MechaClientConfig): MechaClient {
               : { ...message, value: normalizeRow(t.fields, message.value, "electric") },
           ),
       })
+      if (!baseline) return handle
+      const cleanup = () => {
+        baseline.reject(new Error(`on-demand stream closed: ${t.id}`))
+        if (rawBaselines.get(t.id) === baseline) rawBaselines.delete(t.id)
+        if (typeof handle === "function") handle()
+        else handle?.cleanup?.()
+      }
+      return { ...(typeof handle === "object" ? handle : {}), cleanup }
     }
     return createCollection({
       // Never startSync: true. Sync begins on the first subscriber, so a
@@ -607,6 +681,24 @@ export function createMechaClient(config: MechaClientConfig): MechaClient {
       await confirmDelete(t.id, t.key, key)
       setPhase(`${t.id}:${key}`, null)
     }
+    if (t.onDemand) {
+      // Replayed transactions have no screen keeping their stream alive.
+      // Establish its changes-only baseline before sending the write, so
+      // offset=now cannot skip the very commit that confirms delivery.
+      for (const op of ["insert", "update", "delete"]) {
+        const deliver = mutationFns[`${op}:${t.id}`]
+        mutationFns[`${op}:${t.id}`] = async (args: any) => {
+          const c = collections[t.id]
+          const lease = c.subscribeChanges(() => {}, { includeInitialState: false })
+          try {
+            await waitForRawReady(t.id)
+            return await deliver(args)
+          } finally {
+            lease.unsubscribe()
+          }
+        }
+      }
+    }
   }
 
   const executor = startOfflineExecutor({
@@ -645,17 +737,38 @@ export function createMechaClient(config: MechaClientConfig): MechaClient {
   // publishing a truncate or a bulk write reopens this; so would taking over
   // their sync the way union.ts takes over its own.
   function run(mutationFnName: string, phaseKeys: string[], mutate: () => void): Promise<void> {
+    const tableId = mutationFnName.slice(mutationFnName.indexOf(":") + 1)
+    const lease = byId.get(tableId)?.onDemand
+      ? collections[tableId].subscribeChanges(() => {}, { includeInitialState: false })
+      : undefined
     for (const phaseKey of phaseKeys) setPhase(phaseKey, "queued")
     // autoCommit off: mutate() would otherwise self-commit and race the
     // explicit commit below into "no longer pending".
-    const tx = executor.createOfflineTransaction({ mutationFnName, autoCommit: false })
-    tx.mutate(mutate)
-    return tx.commit().then(() => undefined)
+    try {
+      const tx = executor.createOfflineTransaction({ mutationFnName, autoCommit: false })
+      tx.mutate(mutate)
+      return tx.commit().then(() => undefined).finally(() => lease?.unsubscribe())
+    } catch (error) {
+      lease?.unsubscribe()
+      throw error
+    }
   }
 
   return {
     collections,
     ready: executor.waitForInit().then(() => undefined),
+    waitForRawReady,
+    subscribeRawChanges(tableId, listener) {
+      if (!byId.get(tableId)?.onDemand) throw new Error(`raw changes require an on-demand table: ${tableId}`)
+      let listeners = rawListeners.get(tableId)
+      if (!listeners) rawListeners.set(tableId, listeners = new Set())
+      const notify = (messages: readonly unknown[]) => listener(messages)
+      listeners.add(notify)
+      const lease = collections[tableId].subscribeChanges(() => {}, { includeInitialState: false })
+      return () => {
+        if (listeners.delete(notify)) lease.unsubscribe()
+      }
+    },
     insert(tableId, rows) {
       const t = byId.get(tableId)
       if (!t) throw new Error(`unknown table id: ${tableId}`)

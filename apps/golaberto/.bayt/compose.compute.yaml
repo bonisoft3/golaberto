@@ -47,6 +47,7 @@ services:
         aliases:
         - compute
     restart: on-failure
+    scale: 0
   apps_golaberto-compute_bayt:
     build:
       additional_contexts:

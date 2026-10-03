@@ -40,19 +40,21 @@ access:
     scope: public
   game_card:
     scope: public
-  home_game_card:
-    scope: public
   team_game:
     scope: public
   comment:
     scope: public
-  editor:
-    owner: app_user_id
-    scope: private
   player_stat:
     scope: public
   phase_round:
     scope: public
+  home_game_card:
+    scope: public
+  matches_game_card:
+    scope: public
+  editor:
+    owner: app_user_id
+    scope: private
 app: golaberto
 auth:
   required: false
@@ -79,9 +81,35 @@ i18n:
 local:
   catalog_filter: tab
   games_view: tab
+  archive_page: tab
   comment_draft: tab
   game_edit: tab
   directory_filter: tab
+onDemand:
+  - category
+  - championship
+  - comment
+  - game
+  - game_card
+  - game_importance
+  - goal
+  - phase
+  - phase_round
+  - player
+  - player_game
+  - player_rating
+  - player_stat
+  - position_chance
+  - referee
+  - stadium
+  - stage_group
+  - standing
+  - team
+  - team_chance
+  - team_game
+  - team_rating
+  - zone
+  - zone_chance
 optional:
   game_edit:
     - name: played
@@ -112,17 +140,29 @@ seed:
     - id: teams
       q: ''
       state: browsing
+      offset: 0
+      next_offset: 40
+      page: 1
     - id: stadiums
       q: ''
       state: browsing
+      offset: 0
+      next_offset: 40
+      page: 1
     - id: referees
       q: ''
       state: browsing
+      offset: 0
+      next_offset: 40
+      page: 1
   catalog_filter:
     - id: catalog
       q: ''
       region: ''
       state: browsing
+      offset: 0
+      next_offset: 40
+      page: 1
 server: true
 routes:
   - path: /
@@ -172,7 +212,8 @@ routes:
     files:
       html: shell/screens/campeonatos.html
       css: shell/screens/campeonatos.css
-      handlers: []
+      handlers:
+        - shell/handlers/page-value.js
       adapters: []
       renderers:
         - shell/renderers/team-badge.js
@@ -241,7 +282,8 @@ routes:
     files:
       html: shell/screens/jogo.html
       css: shell/screens/jogo.css
-      handlers: []
+      handlers:
+        - shell/handlers/page-value.js
       adapters: []
       renderers:
         - shell/renderers/team-badge.js
@@ -351,7 +393,8 @@ routes:
     files:
       html: shell/screens/equipes.html
       css: shell/screens/equipes.css
-      handlers: []
+      handlers:
+        - shell/handlers/page-value.js
       adapters: []
       renderers:
         - shell/renderers/team-badge.js
@@ -391,7 +434,8 @@ routes:
     files:
       html: shell/screens/estadios.html
       css: shell/screens/estadios.css
-      handlers: []
+      handlers:
+        - shell/handlers/page-value.js
       adapters: []
       renderers:
         - shell/renderers/team-badge.js
@@ -423,7 +467,8 @@ routes:
     files:
       html: shell/screens/estadio.html
       css: shell/screens/estadio.css
-      handlers: []
+      handlers:
+        - shell/handlers/page-value.js
       adapters: []
       renderers:
         - shell/renderers/team-badge.js
@@ -462,7 +507,8 @@ routes:
     files:
       html: shell/screens/arbitros.html
       css: shell/screens/arbitros.css
-      handlers: []
+      handlers:
+        - shell/handlers/page-value.js
       adapters: []
       renderers:
         - shell/renderers/team-badge.js
@@ -494,7 +540,8 @@ routes:
     files:
       html: shell/screens/arbitro.html
       css: shell/screens/arbitro.css
-      handlers: []
+      handlers:
+        - shell/handlers/page-value.js
       adapters: []
       renderers:
         - shell/renderers/team-badge.js
@@ -525,7 +572,8 @@ routes:
     files:
       html: shell/screens/equipe.html
       css: shell/screens/equipe.css
-      handlers: []
+      handlers:
+        - shell/handlers/page-value.js
       adapters: []
       renderers:
         - shell/renderers/team-badge.js
@@ -556,7 +604,8 @@ routes:
     files:
       html: shell/screens/jogador.html
       css: shell/screens/jogador.css
-      handlers: []
+      handlers:
+        - shell/handlers/page-value.js
       adapters: []
       renderers:
         - shell/renderers/team-badge.js
@@ -620,6 +669,7 @@ tables:
   - game_importance
   - goal
   - home_game_card
+  - matches_game_card
   - phase
   - phase_round
   - player
@@ -1598,6 +1648,215 @@ schema:
         name: home_recent_group
         type: bool
         required: true
+  team_game:
+    durability: live
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: team_id
+        ref: team
+        type: uuid
+        required: true
+      - name: game_id
+        ref: game
+        type: uuid
+        required: true
+      - enum:
+          - home
+          - away
+        name: side
+        type: string
+        required: true
+      - name: opponent_id
+        ref: team
+        type: uuid
+        required: true
+      - name: opponent_name
+        type: string
+        required: true
+      - name: championship_id
+        ref: championship
+        type: uuid
+        required: true
+      - name: championship_name
+        type: string
+        required: true
+      - name: day
+        type: date
+        required: true
+      - name: kickoff
+        type: timestamp
+        required: false
+      - name: played
+        type: bool
+        required: true
+      - bounds:
+          intMin: 0
+          intMax: 99
+        name: goals_for
+        type: int32
+        required: false
+      - bounds:
+          intMin: 0
+          intMax: 99
+        name: goals_against
+        type: int32
+        required: false
+      - enum:
+          - ''
+          - w
+          - d
+          - l
+        name: result
+        type: string
+        required: true
+      - name: day_display
+        type: string
+        required: true
+      - name: kickoff_local
+        type: string
+        required: true
+  comment:
+    durability: server
+    fields:
+      - default: gen_random_uuid()
+        name: id
+        pk: true
+        type: uuid
+        required: true
+      - name: game_id
+        ref: game
+        type: uuid
+        required: true
+      - default: auth_uid()
+        name: app_user_id
+        ref: app_user
+        type: uuid
+        required: true
+      - bounds:
+          sizeMin: 1
+          sizeMax: 1000
+        name: body
+        type: string
+        required: true
+      - default: now()
+        name: created_at
+        type: timestamp
+        required: true
+  player_stat:
+    durability: live
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: championship_id
+        ref: championship
+        type: uuid
+        required: true
+      - name: team_id
+        ref: team
+        type: uuid
+        required: true
+      - name: player_id
+        ref: player
+        type: uuid
+        required: true
+      - name: player_name
+        type: string
+        required: true
+      - enum:
+          - ''
+          - g
+          - dr
+          - dc
+          - dl
+          - dm
+          - cm
+          - am
+          - fw
+        name: position
+        type: string
+        required: true
+      - bounds:
+          intMin: 0
+        name: played
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: started
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: came_on
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: bench
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: minutes
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: goals
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: penalties
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: own_goals
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: yellow
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: red
+        type: int32
+        required: true
+      - name: championship_name
+        type: string
+        required: true
+      - name: team_name
+        type: string
+        required: true
+  phase_round:
+    durability: live
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: phase_id
+        ref: phase
+        type: uuid
+        required: true
+      - bounds:
+          intMin: 1
+        name: current
+        type: int32
+        required: true
+      - bounds:
+          intMin: 1
+        name: next
+        type: int32
+        required: false
   home_game_card:
     durability: live
     fields:
@@ -1733,41 +1992,28 @@ schema:
         name: home_recent_group
         type: bool
         required: true
-  team_game:
+  matches_game_card:
     durability: live
     fields:
       - name: id
         pk: true
-        type: string
-        required: true
-      - name: team_id
-        ref: team
-        type: uuid
-        required: true
-      - name: game_id
         ref: game
         type: uuid
         required: true
-      - enum:
-          - home
-          - away
-        name: side
-        type: string
-        required: true
-      - name: opponent_id
-        ref: team
+      - name: phase_id
+        ref: phase
         type: uuid
-        required: true
-      - name: opponent_name
-        type: string
         required: true
       - name: championship_id
         ref: championship
         type: uuid
         required: true
-      - name: championship_name
-        type: string
-        required: true
+      - bounds:
+          intMin: 1
+          intMax: 99
+        name: round
+        type: int32
+        required: false
       - name: day
         type: date
         required: true
@@ -1777,58 +2023,109 @@ schema:
       - name: played
         type: bool
         required: true
-      - bounds:
-          intMin: 0
-          intMax: 99
-        name: goals_for
-        type: int32
-        required: false
-      - bounds:
-          intMin: 0
-          intMax: 99
-        name: goals_against
-        type: int32
-        required: false
-      - enum:
-          - ''
-          - w
-          - d
-          - l
-        name: result
+      - name: home_id
+        ref: team
+        type: uuid
+        required: true
+      - name: away_id
+        ref: team
+        type: uuid
+        required: true
+      - name: home_name
         type: string
         required: true
+      - name: away_name
+        type: string
+        required: true
+      - bounds:
+          intMin: 0
+          intMax: 99
+        name: home_score
+        type: int32
+        required: false
+      - bounds:
+          intMin: 0
+          intMax: 99
+        name: away_score
+        type: int32
+        required: false
+      - bounds:
+          intMin: 0
+          intMax: 99
+        name: home_aet
+        type: int32
+        required: false
+      - bounds:
+          intMin: 0
+          intMax: 99
+        name: away_aet
+        type: int32
+        required: false
+      - bounds:
+          intMin: 0
+          intMax: 99
+        name: home_pen
+        type: int32
+        required: false
+      - bounds:
+          intMin: 0
+          intMax: 99
+        name: away_pen
+        type: int32
+        required: false
+      - name: championship_name
+        type: string
+        required: true
+      - name: phase_name
+        type: string
+        required: true
+      - name: stadium_name
+        type: string
+        required: false
+      - name: referee_name
+        type: string
+        required: false
+      - bounds:
+          intMin: 0
+          intMax: 250000
+        name: attendance
+        type: int32
+        required: false
       - name: day_display
         type: string
         required: true
       - name: kickoff_local
         type: string
         required: true
-  comment:
-    durability: server
-    fields:
-      - default: gen_random_uuid()
-        name: id
-        pk: true
+      - name: stadium_id
+        ref: stadium
         type: uuid
-        required: true
-      - name: game_id
-        ref: game
+        required: false
+      - name: referee_id
+        ref: referee
         type: uuid
-        required: true
-      - default: auth_uid()
-        name: app_user_id
-        ref: app_user
-        type: uuid
+        required: false
+      - bounds:
+          intMin: 0
+          intMax: 20
+        default: '0'
+        name: home_upcoming_rank
+        type: int32
         required: true
       - bounds:
-          sizeMin: 1
-          sizeMax: 1000
-        name: body
-        type: string
+          intMin: 0
+          intMax: 20
+        default: '0'
+        name: home_recent_rank
+        type: int32
         required: true
-      - default: now()
-        name: created_at
-        type: timestamp
+      - default: 'false'
+        name: home_upcoming_group
+        type: bool
+        required: true
+      - default: 'false'
+        name: home_recent_group
+        type: bool
         required: true
   comment_draft:
     durability: tab
@@ -1909,118 +2206,18 @@ schema:
       - name: away_name
         type: string
         required: false
-  player_stat:
-    durability: live
-    fields:
-      - name: id
-        pk: true
-        type: string
-        required: true
-      - name: championship_id
-        ref: championship
-        type: uuid
-        required: true
-      - name: team_id
-        ref: team
-        type: uuid
-        required: true
-      - name: player_id
-        ref: player
-        type: uuid
-        required: true
-      - name: player_name
-        type: string
-        required: true
-      - enum:
-          - ''
-          - g
-          - dr
-          - dc
-          - dl
-          - dm
-          - cm
-          - am
-          - fw
-        name: position
+      - bounds:
+          sizeMax: 80
+        default: ''''''
+        name: stadium_q
         type: string
         required: true
       - bounds:
-          intMin: 0
-        name: played
-        type: int32
-        required: true
-      - bounds:
-          intMin: 0
-        name: started
-        type: int32
-        required: true
-      - bounds:
-          intMin: 0
-        name: came_on
-        type: int32
-        required: true
-      - bounds:
-          intMin: 0
-        name: bench
-        type: int32
-        required: true
-      - bounds:
-          intMin: 0
-        name: minutes
-        type: int32
-        required: true
-      - bounds:
-          intMin: 0
-        name: goals
-        type: int32
-        required: true
-      - bounds:
-          intMin: 0
-        name: penalties
-        type: int32
-        required: true
-      - bounds:
-          intMin: 0
-        name: own_goals
-        type: int32
-        required: true
-      - bounds:
-          intMin: 0
-        name: yellow
-        type: int32
-        required: true
-      - bounds:
-          intMin: 0
-        name: red
-        type: int32
-        required: true
-      - name: championship_name
+          sizeMax: 80
+        default: ''''''
+        name: referee_q
         type: string
         required: true
-      - name: team_name
-        type: string
-        required: true
-  phase_round:
-    durability: live
-    fields:
-      - name: id
-        pk: true
-        type: string
-        required: true
-      - name: phase_id
-        ref: phase
-        type: uuid
-        required: true
-      - bounds:
-          intMin: 1
-        name: current
-        type: int32
-        required: true
-      - bounds:
-          intMin: 1
-        name: next
-        type: int32
-        required: false
   games_view:
     durability: tab
     fields:
@@ -2060,6 +2257,24 @@ schema:
         name: state
         type: string
         required: true
+      - bounds:
+          intMin: 0
+        default: '0'
+        name: offset
+        type: int32
+        required: true
+      - bounds:
+          intMin: 40
+        default: '40'
+        name: next_offset
+        type: int32
+        required: true
+      - bounds:
+          intMin: 1
+        default: '1'
+        name: page
+        type: int32
+        required: true
   catalog_filter:
     durability: tab
     fields:
@@ -2084,6 +2299,58 @@ schema:
           - national
         name: region
         type: string
+        required: true
+      - default: '''browsing'''
+        enum:
+          - browsing
+        name: state
+        type: string
+        required: true
+      - bounds:
+          intMin: 0
+        default: '0'
+        name: offset
+        type: int32
+        required: true
+      - bounds:
+          intMin: 40
+        default: '40'
+        name: next_offset
+        type: int32
+        required: true
+      - bounds:
+          intMin: 1
+        default: '1'
+        name: page
+        type: int32
+        required: true
+  archive_page:
+    durability: tab
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: owner_id
+        type: uuid
+        required: true
+      - bounds:
+          intMin: 0
+        default: '0'
+        name: offset
+        type: int32
+        required: true
+      - bounds:
+          intMin: 40
+        default: '40'
+        name: next_offset
+        type: int32
+        required: true
+      - bounds:
+          intMin: 1
+        default: '1'
+        name: page
+        type: int32
         required: true
       - default: '''browsing'''
         enum:
@@ -2408,6 +2675,10 @@ migrations:
   - services/database/migrations/013_home_games.sql
   - services/database/migrations/014_home_championships.sql
   - services/database/migrations/015_home_performance.sql
+  - services/database/migrations/016_matches_performance.sql
+  - services/database/migrations/017_game_countries.sql
+  - services/database/migrations/018_route_performance.sql
+  - services/database/migrations/019_normalized_game_flags.sql
   - services/database/migrations/900_seed.sql
 pipelines:
   - name: standings
@@ -2419,6 +2690,9 @@ pipelines:
   - name: home-games
     to: home_game_card
     raw: true
+  - name: matches-games
+    to: matches_game_card
+    raw: true
   - name: player-stats
     to: player_stat
     raw: true
@@ -2426,13 +2700,13 @@ pipelines:
     to: phase_round
     raw: true
 uniques:
+  player_game:
+    - - game_id
+      - player_id
   team_group:
     - - group_id
       - team_id
   team_player:
     - - championship_id
       - team_id
-      - player_id
-  player_game:
-    - - game_id
       - player_id

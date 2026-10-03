@@ -12,6 +12,17 @@
 .game-row .where { grid-area: where; color: var(--secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .game-row .home, .scoreboard .home { grid-area: home; text-align: end; }
 .game-row .away, .scoreboard .away { grid-area: away; }
+/* Badges form two fixed columns beside the score, independent of name length. */
+:is(.game-row, .scoreboard) :is(.home, .away):has(.team-icons) {
+  display: grid; align-items: center; gap: var(--sp-sm); min-width: 0;
+}
+:is(.game-row, .scoreboard) .home:has(.team-icons) { grid-template-columns: minmax(0, 1fr) auto; }
+:is(.game-row, .scoreboard) .away:has(.team-icons) { grid-template-columns: auto minmax(0, 1fr); }
+.team-name { min-width: 0; overflow-wrap: anywhere; }
+.team-icons { display: flex; align-items: center; gap: var(--sp-xs); }
+.team-icons .archive-icon { width: 15px; height: 15px; margin: 0; }
+:is(.game-row, .scoreboard):not([data-show-country="true"]) .team-flag { display: none; }
+
 .game-row .score, .scoreboard .score { grid-area: score; display: flex; gap: var(--sp-sm); justify-content: center; font-weight: 700; }
 .game-row .score i, .scoreboard .score i { font-style: normal; color: var(--secondary); font-weight: 400; }
 [data-played="false"] .score b { display: none; }

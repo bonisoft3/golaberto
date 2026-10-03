@@ -36,7 +36,7 @@ input:
                           Authorization: Bearer ${SERVICE_JWT}
                   result_map: root.championships = this
               - mapping: |
-                  root = this.championships.map_each(c -> {"data": {"__table": "championship", "id": c.id}.format_json()})
+                  root = this.championships.map_each(c -> {"data": {"__table": "championship", "id": c.id}.format_json().string()})
               - unarchive:
                   format: json_array
           - split:

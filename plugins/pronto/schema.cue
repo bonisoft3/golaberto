@@ -549,6 +549,13 @@ import (
 	// construction, with no policy to write, which is why `access` is not
 	// merely optional for them but meaningless: nothing else can reach it.
 	durability: #Durability
+	// Public server collections may load only the subsets their regions ask for.
+	// This changes delivery volume, never the entity's durability or policy.
+	onDemand: *false | bool
+	if onDemand {
+		server: true
+		access: scope: "public"
+	}
 	// Whether the rows live in the cluster: every durability but the two the browser keeps.
 	// The one spelling of that boundary; the emitter reads this, never the names.
 	server: durability != "tab" && durability != "device"

@@ -16,6 +16,8 @@
 //            those answered and asks again, until plan adds none, so a job
 //            can take an earlier one's answer; the jobs already answered must
 //            come back unchanged;
+//            or a synchronous generator yielding one job at a time, each
+//            yield receiving that job's output, without retaining job inputs;
 //   finish   (inputs, outputs) => {sink table: [rows]}.
 //
 // `inputs` is {query name: rows}, frozen, as are the outputs. `seed` is a
@@ -102,6 +104,11 @@ export async function duckdb(): Promise<DuckDBInstance> {
     extension_directory: EXTENSIONS,
     autoinstall_known_extensions: "false",
     autoload_known_extensions: "false",
+    // Native query buffers share the VM with the workers and other services.
+    // Large archive sorts/copies spill instead of taking DuckDB's default
+    // share of the entire VM's memory.
+    memory_limit: "512MiB",
+    threads: "2",
   });
   await (await instance.connect()).run("SET GLOBAL TimeZone = 'UTC'");
   return instance;
@@ -217,17 +224,25 @@ export class Computation implements Runnable {
       await cage.load(this.compiled);
       const ran: Job[] = [];
       const outputs: unknown[] = [];
-      let { jobs } = await cage.ask({ inputs, seed: this.seed });
-      while (true) {
-        const planned = this.jobs(jobs);
-        if (ran.some((job, i) => job.wasm !== planned[i]?.wasm || job.input !== planned[i].input)) {
-          throw new Error(`computation ${this.name}: plan changed the jobs it was answered`);
+      let answer = await cage.ask({ inputs, seed: this.seed });
+      if (answer.sequential === true) {
+        while (!answer.done) {
+          const [output] = await this.runner.run(this.jobs([answer.job]));
+          outputs.push(output);
+          answer = await cage.ask({ resume: output });
         }
-        if (planned.length === ran.length) break;
-        const fresh = planned.slice(ran.length);
-        outputs.push(...await this.runner.run(fresh));
-        ran.push(...fresh);
-        ({ jobs } = await cage.ask({ outputs, plan: true }));
+      } else {
+        while (true) {
+          const planned = this.jobs(answer.jobs);
+          if (ran.some((job, i) => job.wasm !== planned[i]?.wasm || job.input !== planned[i].input)) {
+            throw new Error(`computation ${this.name}: plan changed the jobs it was answered`);
+          }
+          if (planned.length === ran.length) break;
+          const fresh = planned.slice(ran.length);
+          outputs.push(...await this.runner.run(fresh));
+          ran.push(...fresh);
+          answer = await cage.ask({ outputs, plan: true });
+        }
       }
       return (await cage.ask({ outputs })).out;
     } finally {
@@ -262,6 +277,7 @@ export class Lake implements Reader {
     await Deno.mkdir(`${lakeDir}/data`);
     const db = await duckdb();
     const con = await db.connect();
+    await con.run(`SET temp_directory = ${literal(`${lakeDir}/spill`)}`);
     await con.run("LOAD postgres; LOAD ducklake");
     await con.run(
       `ATTACH ${literal(`ducklake:${lakeDir}/catalog.ducklake`)} AS lake (DATA_PATH ${literal(`${lakeDir}/data/`)})`,

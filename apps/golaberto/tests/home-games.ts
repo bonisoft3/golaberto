@@ -151,7 +151,8 @@ Deno.test("the homepage projection contains only both selected feeds and replay 
     SELECT json_build_object('upcoming', (SELECT count(*) FROM home_game_card WHERE home_upcoming_rank > 0),
       'recent', (SELECT count(*) FROM home_game_card WHERE home_recent_rank > 0),
       'mismatch', (SELECT count(*) FROM home_game_card h JOIN game_card g USING(id)
-        WHERE (to_jsonb(h)-'txid') IS DISTINCT FROM (to_jsonb(g)-'txid')),
+        WHERE (to_jsonb(h)-ARRAY['txid', 'show_country', 'home_country', 'away_country'])
+          IS DISTINCT FROM (to_jsonb(g)-ARRAY['txid', 'show_country', 'home_country', 'away_country'])),
       'replayWrites', (SELECT count(*) FROM home_game_card h JOIN home_versions v USING(id) WHERE h.ctid::text<>v.version),
       'unselectedWrites', (SELECT count(*) FROM game_card g JOIN unselected_versions v USING(id) WHERE g.ctid::text<>v.version));
   `), { upcoming: 20, recent: 20, mismatch: 0, replayWrites: 0, unselectedWrites: 0 });

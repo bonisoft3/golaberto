@@ -27,12 +27,12 @@
           </dl>
           <section class="team-next">
             <h2 data-text="{msg.team_next}"></h2>
-<ol class="games team-games" data-live="team_game" data-filter="team_id=eq.{id}&played=is.false&limit=5" data-order="day.asc,kickoff.asc" data-empty="{msg.games_none_upcoming}">
+<ol class="games team-games" data-live="team_game" data-select="*,championship(show_country),opponent:opponent_id(country)" data-filter="team_id=eq.{id}&played=is.false&limit=5" data-order="day.asc,kickoff.asc" data-empty="{msg.games_none_upcoming}">
   <template data-item>
-    <li><a class="game-row" data-route="jogo" data-param-id="{game_id}" data-played="{played}" data-result="{result}">
+    <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{game_id}" data-played="{played}" data-result="{result}">
       <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
       <span class="where" data-text="{championship_name}"></span>
-      <span class="home"><span class="venue" data-text="{msg[side]}"></span> <span class="archive-icon" data-text="{opponent_id}|{opponent_name}" data-text-format="team-badge"></span><span data-text="{opponent_name}"></span></span>
+      <span class="home"><span class="team-name"><span class="venue" data-text="{msg[side]}"></span> <span data-text="{opponent_name}"></span></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{opponent.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{opponent_id}|{opponent_name}" data-text-format="team-badge"></span></span></span>
       <span class="score"><b data-text="{goals_for}"></b><i>x</i><b data-text="{goals_against}"></b></span>
       <span class="away"></span>
     </a></li>
@@ -41,12 +41,12 @@
           </section>
           <section class="team-results">
             <h2 data-text="{msg.team_results}"></h2>
-<ol class="games team-games" data-live="team_game" data-filter="team_id=eq.{id}&played=is.true&limit=10" data-order="day.desc,kickoff.desc" data-empty="{msg.games_none_results}">
+<ol class="games team-games" data-live="team_game" data-select="*,championship(show_country),opponent:opponent_id(country)" data-filter="team_id=eq.{id}&played=is.true&limit=10" data-order="day.desc,kickoff.desc" data-empty="{msg.games_none_results}">
   <template data-item>
-    <li><a class="game-row" data-route="jogo" data-param-id="{game_id}" data-played="{played}" data-result="{result}">
+    <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{game_id}" data-played="{played}" data-result="{result}">
       <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
       <span class="where" data-text="{championship_name}"></span>
-      <span class="home"><span class="venue" data-text="{msg[side]}"></span> <span class="archive-icon" data-text="{opponent_id}|{opponent_name}" data-text-format="team-badge"></span><span data-text="{opponent_name}"></span></span>
+      <span class="home"><span class="team-name"><span class="venue" data-text="{msg[side]}"></span> <span data-text="{opponent_name}"></span></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{opponent.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{opponent_id}|{opponent_name}" data-text-format="team-badge"></span></span></span>
       <span class="score"><b data-text="{goals_for}"></b><i>x</i><b data-text="{goals_against}"></b></span>
       <span class="away"><i class="outcome" title="{msg[result]}"></i><span class="visually-hidden" data-text="{msg[result]}"></span></span>
     </a></li>
@@ -55,12 +55,22 @@
           </section>
           <section class="squads">
             <h2 data-text="{msg.team_squads}"></h2>
+<div class="paged-read" data-live="archive_page" data-filter="id=eq.team-squads-{id}" data-machine='{"field":"state","initial":"browsing","context":{"offset":0,"next_offset":40,"page":1},"states":{"browsing":{"on":{"click@team-squads-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@team-squads-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}' data-empty-row='{"id":"team-squads-{id}","owner_id":"{id}","offset":0,"next_offset":40,"page":1,"state":"browsing"}'>
+  <div class="page-window">
             <table class="grid squad-table">
               <thead><tr><th scope="col" class="champ" data-text="{msg.col_championship}"></th><th scope="col" class="name"><abbr title="{msg.col_player_long}" data-text="{msg.col_player}"></abbr></th><th scope="col" class="num"><abbr title="{msg.col_pos_long}" data-text="{msg.col_pos}"></abbr></th><th scope="col" class="num"><abbr title="{msg.col_played_long}" data-text="{msg.col_played}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_started_long}" data-text="{msg.col_started}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_came_on_long}" data-text="{msg.col_came_on}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_minutes_long}" data-text="{msg.col_minutes}"></abbr></th><th scope="col" class="num"><abbr title="{msg.col_goals_long}" data-text="{msg.col_goals}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_yellow_long}" data-text="{msg.col_yellow}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_red_long}" data-text="{msg.col_red}"></abbr></th></tr></thead>
-              <tbody data-live="player_stat" data-filter="team_id=eq.{id}" data-order="championship_name.asc,played.desc,minutes.desc,player_name.asc" data-empty="{msg.team_no_squads}">
+              <tbody data-live="player_stat" data-filter="team_id=eq.{owner_id}&offset={offset}&limit=40" data-order="championship_name.asc,played.desc,minutes.desc,player_name.asc" data-empty="{msg.team_no_squads}">
                 <template data-item><tr><td class="champ"><a data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}"></span></a></td><td class="name"><a data-route="jogador" data-param-id="{player_id}" data-text="{player_name}"></a></td><td class="num" data-text="{position}"></td><td class="num" data-text="{played}"></td><td class="num wide" data-text="{started}"></td><td class="num wide" data-text="{came_on}"></td><td class="num wide" data-text="{minutes}"></td><td class="num" data-text="{goals}"></td><td class="num wide" data-text="{yellow}"></td><td class="num wide" data-text="{red}"></td></tr></template>
               </tbody>
             </table>
+<nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
+  <button id="team-squads-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
+  <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
+  <span data-live="player_stat" data-filter="team_id=eq.{owner_id}&amp;offset={next_offset}&amp;limit=1" data-order="championship_name.asc,played.desc,minutes.desc,player_name.asc" data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <button id="team-squads-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
+</nav>
+  </div>
+</div>
           </section>
         </div>
         <aside class="side">

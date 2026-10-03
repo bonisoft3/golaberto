@@ -256,12 +256,17 @@ const normalized = (totals, people) => {
   });
 };
 
-export const plan = (inputs, seed, outputs) => {
-  if (inputs.games.length === 0) return [];
+export function* plan(inputs, seed) {
+  if (inputs.games.length === 0) return;
   const ids = numbers(inputs);
-  const jobs = [
-    { wasm: WASM, input: { op: "historic", request: ratingsRequest(inputs.games.filter((g) => g.seven_years), ids, []) } },
-    ...inputs.phases.map((p) => ({
+  // Phase windows overlap most of the archive. Yielding one at a time keeps
+  // their duplicated requests out of memory while preserving job order.
+  const history = yield {
+    wasm: WASM,
+    input: { op: "historic", request: ratingsRequest(inputs.games.filter((g) => g.seven_years), ids, []) },
+  };
+  for (const p of inputs.phases) {
+    yield {
       wasm: WASM,
       input: {
         op: "eval",
@@ -269,15 +274,13 @@ export const plan = (inputs, seed, outputs) => {
           ids.phases.number(p.id),
         ]),
       },
-    })),
-  ];
+    };
+  }
   // The player ratings read the team ratings the historic job answers.
-  if (outputs.length === 0 || !inputs.games.some((g) => g.recent)) return jobs;
-  return [
-    ...jobs,
-    { wasm: WASM, input: { op: "player_ratings", request: playersRequest(inputs, persisted(outputs[0]), ids) } },
-  ];
-};
+  if (inputs.games.some((g) => g.recent)) {
+    yield { wasm: WASM, input: { op: "player_ratings", request: playersRequest(inputs, persisted(history), ids) } };
+  }
+}
 
 export const finish = (inputs, outputs) => {
   if (inputs.games.length === 0) return { team_rating: [], player_rating: [], rating_eval: [] };

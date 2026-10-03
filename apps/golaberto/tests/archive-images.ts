@@ -34,9 +34,9 @@ Deno.test("archive images load across lists, standings, directories and team hea
       console.log("image viewport", width);
       await page.goto(base);
       const first = page.locator(".home-games .game-row").first();
-      await loaded(first.locator(".archive-icon img"), 2);
+      await loaded(first.locator(".team-badge img"), 2);
       for (const side of ["home", "away"]) {
-        const label = first.locator(`.${side} > span[data-text]:not(.archive-icon)`);
+        const label = first.locator(`.${side} .team-name`);
         assert((await label.innerText()).trim().length > 0 && await label.isVisible(), "both team names stay visible");
       }
       const championshipFlag = page.locator(".home-championship h3 .archive-icon img").first();
@@ -64,7 +64,7 @@ Deno.test("archive images load across lists, standings, directories and team hea
 
       console.log("match list images");
       await page.goto(new URL("/jogos", base).href);
-      await loaded(page.locator(".game-row").first().locator(".archive-icon img"), 2);
+      await loaded(page.locator(".game-row").first().locator(".team-badge img"), 2);
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "match icons cause no horizontal overflow");
 
       // A CDN outage must leave both team names readable and the row navigable.
@@ -85,7 +85,7 @@ Deno.test("archive images load across lists, standings, directories and team hea
       assert(blockedImages > 0, "the outage actually intercepts CDN requests");
       assert(await failedImage.evaluate((element: HTMLImageElement) => element.complete && element.naturalWidth === 0), "a rendered badge actually failed");
       for (const side of ["home", "away"]) {
-        const label = failedRow.locator(`.${side} > span[data-text]:not(.archive-icon)`);
+        const label = failedRow.locator(`.${side} .team-name`);
         const name = (await label.innerText()).trim();
         assert(name.length > 0 && await label.isVisible(), "failed images preserve each visible team name");
         assert((await failedRow.ariaSnapshot()).includes(name), "accessible match label retains the exact team name");

@@ -130,6 +130,9 @@ services:
         path: ../shell/handlers/count-or-null.js
         target: /srv/shell/handlers/count-or-null.js
       - action: sync+restart
+        path: ../shell/handlers/page-value.js
+        target: /srv/shell/handlers/page-value.js
+      - action: sync+restart
         path: ../shell/handlers/row-id.js
         target: /srv/shell/handlers/row-id.js
       - action: sync+restart

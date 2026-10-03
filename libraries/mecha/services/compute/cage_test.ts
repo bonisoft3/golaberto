@@ -138,6 +138,40 @@ Deno.test("inputs are frozen", async () => {
   await assertRejects(() => plan(`inputs.game.push({}); return [];`, { game: [] }), Error);
 });
 
+Deno.test("a generator allocates its next job only after the prior output arrives", async () => {
+  const cage = new Cage("sequential.js");
+  try {
+    await cage.load(compile("sequential.js", `
+      export const reads = []; export const queries = {};
+      let allocated = 0;
+      export function* plan() {
+        const first = yield { wasm: "echo", input: ++allocated };
+        yield { wasm: "echo", input: { allocated: ++allocated, first } };
+      }
+      export const finish = () => ({ allocated });`));
+    assertEquals(await cage.ask({ inputs: {}, seed: 7 }), { sequential: true, done: false, job: { wasm: "echo", input: 1 } });
+    assertEquals((await cage.ask({ outputs: [] })).out, { allocated: 1 });
+    assertEquals(await cage.ask({ resume: { result: 42 } }), {
+      sequential: true, done: false, job: { wasm: "echo", input: { allocated: 2, first: { result: 42 } } },
+    });
+    assertEquals(await cage.ask({ resume: null }), { sequential: true, done: true });
+  } finally { cage.close(); }
+});
+
+Deno.test("generator replies are frozen and returned jobs cannot be silently skipped", async () => {
+  for (const body of ["const answer = yield {wasm:'echo',input:1}; answer.value = 2;", "yield {wasm:'echo',input:1}; return [];"]) {
+    const cage = new Cage("invalid-generator.js");
+    try {
+      await cage.load(compile("invalid-generator.js", `
+        export const reads = []; export const queries = {};
+        export function* plan() { ${body} }
+        export const finish = () => ({});`));
+      await cage.ask({ inputs: {}, seed: 7 });
+      await assertRejects(() => cage.ask({ resume: { value: 1 } }), Error);
+    } finally { cage.close(); }
+  }
+});
+
 Deno.test("a module exports exactly the contract", async () => {
   const cage = new Cage("extra.js");
   try {

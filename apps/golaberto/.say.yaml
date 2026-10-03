@@ -18,6 +18,10 @@ say:
         priority: 1
         cmds:
           - do: deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker tests/home-games.ts tests/home-upgrade.ts
+      matches-games:
+        priority: 1
+        cmds:
+          - do: deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker tests/matches-games.ts
       archive-refresh:
         priority: 1
         cmds:
@@ -25,13 +29,25 @@ say:
       acceptance:
         priority: 1
         cmds:
-          - do: deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/acceptance.ts
+          - do: 'let project = (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim); if $project !~ ''(?i)(check|test)'' or ($project | str downcase) == ''golaberto'' { error make {msg: ''acceptance requires an explicit disposable check/test compose project''} }; mise exec -- docker compose -p $project up -d --no-deps --scale apps_golaberto-compute=1 apps_golaberto-compute; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE }; deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/acceptance.ts; let verdict = $env.LAST_EXIT_CODE; mise exec -- docker compose -p $project stop apps_golaberto-compute; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE }; exit $verdict'
       archive-images:
         cmds:
           - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/archive-images.ts
       favicon:
         cmds:
           - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/favicon.ts
+      game-countries:
+        cmds:
+          - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/game-countries.ts
+          - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker tests/home-upgrade.ts
+      route-queries:
+        priority: 1
+        cmds:
+          - do: deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker tests/route-queries.ts
+      route-loads:
+        priority: 1
+        cmds:
+          - do: deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/route-loads.ts
       replay:
         priority: 1
         cmds:
@@ -54,7 +70,7 @@ say:
           - do: mise exec -- cue vet ./...
       rpk:
         cmds:
-          - do: mise exec -- redpanda-connect lint --skip-env-var-check docker/golaberto-standings.yaml docker/golaberto-game-cards.yaml docker/golaberto-home-games.yaml docker/golaberto-player-stats.yaml docker/golaberto-rounds.yaml
+          - do: mise exec -- redpanda-connect lint --skip-env-var-check docker/golaberto-standings.yaml docker/golaberto-game-cards.yaml docker/golaberto-home-games.yaml docker/golaberto-matches-games.yaml docker/golaberto-player-stats.yaml docker/golaberto-rounds.yaml
       facts:
         priority: 1
         cmds:

@@ -14,7 +14,7 @@ export type {
 export { createLiveQueryCollection, liveQueryCollectionOptions } from "@tanstack/db"
 // The predicate vocabulary a live query is built from — what a PostgREST
 // filter translates into.
-export { and, eq, gt, gte, inArray, isNull, lt, lte, not, or } from "@tanstack/db"
+export { and, eq, gt, gte, ilike, inArray, isNull, like, lt, lte, not, or } from "@tanstack/db"
 // Indexes createIndex will not choose for you: BasicIndex answers the equality
 // lookup a join does, BTreeIndex the ordered scan an orderBy with a limit
 // needs to stop early instead of loading everything.

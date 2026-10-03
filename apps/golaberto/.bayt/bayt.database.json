@@ -117,6 +117,26 @@
         },
         {
           "action": "rebuild",
+          "path": "../services/database/migrations/016_matches_performance.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
+          "path": "../services/database/migrations/017_game_countries.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
+          "path": "../services/database/migrations/018_route_performance.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
+          "path": "../services/database/migrations/019_normalized_game_flags.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
           "path": "../services/database/migrations/900_seed.sql",
           "target": "/docker-entrypoint-initdb.d"
         }
@@ -153,6 +173,10 @@
           "services/database/migrations/013_home_games.sql",
           "services/database/migrations/014_home_championships.sql",
           "services/database/migrations/015_home_performance.sql",
+          "services/database/migrations/016_matches_performance.sql",
+          "services/database/migrations/017_game_countries.sql",
+          "services/database/migrations/018_route_performance.sql",
+          "services/database/migrations/019_normalized_game_flags.sql",
           "services/database/migrations/900_seed.sql"
         ],
         "dst": "/docker-entrypoint-initdb.d/",
@@ -204,6 +228,10 @@
       "services/database/migrations/013_home_games.sql",
       "services/database/migrations/014_home_championships.sql",
       "services/database/migrations/015_home_performance.sql",
+      "services/database/migrations/016_matches_performance.sql",
+      "services/database/migrations/017_game_countries.sql",
+      "services/database/migrations/018_route_performance.sql",
+      "services/database/migrations/019_normalized_game_flags.sql",
       "services/database/migrations/900_seed.sql"
     ],
     "exclude": []
@@ -306,6 +334,10 @@
           "services/database/migrations/013_home_games.sql",
           "services/database/migrations/014_home_championships.sql",
           "services/database/migrations/015_home_performance.sql",
+          "services/database/migrations/016_matches_performance.sql",
+          "services/database/migrations/017_game_countries.sql",
+          "services/database/migrations/018_route_performance.sql",
+          "services/database/migrations/019_normalized_game_flags.sql",
           "services/database/migrations/900_seed.sql"
         ],
         "exclude": []

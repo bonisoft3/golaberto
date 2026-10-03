@@ -14,7 +14,7 @@
 import { parseHTML } from "npm:linkedom@0.18.4";
 import "npm:fake-indexeddb@6.2.5/auto";
 import { load as parseYaml } from "../interpreter/vendor/js-yaml.js";
-import { embedDeps, parseEmbeds, parseFilter, parseLimit, screenEnv } from "../interpreter/fragment.js";
+import { embedDeps, parseEmbeds, parseFilter, parseLimit, parseOffset, screenEnv } from "../interpreter/fragment.js";
 import { upsertKey as resolveKey } from "../interpreter/data-sync.js";
 import { batched } from "../interpreter/batched-store.js";
 import "../interpreter/vendor/ses.umd.min.js";
@@ -330,7 +330,8 @@ export function memoryStore(tables: Record<string, Row[]>, cluster: Cluster = {}
       .filter((r: Row) => visible(table, r) && preds.every((p: (row: Row) => boolean) => p(r)))
       .sort(compareBy(order ?? (opts.order as string | undefined)));
     const limit = parseLimit(opts.filter);
-    const capped = limit === undefined ? sorted : sorted.slice(0, limit);
+    const offset = parseOffset(opts.filter) ?? 0;
+    const capped = sorted.slice(offset, limit === undefined ? undefined : offset + limit);
     return capped.map((row: Row) => embedInto(table, row, { ...row }, embeds));
   };
 
@@ -464,7 +465,7 @@ export function memoryStore(tables: Record<string, Row[]>, cluster: Cluster = {}
     store.calls.push({ op: "removeWhere", table });
     // A cap on a delete states a row count the server cannot honour, so the
     // shipped store refuses the filter rather than deleting what it matches.
-    if (parseLimit(filter) !== undefined) throw new Error(`delete filter carries a limit: ${filter}`);
+    if (parseLimit(filter) !== undefined || parseOffset(filter) !== undefined) throw new Error(`delete filter carries a page bound: ${filter}`);
     const preds = parseFilter(filter);
     if (preds === null) throw new Error(`filter outside the grammar for ${table}: ${filter}`);
     const doomed = of(table).filter((r: Row) => preds.every((p: (row: Row) => boolean) => p(r)));

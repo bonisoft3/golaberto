@@ -302,3 +302,12 @@ Deno.test("all 68 seed UUIDs retain their archive crest after renaming", () => {
       "https://d24oxbyqb2c11t.cloudfront.net/teams/logos/" + upstream + "/thumb.png");
   }
 });
+
+Deno.test("game flags require the championship switch and a known country", () => {
+  assertEquals(flag("false|Brazil"), []);
+  assertEquals(flag("|Brazil"), []);
+  assertEquals(flag("true|"), []);
+  assertEquals(flag(null), []);
+  assertEquals(flag("true|Brasil"), flag("Brazil"));
+  assertEquals(flag("true|Argentina"), flag("Argentina"));
+});

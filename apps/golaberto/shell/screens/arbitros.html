@@ -13,7 +13,7 @@
 </header>
 <h1 class="band" data-text="{msg.referees_title}"></h1>
 <div class="page">
-  <div class="content" data-live="directory_filter" data-filter="id=eq.referees" data-machine='{"field":"state","initial":"browsing","context":{"q":""},"states":{"browsing":{"on":{"input@referees-q":{"assign":{"q":{"type":"event","params":{"field":"value"}}}}}}}}'>
+  <div class="content" data-live="directory_filter" data-filter="id=eq.referees" data-machine='{"field":"state","initial":"browsing","context":{"q":"","offset":0,"next_offset":40,"page":1},"states":{"browsing":{"on":{"input@referees-q":{"assign":{"q":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}},"click@referees-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@referees-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}'>
     <template data-item>
       <div class="catalog">
         <div class="filters" role="search">
@@ -26,7 +26,7 @@
             <th scope="col" data-text="{msg.col_referee}"></th>
             <th scope="col" class="narrow" data-text="{msg.col_from}"></th>
           </tr></thead>
-          <tbody data-live="referee" data-filter="name=ilike.*{q}*" data-order="name.asc" data-empty="{msg.referees_empty}">
+          <tbody data-live="referee" data-filter="name=ilike.*{q}*&offset={offset}&limit=40" data-order="name.asc" data-empty="{msg.referees_empty}">
             <template data-item>
               <tr>
                 <td><a data-route="arbitro" data-param-id="{id}" data-text="{name}"></a></td>
@@ -35,6 +35,12 @@
             </template>
           </tbody>
         </table>
+<nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
+  <button id="referees-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
+  <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
+  <span data-live="referee" data-filter="name=ilike.*{q}*&amp;offset={next_offset}&amp;limit=1" data-order="name.asc" data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <button id="referees-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
+</nav>
       </div>
     </template>
   </div>

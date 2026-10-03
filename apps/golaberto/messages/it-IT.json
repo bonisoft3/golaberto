@@ -236,5 +236,10 @@
   "home_selection": "Fino a 20 partite dei prossimi e ultimi sette giorni, scelte per forza delle squadre, importanza e vicinanza della partita. Ora di Brasília.",
   "home_no_upcoming": "Nessuna partita con orario nei prossimi sette giorni.",
   "home_no_results": "Nessun risultato con orario registrato negli ultimi sette giorni.",
-  "home_all_games": "Tutte le partite ›"
+  "home_all_games": "Tutte le partite ›",
+  "archive_pages": "Paginazione",
+  "page_previous": "Precedente",
+  "page_next": "Successiva",
+  "page_label": "Pagina",
+  "choice_search": "Cerca opzioni"
 }

@@ -21,6 +21,18 @@ _homeChampionshipsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split
 _homePerformanceSql: string @embed(file="services/database/sql/015_home_performance.sql", type=text)
 _homePerformanceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homePerformanceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
+_matchesPerformanceSql: string @embed(file="services/database/sql/016_matches_performance.sql", type=text)
+_matchesPerformanceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_matchesPerformanceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
+_gameCountriesSql: string @embed(file="services/database/sql/017_game_countries.sql", type=text)
+_gameCountriesUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_gameCountriesSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
+_normalizedGameFlagsSql: string @embed(file="services/database/sql/019_normalized_game_flags.sql", type=text)
+_normalizedGameFlagsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_normalizedGameFlagsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
+_routePerformanceSql: string @embed(file="services/database/sql/018_route_performance.sql", type=text)
+_routePerformanceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_routePerformanceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
 // "2026" or "2026/2027", in immutable SQL: to_char is only STABLE.
 _season: "extract(year from begins)::int::text || CASE WHEN extract(year from begins) = extract(year from ends) THEN '' ELSE '/' || extract(year from ends)::int::text END"
 
@@ -38,6 +50,34 @@ _hm: "CASE WHEN kickoff IS NULL THEN '' ELSE lpad(extract(hour from (kickoff AT 
 _score: "this >= 0 && this < 100"
 
 code: pronto.#App & {
+	// Queries own their historical subsets; a detail page never loads an archive.
+	state: entities: {
+		AppUser: onDemand: true
+		Category: onDemand: true
+		Championship: onDemand: true
+		Phase: onDemand: true
+		Group: onDemand: true
+		Zone: onDemand: true
+		Stadium: onDemand: true
+		Team: onDemand: true
+		Referee: onDemand: true
+		Player: onDemand: true
+		Game: onDemand: true
+		Goal: onDemand: true
+		PlayerGame: onDemand: true
+		Standing: onDemand: true
+		TeamChance: onDemand: true
+		ZoneChance: onDemand: true
+		PositionChance: onDemand: true
+		GameImportance: onDemand: true
+		TeamRating: onDemand: true
+		PlayerRating: onDemand: true
+		GameCard: onDemand: true
+		TeamGame: onDemand: true
+		Comment: onDemand: true
+		PlayerStat: onDemand: true
+		PhaseRound: onDemand: true
+	}
 	state: entities: {
 		// The auth plane's person: every reader is one, a guest until a passkey
 		// keeps them (ir decision-guest-reading).
@@ -464,7 +504,7 @@ code: pronto.#App & {
 			]
 		}
 		// One game as every list shows it, its names written beside its ids by the
-		// game-cards stream so a list reads one synced table (ir
+		// game-cards stream. Flag settings and countries join their owners (ir
 		// decision-local-reads). Keyed by the game, and gone with it.
 		GameCard: {
 			id: "0xc922f963c8b2479d"
@@ -503,6 +543,9 @@ code: pronto.#App & {
 				{ordinal: 28, name: "home_recent_rank", type: "int32", default: "0", cel: "this >= 0 && this <= 20"},
 				{ordinal: 29, name: "home_upcoming_group", type: "bool", default: "false"},
 				{ordinal: 30, name: "home_recent_group", type: "bool", default: "false"},
+				{ordinal: 31, name: "show_country", type: "bool", default: "false", retired: true},
+				{ordinal: 32, name: "home_country", type: "string", default: "''", retired: true},
+				{ordinal: 33, name: "away_country", type: "string", default: "''", retired: true},
 			]
 			indexes: [{on: "phase_id"}, {on: "day"}, {on: "stadium_id"}, {on: "referee_id"}]
 		}
@@ -544,6 +587,53 @@ code: pronto.#App & {
 				{ordinal: 28, name: "home_recent_rank", type: "int32", default: "0", cel: "this >= 0 && this <= 20"},
 				{ordinal: 29, name: "home_upcoming_group", type: "bool", default: "false"},
 				{ordinal: 30, name: "home_recent_group", type: "bool", default: "false"},
+				{ordinal: 31, name: "show_country", type: "bool", default: "false", retired: true},
+				{ordinal: 32, name: "home_country", type: "string", default: "''", retired: true},
+				{ordinal: 33, name: "away_country", type: "string", default: "''", retired: true},
+			]
+			indexes: [{on: "championship_id"}]
+		}
+		// The matches page syncs only its two chronological forty-card feeds.
+		MatchesGameCard: {
+			id: "0x87ef7c2b79e4b4e4"
+			table:      "matches_game_card"
+			durability: "live"
+			writers:    "pipeline"
+			access: {scope: "public"}
+			fields: [
+				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "game"},
+				{ordinal: 2, name: "phase_id", type: "uuid", ref: "phase"},
+				{ordinal: 3, name: "championship_id", type: "uuid", ref: "championship"},
+				{ordinal: 4, name: "round", type: "int32", required: false, cel: "this >= 1 && this <= 99"},
+				{ordinal: 5, name: "day", type: "date"},
+				{ordinal: 6, name: "kickoff", type: "timestamp", required: false},
+				{ordinal: 7, name: "played", type: "bool"},
+				{ordinal: 8, name: "home_id", type: "uuid", ref: "team"},
+				{ordinal: 9, name: "away_id", type: "uuid", ref: "team"},
+				{ordinal: 10, name: "home_name", type: "string"},
+				{ordinal: 11, name: "away_name", type: "string"},
+				{ordinal: 12, name: "home_score", type: "int32", required: false, cel: _score},
+				{ordinal: 13, name: "away_score", type: "int32", required: false, cel: _score},
+				{ordinal: 14, name: "home_aet", type: "int32", required: false, cel: _score},
+				{ordinal: 15, name: "away_aet", type: "int32", required: false, cel: _score},
+				{ordinal: 16, name: "home_pen", type: "int32", required: false, cel: _score},
+				{ordinal: 17, name: "away_pen", type: "int32", required: false, cel: _score},
+				{ordinal: 18, name: "championship_name", type: "string"},
+				{ordinal: 19, name: "phase_name", type: "string"},
+				{ordinal: 20, name: "stadium_name", type: "string", required: false},
+				{ordinal: 21, name: "referee_name", type: "string", required: false},
+				{ordinal: 22, name: "attendance", type: "int32", required: false, cel: "this >= 0 && this <= 250000"},
+				{ordinal: 23, name: "day_display", type: "string", generated: _dmy},
+				{ordinal: 24, name: "kickoff_local", type: "string", generated: _hm},
+				{ordinal: 25, name: "stadium_id", type: "uuid", required: false, ref: "stadium"},
+				{ordinal: 26, name: "referee_id", type: "uuid", required: false, ref: "referee"},
+				{ordinal: 27, name: "home_upcoming_rank", type: "int32", default: "0", cel: "this >= 0 && this <= 20"},
+				{ordinal: 28, name: "home_recent_rank", type: "int32", default: "0", cel: "this >= 0 && this <= 20"},
+				{ordinal: 29, name: "home_upcoming_group", type: "bool", default: "false"},
+				{ordinal: 30, name: "home_recent_group", type: "bool", default: "false"},
+				{ordinal: 31, name: "show_country", type: "bool", default: "false", retired: true},
+				{ordinal: 32, name: "home_country", type: "string", default: "''", retired: true},
+				{ordinal: 33, name: "away_country", type: "string", default: "''", retired: true},
 			]
 			indexes: [{on: "championship_id"}]
 		}
@@ -574,6 +664,8 @@ code: pronto.#App & {
 				{ordinal: 14, name: "result", type: "string", cel: "this in ['', 'w', 'd', 'l']"},
 				{ordinal: 15, name: "day_display", type: "string", generated: _dmy},
 				{ordinal: 16, name: "kickoff_local", type: "string", generated: _hm},
+				{ordinal: 17, name: "show_country", type: "bool", default: "false", retired: true},
+				{ordinal: 18, name: "opponent_country", type: "string", default: "''", retired: true},
 			]
 			indexes: [{on: "team_id"}, {on: "game_id"}]
 		}
@@ -640,6 +732,8 @@ code: pronto.#App & {
 				// The sides' names, for the labels: a draft binds its own row.
 				{ordinal: 11, name: "home_name", type: "string", required: false},
 				{ordinal: 12, name: "away_name", type: "string", required: false},
+				{ordinal: 13, name: "stadium_q", type: "string", default: "''", cel: "this.size() <= 80"},
+				{ordinal: 14, name: "referee_q", type: "string", default: "''", cel: "this.size() <= 80"},
 			]
 		}
 		// A player's season for one team in one championship, recounted by the
@@ -712,8 +806,11 @@ code: pronto.#App & {
 				{ordinal: 1, name: "id", type: "string", pk: true, cel: "this.size() > 0 && this.size() <= 16"},
 				{ordinal: 2, name: "q", type: "string", default: "''", cel: "this.size() <= 80"},
 				{ordinal: 3, name: "state", type: "string", default: "'browsing'", cel: "this in ['browsing']"},
+				{ordinal: 4, name: "offset", type: "int32", default: "0", cel: "this >= 0"},
+				{ordinal: 5, name: "next_offset", type: "int32", default: "40", cel: "this >= 40"},
+				{ordinal: 6, name: "page", type: "int32", default: "1", cel: "this >= 1"},
 			]
-			seed: [{id: "teams", q: "", state: "browsing"}, {id: "stadiums", q: "", state: "browsing"}, {id: "referees", q: "", state: "browsing"}]
+			seed: [{id: "teams", q: "", state: "browsing", offset: 0, next_offset: 40, page: 1}, {id: "stadiums", q: "", state: "browsing", offset: 0, next_offset: 40, page: 1}, {id: "referees", q: "", state: "browsing", offset: 0, next_offset: 40, page: 1}]
 		}
 		// The catalogue's search, held by the tab: what a reader typed survives a
 		// trip to a championship and back, and belongs to nobody else.
@@ -728,8 +825,24 @@ code: pronto.#App & {
 				{ordinal: 3, name: "region", type: "string", default: "''", cel: "this in ['', 'world', 'continental', 'national']"},
 				// The search machine's state (ir decision-catalog-tab).
 				{ordinal: 4, name: "state", type: "string", default: "'browsing'", cel: "this in ['browsing']"},
+				{ordinal: 5, name: "offset", type: "int32", default: "0", cel: "this >= 0"},
+				{ordinal: 6, name: "next_offset", type: "int32", default: "40", cel: "this >= 40"},
+				{ordinal: 7, name: "page", type: "int32", default: "1", cel: "this >= 1"},
 			]
-			seed: [{id: "catalog", q: "", region: "", state: "browsing"}]
+			seed: [{id: "catalog", q: "", region: "", state: "browsing", offset: 0, next_offset: 40, page: 1}]
+		}
+		ArchivePage: {
+			id: "0x93cef5ac14f2a64a"
+			table: "archive_page"
+			durability: "tab"
+			fields: [
+				{ordinal: 1, name: "id", type: "string", pk: true},
+				{ordinal: 2, name: "owner_id", type: "uuid"},
+				{ordinal: 3, name: "offset", type: "int32", default: "0", cel: "this >= 0"},
+				{ordinal: 4, name: "next_offset", type: "int32", default: "40", cel: "this >= 40"},
+				{ordinal: 5, name: "page", type: "int32", default: "1", cel: "this >= 1"},
+				{ordinal: 6, name: "state", type: "string", default: "'browsing'", cel: "this in ['browsing']"},
+			]
 		}
 	}
 
@@ -753,6 +866,10 @@ code: pronto.#App & {
 		{name: "013_home_games.sql", src: "services/database/sql/013_home_games.sql"},
 		{name: "014_home_championships.sql", src: "services/database/sql/014_home_championships.sql"},
 		{name: "015_home_performance.sql", src: "services/database/sql/015_home_performance.sql"},
+		{name: "016_matches_performance.sql", src: "services/database/sql/016_matches_performance.sql"},
+		{name: "017_game_countries.sql", src: "services/database/sql/017_game_countries.sql"},
+		{name: "018_route_performance.sql", src: "services/database/sql/018_route_performance.sql"},
+		{name: "019_normalized_game_flags.sql", src: "services/database/sql/019_normalized_game_flags.sql"},
 		// Large archive fixtures are copied at build, never expanded through CUE.
 		{name: "900_seed.sql", src: "services/database/sql/900_seed.sql"},
 	]
@@ -762,6 +879,10 @@ code: pronto.#App & {
 	state: migrations: "013_home_games": {operations: [{sql: {up: _homeGamesUpgrade, onComplete: true}}]}
 	state: migrations: "014_home_championships": {operations: [{sql: {up: _homeChampionshipsUpgrade, onComplete: true}}]}
 	state: migrations: "015_home_performance": {operations: [{sql: {up: _homePerformanceUpgrade, onComplete: true}}]}
+	state: migrations: "016_matches_performance": {operations: [{sql: {up: _matchesPerformanceUpgrade, onComplete: true}}]}
+	state: migrations: "017_game_countries": {operations: [{sql: {up: _gameCountriesUpgrade, onComplete: true}}]}
+	state: migrations: "018_route_performance": {operations: [{sql: {up: _routePerformanceUpgrade, onComplete: true}}]}
+	state: migrations: "019_normalized_game_flags": {operations: [{sql: {up: _normalizedGameFlagsUpgrade, onComplete: true}}]}
 	// The numeric stage (ir decision-chances).
 	// The chances read each game's power from team_rating, so they rerun
 	// whenever the ratings change.
@@ -787,6 +908,12 @@ code: pronto.#App & {
 		to: "HomeGameCard"
 		group: "golaberto-home-games"
 	}
+	state: pipelines: "matches-games": {
+		raw: true
+		from: "Game"
+		to: "MatchesGameCard"
+		group: "golaberto-matches-games"
+	}
 	state: pipelines: "player-stats": {
 		raw:   true
 		from:  "PlayerGame"
@@ -801,6 +928,7 @@ code: pronto.#App & {
 	}
 
 	surface: handlers: {
+		"page-value": {ir: "handler-page-value", of: "campeonatos", src: "shell/handlers/page-value.js", note: "a forty-row page changes its offset, next-page probe and displayed page together; previous never passes page one"}
 		"blank-null": {ir: "handler-blank-null", of: "editar", src: "shell/handlers/blank-null.js", note: "an unset optional choice clears the game's reference rather than pointing it at an empty string"}
 		"count-or-null": {ir: "handler-count-or-null", of: "editar", src: "shell/handlers/count-or-null.js", note: "a typed score, minute or crowd as the integer the game stores; a cleared box is an unknown count"}
 		"both-scored": {ir: "handler-both-scored", of: "editar", src: "shell/handlers/both-scored.js", note: "a game is played exactly when both sides have a score; a score typed decides it"}
@@ -1080,10 +1208,11 @@ code: pronto.#App & {
 			}
 			catalogues: _catalogues
 		}
-		ir: sha256: "1a239d15c86b218482f8e1c6ad8b7439bfdd7dfcc3313111866f27c5f40acf28"
+		ir: sha256: "8ad36f4a9976021d022e007389dad63b2db3e708efe0bc28935774a96635e763"
 		targets: []
 		decisions: {
 			"decision-favicon": {}
+			"decision-bounded-route-reads": {}
 			"decision-archive-images": {}
 			"decision-uuid-keys": {}
 			"decision-points": {}
@@ -1719,6 +1848,13 @@ loop: surface: checks: "home-games": {
 	note: "the home selection's quality, time windows, cap, stable ordering and refresh in rolled-back Postgres transactions"
 }
 
+loop: surface: checks: "matches-games": {
+	verb: "integrate"
+	priority: 1
+	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker tests/matches-games.ts"]
+	note: "the bounded chronological matches feeds: cap, parity, selected changes, no-op refresh and service-only writes"
+}
+
 loop: surface: checks: "archive-refresh": {
 	verb: "integrate"
 	priority: 1
@@ -1730,11 +1866,14 @@ loop: surface: checks: "archive-refresh": {
 loop: surface: checks: "acceptance": {
 	verb:     "integrate"
 	priority: 1
-	cmds: ["deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/acceptance.ts"]
+	cmds: ["let project = (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim); if $project !~ '(?i)(check|test)' or ($project | str downcase) == 'golaberto' { error make {msg: 'acceptance requires an explicit disposable check/test compose project'} }; mise exec -- docker compose -p $project up -d --no-deps --scale apps_golaberto-compute=1 apps_golaberto-compute; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE }; deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/acceptance.ts; let verdict = $env.LAST_EXIT_CODE; mise exec -- docker compose -p $project stop apps_golaberto-compute; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE }; exit $verdict"]
 	note: "the ir's screen invariants against the running archive: levels, catalogue and search, a championship's structure, three languages, the dark twin and the screen range"
 }
 
 build:    (pronto.#DefaultBuild & {"code": code, "loop": loop, "cluster": cluster}).out
+// Development reads stored ratings and odds; keep the worker dormant until
+// offline batching rules replace its automatic computation loop.
+build: project: targets: compute: compose: scale: 0
 
 loop: surface: checks: "archive-images": {
   verb: "integrate"
@@ -1749,9 +1888,20 @@ loop: surface: checks: "image-renderers": {
 
 out: pronto.#emit & {"code": code, "cluster": cluster, "terminal": terminal, "loop": loop, "build": build}
 
-
 loop: surface: checks: "favicon": {
 	verb: "integrate"
 	cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/favicon.ts"]
 	note: "public icon packaging, localized entry documents and browser decoding; read-only against the running archive"
 }
+
+loop: surface: checks: "game-countries": {
+  note: "championship flags and team countries propagate through game feeds; fixed badges align on desktop and mobile"
+  verb: "integrate"
+  cmds: [
+    "mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/game-countries.ts",
+    "mise exec -- deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker tests/home-upgrade.ts",
+  ]
+}
+
+loop: surface: checks: "route-queries": {verb: "integrate", priority: 1, cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker tests/route-queries.ts"], note: "catalogs, histories and exact game reads use ordered indexes"}
+loop: surface: checks: "route-loads": {verb: "integrate", priority: 1, cmds: ["deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/route-loads.ts"], note: "every route loads bounded subsets; pagination preserves access to the full archive"}

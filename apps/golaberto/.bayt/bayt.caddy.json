@@ -238,6 +238,11 @@
         },
         {
           "action": "sync+restart",
+          "path": "../shell/handlers/page-value.js",
+          "target": "/srv/shell/handlers/page-value.js"
+        },
+        {
+          "action": "sync+restart",
           "path": "../shell/handlers/row-id.js",
           "target": "/srv/shell/handlers/row-id.js"
         },
@@ -852,6 +857,16 @@
       {
         "from": null,
         "srcs": [
+          "shell/handlers/page-value.js"
+        ],
+        "dst": "/srv/shell/handlers/page-value.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
           "shell/handlers/row-id.js"
         ],
         "dst": "/srv/shell/handlers/row-id.js",
@@ -1339,6 +1354,7 @@
       "shell/handlers/blank-null.js",
       "shell/handlers/both-scored.js",
       "shell/handlers/count-or-null.js",
+      "shell/handlers/page-value.js",
       "shell/handlers/row-id.js",
       "shell/renderers/country-flag.js",
       "shell/renderers/team-badge.js",
@@ -1483,6 +1499,7 @@
           "shell/handlers/blank-null.js",
           "shell/handlers/both-scored.js",
           "shell/handlers/count-or-null.js",
+          "shell/handlers/page-value.js",
           "shell/handlers/row-id.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/team-badge.js",

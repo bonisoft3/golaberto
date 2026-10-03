@@ -235,9 +235,9 @@ async function shapeToken(req: Request): Promise<Response> {
 
 // The parameters a shape request may carry besides the two the token names:
 // Electric's paging and streaming, none of which widens what a row predicate
-// admits. Anything else is refused, `columns`, `replica`, `params` and the
-// secret among them: a parameter this list does not know has a reach it does
-// not know either.
+// admits. Subset snapshots are checked separately: Electric 1.8 applies their
+// WHERE in addition to the signed shape WHERE. Shape `params`, `columns` and
+// secrets remain server-owned; unknown protocol extensions are refused.
 const SHAPE_FREE_PARAMS = new Set([
   "offset",
   "handle",
@@ -249,6 +249,38 @@ const SHAPE_FREE_PARAMS = new Set([
   "log",
   "cache-buster",
 ]);
+
+// @tanstack/electric-db-collection 0.4.0 emits SQL strings and positional
+// string parameters through @electric-sql/client 1.5.27's GET snapshot path.
+// Structured-expression and POST variants are not part of this contract.
+const SHAPE_SUBSET_PARAMS = new Set([
+  "subset__where", "subset__params", "subset__order_by", "subset__limit", "subset__offset",
+]);
+
+function validSubset(params: URLSearchParams): boolean {
+  for (const key of ["subset__where", "subset__order_by"]) {
+    const value = params.get(key);
+    if (value !== null && (!value.trim() || value.length > 65_536 || value.includes("\0"))) return false;
+  }
+  for (const [key, minimum] of [["subset__limit", 1], ["subset__offset", 0]] as const) {
+    const value = params.get(key);
+    if (value === null) continue;
+    if (!/^\d+$/.test(value) || !Number.isSafeInteger(Number(value)) || Number(value) < minimum) return false;
+    if (!params.has("subset__order_by")) return false;
+  }
+  const raw = params.get("subset__params");
+  if (raw !== null) {
+    if (raw.length > 65_536 || !params.has("subset__where")) return false;
+    try {
+      const values = JSON.parse(raw);
+      if (values === null || typeof values !== "object" || Array.isArray(values)) return false;
+      if (!Object.entries(values).every(([key, value]) => /^[1-9]\d*$/.test(key) && typeof value === "string")) return false;
+    } catch {
+      return false;
+    }
+  }
+  return true;
+}
 
 // What Caddy asks before proxying to Electric. It answers about the request
 // Caddy actually received, not about one the client describes: the method and
@@ -275,7 +307,7 @@ async function shapeVerify(req: Request): Promise<Response> {
   // compared only once it is known to have one value.
   for (const key of new Set(params.keys())) {
     if (params.getAll(key).length !== 1) return jsonError(403, `${key} repeated`);
-    if (key !== "table" && key !== "where" && !SHAPE_FREE_PARAMS.has(key)) {
+    if (key !== "table" && key !== "where" && key !== "replica" && !SHAPE_FREE_PARAMS.has(key) && !SHAPE_SUBSET_PARAMS.has(key)) {
       return jsonError(403, `${key} is not a shape parameter`);
     }
   }
@@ -283,6 +315,8 @@ async function shapeVerify(req: Request): Promise<Response> {
   // read as authorized against a claim that named a predicate.
   if (params.get("table") !== claims.table) return jsonError(403, "table not authorized");
   if (params.get("where") !== claims.where) return jsonError(403, "where not authorized");
+  if (params.has("replica") && params.get("replica") !== "full") return jsonError(403, "replica not authorized");
+  if (!validSubset(params)) return jsonError(403, "invalid subset parameters");
   return json(200, { ok: true });
 }
 

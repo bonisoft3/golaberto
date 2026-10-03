@@ -30,17 +30,27 @@
           </section>
           <section class="venue-games">
             <h2 data-text="{msg.stadium_games}"></h2>
-<ol class="games" data-live="game_card" data-filter="stadium_id=eq.{id}" data-order="day.desc,kickoff.desc" data-empty="{msg.stadium_no_games}">
+<div class="paged-read" data-live="archive_page" data-filter="id=eq.stadium-history-{id}" data-machine='{"field":"state","initial":"browsing","context":{"offset":0,"next_offset":40,"page":1},"states":{"browsing":{"on":{"click@stadium-history-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@stadium-history-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}' data-empty-row='{"id":"stadium-history-{id}","owner_id":"{id}","offset":0,"next_offset":40,"page":1,"state":"browsing"}'>
+  <div class="page-window">
+<ol class="games" data-live="game_card" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="stadium_id=eq.{owner_id}&offset={offset}&limit=40" data-order="day.desc,kickoff.desc" data-empty="{msg.stadium_no_games}">
   <template data-item>
-    <li><a class="game-row" data-route="jogo" data-param-id="{id}" data-played="{played}">
+    <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{id}" data-played="{played}">
       <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
       <span class="where" data-text="{championship_name}"></span>
-      <span class="home"><span class="archive-icon" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span><span data-text="{home_name}"></span></span>
+      <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></span>
       <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-      <span class="away"><span class="archive-icon" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span data-text="{away_name}"></span></span>
+      <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>
     </a></li>
   </template>
 </ol>
+<nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
+  <button id="stadium-history-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
+  <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
+  <span data-live="game_card" data-filter="stadium_id=eq.{owner_id}&amp;offset={next_offset}&amp;limit=1" data-order="day.desc,kickoff.desc" data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <button id="stadium-history-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
+</nav>
+  </div>
+</div>
           </section>
         </div>
         <aside class="side">

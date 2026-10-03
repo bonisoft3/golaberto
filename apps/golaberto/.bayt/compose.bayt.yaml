@@ -8,6 +8,8 @@ include:
   required: false
 - path: ./compose.integrate.yaml
   required: false
+- path: ./compose.compute.yaml
+  required: false
 - path: ./compose.database.yaml
   required: false
 - path: ./compose.crud.yaml
@@ -25,8 +27,6 @@ include:
 - path: ./compose.conduit.yaml
   required: false
 - path: ./compose.transform.yaml
-  required: false
-- path: ./compose.compute.yaml
   required: false
 - path: ./compose.migrate.yaml
   required: false

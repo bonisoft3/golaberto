@@ -30,6 +30,9 @@ services:
         path: ../docker/golaberto-home-games.yaml
         target: /pipelines/golaberto-home-games.yaml
       - action: sync+restart
+        path: ../docker/golaberto-matches-games.yaml
+        target: /pipelines/golaberto-matches-games.yaml
+      - action: sync+restart
         path: ../docker/golaberto-player-stats.yaml
         target: /pipelines/golaberto-player-stats.yaml
       - action: sync+restart

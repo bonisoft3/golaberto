@@ -3,12 +3,12 @@ package golaberto
 
 code: surface: screens: {
 	arbitro: {
-		reads: [{entity: "GameCard"}, {entity: "Referee"}]
-		files: {handlers: [], adapters: []}
+		reads: [{entity: "ArchivePage"}, {entity: "GameCard"}, {entity: "Referee"}]
+		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
 	}
 	arbitros: {
 		reads: [{entity: "DirectoryFilter"}, {entity: "Referee"}]
-		files: {handlers: [], adapters: []}
+		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
 	}
 	campeonato: {
 		reads: [{entity: "Category"}, {entity: "Championship"}, {entity: "GameCard"}, {entity: "Group"}, {entity: "Phase"}, {entity: "PhaseRound"}, {entity: "Standing"}, {entity: "TeamChance"}, {entity: "Zone"}]
@@ -16,7 +16,7 @@ code: surface: screens: {
 	}
 	campeonatos: {
 		reads: [{entity: "CatalogFilter"}, {entity: "Category"}, {entity: "Championship"}]
-		files: {handlers: [], adapters: []}
+		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
 	}
 	chances: {
 		reads: [{entity: "Championship"}, {entity: "Group"}, {entity: "PositionChance"}, {entity: "TeamChance"}, {entity: "Zone"}, {entity: "ZoneChance"}]
@@ -27,31 +27,31 @@ code: surface: screens: {
 		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/both-scored.js", "shell/handlers/count-or-null.js", "shell/handlers/row-id.js"], adapters: []}
 	}
 	equipe: {
-		reads: [{entity: "PlayerStat"}, {entity: "Stadium"}, {entity: "Team"}, {entity: "TeamGame"}, {entity: "TeamRating"}]
-		files: {handlers: [], adapters: []}
+		reads: [{entity: "ArchivePage"}, {entity: "PlayerStat"}, {entity: "Stadium"}, {entity: "Team"}, {entity: "TeamGame"}, {entity: "TeamRating"}]
+		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
 	}
 	equipes: {
 		reads: [{entity: "DirectoryFilter"}, {entity: "Team"}]
-		files: {handlers: [], adapters: []}
+		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
 	}
 	estadio: {
-		reads: [{entity: "GameCard"}, {entity: "Stadium"}, {entity: "Team"}]
-		files: {handlers: [], adapters: []}
+		reads: [{entity: "ArchivePage"}, {entity: "GameCard"}, {entity: "Stadium"}, {entity: "Team"}]
+		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
 	}
 	estadios: {
 		reads: [{entity: "DirectoryFilter"}, {entity: "Stadium"}]
-		files: {handlers: [], adapters: []}
+		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
 	}
 	jogador: {
-		reads: [{entity: "GameCard"}, {entity: "Player"}, {entity: "PlayerGame"}, {entity: "PlayerRating"}, {entity: "PlayerStat"}]
-		files: {handlers: [], adapters: []}
+		reads: [{entity: "ArchivePage"}, {entity: "GameCard"}, {entity: "Player"}, {entity: "PlayerGame"}, {entity: "PlayerRating"}, {entity: "PlayerStat"}]
+		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
 	}
 	jogo: {
-		reads: [{entity: "Comment"}, {entity: "CommentDraft"}, {entity: "Editor"}, {entity: "GameCard"}, {entity: "GameImportance"}, {entity: "Goal"}, {entity: "PlayerGame"}]
-		files: {handlers: [], adapters: []}
+		reads: [{entity: "ArchivePage"}, {entity: "Comment"}, {entity: "CommentDraft"}, {entity: "Editor"}, {entity: "GameCard"}, {entity: "GameImportance"}, {entity: "Goal"}, {entity: "PlayerGame"}]
+		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
 	}
 	jogos: {
-		reads: [{entity: "GameCard"}, {entity: "GamesView"}]
+		reads: [{entity: "GamesView"}, {entity: "MatchesGameCard"}]
 		files: {handlers: [], adapters: []}
 	}
 	principal: {
@@ -61,8 +61,9 @@ code: surface: screens: {
 }
 
 _irNotes: {
-	"decision-archive-images": "Restore the archive’s team badges and country flags beside their names. Use the original 15-pixel CDN assets in match lists, standings, team directories, championship headings and country facts. Imported team UUIDs retain the original numeric ID; development fixture UUIDs map to their original archive IDs, retaining the badge when a team is renamed. New teams use the original neutral badge. Pure terminal renderers produce decorative images with empty alternatives; names stay readable when images cannot load. Preserve the accepted compact layout, full names and existing colors. Stitch project 3684321283098058780, screen 3756c9310aaa459ebcbdf0385ea57c5d, confirmed the compact 15×15 crest and flag placement; only that image restoration is carried forward. No database joins or additional archive subscriptions are needed for image presentation"
+	"decision-archive-images": "Restore the archive’s team badges and country flags beside their names. Use the original 15-pixel CDN assets in match lists, standings, team directories, championship headings and country facts. Imported team UUIDs retain the original numeric ID; development fixture UUIDs map to their original archive IDs, retaining the badge when a team is renamed. New teams use the original neutral badge. Pure terminal renderers produce decorative images with empty alternatives; names stay readable when images cannot load. Preserve the accepted compact layout, full names and existing colors. Stitch project 3684321283098058780, screen 3756c9310aaa459ebcbdf0385ea57c5d, confirmed the compact 15×15 crest and flag placement; only that image restoration is carried forward. Each championship stores whether games show team countries (show_country, default off); enabled competitions show the home and away team's own country flag alongside their badge. Game lists and opponent lines join the championship flag setting and the teams’ countries through their existing foreign keys, including bounded home and matches feeds. A flag or country edit updates its owning row and open lists immediately; it does not rewrite games, cards or opponent lines. Stored names still refresh when their source names change. Badge slots remain 15px in mirrored fixed columns closest to the score: home name, optional flag, badge, score, badge, optional flag, away name. Full names wrap on phones; unknown countries leave an empty flag slot and failed images preserve readable names. Stitch refinement 50515d290f3e4e8a8e49cda741813c6a preserves the accepted compact archive layout"
 	"decision-bench": "A substitute who never came on is in the line-up. Upstream lists the unused substitutes with the line-up and counts them — its \"E\" column is games played plus games on the bench — and a booking on the bench is a booking. So an appearance says whether it was only a bench, and a bench appearance has no minutes"
+	"decision-bounded-route-reads": "Each page fetches its own filtered subset. Public archive collections opt into on-demand delivery. A query waits for its own subset, and embedded references load only matching keys. Electric 1.8 cannot compare the portable scalar domains: those predicates and capped scalar orders use bounded PostgREST reads with changes-only notifications instead. UUID subsets still load exact related keys. Changes-only watches do not download historical snapshots; writes acquire the exact rows and validation edges they need. Catalogs, directories, squads, seasons, appearances, venue and referee histories and comments show forty rows per page. Previous and Next keep the full archive accessible; a one-row probe hides Next when the list ends. Search and region changes reset to page one. Page state belongs to the tab. Selected stadium and referee choices load by exact id; their searchable lists are capped at forty. Existing bounded home and matches feeds remain bounded. Ordered SQL indexes match these reads, with the latest team-rating index reused"
 	"decision-brasilia-time": "A kickoff is printed on Brasília's wall clock. The archive is Brazilian and upstream means every hour in Brasília time, with a zone picker beside the language switch — though its game pages and lists print the stored UTC hour under that label, and only its player pages convert; the seed reads the crawled hours as UTC and takes a game's day from Brasília's calendar, so a 21:00 game on the 11th is not filed under the 12th. The instant is stored as an instant; what a list prints is a generated HH:MM in America/Sao_Paulo, because the terminal's datetime format prints a date with the hour and a list wants the hour alone. A reader's own zone is the zone picker's turn, which upstream has and this compile does not"
 	"decision-catalog-tab": "The catalogue's search is a tab row, written by a form on change. Filtering is a live query over the championship table interpolating the search row's columns; a machine over that row assigns them from the controls' own events, so every keystroke narrows the list and nothing leaves the browser. The catalogue is rebuilt on every visit (keep: 0), so the search a reader returns to is the row's, which is the claim. A URL parameter would be the alternative; it would make a search shareable, but the archive's catalogue is short enough that a shared search is not worth an address"
 	"decision-chances": "Chances are upstream's odds estimator, odds-rust itself compiled to Wasm. Upstream computes each group's odds in odds-rust: a 20 000-season importance scout, a 100 000-season matched pool with exact point PMFs, and a rare-position search (proofs, conditioned and importance sampling, joint caps, tilts, witnesses, rescues, reconcile) that certifies probabilities down to 1e-14. Here that crate is compiled to a WASI module, computations/golaberto-odds.wasm, built by tools/odds-wasm. The chances computation is one JavaScript module run by mecha's compute service over a DuckLake published from the tables it reads: it builds each live group's request as Rails' Group#odds does and asks the module once per group, one group at a time, each with a seed hashed from the computation's name and the group's id. Each game's expected goals come from the latest TeamRating before it, by Rails' formula. Results land in four live sinks out of the publication, so a write never feeds the change it answers. Upstream funds a last rare-position tail with a share of the wall time its earlier stages took, so with it a response hangs on the machine's speed; the module runs with it off (upstream's RUST_ODDS_RARE_TAIL=0), and its response is the native one under that setting byte for byte, the seed's alone. What the tail adds is estimates under 1e-11 percent where the earlier stages found none, far under the cent the cells show; the cost is that such a cell the tail would have proved reachable by a witness season stays undecided. A cell that shows 0 says whether it can still happen, as upstream's odds_reachability does: odds-rust labels each final position impossible (proved by points or ranks), reachable (an estimate above zero or a witness season) or undecided, and a zone is impossible when each of its positions is, reachable when any is. The computation writes that as reach on the PositionChance and ZoneChance rows that round to 0 — a finished group's other positions are impossible — and the chances page and the front page's title column mark a reachable 0 with * and an undecided one with ?, an impossible one unmarked, each saying its status in words. Upstream's other use of the status, a zone shown as exactly 100 only when every position outside it is proved impossible, has no counterpart: cells here are rounded to the cent, and a 100 is a rounding like any other"
@@ -87,7 +88,7 @@ _irNotes: {
 	"decision-phases-stacked": "A championship shows every phase, stacked, with chips that jump to each. Upstream shows one phase at a time behind buttons. Phases are rows, and a selection machine's states are fixed when the program is written, so a tab per phase would need a machine per championship shape. Stacked sections under anchor chips show a league (one phase) and a cup (several) the same way, and a phone reads them as one scroll"
 	"decision-player-stats": "A player's season is recounted, never typed. Upstream computes its player table on request; here, as the tables are, it is rows a stream writes from the appearances and goals, per player, championship and team, so every page that shows a season agrees with every other. The recount is checked against upstream's own table for the 885 players of the 2026 Série A named once in their squads, every column. Two players of one name in one squad cannot be told apart by a line-up, which names a player and does not identify one; the crawl that seeds them merges them, and the check leaves them out"
 	"decision-points": "Points are the championship's. Upstream stores point_win, point_draw and point_loss per championship and the archive needs it: a 1985 table gave two points for a win. The defaults are today's"
-	"decision-ratings": "Ratings are upstream's, refit by a computation. Upstream fits SPI team ratings (an iterative fixed point with time decay and shrinkage), snapshots them per day as historic ratings, rates players from every minute they played and scores the ratings' predictions (/eval). The ratings computation asks the same Wasm module for all four and shapes the rows as upstream's writes left them — a team's last snapshot of a day, to six decimals; a player's rating per 90 minutes, in f32 — and writes TeamRating, PlayerRating and RatingEval. A team's page shows its latest rating; a player's shows his"
+	"decision-ratings": "Ratings are upstream's, refit by a computation. Upstream fits SPI team ratings (an iterative fixed point with time decay and shrinkage), snapshots them per day as historic ratings, rates players from every minute they played and scores the ratings' predictions (/eval). The ratings computation asks the same Wasm module for all four and shapes the rows as upstream's writes left them — a team's last snapshot of a day, to six decimals; a player's rating per 90 minutes, in f32 — and writes TeamRating, PlayerRating and RatingEval. A team's page shows its latest rating; a player's shows his. The planner yields one Wasm job at a time: historic ratings, each phase's evaluation, then player ratings using the historic result. Only the current job's input is materialized; ordered results retain the existing finish contract. Historical snapshots remain complete because chances need the rating before each game's kickoff. The compute lake limits DuckDB to 512 MiB and two threads, with temporary spill files on disk, so background work cannot consume the whole development VM"
 	"decision-score-whole": "A result is whole or absent. Upstream defaults both scores to 0 and trusts played; a 0–0 that never happened is one mistyped checkbox away. Here the scores are optional and one row invariant ties them to played, so the table the next turn derives never reads an unplayed game"
 	"decision-screen-range": "One layout that bends, not four. Above 720px the page is content beside a side column in a column up to 960px wide; below it the side column follows the content, the masthead and band shrink, and the strip scrolls sideways on one line rather than wrapping. A table keeps its identifying columns on a phone and drops the least informative ones. No page scrolls sideways at 390, 768, 1366 or 1920px, and the acceptance driver measures it"
 	"decision-seed-archive": "The archive a fresh cluster starts from is real. The seed rows are championships, phases, clubs, stadiums and zones as golaberto.com.br records them — the 2026 Série A's twenty clubs, its zones, the 2026 World Cup final — so every screen and every screenshot reads as the archive does. Games and line-ups are crawled from the same pages, so derived tables can be checked against the original. The dataset is a generated SQL fixture outside CUE compilation, copied into fresh-database migrations and inserted in batches. Database domains, constraints and validation triggers still check every record; repeated initialization preserves existing IDs. Regeneration is checked at the test gate. Retained archives are never reseeded by this fixture"

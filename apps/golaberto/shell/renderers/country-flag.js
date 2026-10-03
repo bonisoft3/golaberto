@@ -1,7 +1,10 @@
 // The original archive serves English country filenames, including the
 // football nations of the UK; seed fixtures also carry Portuguese names.
 export default function render(value) {
-  const country = String(value).split(" - ")[0].trim();
+  // Game rows prefix the country with the championship's explicit switch.
+  const parts = String(value ?? "").split("|");
+  if (parts.length > 1 && parts[0] !== "true") return [];
+  const country = parts[parts.length - 1].split(" - ")[0].trim();
   if (!country) return [];
   const aliases = {
     "Brasil": "Brazil", "Inglaterra": "England", "Espanha": "Spain",

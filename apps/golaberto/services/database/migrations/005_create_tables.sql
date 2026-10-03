@@ -370,6 +370,16 @@ CREATE TABLE IF NOT EXISTS phase_round (
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS home_championship (
+  "id" uuid PRIMARY KEY REFERENCES championship(id) ON DELETE CASCADE,
+  "region" portable_string NOT NULL,
+  "region_name" portable_string NOT NULL,
+  "full_name" portable_string NOT NULL,
+  "strength" portable_double NOT NULL,
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS team_group (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   "group_id" uuid NOT NULL REFERENCES stage_group(id) ON DELETE CASCADE,

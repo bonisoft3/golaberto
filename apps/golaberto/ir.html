@@ -70,6 +70,9 @@ graph TD
   Player --> PlayerGame
   Championship --> TeamPlayer
   Championship --> principal
+  Championship --> recent-championships
+  recent-championships --> HomeChampionship
+  HomeChampionship --> principal
   Championship --> campeonatos
   CatalogFilter --> campeonatos
   Championship --> campeonato
@@ -141,6 +144,19 @@ graph TD
 <tr data-ordinal="15"><td>search_name</td><td>string</td><td></td><td>generated: the full championship label; search-only ICU collation ignores case and accents</td></tr>
 </table>
 <p data-extract="invariant">Row invariant: <code class="cel">this.ends &gt;= this.begins</code> — a season does not end before it begins.</p>
+</section>
+
+<section id="HomeChampionship" data-kind="entity" data-durability="live" data-type-id="0x9f7e16021a981047">
+<h3>HomeChampionship — live, public, pipeline-owned</h3>
+<p>Every championship beginning less than thirty days ahead and ending more than thirty days ago on Brasília’s calendar. The clock refreshes membership and team strength every thirty seconds. Distinct teams across every phase and group count once. Missing ratings count as zero; the latest stored rating at or before today is used. Strongest first, their weights are 0.7 to the zero-based rank; strength is the weighted sum divided by the sum of weights. A competition without teams has strength zero. Equal strengths sort by full name and id. Each region shows all its eligible rows, and unchanged refreshes make no writes.</p>
+<table data-extract="fields">
+<tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
+<tr data-ordinal="1"><td>id</td><td>uuid</td><td></td><td>pk; references championship</td></tr>
+<tr data-ordinal="2"><td>region</td><td>string</td><td></td><td>existing region section</td></tr>
+<tr data-ordinal="3"><td>region_name</td><td>string</td><td></td><td>flag country</td></tr>
+<tr data-ordinal="4"><td>full_name</td><td>string</td><td></td><td>championship link label</td></tr>
+<tr data-ordinal="5"><td>strength</td><td>double</td><td></td><td>upstream geometric weighted mean</td></tr>
+</table>
 </section>
 
 <section id="Phase" data-kind="entity" data-durability="server" data-type-id="0xb8d8d6dc02bc184b">
@@ -781,12 +797,16 @@ graph TD
 <section id="home-games" data-kind="pipeline" data-from="Game" data-to="HomeGameCard">
 <h3>home-games</h3><p>A clock-driven refresh of home ranks every thirty seconds, through the service-only refresh_home_games SQL function. Selection reads the declared fourteen-day GameCard windows, including the upcoming three-hour grace period, seeks the latest TeamRating only for candidate teams, and reads GameImportance. The two ranks and forty-row HomeGameCard projection are updated in one transaction and only when changed; replay is idempotent. Concurrent refreshes skip under an advisory transaction lock. GameCard stays off the CDC publication. The pure home_game_selection function accepts a clock for deterministic window, quality and highlighting tests; home_game_order retains the three-column ranking interface. Highlight flags belong only to the bounded HomeGameCard projection and settle atomically with its ranks.</p>
 </section>
+<section id="recent-championships" data-kind="pipeline" data-from="Championship" data-to="HomeChampionship">
+<h3>recent-championships — clock-owned tournament list</h3>
+<p>A thirty-second service-only refresh reads the eligible championships and their distinct members’ latest known ratings, then atomically removes expired rows and upserts changed names, regions and geometric weighted strengths. The advisory lock skips overlapping calls. Unchanged rows are not written. The live sink belongs to Electric and is excluded from the source CDC publication; screens own no clock or fetch.</p>
+</section>
 <section id="matches-games" data-kind="pipeline" data-from="Game" data-to="MatchesGameCard">
 <h3>matches-games</h3><p>A thirty-second service-only refresh_matches_games RPC selects the two chronological forty-card lists using partial ordering indexes, locks only old and new selected cards in ID order, prunes and copies the bounded projection atomically, and suppresses unchanged writes. Overlapping refreshes skip under an advisory transaction lock. Selected-card edits and deletions are mirrored; membership settles on the next clock tick. MatchesGameCard belongs to Electric and stays outside CDC.</p>
 </section>
 <section id="principal" data-kind="screen" data-route="/">
 <h3>principal — the front page</h3>
-<p data-extract="reads">Reads: <a href="#HomeGameCard">HomeGameCard</a> heading markers and selected games nested by championship for both feeds; <a href="#Championship">Championship</a> three times, once per level — <code>region=eq.world</code>, <code>region=eq.continental</code>, <code>region=eq.national</code> — each <code>begins.desc</code>, capped at six.</p>
+<p data-extract="reads">Reads: <a href="#HomeGameCard">HomeGameCard</a> heading markers and selected games nested by championship for both feeds; <a href="#HomeChampionship">HomeChampionship</a> once per region, in national, continental, world order, each sorted by <code>strength.desc,full_name.asc,id.asc</code> with no cap.</p>
 <p data-extract="mutations">Mutations: none.</p>
 <div class="storyboard frames">
 <figure id="principal-loading" data-kind="state" data-of="principal" data-state="loading">
@@ -825,7 +845,7 @@ graph TD
 <rect x="16" y="235" width="212" height="12" fill="#00008b"/><text x="20" y="244" fill="#fff"># · Equipe · Pts · J · Chance de título</text>
 <text x="18" y="264" fill="#784d1e">1 Flamengo-RJ · tabela e chances</text>
 <text x="18" y="293" fill="#000000" font-weight="700">Campeonatos recentes por esfera</text>
-<text x="18" y="310" fill="#784d1e">Mundial · Continental · Nacional</text>
+<text x="18" y="310" fill="#784d1e">Nacional · Continental · Mundial</text>
 </g></svg>
 <figcaption>Shared date headings and linked phase subheadings group compact match rows; only kickoff time remains visible in the time column. The accepted colours and frame are retained.</figcaption></figure>
 <figure id="principal-no-games" data-kind="state" data-of="principal" data-state="no-games">
@@ -846,7 +866,7 @@ graph TD
 <rect x="16" y="235" width="212" height="12" fill="#00008b"/><text x="20" y="244" fill="#fff"># · Equipe · Pts · J · Chance de título</text>
 <text x="18" y="264" fill="#784d1e">1 Flamengo-RJ · tabela e chances</text>
 <text x="18" y="293" fill="#000000" font-weight="700">Campeonatos recentes por esfera</text>
-<text x="18" y="310" fill="#784d1e">Mundial · Continental · Nacional</text>
+<text x="18" y="310" fill="#784d1e">Nacional · Continental · Mundial</text>
 </g></svg>
 <figcaption>When both windows are empty, each feed says so and removes stale rows; the featured table and archive links remain.</figcaption></figure>
 <figure id="principal-populated-dark" data-kind="state" data-of="principal" data-state="populated-dark">
@@ -866,7 +886,7 @@ graph TD
 <rect x="16" y="235" width="212" height="12" fill="#1d2a6b"/><text x="20" y="244" fill="#fff"># · Equipe · Pts · J · Chance de título</text>
 <text x="18" y="264" fill="#e0b07a">1 Flamengo-RJ · tabela e chances</text>
 <text x="18" y="293" fill="#e8efd6" font-weight="700">Campeonatos recentes por esfera</text>
-<text x="18" y="310" fill="#e0b07a">Mundial · Continental · Nacional</text>
+<text x="18" y="310" fill="#e0b07a">Nacional · Continental · Mundial</text>
 </g></svg>
 <figcaption>Shared date headings and linked phase subheadings group compact match rows; only kickoff time remains visible in the time column. The accepted colours and frame are retained.</figcaption></figure>
 </div>
@@ -2533,7 +2553,7 @@ Below the game feeds, the front page keeps the featured 2026 Brasileirão: its t
 </p>
 <p id="test-home-games" data-kind="test" data-of="principal" data-accepts="accept-home-games">Upcoming fixtures and recent results lead the home page in the server's global rank order, with one localized weekday/date heading across competitions and phase headings exactly at the declared transitions. The browser checks linked championship names, full game rows, team-name and accent-score emphasis and live flag changes, phone and dark desktop layouts, live date edits, clock-only expiry after the three-hour grace period, both translated empty states and restored fixtures: <code class="cel">output.upcoming.size() &gt; 0 &amp;&amp; output.recent.size() &gt; 0</code>.</p>
 <p id="test-home-levels" data-kind="test" data-of="principal" data-accepts="accept-home-levels">
-Over the seeded archive the front page's world list is <code class="cel">output.world[0] == "Mundial - Copa do Mundo FIFA 2026"</code>, the continental list opens <code class="cel">output.continental[0] == "Europa - Champions League 2026/2027"</code>, and the national list opens <code class="cel">output.national[0] == "Alemanha - Bundesliga 2026/2027"</code> with <code class="cel">output.national.size() == 6</code>; each entry leads to its championship's page.
+The sections appear in national, continental, world order. Each region lists every tournament whose begin date is strictly before today plus thirty days and end date strictly after today minus thirty days. Within a region, upstream’s geometric weighted team strength descends, with full name and id breaking ties. The browser compares the complete ordered links with the projection, then verifies insertion, rating-based reranking, renaming, region changes and expiry on the same open page without a reload; SQL checks exact date boundaries, more than six rows, duplicate memberships, missing and future ratings, empty teams, reranking, expiry, no-op refresh and public read/service write access.
 </p>
 <p id="test-catalog-category" data-kind="test" data-of="campeonatos" data-accepts="accept-catalog">
 The catalogue lists all thirteen seeded championships, <code class="cel">output.rows.size() == 13</code>, and the women's league reads its category while the men's reads the professional default: <code class="cel">output.category["Brasil - Campeonato Brasileiro Feminino 2026"] == "Feminino" &amp;&amp; output.category["Brasil - Campeonato Brasileiro 2026"] == "Profissional"</code>.
@@ -2542,6 +2562,7 @@ The catalogue lists all thirteen seeded championships, <code class="cel">output.
 Typing <code class="cel">input.q == "libertadores"</code> narrows to <code class="cel">output.rows == ["América do Sul - Copa Libertadores 2026"]</code>, and picking <code class="cel">input.region == "continental"</code> with no text leaves the three continental championships.
 The accent-search integration check compares result IDs for atletico, atlético, uppercase and decomposed spellings against accented and plain fixtures in every text search: championships, teams, stadiums, referees, and both editor pickers. Phone and desktop checks preserve the typed query, confirm 40-row pagination reaches all 42 team fixtures, and select a matching picker result. SQL checks cover retained and declared-baseline upgrades, replay with dependent views, and search values updating after a name edit.
 </p>
+
 <p id="test-catalog-no-match" data-kind="test" data-of="campeonatos" data-accepts="accept-catalog-search">
 A search nothing matches, <code class="cel">input.q == "xyzzy"</code>, shows the catalogue's own words, <code class="cel">output.empty == "Nenhum campeonato com esse nome nesta esfera."</code>.
 </p>
@@ -2768,6 +2789,7 @@ Following <a href="https://github.com/galo2099/golaberto/blob/master/app/control
 Highlighting mirrors the controller independently for each feed: the union of the five displayed games with greatest raw quality and one game with greatest weighted quality for each phase/Brasília date among all eligible candidates. Overall raw-quality ties retain display order. A tied phase/date maximum chooses the last candidate in the raw-quality descending, kickoff descending, id ascending input order, reproducing upstream's greater-than-or-equal replacement with a deterministic id tie break. The phase/date winner is chosen before the twenty-game cap; if it is not selected, another displayed row is not promoted in its place. The selected games use semibold primary-color team names and bold theme-accent scores and separators against normal-weight secondary-color ordinary names and scores, following the accepted Stitch refinement. Kickoff times and backgrounds keep their existing styles.
 The screen reads one flat list in server rank order. Each date appears once across competitions in its feed, followed by a linked championship and named phase heading on the first row and each date/phase transition. A phase may appear again on another day or when tied phase strengths interleave. The terminal's first-row-per-day projection and exact-key nested reads place date headings. Its previous-row projection and a hidden exact-key comparison of that row's date and phase derive visible phase transitions. Headings therefore transfer immediately after removal or restoration without another SQL refresh; the stored group flags retain the server's transition state. Row links retain accessible dates while showing only kickoff time, full team names, badges and score. HomeGameCard's day derives from its kickoff in Brasília so headings match the ranking date even when the archive's date differs. The thirty-second service-only refresh updates the ranks, phase markers, highlights and bounded forty-row projection atomically, suppresses unchanged writes, and skips overlapping calls. Removing a selected kickoff immediately removes its projected row; restoring a known kickoff copies it again while its rank remains selected. Screens own no timer or fetch. The featured season and archive follow the feeds; empty windows remove old rows and show the translated message.</p>
 
+<p id="recent-championships-oracle">The user requested all tournaments in the rolling thirty-day window, ordered by the original Championship#avg_team_rating formula. The user’s follow-up orders the region sections National first, Continental second, World last, since National usually has the most tournaments. Preserve the accepted section and link styles. Stitch project 3684321283098058780, screen 2cbae711356b4c7a8c7b013e3ccbf796, confirms the requested region order. Remove the six-row cap and use strongest-first ordering inside each section. No new visual choice is needed. The strict begin/end comparisons follow the user’s requested window; the upstream controller’s inclusive boundaries are not carried forward.</p>
 <p id="home-grouping-oracle">The user's explicit request to match upstream ranking and grouping supersedes the earlier championship-first hierarchy. Stitch project <code>3684321283098058780</code>, screen <code>71371e00df874a089a768689d8b4ed21</code>, refines the accepted frame to date-first feeds with phase subheadings. Established DESIGN.md tokens, full championship and team names, badge rails and independent empty states remain the oracle. Illustrative fixtures, extra widgets, venue columns and generated theme tokens are excluded.</p>
 <p id="home-highlight-oracle"><strong>Emphasize the teams readers scan for, with the score as a warm accent.</strong> The user accepted Stitch’s team-name emphasis after comparing it with score color alone. Important home team names use primary text (#000000 light, #e8efd6 dark) at weight 600, and scores and x separators use the existing accent (#784d1e light, #e0b07a dark) at weight 700. Ordinary names, scores and x use secondary text (#4a4a1f light, #c3cc9a dark) at weight 400. This provides a visible anchor for upcoming games whose score is only x and applies equally to results. Preserve the existing Arial stack, type size, centered score column, zebra backgrounds, time and date/phase hierarchy, full names and equal 4px icon/name gaps. Names may wrap naturally on phones. No score frames, outlines, stars, legends, row tints or leading edges. Stitch project <code>3684321283098058780</code>, screen <code>cdc4b1c5ac72476290b2b13716713b50</code>, is the accepted oracle: the consultation included prior rejected designs, both themes, mobile constraints and the observed 23-of-40 highlighted density. Screens <code>163c5548bc9e4e71810ed67a21fb260b</code> (time emphasis) and <code>c383c1f770d74a4ea71d6849d408ac30</code> (tonal row contrast) were considered and not selected. Score colors exceed 4.5:1 contrast on both themes’ zebra backgrounds.</p>
 <p id="home-date-oracle">The user requested less repeated dates because most home games share a day. The accepted Stitch refinement now places one date heading per feed/day across all competitions, then phase headings. The user’s weekday refinement adds the full weekday in the page language followed by comma and dd/mm/yyyy, for example Saturday, 03/10/2026. The pure home-date renderer reads the existing Brasília civil day and the catalogue’s weekday names, using explicit UTC calendar arithmetic so reader time zones cannot move it to another day. Both feeds update the heading and weekday together when live dates change. Stitch project 3684321283098058780, screen 1dfafec90e224925b2eac8749ea56c90, confirms the requested refinement within the accepted light/dark/mobile layout; retain its existing typography and natural wrapping. The kickoff column remains 3.5em on desktop and phone; individual game links retain their dates for assistive technology. An exact-key live read moves the shared heading to the first remaining row after a date edit or expiry without a reload.</p>

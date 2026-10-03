@@ -309,10 +309,10 @@ pairs:
     of: principal
     accepts:
       - accept-home-levels
-    says: the front page lists each level's most recent championships first
+    says: 'the front page lists national, continental, then world championships, with all eligible tournaments ordered by descending geometric team strength within each region'
     given: {}
     when: view
-    then: 'output.world[0] == "Mundial - Copa do Mundo FIFA 2026" && output.national.size() == 6'
+    then: output.matches_projection == true
   - id: test-catalog-category
     ir: test-catalog-category
     of: campeonatos

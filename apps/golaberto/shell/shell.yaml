@@ -48,6 +48,8 @@ access:
     scope: public
   phase_round:
     scope: public
+  home_championship:
+    scope: public
   home_game_card:
     scope: public
   matches_game_card:
@@ -669,6 +671,7 @@ tables:
   - game_card
   - game_importance
   - goal
+  - home_championship
   - home_game_card
   - matches_game_card
   - phase
@@ -1870,6 +1873,26 @@ schema:
         name: next
         type: int32
         required: false
+  home_championship:
+    durability: live
+    fields:
+      - name: id
+        pk: true
+        ref: championship
+        type: uuid
+        required: true
+      - name: region
+        type: string
+        required: true
+      - name: region_name
+        type: string
+        required: true
+      - name: full_name
+        type: string
+        required: true
+      - name: strength
+        type: double
+        required: true
   home_game_card:
     durability: live
     fields:
@@ -2698,6 +2721,7 @@ migrations:
   - services/database/migrations/019_normalized_game_flags.sql
   - services/database/migrations/020_home_reference_order.sql
   - services/database/migrations/021_home_highlights.sql
+  - services/database/migrations/022_recent_championships.sql
   - services/database/migrations/023_search_collation.sql
   - services/database/migrations/900_seed.sql
 pipelines:
@@ -2709,6 +2733,9 @@ pipelines:
     raw: true
   - name: home-games
     to: home_game_card
+    raw: true
+  - name: recent-championships
+    to: home_championship
     raw: true
   - name: matches-games
     to: matches_game_card

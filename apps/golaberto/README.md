@@ -72,7 +72,12 @@ names and scores use the quieter secondary color and normal weight. Highlight
 flags belong only to the bounded home projection and refresh atomically.
 Dates and
 kickoff times use Brasília time. The featured championship's
-table and the championship catalogue follow the game feeds.
+table and the recent championships follow the game feeds. Each region lists all
+tournaments beginning less than 30 days ahead and ending more than 30 days ago
+on Brasília’s calendar. They sort by the original geometric weighted mean of
+distinct teams’ latest known ratings: strongest first, weights 1, 0.7, 0.7²,
+and so on, divided by the sum of weights. Missing ratings count as zero.
+The list refreshes every 30 seconds, with no six-tournament cap.
 
 Launch automatically upgrades existing databases through the pgroll migration
 ledger before starting readers and pipelines, while preserving their data.

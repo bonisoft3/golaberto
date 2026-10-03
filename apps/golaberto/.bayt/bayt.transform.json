@@ -45,6 +45,11 @@
         },
         {
           "action": "sync+restart",
+          "path": "../docker/golaberto-recent-championships.yaml",
+          "target": "/pipelines/golaberto-recent-championships.yaml"
+        },
+        {
+          "action": "sync+restart",
           "path": "../docker/golaberto-matches-games.yaml",
           "target": "/pipelines/golaberto-matches-games.yaml"
         },
@@ -106,6 +111,16 @@
       {
         "from": null,
         "srcs": [
+          "docker/golaberto-recent-championships.yaml"
+        ],
+        "dst": "/pipelines/golaberto-recent-championships.yaml",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
           "docker/golaberto-matches-games.yaml"
         ],
         "dst": "/pipelines/golaberto-matches-games.yaml",
@@ -144,6 +159,7 @@
       "/pipelines/golaberto-standings.yaml",
       "/pipelines/golaberto-game-cards.yaml",
       "/pipelines/golaberto-home-games.yaml",
+      "/pipelines/golaberto-recent-championships.yaml",
       "/pipelines/golaberto-matches-games.yaml",
       "/pipelines/golaberto-player-stats.yaml",
       "/pipelines/golaberto-rounds.yaml"
@@ -158,6 +174,7 @@
       "docker/golaberto-standings.yaml",
       "docker/golaberto-game-cards.yaml",
       "docker/golaberto-home-games.yaml",
+      "docker/golaberto-recent-championships.yaml",
       "docker/golaberto-matches-games.yaml",
       "docker/golaberto-player-stats.yaml",
       "docker/golaberto-rounds.yaml"
@@ -261,6 +278,7 @@
           "docker/golaberto-standings.yaml",
           "docker/golaberto-game-cards.yaml",
           "docker/golaberto-home-games.yaml",
+          "docker/golaberto-recent-championships.yaml",
           "docker/golaberto-matches-games.yaml",
           "docker/golaberto-player-stats.yaml",
           "docker/golaberto-rounds.yaml"

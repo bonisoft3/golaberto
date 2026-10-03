@@ -189,6 +189,14 @@ message Group {
   optional int32 position = 4 [json_name = "position"];
 }
 
+message HomeChampionship {
+  optional string id = 1 [json_name = "id"];
+  optional string region = 2 [json_name = "region"];
+  optional string region_name = 3 [json_name = "region_name"];
+  optional string full_name = 4 [json_name = "full_name"];
+  optional double strength = 5 [json_name = "strength"];
+}
+
 message HomeGameCard {
   optional string id = 1 [json_name = "id"];
   optional string phase_id = 2 [json_name = "phase_id"];

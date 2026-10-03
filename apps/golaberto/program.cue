@@ -33,6 +33,9 @@ _normalizedGameFlagsUpgrade: strings.Join(strings.Split(strings.Join(strings.Spl
 _homeReferenceSql: string @embed(file="services/database/sql/020_home_reference_order.sql", type=text)
 _homeReferenceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeReferenceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
+_recentChampionshipsSql: string @embed(file="services/database/sql/022_recent_championships.sql", type=text)
+_recentChampionshipsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_recentChampionshipsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
 _searchCollationSql: string @embed(file="services/database/sql/023_search_collation.sql", type=text)
 _searchCollationUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_searchCollationSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
@@ -139,6 +142,20 @@ code: pronto.#App & {
 			]
 			invariant: {cel: "this.ends >= this.begins"}
 			indexes: [{on: "begins"}]
+		}
+		HomeChampionship: {
+			id: "0x9f7e16021a981047"
+			table: "home_championship"
+			durability: "live"
+			writers: "pipeline"
+			access: {scope: "public"}
+			fields: [
+				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "championship"},
+				{ordinal: 2, name: "region", type: "string"},
+				{ordinal: 3, name: "region_name", type: "string"},
+				{ordinal: 4, name: "full_name", type: "string"},
+				{ordinal: 5, name: "strength", type: "double"},
+			]
 		}
 		Phase: {
 			id: "0xb8d8d6dc02bc184b"
@@ -886,6 +903,7 @@ code: pronto.#App & {
 		{name: "019_normalized_game_flags.sql", src: "services/database/sql/019_normalized_game_flags.sql"},
 		{name: "020_home_reference_order.sql", src: "services/database/sql/020_home_reference_order.sql"},
 		{name: "021_home_highlights.sql", src: "services/database/sql/021_home_highlights.sql"},
+		{name: "022_recent_championships.sql", src: "services/database/sql/022_recent_championships.sql"},
 		{name: "023_search_collation.sql", src: "services/database/sql/023_search_collation.sql"},
 		// Large archive fixtures are copied at build, never expanded through CUE.
 		{name: "900_seed.sql", src: "services/database/sql/900_seed.sql"},
@@ -902,6 +920,7 @@ code: pronto.#App & {
 	state: migrations: "019_normalized_game_flags": {operations: [{sql: {up: _normalizedGameFlagsUpgrade, onComplete: true}}]}
 	state: migrations: "020_home_reference_order": {operations: [{sql: {up: _homeReferenceUpgrade, onComplete: true}}]}
 	state: migrations: "021_home_highlights": {operations: [{sql: {up: _homeHighlightsUpgrade, onComplete: true}}]}
+	state: migrations: "022_recent_championships": {operations: [{sql: {up: _recentChampionshipsUpgrade, onComplete: true}}]}
 	state: migrations: "023_search_collation": {operations: [{sql: {up: _searchCollationUpgrade, onComplete: true}}]}
 	// The numeric stage (ir decision-chances).
 	// The chances read each game's power from team_rating, so they rerun
@@ -927,6 +946,12 @@ code: pronto.#App & {
 		from: "Game"
 		to: "HomeGameCard"
 		group: "golaberto-home-games"
+	}
+	state: pipelines: "recent-championships": {
+		raw: true
+		from: "Championship"
+		to: "HomeChampionship"
+		group: "golaberto-recent-championships"
 	}
 	state: pipelines: "matches-games": {
 		raw: true
@@ -1460,10 +1485,10 @@ code: pronto.#App & {
 			}
 			"test-home-levels": {
 				of:    "principal"
-				says:  "the front page lists each level's most recent championships first"
+				says:  "the front page lists national, continental, then world championships, with all eligible tournaments ordered by descending geometric team strength within each region"
 				given: {}
 				when:  "view"
-				then:  "output.world[0] == \"Mundial - Copa do Mundo FIFA 2026\" && output.national.size() == 6"
+				then:  "output.matches_projection == true"
 			}
 			"test-catalog-category": {
 				of:    "campeonatos"
@@ -1942,4 +1967,11 @@ loop: surface: checks: "home-date-renderer": {
   verb: "test"
   cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/home-date-renderer.ts"]
   note: "civil-date weekdays across week, leap-day and year boundaries, translated catalogues and the Jessie renderer cage"
+}
+
+loop: surface: checks: "recent-championships": {
+	verb: "integrate"
+	priority: 1
+	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker tests/recent-championships.ts"]
+	note: "all recent tournaments, strict thirty-day boundaries, distinct membership, geometric strength, clock refresh and service-only writes"
 }

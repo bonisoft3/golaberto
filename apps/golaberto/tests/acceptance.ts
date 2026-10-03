@@ -489,15 +489,58 @@ test("test-home-games: empty windows remove stale rows and explain both feeds", 
   }
 });
 
-test("test-home-levels: each level's most recent championships first", async () => {
+test("test-home-levels: every eligible championship appears in strength order within its region", async () => {
+  await psql("SELECT refresh_recent_championships()");
+  const expected = JSON.parse(await psql(`SELECT coalesce(json_agg(rows ORDER BY region), '[]') FROM (
+    SELECT region, json_agg(json_build_object('id',id,'name',full_name) ORDER BY strength DESC, full_name, id) AS items
+    FROM home_championship GROUP BY region
+  ) rows`));
   const page = await open("/");
-  const [world, continental, national] = await Promise.all(
-    [0, 1, 2].map((i) => texts(page, `.recent:nth-of-type(${i + 1}) .champ-list li`)),
-  );
-  assertEquals(world[0], "Mundial - Copa do Mundo FIFA 2026");
-  assertEquals(continental[0], "Europa - Champions League 2026/2027");
-  assertEquals(national[0], "Alemanha - Bundesliga 2026/2027");
-  assertEquals(national.length, 6);
+  const regionOrder = ["national", "continental", "world"];
+  assertEquals(await page.locator(".regions .champ-list").evaluateAll((lists: Element[]) =>
+    lists.map((list) => list.getAttribute("data-filter"))), regionOrder.map((region) => `region=eq.${region}`));
+  for (const region of regionOrder) {
+    const rows = expected.find((row: { region: string }) => row.region === region)?.items ?? [];
+    const list = `.champ-list[data-filter="region=eq.${region}"]`;
+    await page.waitForFunction(({ list, count }: { list: string; count: number }) =>
+      document.querySelectorAll(`${list} li:not(.empty)`).length === count, { list, count: rows.length });
+    assertEquals(await texts(page, `${list} li:not(.empty)`), rows.map((row: { name: string }) => row.name));
+    const ids = await page.locator(`${list} a`).evaluateAll((links: Element[]) => links.map((link) => link.getAttribute("data-param-id")));
+    assertEquals(ids, rows.map((row: { id: string }) => row.id));
+  }
+  const liveId = crypto.randomUUID();
+  const link = `.champ-list a[data-param-id="${liveId}"]`;
+  const nationalLinks = '.champ-list[data-filter="region=eq.national"] a';
+  try {
+    await psql(`
+      INSERT INTO championship (id,name,region_name,begins,ends) VALUES
+        ('${liveId}','Live tournament','ZZZ',(now() AT TIME ZONE 'America/Sao_Paulo')::date-1,(now() AT TIME ZONE 'America/Sao_Paulo')::date+1);
+      INSERT INTO phase (id,championship_id,name) VALUES ('${liveId}','${liveId}','Principal');
+      INSERT INTO stage_group (id,phase_id,name) VALUES ('${liveId}','${liveId}','Grupo');
+      INSERT INTO team (id,name,country) VALUES ('${liveId}','Live tournament team','Brasil');
+      INSERT INTO team_group (group_id,team_id) VALUES ('${liveId}','${liveId}');
+      INSERT INTO team_rating (id,team_id,measure_date,offense,defense,rating) VALUES
+        ('${liveId}','${liveId}',(now() AT TIME ZONE 'America/Sao_Paulo')::date,1,1,0);
+      SELECT refresh_recent_championships();
+    `);
+    await page.waitForFunction(({ selector, id }: { selector: string; id: string }) =>
+      [...document.querySelectorAll(selector)].at(-1)?.getAttribute("data-param-id") === id,
+      { selector: nationalLinks, id: liveId });
+    await psql(`UPDATE team_rating SET rating=100 WHERE id='${liveId}'; SELECT refresh_recent_championships()`);
+    await page.waitForFunction(({ selector, id }: { selector: string; id: string }) =>
+      document.querySelector(selector)?.getAttribute("data-param-id") === id,
+      { selector: nationalLinks, id: liveId });
+    await psql(`UPDATE championship SET name='Renamed live tournament',region='continental' WHERE id='${liveId}'; SELECT refresh_recent_championships()`);
+    await page.waitForFunction((id: string) => {
+      const link = document.querySelector(`.champ-list[data-filter="region=eq.continental"] a[data-param-id="${id}"]`);
+      return link?.textContent?.includes("Renamed live tournament") && !document.querySelector(`.champ-list[data-filter="region=eq.national"] a[data-param-id="${id}"]`);
+    }, liveId);
+    await psql(`UPDATE championship SET begins=(now() AT TIME ZONE 'America/Sao_Paulo')::date-60,
+      ends=(now() AT TIME ZONE 'America/Sao_Paulo')::date-30 WHERE id='${liveId}'; SELECT refresh_recent_championships()`);
+    await page.waitForFunction((selector: string) => !document.querySelector(selector), link);
+  } finally {
+    await psql(`DELETE FROM championship WHERE id='${liveId}'; DELETE FROM team WHERE id='${liveId}'; SELECT refresh_recent_championships()`);
+  }
 });
 
 test("test-catalog-category: every championship with its category", async () => {

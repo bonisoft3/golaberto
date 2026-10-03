@@ -44,7 +44,7 @@ _locales: [
 	out:    """
 		<section class="recent">
 		  <h2 data-text="{msg.\(R.region)}"></h2>
-		  <ul class="champ-list" data-live="championship" data-filter="region=eq.\(R.region)&limit=6" data-order="begins.desc" data-empty="{msg.home_empty}">
+		  <ul class="champ-list" data-live="home_championship" data-filter="region=eq.\(R.region)" data-order="strength.desc,full_name.asc,id.asc" data-empty="{msg.home_empty}">
 		    <template data-item>
 		      <li><a data-route="campeonato" data-param-id="{id}"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}"></span></a></li>
 		    </template>
@@ -604,7 +604,7 @@ _principalMarkup: """
 	    </section>
 	    <h2 class="recent-title" data-text="{msg.home_recent}"></h2>
 	    <div class="regions">
-	\(strings.Join([for r in ["world", "continental", "national"] {(#Recent & {region: r}).out}], "\n"))
+	\(strings.Join([for r in ["national", "continental", "world"] {(#Recent & {region: r}).out}], "\n"))
 	    </div>
 	    <p class="more"><a data-route="campeonatos" data-text="{msg.home_all}"></a></p>
 	  </div>

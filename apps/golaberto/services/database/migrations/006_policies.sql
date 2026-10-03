@@ -179,6 +179,13 @@ CREATE POLICY phase_round_app_user_select ON phase_round FOR SELECT TO app_user 
 DROP POLICY IF EXISTS phase_round_service_all ON phase_round;
 CREATE POLICY phase_round_service_all ON phase_round FOR ALL TO service USING (true) WITH CHECK (true);
 
+CALL rls_protect('home_championship');
+ALTER TABLE home_championship ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS home_championship_app_user_select ON home_championship;
+CREATE POLICY home_championship_app_user_select ON home_championship FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS home_championship_service_all ON home_championship;
+CREATE POLICY home_championship_service_all ON home_championship FOR ALL TO service USING (true) WITH CHECK (true);
+
 CALL rls_protect('team_group');
 ALTER TABLE team_group ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS team_group_app_user_select ON team_group;

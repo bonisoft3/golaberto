@@ -106,8 +106,8 @@
     <h2 class="recent-title" data-text="{msg.home_recent}"></h2>
     <div class="regions">
 <section class="recent">
-  <h2 data-text="{msg.world}"></h2>
-  <ul class="champ-list" data-live="championship" data-filter="region=eq.world&limit=6" data-order="begins.desc" data-empty="{msg.home_empty}">
+  <h2 data-text="{msg.national}"></h2>
+  <ul class="champ-list" data-live="home_championship" data-filter="region=eq.national" data-order="strength.desc,full_name.asc,id.asc" data-empty="{msg.home_empty}">
     <template data-item>
       <li><a data-route="campeonato" data-param-id="{id}"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}"></span></a></li>
     </template>
@@ -115,15 +115,15 @@
 </section>
 <section class="recent">
   <h2 data-text="{msg.continental}"></h2>
-  <ul class="champ-list" data-live="championship" data-filter="region=eq.continental&limit=6" data-order="begins.desc" data-empty="{msg.home_empty}">
+  <ul class="champ-list" data-live="home_championship" data-filter="region=eq.continental" data-order="strength.desc,full_name.asc,id.asc" data-empty="{msg.home_empty}">
     <template data-item>
       <li><a data-route="campeonato" data-param-id="{id}"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}"></span></a></li>
     </template>
   </ul>
 </section>
 <section class="recent">
-  <h2 data-text="{msg.national}"></h2>
-  <ul class="champ-list" data-live="championship" data-filter="region=eq.national&limit=6" data-order="begins.desc" data-empty="{msg.home_empty}">
+  <h2 data-text="{msg.world}"></h2>
+  <ul class="champ-list" data-live="home_championship" data-filter="region=eq.world" data-order="strength.desc,full_name.asc,id.asc" data-empty="{msg.home_empty}">
     <template data-item>
       <li><a data-route="campeonato" data-param-id="{id}"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}"></span></a></li>
     </template>

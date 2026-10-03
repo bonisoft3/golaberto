@@ -85,6 +85,9 @@ CREATE TRIGGER restamp_txid BEFORE UPDATE ON player_stat
 DROP TRIGGER IF EXISTS restamp_txid ON phase_round;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON phase_round
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+DROP TRIGGER IF EXISTS restamp_txid ON home_championship;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON home_championship
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON team_group;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_group
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();

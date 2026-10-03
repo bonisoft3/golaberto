@@ -55,7 +55,7 @@ code: surface: screens: {
 		files: {handlers: [], adapters: []}
 	}
 	principal: {
-		reads: [{entity: "Championship"}, {entity: "Group"}, {entity: "HomeGameCard"}, {entity: "Phase"}, {entity: "Standing"}, {entity: "TeamChance"}, {entity: "ZoneChance"}]
+		reads: [{entity: "Championship"}, {entity: "Group"}, {entity: "HomeChampionship"}, {entity: "HomeGameCard"}, {entity: "Phase"}, {entity: "Standing"}, {entity: "TeamChance"}, {entity: "ZoneChance"}]
 		files: {handlers: [], adapters: []}
 	}
 }

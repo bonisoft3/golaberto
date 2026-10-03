@@ -73,6 +73,9 @@ services:
         path: ../services/database/migrations/021_home_highlights.sql
         target: /docker-entrypoint-initdb.d
       - action: rebuild
+        path: ../services/database/migrations/022_recent_championships.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
         path: ../services/database/migrations/023_search_collation.sql
         target: /docker-entrypoint-initdb.d
       - action: rebuild

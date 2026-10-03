@@ -1,0 +1,86 @@
+say:
+  generate:
+    rulemap:
+      types:
+        cmds:
+          - do: "deno run --no-config --allow-read --allow-write=portable-types.ts refresh-portable-types.ts"
+  test:
+    # The shorthand replaces the builtin's command; the rule below sorts ahead of
+    # it on priority, because the builtin carries stop:true and a rule sorted
+    # after it is emitted and never runs.
+    do: "deno run --allow-read=. bounds.ts"
+    rulemap:
+      loop:
+        priority: -1
+        cmds:
+          - do: "deno run --allow-read=. check-loop.ts --self-test"
+          - do: "deno test --config deno.json --allow-read workflow_test.ts"
+      # emit.cue's output pinned against a small program; testdata/ is outside
+      # every `./...` pattern, so no app or scan evaluates it.
+      emit:
+        priority: -1
+        cmds:
+          - do: "cue vet -c ./testdata/emit"
+      distribution:
+        priority: -1
+        cmds:
+          - do: "deno test --config deno.json --allow-read --allow-write --allow-run --allow-env bootstrap_test.ts"
+      types:
+        priority: -1
+        cmds:
+          - do: "deno test --config deno.json --allow-read --allow-write --allow-run types_test.ts"
+      # Held seed rows: their rendering into 900_seed.sql and their judgement,
+      # which shells out to cue in a scratch package.
+      seed:
+        priority: -1
+        cmds:
+          - do: "deno test --config deno.json --allow-read --allow-write --allow-run=cue seed_test.ts"
+      identity:
+        priority: -1
+        cmds:
+          - do: "deno test --config deno.json --allow-read --allow-run=cue identity_test.ts"
+      type-system:
+        priority: -1
+        cmds:
+          - do: "deno test --no-config --allow-read --allow-run=cue type-proto.test.ts type-sql.test.ts portable-types.test.ts types.test.ts"
+          # The client's transformations against the table that defines them,
+          # and the table against CUE's own reading of it. Both need `cue`, and
+          # the agreement test needs a scratch directory to run it in.
+          - do: "deno test --no-config --allow-read --allow-write --allow-run=cue type-agreement.test.ts"
+          - do: "mise exec -- deno test --no-config --allow-read --allow-write --allow-run=protoc,cue type-proto.roundtrip.test.ts"
+      # The schema-evolution passes. Named here because this rulemap names test
+      # files one by one: a suite that exists and is not listed is a suite that
+      # runs only when someone globs locally, which is indistinguishable from
+      # passing. replay drives duckdb over replay.sql, and withheld drives
+      # check-proto as a subprocess, so both need run and a scratch directory.
+      schema-evolution:
+        priority: -1
+        cmds:
+          - do: "mise exec -- deno test --no-config --allow-read --allow-write --allow-run --allow-env replay.test.ts withheld.test.ts"
+      machines:
+        priority: -1
+        cmds:
+          - do: "mise exec -- deno test --config deno.json --allow-read --allow-run=cue mecha-machine.test.ts"
+      duckstream:
+        priority: -1
+        cmds:
+          - do: "mise exec -- deno test --config deno.json --allow-read --allow-run --allow-env duckstream.test.ts"
+      # A pages release's derived rows: their SQL, and a bundled page whose
+      # PGlite boots holding them; bundling needs the omnishell and mecha trees.
+      bundle:
+        priority: -1
+        cmds:
+          - do: "mise exec -- deno test --config bundle/deno.json --allow-read --allow-write --allow-run --allow-env bundle/bundle_test.ts"
+      # The door's language rule against the terminal's, over an emitted
+      # Caddyfile: two runtimes that cannot share code and must not disagree.
+      negotiation:
+        priority: -1
+        cmds:
+          - do: "deno test --config deno.json --allow-read negotiation_test.ts"
+  # lint is not a #verb: it carries its own rulemap with no builtin wiring, so a
+  # `do:` here type-checks, exports, and never reaches lint.rules.
+  lint:
+    rulemap:
+      types:
+        cmds:
+          - do: "deno check --config deno.json *.ts"

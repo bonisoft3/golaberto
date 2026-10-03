@@ -1,0 +1,281 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "compose": {
+    "up": true,
+    "manual": true,
+    "build": {
+      "additional_contexts": {
+        "root": ".."
+      },
+      "secrets": [],
+      "args": {}
+    },
+    "command": [
+      "deno",
+      "run",
+      "--node-modules-dir=auto",
+      "--allow-read",
+      "--allow-write",
+      "--allow-net",
+      "--allow-env",
+      "--allow-run",
+      "--allow-sys",
+      "--unsafely-ignore-certificate-errors=caddy",
+      "/omnishell/check-visual.ts",
+      "."
+    ],
+    "depends_on": {
+      "apps_golaberto-launch": {
+        "condition": "service_healthy"
+      }
+    },
+    "environment": {
+      "APP_URL": "https://caddy:8443"
+    },
+    "ports": [],
+    "volumes": []
+  },
+  "dockerfile": {
+    "preamble": [
+      "COPY --from=denoland/deno:bin-2.5.5@sha256:a8dd9a073b2b4d1beb77a8174830c5af54e32517808dcc28249ed6c04fdac979 /deno /usr/local/bin/deno",
+      "ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright",
+      "ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1",
+      "ENV DENO_DIR=/deno-cache",
+      "COPY --from=root .runtime/plugins/omnishell /omnishell",
+      "RUN deno install --node-modules-dir=auto --entrypoint /omnishell/check-visual.ts"
+    ],
+    "preambleCopyContexts": [],
+    "from": {
+      "name": "mcr.microsoft.com/playwright:v1.61.1-noble@sha256:5b8f294aff9041b7191c34a4bab3ac270157a28774d4b0660e9743297b697e48"
+    },
+    "add": [],
+    "mounts": [],
+    "secrets": {},
+    "extra_hosts": [],
+    "epilogue": [],
+    "copy": [],
+    "healthcheck": null,
+    "expose": [],
+    "entrypoint": null,
+    "incremental": false,
+    "cmd": null
+  },
+  "name": "integrate",
+  "project": "apps_golaberto",
+  "dir": "",
+  "activate": "mise x --",
+  "srcs": {
+    "globs": [
+      "shell/shell.yaml",
+      "shell/screens/**"
+    ],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {},
+  "synthetics": {
+    "bayt": {
+      "name": "integrate_bayt",
+      "project": "apps_golaberto",
+      "dir": "",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.integrate.yaml",
+          ".bayt/Dockerfile.integrate",
+          ".bayt/bayt.integrate.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/Taskfile.integrate.yaml",
+          ".bayt/compose.integrate.closure.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        ".bayt/compose.integrate.yaml",
+        ".bayt/compose.launch.yaml",
+        ".bayt/compose.caddy.yaml",
+        ".bayt/compose.database.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml",
+        ".bayt/compose.crud.yaml",
+        ".bayt/compose.electric.yaml",
+        ".bayt/compose.redis.yaml",
+        ".bayt/compose.mesh-events.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.mesh-image.yaml",
+        ".bayt/compose.conduit.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.conduit-image.yaml",
+        ".bayt/compose.transform.yaml",
+        ".bayt/compose.compute.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.compute-image.yaml",
+        ".bayt/compose.auth.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.auth-image.yaml"
+      ]
+    },
+    "outs": {
+      "name": "integrate_outs",
+      "project": "apps_golaberto",
+      "dir": "",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        ".bayt/compose.integrate.yaml",
+        ".bayt/compose.launch.yaml",
+        ".bayt/compose.caddy.yaml",
+        ".bayt/compose.database.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml",
+        ".bayt/compose.crud.yaml",
+        ".bayt/compose.electric.yaml",
+        ".bayt/compose.redis.yaml",
+        ".bayt/compose.mesh-events.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.mesh-image.yaml",
+        ".bayt/compose.conduit.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.conduit-image.yaml",
+        ".bayt/compose.transform.yaml",
+        ".bayt/compose.compute.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.compute-image.yaml",
+        ".bayt/compose.auth.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.auth-image.yaml"
+      ]
+    },
+    "srcs": {
+      "name": "integrate_srcs",
+      "project": "apps_golaberto",
+      "dir": "",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          "shell/shell.yaml",
+          "shell/screens/**"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [
+        "launch_outs_srcs"
+      ],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        ".bayt/compose.integrate.yaml",
+        ".bayt/compose.launch.yaml",
+        ".bayt/compose.caddy.yaml",
+        ".bayt/compose.database.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml",
+        ".bayt/compose.crud.yaml",
+        ".bayt/compose.electric.yaml",
+        ".bayt/compose.redis.yaml",
+        ".bayt/compose.mesh-events.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.mesh-image.yaml",
+        ".bayt/compose.conduit.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.conduit-image.yaml",
+        ".bayt/compose.transform.yaml",
+        ".bayt/compose.compute.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.compute-image.yaml",
+        ".bayt/compose.auth.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.auth-image.yaml"
+      ]
+    }
+  },
+  "taskfile": {
+    "run": "once",
+    "incremental": true,
+    "preconditions": []
+  },
+  "visibility": "internal",
+  "emitsSrcs": true,
+  "deps": [
+    "launch_outs"
+  ],
+  "sameProjectDeps": [
+    "launch_outs"
+  ],
+  "transitiveDeps": [
+    "launch_outs"
+  ],
+  "transitiveCrossDeps": [],
+  "upClosure": [
+    ".bayt/compose.integrate.yaml",
+    ".bayt/compose.launch.yaml",
+    ".bayt/compose.caddy.yaml",
+    ".bayt/compose.database.yaml",
+    ".runtime/libraries/mecha/.bayt/compose.database-image.yaml",
+    ".bayt/compose.crud.yaml",
+    ".bayt/compose.electric.yaml",
+    ".bayt/compose.redis.yaml",
+    ".bayt/compose.mesh-events.yaml",
+    ".runtime/libraries/mecha/.bayt/compose.mesh-image.yaml",
+    ".bayt/compose.conduit.yaml",
+    ".runtime/libraries/mecha/.bayt/compose.conduit-image.yaml",
+    ".bayt/compose.transform.yaml",
+    ".bayt/compose.compute.yaml",
+    ".runtime/libraries/mecha/.bayt/compose.compute-image.yaml",
+    ".bayt/compose.auth.yaml",
+    ".runtime/libraries/mecha/.bayt/compose.auth-image.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "launch_outs",
+      "project": "apps_golaberto",
+      "dir": "",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

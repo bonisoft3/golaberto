@@ -1,0 +1,3041 @@
+// #emit derives the emitted-file bundle from an #App. `cue export -e out`
+// yields the whole program surface: `manifest` is the list of files, `files`
+// maps each path to its content or its source. Derived structure renders in
+// CUE (strings for raw formats, structs for the writer to serialize — the
+// bayt #render division of labor); assembly files (html, css, jessie,
+// bloblang, complex sql) are never CUE strings — they live in the app tree
+// and their entries carry `src`. Where a derived config's consumer cannot
+// reference a file, the content is inlined via @embed at the reference site.
+//
+// Not emitted here: .mise.toml (bootstrap CUE-owned) and the ir view (ir.html is
+// the pinned artifact itself). bayt.cue is emitted as a thin stub over
+// bayt.json (the build seat's export), and the sayt verbs run on their
+// builtins against emitted files (tasks.json, compose.yaml, .say.yaml lint
+// rules).
+@extern(embed)
+
+package pronto
+
+import (
+	"encoding/json"
+	"list"
+	"regexp"
+	"strconv"
+	"strings"
+
+	prontobuild "bonisoft.org/.runtime/plugins/pronto/builders:bayt"
+	"bonisoft.org/.runtime/plugins/pronto/clusters:mecha"
+	prontoloop "bonisoft.org/.runtime/plugins/pronto/loops:sayt"
+	"bonisoft.org/.runtime/plugins/pronto/scales"
+	"bonisoft.org/.runtime/plugins/pronto/distribution"
+	"bonisoft.org/.runtime/plugins/pronto/terminals:omnishell"
+)
+
+#File: {
+	format: "sql" | "type-sql" | "carrier-sql" | "seed-sql" | "proto" | "yaml" | "json" | "caddyfile" | "html" | "css" | "cue" | "bloblang" | "jessie" | "js" | "text" | "toml"
+	text?:  string // raw formats, writer-materialized
+	data?:  _      // structured formats, writer-serialized
+	src?:   string // assembly file authored in place; writer verifies presence
+}
+
+_caddyfileAsset:   _ @embed(file="assets/Caddyfile", type=text)
+_cdcTypesAsset:    _ @embed(file="assets/cdc-types.blobl", type=text)
+_cdcCarriersAsset: _cdcTypesAsset
+
+// The type a bus row's column is converted to, by its label: the physical
+// labels a program may still use name their type, and a tsvector is an
+// index, not a value anyone states, so it passes through.
+_busType: {for k, v in #typeAlias if k != "tsvector" {(k): v}, for k, _ in #types {(k): k}}
+_busCarrier: _busType
+
+// The types cdc-types.blobl has a measured bus spelling for — the
+// asset's own dispatch, stated once here beside it and held equal to it by
+// cdc-types.integration.test.ts. A server column of any other type would
+// wedge its whole table at runtime, every change to it dropped by every
+// pipeline and visible only in a log, so it is refused where the app is built.
+_busTypes: ["string", "bool", "int32", "int64", "double", "uuid", "timestamp", "date", "time", "timezone", "duration", "decimal"]
+_busCarriers:    _busTypes
+_busConvertible: or(_busTypes)
+
+// The one address a route answers at in one locale: the locale's prefix, empty
+// for the default, ahead of that locale's own pattern. Three emitted artifacts
+// read it — the Caddyfile's matcher list, the sitemap's <loc> and its hreflang
+// alternates — and they must agree, because a sitemap naming an address the
+// door does not route is a 404 handed to a crawler on purpose.
+#address: A={
+	route: _
+	i18n?: _
+	_prefix: [
+		if A.i18n != _|_ if A.tag != A.i18n.default {"/" + A.i18n.locales[A.tag].path},
+		"",
+	][0]
+	_pattern: [if A.i18n != _|_ if A.route.paths != _|_ {A.route.paths[A.tag]}, A.route.path][0]
+	// The bare prefix reads /es rather than /es/, and the default locale's root
+	// keeps the slash it cannot drop.
+	_joined: strings.TrimSuffix(A._prefix+A._pattern, "/")
+	tag:     string | *""
+	out: [if A._joined == "" {"/"}, A._joined][0]
+}
+
+// A pattern's :params in the order it holds them. A translated spelling may
+// order them differently from the default's, so a capture is read back by
+// name and never by position.
+#params: P={
+	pattern: string
+	out: [for seg in strings.Split(P.pattern, "/") if strings.HasPrefix(seg, ":") {strings.TrimPrefix(seg, ":")}]
+}
+
+_sqlType: {
+	text: "TEXT", int: "INTEGER", bigint: "BIGINT", timestamptz: "TIMESTAMPTZ", tsvector: "TSVECTOR"
+	uuid: "uuid"
+	for k, c in #Carrier if k != "uuid" {(k): c.sql}
+}
+
+#colSql: C={
+	f: #Field
+	_type: [if C.f.type == "decimal" {"portable_decimal_\(C.f.precision)_\(C.f.scale)"}, _sqlType[C.f.type]][0]
+	// The column's derived CHECK body; absent where the field states no cel.
+	check?: string
+	_frags: list.Concat([
+		["\"\(C.f.name)\"", C._type],
+		[if C.f.generated != _|_ {"GENERATED ALWAYS AS (\(C.f.generated)) STORED"}],
+		[if C.f.pk {"PRIMARY KEY"}],
+		[if C.f.generated == _|_ if C.f.default != _|_ {"DEFAULT \(C.f.default)"}],
+		[if C.f.generated == _|_ if !C.f.pk && C.f.required {"NOT NULL"}],
+		[if C.f.unique != _|_ if C.f.unique {"UNIQUE"}],
+		[if C.f.ref != _|_ {"REFERENCES \(C.f.ref)(id) ON DELETE CASCADE"}],
+		[if C.check != _|_ {"CHECK (\(C.check))"}],
+	])
+	out: strings.Join(_frags, " ")
+}
+
+#indexSql: I={
+	e: #Entity
+	out: [for ix in I.e.indexes {
+		"CREATE INDEX IF NOT EXISTS idx_\(I.e.table)_\(ix.on) ON \(I.e.table) USING \(ix.using) (\(ix.on));"
+	}]
+}
+
+// Go-style duration composed of h/m/s integer units ("168h", "30m", "1h30m").
+#durationSeconds: D={
+	d:  string
+	_m: regexp.FindNamedSubmatch(#"^(?:(?P<h>\d+)h)?(?:(?P<m>\d+)m)?(?:(?P<s>\d+)s)?$"#, D.d)
+	_hours: [if D._m.h != "" {strconv.Atoi(D._m.h)}, 0][0]
+	_mins: [if D._m.m != "" {strconv.Atoi(D._m.m)}, 0][0]
+	_secs: [if D._m.s != "" {strconv.Atoi(D._m.s)}, 0][0]
+	out: D._hours*3600 + D._mins*60 + D._secs
+}
+
+#tableSql: T={
+	e: #Entity
+	_lines: list.Concat([
+		[for fld in T.e.fields {
+			"  " + (#colSql & {f: fld, if T.e.checks[fld.name] != _|_ {check: T.e.checks[fld.name]}}).out
+		}],
+		// Platform column, never a #Field: the write's transaction id, returned
+		// via Prefer: return=representation so clients can awaitTxId against
+		// the shape stream (007_txid.sql restamps it on UPDATE).
+		["  \"txid\" BIGINT DEFAULT pg_current_xact_id()::text::bigint"],
+		// Platform column, never a #Field: the tenancy floor's scope. GENERATED
+		// so Postgres refuses a client-supplied value — the derivation cannot be
+		// made to lie without a trigger defending it. NOT NULL because a NULL
+		// scope fails `= ANY()`, which would make the row invisible to every
+		// role while the audit reported the table protected.
+		//
+		// Carrying a scope and being floored are separate. A per-object share
+		// cannot be floored -- the floor is restrictive, so it ANDs, and a sharee
+		// holds no scope the owner's row carries -- but the column is still what
+		// a shape predicate names and what a child's trigger copies. So `shared`
+		// gets the column and stays out of `rls_protect`; the exemption below
+		// says so, and the permissive share policies keep governing CRUD.
+		[if T.e.access != _|_ if T.e.access.scope == "private" {
+			"  \"scope_id\" TEXT GENERATED ALWAYS AS ('user:' || \"\(T.e.access.owner)\") STORED NOT NULL"
+		}],
+		// A child of a composition takes its parent's scope. Not GENERATED: a
+		// generated column cannot reach another table, so a trigger defends it
+		// instead (emitted beside the policies). NOT NULL holds because Postgres
+		// checks it after BEFORE triggers, so a child of no parent is refused.
+		[if T.e.access != _|_ if T.e.access.scope == "folder" {
+			"  \"scope_id\" TEXT NOT NULL"
+		}],
+		// A constant: every subject holds `public:` (subject_scopes in rls.sql
+		// says what a public row reached by scope rather than by exemption buys).
+		// Writes stay with the permissive policies below and the table grants.
+		[if T.e.access != _|_ if T.e.access.scope == "public" {
+			"  \"scope_id\" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL"
+		}],
+		// The identity table under `internal`, which is the one place a
+		// person reads their own row (the self-select policy below says why).
+		// Its own id IS its scope, so `user:<me>` matches exactly that row --
+		// the policy and the shape predicate come out as the same statement.
+		[if T.e.access != _|_ if T.e.access.scope == "internal" if T.e.table == "app_user" {
+			"  \"scope_id\" TEXT GENERATED ALWAYS AS ('user:' || \"id\") STORED NOT NULL"
+		}],
+		[if T.e.invariant.check != _|_ {"  CHECK (\(T.e.invariant.check))"}],
+	])
+	out: "CREATE TABLE IF NOT EXISTS \(T.e.table) (\n" + strings.Join(_lines, ",\n") + "\n);"
+}
+
+#sqlLit: L={
+	v: _
+	out: [
+		if (L.v & null) != _|_ if (L.v & (string | bool | number | {...} | [...])) == _|_ {"NULL"},
+		if (L.v & {raw: string}) != _|_ {(L.v & {raw: string}).raw},
+		if (L.v & string) != _|_ {"'" + strings.Replace((L.v & string), "'", "''", -1) + "'"},
+		if (L.v & bool) != _|_ {[if (L.v & bool) {"true"}, "false"][0]},
+		if (L.v & {...}) != _|_ {"'" + strings.Replace(json.Marshal(L.v), "'", "''", -1) + "'"},
+		if (L.v & [...]) != _|_ {"'" + strings.Replace(json.Marshal(L.v), "'", "''", -1) + "'"},
+		"\(L.v)",
+	][0]
+}
+
+// What the writer renders 900_seed.sql from (seed.ts): a seeded server entity's
+// columns, each with the function its carrier type reads a JSON literal
+// through, and the rows the program states; the rows state.seed holds the
+// writer reads from `src` itself. Every server entity is listed where a seed
+// file is declared, because which of them it holds rows for is the file's to
+// say.
+#seedData: S={
+	code: #App
+	_held: S.code.state.seed != _|_
+	out: {
+		if S._held {src: S.code.state.seed.src}
+		entities: [for _, e in S.code.state.entities if e.server if S._held || len(e.seed) > 0 {
+			name:  e.name
+			table: e.table
+			columns: [for f in e.fields {
+				name: f.name
+				if #Carrier[f.type] != _|_ {
+					from: "public.\([if f.type == "decimal" {"portable_decimal_\(f.precision)_\(f.scale)"}, #Carrier[f.type].sql][0])_from_json"
+				}
+			}]
+			rows: e.seed
+		}]
+	}
+}
+
+// A SECURITY DEFINER read under FORCE ROW LEVEL SECURITY is still scoped by
+// the caller's app.scopes unless the definer itself bypasses RLS, so the role
+// that owns these functions decides whether the server seat judges against the
+// truth or against one caller's slice.
+#validationPrecondition: """
+	DO $$ BEGIN
+	  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = current_user AND (rolsuper OR rolbypassrls)) THEN
+	    RAISE EXCEPTION 'validation triggers require a migration role that bypasses RLS (superuser or BYPASSRLS): %', current_user;
+	  END IF;
+	END $$;
+	"""
+
+// A validated table's plv8 predicates and the trigger that hands them their
+// world. The trigger is SECURITY DEFINER so the server seat judges against
+// the truth, and it refuses with check_violation because PostgREST maps a
+// bare plv8 exception to 500, which the client outbox would retry forever.
+// AFTER, so a row the caller's RLS refuses never reaches the definer's read:
+// the predicate cannot be used as an oracle for rows the caller cannot write.
+// It also puts stored generated columns and the restamped txid in `event.row`.
+#validationSql: V={
+	e: #Entity
+	_fn: {for n, _ in V.e.validations {(n): "\(V.e.table)_validation_\(strings.Replace(n, "-", "_", -1))"}}
+	// The statements carry their own line break, so a module that is a bare
+	// arrow function leaves no blank line above the completion.
+	_statements: {for n, v in V.e.validations {
+		(n): [if v.module.statements != "" {v.module.statements + "\n"}, ""][0]
+	}}
+	// text, not boolean: a predicate that answers neither is the app's program
+	// error, and only a value the wrapper can tell apart from a verdict lets it
+	// raise a different ERRCODE for it. REVOKE, because PostgREST publishes
+	// every function the anon role may execute as an /rpc/ endpoint.
+	_functions: [for n, v in V.e.validations {
+		"""
+		CREATE OR REPLACE FUNCTION \(V._fn[n])(state jsonb, event jsonb) RETURNS text
+		LANGUAGE plv8 IMMUTABLE AS $validation$
+		\(V._statements[n])const verdict = (\(v.module.completion))(state, event);
+		return verdict === true ? "true" : verdict === false ? "false" : "answered " + typeof verdict;
+		$validation$;
+
+		REVOKE EXECUTE ON FUNCTION \(V._fn[n])(jsonb, jsonb) FROM PUBLIC;
+		"""
+	}]
+	_reads: {for n, v in V.e.validations {
+		(n): strings.Join([for ed in v.edges {
+			"'\(ed.table)', (SELECT coalesce(jsonb_agg(to_jsonb(r)), '[]'::jsonb) FROM \(ed.table) r WHERE r.\"\(ed.key)\" = NEW.\"\(ed.from)\")"
+		}], ", ")
+	}}
+	// IS DISTINCT FROM, so a null answer takes the program-error arm rather
+	// than passing: an unanswered predicate refuses.
+	_checks: [for n, _ in V.e.validations {
+		"""
+		  v := \(V._fn[n])(jsonb_build_object('items', items, 'rows', jsonb_build_object(\(V._reads[n]))), event);
+		  IF v = 'false' THEN
+		    RAISE EXCEPTION USING ERRCODE = 'check_violation', MESSAGE = 'validation \(V.e.table).\(n)';
+		  ELSIF v IS DISTINCT FROM 'true' THEN
+		    RAISE EXCEPTION USING ERRCODE = 'raise_exception', MESSAGE = 'predicate \(V.e.table).\(n) ' || coalesce(v, 'answered nothing');
+		  END IF;
+		"""
+	}]
+	out: strings.Join(list.Concat([V._functions, [
+		"""
+		CREATE OR REPLACE FUNCTION \(V.e.table)_validate() RETURNS trigger
+		LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+		DECLARE
+		  items jsonb;
+		  event jsonb;
+		  v text;
+		BEGIN
+		  items := CASE WHEN TG_OP = 'UPDATE' THEN jsonb_build_array(to_jsonb(OLD)) ELSE '[]'::jsonb END;
+		  event := jsonb_build_object('type', lower(TG_OP), 'row', to_jsonb(NEW));
+		\(strings.Join(V._checks, "\n"))
+		  RETURN NULL;
+		END $$;
+
+		DROP TRIGGER IF EXISTS \(V.e.table)_validate ON \(V.e.table);
+		CREATE TRIGGER \(V.e.table)_validate AFTER INSERT OR UPDATE ON \(V.e.table)
+		  FOR EACH ROW EXECUTE FUNCTION \(V.e.table)_validate();
+		""",
+	]]), "\n\n")
+}
+
+#mechaEffectSql: EF={
+	effect: #MechaEffect
+	op:     *"INSERT" | "UPDATE" | "DELETE"
+
+	_isRel:    (EF.effect & #RelationalEffect) != _|_
+	_isCall:   (EF.effect & #FunctionEffect) != _|_
+	_isNotify: (EF.effect & #NotifyEffect) != _|_
+	_isSaga:   (EF.effect & #SagaEffect) != _|_
+	_isStream: (EF.effect & #StreamEffect) != _|_
+
+	_rel: EF.effect
+	_cols: [if _isRel if _rel["values"] != _|_ {[for c, _ in _rel.values {"\"\(c)\""}]}, []][0]
+	_rawKeys: [if _isRel {[if _rel["key"] != _|_ {_rel.key}, ["id"]][0]}, []][0]
+	_keys: [if _isRel {[for k in _rawKeys {"\"\(k)\""}]}, []][0]
+	_vals: [if _isRel if _rel["values"] != _|_ {[for _, val in _rel.values {(#sqlLit & {v: val}).out}]}, []][0]
+	_updates: [if _isRel if _rel["values"] != _|_ {[for c, _ in _rel.values if !list.Contains(_rawKeys, c) {"\"\(c)\" = EXCLUDED.\"\(c)\""}]}, []][0]
+	_setClauses: [if _isRel if _rel["values"] != _|_ {[for c, _ in _rel.values if (_rel["where"] != _|_ || !list.Contains(_rawKeys, c)) {"\"\(c)\" = \((#sqlLit & {v: _rel.values[c]}).out)"}]}, []][0]
+	_customUpdates: [if _isRel if _rel["updateValues"] != _|_ {[for c, val in _rel.updateValues {"\"\(c)\" = \((#sqlLit & {v: val}).out)"}]}, []][0]
+	_accUpdates: [if _isRel if _rel["values"] != _|_ {[for c, _ in _rel.values if !list.Contains(_rawKeys, c) {
+		if _rel["accumulate"] != _|_ {
+			if list.Contains(_rel.accumulate, c) {
+				"\"\(c)\" = \"\(_rel.table)\".\"\(c)\" + EXCLUDED.\"\(c)\""
+			}
+			if !list.Contains(_rel.accumulate, c) {
+				"\"\(c)\" = EXCLUDED.\"\(c)\""
+			}
+		}
+		if _rel["accumulate"] == _|_ {
+			"\"\(c)\" = \"\(_rel.table)\".\"\(c)\" + EXCLUDED.\"\(c)\""
+		}
+	}]}, []][0]
+
+	_wherePreds: [if _isRel if _rel["where"] != _|_ {[for c, val in _rel.where {"\"\(c)\" = \((#sqlLit & {v: val}).out)"}]}, []][0]
+	_rawWherePred: [if _isRel if _rel["rawWhere"] != _|_ {[_rel.rawWhere]}, []][0]
+	_keyPreds: [if _isRel if _rel["values"] != _|_ {[for k in _rawKeys if _rel.values[k] != _|_ {"\"\(k)\" = \((#sqlLit & {v: _rel.values[k]}).out)"}]}, []][0]
+	_explicitPreds: list.Concat([_wherePreds, _rawWherePred])
+	_preds: [if _isRel {[if len(_explicitPreds) > 0 {_explicitPreds}, _keyPreds][0]}, []][0]
+
+	_relSql: [
+		if _isRel if _rel["op"] != _|_ if _rel.op == "insert" {"        INSERT INTO \"\(_rel.table)\" (\(strings.Join(_cols, ", "))) VALUES (\(strings.Join(_vals, ", ")));"},
+		if _isRel if _rel["op"] != _|_ if _rel.op == "ensure" {"        INSERT INTO \"\(_rel.table)\" (\(strings.Join(_cols, ", "))) VALUES (\(strings.Join(_vals, ", "))) ON CONFLICT (\(strings.Join(_keys, ", "))) DO NOTHING;"},
+		if _isRel if _rel["op"] != _|_ if _rel.op == "upsert" {
+			[if len(_customUpdates) > 0 {
+				"        INSERT INTO \"\(_rel.table)\" (\(strings.Join(_cols, ", "))) VALUES (\(strings.Join(_vals, ", "))) ON CONFLICT (\(strings.Join(_keys, ", "))) DO UPDATE SET \(strings.Join(_customUpdates, ", "));"
+			}, {
+				"        INSERT INTO \"\(_rel.table)\" (\(strings.Join(_cols, ", "))) VALUES (\(strings.Join(_vals, ", "))) ON CONFLICT (\(strings.Join(_keys, ", "))) DO UPDATE SET \(strings.Join(_updates, ", "));"
+			}][0]
+		},
+		if _isRel if _rel["op"] != _|_ if _rel.op == "accumulate" {
+			[if len(_customUpdates) > 0 {
+				"        INSERT INTO \"\(_rel.table)\" (\(strings.Join(_cols, ", "))) VALUES (\(strings.Join(_vals, ", "))) ON CONFLICT (\(strings.Join(_keys, ", "))) DO UPDATE SET \(strings.Join(_customUpdates, ", "));"
+			}, {
+				"        INSERT INTO \"\(_rel.table)\" (\(strings.Join(_cols, ", "))) VALUES (\(strings.Join(_vals, ", "))) ON CONFLICT (\(strings.Join(_keys, ", "))) DO UPDATE SET \(strings.Join(_accUpdates, ", "));"
+			}][0]
+		},
+		if _isRel if _rel["op"] != _|_ if _rel.op == "update" {
+			if len(_preds) > 0 {
+				"        UPDATE \"\(_rel.table)\" SET \(strings.Join(_setClauses, ", ")) WHERE \(strings.Join(_preds, " AND "));"
+			}
+			if len(_preds) == 0 {
+				"        UPDATE \"\(_rel.table)\" SET \(strings.Join(_setClauses, ", "));"
+			}
+		},
+		if _isRel if _rel["op"] != _|_ if _rel.op == "delete" {"        DELETE FROM \"\(_rel.table)\" WHERE \(strings.Join(_preds, " AND "));"},
+		"",
+	][0]
+
+	_callArgs: [if _isCall if EF.effect["args"] != _|_ {[for _, a in EF.effect.args {(#sqlLit & {v: a}).out}]}, []][0]
+	_callSql: [if _isCall if EF.effect["call"] != _|_ {"        PERFORM \(EF.effect.call)(\(strings.Join(_callArgs, ", ")));"}, ""][0]
+
+	_notifySql: [if _isNotify if EF.effect["notify"] != _|_ {"        PERFORM pg_notify('\(EF.effect.notify)', \((#sqlLit & {v: EF.effect.payload}).out));"}, ""][0]
+
+	_defaultKey: [if EF.op == "DELETE" {"OLD.id::text"}, "NEW.id::text"][0]
+
+	_rawSagaKey: [
+		if _isSaga if EF.effect["idempotencyKey"] != _|_ {
+			[
+				if (EF.effect.idempotencyKey & {raw: string}) != _|_ {
+					(EF.effect.idempotencyKey & {raw: string}).raw + "::text"
+				},
+				if (EF.effect.idempotencyKey & string) != _|_ {
+					[
+						if strings.HasPrefix((EF.effect.idempotencyKey & string), "NEW.") || strings.HasPrefix((EF.effect.idempotencyKey & string), "OLD.") {
+							(EF.effect.idempotencyKey & string) + "::text"
+						},
+						"'" + strings.Replace((EF.effect.idempotencyKey & string), "'", "''", -1) + "'",
+					][0]
+				},
+				_defaultKey,
+			][0]
+		},
+		_defaultKey,
+	][0]
+
+	_sagaPayload: [
+		if _isSaga if EF.effect["payload"] != _|_ {
+			"jsonb_build_object(" + strings.Join([for k, v in EF.effect.payload {
+				_valSql: [
+					if (v & {raw: string}) != _|_ {(v & {raw: string}).raw},
+					if (v & string) != _|_ if strings.HasPrefix((v & string), "NEW.") || strings.HasPrefix((v & string), "OLD.") {(v & string)},
+					if (v & string) != _|_ if !strings.HasPrefix((v & string), "NEW.") && !strings.HasPrefix((v & string), "OLD.") {"'" + strings.Replace((v & string), "'", "''", -1) + "'"},
+					if (v & bool) != _|_ {[if (v & bool) {"true"}, "false"][0]},
+					if (v & number) != _|_ {"\(v)"},
+					if (v & {...}) != _|_ {"'" + strings.Replace(json.Marshal(v), "'", "''", -1) + "'::jsonb"},
+					if (v & [...]) != _|_ {"'" + strings.Replace(json.Marshal(v), "'", "''", -1) + "'::jsonb"},
+					"null",
+				][0]
+				"'\(k)', " + _valSql
+			}], ", ") + ")"
+		},
+		"'{}'::jsonb"
+	][0]
+
+	_sagaSql: [if _isSaga {
+		"""
+		        INSERT INTO "saga" ("id", "name", "idempotency_key", "payload", "status")
+		        VALUES (gen_random_uuid()::text, '\(EF.effect.saga)', \(_rawSagaKey), \(_sagaPayload)::jsonb, 'pending')
+		        ON CONFLICT ("name", "idempotency_key") DO NOTHING;
+		        PERFORM pg_notify('cortex_saga_queue', jsonb_build_object('saga', '\(EF.effect.saga)', 'key', \(_rawSagaKey))::text);
+		"""
+	}, ""][0]
+
+	_streamSignal: [if _isStream if EF.effect["signal"] != _|_ {EF.effect.signal}, "refresh"][0]
+	_rawStreamKey: [
+		if _isStream if EF.effect["key"] != _|_ {
+			[
+				if (EF.effect.key & {raw: string}) != _|_ {
+					(EF.effect.key & {raw: string}).raw + "::text"
+				},
+				if (EF.effect.key & string) != _|_ {
+					[
+						if strings.HasPrefix((EF.effect.key & string), "NEW.") || strings.HasPrefix((EF.effect.key & string), "OLD.") {
+							(EF.effect.key & string) + "::text"
+						},
+						"'" + strings.Replace((EF.effect.key & string), "'", "''", -1) + "'",
+					][0]
+				},
+				_defaultKey,
+			][0]
+		},
+		_defaultKey,
+	][0]
+	_streamSql: [if _isStream {
+		"""
+		        PERFORM pg_notify('duckstream_\(EF.effect.stream)', jsonb_build_object('signal', '\(_streamSignal)', 'table', TG_TABLE_NAME, 'id', \(_rawStreamKey))::text);
+		"""
+	}, ""][0]
+
+	out: [if _isRel {_relSql}, if _isCall {_callSql}, if _isNotify {_notifySql}, if _isSaga {_sagaSql}, if _isStream {_streamSql}, ""][0]
+}
+
+#mechaActionSql: AC={
+	action: #MechaAction
+	op:     *"INSERT" | "UPDATE" | "DELETE"
+
+	_effList: [if AC.action["effect"] != _|_ {
+		[if (AC.action.effect & [...]) != _|_ {AC.action.effect}, [AC.action.effect]][0]
+	}, []][0]
+
+	_assigns: [if AC.action["assign"] != _|_ {[
+		for col, val in AC.action.assign {
+			"        NEW.\"\(col)\" := \((#sqlLit & {v: val}).out);"
+		},
+	]}, []][0]
+
+	_effects: [
+		for eff in _effList {
+			(#mechaEffectSql & {effect: eff, op: AC.op}).out
+		},
+	]
+
+	_raise: [if AC.action["raise"] != _|_ {[
+		"        RAISE EXCEPTION '\(AC.action.raise)' USING ERRCODE = 'check_violation';",
+	]}, []][0]
+
+	out: strings.Join(list.Concat([_assigns, _effects, _raise]), "\n")
+}
+
+#mechaStateSql: ST={
+	table: string
+	field: string
+	name:  string
+	state: #MechaState
+
+	_type: [if ST.state["type"] != _|_ {ST.state["type"]}, "normal"][0]
+	_isFinal: _type == "final"
+
+	_finalBlock: """
+		    IF OLD."\(ST.field)" = '\(ST.name)' THEN
+		      RAISE EXCEPTION 'cannot transition from final state % on %', OLD."\(ST.field)", '\(ST.table)' USING ERRCODE = 'check_violation';
+		    END IF;
+		"""
+
+	_onTransitions: [if ST.state["on"] != _|_ {[
+		for ev, tr in ST.state.on
+		for t in [if (tr & string) != _|_ {[{target: tr}]}, if (tr & [...]) != _|_ {tr}, [tr]][0] {
+			if t["target"] != _|_ {target: t.target}
+			event: ev
+			if t["guard"] != _|_ {guard: t.guard}
+			actions: [if t["actions"] != _|_ {[if (t.actions & [...]) != _|_ {t.actions}, [t.actions]][0]}, []][0]
+		},
+	]}, []][0]
+
+	_afterTransitions: [if ST.state["after"] != _|_ {[
+		for d, tr in ST.state.after
+		for t in [if (tr & string) != _|_ {[{target: tr}]}, if (tr & [...]) != _|_ {tr}, [tr]][0] {
+			if t["target"] != _|_ {target: t.target}
+			event:   "after"
+			delayMs: d
+			if t["guard"] != _|_ {guard: t.guard}
+			actions: [if t["actions"] != _|_ {[if (t.actions & [...]) != _|_ {t.actions}, [t.actions]][0]}, []][0]
+		},
+	]}, []][0]
+
+	_allTransitions: list.Concat([_onTransitions, _afterTransitions])
+
+	_validTargets: [for t in _allTransitions if t["target"] != _|_ {t.target}]
+	_validTargetLits: [for t in _validTargets {"'\(t)'"}]
+
+	_timeoutChecks: [for t in _afterTransitions {
+		"""
+		      -- Timeout check: state \(ST.name) expires after \(t.delayMs)ms
+		      IF NEW."\(ST.field)" <> '\(t.target)' AND OLD.created_at < (now() - interval '\(t.delayMs) milliseconds') THEN
+		        RAISE EXCEPTION '% in state % has expired (timeout after %ms)', '\(ST.table)', '\(ST.name)', '\(t.delayMs)' USING ERRCODE = 'check_violation';
+		      END IF;
+		"""
+	}]
+
+	_transitionBranches: [for t in _allTransitions {
+		_guardLine: [if t["guard"] != _|_ {
+			"""
+			        IF NOT (\(t.guard)) THEN
+			          RAISE EXCEPTION 'guard failed on % transition from % to %', '\(ST.table)', '\(ST.name)', '\(t.target)' USING ERRCODE = 'check_violation';
+			        END IF;
+			"""
+		}, ""][0]
+		_actionLines: [for a in t.actions {(#mechaActionSql & {action: a, op: "UPDATE"}).out}]
+		"""
+		      IF NEW."\(ST.field)" = '\(t.target)' THEN
+		\(_guardLine)\(strings.Join(_actionLines, "\n"))
+		        RETURN NEW;
+		      END IF;
+		"""
+	}]
+
+	_normalBlock: """
+		    IF OLD."\(ST.field)" = '\(ST.name)' THEN
+		\(strings.Join(_timeoutChecks, "\n"))
+		      IF NEW."\(ST.field)" NOT IN (\(strings.Join(_validTargetLits, ", "))) THEN
+		        RAISE EXCEPTION 'invalid transition on % from % to %', '\(ST.table)', OLD."\(ST.field)", NEW."\(ST.field)" USING ERRCODE = 'check_violation';
+		      END IF;
+
+		\(strings.Join(_transitionBranches, "\n"))
+		      RETURN NEW;
+		    END IF;
+		"""
+
+	out: [if _isFinal {_finalBlock}, _normalBlock][0]
+}
+
+#mechaMachineSql: S={
+	machine: #MechaMachine
+	entities: [string]: #Entity
+
+	_table: [if S.entities[S.machine.entity] != _|_ {S.entities[S.machine.entity].table}, S.machine.entity][0]
+
+	_stateMachineSql: [if S.machine["states"] != _|_ {
+		_field:  S.machine.field
+		_fnName: "trg_\(_table)_\(_field)_machine"
+
+		_stateNames: [for s, _ in S.machine.states {s}]
+		_stateLitList: [for s in _stateNames {"'\(s)'"}]
+		_checkConstraint: """
+			ALTER TABLE "\(_table)" DROP CONSTRAINT IF EXISTS "\(_table)_\(_field)_check";
+			ALTER TABLE "\(_table)" ADD CONSTRAINT "\(_table)_\(_field)_check" CHECK ("\(_field)" IN (\(strings.Join(_stateLitList, ", ")))) NOT VALID;
+			"""
+
+		_stateBlocks: [for sName, sBody in S.machine.states {
+			(#mechaStateSql & {
+				table: _table
+				field: _field
+				name:  sName
+				state: sBody
+			}).out
+		}]
+
+		_triggerBody: """
+			CREATE OR REPLACE FUNCTION "\(_fnName)"() RETURNS trigger
+			LANGUAGE plpgsql
+			SECURITY DEFINER
+			SET search_path = public, pg_catalog AS $$
+			BEGIN
+			  IF TG_OP = 'UPDATE' AND OLD."\(_field)" = NEW."\(_field)" THEN
+			    RETURN NEW;
+			  END IF;
+
+			  IF TG_OP = 'INSERT' THEN
+			    IF NEW."\(_field)" <> '\(S.machine.initial)' THEN
+			      RAISE EXCEPTION 'new % must start in initial state % (got %)', '\(_table)', '\(S.machine.initial)', NEW."\(_field)" USING ERRCODE = 'check_violation';
+			    END IF;
+			    RETURN NEW;
+			  END IF;
+
+			  IF TG_OP = 'UPDATE' THEN
+			\(strings.Join(_stateBlocks, "\n"))
+			  END IF;
+
+			  RETURN NEW;
+			END $$;
+
+			DROP TRIGGER IF EXISTS "\(_fnName)" ON "\(_table)";
+			CREATE TRIGGER "\(_fnName)"
+			  BEFORE INSERT OR UPDATE ON "\(_table)"
+			  FOR EACH ROW
+			  EXECUTE FUNCTION "\(_fnName)"();
+			"""
+
+		_checkConstraint + "\n\n" + _triggerBody
+	}, ""][0]
+
+	_lifecycleMachineSql: [if S.machine["on"] != _|_ {
+		_fnName: "trg_\(_table)_\(S.machine.name)_reducer"
+		_insertActions: [if S.machine.on["insert"] != _|_ {
+			[for a in [if (S.machine.on.insert & [...]) != _|_ {S.machine.on.insert}, [S.machine.on.insert]][0] {
+				(#mechaActionSql & {action: a, op: "INSERT"}).out
+			}]
+		}, []][0]
+		_updateActions: [if S.machine.on["update"] != _|_ {
+			[for a in [if (S.machine.on.update & [...]) != _|_ {S.machine.on.update}, [S.machine.on.update]][0] {
+				(#mechaActionSql & {action: a, op: "UPDATE"}).out
+			}]
+		}, []][0]
+		_deleteActions: [if S.machine.on["delete"] != _|_ {
+			[for a in [if (S.machine.on.delete & [...]) != _|_ {S.machine.on.delete}, [S.machine.on.delete]][0] {
+				(#mechaActionSql & {action: a, op: "DELETE"}).out
+			}]
+		}, []][0]
+
+		_timing: [if S.machine["timing"] != _|_ {S.machine.timing}, "AFTER"][0]
+
+		_reducerBody: """
+			CREATE OR REPLACE FUNCTION "\(_fnName)"() RETURNS trigger
+			LANGUAGE plpgsql
+			SECURITY DEFINER
+			SET search_path = public, pg_catalog AS $$
+			BEGIN
+			  IF TG_OP = 'INSERT' THEN
+			\(strings.Join(_insertActions, "\n"))
+			    RETURN NEW;
+			  END IF;
+
+			  IF TG_OP = 'UPDATE' THEN
+			\(strings.Join(_updateActions, "\n"))
+			    RETURN NEW;
+			  END IF;
+
+			  IF TG_OP = 'DELETE' THEN
+			\(strings.Join(_deleteActions, "\n"))
+			    RETURN OLD;
+			  END IF;
+
+			  RETURN COALESCE(NEW, OLD);
+			END $$;
+
+			DROP TRIGGER IF EXISTS "\(_fnName)" ON "\(_table)";
+			CREATE TRIGGER "\(_fnName)"
+			  \(_timing) INSERT OR UPDATE OR DELETE ON "\(_table)"
+			  FOR EACH ROW
+			  EXECUTE FUNCTION "\(_fnName)"();
+			"""
+		_reducerBody
+	}, ""][0]
+
+	out: [if S.machine["states"] != _|_ {_stateMachineSql}, _lifecycleMachineSql][0]
+}
+
+#sagaTableSql: """
+	CREATE TABLE IF NOT EXISTS "saga" (
+	  "id"              TEXT PRIMARY KEY,
+	  "name"            TEXT NOT NULL,
+	  "idempotency_key" TEXT NOT NULL,
+	  "payload"         JSONB NOT NULL DEFAULT '{}'::jsonb,
+	  "status"          TEXT NOT NULL DEFAULT 'pending',
+	  "outcome"         JSONB,
+	  "created_at"      TIMESTAMPTZ NOT NULL DEFAULT clock_timestamp(),
+	  "settled_at"      TIMESTAMPTZ,
+	  UNIQUE ("name", "idempotency_key")
+	);
+
+	CREATE INDEX IF NOT EXISTS "idx_saga_status" ON "saga" ("status") WHERE "status" = 'pending';
+
+	ALTER TABLE "saga" ENABLE ROW LEVEL SECURITY;
+	REVOKE ALL ON "saga" FROM anon, app_user, electric;
+	"""
+
+// The app_user USING clause of a private entity. `qual` prefixes the row's
+// own columns: the table name in the entity's policies, the parent alias
+// when a folder-scope child inlines this clause. `table` is the private
+// entity's table regardless of qual — it names the shared-arm helper.
+#ownedUsing: U={
+	a:     #Access
+	qual:  string
+	table: string
+	// The membership test is a SECURITY DEFINER helper (emitted with the
+	// owned entity's policies), not an inline EXISTS: the via table's own
+	// policy references this table back, and inlining would recurse
+	// (Postgres aborts with "infinite recursion detected in policy").
+	_shared: [
+		if U.a.shared != _|_ {" OR \(U.table)_shared(\(U.qual).id)"},
+		"",
+	][0]
+	out: "\(U.qual).\(U.a.owner) = auth_uid()" + U._shared
+}
+
+// One policy, restated rather than created. Postgres has no CREATE POLICY IF
+// NOT EXISTS, so the drop is how a migration carrying a corrected rule reaches
+// a database that already holds the old one — the same restatement rls_protect
+// does for the tenancy policy it owns. Inside the migration's transaction the
+// drop and the create are one step, so no window exists in which the table is
+// enabled for RLS with this policy missing.
+#policy: {
+	name:  string
+	table: string
+	rest:  string
+	out:   "DROP POLICY IF EXISTS \(name) ON \(table);\nCREATE POLICY \(name) ON \(table) \(rest);"
+}
+
+// One entity's RLS block. Policy names are deterministic:
+// <table>_<role>_<action>. Every mode grants service ALL; the floor binds
+// PUBLIC and 001 exempts service from it by role attribute.
+#policySql: P={
+	// These reasons are read by a person out of rls_exempt, so each says why
+	// rather than naming a code. Empty means floored. The one that is not
+	// self-evident from the string: a per-object share is unfloorable because
+	// there is no scope both parties hold that does not also grant everything
+	// else the owner has.
+	_exempt: string
+	if P.e.access.scope == "private" if P.e.access.shared != _|_ {
+		_exempt: "private with a per-object share via \(P.e.access.shared.via): finer than tenancy, guarded by its own policies"
+	}
+	if P.e.access.scope == "private" if P.e.access.shared == _|_ {_exempt: ""}
+	if P.e.access.scope == "public" {_exempt: ""}
+	if P.e.access.scope == "internal" if P._t != "app_user" {
+		_exempt: "internal: no app_user reaches it"
+	}
+	if P.e.access.scope == "internal" if P._t == "app_user" {
+		_exempt: "internal except a person reading their own row, which the self-select policy alone allows"
+	}
+	if P.e.access.scope == "folder" {
+		// A child is exactly as floorable as its parent: floored under a floored
+		// one, exempt under a shared one, whose share it inherits. A parent
+		// that carries no scope -- internal, unless it is app_user -- has
+		// none to hand down, and the composition is a schema error.
+		_p:        P.entities[P.e.access.parent]
+		_pFloored: bool
+		if P._p.access.scope == "private" {_pFloored: P._p.access.shared == _|_}
+		if P._p.access.scope == "public" {_pFloored: true}
+		if P._p.access.scope == "folder" {_pFloored: false}
+		if P._p.access.scope == "internal" {_pFloored: false}
+		_pScoped: bool & (P._p.access.scope != "folder" && (P._p.access.scope != "internal" || P._p.table == "app_user")) & true
+		if P._pFloored {_exempt: ""}
+		if !P._pFloored {
+			_exempt: "folder \(P.e.access.parent), which is itself exempt: the child inherits its visibility"
+		}
+	}
+
+	// A composition's scope is its parent's, written by mecha.scope_from_parent
+	// (rls.sql says why a trigger and not a generated column). Called, never
+	// restated, like the floor.
+	_scopeTrigger: [...string]
+	if P.e.access.scope != "folder" {_scopeTrigger: []}
+	if P.e.access.scope == "folder" {
+		_parentTable: P.entities[P.e.access.parent].table
+		_scopeTrigger: [
+			"""
+			DROP TRIGGER IF EXISTS \(P._t)_scope ON \(P._t);
+			CREATE TRIGGER \(P._t)_scope BEFORE INSERT OR UPDATE ON \(P._t)
+			  FOR EACH ROW EXECUTE FUNCTION mecha.scope_from_parent('\(P._parentTable)', 'id', '\(P.e.access.on)');
+			""",
+		]
+	}
+
+	e: #Entity
+	entities: [string]: #Entity // parent lookup for folder scope
+	_t: P.e.table
+	if P.e.access.scope == "private" {
+		_using: (#ownedUsing & {a: P.e.access, qual: P._t, table: P._t}).out
+		// The helper runs as the migration superuser, so its read of the via
+		// table bypasses RLS — the cycle-break #ownedUsing relies on. auth_uid()
+		// still reads the caller's session GUC (set_config is role-independent).
+		_pkType: [for f in P.e.fields if f.pk {f.type}][0]
+		_pre: [
+			if P.e.access.shared != _|_ {
+				"""
+					CREATE OR REPLACE FUNCTION \(P._t)_shared(row_id \(_sqlType[P._pkType])) RETURNS boolean
+					LANGUAGE sql STABLE SECURITY DEFINER SET search_path = public AS $$
+					  SELECT EXISTS (SELECT 1 FROM \(P.e.access.shared.via) s WHERE s.\(P.e.access.shared.on) = row_id AND s.\(P.e.access.shared.user) = auth_uid())
+					$$;
+					"""
+			},
+		]
+		_appUser: [
+			(#policy & {name: "\(P._t)_app_user_select", table: P._t, rest: "FOR SELECT TO app_user USING (\(P._using))"}).out,
+			(#policy & {name: "\(P._t)_app_user_insert", table: P._t, rest: "FOR INSERT TO app_user WITH CHECK (\(P._t).\(P.e.access.owner) = auth_uid())"}).out,
+			(#policy & {name: "\(P._t)_app_user_update", table: P._t, rest: "FOR UPDATE TO app_user USING (\(P._using))"}).out,
+			(#policy & {name: "\(P._t)_app_user_delete", table: P._t, rest: "FOR DELETE TO app_user USING (\(P._using))"}).out,
+		]
+	}
+	if P.e.access.scope == "folder" {
+		// The parent's private USING is inlined one level, its row columns
+		// re-qualified by the alias p; a folder parent is a schema error.
+		_parent: P.entities[P.e.access.parent]
+		// The join casts the child's on-column when it differs in type from
+		// the parent pk (a live-path child keys the parent's uuid as text);
+		// Postgres has no cross-type = operator for uuid. The child's side, so
+		// the parent's key index serves the lookup.
+		_onType: [for f in P.e.fields if f.name == P.e.access.on {f.type}][0]
+		_pkType: [for f in P._parent.fields if f.pk {f.type}][0]
+		_onCast: [if P._onType == P._pkType {""}, "::\(_sqlType[P._pkType])"][0]
+		_pre: []
+		_expr: "EXISTS (SELECT 1 FROM \(P._parent.table) p WHERE p.id = \(P._t).\(P.e.access.on)\(P._onCast) AND (\((#ownedUsing & {a: P._parent.access, qual: "p", table: P._parent.table}).out)))"
+		_appUser: [
+			(#policy & {name: "\(P._t)_app_user_all", table: P._t, rest: "FOR ALL TO app_user USING (\(P._expr)) WITH CHECK (\(P._expr))"}).out,
+		]
+	}
+	if P.e.access.scope == "public" {
+		_pre: []
+		_appUser: list.Concat([
+			[(#policy & {name: "\(P._t)_app_user_select", table: P._t, rest: "FOR SELECT TO app_user USING (true)"}).out],
+			[if P.e.access["write"] != _|_ if P.e.access.write == true {
+				(#policy & {name: "\(P._t)_app_user_write", table: P._t, rest: "FOR ALL TO app_user USING (true) WITH CHECK (true)"}).out
+			}],
+		])
+	}
+	if P.e.access.scope == "internal" {
+		_pre: []
+		// The one exception, and it is the terminal's: at boot the shell reads
+		// the signed-in row back out of app_user to tell a live account from a
+		// token naming one that is gone (interpreter/shell.js accountLives).
+		// It reads with the person's own token, so an internal app_user
+		// answers zero rows, the shell concludes the account is gone, drops
+		// the session and shows the door — on every reload, to everybody. A
+		// person reading their own row discloses nobody; resolving anyone
+		// else's still needs the SECURITY DEFINER path.
+		if P._t == "app_user" {
+			_appUser: [
+				(#policy & {name: "app_user_self_select", table: "app_user", rest: "FOR SELECT TO app_user USING (id = auth_uid())"}).out,
+			]
+		}
+		if P._t != "app_user" {
+			_appUser: []
+		}
+	}
+
+	// A row the floor does not deliver reaches the sync path one shape at a
+	// time, keyed on a column mecha.shape_key declares (rls.sql says what
+	// declaring one asserts). Three edges, each a fact the policies above
+	// encode: a shared entity by its own key, its grant table by the sharee,
+	// a composition by its parent. Only where the parent is shared: a floored
+	// parent's children already carry its scope.
+	_pkName: [for f in P.e.fields if f.pk {f.name}][0]
+	_isShared: bool
+	if P.e.access.scope == "private" {_isShared: P.e.access.shared != _|_}
+	if P.e.access.scope != "private" {_isShared: false}
+	_underShared: bool
+	if P.e.access.scope == "folder" {_underShared: P._p.access.scope == "private" && P._p.access.shared != _|_}
+	if P.e.access.scope != "folder" {_underShared: false}
+	_shapeKeys: [...string]
+	if P._isShared {
+		_shapeKeys: [
+			"INSERT INTO mecha.shape_key VALUES ('public.\(P._t)', '\(P._pkName)', 'public.\(P._t)', '\(P._pkName)') ON CONFLICT DO NOTHING;",
+			"INSERT INTO mecha.shape_key VALUES ('public.\(P.e.access.shared.via)', '\(P.e.access.shared.user)', 'subject', 'id') ON CONFLICT DO NOTHING;",
+		]
+	}
+	if P._underShared {
+		_shapeKeys: [
+			"INSERT INTO mecha.shape_key VALUES ('public.\(P._t)', '\(P.e.access.on)', 'public.\(P._p.table)', '\([for f in P._p.fields if f.pk {f.name}][0])') ON CONFLICT DO NOTHING;",
+		]
+	}
+	if !P._isShared if !P._underShared {_shapeKeys: []}
+
+	out: strings.Join(list.Concat([
+		P._pre,
+		P._scopeTrigger,
+		// The floor's text lives in mecha's rls.sql and is called, never
+		// restated, so a generator cannot emit a subtly wrong one.
+		// Floored is what `_exempt` empty means, and this is the one place it
+		// is read for that.
+		[if P._exempt == "" {"CALL rls_protect('\(P._t)');"}],
+		P._shapeKeys,
+		// Everything the floor does not cover says so, because an audit that is
+		// permanently non-empty is one nobody reads. Two kinds of reason live
+		// here: a permanent one, where the visibility is genuinely not tenancy,
+		// and a `pending:` one, where the derivation is simply not built.
+		[if P._exempt != "" {
+			"INSERT INTO mecha.rls_exempt VALUES ('public.\(P._t)', '\(P._exempt)') ON CONFLICT DO NOTHING;"
+		}],
+		["ALTER TABLE \(P._t) ENABLE ROW LEVEL SECURITY;"],
+		P._appUser,
+		[(#policy & {name: "\(P._t)_service_all", table: P._t, rest: "FOR ALL TO service USING (true) WITH CHECK (true)"}).out],
+	]), "\n")
+}
+
+// A publication over a table list. Created when absent, and brought up to the
+// list when present: this file replays on a fresh volume only, and a database
+// that outlives one would otherwise publish every table but the newest.
+#publication: P={
+	name: string
+	tables: [...string]
+	out: """
+		DO $$ DECLARE t text; BEGIN
+		  IF NOT EXISTS (SELECT 1 FROM pg_publication WHERE pubname = '\(P.name)') THEN
+		    CREATE PUBLICATION \(P.name) FOR TABLE \(strings.Join(P.tables, ",")) WITH (publish_generated_columns = stored);
+		  END IF;
+		  FOREACH t IN ARRAY ARRAY[\(strings.Join([for t in P.tables {"'\(t)'"}], ","))] LOOP
+		    IF NOT EXISTS (SELECT 1 FROM pg_publication_tables
+		                   WHERE pubname = '\(P.name)' AND schemaname = 'public' AND tablename = t) THEN
+		      EXECUTE format('ALTER PUBLICATION \(P.name) ADD TABLE %I', t);
+		    END IF;
+		  END LOOP;
+		END $$;
+		"""
+}
+
+// Column conduit stamps onto every bus row naming the table it came from. Not
+// a database column: it exists only on the wire, so it must not collide with
+// one, hence the reserved prefix.
+_cdcTableField: "__table"
+
+#rpkPipeline: R={
+	p:           #Pipeline
+	sourceTable: string
+	sinkTable:   string
+	sinkPk:      string
+	// {table: {column: carrier}} over the publication; see cdc-carriers.blobl.
+	carriers: [string]: [string]: string
+	// Auth'd clusters put every table behind RLS, so the transform's reads
+	// and writes carry the service token; ${SERVICE_JWT} is benthos env
+	// interpolation, resolved from the transform service's environment.
+	authOn: *false | bool
+	// A keyed transform posts an array of sink rows, one per key, so the
+	// upsert must conflict on the sink pk; the singleton path conflicts on id.
+	_onConflict: [if R.p.key != _|_ {R.sinkPk}, "id"][0]
+	// The read is absolute, which is what makes the sink idempotent under
+	// at-least-once delivery. The branch grafts the fetched aggregate rows onto
+	// the event as root.rows, keeping the opencdc event (payload.before/after
+	// as JSON-encoded row strings) beside the rows so a delete's key stays
+	// reachable for delete-to-zero emissions.
+	_fetch: branch: {
+		processors: [{http: {
+			url:  "${CRUD_URL}/\(R.sourceTable)?\(R.p.transform.aggregate)"
+			verb: "GET"
+			if R.authOn {
+				headers: Authorization: "Bearer ${SERVICE_JWT}"
+			}
+		}}]
+		result_map: "root.rows = this"
+	}
+	out: {
+		input: redis_streams: {
+			url: "${REDIS_URL}"
+			streams: ["cdc-events"]
+			body_key:       "data"
+			consumer_group: R.p.group
+		}
+		pipeline: processors: [
+			// Ahead of the fetch on purpose: cdc-events carries every table and
+			// each stream reads all of it, so a message the mapping will discard
+			// otherwise costs a PostgREST GET first. Which messages are its own
+			// is the mapping's decision — this only spares the malformed.
+			{mapping: "root = if this.exists(\"data\") && this.data.type() == \"string\" && this.data.length() > 0 { this } else { deleted() }"},
+			// The bus row in carrier form, so a mapping reads the values
+			// PostgREST and the client hold rather than conduit's text
+			// spellings. Inside a `try` with the fetch and the transform: a
+			// failed processor does not stop the ones after it, so without this
+			// a refused row still pays a PostgREST GET, still runs the app's
+			// mapping over unconverted values, and reaches the catch with the
+			// transform's output in hand instead of the row that refused.
+			{"try": [
+				{bloblang: "let carriers = \(json.Marshal(R.carriers))\n" + _cdcTypesAsset},
+				R._fetch,
+				{bloblang: R.p.transform.bloblang},
+			]},
+			// A failed processor leaves the message untouched and carries on, so
+			// without this a throwing mapping silently POSTs the CloudEvent
+			// envelope and the only trace is PostgREST rejecting a column named
+			// `data`. Name the pipeline and the input, then drop: the read is
+			// absolute, so the next event for that key repairs the sink.
+			{catch: [
+				{log: {
+					level:   "ERROR"
+					message: "\(R.p.name): transform failed (${! error() }) on ${! content() }"
+				}},
+				{mapping: "root = deleted()"},
+			]},
+		]
+		output: retry: {
+			max_retries: 3
+			backoff: {initial_interval: "2s", max_interval: "30s", max_elapsed_time: "3m"}
+			output: http_client: {
+				// CRUD_URL is PostgREST direct, never the gateway: Caddy's
+				// client-facing Prefer injection would clobber the
+				// merge-duplicates upsert below.
+				url:  "${CRUD_URL}/\(R.sinkTable)?on_conflict=\(R._onConflict)"
+				verb: "POST"
+				headers: {
+					"Content-Type": "application/json"
+					Prefer:         "resolution=merge-duplicates"
+					if R.authOn {
+						Authorization: "Bearer ${SERVICE_JWT}"
+					}
+				}
+				successful_on: [200, 201]
+			}
+		}
+	}
+}
+
+// Scheduled pipeline: a generate input ticks, one bloblang processor stamps
+// the filter's time tokens as metadata (and the PATCH body as root), and the
+// http_client mutates the sink rows the filter matches. Derived entirely —
+// no .blobl assembly, no browser shim.
+#rpkScheduled: R={
+	p:          #Pipeline
+	sinkTable:  string
+	authOn:     *false | bool // same service-token contract as #rpkPipeline
+	_hasCutoff: strings.Contains(R.p.filter, "{cutoff}")
+	_hasNowts:  strings.Contains(R.p.filter, "{nowts}")
+	if R._hasCutoff {
+		_windowSeconds: (#durationSeconds & {d: R.p.window}).out
+	}
+	_metaLines: list.Concat([
+		[if R._hasCutoff {"meta cutoff = (timestamp_unix() - \(R._windowSeconds)).ts_format(\"2006-01-02T15:04:05.000000Z\", \"UTC\")"}],
+		[if R._hasNowts {"meta nowts = now().ts_format(\"2006-01-02T15:04:05.000000Z\", \"UTC\")"}],
+	])
+	_rootLine: [if R.p.set != _|_ {"root = " + json.Marshal(R.p.set)}, "root = {}"][0]
+	_url: "${CRUD_URL}/\(R.sinkTable)?" + strings.Replace(
+		strings.Replace(R.p.filter, "{cutoff}", "${! meta(\"cutoff\") }", -1),
+		"{nowts}", "${! meta(\"nowts\") }", -1)
+	out: {
+		input: generate: {interval: R.p.interval, mapping: "root = {}"}
+		pipeline: processors: [{bloblang: strings.Join(list.Concat([R._metaLines, [R._rootLine]]), "\n")}]
+		output: retry: {
+			max_retries: 3
+			backoff: {initial_interval: "2s", max_interval: "30s", max_elapsed_time: "3m"}
+			output: http_client: {
+				url: R._url
+				verb: [if R.p.action == "delete" {"DELETE"}, "PATCH"][0]
+				if R.p.action == "update" || R.authOn {
+					headers: {
+						if R.p.action == "update" {
+							"Content-Type": "application/json"
+						}
+						if R.authOn {
+							Authorization: "Bearer ${SERVICE_JWT}"
+						}
+					}
+				}
+				successful_on: [200, 204]
+			}
+		}
+	}
+}
+
+// The shell config is a file map, not a DSL: screen semantics live in the
+// generated HTML/CSS/Jessie themselves; this only wires routes, data files,
+// and pipeline topology to the filesystem. All paths are app-relative — the
+// same path language as the manifest.
+#shellConfig: S={
+	code: #App
+	migrations: [...string]
+	// The terminal's measured floors, carried into the file visual lint
+	// reads. #scale publishes the same struct as --min-*, so the rung an author
+	// is sent to and the threshold a tap target is held to are one declaration.
+	floors: [string]: int
+	// Whether the cluster runs an auth and a crud service: #serverOn, the
+	// predicate that emits them, carried into the file visual lint reads.
+	server: bool
+	// Whether the app claims a native host beside the web one, carried into the
+	// file the parity check reads to know a route's affordances are owed a peer.
+	native: bool
+	_tables: {for _, s in S.code.surface.screens for r in s.reads {(S.code.state.entities[r.entity].table): true}}
+	_tablePath: {for _, s in S.code.surface.screens for r in s.reads {
+		(S.code.state.entities[r.entity].table): S.code.state.entities[r.entity].durability
+	}}
+	// A form's entity joins the registry even when no screen reads it: a
+	// write-only table — one a form appends to and only a pipeline reads back —
+	// must still be known to the store or create() refuses the table id.
+	_tables: {for _, s in S.code.surface.screens for f in s.forms {(S.code.state.entities[f.entity].table): true}}
+	_tablePath: {for _, s in S.code.surface.screens for f in s.forms {
+		(S.code.state.entities[f.entity].table): S.code.state.entities[f.entity].durability
+	}}
+	// A fold's private pair joins the registry the same way: no region names it
+	// and no form writes it, but the terminal reads it on every projection, and
+	// a table the store does not know has no collection to read.
+	_tables: {for _, p in S.code.state.pipelines if p.fold != _|_ {(p.fold.pair.table): true}}
+	_tablePath: {for _, p in S.code.state.pipelines if p.fold != _|_ {
+		(p.fold.pair.table): [for _, e in S.code.state.entities if e.table == p.fold.pair.table {e.durability}][0]
+	}}
+
+	// Browser-only durabilities. They are collections like any other — read by a
+	// data-live region, mutated by a form — but the terminal builds them from
+	// a local factory instead of an Electric shape, so they cannot be listed
+	// among the tables it subscribes.
+	_localTables: {for _, e in S.code.state.entities if !e.server {(e.table): true}}
+	_local: {for t, p in S._tablePath if S._localTables[t] != _|_ {(t): p}}
+	_tableKeys: {for _, s in S.code.surface.screens for r in s.reads {
+		(S.code.state.entities[r.entity].table): [for f in S.code.state.entities[r.entity].fields if f.pk {f.name}][0]
+	}}
+	_nonIdKeys: {for t, k in S._tableKeys if k != "id" {(t): k}}
+	// Natural keys only: a partial unique (`where:`) witnesses a slot's
+	// cardinality but cannot resolve an upsert, so it stays out of `uniques:`.
+	_naturalKeys: {for _, e in S.code.state.entities {(e.table): [for u in e.uniques if u.where == _|_ {u.cols}]}}
+	_uniqueTables: [for t, ks in S._naturalKeys if len(ks) > 0 {t}]
+	// Partial uniques travel apart, as the whole invariant: the terminal
+	// reconciles surviving browser-durability rows against them at first load.
+	_partialUniques: {for _, e in S.code.state.entities {(e.table): [for u in e.uniques if u.where != _|_ {cols: u.cols, where: u.where}]}}
+	_partialTables: [for t, ps in S._partialUniques if len(ps) > 0 {t}]
+	// A local table's `required: false` columns and their types, which the
+	// terminal fills on stored rows that predate them (data-sync.js fill).
+	// Server tables are left out: Postgres answers a missing value as null.
+	_optional: {for _, e in S.code.state.entities if S._local[e.table] != _|_ {(e.table): [for f in e.fields if !f.required && !f.retired {name: f.name, type: f.type}]}}
+	_optionalTables: [for t, cs in S._optional if len(cs) > 0 {t}]
+	// What the terminal's own checks judge an app against: the columns a filter
+	// may name, the pk, unique field or declared unique that witnesses a slot's
+	// cardinality, the durability and type a machine region's writes are held to, the
+	// values a data-when may state (check-markup.ts), and the domain a generated row's
+	// column is drawn from (check-battery.ts). Scoped to the
+	// tables the terminal registers, and to the field attributes those checks
+	// read — shell.yaml carries one projection of the program per reader, and
+	// this is the terminal's.
+	//
+	// `enum` and `bounds` are the two halves of one answer, apart because they
+	// are read apart: the closed set a markup rule holds a data-when to, and
+	// everything an open constraint still says about a value — which only the
+	// battery asks for, and which it takes as one object.
+	_schema: {for _, e in S.code.state.entities if S._tables[e.table] != _|_ {
+		(e.table): {
+			durability: e.durability
+			// A retired field is a column the database keeps and an ordinal the
+			// program remembers; the bundle is told of neither.
+			fields: [for f in e.fields if !f.retired {
+				name:     f.name
+				type:     f.type
+				required: f.required
+				if f.type == "decimal" {precision: f.precision, scale: f.scale}
+				if f.pk {pk: true}
+				if f.ref != _|_ {ref: f.ref}
+				if f.unique != _|_ {unique: f.unique}
+				if f.default != _|_ {default: f.default}
+				if e.enums[f.name] != _|_ {enum: e.enums[f.name]}
+				if e.bounds[f.name] != _|_ {bounds: e.bounds[f.name]}
+			}]
+			if len(e.uniques) > 0 {
+				uniques: [for u in e.uniques {
+					name: u.name
+					cols: u.cols
+					if u.where != _|_ {where: u.where}
+				}]
+			}
+		}
+	}}
+	_validatedTables: [for _, e in S.code.state.entities if S._tables[e.table] != _|_ if len([for n, _ in e.validations {n}]) > 0 {e.table}]
+	// The seeds #appMigrations.seeded leaves out: a browser durability has no
+	// migration to render into, so the terminal is told the rows instead.
+	_localSeeds: {for _, e in S.code.state.entities if S._local[e.table] != _|_ if len(e.seed) > 0 {(e.table): e.seed}}
+	_seededLocal: [for t, _ in S._localSeeds {t}]
+	_unitNames: [for n, _ in S.code.capabilities.vendored {n}]
+	_access: {for _, e in S.code.state.entities if S._tables[e.table] != _|_ if e.access != _|_ {
+		(e.table): {
+			scope: e.access.scope
+			if e.access.scope == "private" {
+				owner: e.access.owner
+				if e.access.shared != _|_ {shared: e.access.shared}
+			}
+			if e.access.scope == "folder" {
+				parent: S.code.state.entities[e.access.parent].table
+				on:     e.access.on
+			}
+		}
+	}}
+	if S.code.meta.i18n != _|_ {
+		_msg: S.code.meta.i18n._msg
+		// The first segment a slugged route resolves to, per locale, and the
+		// only place a catalogue's value is held to the URL-safe shape: the
+		// authored pattern constrains the default locale's address alone, and
+		// a translated value is an address in exactly the same way.
+		_segment: {for n, s in S.code.surface.screens if s.slug != _|_ {
+			(n): {for tag, _ in S.code.meta.i18n.locales {
+				(tag): S._msg[tag][s.slug] & =~"^[a-z0-9]+(-[a-z0-9]+)*$"
+			}}
+		}}
+		// The strip label a route wears, per locale, resolved the way a slug's
+		// segment is and held to nothing but being a word: a catalogue missing
+		// the key is a cue error here, before any check runs.
+		_navLabel: {for n, s in S.code.surface.screens if s.label != _|_ {
+			(n): {for tag, _ in S.code.meta.i18n.locales {
+				(tag): S._msg[tag][s.label] & =~"\\S"
+			}}
+		}}
+		// Every route's pattern in every declared locale, WITHOUT the locale
+		// prefix — routeHref composes that from i18n.locales[tag].path. Only
+		// the first segment translates; the rest, literal or `:param`, are
+		// carried verbatim. An unslugged route keeps its authored pattern in
+		// every locale, which is what the default says.
+		_pattern: {for n, s in S.code.surface.screens {
+			(n): {for tag, _ in S.code.meta.i18n.locales {
+				(tag): *s.route | string
+				if s.slug != _|_ {
+					(tag): "/" + strings.Join(list.Concat([[S._segment[n][tag]], strings.Split(s.route, "/")[2:]]), "/")
+				}
+			}}
+		}}
+		// The routes of one locale, keyed by the pattern they resolve to, which
+		// is what makes two decidable constraints cue errors at emission rather
+		// than live 404s: within a locale no two routes may share a pattern,
+		// and no default-locale pattern may be a declared locale's own prefix —
+		// or /es is both the Spanish home and the route whose Portuguese slug
+		// is `es`. Both hold over ALL routes, slugged and not, because after
+		// the prefix is stripped they are matched from one table.
+		//
+		// `routes` reads each address back out of here rather than off
+		// `_pattern`, so emitting a route is what runs the checks.
+		_seen: {for tag, _ in S.code.meta.i18n.locales {
+			(tag): {
+				for n, _ in S.code.surface.screens {(S._pattern[n][tag]): n}
+				if tag == S.code.meta.i18n.default {
+					for t, l in S.code.meta.i18n.locales {("/" + l.path): "\(t) prefix"}
+				}
+			}
+		}}
+		_addressOf: {for n, _ in S.code.surface.screens {
+			(n): {for tag, t in S._seen {(tag): [for p, sn in t if sn == n {p}][0]}}
+		}}
+	}
+	out: {
+		app:    S.code.meta.name
+		floors: S.floors
+		server: S.server
+		if S.native {
+			native: true
+		}
+		if S.code.capabilities.auth != _|_ {
+			auth: S.code.capabilities.auth
+		}
+
+		// Projected, not copied: the catalogues are the emitter's input and the
+		// resolved patterns on each route are what survives them.
+		if S.code.meta.i18n != _|_ {
+			i18n: {default: S.code.meta.i18n.default, locales: S.code.meta.i18n.locales}
+		}
+
+		// Optional keys are emitted only where they differ from the default,
+		// so shell.yaml stays stable for the ordinary screen.
+		routes: [for n, s in S.code.surface.screens {
+			path:   s.route
+			screen: s.name
+			// `path` IS the default locale's pattern, not a second spelling
+			// beside it: unifying the two makes a slugged route whose authored
+			// first segment disagrees with the default catalogue's value a cue
+			// error rather than a live 404. An unslugged route resolves to what
+			// it authored, so the unification is an identity.
+			if S.code.meta.i18n != _|_ {
+				path: S._addressOf[n][S.code.meta.i18n.default]
+			}
+
+			// Emitted iff a slug is declared: every declared tag, the default
+			// included, and each pattern WITHOUT the locale prefix.
+			if s.slug != _|_ {
+				slug:  s.slug
+				paths: S._addressOf[n]
+			}
+			if s.prerender {
+				prerender: true
+			}
+			if s.ssr != _|_ {
+				ssr: s.ssr
+			}
+
+			// `label` is the default-language spelling and the whole of what an
+			// app with no catalogues carries; `key` and `labels` are the same
+			// pair `slug` and `paths` are, for the word instead of the address.
+			nav: {
+				label: s.title
+				if s.label != _|_ {
+					key:    s.label
+					labels: S._navLabel[n]
+				}
+				if !s.strip {strip: false}
+			}
+			files:  s.files
+			states: s.states // storybook frame list; semantics stay in the ir storyboard
+			if s.keep != 1 {
+				keep: s.keep
+			}
+		}]
+		tables: list.SortStrings([for t, _ in S._tables if S._local[t] == _|_ {t}])
+		if len(S._local) > 0 {
+			local: S._local
+		}
+
+		// Unguarded, unlike the optional keys below: a markup rule's schema is
+		// what makes its findings true, and a checker reading an absent key
+		// would grade every screen against an app that declares nothing.
+		schema: S._schema
+
+		// The type table (types.cue), served rather than restated. The
+		// client canonicalizes a value with code — Electric hands it an
+		// interval as `PT30M` — and judges the result by the entry here, so
+		// what canonical IS has one statement and the transformations have no
+		// say in it. A holder meeting a `beyond` name it does not implement
+		// refuses the table.
+		types: {
+			types:   #types
+			aliases: #typeAlias
+		}
+		carriers: types
+
+		// Primary key per table, only where it is not "id": the terminal's
+		// synced collections key rows by it (a pipeline sink like note_progress
+		// keys on its subject column, and keying such a table on the missing
+		// "id" collapses every row onto one key).
+		if len(S._nonIdKeys) > 0 {
+			keys: S._nonIdKeys
+		}
+
+		// RLS mirror for the terminal, in table-name space (through-parents
+		// resolved). The Electric sync plane is unscoped in the dev cluster,
+		// so the terminal must re-apply row visibility on every collection
+		// read — without this map, every browser renders every user's rows.
+		if len(S._access) > 0 {
+			access: S._access
+		}
+
+		// Natural keys, so the terminal can resolve a row the way the database
+		// would: an upsert writes "the row for this key", which is a local
+		// question the collection already answers. Guarded on a LIST: len() over
+		// the struct a comprehension builds reads as incomplete in cue 0.16.
+		if len(S._uniqueTables) > 0 {
+			uniques: {
+				for t, ks in S._naturalKeys if len(ks) > 0 {
+					(t): ks
+				}
+			}
+		}
+		if len(S._partialTables) > 0 {
+			partialUniques: {
+				for t, ps in S._partialUniques if len(ps) > 0 {
+					(t): ps
+				}
+			}
+		}
+		if len(S._optionalTables) > 0 {
+			optional: {
+				for t, cs in S._optional if len(cs) > 0 {
+					(t): cs
+				}
+			}
+		}
+		if len(S._validatedTables) > 0 {
+			validations: {
+				for _, e in S.code.state.entities if S._tables[e.table] != _|_ for n, v in e.validations {
+					(e.table): {(n): {src: v.src, edges: v.edges}}
+				}
+			}
+		}
+		if len(S._seededLocal) > 0 {
+			seed: S._localSeeds
+		}
+
+		// The units a data-hatch may name, and what the terminal is allowed to
+		// do for each: the boundary to mount it behind, the capabilities it
+		// asked for (checked against the terminal's offer at compile time), and
+		// the entry point to load. The rest of `files` is served, not declared —
+		// a unit fetches its own siblings by name.
+		if len(S._unitNames) > 0 {
+			units: {
+				for n, v in S.code.capabilities.vendored {
+					(n): {isolation: v.isolation, capabilities: v.capabilities, src: v.src}
+				}
+			}
+		}
+		if S.code.surface.endowments != _|_ {
+			endowments: S.code.surface.endowments
+		}
+		"migrations": S.migrations
+		pipelines: [for _, p in S.code.state.pipelines {
+			if p.trigger == "cdc" if p.raw == _|_ {
+				name:      p.name
+				from:      S.code.state.entities[p.from].table
+				to:        S.code.state.entities[p.to].table
+				aggregate: p.transform.aggregate
+				if p.fold == _|_ {shim: p.shim}
+
+				// A fold names its module rather than a shim. The terminal's
+				// projection of the synced sink counts contributions and does not
+				// run the module (docs/pipelines-and-schedules.md#below-the-cluster).
+				if p.fold != _|_ {
+					fold:      p.fold.src
+					projects:  p.fold.projects
+					watermark: p.fold.watermark
+					dedupe:    p.fold.dedupe
+					retracted: p.fold.retracted
+					pair:      p.fold.pair
+				}
+				if p.key != _|_ {key: p.key}
+			}
+			if p.trigger == "schedule" {
+				name:    p.name
+				to:      S.code.state.entities[p.to].table
+				trigger: "schedule"
+			}
+
+			// Raw pipelines have no shim: the terminal lists them and skips.
+			if p.raw != _|_ {
+				name: p.name
+				to:   S.code.state.entities[p.to].table
+				raw:  true
+			}
+		}]
+	}
+}
+
+// Whether an app's cluster keeps server-side state: an entity of a cluster durability,
+// or auth, which is identity the cluster keeps. The one predicate the cluster's
+// services, its migrations and the emitted shell.yaml all follow.
+#serverOn: S={
+	// Only what the answer reads, so a caller hands over no seed rows.
+	servers: [...bool]
+	auth: bool
+	out:  list.Contains(S.servers, true) || S.auth
+}
+
+#appMigrations: M={
+	code: #App
+	_validatedTables: [for _, e in M.code.state.entities if e.server if len([for n, _ in e.validations {n}]) > 0 {e.table}]
+	seeded: [for _, e in M.code.state.entities if len(e.seed) > 0 if e.server {e}]
+	_seedFile: len(M.seeded) > 0 || M.code.state.seed != _|_
+	accessed: [for _, e in M.code.state.entities if e.access != _|_ {e}]
+	machines: [if M.code.state.machines != _|_ {[for _, m in M.code.state.machines {m}]}, []][0]
+	sagas:    [if M.code.state.sagas != _|_ {[for _, s in M.code.state.sagas {s}]}, []][0]
+	raw: [if M.code.state.rawMigrations != _|_ {M.code.state.rawMigrations}, []][0]
+	// The cluster copies this list into its database image, so it follows the
+	// predicate that emits the database: a migration named without one would be
+	// a copy into a target that was never emitted.
+	_server: (#serverOn & {servers: [for _, e in M.code.state.entities {e.server}], auth: M.code.capabilities.auth != _|_}).out
+	list: [for f in M._all if M._server {f}]
+	_all: [
+		"services/database/migrations/000_extensions.sql",
+		"services/database/migrations/001_roles.sql",
+		"services/database/migrations/002_grants.sql",
+		"services/database/migrations/004_types.sql",
+		"services/database/migrations/005_create_tables.sql",
+		if len(M.accessed) > 0 {"services/database/migrations/006_policies.sql"},
+		"services/database/migrations/007_txid.sql",
+		"services/database/migrations/008_publication.sql",
+		if len(M._validatedTables) > 0 {"services/database/migrations/009_validations.sql"},
+		if len(M.machines) > 0 {"services/database/migrations/010_machines.sql"},
+		if len(M.sagas) > 0 {"services/database/migrations/015_sagas.sql"},
+		if len(M.code.state.schedules) > 0 {"services/database/migrations/021_schedule_seed.sql"},
+		for r in M.raw {"services/database/migrations/\(r.name)"},
+		if M._seedFile {"services/database/migrations/900_seed.sql"},
+	]
+}
+
+// Default runtime instances, parameterized by the code. program.cue wires
+// them; overrides land in bayt.cue by unification.
+#DefaultLoop: D={
+	code:     #App
+	cluster:  mecha.#Cluster
+	terminal: omnishell.#Terminal
+	out: prontoloop.#Loop & {
+		meta: app: D.code.meta.name
+		surface: {
+			sources: {
+				pronto: *"../../plugins/pronto" | string
+				// The siblings follow pronto: an app that installs pronto as a
+				// distribution has no monorepo beside it.
+				omnishell: string
+				mecha:     string
+				if pronto == "" {
+					omnishell: *"" | string
+					mecha:     *"" | string
+				}
+				if pronto != "" {
+					let root = strings.TrimSuffix(pronto, "plugins/pronto")
+					omnishell: *"\(root)plugins/omnishell" | string
+					mecha:     *"\(root)libraries/mecha" | string
+				}
+			}
+			_distribution: distribution.#Project & {
+				runtime:   "\(sources.pronto)"
+				omnishell: "\(sources.omnishell)"
+				mecha:     "\(sources.mecha)"
+				// What only the cluster's streams and computations write lands in
+				// live tables, which the page ships as they stood at bundling.
+				if len(D.code.state.pipelines)+len(D.code.state.computations) > 0 {
+					derived: {
+						tables: list.SortStrings([for _, e in D.code.state.entities if e.durability == "live" {e.table}])
+						streams: list.SortStrings([for _, p in D.code.state.pipelines {"\(D.code.meta.name)-\(p.name)"}])
+					}
+				}
+			}
+			buildCmd: [if sources.pronto != "" {"deno run --allow-read --allow-write=. --allow-run --allow-env \(sources.pronto)/write.ts ."}, "sayt build"][0]
+			testCmd: "cue vet -c ./..."
+			pipelineFiles: [for _, p in D.code.state.pipelines {"docker/\(D.code.meta.name)-\(p.name).yaml"}]
+			// Both runtimes declare checks about their own surfaces; the loop
+			// routes each to the verb it names. A name collision across the two
+			// is a conflict here rather than a silent overwrite.
+			verbs: {
+				for name, c in D.cluster.surface.verbs {(name): c}
+				for name, c in D.terminal.surface.verbs {(name): c}
+
+				// The pages target: the bundle is the artifact, and the tag pushed
+				// is what makes the app's mirror bundle it again and deploy it.
+				// The tags on HEAD under this app's prefix are release.nu's own
+				// reading of what it just created.
+				if list.Contains(D.code.meta.targets, "pages") {
+					pages: {
+						verb:     "release"
+						platform: "pages"
+						cmds: [if len(_distribution.derived.tables) > 0 {_distribution.derive}, _distribution.bundle]
+						publish: ["use semver.nu [tag-on-head]; let tag = (tag-on-head); if ($tag | is-empty) { error make {msg: \"no release tag on HEAD to push\"} }; git push origin $tag"]
+						note: "Pronto release@pages"
+					}
+				}
+			}
+			checks: {
+				for name, c in D.cluster.surface.checks {(name): c}
+				for name, c in D.terminal.surface.checks {(name): c}
+				for name in ["derive", "types", "proto"] {
+					(name): {verb: "lint", cmds: [_distribution.checks[name]], note: "Pronto compiler \(name)"}
+				}
+				// A runtime inside the app is a mirror's, whose sync rewrote the
+				// imports the facts hash; the monorepo holds them.
+				if !_mirrored {
+					facts: {verb: "lint", priority: 1, cmds: [_distribution.checks.facts], note: "Pronto compiler facts"}
+				}
+				// Only where there is SQL to read: an app whose every entity is
+				// a browser durability emits no migration and authors none, so the
+				// pass would grade an empty set.
+				if len([for _, e in D.code.state.entities if e.server {e}]) > 0 {
+					sql: {verb: "lint", cmds: [_distribution.checks.sql], note: "Pronto compiler sql"}
+					// On `integrate`, because it grades a built image, and after
+					// the rule that builds one. Nothing in the verb states that
+					// ordering: the rulemap sorts by priority and then by NAME,
+					// so at the default priority "replay" would run before the
+					// "visual" rule whose `up --build` produces the image — and
+					// it would then grade whatever the machine happened to hold,
+					// which reads exactly like a verdict about this tree. The
+					// priority is what says "after the images exist"; the
+					// alphabet is not a contract.
+					//
+					// In the build graph's replay service, whose verdict is its exit
+					// code. A project of its own: --remove-orphans under the runtime's
+					// would take the runtime down, as nothing of it is in this closure.
+					replay: {
+						verb:     "integrate"
+						priority: 1
+						cmds: [(omnishell.#ClosureUp & {project: "\(D.code.meta.name)-replay", target: "replay"}).out]
+						note: "Pronto compiler replay"
+					}
+				}
+
+				// Only where something was minted: an app with no identities has
+				// none to lose, and the check would grade an empty snapshot.
+				if len([for _, e in D.code.state.entities if e.id != _|_ {e}]) > 0 {
+					identity: {verb: "lint", cmds: [_distribution.checks.identity], note: "Pronto compiler identity"}
+				}
+
+				// Declaring a route crawlable is a promise the build can write it,
+				// and a promise nothing exercises is one that breaks silently. The
+				// writer runs wherever a route declares it, over every declared
+				// locale, into a directory it throws away: what is graded is that
+				// each document renders, not the bytes. On `test` rather than
+				// `lint` because it boots the interpreter against the fixture
+				// store, which is not static verification.
+				if len([for _, s in D.code.surface.screens if s.prerender {s}]) > 0 {
+					prerender: {verb: "test", cmds: [_prerender], note: "Pronto prerender"}
+				}
+
+				// A computation's tests run it as mecha's compute service does.
+				if len(D.code.state.computations) > 0 {
+					computations: {verb: "test", cmds: [_distribution.checks.computations], note: "Pronto computations"}
+					admit: {
+						verb: "lint"
+						cmds: [strings.Join([_distribution.checks.admit, for _, c in D.code.state.computations {json.Marshal(c.src)}], " ")]
+						note: "Pronto computations admitted"
+					}
+				}
+			}
+			// The origin is the launch door's, because the canonical and hreflang
+			// links a crawler compares are absolute and a deployed origin is the
+			// deployment's to name.
+			_mirrored: sources.pronto != "" && !strings.HasPrefix(sources.pronto, "../")
+			_prerender: (distribution.#Run & {
+				runtime: "\(sources.pronto)"
+				args:    "let out = (mktemp -d); run-mise exec -- deno run --config ($pronto | path join deno.json) --allow-read $\"--allow-write=($out)\" ($pronto | path join prerender.ts) . $out https://localhost:8443; rm -rf $out"
+			}).out
+			if sources.pronto == "" {
+				sayYaml: _distribution.say
+			}
+		}
+	}
+}
+
+#DefaultBuild: D={
+	code:    #App
+	loop:    prontoloop.#Loop
+	cluster: mecha.#Cluster
+	out: prontobuild.#Build & {
+		"cluster": D.cluster
+		meta: {
+			app:      D.code.meta.name
+			local:    D.loop.surface.sources.pronto != ""
+			if local {pronto: D.loop.surface.sources.pronto}
+			buildCmd: D.loop.surface.buildCmd
+			testCmd:  D.loop.surface.testCmd
+			if D.code.state.seed != _|_ {seed: D.code.state.seed.src}
+		}
+	}
+}
+
+#DefaultTerminal: D={
+	code:  #App
+	boot?: string
+	// An adapter the terminal serves is the terminal's file and not the app's,
+	// so only an app's own module joins the set.
+	_handlerSet: {
+		for _, s in D.code.surface.screens for i in s.files.handlers {(i): true}
+		for _, s in D.code.surface.screens for i in s.files.adapters if !strings.HasPrefix(i, "/") {(i): true}
+	}
+	_sharedSet: {for _, s in D.code.surface.screens for i in s.files.shared {(i): true}}
+	_rendererSet: {for _, s in D.code.surface.screens if s.files.renderers != _|_ for i in s.files.renderers {(i): true}}
+	_unitSet: {for _, v in D.code.capabilities.vendored for f in v.files {(f): true}}
+	_validationSet: {for _, e in D.code.state.entities for _, v in e.validations {(v.src): true}}
+	out: omnishell.#Terminal & {
+		app:         D.code.meta.name
+		description: D.code.meta.description
+		if D.code.meta.i18n != _|_ {
+			language: D.code.meta.i18n.default
+			// The base language decides, because a tag's region never does.
+			if list.Contains(omnishell.#RtlLanguages, strings.Split(D.code.meta.i18n.default, "-")[0]) {
+				direction: "rtl"
+			}
+		}
+		surface: {
+			if D.boot != _|_ {
+				assets: boot: D.boot
+			}
+			screens: [for _, s in D.code.surface.screens {name: s.name, html: s.files.html, css: s.files.css}]
+			handlers: list.SortStrings([for i, _ in D._handlerSet {i}])
+			renderers: list.SortStrings([for i, _ in D._rendererSet {i}])
+			// The union of what screens import, so the served set is exactly what
+			// something references — an unreferenced file under shell/shared/ is
+			// never built and cannot pretend to be part of the app.
+			shared: list.SortStrings([for i, _ in D._sharedSet {i}])
+			folds: list.SortStrings([
+				for _, pl in D.code.state.pipelines if pl.fold != _|_ {pl.fold.src},
+			])
+			validations: list.SortStrings([for s, _ in D._validationSet {s}])
+			// A unit's whole directory, not just its src: the wrapper's own
+			// imports are files the browser fetches by name.
+			units: list.SortStrings([for f, _ in D._unitSet {f}])
+			messages: [
+				if D.code.meta.i18n != _|_ for tag, _ in D.code.meta.i18n.locales {
+					"messages/\(tag).json"
+				},
+			]
+		}
+	}
+}
+
+#DefaultCluster: D={
+	code: #App
+	statics: [...mecha.#Static]
+
+	// The review ladder's artifacts, served beside the app by caddy's catch-all
+	// /srv root. One directory is load-bearing, not tidiness: brief.html links
+	// `ir.html`, its wikilinks render as `ir.html#Id`, and its transclusions
+	// `fetch` their target by bare relative path — all three resolve only if the
+	// four files are siblings. Served, the transclusion inlines instead of
+	// degrading to the boxed link it shows on file://.
+	//
+	// These are caddy statics, so they sit outside the terminal's auth gate by
+	// construction. Intended: reviewing a design doc is not using the app, and
+	// requiring a sign-in to read one would put the ladder behind the thing it
+	// exists to review.
+	_ladder: [for f in ["brief.html", "ir.html", "acceptance.md", "DESIGN.md"] {
+		file:   f
+		target: "/srv/docs/\(f)"
+		watch:  true
+	}]
+
+	// What a crawler asks for by name. Served from the root, not under the
+	// terminal's shell/ prefix: neither file is read anywhere else.
+	_crawl: [for f in ["robots.txt", "sitemap.xml"] {
+		file:   f
+		target: "/srv/\(f)"
+		watch:  true
+	}]
+
+	out: mecha.#Cluster & {
+		meta: {
+			app: D.code.meta.name
+			statics: list.Concat([D.statics, D._ladder, D._crawl])
+			// mecha's images, reached through the monorepo's bayt federation.
+			images: {for s in ["database", "migrate", "mesh", "conduit", "auth", "ticker", "clock", "compute", "rclone-s3"] {(s): {ref: "libraries_mecha:\(s)-image"}}}
+		}
+		// The cluster's auth service and JWT envs follow the program's auth
+		// block; the blob plane follows the program's flag; the data plane
+		// follows #serverOn, so an app with no server-side state is served by
+		// caddy alone. Set here, where the instance is built, because the
+		// same instance reaches the build seat and the emitter; #emit restates
+		// them as constraints.
+		capabilities: {
+			auth:  D.code.capabilities.auth != _|_
+			blobs: D.code.capabilities.blobs
+			server: (#serverOn & {servers: [for _, e in D.code.state.entities {e.server}], auth: D.code.capabilities.auth != _|_}).out
+		}
+		state: {
+			migrations: (#appMigrations & {"code": D.code}).list
+			if D.code.state.migrations != _|_ {pgroll: D.code.state.migrations}
+			pipelines: [for _, pl in D.code.state.pipelines {
+				name: "\(D.code.meta.name)-\(pl.name)"
+				file: "docker/\(D.code.meta.name)-\(pl.name).yaml"
+			}]
+			schedules: [for _, sc in D.code.state.schedules {sc.name}]
+			computations: [for _, c in D.code.state.computations {
+				name:  "\(D.code.meta.name)-\(c.name)"
+				file:  c.src
+				every: c.every
+				to: [for t in c.to {D.code.state.entities[t].table}]
+				wasm: c.wasm
+				// A sink in the publication would feed the change it answers.
+				_live: [for t in c.to {D.code.state.entities[t].durability & "live"}]
+			}]
+		}
+	}
+}
+
+// The three components of an app package — code, cluster, terminal — are
+// inputs; program.cue wires the defaults (#DefaultCluster/#DefaultTerminal)
+// and bayt.cue redeclares the runtime pair as the escape-hatch seams.
+#emit: E={
+	_uniqueLines: [
+		for ent in E._serverEntities for u in ent.uniques {
+			"CREATE UNIQUE INDEX IF NOT EXISTS \(u.name) ON \(ent.table) (\(strings.Join(u.cols, ", ")));"
+		},
+	]
+	code:     #App
+	cluster:  mecha.#Cluster
+	terminal: omnishell.#Terminal
+	// The vocabulary this bundle was emitted against, restated so the literal
+	// lint reads both sides of its join out of ONE export: a rule whose step set
+	// can arrive empty reports zero findings, which reads as green. Concrete and
+	// closed, so this is not an app seam — an app naming a step differently
+	// conflicts rather than overrides.
+	scale: #scale
+	// Every vocabulary REGISTERED under scales/. An imported package's
+	// unreferenced fields are never evaluated, so scales/vocabulary.cue would
+	// grade a tree only on the day #scale drew a bucket from it; dereferencing
+	// them here puts a registration under every app's own `cue export` on the day
+	// build.ts writes it. Non-hidden for the reason #Scale's prefixes and sourced
+	// are: a guard nothing evaluates is a guard nothing has.
+	registered: {for n, v in scales {(n): v}}
+
+	// DDL emits parents first (a `ref` REFERENCES needs its target); the
+	// order comes from #App.entityOrder or declaration order.
+	_entities: [...#Entity]
+	if E.code.state.entityOrder != _|_ {
+		_entities: [for n in E.code.state.entityOrder {E.code.state.entities[n]}]
+	}
+	if E.code.state.entityOrder == _|_ {
+		_entities: [for _, e in E.code.state.entities {e}]
+	}
+
+	// The target terminal's published doctrine is a compile-time constraint:
+	// an app cannot demand an auth mode its terminal does not offer.
+	if E.code.capabilities.auth != _|_ {
+		_authModeOffered: true & list.Contains(E.terminal.capabilities.auth.modes, E.code.capabilities.auth.mode)
+	}
+
+	for _, v in E.code.capabilities.vendored {
+		_vendoredIsolationBuildable: true & list.Contains(E.terminal.capabilities.isolation, v.isolation)
+		// The unit's own entry point has to be one of the files the terminal
+		// serves, or the mount fetches a path nothing published.
+		_vendoredSrcServed: true & list.Contains(v.files, v.src)
+		for cap in v.capabilities {
+			let parts = strings.Split(cap, ".")
+			_vendoredCapabilityOffered: true & (E.terminal.capabilities[parts[0]][parts[1]] != _|_)
+		}
+	}
+
+	// The cluster stores these. tab and device live only in the browser, so
+	// nothing server-side is derived for them at all: no table, no restamp
+	// trigger, no publication entry, no policy, no seed — which is the whole
+	// point of separating durability from visibility.
+	_serverEntities: [for e in E._entities if e.server {e}]
+	// Server entities with validations, as a list so len() is decidable in
+	// cue 0.16 (see #shellConfig's guard note).
+	_validated: [for e in E._serverEntities if len([for n, _ in e.validations {n}]) > 0 {e}]
+	_localEntities: [for e in E._entities if !e.server {e}]
+	_cdcTables: strings.Join([for e in _entities if e.durability == "server" {e.table}], ",")
+	// Every table the publication carries, column by column, as the carrier
+	// cdc-carriers.blobl converts a bus row into before a pipeline reads it.
+	_cdcCarriers: {for e in _entities if e.durability == "server" {
+		(e.table): {for f in e.fields if _busCarrier[f.type] != _|_ {(f.name): _busCarrier[f.type] & _busConvertible}}
+	}}
+	_syncTables: [for e in E._serverEntities {e.table}]
+
+	// The refusal that would have caught the original bug: a target whose
+	// schedules nothing wakes. At compose the cluster emits its own clock; at a
+	// target the clock lives in a deploy tree this emitter does not write, and
+	// the failure is silent — the pipelines simply never run. Declaring the
+	// clock is what makes the absence loud, and `meta.clocks` is where the app
+	// says so.
+	_clockDeclared: {
+		for t in E.code.meta.targets {
+			if len([for _, s in E.code.state.schedules if !s.suspend {s}]) > 0 {
+				(t): true & list.Contains(E.code.meta.clocks, t)
+			}
+		}
+	}
+
+	// A unit is a worker the browser fetches past the bundled document's shim,
+	// so a program with one cannot be bundled yet; a closed tab ticks no
+	// schedule; one user shares with nobody, while the client opens a keyed
+	// shape per grant that the page's cluster does not serve; and a validation
+	// runs in plv8, which PGlite has none of. The pages target is refused rather
+	// than released broken. A suspended schedule runs nowhere and refuses nothing.
+	_pagesBundle: {
+		if list.Contains(E.code.meta.targets, "pages") {
+			units: true & (len(E.code.capabilities.vendored) == 0)
+			schedules: true & (len([for _, s in E.code.state.schedules if !s.suspend {s}]) == 0)
+			shared: true & (len([for _, e in E.code.state.entities if e.access != _|_ if e.access.shared != _|_ {e}]) == 0)
+			validations: true & (len(E._validated) == 0)
+		}
+	}
+
+	// A schedule's two entities, checked here because #Schedule cannot see them.
+	// Both rules are the publication's: it carries "server" and excludes "live",
+	// so a tick has to be the first to be read at all, and an outcome has to be
+	// the second or the pipeline answering a tick would feed itself the answer.
+	// Unifying against the enum is not vacuous — `durability` carries no default.
+	_scheduleShape: {
+		for _, sc in E.code.state.schedules {
+			(sc.name): {
+				emits: E.code.state.entities[sc.emits.entity].durability & "server"
+				if sc.done != _|_ {
+					done:     E.code.state.entities[sc.done.entity].durability & "live"
+					distinct: true & (sc.emits.entity != sc.done.entity)
+				}
+			}
+		}
+	}
+	_pkg: strings.Replace(E.code.meta.name, "-", "_", -1)
+	_pub: "\(_pkg)_cdc"
+	// The loop is the fourth component (see #DefaultLoop); it owns the verb
+	// surface and the argv doctrine.
+	loop: prontoloop.#Loop
+
+	// The build graph is the fifth (see #DefaultBuild); its resolved value
+	// is emitted as bayt.json for the bayt.cue stub to embed.
+	build: prontobuild.#Build
+	// A check the build graph runs beside the stack is the loop's to schedule.
+	loop: surface: checks: {for name, c in E.build.checks {(name): c.rule}}
+
+	_hatchSeam: [
+		if len(E.code.capabilities.hatches) > 0 {
+			"""
+				// Compiled escape hatches (ir.html: \(strings.Join(list.SortStrings([for hn, _ in E.code.capabilities.hatches {hn}]), ", ")))
+				// live in program.cue's cluster unification; this redeclaration
+				// is the out-of-band human override seam (add a cluster target,
+				// modify one, null to drop one; extend the terminal).
+				"""
+		},
+		"""
+			// Escape hatches: none (ir.html) — the default runtime,
+			// redeclared unchanged. A program whose ir declares a hatch
+			// unifies its overrides right here (add a cluster target,
+			// modify one, null to drop one; extend the terminal).
+			""",
+	][0]
+
+	// The design block becomes CSS here and only here.
+	_design: E.code.surface.design
+	// The scale block, read straight off #scale — platform data with no app
+	// seam, so this text is the same in every app. :where(html) is specificity
+	// (0,0,0) against :root's (0,1,0), which is what makes a role beat a rung
+	// by construction: an app naming --sp-md wins over --size-3 without an
+	// ordering argument, and a screen may shadow a step from its own :root
+	// without a specificity war. It is also the selector Open Props ships with.
+	//
+	// One comprehension over the buckets, so a bucket added to the vocabulary is
+	// emitted with no edit here and the emitted name is prefix + key by
+	// construction. The order is #scale.buckets' declaration order, which is
+	// where that decision is stated.
+	_scaleCss: """
+		/* The value vocabulary, composed from several sources, each bucket under
+		   its own source's upstream names. #scale says which sources those are;
+		   naming them here too would make this sentence false at the next
+		   registration. A rung, unlike a role, means only
+		   "the Nth one": it is what an author reaches for when no role fits,
+		   which is exactly the case that otherwise produces a number. Nothing
+		   here has an appearance, so nothing here has a dark twin — what
+		   changes with the appearance is which rung a role points at, one
+		   namespace up, where the twin is closed. */
+		:where(html) {
+		\(strings.Join(list.Concat([
+			for _, b in #scale.buckets {[for k, v in b.steps {"  \(b.prefix)\(k): \(v);"}]},
+	]), "\n"))
+		}
+		"""
+	_designCss: """
+
+		\(E._scaleCss)
+
+		/* Design system values, from DESIGN.md's frontmatter, which the program
+		   reads as its design block: the roles the preset publishes, each colour
+		   carrying both appearances. A screen that redeclares one of these has
+		   forked the system — the shared layer is the only declaration. */
+		:root {
+		\(strings.Join(list.Concat([
+			// One declaration per colour, both appearances inside it. The dark
+			// palette is not a second :root to keep in step — it is the other
+			// half of this value, resolved against whatever colour-scheme is in
+			// force at the point of use.
+			[for k, v in E._design.colors {"  --\(k): light-dark(\(v), \(E._design.dark[k]));"}],
+			[for k, v in E._design.rounded {"  --r-\(k): \(v);"}],
+			[for k, v in E._design.spacing {"  --sp-\(k): \(v);"}],
+			[for k, v in E._design.motion {"  --motion-\(k): \(v);"}],
+			[for k, v in E._design.control {"  --control-\(k): \(v);"}],
+			[for k, v in E._design.measures {"  --measure-\(k): \(v);"}],
+			[for k, v in E._design.type {"  --type-\(k): \(v);"}],
+			[for k, v in E._design.component {"  --c-\(k): \(v);"}],
+			[
+				"  --shell-bg: var(--\(E._design.shell.bg));",
+				"  --shell-fg: var(--\(E._design.shell.fg));",
+				"  --shell-rule: var(--\(E._design.shell.rule));",
+				"  color-scheme: light dark;",
+			],
+	]), "\n"))
+		}
+		/* The storybook stamps -dark frames as data-state values. colour-scheme
+		   is inherited and light-dark() reads it at the point of use, so
+		   flipping it on the frame resolves every token inside to its twin —
+		   both appearances reviewable on one device, with no second palette to
+		   drift from this one. */
+		.screen[data-state$="-dark"] {
+		  color-scheme: dark;
+		}
+
+		/* The terminal's chrome, styled here because the terminal ships no
+		   style: its markup carries stable classes and attributes, and this
+		   emission — program-owned, preset-derived, app-overridable — is the
+		   only stylesheet they have. Aesthetic values stay behind --shell-*
+		   variables so an app can retheme without repeating structure. */
+		body { margin: 0; font: var(--shell-font, 1rem/1.5 system-ui, sans-serif);
+		  background: var(--shell-bg); color: var(--shell-fg); }
+		/* Sticky, because the navigation stack restores a screen's scroll
+		   position on return — without it the way back to the primary
+		   navigation is scrolling up. A sticky element is transparent, so it
+		   needs its own background or content runs under it.
+
+		   One line, always: a wrapped strip is as tall as its rows and pushes
+		   the masthead below the fold, and any app with more routes than a
+		   phone's width holds would wrap at its natural size. It scrolls
+		   instead, and the scrollbar is hidden because a horizontal bar across
+		   the chrome reads as a second rule under the strip. */
+		body > nav { position: sticky; top: 0; z-index: 10;
+		  background: var(--shell-bg);
+		  display: flex; gap: var(--shell-nav-gap, 20px);
+		  flex-wrap: nowrap; align-items: center;
+		  overflow-x: auto; scrollbar-width: none;
+		  padding: var(--shell-nav-pad, 14px 24px);
+		  font-weight: var(--shell-nav-weight, 600);
+		  border-bottom: 1px solid var(--shell-rule); }
+		body > nav::-webkit-scrollbar { display: none; }
+		body > nav a { color: inherit; text-decoration: none; }
+		body > nav a:hover { text-decoration: var(--shell-nav-hover, underline); }
+		/* The routes carry their own width — shrinking them is what would make
+		   the strip fit by breaking words, which is the wrap this avoids. The
+		   identity beside them keeps flex's default shrink, so it is the part
+		   that gives and ellipsises. 24px is check-visual's touch-target floor:
+		   nav labels are small type, so the box grows to the floor rather than
+		   the type growing with it. */
+		body > nav > a { white-space: nowrap; flex: none;
+		  display: inline-flex; align-items: center; min-height: 24px; }
+		/* The signed-in person at the strip's far end, name-then-handle as a
+		   byline. All four ellipsis rules are load-bearing: nowrap alone
+		   cannot shrink, and min-width: 0 is what lets a flex item shrink
+		   below its content width at all. */
+		body > nav .shell-me { margin-inline-start: auto; display: flex; align-items: center; gap: var(--shell-nav-gap, 20px); min-width: 0; }
+		body > nav .shell-who { display: flex; align-items: center; gap: 5px; min-width: 0; min-height: 24px; }
+		body > nav .shell-who .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+		body > nav .shell-who .name:empty { display: none; }
+		body > nav .shell-who .name:not(:empty)::after { content: " ·"; }
+		body > nav .shell-who .handle { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+		/* De-emphasis comes from weight alone: layered opacity on --shell-fg
+		   lands below 4.5:1 contrast on both themes' nav ground. */
+		/* A short word is still a target: "sair" sets 23px of text, under the
+		   24px minimum a finger needs, so the box keeps the floor the label
+		   does not. */
+		body > nav .shell-signout { font-weight: 400;
+		  display: inline-flex; align-items: center; justify-content: center;
+		  min-height: 24px; min-width: 24px; }
+
+		/* Not a preference to weigh against the design: durations collapse
+		   and the interpreter's exit path, which waits on running animations,
+		   finds none and removes immediately. */
+		@media (prefers-reduced-motion: reduce) {
+		  :root { --motion-fast: 0s; --motion-base: 0s; --motion-shift: 0px; }
+		}
+
+		/* Lifecycle slots the interpreter stamps at moments no screen can
+		   observe. Keyframes, not transitions: screens style rows with
+		   transition, and the cascade would hand them the whole shorthand.
+		   These bindings are deliberately rebindable — a screen may point
+		   them at its own keyframes; the interpreter waits on whatever
+		   animations actually run. */
+		@keyframes shell-item-enter {
+		  from { opacity: 0; transform: translateY(var(--motion-shift)); }
+		}
+		@keyframes shell-item-exit {
+		  to { opacity: 0; transform: scale(.98); }
+		}
+		[data-id][data-enter] { animation: shell-item-enter var(--motion-base) var(--motion-ease); }
+		/* forwards holds the departed row invisible for the frames between
+		   the animation ending and the interpreter removing the node. */
+		[data-id][data-exit] { animation: shell-item-exit var(--motion-base) var(--motion-ease) forwards; }
+		@keyframes shell-reveal {
+		  from { opacity: 0; transform: translateY(calc(var(--motion-shift) * -1)); }
+		}
+		.empty, .invalid, .store-error {
+		  animation: shell-reveal var(--motion-base) var(--motion-ease);
+		}
+		/* A screen arriving on the navigation stack; the one it replaces is
+		   hidden at once — overlapping two live screens would need a stacking
+		   layout the terminal does not own. */
+		.shell-screen { transition: opacity var(--motion-fast) var(--motion-ease); }
+		.shell-screen[data-entering] { opacity: 0; }
+
+		/* The login ceremony — the one full surface the terminal renders,
+		   on the same tokens as everything else. */
+		.shell-login { display: grid; place-items: center; min-height: 70vh; }
+		.shell-login form { display: grid; gap: 12px; width: min(320px, 90vw);
+		  padding: var(--sp-lg, 24px); border: 1px solid var(--shell-rule);
+		  border-radius: var(--r-md, 8px); background: var(--surface); }
+		.shell-login h1 { margin: 0; font-size: 1.25rem; }
+		.shell-login label { display: grid; gap: 4px; font-weight: 600; }
+		.shell-login input { font: inherit; padding: 8px 10px;
+		  border-radius: var(--r-sm, 6px); border: 1px solid var(--shell-rule);
+		  background: var(--surface); color: var(--shell-fg); }
+		.shell-login button { font: inherit; font-weight: 600; padding: 8px 10px;
+		  border-radius: var(--r-sm, 6px); border: 1px solid var(--shell-rule);
+		  background: var(--shell-fg); color: var(--shell-bg);
+		  cursor: pointer; min-height: 44px; }
+		.shell-login .login-hint { margin: 0; font-weight: 400; font-size: .875rem;
+		  color: var(--shell-fg); }
+		.shell-login .login-guest { background: var(--surface);
+		  color: var(--shell-fg); font-weight: 400; }
+		.shell-login .login-error { color: var(--danger); margin: 0; }
+
+		"""
+
+	_seedFile: (#appMigrations & {"code": E.code})._seedFile
+
+	_migrations: (#appMigrations & {"code": E.code}).list
+
+	_accessed: (#appMigrations & {"code": E.code}).accessed
+	_raw: (#appMigrations & {"code": E.code}).raw
+	// The auth plane switches on as one: declaring #App.auth or any entity
+	// access implies the roles and service-token plumbing — policies without
+	// tokens (or vice versa) is not a supported state. The auth_uid() the
+	// policies call is the database image's (mecha's tenancy floor).
+	_authOn: E.code.capabilities.auth != _|_ || len(E._accessed) > 0
+
+	// The cluster handed in must be the program's: #DefaultCluster derives
+	// these from the code, and a cluster that disagrees conflicts here.
+	cluster: capabilities: auth:  E.code.capabilities.auth != _|_
+	cluster: capabilities: blobs: E.code.capabilities.blobs
+	_serverOn: (#serverOn & {servers: [for _, e in E.code.state.entities {e.server}], auth: E.code.capabilities.auth != _|_}).out
+	// The served route table, resolved once: shell.yaml IS this, and the
+	// Caddyfile's own matcher list is read out of the same addresses, so the
+	// door and the router cannot disagree about what a route is.
+	_shell: (#shellConfig & {"code": E.code, migrations: E._migrations, floors: E.terminal.capabilities.floors, server: E._serverOn, native: E.code.capabilities.native}).out
+	// The locales in one order, so every artifact that lists them lists them the
+	// same way and a regenerated file has no spurious diff.
+	_locales: list.SortStrings([if E._shell.i18n != _|_ for tag, _ in E._shell.i18n.locales {tag}])
+	// Every address a route answers at, flattened for the door's matcher list.
+	_addressed: list.FlattenN([for r in E._shell.routes {E._spellings[r.screen]}], 1)
+	// The locales a reader can be sent TO. The default is where they already
+	// are, so it names no redirect — only the captures that mean "stay".
+	_others: [for tag in E._locales if E._shell.i18n != _|_ if tag != E._shell.i18n.default {tag}]
+	// Every declared tag, plus the bare language of each, which is the whole of
+	// what negotiateLocale will look at: it tries the exact tag, then the first
+	// declared tag sharing its language. Longest first, because Go's alternation
+	// is leftmost-FIRST and `pt` would otherwise swallow `pt-BR`.
+	_alternatives: list.Concat([(E._byLength & {of: E._localeOrder}).out, (E._byLength & {of: E._baseOrder}).out])
+	// Down from the longest actually declared, rather than from a guessed
+	// ceiling: a tag is a BCP 47 subtag chain with no length a compiler may
+	// assume, and one left out of the alternation is a language the door
+	// cannot see at all.
+	_byLength: B={
+		of: [...string]
+		out: [
+			for n in list.Range(list.Max(list.Concat([[0], [for s in B.of {len(s)}]])), 0, -1)
+			for s in B.of if len(s) == n {s},
+		]
+	}
+	// Declaration order, not sorted: negotiateLocale resolves a bare language to
+	// the FIRST declared tag carrying it, and shell.yaml's order is that one.
+	_localeOrder: [if E._shell.i18n != _|_ for tag, _ in E._shell.i18n.locales {tag}]
+	_baseOf: {for tag in E._localeOrder {(tag): strings.Split(tag, "-")[0]}}
+	// A language already spelled as a tag needs no second alternative.
+	_baseOrder: [
+		for i, tag in E._localeOrder
+		let b = E._baseOf[tag]
+		if b != tag
+		if len([for j, o in E._localeOrder if j < i if E._baseOf[o] == b {o}]) == 0 {b},
+	]
+	// What a capture means. A bare language means the first declared tag that
+	// carries it, which is what makes `pt-PT` read as `pt-BR`.
+	_meansLocale: {
+		for tag in E._localeOrder {(tag): tag}
+		for b in E._baseOrder {(b): [for tag in E._localeOrder if E._baseOf[tag] == b {tag}][0]}
+	}
+	// An app whose every route is behind a session has nothing to offer a
+	// crawler but its login wall, so it offers nothing and says so in robots.
+	// A comprehension rather than `==`, which errors on a field an app without
+	// an auth block never declares instead of reading as false.
+	_public: [
+		if E._shell.auth != _|_ if E._shell.auth.required {false},
+		true,
+	][0]
+	// A crawler is offered the routes it can actually reach: a `:param` segment
+	// holds a row id, and an address invented for one is a 404 or, worse,
+	// somebody's row. Naming only the static routes is not a hedge — it is the
+	// whole of what the app can promise exists without reading the database.
+	// Every locale's spelling is asked, not only the default's: nothing makes a
+	// route's params the same in each, which is why the prerender check walks
+	// them one by one too.
+	_crawlable: [
+		if E._public for r in E._shell.routes
+		if len([for a in E._spellings[r.screen] if strings.Contains(a, ":") {a}]) == 0 {r},
+	]
+	// Every address one route answers at, per route, so both the flat list the
+	// door reads and the per-route grouping the sitemap needs come from one
+	// composition.
+	_spellings: {
+		for r in E._shell.routes {
+			(r.screen): [
+				if E._shell.i18n == _|_ {(#address & {route: r}).out},
+				if E._shell.i18n != _|_ for tag in E._locales {
+					(#address & {route: r, i18n: E._shell.i18n, "tag": tag}).out
+				},
+			]
+		}
+	}
+	// A server entity syncs through a gate the auth service answers, so a
+	// cluster with one and no auth plane would 502 every shape.
+	_gated: bool & (E._serverOn == false || E._authOn) & true
+	cluster: capabilities: server: E._serverOn
+
+	files: [string]: #File
+	files: {
+		"schema/entities.proto": {
+			format: "proto"
+			data:   E.code.state.entities
+		}
+		// The app's own buf module, so `buf breaking` runs inside the app and
+		// reaches for nothing above it: an app copybara'd into a repo of its
+		// own carries this file and compares the same way there, where the
+		// path from the repo root to the app is no longer the one it is here.
+		//
+		// `path: .` and not the schema directory, because the set is meant to
+		// be discovered: every proto the app holds is read — the emitted one
+		// and any a hatch brought with it — so adding a proto cannot quietly
+		// escape the comparison. A hatch withholds its own by path on the
+		// command line (check-proto.ts), which leaves this file the same
+		// whatever an app declares.
+		//
+		// WIRE_JSON rather than WIRE: the emitter writes json_name on every
+		// field, so the JSON a holder reads is keyed by name, and a rename
+		// that binary decoding would survive breaks it.
+		"buf.yaml": {
+			format: "yaml"
+			data: {
+				version: "v2"
+				// A mirror's runtime sits inside the app, with protos of its own.
+				let pronto = E.loop.surface.sources.pronto
+				modules: [
+					if pronto != "" && !strings.HasPrefix(pronto, "../") {
+						{path: ".", excludes: [strings.TrimSuffix(pronto, "/plugins/pronto")]}
+					},
+					{path: "."},
+				][0:1]
+				breaking: use: ["WIRE_JSON"]
+			}
+		}
+		// The server-side surface, emitted only where there is a server to run
+		// it: an app whose every entity is a browser durability has no schema, no
+		// publication, no bus wiring and no pipeline file, and the cluster it
+		// targets instantiates none of the services these configure.
+		if E._serverOn {
+			"services/database/migrations/004_types.sql": {
+				format: "type-sql"
+				data: [for _, e in E.code.state.entities if e.server for f in e.fields if f.type == "decimal" {precision: f.precision, scale: f.scale}]
+			}
+			"services/database/migrations/000_extensions.sql": {
+				format: "sql"
+				// plv8 is required exactly when a server entity declares
+				// validations: it is the language their predicates run in.
+				// gen_random_uuid() is core since PostgreSQL 13, so an app
+				// without validations needs no extension at all.
+				//
+				// IF NOT EXISTS because a migration is restated, not replayed
+				// once: a correction below it reaches a database that already
+				// holds the extension, and CREATE EXTENSION alone would abort
+				// the whole file before the correction ran.
+				text: [
+					if len(E._validated) > 0 {"CREATE EXTENSION IF NOT EXISTS plv8;\n"},
+					if len(E._validated) == 0 {"-- no extensions required\n"},
+				][0]
+			}
+			"services/database/migrations/001_roles.sql": {
+				format: "sql"
+				_roles: list.Concat([["anon"], [if E._authOn {"app_user"}, if E._authOn {"service"}], [if E._serverOn {"electric"}]])
+				text: "DO $$ BEGIN\n" + strings.Join([for r in _roles {
+					"""
+					  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '\(r)') THEN
+					    CREATE ROLE \(r) NOLOGIN;
+					  END IF;
+					"""
+				}], "\n") + "\nEND $$;\n" + strings.Join(_bypass, "") + strings.Join(_timeouts, "")
+
+				// The tenancy floor binds PUBLIC, which includes service. A pipeline
+				// and the auth service read every tenant's rows by definition, so
+				// their exemption is a role attribute — visible in pg_roles, and so
+				// auditable — rather than an absence from a TO list.
+				//
+				// Electric is the same case and the dangerous one: it reads the WAL
+				// for every tenant, and a role without BYPASSRLS gets `{}` from
+				// current_scopes(), so every shape yields an empty snapshot with no
+				// error.
+				_bypass: [
+					if E._authOn {"\nALTER ROLE service BYPASSRLS;\n"},
+					// A dev credential; cluster.cue, at the URL naming this role, says
+					// what a deployment does with both.
+					if E._serverOn {"\nALTER ROLE electric BYPASSRLS REPLICATION LOGIN PASSWORD 'electric';\n" +
+						"GRANT USAGE ON SCHEMA public TO electric;\n" +
+						"GRANT SELECT ON ALL TABLES IN SCHEMA public TO electric;\n" +
+						"ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO electric;\n" +
+						""
+					},
+				]
+
+				_timeouts: [
+					"\n-- Finite machine bounds: statement, lock, and idle timeouts.\n" +
+					"ALTER ROLE anon SET statement_timeout = '5s';\n" +
+					"ALTER ROLE anon SET lock_timeout = '2s';\n" +
+					"ALTER ROLE anon SET idle_in_transaction_session_timeout = '10s';\n",
+					if E._authOn {
+						"ALTER ROLE app_user SET statement_timeout = '5s';\n" +
+						"ALTER ROLE app_user SET lock_timeout = '2s';\n" +
+						"ALTER ROLE app_user SET idle_in_transaction_session_timeout = '10s';\n" +
+						"ALTER ROLE service SET statement_timeout = '30s';\n" +
+						"ALTER ROLE service SET lock_timeout = '5s';\n" +
+						"ALTER ROLE service SET idle_in_transaction_session_timeout = '60s';\n"
+					},
+				]
+			}
+			"services/database/migrations/002_grants.sql": {
+				format: "sql"
+				if !E._authOn {
+					text: """
+						GRANT USAGE ON SCHEMA public TO anon;
+						GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO anon;
+						ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO anon;
+
+						"""
+				}
+
+				// Auth'd grants: anon can connect (USAGE) but touches no table —
+				// every row read or written goes through app_user or service,
+				// where 006's policies decide.
+				if E._authOn {
+					text: """
+						GRANT USAGE ON SCHEMA public TO anon, app_user, service;
+						GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO app_user, service;
+						ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO app_user, service;
+
+						"""
+				}
+			}
+			"services/database/migrations/008_publication.sql": {
+				format: "sql"
+				// Runs after 005_create_tables: FOR TABLE fails on missing tables
+				// and initdb aborts on the first error. FOR TABLE <crud tables>,
+				// never FOR ALL TABLES — derived-table upserts must not re-feed the
+				// pipelines that wrote them, and conduit's `tables` setting does not
+				// filter logrepl events, so the publication is the loop breaker.
+				// publish_generated_columns = stored: Electric sets REPLICA IDENTITY
+				// FULL, and a publication excluding generated columns from a FULL
+				// identity refuses UPDATE/DELETE (42P10). Slots belong to consumers,
+				// created on first connect.
+				// REPLICA IDENTITY FULL is declared here, not inherited. Under the
+				// DEFAULT identity a DELETE replicates only the primary key, so a
+				// pipeline keyed on any other column reads its own key as empty and
+				// cannot recount the group the row left — the count freezes at its
+				// last value and a junk sink row keyed on "" accumulates beside it.
+				// Electric sets FULL on the tables it syncs, which made this work by
+				// accident on any cluster it had already reached and fail on a fresh
+				// one until it did; delete-to-zero must not depend on that.
+				// An app whose entities all live in the browser (tab, device) has no
+				// crud table at all, and `FOR TABLE` with an empty list is a syntax
+				// error that aborts initdb — so the publication is emitted only when
+				// there is something to publish.
+				// The publications and the replica identity need a WAL reader, so
+				// they go inside the fence (libraries/mecha/docs/browser.md#the-fence).
+				_wal: #Tier & "container"
+				text: [
+					if len(E._syncTables) > 0 {
+						"""
+				\([if len(E._cdcTables) > 0 {"-- tier: \(_wal)\n" + (#publication & {name: E._pub, tables: strings.Split(E._cdcTables, ",")}).out + "\n-- tier: any"}, "-- No server-durability entity: nothing for the bus to read."][0])
+
+				-- Electric's own publication, declared rather than left to it.
+				-- ELECTRIC_MANUAL_TABLE_PUBLISHING makes it validate this instead of
+				-- building one, which is what lets its role hold only REPLICATION and
+				-- SELECT: creating a publication needs CREATE on the database, and
+				-- adding a table to one needs ownership of that table. A sync service
+				-- that owns the app's tables can drop them.
+				-- tier: \(_wal)
+				\((#publication & {name: "electric_publication_default", tables: E._syncTables}).out)
+
+				\(strings.Join([for t in E._syncTables {"ALTER TABLE \(t) REPLICA IDENTITY FULL;"}], "\n"))
+				-- tier: any
+				GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO anon;
+
+				"""
+					},
+					"""
+						-- No synced entity: nothing to publish, nothing to grant.
+
+						""",
+				][0]
+			}
+			// Tables, their indexes and their composite uniques in one step. A
+			// unique index belongs to the transaction that creates its table:
+			// the constraint is then never briefly absent, and an index built
+			// over a table the same transaction created blocks no writer, which
+			// is what makes plain CREATE INDEX — rather than CONCURRENTLY, which
+			// cannot run in a transaction — the right statement here.
+			//
+			// Composite unique names are uq_<table>_<cols>, and a violation is
+			// what the app's duplicate refusal reads: the Caddyfile injects
+			// resolution=ignore-duplicates, which PostgREST targets at the
+			// PRIMARY KEY — a client-minted uuid that never collides — so a
+			// repeated pair reaches this index and comes back 23505 rather than
+			// merging silently.
+			"services/database/migrations/005_create_tables.sql": {
+				format: "sql"
+				_indexLines: list.Concat([for ent in E._serverEntities if ent.indexes != _|_ {(#indexSql & {e: ent}).out}])
+				text: strings.Join(list.Concat([
+					[for ent in E._serverEntities {(#tableSql & {e: ent}).out}],
+					[if len(_indexLines) > 0 {strings.Join(_indexLines, "\n")}],
+					[if len(E._uniqueLines) > 0 {strings.Join(E._uniqueLines, "\n")}],
+				]), "\n\n") + "\n"
+			}
+			if len(E._accessed) > 0 {
+				"services/database/migrations/006_policies.sql": {
+					format: "sql"
+					text: strings.Join([for ent in E._entities if ent.access != _|_ {
+						(#policySql & {e: ent, entities: E.code.state.entities}).out
+					}], "\n\n") + "\n"
+				}
+			}
+			if len(E._validated) > 0 {
+				"services/database/migrations/009_validations.sql": {
+					format: "sql"
+					text: strings.Join(list.Concat([
+						[#validationPrecondition],
+						[for ent in E._validated {(#validationSql & {e: ent}).out}],
+					]), "\n\n") + "\n"
+				}
+			}
+
+			_machines: [if E.code.state.machines != _|_ {[for _, m in E.code.state.machines {m}]}, []][0]
+			if len(_machines) > 0 {
+				"services/database/migrations/010_machines.sql": {
+					format: "sql"
+					text: strings.Join([for m in _machines {(#mechaMachineSql & {machine: m, entities: E.code.state.entities}).out}], "\n\n") + "\n"
+				}
+			}
+
+			_sagas: [if E.code.state.sagas != _|_ {[for _, s in E.code.state.sagas {s}]}, []][0]
+			if len(_sagas) > 0 {
+				"services/database/migrations/015_sagas.sql": {
+					format: "sql"
+					text:   #sagaTableSql + "\n"
+				}
+			}
+
+			if len(E.code.state.schedules) > 0 {
+				// The table is mecha's: the cluster, handed the schedules' names,
+				// places it in the database as 020_schedule.sql, and this seeds it
+				// after, one row per declaration. An upsert on the name, so a
+				// redeploy restates the schedule without resetting the watermark it
+				// has earned.
+				"services/database/migrations/021_schedule_seed.sql": {
+					format: "sql"
+					text: strings.Join([for _, sc in E.code.state.schedules {
+						"""
+						INSERT INTO schedule (name, cron, time_zone, suspended, max_lateness_seconds,
+						                      concurrency_policy, done_entity, done_filter,
+						                      emits_entity, emits_values)
+						VALUES (\((#sqlLit & {v: sc.name}).out), \((#sqlLit & {v: sc.cron}).out), \((#sqlLit & {v: sc.timeZone}).out), \(sc.suspend), \(sc.maxLatenessSeconds),
+						        \((#sqlLit & {v: sc.concurrency}).out), \([if sc.done != _|_ {(#sqlLit & {v: E.code.state.entities[sc.done.entity].table}).out}, "NULL"][0]), \([if sc.done != _|_ {(#sqlLit & {v: sc.done.filter}).out}, "NULL"][0]),
+						        \((#sqlLit & {v: E.code.state.entities[sc.emits.entity].table}).out), \((#sqlLit & {v: json.Marshal(sc.emits.values)}).out))
+						ON CONFLICT (name) DO UPDATE SET
+						  cron = EXCLUDED.cron, time_zone = EXCLUDED.time_zone,
+						  suspended = EXCLUDED.suspended,
+						  max_lateness_seconds = EXCLUDED.max_lateness_seconds,
+						  concurrency_policy = EXCLUDED.concurrency_policy,
+						  done_entity = EXCLUDED.done_entity, done_filter = EXCLUDED.done_filter,
+						  emits_entity = EXCLUDED.emits_entity, emits_values = EXCLUDED.emits_values;
+						"""
+					}], "\n")
+				}
+			}
+			"services/database/migrations/007_txid.sql": {
+				format: "sql"
+				// A column DEFAULT only fires on INSERT; updates restamp here so
+				// every write's response row carries the txid that committed it.
+				text: """
+					CREATE OR REPLACE FUNCTION restamp_txid() RETURNS trigger
+					LANGUAGE plpgsql AS $$
+					BEGIN
+					  NEW.txid := pg_current_xact_id()::text::bigint;
+					  RETURN NEW;
+					END $$;
+
+					""" + strings.Join([for ent in E._serverEntities {
+					"""
+					DROP TRIGGER IF EXISTS restamp_txid ON \(ent.table);
+					CREATE TRIGGER restamp_txid BEFORE UPDATE ON \(ent.table)
+					  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+					"""
+				}], "\n") + "\n"
+			}
+			for rm in E._raw {
+				"services/database/migrations/\(rm.name)": {format: "sql", src: rm.src}
+			}
+			if E._seedFile {
+				"services/database/migrations/900_seed.sql": {
+					format: "seed-sql"
+					data:   (#seedData & {code: E.code}).out
+				}
+			}
+
+			// Only a cluster whose change feed runs has a conduit to configure.
+			if E.cluster.capabilities.capture {
+				"docker/conduit-pipeline.yaml": {
+					format: "yaml"
+					data: {
+						version: "2.2"
+						pipelines: [{
+							id:     "cdc-to-bus"
+							status: "running"
+							connectors: [{
+								id:     "postgres-source"
+								type:   "source"
+								plugin: "builtin:postgres"
+								settings: {
+									url:                       "${DATABASE_URL}"
+									tables:                    E._cdcTables // derived tables are excluded: no CDC loops
+									cdcMode:                   "logrepl"
+									snapshotMode:              "never"
+									"logrepl.publicationName": E._pub
+									"logrepl.slotName":        "\(E._pkg)_conduit_slot"
+									// Without this the http connector re-decodes the payload
+									// against the captured Avro schema and chokes post-encode.
+									"logrepl.withAvroSchema": "false"
+								}
+							}, {
+								id:     "bus-destination"
+								type:   "destination"
+								plugin: "standalone:http"
+								settings: {
+									url: "http://mesh-events:3500/v1.0/publish/redis-streams/cdc-events"
+									// The probe is a HEAD, which dapr's publish endpoint 404s.
+									validateConnection: "false"
+								}
+							}]
+							processors: [{
+								// Which table changed, carried in the row itself. The bus
+								// is one topic for every table and each pipeline reads all
+								// of it, so a consumer has to tell its own source's events
+								// apart; column shape cannot do it (favorite and bookmark
+								// are column-identical, and inferring from a witness column
+								// silently mis-fires the moment a sibling table grows one).
+								// Both sides are stamped because a delete's After is empty
+								// and restore-deleted-row back-fills it from Before.
+								id:     "stamp-collection-after"
+								plugin: "builtin:field.set"
+								// Guarded, and the guard is the whole point: a delete carries an
+								// EMPTY After, and setting a field on it CREATES one — which makes
+								// restore-deleted-row believe there is a row worth keeping, so it
+								// skips the back-fill and the delete reaches the bus as {__table}
+								// and nothing else. Every un-favourite then fails to recount and
+								// the sink only ratchets up.
+								condition: "{{ if .Payload.After }}true{{ else }}false{{ end }}"
+								settings: {
+									field: ".Payload.After.\(_cdcTableField)"
+									value: "{{ index .Metadata \"opencdc.collection\" }}"
+								}
+							}, {
+								id:        "stamp-collection-before"
+								plugin:    "builtin:field.set"
+								condition: "{{ if .Payload.Before }}true{{ else }}false{{ end }}"
+								settings: {
+									field: ".Payload.Before.\(_cdcTableField)"
+									value: "{{ index .Metadata \"opencdc.collection\" }}"
+								}
+							}, {
+								id:     "stringify-after"
+								plugin: "builtin:json.encode"
+								settings: field: ".Payload.After"
+							}, {
+								id:     "stringify-before"
+								plugin: "builtin:json.encode"
+								settings: field: ".Payload.Before"
+							}, {
+								// The http destination posts only Payload.After, and a
+								// delete's After is empty — back-fill from Before so every
+								// bus message carries the changed row.
+								id:     "restore-deleted-row"
+								plugin: "builtin:field.set"
+								settings: {
+									field: ".Payload.After"
+									value: "{{ if .Payload.After }}{{ printf \"%s\" .Payload.After }}{{ else }}{{ printf \"%s\" .Payload.Before }}{{ end }}"
+								}
+							}]
+						}]
+					}
+				}
+			}
+			for _, pl in E.code.state.pipelines if pl.trigger == "cdc" if pl.raw == _|_ {
+				"docker/\(E.code.meta.name)-\(pl.name).yaml": {
+					format: "yaml"
+					data: (#rpkPipeline & {
+						p:           pl
+						sourceTable: E.code.state.entities[pl.from].table
+						sinkTable:   E.code.state.entities[pl.to].table
+						sinkPk: [for fld in E.code.state.entities[pl.to].fields if fld.pk {fld.name}][0]
+						carriers: E._cdcCarriers
+						authOn:   E._authOn
+					}).out
+				}
+			}
+			for _, pl in E.code.state.pipelines if pl.trigger == "schedule" {
+				"docker/\(E.code.meta.name)-\(pl.name).yaml": {
+					format: "yaml"
+					data: (#rpkScheduled & {
+						p:         pl
+						sinkTable: E.code.state.entities[pl.to].table
+						authOn:    E._authOn
+					}).out
+				}
+			}
+
+			// Raw pipelines: the assembly rpk stream is copied verbatim beside the
+			// derived ones, so the transform image and the rpk lint list treat all
+			// pipelines alike.
+			for _, pl in E.code.state.pipelines if pl.raw != _|_ {
+				"docker/\(E.code.meta.name)-\(pl.name).yaml": {format: "yaml", src: pl.src}
+				"\(pl.src)": {format: "yaml", src: pl.src}
+			}
+
+			_duckstreams: [if E.code.state.duckstreams != _|_ {[for _, d in E.code.state.duckstreams {d}]}, []][0]
+			for _, ds in _duckstreams {
+				"pipelines/duckstream/\(ds.name).sql": {
+					format: "sql"
+					text:   ds.sql + "\n"
+				}
+			}
+		}
+		"docker/Caddyfile": {
+			format: "caddyfile"
+			// The asset's last block, recomposed here because both halves are
+			// per-app. A route is a real path now — the router reads
+			// location.pathname — so this is what lets a deep link reach a document
+			// at all: the prerendered one where the build wrote it, the terminal's
+			// entry otherwise, and a 404 for a path that is neither.
+			_anchor: """
+				  handle {
+				    root * /srv
+				    header Cache-Control "no-cache"
+				    file_server
+				  }
+				"""
+			// The default locale is served unprefixed, so its prefixed spelling is an
+			// alias and answers 301 rather than a second copy of the document.
+			// handle_path strips the matched prefix, leaving {uri} as path AND query —
+			// /pt-br/regras?lang=es becomes /regras?lang=es, and `lang` is a wire
+			// parameter the redirect has no business dropping. The bare prefix matches
+			// no wildcard, so it is rewritten into one rather than redirected on its
+			// own: a second `redir` could only name a literal target and would lose
+			// the query there (measured, caddy 2.10.0).
+			// The entry document lives under shell/ and answers at every route,
+			// so its own directory is a location rather than an address: a
+			// reader who lands there is served the document and told by the
+			// router that /shell/ is no route of this app. It is the app's root
+			// they meant.
+			_entry: """
+			    @entry path /\(E.terminal.surface.entry) /\(strings.TrimSuffix(E.terminal.surface.entry, "index.html"))
+			    redir @entry / permanent
+
+			"""
+			_alias: [
+				if E._shell.i18n != _|_ {"""
+				    @unprefixed path /\(E._shell.i18n.locales[E._shell.i18n.default].path)
+				    rewrite @unprefixed /\(E._shell.i18n.locales[E._shell.i18n.default].path)/
+				    handle_path /\(E._shell.i18n.locales[E._shell.i18n.default].path)/* {
+				      redir {uri} permanent
+				    }
+
+				"""},
+				"",
+			][0]
+			// The reader's language decided at the door, so a reader whose
+			// language is not the address's is moved before a document is built
+			// rather than after one has booted and thrown itself away.
+			//
+			// This is not a second implementation of negotiateLocale. That
+			// function reads navigator.languages — an ordered list with no
+			// q-values — and takes the first declared tag, exact before bare
+			// language. The capture below is that same rule compiled: one
+			// alternation of the declared tags and their languages, longest
+			// first, matched leftmost against the header the browser builds from
+			// the same ordered list. negotiation_test.ts runs a corpus
+			// through both and refuses a disagreement.
+			//
+			// `?lang=` is excluded: it is the wire's own parameter and the
+			// terminal answers it, on the terms a plain route's language gets.
+			_defaultAddress: {for r in E._shell.routes {(r.screen): (#address & {route: r, i18n: E._shell.i18n, tag: E._shell.i18n.default}).out}}
+			// Caddy path matchers are exact, so a :param segment widens to `*`
+			// the way the served matcher list does.
+			_widened: {for s, a in _defaultAddress {(s): "/" + strings.Join([
+				for seg in strings.Split(strings.TrimPrefix(a, "/"), "/") {
+					[if strings.HasPrefix(seg, ":") {"*"}, seg][0]
+				},
+			], "/")
+			}}
+			_branches: [
+				for r in E._shell.routes for tag in E._others
+				let here = _defaultAddress[r.screen]
+				let there = (#address & {route: r, i18n: E._shell.i18n, "tag": tag}).out
+				let names = (#params & {pattern: here}).out
+				// Segment by segment, because a :param is a whole segment and
+				// replacing the "/:" that introduces it would leave its name
+				// behind in the pattern.
+				let at = [
+					if len(names) == 0 {"          path \(here)"},
+					"          path_regexp \(r.screen) ^/" + strings.Join([
+						for seg in strings.Split(strings.TrimPrefix(here, "/"), "/") {
+							[if strings.HasPrefix(seg, ":") {"([^/]+)"}, seg][0]
+						},
+					], "/") + "$",
+				][0]
+				// Read back by name: a translated spelling is free to put the
+				// same :params in another order.
+				let target = [
+					if len(names) == 0 {there},
+					strings.Join([
+						for seg in strings.Split(there, "/") {
+							[
+								if strings.HasPrefix(seg, ":") {"{re.\(r.screen).\([for i, n in names if n == strings.TrimPrefix(seg, ":") {i + 1}][0])}"},
+								seg,
+							][0]
+						},
+					], "/"),
+				][0]
+				let captures = [for c, l in E._meansLocale if l == tag {c}] {"""
+				        @\(r.screen)_\(E._shell.i18n.locales[tag].path) {
+				\(at)
+				          not query lang=*
+				          vars_regexp {re.lang.1} (?i)^(\(strings.Join(captures, "|")))$
+				        }
+				        redir @\(r.screen)_\(E._shell.i18n.locales[tag].path) \(target) 302
+				"""},
+			]
+			// Caddy refuses an empty path matcher at provision, so a program with
+			// no route emits neither this block nor `_rewrite` below.
+			_routeless: len(E._shell.routes) == 0
+			_negotiate: [
+				if E._shell.i18n == _|_ {""},
+				if len(E._others) == 0 {""},
+				if _routeless {""},
+				"""
+				    route {
+				      @negotiable path \(strings.Join(list.SortStrings([for _, w in _widened {w}]), " "))
+				      header @negotiable Vary Accept-Language
+				      @lang header_regexp lang Accept-Language (?i)(?:^|,)\\s*(\(strings.Join(E._alternatives, "|")))\\b
+				      handle @lang {
+				\(strings.Join(_branches, "\n"))
+				      }
+				    }
+
+				""",
+			][0]
+			_addressed: E._addressed
+			// The same addresses as caddy path matchers. A `:param` segment widens to
+			// `*`: its value is a row id the door cannot know. The trailing slash is
+			// trimmed so a locale's bare prefix reads `/es` rather than `/es/`; both
+			// spellings are then listed, because a caddy path matcher is exact and a
+			// reader who types the slash is at the same route.
+			_matcher: {for a in _addressed {
+				let widened = strings.TrimSuffix("/"+strings.Join([
+					for seg in strings.Split(strings.TrimPrefix(a, "/"), "/") {
+						[if strings.HasPrefix(seg, ":") {"*"}, seg][0]
+					},
+				], "/"), "/")
+				([if widened == "" {"/"}, widened][0]): true
+			}}
+			_matchers: list.SortStrings([
+				for a, _ in _matcher {a},
+				for a, _ in _matcher if a != "/" {a + "/"},
+			])
+			// `route`, because caddy orders directives by its own table and the
+			// catch-all `handle` sorts ahead of both `handle_path` and `route`:
+			// written outside one, the alias is answered 200 by the file server
+			// before its redirect is ever reached (measured, caddy 2.10.0). Inside,
+			// these run as written, and the path-scoped `handle` blocks above still
+			// take their requests first.
+			//
+			// `@file` ahead of `@route`, and not one `try_files` over both: try_files
+			// rewrites to its LAST candidate when none exist, so a single directive
+			// naming the entry answers every missing asset with the entry document at
+			// 200 instead of 404 (measured, caddy 2.10.0). Here a request that names
+			// no file and no route reaches file_server unrewritten, which is the 404
+			// a crawler is owed.
+			_rewrite: [
+				if _routeless {""},
+				"""
+					      @route path \(strings.Join(_matchers, " "))
+					      rewrite @route /\(E.terminal.surface.entry)
+
+					""",
+			][0]
+			_served: """
+				  route {
+				\(_entry)\(_alias)\(_negotiate)    handle {
+				      root * /srv
+				      header Cache-Control "no-cache"
+				      @file file {path} {path}/index.html
+				      rewrite @file {http.matchers.file.relative}
+				\(_rewrite)      file_server
+				    }
+				  }
+				"""
+			// An asset the anchor is absent from indexes out of range here, rather
+			// than emitting a proxy that silently 404s every deep link.
+			_split: strings.SplitN(_caddyfileAsset, _anchor, 2)
+			text:   _split[0] + _served + _split[1]
+		}
+		// Both crawler files are caddy templates, served from the origin root.
+		// `$o` is the origin of the request being answered — see the Caddyfile
+		// for why the build cannot write one instead. Only a file that names an
+		// address declares it, so a refusal carries no unread variable.
+		_origin: "{{- $o := printf \"%s://%s\" (placeholder \"http.request.scheme\") .Req.Host -}}"
+		"robots.txt": {
+			format: "text"
+			// An app behind a session is not a site: every address answers with
+			// the same login wall, and inviting a crawler in only puts that wall
+			// in search results under the app's own name. It names no origin
+			// either — the whole of what it has to say is the refusal.
+			text: [
+				if E._public {"""
+					\(_origin)
+					# generated by pronto from program.cue — do not edit
+					User-agent: *
+					Allow: /
+
+					Sitemap: {{$o}}/sitemap.xml
+
+					"""},
+				"""
+					# generated by pronto from program.cue — do not edit
+					User-agent: *
+					Disallow: /
+
+					""",
+			][0]
+		}
+		"sitemap.xml": {
+			format: "text"
+			_o:     "{{$o}}"
+			// One <url> per crawlable route per locale, each carrying the whole
+			// alternate set including itself — which is what the protocol asks
+			// for: a crawler reaching any one address learns every other, and
+			// the three spellings of a page are read as one page rather than as
+			// near-duplicates competing with each other.
+			_urls: [
+				if E._shell.i18n == _|_ for r in E._crawlable {
+					"  <url><loc>\(_o)\((#address & {route: r}).out)</loc></url>"
+				},
+				if E._shell.i18n != _|_ for r in E._crawlable for tag in E._locales {
+					strings.Join(list.Concat([
+						["  <url>", "    <loc>\(_o)\((#address & {route: r, i18n: E._shell.i18n, "tag": tag}).out)</loc>"],
+						[for other in E._locales {
+							"    <xhtml:link rel=\"alternate\" hreflang=\"\(other)\" href=\"\(_o)\((#address & {route: r, i18n: E._shell.i18n, tag: other}).out)\"/>"
+						}],
+						// x-default names the default locale's unprefixed
+						// address: where a crawler sends a reader whose language
+						// matches no alternate.
+						["    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"\(_o)\((#address & {route: r, i18n: E._shell.i18n, tag: E._shell.i18n.default}).out)\"/>"],
+						["  </url>"],
+					]), "\n")
+				},
+			]
+			text: strings.Join(list.Concat([
+				[
+					if len(_urls) > 0 {_origin},
+					"<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+					"<!-- generated by pronto from program.cue — do not edit -->",
+					// The xhtml namespace is what the alternates are spelled in,
+					// so a single-locale app declares no namespace it never uses.
+					[
+						if E._shell.i18n != _|_ {"<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">"},
+						"<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">",
+					][0],
+				],
+				_urls,
+				["</urlset>", ""],
+			]), "\n")
+		}
+		"shell/shell.yaml": {
+			format: "yaml"
+			data:   E._shell
+		}
+		"shell/shell.json": {
+			format: "json"
+			data:   E._shell
+		}
+		"\(E.terminal.surface.entry)": {
+			format: "text"
+			text:   E.terminal.surface.assets.html
+		}
+		"\(E.terminal.surface.css)": {
+			format: "text"
+			text:   E.terminal.surface.assets.css
+		}
+		"\(E.terminal.surface.boot)": {
+			format: "text"
+			text:   E.terminal.surface.assets.boot
+		}
+		"\(E.terminal.surface.sw)": {
+			format: "text"
+			text:   E.terminal.surface.assets.sw
+		}
+		"shell/design.css": {
+			format: "css"
+			text:   E._designCss
+		}
+		for _, s in E.code.surface.screens {
+			// A CUE-authored screen (markup) emits its html; an assembly screen
+			// is authored at the served path itself.
+			if s.markup != _|_ {
+				"\(s.files.html)": {format: "html", text: s.markup}
+			}
+			if s.markup == _|_ {
+				"\(s.files.html)": {format: "html", src: s.files.html}
+			}
+			"\(s.files.css)": {format: "css", src: s.files.css}
+			for i in s.files.handlers {"\(i)": {format: "jessie", src: i}}
+			for i in s.files.adapters if !strings.HasPrefix(i, "/") {"\(i)": {format: "jessie", src: i}}
+			if s.files.renderers != _|_ {
+				for i in s.files.renderers {"\(i)": {format: "jessie", src: i}}
+			}
+		}
+		for _, pl in E.code.state.pipelines if pl.trigger == "cdc" if pl.raw == _|_ {
+			if pl.fold == _|_ {
+				"\(pl.transform.src)": {format: "bloblang", src: pl.transform.src}
+				"\(pl.shim)": {format: "js", src: pl.shim}
+			}
+			if pl.fold != _|_ {
+				"\(pl.fold.src)": {format: "js", src: pl.fold.src}
+			}
+		}
+		for _, h in E.code.surface.handlers {
+			"\(h.src)": {format: "jessie", src: h.src}
+		}
+		for _, e in E.code.state.entities for _, v in e.validations {
+			"\(v.src)": {format: "jessie", src: v.src}
+		}
+		"tests/pairs.yaml": {
+			format: "yaml"
+			data: pairs: [for _, t in E.code.meta.tests {t}]
+		}
+		// The runtime is fixed by default, and its pieces are owned by their
+		// implementations: mecha publishes the virtual cluster as bayt targets,
+		// omnishell the virtual terminal, and the build seat is their fixed
+		// composition — so the runtime compose is bayt's, under .bayt/. This
+		// root exists for what resolves a project by its nearest compose file:
+		// sayt's project-dir walk, and every `docker compose up launch` run
+		// from the app directory with no -f.
+		"compose.yaml": {
+			format: "yaml"
+			data: include: [{path: "./.bayt/compose.yaml"}]
+		}
+		"bayt.json": {
+			format: "json"
+			data:   E.build.project
+		}
+		"bayt.cue": {
+			format: "cue"
+			text:   """
+				// The build graph is authored in program.cue (the build seat) and
+				// lands here as bayt.json; unifying it back through bayt.#project
+				// keeps bayt's schema live at generate time.
+				@extern(embed)
+
+				package \(E._pkg)
+
+				import (
+					bayt "bonisoft.org/.runtime/plugins/bayt/core:bayt"
+					mecha "bonisoft.org/.runtime/plugins/pronto/clusters:mecha"
+					omnishell "bonisoft.org/.runtime/plugins/pronto/terminals:omnishell"
+					prontoloop "bonisoft.org/.runtime/plugins/pronto/loops:sayt"
+				)
+
+				\(E._hatchSeam)
+				cluster:  mecha.#Cluster
+				terminal: omnishell.#Terminal
+				loop:     prontoloop.#Loop
+
+				_baytData: _ @embed(file="bayt.json")
+
+				project: _\(E._pkg)
+				_\(E._pkg): bayt.#project & _baytData
+
+				depManifestsIn: {[string]: _}
+				_render: (bayt.#render & {project: _\(E._pkg), depManifests: depManifestsIn})
+
+				"""
+		}
+		// Only lint carries rules: the other verbs use their builtins against
+		// the files they expect — build/test read .vscode/tasks.json, launch
+		// drives compose.yaml's `launch` service convention.
+		".say.yaml": {
+			format: "yaml"
+			data:   E.loop.surface.sayYaml
+		}
+		".vscode/tasks.json": {
+			format: "json"
+			data:   E.loop.surface.tasksJson
+		}
+
+		// The pages target's ceremony and its mirror's release. goreleaser is
+		// the shim iris uses, builds skipped and the GitHub release disabled,
+		// so release.nu has a file to run and nothing to publish; the
+		// workflow bundles and deploys the app on its mirror, where copybara
+		// moves it to the root GitHub reads. Inert here.
+		if list.Contains(E.code.meta.targets, "pages") {
+			".goreleaser.yaml": {
+				format: "yaml"
+				// Its own dist, since --clean wipes it and the bundle's is dist/browser.
+				data: {version: 2, project_name: E.code.meta.name, dist: "dist/goreleaser", builds: [{builder: "zig", skip: true}], release: {disable: true}}
+			}
+			// An app at the mirror's root releases from there.
+			let pagesDir = [if E.build.project.dir != "" {"\n        working-directory: \(E.build.project.dir)"}, ""][0]
+			let pagesPrefix = [if E.build.project.dir != "" {"\(E.build.project.dir)/"}, ""][0]
+			".github/workflows/cd.yml": {
+				format: "yaml"
+				text:   """
+					# Release the app to GitHub Pages: bundle it into one document and deploy it.
+					#
+					# GitHub reads workflows only from a repository's root .github/, so this
+					# file is inert in the monorepo and active in the mirror, where copybara
+					# moves it to the root. The trigger is the plain `v*` tag the monorepo's
+					# cd.yml creates here once the mirror holds the tagged commit; nothing
+					# publishes from a branch, and a dispatch redeploys what main holds.
+					#
+					# The release verb builds the document as a developer would, a snapshot
+					# since the tag is the release already. The site is a project site, so
+					# the document is bundled for the repository's path prefix and doubles
+					# as the site's 404.html, which is what makes a deep link boot.
+
+					name: cd
+
+					on:
+					  push:
+					    tags:
+					      - 'v*'
+					  workflow_dispatch:
+
+					permissions:
+					  contents: read
+					  pages: write
+					  id-token: write
+
+					concurrency:
+					  group: pages
+					  cancel-in-progress: false
+
+					jobs:
+					  pages:
+					    runs-on: ubuntu-24.04
+					    environment:
+					      name: github-pages
+					      url: ${{ steps.deploy.outputs.page_url }}
+					    steps:
+					      - uses: actions/checkout@v7
+					      # The released sayt at the version the toolchain pins, its mise cached.
+					      - uses: bonisoft3/sayt/.github/actions/sayt/install@v\(distribution.#SaytVersion)
+					        with:
+					          version: v\(distribution.#SaytVersion)
+					      - run: sayt release@pages --snapshot --base="/${GITHUB_REPOSITORY##*/}"\(pagesDir)
+					      - uses: actions/configure-pages@v5
+					      - uses: actions/upload-pages-artifact@v4
+					        with:
+					          path: \(pagesPrefix)dist/browser
+					      - id: deploy
+					        uses: actions/deploy-pages@v4
+					"""
+			}
+		}
+
+		// The terminal's own toolchain stanza, in the drop-in directory mise
+		// merges beside the hand-owned config rather than in it: a contributor
+		// that writes its own file can be withdrawn by deleting one, and the
+		// config a person authors stays a thing a person authored.
+		if E.terminal.surface.miseConf != "" {
+			".config/mise/conf.d/omnishell.toml": {
+				format: "toml"
+				text:   E.terminal.surface.miseConf
+			}
+		}
+	}
+
+	manifest: list.SortStrings([for p, _ in files {p}])
+}

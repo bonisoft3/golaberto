@@ -1,0 +1,6 @@
+# generated from bayt.cue — do not edit
+include:
+- path: ./compose.setup.yaml
+  required: false
+- path: ./compose.setup-js.yaml
+  required: false

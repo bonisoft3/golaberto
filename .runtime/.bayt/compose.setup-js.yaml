@@ -1,0 +1,86 @@
+# generated from bayt.cue — do not edit
+services:
+  workspaceroot-setup-js:
+    build:
+      additional_contexts:
+        workspaceroot-setup: service:workspaceroot-setup
+      context: ..
+      dockerfile: .bayt/Dockerfile.setup-js
+      target: setup-js
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+      x-bake:
+        cache-from:
+        - >-
+          type=registry,ref=registry.depot.dev/${DEPOT_PROJECT_ID:-f5k5087x1b}:monorepo-bake-cache-v2-${CACHE_SCOPE:-unscoped}-setup-js
+        - >-
+          type=registry,ref=registry.depot.dev/${DEPOT_PROJECT_ID:-f5k5087x1b}:monorepo-bake-cache-v2-${CACHE_SCOPE_FALLBACK:-unscoped}-setup-js
+        cache-to:
+        - >-
+          type=registry,ref=registry.depot.dev/${DEPOT_PROJECT_ID:-f5k5087x1b}:monorepo-bake-cache-v2-${CACHE_SCOPE:-unscoped}-setup-js,mode=min,image-manifest=true,oci-mediatypes=true,compression=zstd,compression-level=3
+    image: bayt-workspaceroot-setup-js:${BAYT_IMAGE_TAG:-latest}
+    scale: 0
+  workspaceroot-setup-js_bayt:
+    build:
+      additional_contexts:
+        workspaceroot-setup_bayt: service:workspaceroot-setup_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.setup-js
+      target: setup-js_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+      x-bake:
+        cache-from:
+        - >-
+          type=registry,ref=registry.depot.dev/${DEPOT_PROJECT_ID:-f5k5087x1b}:monorepo-bake-cache-v2-${CACHE_SCOPE:-unscoped}-workspaceroot-setup-js_bayt
+        - >-
+          type=registry,ref=registry.depot.dev/${DEPOT_PROJECT_ID:-f5k5087x1b}:monorepo-bake-cache-v2-${CACHE_SCOPE_FALLBACK:-unscoped}-workspaceroot-setup-js_bayt
+        cache-to:
+        - >-
+          type=registry,ref=registry.depot.dev/${DEPOT_PROJECT_ID:-f5k5087x1b}:monorepo-bake-cache-v2-${CACHE_SCOPE:-unscoped}-workspaceroot-setup-js_bayt,mode=max,image-manifest=true,oci-mediatypes=true,compression=zstd,compression-level=3
+    image: bayt-workspaceroot-setup-js_bayt:latest
+    scale: 0
+  workspaceroot-setup-js_srcs:
+    build:
+      additional_contexts:
+        workspaceroot-setup_srcs: service:workspaceroot-setup_srcs
+      context: ..
+      dockerfile: .bayt/Dockerfile.setup-js
+      target: setup-js_srcs
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+      x-bake:
+        cache-from:
+        - >-
+          type=registry,ref=registry.depot.dev/${DEPOT_PROJECT_ID:-f5k5087x1b}:monorepo-bake-cache-v2-${CACHE_SCOPE:-unscoped}-workspaceroot-setup-js_srcs
+        - >-
+          type=registry,ref=registry.depot.dev/${DEPOT_PROJECT_ID:-f5k5087x1b}:monorepo-bake-cache-v2-${CACHE_SCOPE_FALLBACK:-unscoped}-workspaceroot-setup-js_srcs
+        cache-to:
+        - >-
+          type=registry,ref=registry.depot.dev/${DEPOT_PROJECT_ID:-f5k5087x1b}:monorepo-bake-cache-v2-${CACHE_SCOPE:-unscoped}-workspaceroot-setup-js_srcs,mode=max,image-manifest=true,oci-mediatypes=true,compression=zstd,compression-level=3
+    image: bayt-workspaceroot-setup-js_srcs:latest
+    scale: 0
+  workspaceroot-setup-js_outs:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.setup-js
+      target: setup-js_outs
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+      additional_contexts:
+        workspaceroot-setup-js: service:workspaceroot-setup-js
+      x-bake:
+        cache-from:
+        - >-
+          type=registry,ref=registry.depot.dev/${DEPOT_PROJECT_ID:-f5k5087x1b}:monorepo-bake-cache-v2-${CACHE_SCOPE:-unscoped}-workspaceroot-setup-js_outs
+        - >-
+          type=registry,ref=registry.depot.dev/${DEPOT_PROJECT_ID:-f5k5087x1b}:monorepo-bake-cache-v2-${CACHE_SCOPE_FALLBACK:-unscoped}-workspaceroot-setup-js_outs
+        cache-to:
+        - >-
+          type=registry,ref=registry.depot.dev/${DEPOT_PROJECT_ID:-f5k5087x1b}:monorepo-bake-cache-v2-${CACHE_SCOPE:-unscoped}-workspaceroot-setup-js_outs,mode=max,image-manifest=true,oci-mediatypes=true,compression=zstd,compression-level=3
+    image: bayt-workspaceroot-setup-js_outs:latest
+    scale: 0

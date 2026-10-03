@@ -1,0 +1,42 @@
+# generated from bayt.cue — do not edit
+includes:
+  replay:
+    taskfile: ./Taskfile.replay.yaml
+    dir: ../
+    optional: true
+  setup:
+    taskfile: ./Taskfile.setup.yaml
+    dir: ../
+    optional: true
+  lint:
+    taskfile: ./Taskfile.lint.yaml
+    dir: ../
+    optional: true
+  build:
+    taskfile: ./Taskfile.build.yaml
+    dir: ../
+    optional: true
+  test:
+    taskfile: ./Taskfile.test.yaml
+    dir: ../
+    optional: true
+  integrate:
+    taskfile: ./Taskfile.integrate.yaml
+    dir: ../
+    optional: true
+  libraries_mecha:
+    taskfile: ../.runtime/libraries/mecha/Taskfile.yml
+    dir: ../.runtime/libraries/mecha/
+    optional: true
+  workspaceroot:
+    taskfile: ../.runtime/Taskfile.yml
+    dir: ../.runtime/
+    optional: true
+tasks:
+  cross_workspaceroot_setup:
+    internal: true
+    run: once
+    if: test -f .runtime/Taskfile.yml
+    deps:
+    - workspaceroot:bayt:setup
+version: "3"

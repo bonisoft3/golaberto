@@ -1,0 +1,118 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "name": "test",
+  "project": "apps_golaberto",
+  "dir": "",
+  "activate": "mise x --",
+  "srcs": {
+    "globs": [
+      "*.cue",
+      "bayt.json",
+      "DESIGN.md",
+      "[p]ipelines/*.blobl",
+      "[m]essages/*.json",
+      "[s]hell/boot.js"
+    ],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {},
+  "taskfile": {
+    "run": "once",
+    "incremental": true,
+    "preconditions": []
+  },
+  "visibility": "internal",
+  "emitsSrcs": false,
+  "deps": [
+    "build"
+  ],
+  "sameProjectDeps": [
+    "build"
+  ],
+  "transitiveDeps": [
+    "build",
+    "setup"
+  ],
+  "transitiveCrossDeps": [
+    {
+      "name": "setup",
+      "project": "workspaceroot",
+      "dir": ".runtime",
+      "outs": {
+        "globs": [
+          "[m]ise.toml",
+          "[.]mise.toml",
+          "[m]ise.lock",
+          "[.]tool-versions",
+          "gradle/libs.versions.toml",
+          "plugins/devserver/dind.sh",
+          ".task/bayt/setup.hash"
+        ],
+        "exclude": []
+      }
+    }
+  ],
+  "upClosure": [
+    ".bayt/compose.build.yaml",
+    ".bayt/compose.setup.yaml",
+    ".bayt/compose.setup.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "build",
+      "project": "apps_golaberto",
+      "dir": "",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "setup",
+      "project": "apps_golaberto",
+      "dir": "",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [
+    {
+      "srcs": {
+        "globs": [
+          "*.cue",
+          "bayt.json",
+          "DESIGN.md",
+          "[p]ipelines/*.blobl",
+          "[m]essages/*.json",
+          "[s]hell/boot.js"
+        ],
+        "exclude": [],
+        "defaultGlobs": null,
+        "defaultExclude": null
+      },
+      "do": "cue vet -c ./...",
+      "name": "builtin",
+      "shell": "exec",
+      "stop": false
+    }
+  ],
+  "cache": {
+    "full": false,
+    "similar": false
+  },
+  "vscode": {
+    "group": {
+      "kind": "test",
+      "isDefault": true
+    }
+  }
+}

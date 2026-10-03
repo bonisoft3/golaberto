@@ -1,0 +1,130 @@
+[versions]
+## SDK Versions
+java = "25"
+kotlin = "2.3.21"
+micronaut = "4.9.3"   # keep in sync with gradle.properties
+micronautPlugins = "4.5.4"
+firebase = "32.6.0"   # keep in sync with gradle.properties
+kotest = "5.8.1"
+testcontainers = "2.0.2"
+pnpm = "8.5.1"
+node = "20.2.0"
+
+# Dependencies
+coroutines = "1.7.3"
+koin = "3.4.0"
+sqldelight = "2.0.1"
+
+# Protocol buffers
+proto = "3.25.3"
+grpc = "1.62.2"
+grpcKotlin = "1.3.1"
+
+[libraries]
+
+coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-reactor = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-reactor", version.ref = "coroutines" }
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
+
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
+
+kotlinx-dateTime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.4.0" }
+
+turbine = { module = "app.cash.turbine:turbine", version = "0.13.0" }
+
+# protobuf runtime
+protobuf-java-util = { module = "com.google.protobuf:protobuf-java-util", version.ref = "proto" }
+protobuf-kotlin = { module = "com.google.protobuf:protobuf-kotlin", version.ref = "proto" }
+grpc-protobuf = { module = "io.grpc:grpc-protobuf", version.ref = "grpc" }
+grpc-stub = { module = "io.grpc:grpc-stub", version.ref = "grpc" }
+grpc-services = { module = "io.grpc:grpc-services", version.ref = "grpc" }
+grpc-api = { module = "io.grpc:grpc-api", version.ref = "grpc" }
+# Not using yet due to need of injecting an android context
+grpc-cronet = { module = "io.grpc:grpc-cronet", version.ref = "grpc" } 
+# Super obscure, but if I name this grpc-okhttp, the build fails
+grpc-okhttp = { module = "io.grpc:grpc-okhttp", version.ref = "grpc" } 
+grpc-kotlin-stub = { module = "io.grpc:grpc-kotlin-stub", version.ref = "grpcKotlin" }
+
+# database stuff
+h2database = { module = "com.h2database:h2", version = "2.1.214" }
+postgresql = { module = "org.postgresql:postgresql", version = "42.3.2" }
+jooq = { module = "org.jooq:jooq", version = "3.17.3" }
+jooq-codegen = { module = "org.jooq:jooq-codegen", version = "3.17.3" }
+sfm-proto = { module = "org.simpleflatmapper:sfm-converter-protobuf", version = "8.2.3" }  # https://stackoverflow.com/a/72870512
+sfm-jooq = { module = "org.simpleflatmapper:sfm-jooq-jre9", version = "8.2.3" }
+jts-core = { module = "org.locationtech.jts:jts-core", version = "1.19.0" }
+uuid-jug = { module = "com.fasterxml.uuid:java-uuid-generator", version = "4.0.1" }
+sqldelight-jdbc = { module = "app.cash.sqldelight:jdbc-driver", version.ref = "sqldelight" }
+sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
+sqldelight-postgresql-dialect = { module = "app.cash.sqldelight:postgresql-dialect", version.ref = "sqldelight" }
+sqldelight-hsql-dialect = { module = "app.cash.sqldelight:hsql-dialect", version.ref = "sqldelight" }
+
+# jakarta specification
+jakarta-annotation = { module = "jakarta.annotation:jakarta.annotation-api", version = "2.1.1" }
+jakarta-persistence = { module = "jakarta.persistence:jakarta.persistence-api", version = "3.1.0" }
+
+# logs
+logback-classic = { module = "ch.qos.logback:logback-classic", version = "1.4.7" }
+logback-core = { module = "ch.qos.logback:logback-core", version = "1.4.7" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version = "2.0.7" }
+
+# protoc artifacts
+protoc = { module = "com.google.protobuf:protoc", version.ref = "proto" }
+protoc-grpc = { module = "io.grpc:protoc-gen-grpc-java", version.ref = "grpc" }
+protoc-grpc-kotlin = { module = "io.grpc:protoc-gen-grpc-kotlin", version.ref = "grpcKotlin" }
+
+# other utilities
+# https://stackoverflow.com/a/75746094
+snake-yaml = { module = "org.yaml:snakeyaml", version = "2.2" }
+
+# testing
+kotest-runner = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest"}
+kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest"}
+kotest-property = { module = "io.kotest:kotest-property", version.ref = "kotest"}
+kotest-engine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
+kotest-jvm = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "kotest"}
+kotest-htmlreporter = { module = "io.kotest:kotest-extensions-htmlreporter", version.ref = "kotest" }
+kotest-junitxml = { module = "io.kotest:kotest-extensions-junitxml", version.ref = "kotest" }
+kotest-koin = { module = "io.kotest:kotest-extensions-koin", version = "4.4.3" }
+micronaut-kotest = { module = "io.micronaut.test:micronaut-test-kotest5" }
+datafaker = { module = "net.datafaker:datafaker", version = "1.9.0" }
+testcontainers-bom = { module = "org.testcontainers:testcontainers-bom", version.ref = "testcontainers" }
+testcontainers-postgresql = { module = "org.testcontainers:postgresql", version = "1.21.3" }
+
+# Notice this is not a catalog, but rather it replaces settings.gradle.kts:PluginManagement.
+# See https://github.com/gradle/gradle/issues/16078. Because of that, we don't use it.
+[plugins]
+# micronaut-minimal-application = { id = "io.micronaut.minimal.application", version.ref = "micronautPlugins" }
+# micronaut-minimal-library = { id = "io.micronaut.minimal.library", version.ref = "micronautPlugins" }
+# flywaydb-flyway = { id = "org.flywaydb.flyway", version = "9.18.0" }
+# kotlin-jvm = { id = "org.jetbrains.kotlin.jvm" , version.ref = "kotlin" }
+# kotlin-ksp = { id = "com.google.devtools.ksp", version = "1.9.21-1.0.15" }
+# jib = { id = "com.google.cloud.tools.jib", version  = "3.3.2" }
+# node = { id = "com.github.node-gradle.node",  version = "5.0.0" }
+# docker = { id = "com.palantir.docker",  version  = "0.35.0" }
+# browserstack = { id = "com.browserstack.gradle", version = "3.0.3" }
+# sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
+
+
+[bundles]
+
+tracker-test = [
+    "kotest-jvm",
+    "kotest-htmlreporter",
+    "kotest-junitxml",
+    "micronaut-kotest"
+]
+
+grpc-compile = [
+
+]
+grpc-runtime = [
+    "protobuf-java-util",
+    "protobuf-kotlin",
+    "grpc-protobuf",
+    "grpc-api",
+    "grpc-stub",
+    "grpc-services",
+    "grpc-kotlin-stub"
+]

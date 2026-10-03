@@ -1,0 +1,334 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "compose": {
+    "up": true,
+    "manual": true,
+    "build": {
+      "additional_contexts": {
+        "root": ".."
+      },
+      "secrets": [],
+      "args": {}
+    },
+    "command": [
+      "mise",
+      "x",
+      "--",
+      "sh",
+      "-c",
+      "deno run --config \".runtime/plugins/pronto/deno.json\" --allow-read --allow-write --allow-run --allow-env \".runtime/plugins/pronto/check-replay.ts\" ."
+    ],
+    "environment": {
+      "BAYT_IMAGE_TAG": "${BAYT_IMAGE_TAG:-latest}"
+    },
+    "ports": [],
+    "volumes": [
+      "//var/run/docker.sock:/var/run/docker.sock"
+    ],
+    "depends_on": {}
+  },
+  "dockerfile": {
+    "preamble": [
+      "COPY --link --from=docker:29.7.1-cli@sha256:27a51d5ab1cd38d9eeaba7b415b8c07bc10c31e1cf1ec8d78f6413fcfab3f44f /usr/local/bin/docker /usr/local/bin/docker",
+      "COPY --link --from=docker:29.7.1-cli@sha256:27a51d5ab1cd38d9eeaba7b415b8c07bc10c31e1cf1ec8d78f6413fcfab3f44f /usr/local/libexec/docker/cli-plugins/docker-compose /usr/local/libexec/docker/cli-plugins/docker-compose",
+      "ENV PATH=/usr/local/bin:$PATH"
+    ],
+    "preambleCopyContexts": [
+      {
+        "name": "docker:29.7.1-cli@sha256:27a51d5ab1cd38d9eeaba7b415b8c07bc10c31e1cf1ec8d78f6413fcfab3f44f"
+      },
+      {
+        "name": "docker:29.7.1-cli@sha256:27a51d5ab1cd38d9eeaba7b415b8c07bc10c31e1cf1ec8d78f6413fcfab3f44f"
+      }
+    ],
+    "from": {
+      "ref": ":setup",
+      "name": "apps_golaberto-setup"
+    },
+    "add": [],
+    "mounts": [],
+    "secrets": {},
+    "extra_hosts": [],
+    "epilogue": [],
+    "copy": [
+      {
+        "from": {
+          "name": "root"
+        },
+        "srcs": [
+          "cue.mod",
+          ".runtime/.bayt",
+          ".runtime/plugins/pronto",
+          ".runtime/plugins/omnishell",
+          ".runtime/plugins/bayt",
+          ".runtime/plugins/sayt",
+          ".runtime/libraries/mecha"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": true,
+        "exclude": []
+      }
+    ],
+    "healthcheck": null,
+    "expose": [],
+    "entrypoint": null,
+    "incremental": false,
+    "cmd": null
+  },
+  "name": "replay",
+  "project": "apps_golaberto",
+  "dir": "",
+  "activate": "",
+  "srcs": {
+    "globs": [
+      "*.cue",
+      "bayt.json",
+      "DESIGN.md",
+      "[p]ipelines/*.blobl",
+      "[m]essages/*.json",
+      "[s]hell/boot.js",
+      ".bayt/compose*.yaml",
+      "services/database/migrations/**"
+    ],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {
+    "MISE_ALWAYS_KEEP_DOWNLOAD": "1"
+  },
+  "synthetics": {
+    "bayt": {
+      "name": "replay_bayt",
+      "project": "apps_golaberto",
+      "dir": "",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.replay.yaml",
+          ".bayt/Dockerfile.replay",
+          ".bayt/bayt.replay.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/Taskfile.replay.yaml",
+          ".bayt/compose.replay.closure.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        ".bayt/compose.replay.yaml",
+        ".bayt/compose.setup.yaml",
+        ".bayt/compose.setup.yaml"
+      ]
+    },
+    "outs": {
+      "name": "replay_outs",
+      "project": "apps_golaberto",
+      "dir": "",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        ".bayt/compose.replay.yaml",
+        ".bayt/compose.setup.yaml",
+        ".bayt/compose.setup.yaml"
+      ]
+    },
+    "srcs": {
+      "name": "replay_srcs",
+      "project": "apps_golaberto",
+      "dir": "",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          "*.cue",
+          "bayt.json",
+          "DESIGN.md",
+          "[p]ipelines/*.blobl",
+          "[m]essages/*.json",
+          "[s]hell/boot.js",
+          ".bayt/compose*.yaml",
+          "services/database/migrations/**"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [
+        "setup_srcs"
+      ],
+      "transitiveCrossDeps": [
+        {
+          "name": "setup_srcs",
+          "project": "workspaceroot",
+          "dir": ".runtime",
+          "outs": {
+            "globs": [
+              "[m]ise.toml",
+              "[.]mise.toml",
+              "[m]ise.lock",
+              "[.]tool-versions",
+              "gradle/libs.versions.toml",
+              "plugins/devserver/dind.sh"
+            ],
+            "exclude": []
+          }
+        }
+      ],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        ".bayt/compose.replay.yaml",
+        ".bayt/compose.setup.yaml",
+        ".bayt/compose.setup.yaml"
+      ]
+    }
+  },
+  "taskfile": {
+    "run": "once",
+    "incremental": true,
+    "preconditions": []
+  },
+  "visibility": "internal",
+  "emitsSrcs": true,
+  "deps": [
+    "setup"
+  ],
+  "sameProjectDeps": [
+    "setup"
+  ],
+  "transitiveDeps": [
+    "setup"
+  ],
+  "transitiveCrossDeps": [
+    {
+      "name": "setup",
+      "project": "workspaceroot",
+      "dir": ".runtime",
+      "outs": {
+        "globs": [
+          "[m]ise.toml",
+          "[.]mise.toml",
+          "[m]ise.lock",
+          "[.]tool-versions",
+          "gradle/libs.versions.toml",
+          "plugins/devserver/dind.sh",
+          ".task/bayt/setup.hash"
+        ],
+        "exclude": []
+      }
+    }
+  ],
+  "upClosure": [
+    ".bayt/compose.replay.yaml",
+    ".bayt/compose.setup.yaml",
+    ".bayt/compose.setup.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "setup",
+      "project": "apps_golaberto",
+      "dir": "",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [
+    {
+      "srcs": {
+        "globs": [
+          "*.cue",
+          "bayt.json",
+          "DESIGN.md",
+          "[p]ipelines/*.blobl",
+          "[m]essages/*.json",
+          "[s]hell/boot.js",
+          ".bayt/compose*.yaml",
+          "services/database/migrations/**",
+          "[m]ise.toml",
+          "[.]mise.toml",
+          "[m]ise.lock",
+          "[.]tool-versions"
+        ],
+        "exclude": [],
+        "defaultGlobs": null,
+        "defaultExclude": null
+      },
+      "do": "mise install",
+      "dockerfile": {
+        "do": "d=/root/.local/share/mise/downloads; s=/mise-tarball-store; mkdir -p \"$d\" \"$s\"; cp -r \"$s\"/. \"$d\"/ 2>/dev/null || true; mise install || exit; cd \"$d\" && for f in */*/*; do [ -f \"$f\" ] || continue; o=\"$s/$f\"; [ -e \"$o\" ] && continue; mkdir -p \"$(dirname \"$o\")\"; t=\"$(mktemp \"$(dirname \"$o\")/.pXXXXXX\")\" && cp \"$f\" \"$t\" && mv -f \"$t\" \"$o\"; done; :",
+        "mounts": [
+          {
+            "type": "cache",
+            "target": "/root/.local/share/mise/downloads",
+            "scope": "project",
+            "required": false
+          },
+          {
+            "type": "cache",
+            "target": "/mise-tarball-store",
+            "scope": "global",
+            "required": false
+          }
+        ],
+        "shell": "sh"
+      },
+      "name": "builtin",
+      "shell": "exec",
+      "stop": false
+    }
+  ],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

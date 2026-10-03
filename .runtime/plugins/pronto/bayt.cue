@@ -1,0 +1,56 @@
+// plugins/pronto/bayt.cue — source-only bayt project for the pronto compiler.
+//
+// pronto ships no runtime image. It is a set of deno programs an app's verbs
+// invoke from the app's own directory, so what this project exists to give is
+// `plugins_pronto:setup:srcs` — the way a cross-project consumer pulls the
+// compiler into a build context — and a build stage whose RUN is a typecheck
+// of the programs themselves, against the context that consumer receives.
+// Mirrors how omnishell exposes `plugins_omnishell:build:srcs`.
+package pronto
+
+import (
+	bayt "bonisoft.org/.runtime/plugins/bayt/core:bayt"
+	mise "bonisoft.org/.runtime/plugins/bayt/stacks/mise"
+	sayt "bonisoft.org/.runtime/plugins/bayt/stacks/sayt"
+)
+
+_pronto: bayt.#project & {
+	dir:      "plugins/pronto"
+	activate: "mise x --"
+
+	targets: {
+		// Public so a project that emits an app can COPY the compiler beside
+		// it. deno.lock is a source here: the programs resolve their imports
+		// against it, and a context without it resolves something else.
+		"setup": sayt.setup & mise.install & {
+			visibility: "public"
+			srcs: globs: ["*.ts", "scales/*.ts", "deno.json", "deno.lock"]
+			dockerfile: bayt.nubox
+		}
+		"doctor": sayt.doctor & mise.doctor
+
+		// Typecheck-only build, no emitted artifact: every consumer runs these
+		// .ts files directly under deno, so the typecheck is what building
+		// them means.
+		"build": sayt.build & mise.exec & {
+			srcs: globs: ["*.ts", "scales/*.ts", "deno.json", "deno.lock"]
+			// Two files reach across the plugin boundary into omnishell's
+			// interpreter — prerender.ts renders through the storybook, and
+			// negotiation_test.ts holds the door's language rule against the
+			// terminal's. This context carries pronto alone, so neither module
+			// resolves here and neither can be typechecked here; both are, at
+			// the repo tier, by `just lint`, where omnishell is a sibling.
+			//
+			// Named rather than globbed away: a third file reaching out lands
+			// in this list's absence and turns the image red, which is the
+			// decision arriving at whoever wrote the import.
+			cmd: "builtin": {
+				shell: "sh"
+				do:    "deno run --allow-read=. --allow-run check-build.ts"
+			}
+			dockerfile: from: ref: ":setup"
+		}
+	}
+}
+
+project: _pronto

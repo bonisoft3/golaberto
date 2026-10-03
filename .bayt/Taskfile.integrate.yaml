@@ -1,0 +1,9 @@
+# generated from bayt.cue — do not edit
+tasks:
+  default:
+    deps:
+    - "::bayt:launch"
+    run: once
+    status:
+    - "{{if eq OS \"windows\"}}mise tool-stub .runtime/plugins/bayt/runtime/nu.toml .runtime/plugins/bayt/runtime/bayt.nu{{else}}.runtime/plugins/bayt/runtime/bayt{{end}} fingerprint --manifest '{{.TASKFILE_DIR}}/bayt.integrate.json' --stamp-file .task/bayt/integrate.hash"
+version: "3"

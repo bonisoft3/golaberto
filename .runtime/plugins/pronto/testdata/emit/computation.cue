@@ -1,0 +1,50 @@
+// A program with a computation, pinned where lint loads its module: the
+// service loads every computation at startup and dies on one SES's
+// Compartment refuses, so lint loads each the same way first.
+package emit
+
+import "strings"
+import pronto "bonisoft.org/.runtime/plugins/pronto"
+
+_computed: _code & {
+	state: {
+		entities: Chance: {
+			table:      "chance"
+			durability: "live"
+			fields: [{name: "id", type: "uuid", pk: true}, {name: "odds", type: "int"}]
+		}
+		computations: chances: to: ["Chance"]
+	}
+}
+
+_computedLoop: (pronto.#DefaultLoop & {
+	code:     _computed
+	terminal: (pronto.#DefaultTerminal & {code: _computed}).out
+	cluster: (pronto.#DefaultCluster & {code: _computed, statics: []}).out
+}).out
+_admit: _computedLoop.surface.checks.admit
+
+admitLints:       _admit.verb & "lint"
+admitLoadsModule: strings.HasSuffix(_admit.cmds[0], #"admit.ts) "computations/chances.js""#) & true
+admitUnderPins:   strings.Contains(_admit.cmds[0], "services compute deno.json") & true
+
+// Released to pages, the page runs no computation, so the release settles the
+// cluster and ships its live tables before it bundles; with no stream the
+// derive names none, and the bundle reads what it wrote.
+_paged: pronto.#App & {
+	for k, v in _computed if k != "meta" {(k): v}
+	meta: {
+		for k, v in _computed.meta if k != "targets" {(k): v}
+		targets: ["pages"]
+	}
+}
+_pages: (pronto.#DefaultLoop & {
+	code:     _paged
+	terminal: (pronto.#DefaultTerminal & {code: _paged}).out
+	cluster: (pronto.#DefaultCluster & {code: _paged, statics: []}).out
+}).out.surface.verbs.pages
+pagesDerivesFirst:  strings.Contains(_pages.cmds[0], "derived.ts) . --tables chance --out dist/derived.sql") & true
+pagesBundlesRows:   strings.HasSuffix(_pages.cmds[1], " --derived dist/derived.sql") & true
+pagesDerivesAlone:  (len(_pages.cmds) == 2) & true
+_unpaged:           _computedLoop.surface.verbs
+unpagedHasNoTarget: (_unpaged.pages == _|_) & true

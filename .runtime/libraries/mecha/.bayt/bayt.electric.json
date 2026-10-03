@@ -1,0 +1,196 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "compose": {
+    "up": false,
+    "manual": false,
+    "environment": {
+      "DATABASE_URL": "postgresql://electric:electric@database:5432/${POSTGRES_DB:-mecha}?sslmode=disable",
+      "ELECTRIC_SECRET": "${ELECTRIC_SECRET:-dev-electric-secret}",
+      "ELECTRIC_MANUAL_TABLE_PUBLISHING": "true"
+    },
+    "ports": [],
+    "volumes": [],
+    "depends_on": {
+      "libraries_mecha-database": {
+        "condition": "service_healthy"
+      },
+      "libraries_mecha-migrate": {
+        "condition": "service_completed_successfully"
+      }
+    },
+    "networks": {
+      "default": {
+        "aliases": [
+          "electric"
+        ]
+      }
+    },
+    "restart": "on-failure",
+    "healthcheck": {
+      "test": [
+        "CMD",
+        "curl",
+        "-f",
+        "http://localhost:3000/v1/health"
+      ],
+      "interval": "5s",
+      "timeout": "5s",
+      "retries": 12,
+      "start_period": "60s",
+      "start_interval": "500ms"
+    }
+  },
+  "dockerfile": {
+    "preamble": [],
+    "preambleCopyContexts": [],
+    "from": {
+      "name": "docker.io/bonitao/electric:1.8.0@sha256:7b6aed2d5fd356a5e5edd5290eeec0b19859ab798d3cbdb7d9d223fbb872a5ab"
+    },
+    "add": [],
+    "mounts": [],
+    "secrets": {},
+    "extra_hosts": [],
+    "epilogue": [],
+    "copy": [],
+    "healthcheck": null,
+    "expose": [],
+    "entrypoint": null,
+    "incremental": false,
+    "cmd": null
+  },
+  "name": "electric",
+  "project": "libraries_mecha",
+  "dir": ".runtime/libraries/mecha",
+  "activate": "",
+  "srcs": {
+    "globs": [],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {},
+  "synthetics": {
+    "bayt": {
+      "name": "electric_bayt",
+      "project": "libraries_mecha",
+      "dir": ".runtime/libraries/mecha",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.electric.yaml",
+          ".bayt/Dockerfile.electric",
+          ".bayt/bayt.electric.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        ".runtime/libraries/mecha/.bayt/compose.electric.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.database.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.migrate.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.migrate-image.yaml"
+      ]
+    },
+    "outs": {
+      "name": "electric_outs",
+      "project": "libraries_mecha",
+      "dir": ".runtime/libraries/mecha",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        ".runtime/libraries/mecha/.bayt/compose.electric.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.database.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.migrate.yaml",
+        ".runtime/libraries/mecha/.bayt/compose.migrate-image.yaml"
+      ]
+    }
+  },
+  "visibility": "internal",
+  "emitsSrcs": false,
+  "deps": [
+    "database_outs",
+    "migrate_outs"
+  ],
+  "sameProjectDeps": [
+    "database_outs",
+    "migrate_outs"
+  ],
+  "transitiveDeps": [
+    "database_outs",
+    "migrate_outs"
+  ],
+  "transitiveCrossDeps": [],
+  "upClosure": [
+    ".runtime/libraries/mecha/.bayt/compose.electric.yaml",
+    ".runtime/libraries/mecha/.bayt/compose.database.yaml",
+    ".runtime/libraries/mecha/.bayt/compose.database-image.yaml",
+    ".runtime/libraries/mecha/.bayt/compose.migrate.yaml",
+    ".runtime/libraries/mecha/.bayt/compose.migrate-image.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "database_outs",
+      "project": "libraries_mecha",
+      "dir": ".runtime/libraries/mecha",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "migrate_outs",
+      "project": "libraries_mecha",
+      "dir": ".runtime/libraries/mecha",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

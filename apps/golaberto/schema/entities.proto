@@ -83,6 +83,7 @@ message DirectoryFilter {
   optional string region_key = 11 [json_name = "region_key"];
   optional string region_selection = 12 [json_name = "region_selection"];
   optional string country_selection = 13 [json_name = "country_selection"];
+  optional string team_type = 14 [json_name = "team_type"];
 }
 
 message Editor {
@@ -467,6 +468,7 @@ message TeamDirectory {
   optional string region_id = 13 [json_name = "region_id"];
   optional string country_search_key = 14 [json_name = "country_search_key"];
   optional string region_search_key = 15 [json_name = "region_search_key"];
+  optional string team_type = 16 [json_name = "team_type"];
 }
 
 message TeamGame {

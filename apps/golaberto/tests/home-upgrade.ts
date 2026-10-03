@@ -105,6 +105,25 @@ Deno.test("home schema upgrades retained data before readers start and does not 
     assertEquals(await sql(clone, "SELECT count(*) FROM pg_attribute WHERE attrelid='team_directory'::regclass AND attname IN ('search_key','country_key') AND attcollation='golaberto_search'::regcollation"), "2", "extended directory keys use the search collation");
     assertEquals(await sql(clone, "SELECT count(*) FROM pg_attribute WHERE attrelid='team_directory'::regclass AND attname IN ('country_id','region_id','country_search_key','region_search_key')"), "4", "the geography upgrade adds ids and search fields to the projection");
     assertEquals(await sql(clone, "SELECT count(*) FROM pg_attribute WHERE attrelid='team_directory'::regclass AND attname IN ('country_search_key','region_search_key') AND attcollation='golaberto_search'::regcollation"), "2", "geography search fields use the multilingual search collation");
+    assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='027_team_directory_type' AND done"), "1", "team type projection upgrade is recorded");
+    assertEquals(await sql(clone, "SELECT count(*) FROM pg_attribute WHERE attrelid='team_directory'::regclass AND attname='team_type' AND atttypid='portable_string'::regtype AND attnotnull"), "1", "the retained directory has a required team type field");
+    assertEquals(await sql(clone, "SELECT count(*) FROM team_directory d JOIN team t USING(id) WHERE d.team_type IS DISTINCT FROM t.team_type"), "0", "the retained directory backfills each source team type");
+    assert(Number(await sql(clone, "SELECT count(*) FROM team_directory WHERE team_type='national'")) > 0, "retained national teams are projected as national");
+    const rejectInvalidTeamType = () => sql(clone, `BEGIN; SET LOCAL ROLE service;
+      DO $$ BEGIN
+        BEGIN
+          UPDATE team_directory SET team_type='invalid' WHERE id=(SELECT id FROM team_directory ORDER BY id LIMIT 1);
+          RAISE EXCEPTION 'invalid projected team type was accepted';
+        EXCEPTION WHEN check_violation THEN NULL; END;
+      END $$; ROLLBACK;`);
+    await rejectInvalidTeamType();
+    const typeProjectionVersions = () => sql(clone, "SELECT md5(string_agg(id::text||':'||txid::text, ',' ORDER BY id)) FROM team_directory");
+    const beforeTypeReplay = await typeProjectionVersions();
+    // Model a retained projection that predates the declared type constraint.
+    await sql(clone, "ALTER TABLE team_directory DROP CONSTRAINT team_directory_team_type_check");
+    await sql(clone, await Deno.readTextFile("services/database/sql/027_team_directory_type.sql"));
+    await rejectInvalidTeamType();
+    assertEquals(await typeProjectionVersions(), beforeTypeReplay, "raw type migration replay leaves versioned projection rows unchanged");
     await sql(clone, "INSERT INTO team (id,name,country) VALUES ('03000000-0000-4000-8000-000000000001','Retained ı Þ æ','Þorland'); SELECT refresh_team_directory()");
     assertEquals(await sql(clone, "SELECT search_key||'|'||country_key FROM team_directory WHERE id='03000000-0000-4000-8000-000000000001'"), "Retained i th æ|thorland", "the retained directory derives both letter mappings from source fields");
     assertEquals(await sql(clone, "SELECT count(*) FROM team_directory WHERE id='03000000-0000-4000-8000-000000000001' AND search_key LIKE '%retained i th ae%' AND country_key LIKE '%thorland%'"), "1", "mapped inputs match retained team and country search keys");
@@ -120,6 +139,9 @@ Deno.test("home schema upgrades retained data before readers start and does not 
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='022_recent_championships' AND done"), "1", "recent championships upgrade is recorded once on replay");
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='025_search_letter_equivalences' AND done"), "1", "extended search upgrade is recorded once on replay");
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='026_team_geography' AND done"), "1", "the geography upgrade is recorded once on replay");
+    assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='027_team_directory_type' AND done"), "1", "the team type upgrade remains recorded once on replay");
+    assertEquals(await sql(clone, "SELECT count(*) FROM team_directory d JOIN team t USING(id) WHERE d.team_type IS DISTINCT FROM t.team_type"), "0", "replaying the migrator preserves projected source team types");
+    await rejectInvalidTeamType();
     assertEquals(await sql(clone, "SELECT count(*) FROM team_directory WHERE id='03000000-0000-4000-8000-000000000001' AND country_id='' AND region_id='' AND country_search_key='thorland'"), "1", "replaying the upgrade preserves the refreshed legacy-team projection");
   } finally {
     await sql("postgres", `DROP DATABASE ${clone} WITH (FORCE)`);

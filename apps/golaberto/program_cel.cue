@@ -422,6 +422,17 @@ code: state: entities: {
 			rating: {intMin: 0, intMax: 100}
 		}
 	}
+	TeamDirectory: {
+		checks: {
+			team_type: "team_type IN ('club', 'national')"
+		}
+		seed: [...{
+			team_type?: ("club" | "national")
+		}]
+		enums: {
+			team_type: ["club","national"]
+		}
+	}
 	GameCard: {
 		checks: {
 			round: "round >= 1 AND round <= 99"
@@ -711,9 +722,11 @@ code: state: entities: {
 			region_key?: strings.MaxRunes(160)
 			region_selection?: strings.MaxRunes(60)
 			country_selection?: strings.MaxRunes(60)
+			team_type?: ("club" | "national")
 		}]
 		enums: {
 			state: ["browsing"]
+			team_type: ["club","national"]
 		}
 		bounds: {
 			id: {sizeMin: 1, sizeMax: 16}

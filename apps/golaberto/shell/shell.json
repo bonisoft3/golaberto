@@ -230,7 +230,8 @@
         "region_key": "",
         "region_q": "",
         "region_selection": "*",
-        "state": "browsing"
+        "state": "browsing",
+        "team_type": "club"
       },
       {
         "id": "stadiums",
@@ -245,7 +246,8 @@
         "region_key": "",
         "region_q": "",
         "region_selection": "*",
-        "state": "browsing"
+        "state": "browsing",
+        "team_type": "club"
       },
       {
         "id": "referees",
@@ -260,7 +262,8 @@
         "region_key": "",
         "region_q": "",
         "region_selection": "*",
-        "state": "browsing"
+        "state": "browsing",
+        "team_type": "club"
       }
     ],
     "catalog_filter": [
@@ -2306,6 +2309,16 @@
           "name": "region_search_key",
           "type": "string",
           "required": true
+        },
+        {
+          "default": "'club'",
+          "enum": [
+            "club",
+            "national"
+          ],
+          "name": "team_type",
+          "type": "string",
+          "required": true
         }
       ]
     },
@@ -3676,6 +3689,16 @@
           "name": "country_selection",
           "type": "string",
           "required": true
+        },
+        {
+          "default": "'club'",
+          "enum": [
+            "club",
+            "national"
+          ],
+          "name": "team_type",
+          "type": "string",
+          "required": true
         }
       ]
     },
@@ -4223,6 +4246,7 @@
     "services/database/migrations/024_team_directory.sql",
     "services/database/migrations/025_search_letter_equivalences.sql",
     "services/database/migrations/026_team_geography.sql",
+    "services/database/migrations/027_team_directory_type.sql",
     "services/database/migrations/900_seed.sql"
   ],
   "pipelines": [

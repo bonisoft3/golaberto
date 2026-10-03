@@ -88,6 +88,9 @@ services:
         path: ../services/database/migrations/026_team_geography.sql
         target: /docker-entrypoint-initdb.d
       - action: rebuild
+        path: ../services/database/migrations/027_team_directory_type.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
         path: ../services/database/migrations/900_seed.sql
         target: /docker-entrypoint-initdb.d
     environment:

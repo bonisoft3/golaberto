@@ -50,6 +50,9 @@ _extendedSearchCollationUpgrade: strings.Join(strings.Split(strings.Join(strings
 _teamGeographySql: string @embed(file="services/database/sql/026_team_geography.sql", type=text)
 _teamGeographyUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamGeographySql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
+_teamTypeSql: string @embed(file="services/database/sql/027_team_directory_type.sql", type=text)
+_teamTypeUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamTypeSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
 _homeHighlightsSql: string @embed(file="services/database/sql/021_home_highlights.sql", type=text)
 _homeHighlightsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeHighlightsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
@@ -333,6 +336,7 @@ code: pronto.#App & {
 				{ordinal: 13, name: "region_id", type: "string", default: "''"},
 				{ordinal: 14, name: "country_search_key", type: "string", default: "''"},
 				{ordinal: 15, name: "region_search_key", type: "string", default: "''"},
+				{ordinal: 16, name: "team_type", type: "string", default: "'club'", cel: "this in ['club', 'national']"},
 			]
 		}
 		Player: {
@@ -920,8 +924,9 @@ code: pronto.#App & {
 				{ordinal: 11, name: "region_key", type: "string", default: "''", cel: "this.size() <= 160"},
 				{ordinal: 12, name: "region_selection", type: "string", default: "'*'", cel: "this.size() <= 60"},
 				{ordinal: 13, name: "country_selection", type: "string", default: "'*'", cel: "this.size() <= 60"},
+				{ordinal: 14, name: "team_type", type: "string", default: "'club'", cel: "this in ['club', 'national']"},
 			]
-			seed: [{id: "teams", q: "", country: "", q_key: "", country_key: "", region_q: "", region_key: "", region_selection: "*", country_selection: "*", state: "browsing", offset: 0, next_offset: 40, page: 1}, {id: "stadiums", q: "", country: "", q_key: "", country_key: "", region_q: "", region_key: "", region_selection: "*", country_selection: "*", state: "browsing", offset: 0, next_offset: 40, page: 1}, {id: "referees", q: "", country: "", q_key: "", country_key: "", region_q: "", region_key: "", region_selection: "*", country_selection: "*", state: "browsing", offset: 0, next_offset: 40, page: 1}]
+			seed: [{id: "teams", q: "", country: "", q_key: "", country_key: "", region_q: "", region_key: "", region_selection: "*", country_selection: "*", team_type: "club", state: "browsing", offset: 0, next_offset: 40, page: 1}, {id: "stadiums", q: "", country: "", q_key: "", country_key: "", region_q: "", region_key: "", region_selection: "*", country_selection: "*", team_type: "club", state: "browsing", offset: 0, next_offset: 40, page: 1}, {id: "referees", q: "", country: "", q_key: "", country_key: "", region_q: "", region_key: "", region_selection: "*", country_selection: "*", team_type: "club", state: "browsing", offset: 0, next_offset: 40, page: 1}]
 		}
 		// The catalogue's search, held by the tab: what a reader typed survives a
 		// trip to a championship and back, and belongs to nobody else.
@@ -989,6 +994,7 @@ code: pronto.#App & {
 		{name: "024_team_directory.sql", src: "services/database/sql/024_team_directory.sql"},
 		{name: "025_search_letter_equivalences.sql", src: "services/database/sql/025_search_letter_equivalences.sql"},
 		{name: "026_team_geography.sql", src: "services/database/sql/026_team_geography.sql"},
+		{name: "027_team_directory_type.sql", src: "services/database/sql/027_team_directory_type.sql"},
 		// Large archive fixtures are copied at build, never expanded through CUE.
 		{name: "900_seed.sql", src: "services/database/sql/900_seed.sql"},
 	]
@@ -1010,6 +1016,7 @@ code: pronto.#App & {
 	state: pipelines: "team-directory": {raw: true, from: "Team", to: "TeamDirectory", group: "golaberto-team-directory"}
 	state: migrations: "025_search_letter_equivalences": {operations: [{sql: {up: _extendedSearchCollationUpgrade, onComplete: true}}]}
 	state: migrations: "026_team_geography": {operations: [{sql: {up: _teamGeographyUpgrade, onComplete: true}}]}
+	state: migrations: "027_team_directory_type": {operations: [{sql: {up: _teamTypeUpgrade, onComplete: true}}]}
 	// The numeric stage (ir decision-chances).
 	// The chances read each game's power from team_rating, so they rerun
 	// whenever the ratings change.
@@ -2076,4 +2083,9 @@ loop: surface: checks: geography: {
   note: "fixed translated football regions and countries narrow teams while preserving latest rating order"
   verb: "integrate"
   cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/geography.ts"]
+}
+loop: surface: checks: "team-types": {
+	verb: "integrate"
+	cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/team-types.ts"]
+	note: "the clubs and national teams selector narrows the shared directory while preserving other filters and rating order"
 }

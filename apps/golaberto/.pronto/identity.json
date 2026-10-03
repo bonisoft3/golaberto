@@ -971,6 +971,11 @@
         "name": "region_search_key",
         "type": "string",
         "retired": false
+      },
+      "16": {
+        "name": "team_type",
+        "type": "string",
+        "retired": false
       }
     }
   },
@@ -2119,6 +2124,11 @@
       },
       "13": {
         "name": "country_selection",
+        "type": "string",
+        "retired": false
+      },
+      "14": {
+        "name": "team_type",
         "type": "string",
         "retired": false
       }

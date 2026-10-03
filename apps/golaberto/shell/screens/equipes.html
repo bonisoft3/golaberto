@@ -13,13 +13,16 @@
 </header>
 <h1 class="band" data-text="{msg.teams_title}"></h1>
 <div class="page">
-  <div class="content" data-live="directory_filter" data-filter="id=eq.teams" data-machine='{"field":"state","initial":"browsing","context":{"q":"","q_key":"","country":"","country_key":"","region_q":"","region_key":"","region_selection":"*","country_selection":"*","offset":0,"next_offset":40,"page":1},"states":{"browsing":{"on":{"input@teams-country":{"assign":{"country":{"type":"event","params":{"field":"value"}},"country_key":{"type":"search-key"},"country_selection":"*","offset":0,"next_offset":40,"page":1}},"input@teams-region-q":{"assign":{"region_q":{"type":"event","params":{"field":"value"}},"region_key":{"type":"search-key"},"region_selection":"*","country_selection":"*","country":"","country_key":"","offset":0,"next_offset":40,"page":1}},"change@teams-region":{"assign":{"region_selection":{"type":"geography-selection"},"country_selection":"*","country":"","country_key":"","offset":0,"next_offset":40,"page":1}},"change@teams-country-select":{"assign":{"country_selection":{"type":"geography-selection"},"offset":0,"next_offset":40,"page":1}},"input@teams-q":{"assign":{"q":{"type":"event","params":{"field":"value"}},"q_key":{"type":"search-key"},"offset":0,"next_offset":40,"page":1}},"click@teams-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@teams-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}'>
+  <div class="content" data-live="directory_filter" data-filter="id=eq.teams" data-machine='{"field":"state","initial":"browsing","context":{"q":"","q_key":"","country":"","country_key":"","region_q":"","region_key":"","region_selection":"*","country_selection":"*","team_type":"club","offset":0,"next_offset":40,"page":1},"states":{"browsing":{"on":{"change@teams-type":{"assign":{"team_type":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}},"input@teams-country":{"assign":{"country":{"type":"event","params":{"field":"value"}},"country_key":{"type":"search-key"},"country_selection":"*","offset":0,"next_offset":40,"page":1}},"input@teams-q":{"assign":{"q":{"type":"event","params":{"field":"value"}},"q_key":{"type":"search-key"},"offset":0,"next_offset":40,"page":1}},"input@teams-region-q":{"assign":{"region_q":{"type":"event","params":{"field":"value"}},"region_key":{"type":"search-key"},"region_selection":"*","country_selection":"*","country":"","country_key":"","offset":0,"next_offset":40,"page":1}},"change@teams-region":{"assign":{"region_selection":{"type":"geography-selection"},"country_selection":"*","country":"","country_key":"","offset":0,"next_offset":40,"page":1}},"change@teams-country-select":{"assign":{"country_selection":{"type":"geography-selection"},"offset":0,"next_offset":40,"page":1}},"click@teams-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@teams-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}'>
     <template data-item>
       <div class="catalog">
         <div class="filters" role="search">
           <label class="field grow" for="teams-q"><span data-text="{msg.search_label}"></span>
             <input id="teams-q" type="search" value="{q}" placeholder="{msg.teams_placeholder}" maxlength="80" autocomplete="off">
           </label>
+            <label class="field" for="teams-type"><span data-text="{msg.teams_type}"></span>
+              <select id="teams-type" data-value="{team_type}"><option value="club" data-text="{msg.teams_clubs}"></option><option value="national" data-text="{msg.teams_national}"></option></select>
+            </label>
           <div class="geography-group">
             <label class="field" for="teams-region-q"><span data-text="{msg.geography_search_region}"></span>
               <input id="teams-region-q" type="search" data-value="{region_q}" placeholder="{msg.geography_search_region}" maxlength="80" autocomplete="off">
@@ -44,7 +47,7 @@
             <th scope="col" class="narrow drop" data-text="{msg.col_city}"></th>
             <th scope="col" class="narrow" data-text="{msg.col_country}"></th>
           </tr></thead>
-          <tbody data-live="team_directory" data-filter="search_key=like.*{q_key}*&country_search_key=like.*{country_key}*&region_search_key=like.*{region_key}*&region_id=like.{region_selection}&country_id=like.{country_selection}&offset={offset}&limit=40" data-order="rating.desc.nullslast,name.asc,id.asc" data-empty="{msg.teams_empty}">
+          <tbody data-live="team_directory" data-filter="search_key=like.*{q_key}*&country_search_key=like.*{country_key}*&region_search_key=like.*{region_key}*&region_id=like.{region_selection}&country_id=like.{country_selection}&team_type=eq.{team_type}&offset={offset}&limit=40" data-order="rating.desc.nullslast,name.asc,id.asc" data-empty="{msg.teams_empty}">
             <template data-item>
               <tr>
                 <td><a data-route="equipe" data-param-id="{id}"><span class="archive-icon" data-text="{id}|{name}" data-text-format="team-badge"></span><span data-text="{name}"></span></a></td>
@@ -58,7 +61,7 @@
 <nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
   <button id="teams-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
   <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
-  <span data-live="team_directory" data-filter="search_key=like.*{q_key}*&country_search_key=like.*{country_key}*&region_search_key=like.*{region_key}*&region_id=like.{region_selection}&country_id=like.{country_selection}&amp;offset={next_offset}&amp;limit=1" data-order="rating.desc.nullslast,name.asc,id.asc" data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <span data-live="team_directory" data-filter="search_key=like.*{q_key}*&country_search_key=like.*{country_key}*&region_search_key=like.*{region_key}*&region_id=like.{region_selection}&country_id=like.{country_selection}&team_type=eq.{team_type}&amp;offset={next_offset}&amp;limit=1" data-order="rating.desc.nullslast,name.asc,id.asc" data-empty=""><template data-item><i data-next-page hidden></i></template></span>
   <button id="teams-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
 </nav>
       </div>

@@ -752,14 +752,18 @@ _campeonatoMarkup: """
 	route:   string
 	order: *"name.asc" | string
 	withCountry: *false | bool
+	withTeamType: *false | bool
 	// A column marked `drop` is the one a phone does without.
 	columns: [...{key: string, bind: string, drop: *false | bool}]
 	_input:  "\(D.row)-q"
 	_machine: json.Marshal({
 		field:   "state"
 		initial: "browsing"
-		context: {q: "", q_key: "", country: "", country_key: "", region_q: "", region_key: "", region_selection: "*", country_selection: "*", offset: 0, next_offset: 40, page: 1}
+		context: {q: "", q_key: "", country: "", country_key: "", region_q: "", region_key: "", region_selection: "*", country_selection: "*", team_type: "club", offset: 0, next_offset: 40, page: 1}
 		states: browsing: on: (#PageActions & {key: D.row}).out & {"input@\(D._input)": assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}}
+		if D.withTeamType {states: browsing: on: {
+			"change@teams-type": assign: {team_type: {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}
+		}}
 		if D.withCountry {states: browsing: on: {
 			"input@teams-country": assign: {country: {type: "event", params: field: "value"}, country_key: {type: "search-key"}, country_selection: "*", offset: 0, next_offset: 40, page: 1}
 			"input@teams-region-q": assign: {region_q: {type: "event", params: field: "value"}, region_key: {type: "search-key"}, region_selection: "*", country_selection: "*", country: "", country_key: "", offset: 0, next_offset: 40, page: 1}
@@ -767,7 +771,12 @@ _campeonatoMarkup: """
 			"change@teams-country-select": assign: {country_selection: {type: "geography-selection"}, offset: 0, next_offset: 40, page: 1}
 		}}
 	})
-	_filter: "search_key=like.*{q_key}*\([if D.withCountry {"&country_search_key=like.*{country_key}*&region_search_key=like.*{region_key}*&region_id=like.{region_selection}&country_id=like.{country_selection}"}, ""][0])"
+	_filter: "search_key=like.*{q_key}*\([if D.withCountry {"&country_search_key=like.*{country_key}*&region_search_key=like.*{region_key}*&region_id=like.{region_selection}&country_id=like.{country_selection}"}, ""][0])\([if D.withTeamType {"&team_type=eq.{team_type}"}, ""][0])"
+	_type: [if D.withTeamType {"""
+	            <label class="field" for="teams-type"><span data-text="{msg.teams_type}"></span>
+	              <select id="teams-type" data-value="{team_type}"><option value="club" data-text="{msg.teams_clubs}"></option><option value="national" data-text="{msg.teams_national}"></option></select>
+	            </label>
+	"""}, ""][0]
 	_country: [if D.withCountry {"""
 		          <div class="geography-group">
 		            <label class="field" for="teams-region-q"><span data-text="{msg.geography_search_region}"></span>
@@ -809,6 +818,7 @@ _campeonatoMarkup: """
 		          <label class="field grow" for="\(D._input)"><span data-text="{msg.search_label}"></span>
 		            <input id="\(D._input)" type="search" value="{q}" placeholder="{msg.\(D.row)_placeholder}" maxlength="80" autocomplete="off">
 		          </label>
+		\(D._type)
 		\(D._country)
 		        </div>
 		        <table class="grid catalog-table">
@@ -833,7 +843,7 @@ _campeonatoMarkup: """
 		"""
 }
 
-_equipesMarkup: (#Directory & {screen: "equipes", row: "teams", table: "team_directory", route: "equipe", order: "rating.desc.nullslast,name.asc,id.asc", withCountry: true, columns: [{key: "team", bind: "name"}, {key: "rating", bind: "rating_display"}, {key: "city", bind: "city", drop: true}, {key: "country", bind: "country"}]}).out
+_equipesMarkup: (#Directory & {screen: "equipes", row: "teams", table: "team_directory", route: "equipe", order: "rating.desc.nullslast,name.asc,id.asc", withCountry: true, withTeamType: true, columns: [{key: "team", bind: "name"}, {key: "rating", bind: "rating_display"}, {key: "city", bind: "city", drop: true}, {key: "country", bind: "country"}]}).out
 _estadiosMarkup: (#Directory & {screen: "estadios", row: "stadiums", table: "stadium", route: "estadio", columns: [{key: "stadium", bind: "name"}, {key: "city", bind: "city"}, {key: "country", bind: "country", drop: true}]}).out
 _arbitrosMarkup: (#Directory & {screen: "arbitros", row: "referees", table: "referee", route: "arbitro", columns: [{key: "referee", bind: "name"}, {key: "from", bind: "location"}]}).out
 

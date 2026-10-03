@@ -45,6 +45,7 @@
     "services/database/migrations/024_team_directory.sql",
     "services/database/migrations/025_search_letter_equivalences.sql",
     "services/database/migrations/026_team_geography.sql",
+    "services/database/migrations/027_team_directory_type.sql",
     "services/database/migrations/900_seed.sql",
     "shell/boot.js",
     "shell/design.css",

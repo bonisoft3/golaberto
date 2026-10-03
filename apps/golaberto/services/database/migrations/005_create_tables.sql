@@ -280,6 +280,7 @@ CREATE TABLE IF NOT EXISTS team_directory (
   "region_id" portable_string DEFAULT '' NOT NULL,
   "country_search_key" portable_string DEFAULT '' NOT NULL,
   "region_search_key" portable_string DEFAULT '' NOT NULL,
+  "team_type" portable_string DEFAULT 'club' NOT NULL CHECK (team_type IN ('club', 'national')),
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );

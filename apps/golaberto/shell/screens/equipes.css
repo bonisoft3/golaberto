@@ -10,7 +10,7 @@
 .country-open {
   anchor-name: --teams-country-trigger;
   display: flex; align-items: center; justify-content: space-between; gap: var(--sp-md);
-  width: 100%; min-width: 0; min-height: var(--min-touch); box-sizing: border-box;
+  width: 100%; min-width: 0; min-height: var(--control-h); box-sizing: border-box;
   padding: 0 var(--control-pad-x); overflow: hidden; cursor: pointer;
   font: inherit; font-size: var(--type-body); font-weight: 400; text-align: start;
   color: var(--primary); background: var(--surface);

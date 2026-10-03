@@ -177,7 +177,7 @@
     {"path":"shell/screens/chances.css","sha256":"cc7b6da3124815d6bb2ae909394073eeaf2ecee2abd9add60c2d3d5db4b8e61b","derived":false},
     {"path":"shell/screens/editar.css","sha256":"cb3bb85374161511276d358a9ed3ead2dba9e1d235f4a161ea6b0f1e2f9e6b43","derived":false},
     {"path":"shell/screens/equipe.css","sha256":"bc8bc0cbbf70ee4ed9f11d28ccfeb4ecfb04db872e1e33bf5f6b495fb9cac12d","derived":false},
-    {"path":"shell/screens/equipes.css","sha256":"6ac4404e7dc89f87b7619de7ee09ac8976ecb58213906765dcc4c9a428f5fe6a","derived":false},
+    {"path":"shell/screens/equipes.css","sha256":"2549aea3277c773b8e1936012acc576cb54f8ab5d9e915202fb49d7e316cc1c6","derived":false},
     {"path":"shell/screens/estadio.css","sha256":"defa7791db1f0a3ed9b301a3cfeed17617c5c3c16e8a8f014d2b4eb99eeda0ce","derived":false},
     {"path":"shell/screens/estadios.css","sha256":"6f94db6a566e13e97db9120e715ce5bea0089121a1beb0b8a0648f8f3ef4a9f4","derived":false},
     {"path":"shell/screens/jogador.css","sha256":"75365f2f1c1bea9be2ddce92e4078227913a78834ccf7591ad2a43562f0729fe","derived":false},

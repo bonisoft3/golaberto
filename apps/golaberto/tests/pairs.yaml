@@ -298,7 +298,7 @@ pairs:
     of: principal
     accepts:
       - accept-home-games
-    says: 'upcoming fixtures and recent results lead the home page in server rank order under shared dates and phase headings, emphasize the selected important games and open their details'
+    says: 'upcoming fixtures and recent results lead the home page in server rank order under shared dates with localized weekdays and phase headings, emphasize the selected important games and open their details'
     given:
       upcoming: true
       recent: true

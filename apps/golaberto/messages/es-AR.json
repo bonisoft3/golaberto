@@ -1,4 +1,5 @@
 {
+  "home_weekdays": "domingo,lunes,martes,miércoles,jueves,viernes,sábado",
   "nav_home": "Inicio",
   "nav_championships": "Campeonatos",
   "route_championships": "campeonatos",

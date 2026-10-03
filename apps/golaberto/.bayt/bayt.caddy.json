@@ -253,6 +253,11 @@
         },
         {
           "action": "sync+restart",
+          "path": "../shell/renderers/home-date.js",
+          "target": "/srv/shell/renderers/home-date.js"
+        },
+        {
+          "action": "sync+restart",
           "path": "../shell/renderers/team-badge.js",
           "target": "/srv/shell/renderers/team-badge.js"
         },
@@ -887,6 +892,16 @@
       {
         "from": null,
         "srcs": [
+          "shell/renderers/home-date.js"
+        ],
+        "dst": "/srv/shell/renderers/home-date.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
           "shell/renderers/team-badge.js"
         ],
         "dst": "/srv/shell/renderers/team-badge.js",
@@ -1357,6 +1372,7 @@
       "shell/handlers/page-value.js",
       "shell/handlers/row-id.js",
       "shell/renderers/country-flag.js",
+      "shell/renderers/home-date.js",
       "shell/renderers/team-badge.js",
       "shell/shared/catalog.css",
       "shell/shared/chrome.css",
@@ -1502,6 +1518,7 @@
           "shell/handlers/page-value.js",
           "shell/handlers/row-id.js",
           "shell/renderers/country-flag.js",
+          "shell/renderers/home-date.js",
           "shell/renderers/team-badge.js",
           "shell/shared/catalog.css",
           "shell/shared/chrome.css",

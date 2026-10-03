@@ -347,7 +347,13 @@ test("test-home-games: same-day games share dates and live edits regroup both fe
       const days = Array.from(group.querySelectorAll(".game-row .day")).map(el => el.textContent?.trim());
       const labels = Array.from(group.querySelectorAll(".home-day-label")).map(el => el.textContent?.trim());
       return days.length > 0 && labels.length === new Set(days).size &&
-        labels.every((day, i) => day === [...new Set(days)][i]) &&
+        labels.every((label, i) => {
+          const day = [...new Set(days)][i]!;
+          const [d,m,y] = day!.split('/');
+          const weekday = new Intl.DateTimeFormat(document.documentElement.lang, {weekday:'long',timeZone:'UTC'})
+            .format(new Date(`${y}-${m}-${d}T00:00:00Z`));
+          return label === `${weekday}, ${day}`;
+        }) &&
         Array.from(group.querySelectorAll(".game-row .day")).every(el => el.classList.contains("visually-hidden"));
     }) && groups.length > 0;
   });
@@ -371,7 +377,7 @@ test("test-home-games: same-day games share dates and live edits regroup both fe
         const labels = await texts(page, `${played ? '.home-results' : '.home-upcoming'} .home-day-label`);
         const expected: string[] = JSON.parse(await psql(`SELECT json_agg(DISTINCT day_display) FROM home_game_card WHERE id IN (${fixtures.filter(row => row.played === played).map(row => `'${row.id}'`).join(',')})`));
         assertEquals(expected.length, 2, "the fixture covers two distinct dates");
-        for (const day of expected) assertEquals(labels.filter(label => label === day).length, 1, "fixture dates each have one heading");
+        for (const day of expected) assertEquals(labels.filter(label => label.endsWith(`, ${day}`)).length, 1, "fixture dates each have one heading");
       }
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "shared dates and full team names fit the viewport");
       // Move the first same-day game; its sibling must acquire the date heading without a reload.
@@ -384,6 +390,14 @@ test("test-home-games: same-day games share dates and live edits regroup both fe
         document.querySelector(`.home-games .game-row[href$='/${id}'] .day`)?.textContent === day, { id: moving.id, day: newDay });
       for (let attempt = 0; !(await dates(page)); attempt++) {
         assert(attempt < 40, "live date headings did not regroup");
+        await new Promise(resolve => setTimeout(resolve, 250));
+      }
+    }
+    for (const language of ['en','es','it','de','fr']) {
+      const page = await open(`/${language}`);
+      await page.waitForFunction(() => document.querySelectorAll('.home-games .game-row').length === 6);
+      for (let attempt = 0; !(await dates(page)); attempt++) {
+        assert(attempt < 40, `shared date headings did not settle in ${language}`);
         await new Promise(resolve => setTimeout(resolve, 250));
       }
     }

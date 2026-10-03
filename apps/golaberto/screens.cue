@@ -159,7 +159,7 @@ _catalogMachine: json.Marshal({
 	_exitMotion: [if G.homeFeed != "" {#" data-exit-motion="none""#}, ""][0]
 	_dayClass: [if G.homeFeed != "" {"day visually-hidden"}, "day"][0]
 	_dayHeading: [if G.homeFeed != "" {"""
-	      <h3 class="home-day" data-live="\(G.table)" data-filter="id=eq.{day_first}&amp;id=eq.{id}" data-empty="" data-exit-motion="none"><template data-item><span class="home-day-label" data-text="{day_display}"></span></template></h3>
+	      <h3 class="home-day" data-live="\(G.table)" data-filter="id=eq.{day_first}&amp;id=eq.{id}" data-empty="" data-exit-motion="none"><template data-item><span class="home-day-label" data-text="{day}|{msg.home_weekdays}" data-text-format="home-date"></span></template></h3>
 	"""}, ""][0]
 	_phaseHeading: [if G.homeFeed != "" {"""
 	      <h4 class="home-phase"><span hidden data-live="home_game_card" data-filter="id=eq.{previous}" data-empty="" data-exit-motion="none" data-project='{"same_day":{"eq":["day","{day}"]},"same_phase":{"eq":["phase_id","{phase_id}"]},"is_first":{"eq":["id","{id}"]}}'><template data-item><span class="home-phase-context" data-same-day="{same_day}" data-same-phase="{same_phase}" data-first="{is_first}"></span></template></span><a class="home-phase-label" data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}"></span> <small data-text="{phase_name}"></small></a></h4>

@@ -959,7 +959,7 @@ code: pronto.#App & {
 				quiet: {states: ["populated", "no-games", "populated"], accepts: ["accept-home-games"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/home-date.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		campeonatos: {
@@ -1444,7 +1444,7 @@ code: pronto.#App & {
 			}
 			"test-home-games": {
 				of: "principal"
-				says: "upcoming fixtures and recent results lead the home page in server rank order under shared dates and phase headings, emphasize the selected important games and open their details"
+				says: "upcoming fixtures and recent results lead the home page in server rank order under shared dates with localized weekdays and phase headings, emphasize the selected important games and open their details"
 				given: {upcoming: true, recent: true}
 				when: "arrive"
 				then: "output.upcoming.size() > 0 && output.recent.size() > 0"
@@ -1916,3 +1916,9 @@ loop: surface: checks: "game-countries": {
 
 loop: surface: checks: "route-queries": {verb: "integrate", priority: 1, cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker tests/route-queries.ts"], note: "catalogs, histories and exact game reads use ordered indexes"}
 loop: surface: checks: "route-loads": {verb: "integrate", priority: 1, cmds: ["deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/route-loads.ts"], note: "every route loads bounded subsets; pagination preserves access to the full archive"}
+
+loop: surface: checks: "home-date-renderer": {
+  verb: "test"
+  cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/home-date-renderer.ts"]
+  note: "civil-date weekdays across week, leap-day and year boundaries, translated catalogues and the Jessie renderer cage"
+}

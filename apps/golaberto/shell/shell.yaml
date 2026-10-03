@@ -186,6 +186,7 @@ routes:
       renderers:
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
+        - shell/renderers/home-date.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css

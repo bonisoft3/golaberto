@@ -63,7 +63,7 @@ competitions. It follows the original site's team-strength, match-importance
 and proximity ranking. Upcoming fixtures span three hours ago to fourteen days
 ahead; played results use fourteen days on either side of the clock shifted back
 three hours, as in the reference. Both feeds refresh every 30 seconds and retain
-global rank order under shared date headings and phase headings. Each feed
+global rank order under shared date headings with localized weekdays and phase headings. Each feed
 highlights the union of its five displayed games with greatest raw quality
 and the greatest weighted-quality game per phase and date among eligible
 candidates. Important team names use the primary color and semibold weight,

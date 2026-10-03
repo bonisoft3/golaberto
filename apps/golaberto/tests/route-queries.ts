@@ -41,8 +41,8 @@ const plans: Array<[string, string, string]> = [
   ],
   [
     "team directory",
-    `SELECT id,name FROM team WHERE search_name LIKE '%united%' ORDER BY name,id`,
-    "team_routes_name_id_idx",
+    `SELECT id,name FROM team_directory WHERE search_name LIKE '%united%' ORDER BY rating DESC NULLS LAST,name,id`,
+    "team_directory_rating_order_idx",
   ],
   [
     "stadium directory",

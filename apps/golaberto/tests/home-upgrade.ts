@@ -14,7 +14,8 @@ const compose = (...args: string[]) => docker("compose", "-p", project, ...args)
 
 Deno.test("home schema upgrades retained data before readers start and does not rerun", async () => {
   const config = JSON.parse(await compose("config", "--format", "json"));
-  const image = config.services["apps_golaberto-migrate"].image;
+  const [migrationImage] = JSON.parse(await docker("image", "inspect", config.services["apps_golaberto-migrate"].image));
+  const image = migrationImage.Id; // Pin the built image before another stack rebuilds its tag.
   assertEquals(config.services["apps_golaberto-crud"].depends_on["apps_golaberto-migrate"].condition, "service_completed_successfully");
   const container = await compose("ps", "-q", "apps_golaberto-database");
   const [info] = JSON.parse(await docker("inspect", container));
@@ -38,6 +39,7 @@ Deno.test("home schema upgrades retained data before readers start and does not 
     await sql(clone, "DROP FUNCTION refresh_home_games(); DROP FUNCTION IF EXISTS home_game_order(timestamptz); DROP FUNCTION IF EXISTS home_game_selection(timestamptz); ALTER TABLE game_card DROP COLUMN home_upcoming_rank, DROP COLUMN home_recent_rank, DROP COLUMN home_upcoming_group, DROP COLUMN home_recent_group; UPDATE championship SET name = 'Preserved homepage upgrade' WHERE id = '02000000-0000-4000-8000-000000000001'");
     const count = await sql(clone, "SELECT count(*) FROM game_card");
     await sql(clone, "ALTER TABLE game_card DROP COLUMN show_country, DROP COLUMN home_country, DROP COLUMN away_country; ALTER TABLE team_game DROP COLUMN show_country, DROP COLUMN opponent_country; UPDATE championship SET show_country=true WHERE id=(SELECT championship_id FROM game_card ORDER BY id LIMIT 1)");
+    await sql(clone, "DROP TABLE IF EXISTS team_directory; DROP FUNCTION IF EXISTS refresh_team_directory()");
     const migrate = () => docker("run", "--rm", "--network", network, "-e", `DATABASE_URL=postgres://postgres:postgres@${host}:5432/${clone}?sslmode=disable`, image);
     await migrate();
     assertEquals(await sql(clone, "SELECT name FROM championship WHERE id = '02000000-0000-4000-8000-000000000001'"), "Preserved homepage upgrade");
@@ -92,6 +94,11 @@ Deno.test("home schema upgrades retained data before readers start and does not 
     assertEquals(await sql(clone, "SELECT count(*) FROM pg_publication_tables WHERE pubname='golaberto_cdc' AND tablename='matches_game_card'"), "0");
     assertEquals(await sql(clone, "SELECT count(*) FROM pg_attribute h JOIN pg_attribute g ON g.attrelid='game_card'::regclass AND h.attname=g.attname WHERE h.attrelid='matches_game_card'::regclass AND h.attnum>0 AND NOT h.attisdropped AND h.atttypid<>g.atttypid"), "0");
     assertEquals(await sql(clone, "SELECT has_function_privilege('anon','home_game_selection(timestamptz)','EXECUTE') OR has_function_privilege('app_user','home_game_selection(timestamptz)','EXECUTE') OR NOT has_function_privilege('service','home_game_selection(timestamptz)','EXECUTE')"), "f");
+    assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='024_team_directory' AND done"), "1");
+    assertEquals(await sql(clone, "SELECT atttypid='portable_date'::regtype FROM pg_attribute WHERE attrelid='team_directory'::regclass AND attname='measure_date'"), "t", "fresh and retained projections use the same date domain");
+    assertEquals(await sql(clone, "SELECT count(*) FROM team_directory"), await sql(clone, "SELECT count(*) FROM team"), "retained teams are backfilled before readers start");
+    assertEquals(await sql(clone, "SELECT count(*) FROM pg_attribute WHERE attrelid='team_directory'::regclass AND attname IN ('search_name','search_country') AND attcollation='golaberto_search'::regcollation"), "2");
+    assertEquals(await sql(clone, "SELECT count(*) FROM pg_publication_tables WHERE pubname='golaberto_cdc' AND tablename='team_directory'"), "0");
     await migrate();
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name = '013_home_games' AND done"), "1");
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name = '014_home_championships' AND done"), "1");

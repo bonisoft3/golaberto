@@ -72,6 +72,10 @@ graph TD
   Championship --> principal
   Championship --> recent-championships
   recent-championships --> HomeChampionship
+  Team --> team-directory
+  TeamRating --> team-directory
+  team-directory --> TeamDirectory
+  TeamDirectory --> equipes
   HomeChampionship --> principal
   Championship --> campeonatos
   CatalogFilter --> campeonatos
@@ -558,6 +562,23 @@ graph TD
 </table>
 </section>
 
+<section id="TeamDirectory" data-kind="entity" data-durability="live" data-type-id="0x93d75c8ddada8190">
+<h3>TeamDirectory — live, public; pipeline-owned</h3>
+<p>Every team with its latest stored rating, selected by measure_date descending and id ascending. A missing rating remains null. Electric delivers this projection; it stays outside CDC. The raw migration owns accent-insensitive search collations and the rating/name/id ordering index.</p>
+<table data-extract="fields">
+<tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
+<tr data-ordinal="1"><td>id</td><td>uuid</td><td></td><td>pk; references team</td></tr>
+<tr data-ordinal="2"><td>name</td><td>string</td><td></td><td></td></tr>
+<tr data-ordinal="3"><td>city</td><td>string</td><td></td><td>optional</td></tr>
+<tr data-ordinal="4"><td>country</td><td>string</td><td></td><td>optional</td></tr>
+<tr data-ordinal="5"><td>rating</td><td>double</td><td></td><td>optional; latest stored rating</td></tr>
+<tr data-ordinal="6"><td>measure_date</td><td>date</td><td></td><td>optional</td></tr>
+<tr data-ordinal="7"><td>search_name</td><td>string</td><td></td><td>generated: name; golaberto_search collation</td></tr>
+<tr data-ordinal="8"><td>search_country</td><td>string</td><td></td><td>generated: coalesce(country, ''); golaberto_search collation</td></tr>
+<tr data-ordinal="9"><td>rating_display</td><td>string</td><td></td><td>generated: CASE WHEN rating IS NULL THEN '—' ELSE round(rating::numeric, 2)::text END</td></tr>
+</table>
+</section>
+
 <section id="DirectoryFilter" data-kind="entity" data-durability="tab" data-type-id="0xae1a2e56ca75c9e6">
 <h3>DirectoryFilter — tab</h3>
 <p>A directory's search — one row each for the teams, the stadiums and the referees — held by the tab and written by a one-arrow machine, as the catalogue's is (<a href="#decision-catalog-tab">decision-catalog-tab</a>).</p>
@@ -569,6 +590,7 @@ graph TD
 <tr data-ordinal="4"><td>offset</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td>default 0</td></tr>
 <tr data-ordinal="5"><td>next_offset</td><td>int32</td><td><code class="cel">this &gt;= 40</code></td><td>default 40</td></tr>
 <tr data-ordinal="6"><td>page</td><td>int32</td><td><code class="cel">this &gt;= 1</code></td><td>default 1</td></tr>
+<tr data-ordinal="7"><td>country</td><td>string</td><td><code class="cel">this.size() &lt;= 60</code></td><td>default ''; teams country/region search</td></tr>
 </table>
 </section>
 
@@ -796,6 +818,9 @@ graph TD
 
 <section id="home-games" data-kind="pipeline" data-from="Game" data-to="HomeGameCard">
 <h3>home-games</h3><p>A clock-driven refresh of home ranks every thirty seconds, through the service-only refresh_home_games SQL function. Selection reads the declared fourteen-day GameCard windows, including the upcoming three-hour grace period, seeks the latest TeamRating only for candidate teams, and reads GameImportance. The two ranks and forty-row HomeGameCard projection are updated in one transaction and only when changed; replay is idempotent. Concurrent refreshes skip under an advisory transaction lock. GameCard stays off the CDC publication. The pure home_game_selection function accepts a clock for deterministic window, quality and highlighting tests; home_game_order retains the three-column ranking interface. Highlight flags belong only to the bounded HomeGameCard projection and settle atomically with its ranks.</p>
+</section>
+<section id="team-directory" data-kind="pipeline" data-from="Team" data-to="TeamDirectory">
+<h3>team-directory — latest rating projection</h3><p>Every thirty seconds the service-only refresh_team_directory function reads all teams and their latest stored TeamRating (measure_date descending, id ascending), atomically prunes deleted teams and upserts changed names, locations and ratings. Unchanged rows are not written. An advisory transaction lock skips overlaps. Null ratings sort last; zero is rated. The initial migration backfills retained teams. The pipeline-owned sink belongs to Electric and stays outside source CDC.</p>
 </section>
 <section id="recent-championships" data-kind="pipeline" data-from="Championship" data-to="HomeChampionship">
 <h3>recent-championships — clock-owned tournament list</h3>
@@ -1580,7 +1605,8 @@ graph TD
 </section>
 <section id="equipes" data-kind="screen" data-route="/equipes">
 <h3>equipes — every team</h3>
-<p data-extract="reads">Reads: <a href="#DirectoryFilter">DirectoryFilter</a> by <code>id=eq.teams</code>, the search row its machine writes; nested, <a href="#Team">Team</a> by <code>name=ilike.*{q}*</code> (<code>name.asc</code>). Catalog and directory reads use the current offset and a forty-row limit, with a one-row next-page probe. The <a href="#handler-page-value">page-value</a> machine updates page state.</p>
+<p data-extract="reads">Reads: <a href="#DirectoryFilter">DirectoryFilter</a> by <code>id=eq.teams</code>, holding the name and country/region searches. Nested <a href="#TeamDirectory">TeamDirectory</a> uses <code>search_name=like.*{q}*&amp;search_country=like.*{country}*</code> and <code>rating.desc.nullslast,name.asc,id.asc</code>. Both searches ignore case and diacritics and combine. Forty rows per page and a one-row next-page probe use identical filters and order. Either input resets the page; searches survive detail/back within the tab.</p>
+<p id="teams-directory-oracle">Stitch project 3684321283098058780, screen c431b5b26c8f4599a9560f4df0fe0efe, refines the existing accepted directory: two compact labelled search fields, rating after team name, highest latest ratings first, city hidden on phones while country and rating remain visible. Preserve existing masthead, sidebar, colours, typography, pager and empty/loading styles; the canvas’s extra heading and pager changes are outside this slice.</p>
 <p data-extract="mutations">Mutations: none.</p>
 <div class="storyboard frames">
 <figure id="equipes-loading" data-kind="state" data-of="equipes" data-state="loading">
@@ -1604,34 +1630,36 @@ graph TD
 </g></svg>
 <figcaption>The band and the list hold their place.</figcaption></figure>
 <figure id="equipes-populated" data-kind="state" data-of="equipes" data-state="populated">
-<svg viewBox="0 0 320 420" width="240" role="img" aria-label="Every team with its city and country, the search above."><g font-family="Arial, sans-serif" font-size="9">
+<svg viewBox="0 0 320 420" width="240" role="img" aria-label="Teams ordered by latest rating; name and country filters above."><g font-family="Arial, sans-serif" font-size="9">
 <rect width="320" height="420" fill="#3b3008"/><rect x="10" width="300" height="420" fill="#e3efca"/>
 <rect x="10" width="300" height="34" fill="#8f983b"/><text x="18" y="24" font-size="18" font-weight="900" fill="#fff" stroke="#111" stroke-width=".6">GOL</text><text x="62" y="24" font-size="11" font-weight="900" fill="#f5c542">aberto</text>
 <text x="222" y="21" fill="#000000" font-weight="700">PT · ES · EN</text>
 <rect x="10" y="34" width="300" height="14" fill="#abb561"/><text x="86" y="44" fill="#000000" font-weight="700">Principal | Campeonatos | Jogos | Equipes</text>
 <rect x="10" y="48" width="300" height="22" fill="#474d0f"/><text x="16" y="63" font-size="12" font-weight="700" fill="#ffffff">Equipes</text>
 <rect x="234" y="78" width="76" height="342" fill="#b8c26e"/>
-<rect x="16" y="77" width="212" height="14" fill="#ffffff" stroke="#4a4a1f"/><text x="20" y="87" fill="#4a4a1f">Flamengo, Arsenal…</text>
-<rect x="16" y="98" width="212" height="12" fill="#00008b"/><text x="20" y="107" fill="#fff">Equipe · Cidade · País</text>
-<rect x="16" y="111" width="212" height="12" fill="#cee3a3"/><text x="20" y="120" fill="#784d1e">Arsenal          London       Inglaterra</text>
-<rect x="16" y="124" width="212" height="12" fill="#e3efca"/><text x="20" y="133" fill="#784d1e">Athletico-PR     Curitiba     Brasil</text>
-<rect x="16" y="137" width="212" height="12" fill="#cee3a3"/><text x="20" y="146" fill="#784d1e">Atlético-MG      Belo Horizonte Brasil</text>
-<rect x="16" y="150" width="212" height="12" fill="#e3efca"/><text x="20" y="159" fill="#784d1e">Bahia-BA         Salvador     Brasil</text>
+<rect x="16" y="77" width="104" height="14" fill="#ffffff" stroke="#4a4a1f"/><text x="20" y="87" fill="#4a4a1f">Flamengo, Arsenal…</text>
+<rect x="124" y="77" width="104" height="14" fill="#ffffff" stroke="#4a4a1f"/><text x="128" y="87" fill="#4a4a1f">País/região…</text>
+<rect x="16" y="98" width="212" height="12" fill="#00008b"/><text x="20" y="107" fill="#fff">Equipe · Rating · Cidade · País</text>
+<rect x="16" y="111" width="212" height="12" fill="#cee3a3"/><text x="20" y="120" fill="#784d1e">Arsenal     90.20  London   Inglaterra</text>
+<rect x="16" y="124" width="212" height="12" fill="#e3efca"/><text x="20" y="133" fill="#784d1e">Athletico-PR 82.10 Curitiba Brasil</text>
+<rect x="16" y="137" width="212" height="12" fill="#cee3a3"/><text x="20" y="146" fill="#784d1e">Atlético-MG  81.90 BH       Brasil</text>
+<rect x="16" y="150" width="212" height="12" fill="#e3efca"/><text x="20" y="159" fill="#784d1e">Bahia-BA     80.00 Salvador Brasil</text>
 </g></svg>
-<figcaption>Every team with its city and country, the search above.</figcaption></figure>
+<figcaption>Teams ordered by latest rating; name and country filters above.</figcaption></figure>
 <figure id="equipes-filtered" data-kind="state" data-of="equipes" data-state="filtered">
-<svg viewBox="0 0 320 420" width="240" role="img" aria-label="Part of a name narrows the list as the reader types."><g font-family="Arial, sans-serif" font-size="9">
+<svg viewBox="0 0 320 420" width="240" role="img" aria-label="Name and country combine while retaining rating order."><g font-family="Arial, sans-serif" font-size="9">
 <rect width="320" height="420" fill="#3b3008"/><rect x="10" width="300" height="420" fill="#e3efca"/>
 <rect x="10" width="300" height="34" fill="#8f983b"/><text x="18" y="24" font-size="18" font-weight="900" fill="#fff" stroke="#111" stroke-width=".6">GOL</text><text x="62" y="24" font-size="11" font-weight="900" fill="#f5c542">aberto</text>
 <text x="222" y="21" fill="#000000" font-weight="700">PT · ES · EN</text>
 <rect x="10" y="34" width="300" height="14" fill="#abb561"/><text x="86" y="44" fill="#000000" font-weight="700">Principal | Campeonatos | Jogos | Equipes</text>
 <rect x="10" y="48" width="300" height="22" fill="#474d0f"/><text x="16" y="63" font-size="12" font-weight="700" fill="#ffffff">Equipes</text>
 <rect x="234" y="78" width="76" height="342" fill="#b8c26e"/>
-<rect x="16" y="77" width="212" height="14" fill="#ffffff" stroke="#4a4a1f"/><text x="20" y="87" fill="#4a4a1f">athletico</text>
-<rect x="16" y="98" width="212" height="12" fill="#00008b"/><text x="20" y="107" fill="#fff">Equipe · Cidade · País</text>
-<rect x="16" y="111" width="212" height="12" fill="#cee3a3"/><text x="20" y="120" fill="#784d1e">Athletico-PR     Curitiba     Brasil</text>
+<rect x="16" y="77" width="104" height="14" fill="#ffffff" stroke="#4a4a1f"/><text x="20" y="87" fill="#4a4a1f">athletico</text>
+<rect x="124" y="77" width="104" height="14" fill="#ffffff" stroke="#4a4a1f"/><text x="128" y="87" fill="#4a4a1f">País/região…</text>
+<rect x="16" y="98" width="212" height="12" fill="#00008b"/><text x="20" y="107" fill="#fff">Equipe · Rating · Cidade · País</text>
+<rect x="16" y="111" width="212" height="12" fill="#cee3a3"/><text x="20" y="120" fill="#784d1e">Athletico-PR 82.10 Curitiba Brasil</text>
 </g></svg>
-<figcaption>Part of a name narrows the list as the reader types.</figcaption></figure>
+<figcaption>Name and country combine while retaining rating order.</figcaption></figure>
 <figure id="equipes-no-match" data-kind="state" data-of="equipes" data-state="no-match">
 <svg viewBox="0 0 320 420" width="240" role="img" aria-label="A search nothing matches says so."><g font-family="Arial, sans-serif" font-size="9">
 <rect width="320" height="420" fill="#3b3008"/><rect x="10" width="300" height="420" fill="#e3efca"/>
@@ -1640,9 +1668,10 @@ graph TD
 <rect x="10" y="34" width="300" height="14" fill="#abb561"/><text x="86" y="44" fill="#000000" font-weight="700">Principal | Campeonatos | Jogos | Equipes</text>
 <rect x="10" y="48" width="300" height="22" fill="#474d0f"/><text x="16" y="63" font-size="12" font-weight="700" fill="#ffffff">Equipes</text>
 <rect x="234" y="78" width="76" height="342" fill="#b8c26e"/>
-<rect x="16" y="77" width="212" height="14" fill="#ffffff" stroke="#4a4a1f"/><text x="20" y="87" fill="#4a4a1f">xyzzy</text>
-<rect x="16" y="98" width="212" height="12" fill="#00008b"/><text x="20" y="107" fill="#fff">Equipe · Cidade · País</text>
-<text x="18" y="120" fill="#4a4a1f">Nenhuma equipe com esse nome.</text>
+<rect x="16" y="77" width="104" height="14" fill="#ffffff" stroke="#4a4a1f"/><text x="20" y="87" fill="#4a4a1f">xyzzy</text>
+<rect x="124" y="77" width="104" height="14" fill="#ffffff" stroke="#4a4a1f"/><text x="128" y="87" fill="#4a4a1f">País/região…</text>
+<rect x="16" y="98" width="212" height="12" fill="#00008b"/><text x="20" y="107" fill="#fff">Equipe · Rating · Cidade · País</text>
+<text x="18" y="120" fill="#4a4a1f">Nenhuma equipe corresponde aos filtros.</text>
 </g></svg>
 <figcaption>A search nothing matches says so.</figcaption></figure>
 <figure id="equipes-populated-dark" data-kind="state" data-of="equipes" data-state="populated-dark">
@@ -1653,10 +1682,11 @@ graph TD
 <rect x="10" y="34" width="300" height="14" fill="#5c6230"/><text x="86" y="44" fill="#e8efd6" font-weight="700">Principal | Campeonatos | Jogos | Equipes</text>
 <rect x="10" y="48" width="300" height="22" fill="#0f1103"/><text x="16" y="63" font-size="12" font-weight="700" fill="#f5c542">Equipes</text>
 <rect x="234" y="78" width="76" height="342" fill="#33371b"/>
-<rect x="16" y="77" width="212" height="14" fill="#ffffff" stroke="#c3cc9a"/><text x="20" y="87" fill="#c3cc9a">Flamengo, Arsenal…</text>
-<rect x="16" y="98" width="212" height="12" fill="#1d2a6b"/><text x="20" y="107" fill="#fff">Equipe · Cidade · País</text>
-<rect x="16" y="111" width="212" height="12" fill="#2e3314"/><text x="20" y="120" fill="#e0b07a">Arsenal          London       Inglaterra</text>
-<rect x="16" y="124" width="212" height="12" fill="#23260f"/><text x="20" y="133" fill="#e0b07a">Athletico-PR     Curitiba     Brasil</text>
+<rect x="16" y="77" width="104" height="14" fill="#ffffff" stroke="#c3cc9a"/><text x="20" y="87" fill="#c3cc9a">Flamengo, Arsenal…</text>
+<rect x="124" y="77" width="104" height="14" fill="#ffffff" stroke="#4a4a1f"/><text x="128" y="87" fill="#4a4a1f">País/região…</text>
+<rect x="16" y="98" width="212" height="12" fill="#1d2a6b"/><text x="20" y="107" fill="#fff">Equipe · Rating · Cidade · País</text>
+<rect x="16" y="111" width="212" height="12" fill="#2e3314"/><text x="20" y="120" fill="#e0b07a">Arsenal     90.20  London   Inglaterra</text>
+<rect x="16" y="124" width="212" height="12" fill="#23260f"/><text x="20" y="133" fill="#e0b07a">Athletico-PR 82.10 Curitiba Brasil</text>
 </g></svg>
 <figcaption>The dark twin.</figcaption></figure>
 </div>
@@ -2632,7 +2662,7 @@ A goal recorded after the fact moves the scorer's season with no reload: <code c
 A 2–1 home win yields a card with both names and two team lines, each from its own side: <code class="cel">output.lines.map(l, l.result) == ["w", "l"]</code>.
 </p>
 <p id="test-teams" data-kind="test" data-of="equipes" data-accepts="accept-teams">
-Part of a name narrows the teams as the reader types: <code class="cel">input.q == "athletico"</code> shows <code class="cel">output.rows == ["Athletico-PR"]</code>.
+Latest stored ratings order all teams descending, with unrated teams last and ties by name/id. Country/region and name searches combine without accents or case; either resets pagination. Part of a name narrows the teams as the reader types: <code class="cel">input.q == "athletico"</code> shows <code class="cel">output.rows == ["Athletico-PR"]</code>.
 </p>
 <p id="test-team-page" data-kind="test" data-of="equipe" data-accepts="accept-team-page">
 Athletico-PR's page shows its full name, city and stadium, its latest results from its own side, and its squad in the 2026 Brasileiro with every player's season: <code class="cel">output.squad.size() &gt; 11</code>.

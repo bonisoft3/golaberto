@@ -39,6 +39,9 @@ _recentChampionshipsUpgrade: strings.Join(strings.Split(strings.Join(strings.Spl
 _searchCollationSql: string @embed(file="services/database/sql/023_search_collation.sql", type=text)
 _searchCollationUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_searchCollationSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
+_teamDirectorySql: string @embed(file="services/database/sql/024_team_directory.sql", type=text)
+_teamDirectoryUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamDirectorySql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
 _homeHighlightsSql: string @embed(file="services/database/sql/021_home_highlights.sql", type=text)
 _homeHighlightsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeHighlightsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
@@ -83,6 +86,7 @@ code: pronto.#App & {
 		PositionChance: onDemand: true
 		GameImportance: onDemand: true
 		TeamRating: onDemand: true
+		TeamDirectory: onDemand: true
 		PlayerRating: onDemand: true
 		GameCard: onDemand: true
 		TeamGame: onDemand: true
@@ -262,6 +266,24 @@ code: pronto.#App & {
 				{ordinal: 2, name: "name", type: "string", cel: "this.size() > 0 && this.size() <= 80"},
 				{ordinal: 3, name: "location", type: "string", required: false, cel: "this.size() <= 80"},
 				{ordinal: 4, name: "search_name", type: "string", generated: "name"},
+			]
+		}
+		TeamDirectory: {
+			id: "0x93d75c8ddada8190"
+			table: "team_directory"
+			durability: "live"
+			writers: "pipeline"
+			access: {scope: "public"}
+			fields: [
+				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "team"},
+				{ordinal: 2, name: "name", type: "string"},
+				{ordinal: 3, name: "city", type: "string", required: false},
+				{ordinal: 4, name: "country", type: "string", required: false},
+				{ordinal: 5, name: "rating", type: "double", required: false},
+				{ordinal: 6, name: "measure_date", type: "date", required: false},
+				{ordinal: 7, name: "search_name", type: "string", generated: "name"},
+				{ordinal: 8, name: "search_country", type: "string", generated: "coalesce(country, '')"},
+				{ordinal: 9, name: "rating_display", type: "string", generated: "CASE WHEN rating IS NULL THEN '—' ELSE round(rating::numeric, 2)::text END"},
 			]
 		}
 		Player: {
@@ -840,8 +862,9 @@ code: pronto.#App & {
 				{ordinal: 4, name: "offset", type: "int32", default: "0", cel: "this >= 0"},
 				{ordinal: 5, name: "next_offset", type: "int32", default: "40", cel: "this >= 40"},
 				{ordinal: 6, name: "page", type: "int32", default: "1", cel: "this >= 1"},
+				{ordinal: 7, name: "country", type: "string", default: "''", cel: "this.size() <= 60"},
 			]
-			seed: [{id: "teams", q: "", state: "browsing", offset: 0, next_offset: 40, page: 1}, {id: "stadiums", q: "", state: "browsing", offset: 0, next_offset: 40, page: 1}, {id: "referees", q: "", state: "browsing", offset: 0, next_offset: 40, page: 1}]
+			seed: [{id: "teams", q: "", country: "", state: "browsing", offset: 0, next_offset: 40, page: 1}, {id: "stadiums", q: "", country: "", state: "browsing", offset: 0, next_offset: 40, page: 1}, {id: "referees", q: "", country: "", state: "browsing", offset: 0, next_offset: 40, page: 1}]
 		}
 		// The catalogue's search, held by the tab: what a reader typed survives a
 		// trip to a championship and back, and belongs to nobody else.
@@ -905,6 +928,7 @@ code: pronto.#App & {
 		{name: "021_home_highlights.sql", src: "services/database/sql/021_home_highlights.sql"},
 		{name: "022_recent_championships.sql", src: "services/database/sql/022_recent_championships.sql"},
 		{name: "023_search_collation.sql", src: "services/database/sql/023_search_collation.sql"},
+		{name: "024_team_directory.sql", src: "services/database/sql/024_team_directory.sql"},
 		// Large archive fixtures are copied at build, never expanded through CUE.
 		{name: "900_seed.sql", src: "services/database/sql/900_seed.sql"},
 	]
@@ -922,6 +946,8 @@ code: pronto.#App & {
 	state: migrations: "021_home_highlights": {operations: [{sql: {up: _homeHighlightsUpgrade, onComplete: true}}]}
 	state: migrations: "022_recent_championships": {operations: [{sql: {up: _recentChampionshipsUpgrade, onComplete: true}}]}
 	state: migrations: "023_search_collation": {operations: [{sql: {up: _searchCollationUpgrade, onComplete: true}}]}
+	state: migrations: "024_team_directory": {operations: [{sql: {up: _teamDirectoryUpgrade, onComplete: true}}]}
+	state: pipelines: "team-directory": {raw: true, from: "Team", to: "TeamDirectory", group: "golaberto-team-directory"}
 	// The numeric stage (ir decision-chances).
 	// The chances read each game's power from team_rating, so they rerun
 	// whenever the ratings change.
@@ -1974,4 +2000,10 @@ loop: surface: checks: "recent-championships": {
 	priority: 1
 	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker tests/recent-championships.ts"]
 	note: "all recent tournaments, strict thirty-day boundaries, distinct membership, geometric strength, clock refresh and service-only writes"
+}
+
+loop: surface: checks: "team-directory": {
+	verb: "integrate"
+	cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/team-directory.ts"]
+	note: "latest-rating order, unrated/tied teams, combined accent-insensitive country/name filters, pagination, refresh and phone/desktop layout"
 }

@@ -31,7 +31,7 @@ code: surface: screens: {
 		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
 	}
 	equipes: {
-		reads: [{entity: "DirectoryFilter"}, {entity: "Team"}]
+		reads: [{entity: "DirectoryFilter"}, {entity: "TeamDirectory"}]
 		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
 	}
 	estadio: {

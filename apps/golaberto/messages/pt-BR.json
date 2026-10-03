@@ -111,7 +111,7 @@
   "route_player": "jogador",
   "teams_title": "Equipes",
   "teams_placeholder": "Flamengo, Arsenal…",
-  "teams_empty": "Nenhuma equipe com esse nome.",
+  "teams_empty": "Nenhuma equipe corresponde aos filtros.",
   "col_city": "Cidade",
   "col_country": "País",
   "team_gone": "Esta equipe não existe ou foi removida.",
@@ -242,5 +242,8 @@
   "page_previous": "Anterior",
   "page_next": "Próxima",
   "page_label": "Página",
-  "choice_search": "Buscar opções"
+  "choice_search": "Buscar opções",
+  "country_region": "País/região",
+  "country_placeholder": "Digite um país ou região…",
+  "col_rating": "Rating"
 }

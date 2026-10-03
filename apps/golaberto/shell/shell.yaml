@@ -36,6 +36,8 @@ access:
     scope: public
   team_rating:
     scope: public
+  team_directory:
+    scope: public
   player_rating:
     scope: public
   game_card:
@@ -108,6 +110,7 @@ onDemand:
   - standing
   - team
   - team_chance
+  - team_directory
   - team_game
   - team_rating
   - zone
@@ -141,22 +144,25 @@ seed:
   directory_filter:
     - id: teams
       q: ''
-      state: browsing
-      offset: 0
+      country: ''
       next_offset: 40
+      offset: 0
       page: 1
+      state: browsing
     - id: stadiums
       q: ''
-      state: browsing
-      offset: 0
+      country: ''
       next_offset: 40
+      offset: 0
       page: 1
+      state: browsing
     - id: referees
       q: ''
-      state: browsing
-      offset: 0
+      country: ''
       next_offset: 40
+      offset: 0
       page: 1
+      state: browsing
   catalog_filter:
     - id: catalog
       q: ''
@@ -687,6 +693,7 @@ tables:
   - standing
   - team
   - team_chance
+  - team_directory
   - team_game
   - team_rating
   - zone
@@ -1518,6 +1525,38 @@ schema:
         name: rating
         type: double
         required: true
+  team_directory:
+    durability: live
+    fields:
+      - name: id
+        pk: true
+        ref: team
+        type: uuid
+        required: true
+      - name: name
+        type: string
+        required: true
+      - name: city
+        type: string
+        required: false
+      - name: country
+        type: string
+        required: false
+      - name: rating
+        type: double
+        required: false
+      - name: measure_date
+        type: date
+        required: false
+      - name: search_name
+        type: string
+        required: true
+      - name: search_country
+        type: string
+        required: true
+      - name: rating_display
+        type: string
+        required: true
   player_rating:
     durability: live
     fields:
@@ -2315,6 +2354,12 @@ schema:
         name: page
         type: int32
         required: true
+      - bounds:
+          sizeMax: 60
+        default: ''''''
+        name: country
+        type: string
+        required: true
   catalog_filter:
     durability: tab
     fields:
@@ -2723,10 +2768,14 @@ migrations:
   - services/database/migrations/021_home_highlights.sql
   - services/database/migrations/022_recent_championships.sql
   - services/database/migrations/023_search_collation.sql
+  - services/database/migrations/024_team_directory.sql
   - services/database/migrations/900_seed.sql
 pipelines:
   - name: standings
     to: standing
+    raw: true
+  - name: team-directory
+    to: team_directory
     raw: true
   - name: game-cards
     to: game_card

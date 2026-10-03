@@ -67,6 +67,9 @@ CREATE TRIGGER restamp_txid BEFORE UPDATE ON game_importance
 DROP TRIGGER IF EXISTS restamp_txid ON team_rating;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_rating
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+DROP TRIGGER IF EXISTS restamp_txid ON team_directory;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_directory
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON player_rating;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON player_rating
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();

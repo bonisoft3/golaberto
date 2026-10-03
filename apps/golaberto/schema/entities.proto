@@ -74,6 +74,7 @@ message DirectoryFilter {
   optional int32 offset = 4 [json_name = "offset"];
   optional int32 next_offset = 5 [json_name = "next_offset"];
   optional int32 page = 6 [json_name = "page"];
+  optional string country = 7 [json_name = "country"];
 }
 
 message Editor {
@@ -418,6 +419,18 @@ message TeamChance {
   optional int32 rank = 5 [json_name = "rank"];
   optional int32 points = 6 [json_name = "points"];
   optional int32 played = 7 [json_name = "played"];
+}
+
+message TeamDirectory {
+  optional string id = 1 [json_name = "id"];
+  optional string name = 2 [json_name = "name"];
+  optional string city = 3 [json_name = "city"];
+  optional string country = 4 [json_name = "country"];
+  optional double rating = 5 [json_name = "rating"];
+  optional string measure_date = 6 [json_name = "measure_date"];
+  optional string search_name = 7 [json_name = "search_name"];
+  optional string search_country = 8 [json_name = "search_country"];
+  optional string rating_display = 9 [json_name = "rating_display"];
 }
 
 message TeamGame {

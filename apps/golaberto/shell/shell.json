@@ -54,6 +54,9 @@
     "team_rating": {
       "scope": "public"
     },
+    "team_directory": {
+      "scope": "public"
+    },
     "player_rating": {
       "scope": "public"
     },
@@ -148,6 +151,7 @@
     "standing",
     "team",
     "team_chance",
+    "team_directory",
     "team_game",
     "team_rating",
     "zone",
@@ -208,26 +212,29 @@
       {
         "id": "teams",
         "q": "",
-        "state": "browsing",
-        "offset": 0,
+        "country": "",
         "next_offset": 40,
-        "page": 1
+        "offset": 0,
+        "page": 1,
+        "state": "browsing"
       },
       {
         "id": "stadiums",
         "q": "",
-        "state": "browsing",
-        "offset": 0,
+        "country": "",
         "next_offset": 40,
-        "page": 1
+        "offset": 0,
+        "page": 1,
+        "state": "browsing"
       },
       {
         "id": "referees",
         "q": "",
-        "state": "browsing",
-        "offset": 0,
+        "country": "",
         "next_offset": 40,
-        "page": 1
+        "offset": 0,
+        "page": 1,
+        "state": "browsing"
       }
     ],
     "catalog_filter": [
@@ -892,6 +899,7 @@
     "standing",
     "team",
     "team_chance",
+    "team_directory",
     "team_game",
     "team_rating",
     "zone",
@@ -2146,6 +2154,58 @@
         }
       ]
     },
+    "team_directory": {
+      "durability": "live",
+      "fields": [
+        {
+          "name": "id",
+          "pk": true,
+          "ref": "team",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "city",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "country",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "rating",
+          "type": "double",
+          "required": false
+        },
+        {
+          "name": "measure_date",
+          "type": "date",
+          "required": false
+        },
+        {
+          "name": "search_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "search_country",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "rating_display",
+          "type": "string",
+          "required": true
+        }
+      ]
+    },
     "player_rating": {
       "durability": "live",
       "fields": [
@@ -3365,6 +3425,15 @@
           "name": "page",
           "type": "int32",
           "required": true
+        },
+        {
+          "bounds": {
+            "sizeMax": 60
+          },
+          "default": "''",
+          "name": "country",
+          "type": "string",
+          "required": true
         }
       ]
     },
@@ -3900,12 +3969,18 @@
     "services/database/migrations/021_home_highlights.sql",
     "services/database/migrations/022_recent_championships.sql",
     "services/database/migrations/023_search_collation.sql",
+    "services/database/migrations/024_team_directory.sql",
     "services/database/migrations/900_seed.sql"
   ],
   "pipelines": [
     {
       "name": "standings",
       "to": "standing",
+      "raw": true
+    },
+    {
+      "name": "team-directory",
+      "to": "team_directory",
       "raw": true
     },
     {

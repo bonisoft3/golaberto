@@ -111,7 +111,7 @@
   "route_player": "player",
   "teams_title": "Teams",
   "teams_placeholder": "Flamengo, Arsenal…",
-  "teams_empty": "No team by that name.",
+  "teams_empty": "No teams match these filters.",
   "col_city": "City",
   "col_country": "Country",
   "team_gone": "This team does not exist or was removed.",
@@ -242,5 +242,8 @@
   "page_previous": "Previous",
   "page_next": "Next",
   "page_label": "Page",
-  "choice_search": "Search choices"
+  "choice_search": "Search choices",
+  "country_region": "Country/region",
+  "country_placeholder": "Enter a country or region…",
+  "col_rating": "Rating"
 }

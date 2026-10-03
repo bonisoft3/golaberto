@@ -13,26 +13,31 @@
 </header>
 <h1 class="band" data-text="{msg.teams_title}"></h1>
 <div class="page">
-  <div class="content" data-live="directory_filter" data-filter="id=eq.teams" data-machine='{"field":"state","initial":"browsing","context":{"q":"","offset":0,"next_offset":40,"page":1},"states":{"browsing":{"on":{"input@teams-q":{"assign":{"q":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}},"click@teams-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@teams-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}'>
+  <div class="content" data-live="directory_filter" data-filter="id=eq.teams" data-machine='{"field":"state","initial":"browsing","context":{"q":"","country":"","offset":0,"next_offset":40,"page":1},"states":{"browsing":{"on":{"input@teams-country":{"assign":{"country":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}},"input@teams-q":{"assign":{"q":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}},"click@teams-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@teams-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}'>
     <template data-item>
       <div class="catalog">
         <div class="filters" role="search">
           <label class="field grow" for="teams-q"><span data-text="{msg.search_label}"></span>
             <input id="teams-q" type="search" value="{q}" placeholder="{msg.teams_placeholder}" maxlength="80" autocomplete="off">
           </label>
+          <label class="field grow" for="teams-country"><span data-text="{msg.country_region}"></span>
+            <input id="teams-country" type="search" value="{country}" placeholder="{msg.country_placeholder}" maxlength="60" autocomplete="off">
+          </label>
         </div>
         <table class="grid catalog-table">
           <thead><tr>
             <th scope="col" data-text="{msg.col_team}"></th>
-            <th scope="col" class="narrow" data-text="{msg.col_city}"></th>
-            <th scope="col" class="narrow drop" data-text="{msg.col_country}"></th>
+            <th scope="col" class="narrow" data-text="{msg.col_rating}"></th>
+            <th scope="col" class="narrow drop" data-text="{msg.col_city}"></th>
+            <th scope="col" class="narrow" data-text="{msg.col_country}"></th>
           </tr></thead>
-          <tbody data-live="team" data-filter="search_name=like.*{q}*&offset={offset}&limit=40" data-order="name.asc" data-empty="{msg.teams_empty}">
+          <tbody data-live="team_directory" data-filter="search_name=like.*{q}*&search_country=like.*{country}*&offset={offset}&limit=40" data-order="rating.desc.nullslast,name.asc,id.asc" data-empty="{msg.teams_empty}">
             <template data-item>
               <tr>
                 <td><a data-route="equipe" data-param-id="{id}"><span class="archive-icon" data-text="{id}|{name}" data-text-format="team-badge"></span><span data-text="{name}"></span></a></td>
-                <td class="narrow" data-text="{city}"></td>
-                <td class="narrow drop"><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{country}"></span></td>
+                <td class="narrow" data-text="{rating_display}"></td>
+                <td class="narrow drop" data-text="{city}"></td>
+                <td class="narrow"><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{country}"></span></td>
               </tr>
             </template>
           </tbody>
@@ -40,7 +45,7 @@
 <nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
   <button id="teams-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
   <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
-  <span data-live="team" data-filter="search_name=like.*{q}*&amp;offset={next_offset}&amp;limit=1" data-order="name.asc" data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <span data-live="team_directory" data-filter="search_name=like.*{q}*&search_country=like.*{country}*&amp;offset={next_offset}&amp;limit=1" data-order="rating.desc.nullslast,name.asc,id.asc" data-empty=""><template data-item><i data-next-page hidden></i></template></span>
   <button id="teams-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
 </nav>
       </div>

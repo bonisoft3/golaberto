@@ -35,6 +35,11 @@
         },
         {
           "action": "sync+restart",
+          "path": "../docker/golaberto-team-directory.yaml",
+          "target": "/pipelines/golaberto-team-directory.yaml"
+        },
+        {
+          "action": "sync+restart",
           "path": "../docker/golaberto-game-cards.yaml",
           "target": "/pipelines/golaberto-game-cards.yaml"
         },
@@ -84,6 +89,16 @@
           "docker/golaberto-standings.yaml"
         ],
         "dst": "/pipelines/golaberto-standings.yaml",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "docker/golaberto-team-directory.yaml"
+        ],
+        "dst": "/pipelines/golaberto-team-directory.yaml",
         "link": true,
         "parents": false,
         "exclude": []
@@ -157,6 +172,7 @@
       "streams",
       "--no-api",
       "/pipelines/golaberto-standings.yaml",
+      "/pipelines/golaberto-team-directory.yaml",
       "/pipelines/golaberto-game-cards.yaml",
       "/pipelines/golaberto-home-games.yaml",
       "/pipelines/golaberto-recent-championships.yaml",
@@ -172,6 +188,7 @@
   "srcs": {
     "globs": [
       "docker/golaberto-standings.yaml",
+      "docker/golaberto-team-directory.yaml",
       "docker/golaberto-game-cards.yaml",
       "docker/golaberto-home-games.yaml",
       "docker/golaberto-recent-championships.yaml",
@@ -276,6 +293,7 @@
       "outs": {
         "globs": [
           "docker/golaberto-standings.yaml",
+          "docker/golaberto-team-directory.yaml",
           "docker/golaberto-game-cards.yaml",
           "docker/golaberto-home-games.yaml",
           "docker/golaberto-recent-championships.yaml",

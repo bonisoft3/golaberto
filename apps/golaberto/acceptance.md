@@ -28,7 +28,7 @@
 - [ ] A game's page shows its championship and phase, the score with extra time and penalties when there were any, its round, day, kick-off, stadium, referee and attendance, its goals by minute on their side, and both line-ups with minutes and cards. {#accept-game-page}
 - [ ] An address that names no game says so in words. {#accept-game-gone}
 - [ ] A championship's page shows each phase's current round and the next, with their games. {#accept-rounds}
-- [ ] The teams page lists every team with its city and country, and typing part of a name narrows it as the reader types, ignoring case and diacritics. {#accept-teams}
+- [ ] The teams page lists every team by latest rating descending, unrated last and ties by name/id, displaying rating, city and country. Country/region and name searches combine, ignoring case and diacritics. Both reset pagination and survive detail/back within the tab; phones retain rating and country. {#accept-teams}
 - [ ] A team's page shows its full name, city, country, foundation and stadium, its next games and latest results, and its squad in each championship with every player's games, minutes, goals and cards. {#accept-team-page}
 - [ ] A player's page shows their name, position and country, a line for each championship and team they played for, and the games they played. {#accept-player-page}
 - [ ] A player's season is recounted from the line-ups and goals recorded, and matches the player table golaberto.com.br shows for the same games. {#accept-player-stats}

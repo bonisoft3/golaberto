@@ -111,7 +111,7 @@
   "route_player": "joueur",
   "teams_title": "Équipes",
   "teams_placeholder": "Flamengo, Marseille…",
-  "teams_empty": "Aucune équipe de ce nom.",
+  "teams_empty": "Aucune équipe ne correspond aux filtres.",
   "col_city": "Ville",
   "col_country": "Pays",
   "team_gone": "Cette équipe n’existe pas ou a été supprimée.",
@@ -242,5 +242,8 @@
   "page_previous": "Précédente",
   "page_next": "Suivante",
   "page_label": "Page",
-  "choice_search": "Rechercher les options"
+  "choice_search": "Rechercher les options",
+  "country_region": "Pays/région",
+  "country_placeholder": "Saisir un pays ou une région…",
+  "col_rating": "Note"
 }

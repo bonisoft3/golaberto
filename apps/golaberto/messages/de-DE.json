@@ -111,7 +111,7 @@
   "route_player": "spieler",
   "teams_title": "Mannschaften",
   "teams_placeholder": "Flamengo, Bayern…",
-  "teams_empty": "Keine Mannschaft mit diesem Namen.",
+  "teams_empty": "Keine Mannschaft entspricht den Filtern.",
   "col_city": "Stadt",
   "col_country": "Land",
   "team_gone": "Diese Mannschaft gibt es nicht, oder sie wurde entfernt.",
@@ -242,5 +242,8 @@
   "page_previous": "Zurück",
   "page_next": "Weiter",
   "page_label": "Seite",
-  "choice_search": "Auswahl suchen"
+  "choice_search": "Auswahl suchen",
+  "country_region": "Land/Region",
+  "country_placeholder": "Land oder Region eingeben…",
+  "col_rating": "Rating"
 }

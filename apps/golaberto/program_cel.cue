@@ -700,6 +700,7 @@ code: state: entities: {
 			offset?: >=0
 			next_offset?: >=40
 			page?: >=1
+			country?: strings.MaxRunes(60)
 		}]
 		enums: {
 			state: ["browsing"]
@@ -710,6 +711,7 @@ code: state: entities: {
 			offset: {intMin: 0}
 			next_offset: {intMin: 40}
 			page: {intMin: 1}
+			country: {sizeMax: 60}
 		}
 	}
 	CatalogFilter: {

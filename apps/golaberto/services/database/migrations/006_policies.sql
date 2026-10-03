@@ -137,6 +137,13 @@ CREATE POLICY team_rating_app_user_select ON team_rating FOR SELECT TO app_user 
 DROP POLICY IF EXISTS team_rating_service_all ON team_rating;
 CREATE POLICY team_rating_service_all ON team_rating FOR ALL TO service USING (true) WITH CHECK (true);
 
+CALL rls_protect('team_directory');
+ALTER TABLE team_directory ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS team_directory_app_user_select ON team_directory;
+CREATE POLICY team_directory_app_user_select ON team_directory FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS team_directory_service_all ON team_directory;
+CREATE POLICY team_directory_service_all ON team_directory FOR ALL TO service USING (true) WITH CHECK (true);
+
 CALL rls_protect('player_rating');
 ALTER TABLE player_rating ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS player_rating_app_user_select ON player_rating;

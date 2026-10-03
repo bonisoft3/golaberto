@@ -111,7 +111,7 @@
   "route_player": "giocatore",
   "teams_title": "Squadre",
   "teams_placeholder": "Flamengo, Juventus…",
-  "teams_empty": "Nessuna squadra con questo nome.",
+  "teams_empty": "Nessuna squadra corrisponde ai filtri.",
   "col_city": "Città",
   "col_country": "Paese",
   "team_gone": "Questa squadra non esiste o è stata rimossa.",
@@ -242,5 +242,8 @@
   "page_previous": "Precedente",
   "page_next": "Successiva",
   "page_label": "Pagina",
-  "choice_search": "Cerca opzioni"
+  "choice_search": "Cerca opzioni",
+  "country_region": "Paese/regione",
+  "country_placeholder": "Inserisci un paese o una regione…",
+  "col_rating": "Rating"
 }

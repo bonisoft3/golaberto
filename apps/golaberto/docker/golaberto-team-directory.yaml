@@ -1,0 +1,19 @@
+# Latest ratings and country/name edits refresh together; unchanged rows do not write.
+input:
+  generate:
+    interval: 30s
+    auto_replay_nacks: false
+    mapping: 'root = {}'
+pipeline:
+  threads: 1
+output:
+  http_client:
+    url: ${CRUD_URL}/rpc/refresh_team_directory
+    verb: POST
+    max_in_flight: 1
+    timeout: 35s
+    retries: 0
+    headers:
+      Content-Type: application/json
+      Authorization: Bearer ${SERVICE_JWT}
+    successful_on: [200, 204]

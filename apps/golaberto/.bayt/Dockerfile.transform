@@ -2,19 +2,20 @@
 FROM redpandadata/connect:4.46.0@sha256:f84ebd666931dc667b8b33c70900ff49a34c73d1811b096f668e360d66a05d4c AS transform
 WORKDIR /monorepo/apps/golaberto
 COPY docker/golaberto-standings.yaml /pipelines/golaberto-standings.yaml
+COPY docker/golaberto-team-directory.yaml /pipelines/golaberto-team-directory.yaml
 COPY docker/golaberto-game-cards.yaml /pipelines/golaberto-game-cards.yaml
 COPY docker/golaberto-home-games.yaml /pipelines/golaberto-home-games.yaml
 COPY docker/golaberto-recent-championships.yaml /pipelines/golaberto-recent-championships.yaml
 COPY docker/golaberto-matches-games.yaml /pipelines/golaberto-matches-games.yaml
 COPY docker/golaberto-player-stats.yaml /pipelines/golaberto-player-stats.yaml
 COPY docker/golaberto-rounds.yaml /pipelines/golaberto-rounds.yaml
-COPY --parents docker/golaberto-standings.yaml docker/golaberto-game-cards.yaml docker/golaberto-home-games.yaml docker/golaberto-recent-championships.yaml docker/golaberto-matches-games.yaml docker/golaberto-player-stats.yaml docker/golaberto-rounds.yaml ./
+COPY --parents docker/golaberto-standings.yaml docker/golaberto-team-directory.yaml docker/golaberto-game-cards.yaml docker/golaberto-home-games.yaml docker/golaberto-recent-championships.yaml docker/golaberto-matches-games.yaml docker/golaberto-player-stats.yaml docker/golaberto-rounds.yaml ./
 COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.transform.json ./.bayt/
-CMD ["streams", "--no-api", "/pipelines/golaberto-standings.yaml", "/pipelines/golaberto-game-cards.yaml", "/pipelines/golaberto-home-games.yaml", "/pipelines/golaberto-recent-championships.yaml", "/pipelines/golaberto-matches-games.yaml", "/pipelines/golaberto-player-stats.yaml", "/pipelines/golaberto-rounds.yaml"]
+CMD ["streams", "--no-api", "/pipelines/golaberto-standings.yaml", "/pipelines/golaberto-team-directory.yaml", "/pipelines/golaberto-game-cards.yaml", "/pipelines/golaberto-home-games.yaml", "/pipelines/golaberto-recent-championships.yaml", "/pipelines/golaberto-matches-games.yaml", "/pipelines/golaberto-player-stats.yaml", "/pipelines/golaberto-rounds.yaml"]
 
 FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS transform_ctxs
 WORKDIR /monorepo/apps/golaberto
-COPY --parents docker/golaberto-standings.yaml docker/golaberto-game-cards.yaml docker/golaberto-home-games.yaml docker/golaberto-recent-championships.yaml docker/golaberto-matches-games.yaml docker/golaberto-player-stats.yaml docker/golaberto-rounds.yaml ./
+COPY --parents docker/golaberto-standings.yaml docker/golaberto-team-directory.yaml docker/golaberto-game-cards.yaml docker/golaberto-home-games.yaml docker/golaberto-recent-championships.yaml docker/golaberto-matches-games.yaml docker/golaberto-player-stats.yaml docker/golaberto-rounds.yaml ./
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
 RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/apps/golaberto -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && touch -hd @${SOURCE_DATE_EPOCH:-0} /monorepo /monorepo/apps; fi

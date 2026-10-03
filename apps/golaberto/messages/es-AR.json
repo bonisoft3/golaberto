@@ -111,7 +111,7 @@
   "route_player": "jugador",
   "teams_title": "Equipos",
   "teams_placeholder": "Boca, Arsenal…",
-  "teams_empty": "Ningún equipo con ese nombre.",
+  "teams_empty": "Ningún equipo coincide con los filtros.",
   "col_city": "Ciudad",
   "col_country": "País",
   "team_gone": "Este equipo no existe o fue eliminado.",
@@ -242,5 +242,8 @@
   "page_previous": "Anterior",
   "page_next": "Siguiente",
   "page_label": "Página",
-  "choice_search": "Buscar opciones"
+  "choice_search": "Buscar opciones",
+  "country_region": "País/región",
+  "country_placeholder": "Escribí un país o región…",
+  "col_rating": "Rating"
 }

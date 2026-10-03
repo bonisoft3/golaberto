@@ -874,6 +874,56 @@
       }
     }
   },
+  "0x93d75c8ddada8190": {
+    "name": "team_directory",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "uuid",
+        "retired": false
+      },
+      "2": {
+        "name": "name",
+        "type": "string",
+        "retired": false
+      },
+      "3": {
+        "name": "city",
+        "type": "string",
+        "retired": false
+      },
+      "4": {
+        "name": "country",
+        "type": "string",
+        "retired": false
+      },
+      "5": {
+        "name": "rating",
+        "type": "double",
+        "retired": false
+      },
+      "6": {
+        "name": "measure_date",
+        "type": "date",
+        "retired": false
+      },
+      "7": {
+        "name": "search_name",
+        "type": "string",
+        "retired": false
+      },
+      "8": {
+        "name": "search_country",
+        "type": "string",
+        "retired": false
+      },
+      "9": {
+        "name": "rating_display",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
   "0xd7098e87ab67f7eb": {
     "name": "player_rating",
     "fields": {
@@ -1910,6 +1960,11 @@
       "6": {
         "name": "page",
         "type": "int32",
+        "retired": false
+      },
+      "7": {
+        "name": "country",
+        "type": "string",
         "retired": false
       }
     }

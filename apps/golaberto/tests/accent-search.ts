@@ -75,6 +75,7 @@ for (const width of [390, 1366]) {
         ids[table] = Array.from({ length: count }, () => crypto.randomUUID());
         const values = ids[table].map((id, i) => `(${quote(id)},${quote(names[i % 2] + (count > 2 ? ` ${String(i).padStart(2, "0")}` : ""))}${table === "championship" ? ",'Brasil','2026-01-01','2026-12-31'" : table === "team" ? ",'Brasil'" : ""})`);
         await psql(`INSERT INTO ${table} (id,name${table === "championship" ? ",region_name,begins,ends" : table === "team" ? ",country" : ""}) VALUES ${values.join(",")};`);
+        if (table === "team") await psql("SELECT refresh_team_directory();");
       }
       await psql(`INSERT INTO app_user (id,handle) VALUES ('${userId}','search-${tag}-${width}'); INSERT INTO editor (app_user_id) VALUES ('${userId}');`);
       const token = await new SignJWT({ role: "app_user", handle: `search-${tag}-${width}`, guest: false })
@@ -97,14 +98,14 @@ for (const width of [390, 1366]) {
         assert((await response).ok(), `${table} search must succeed`);
         assertEquals(await page.locator(input).inputValue(), q);
       };
-      for (const [path, input, table, route] of [["campeonatos", "catalog", "championship", "campeonato"], ["equipes", "teams", "team", "equipe"], ["estadios", "stadiums", "stadium", "estadio"], ["arbitros", "referees", "referee", "arbitro"]]) {
+      for (const [path, input, table, route] of [["campeonatos", "catalog", "championship", "campeonato"], ["equipes", "teams", "team_directory", "equipe"], ["estadios", "stadiums", "stadium", "estadio"], ["arbitros", "referees", "referee", "arbitro"]]) {
         await page.goto(`${base}/${path}?lang=pt-BR`);
         await page.waitForSelector(`#${input}-q`);
         let first: string[] = [];
         for (const [index, spelling] of variants.entries()) {
           const q = `${prefix} ${spelling}`;
           await search(`#${input}-q`, table, q);
-          const expected = table === "team" ? 40 : 2;
+          const expected = table === "team_directory" ? 40 : 2;
           await page.waitForFunction(([route, count, prefix]) => {
             const links = [...document.querySelectorAll(`.catalog-table a[data-route="${route}"]`)];
             return links.length === Number(count) && links.every((link) => link.textContent?.includes(prefix));
@@ -112,7 +113,7 @@ for (const width of [390, 1366]) {
           const results = await page.locator(`.catalog-table a[data-route="${route}"]`).evaluateAll((links) => links.map((link) => new URL((link as HTMLAnchorElement).href).pathname).sort());
           if (index === 0) first = results;
           else assertEquals(results, first);
-          if (table === "team" && index === 0) {
+          if (table === "team_directory" && index === 0) {
             await page.click(`#${input}-next`);
             await page.waitForFunction(() => document.querySelectorAll('.catalog-table a[data-route="equipe"]').length === 2);
             const last = await page.locator('.catalog-table a[data-route="equipe"]').evaluateAll((links) => links.map((link) => new URL((link as HTMLAnchorElement).href).pathname));

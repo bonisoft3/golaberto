@@ -24,6 +24,9 @@ services:
         path: ../docker/golaberto-standings.yaml
         target: /pipelines/golaberto-standings.yaml
       - action: sync+restart
+        path: ../docker/golaberto-team-directory.yaml
+        target: /pipelines/golaberto-team-directory.yaml
+      - action: sync+restart
         path: ../docker/golaberto-game-cards.yaml
         target: /pipelines/golaberto-game-cards.yaml
       - action: sync+restart

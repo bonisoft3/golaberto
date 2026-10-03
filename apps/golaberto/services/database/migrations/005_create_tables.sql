@@ -260,6 +260,20 @@ CREATE TABLE IF NOT EXISTS team_rating (
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS team_directory (
+  "id" uuid PRIMARY KEY REFERENCES team(id) ON DELETE CASCADE,
+  "name" portable_string NOT NULL,
+  "city" portable_string,
+  "country" portable_string,
+  "rating" portable_double,
+  "measure_date" portable_date,
+  "search_name" portable_string GENERATED ALWAYS AS (name) STORED,
+  "search_country" portable_string GENERATED ALWAYS AS (coalesce(country, '')) STORED,
+  "rating_display" portable_string GENERATED ALWAYS AS (CASE WHEN rating IS NULL THEN '—' ELSE round(rating::numeric, 2)::text END) STORED,
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS player_rating (
   "id" uuid PRIMARY KEY REFERENCES player(id) ON DELETE CASCADE,
   "rating" portable_double NOT NULL,

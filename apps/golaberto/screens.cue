@@ -750,21 +750,30 @@ _campeonatoMarkup: """
 	row:     string
 	table:   string
 	route:   string
+	order: *"name.asc" | string
+	withCountry: *false | bool
 	// A column marked `drop` is the one a phone does without.
 	columns: [...{key: string, bind: string, drop: *false | bool}]
 	_input:  "\(D.row)-q"
 	_machine: json.Marshal({
 		field:   "state"
 		initial: "browsing"
-		context: {q: "", offset: 0, next_offset: 40, page: 1}
+		context: {q: "", country: "", offset: 0, next_offset: 40, page: 1}
 		states: browsing: on: (#PageActions & {key: D.row}).out & {"input@\(D._input)": assign: {q: {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}}
+		if D.withCountry {states: browsing: on: "input@teams-country": assign: {country: {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}}
 	})
+	_filter: "search_name=like.*{q}*\([if D.withCountry {"&search_country=like.*{country}*"}, ""][0])"
+	_country: [if D.withCountry {"""
+		          <label class="field grow" for="teams-country"><span data-text="{msg.country_region}"></span>
+		            <input id="teams-country" type="search" value="{country}" placeholder="{msg.country_placeholder}" maxlength="60" autocomplete="off">
+		          </label>
+		"""}, ""][0]
 	_head: strings.Join([for i, c in D.columns {
 		"            <th scope=\"col\"\([if i > 0 {" class=\"narrow\([if c.drop {" drop"}, ""][0])\""}, ""][0]) data-text=\"{msg.col_\(c.key)}\"></th>"
 	}], "\n")
 	_cells: strings.Join([for i, c in D.columns {
 		[
-			if i == 0 && D.table == "team" {"                <td><a data-route=\"\(D.route)\" data-param-id=\"{id}\"><span class=\"archive-icon\" data-text=\"{id}|{name}\" data-text-format=\"team-badge\"></span><span data-text=\"{\(c.bind)}\"></span></a></td>"},
+			if i == 0 && D.route == "equipe" {"                <td><a data-route=\"\(D.route)\" data-param-id=\"{id}\"><span class=\"archive-icon\" data-text=\"{id}|{name}\" data-text-format=\"team-badge\"></span><span data-text=\"{\(c.bind)}\"></span></a></td>"},
 			if i == 0 {"                <td><a data-route=\"\(D.route)\" data-param-id=\"{id}\" data-text=\"{\(c.bind)}\"></a></td>"},
 			if c.bind == "country" {"                <td class=\"narrow\([if c.drop {" drop"}, ""][0])\"><span class=\"archive-icon\" data-text=\"{country}\" data-text-format=\"country-flag\"></span><span data-text=\"{country}\"></span></td>"},
 			"                <td class=\"narrow\([if c.drop {" drop"}, ""][0])\" data-text=\"{\(c.bind)}\"></td>",
@@ -782,12 +791,13 @@ _campeonatoMarkup: """
 		          <label class="field grow" for="\(D._input)"><span data-text="{msg.search_label}"></span>
 		            <input id="\(D._input)" type="search" value="{q}" placeholder="{msg.\(D.row)_placeholder}" maxlength="80" autocomplete="off">
 		          </label>
+		\(D._country)
 		        </div>
 		        <table class="grid catalog-table">
 		          <thead><tr>
 		\(D._head)
 		          </tr></thead>
-		          <tbody data-live="\(D.table)" data-filter="search_name=like.*{q}*&offset={offset}&limit=40" data-order="name.asc" data-empty="{msg.\(D.row)_empty}">
+		          <tbody data-live="\(D.table)" data-filter="\(D._filter)&offset={offset}&limit=40" data-order="\(D.order)" data-empty="{msg.\(D.row)_empty}">
 		            <template data-item>
 		              <tr>
 		\(D._cells)
@@ -795,7 +805,7 @@ _campeonatoMarkup: """
 		            </template>
 		          </tbody>
 		        </table>
-		\((#PageArrows & {key: D.row, table: D.table, filter: "search_name=like.*{q}*", order: "name.asc"}).out)
+		\((#PageArrows & {key: D.row, table: D.table, filter: D._filter, order: D.order}).out)
 		      </div>
 		    </template>
 		  </div>
@@ -805,7 +815,7 @@ _campeonatoMarkup: """
 		"""
 }
 
-_equipesMarkup: (#Directory & {screen: "equipes", row: "teams", table: "team", route: "equipe", columns: [{key: "team", bind: "name"}, {key: "city", bind: "city"}, {key: "country", bind: "country", drop: true}]}).out
+_equipesMarkup: (#Directory & {screen: "equipes", row: "teams", table: "team_directory", route: "equipe", order: "rating.desc.nullslast,name.asc,id.asc", withCountry: true, columns: [{key: "team", bind: "name"}, {key: "rating", bind: "rating_display"}, {key: "city", bind: "city", drop: true}, {key: "country", bind: "country"}]}).out
 _estadiosMarkup: (#Directory & {screen: "estadios", row: "stadiums", table: "stadium", route: "estadio", columns: [{key: "stadium", bind: "name"}, {key: "city", bind: "city"}, {key: "country", bind: "country", drop: true}]}).out
 _arbitrosMarkup: (#Directory & {screen: "arbitros", row: "referees", table: "referee", route: "arbitro", columns: [{key: "referee", bind: "name"}, {key: "from", bind: "location"}]}).out
 

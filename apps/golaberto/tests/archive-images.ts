@@ -39,9 +39,9 @@ Deno.test("archive images load across lists, standings, directories and team hea
         const label = first.locator(`.${side} .team-name`);
         assert((await label.innerText()).trim().length > 0 && await label.isVisible(), "both team names stay visible");
       }
-      const championshipFlag = page.locator(".home-championship h3 .archive-icon img").first();
+      const championshipFlag = page.locator(".home-phase .archive-icon img").first();
       await loaded(championshipFlag, 1);
-      const championshipUrl = await page.locator(".home-championship h3 a").first().getAttribute("href");
+      const championshipUrl = await page.locator(".home-phase a").first().getAttribute("href");
       assert(championshipUrl, "championship link survives");
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "icons cause no horizontal overflow");
       console.log("championship images");

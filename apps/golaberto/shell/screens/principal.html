@@ -17,43 +17,29 @@
     <div class="home-games">
       <section class="home-upcoming" aria-labelledby="home-upcoming-heading">
         <h2 id="home-upcoming-heading" class="home-games-title" data-text="{msg.games_upcoming}"></h2>
-<div class="home-championships" data-live="home_game_card" data-filter="home_upcoming_group=is.true&amp;limit=20" data-order="home_upcoming_rank.asc" data-empty="{msg.home_no_upcoming}" data-exit-motion="none">
+<ol class="games home-championships" data-live="home_game_card" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="played=is.false&home_upcoming_rank=gt.0&limit=20" data-order="home_upcoming_rank.asc" data-empty="{msg.home_no_upcoming}" data-project='{"day_first":{"first":"day"},"previous":"prev"}' data-exit-motion="none">
   <template data-item>
-    <section class="home-championship" data-championship="{championship_id}">
-      <h3><a data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}"></span></a></h3>
-<ol class="games" data-live="home_game_card" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="championship_id=eq.{championship_id}&played=is.false&home_upcoming_rank=gt.0&limit=20" data-order="home_upcoming_rank.asc" data-empty="">
-  <template data-item>
-    <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{id}" data-played="{played}">
-      <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
+    <li class="home-championship" data-championship="{championship_id}" data-phase="{phase_id}">      <h3 class="home-day" data-live="home_game_card" data-filter="id=eq.{day_first}&amp;id=eq.{id}" data-empty="" data-exit-motion="none"><template data-item><span class="home-day-label" data-text="{day_display}"></span></template></h3>      <h4 class="home-phase"><span hidden data-live="home_game_card" data-filter="id=eq.{previous}" data-empty="" data-exit-motion="none" data-project='{"same_day":{"eq":["day","{day}"]},"same_phase":{"eq":["phase_id","{phase_id}"]},"is_first":{"eq":["id","{id}"]}}'><template data-item><span class="home-phase-context" data-same-day="{same_day}" data-same-phase="{same_phase}" data-first="{is_first}"></span></template></span><a class="home-phase-label" data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}"></span> <small data-text="{phase_name}"></small></a></h4><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{id}" data-played="{played}">
+      <span class="when"><span class="day visually-hidden" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
       <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></span>
       <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
       <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>
     </a></li>
   </template>
 </ol>
-    </section>
-  </template>
-</div>
       </section>
       <section class="home-results" aria-labelledby="home-results-heading">
         <h2 id="home-results-heading" class="home-games-title" data-text="{msg.games_results}"></h2>
-<div class="home-championships" data-live="home_game_card" data-filter="home_recent_group=is.true&amp;limit=20" data-order="home_recent_rank.asc" data-empty="{msg.home_no_results}" data-exit-motion="none">
+<ol class="games home-championships" data-live="home_game_card" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="played=is.true&home_recent_rank=gt.0&limit=20" data-order="home_recent_rank.asc" data-empty="{msg.home_no_results}" data-project='{"day_first":{"first":"day"},"previous":"prev"}' data-exit-motion="none">
   <template data-item>
-    <section class="home-championship" data-championship="{championship_id}">
-      <h3><a data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}"></span></a></h3>
-<ol class="games" data-live="home_game_card" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="championship_id=eq.{championship_id}&played=is.true&home_recent_rank=gt.0&limit=20" data-order="home_recent_rank.asc" data-empty="">
-  <template data-item>
-    <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{id}" data-played="{played}">
-      <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
+    <li class="home-championship" data-championship="{championship_id}" data-phase="{phase_id}">      <h3 class="home-day" data-live="home_game_card" data-filter="id=eq.{day_first}&amp;id=eq.{id}" data-empty="" data-exit-motion="none"><template data-item><span class="home-day-label" data-text="{day_display}"></span></template></h3>      <h4 class="home-phase"><span hidden data-live="home_game_card" data-filter="id=eq.{previous}" data-empty="" data-exit-motion="none" data-project='{"same_day":{"eq":["day","{day}"]},"same_phase":{"eq":["phase_id","{phase_id}"]},"is_first":{"eq":["id","{id}"]}}'><template data-item><span class="home-phase-context" data-same-day="{same_day}" data-same-phase="{same_phase}" data-first="{is_first}"></span></template></span><a class="home-phase-label" data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}"></span> <small data-text="{phase_name}"></small></a></h4><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{id}" data-played="{played}">
+      <span class="when"><span class="day visually-hidden" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
       <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></span>
       <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
       <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>
     </a></li>
   </template>
 </ol>
-    </section>
-  </template>
-</div>
       </section>
       <p class="more"><a data-route="jogos" data-text="{msg.home_all_games}"></a></p>
     </div>

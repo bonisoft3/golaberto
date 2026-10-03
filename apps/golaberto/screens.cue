@@ -153,12 +153,23 @@ _catalogMachine: json.Marshal({
 	empty:  string
 	cls:    *"games" | string
 	where:  *true | bool
+	homeFeed: *"" | "upcoming" | "recent"
 	_where: [if G.where {"\n      <span class=\"where\" data-text=\"{championship_name}\"></span>"}, ""][0]
+	_project: [if G.homeFeed != "" {#" data-project='{"day_first":{"first":"day"},"previous":"prev"}'"#}, ""][0]
+	_exitMotion: [if G.homeFeed != "" {#" data-exit-motion="none""#}, ""][0]
+	_dayClass: [if G.homeFeed != "" {"day visually-hidden"}, "day"][0]
+	_dayHeading: [if G.homeFeed != "" {"""
+	      <h3 class="home-day" data-live="\(G.table)" data-filter="id=eq.{day_first}&amp;id=eq.{id}" data-empty="" data-exit-motion="none"><template data-item><span class="home-day-label" data-text="{day_display}"></span></template></h3>
+	"""}, ""][0]
+	_phaseHeading: [if G.homeFeed != "" {"""
+	      <h4 class="home-phase"><span hidden data-live="home_game_card" data-filter="id=eq.{previous}" data-empty="" data-exit-motion="none" data-project='{"same_day":{"eq":["day","{day}"]},"same_phase":{"eq":["phase_id","{phase_id}"]},"is_first":{"eq":["id","{id}"]}}'><template data-item><span class="home-phase-context" data-same-day="{same_day}" data-same-phase="{same_phase}" data-first="{is_first}"></span></template></span><a class="home-phase-label" data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}"></span> <small data-text="{phase_name}"></small></a></h4>
+	"""}, ""][0]
+	_itemAttributes: [if G.homeFeed != "" {#" class="home-championship" data-championship="{championship_id}" data-phase="{phase_id}""#}, ""][0]
 	out:    """
-		<ol class="\(G.cls)" data-live="\(G.table)" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="\(G.filter)" data-order="\(G.order)" data-empty="\(G.empty)">
+		<ol class="\(G.cls)" data-live="\(G.table)" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="\(G.filter)" data-order="\(G.order)" data-empty="\(G.empty)"\(G._project)\(G._exitMotion)>
 		  <template data-item>
-		    <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{id}" data-played="{played}">
-		      <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>\(G._where)
+		    <li\(G._itemAttributes)>\(G._dayHeading)\(G._phaseHeading)<a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{id}" data-played="{played}">
+		      <span class="when"><span class="\(G._dayClass)" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>\(G._where)
 		      <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></span>
 		      <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
 		      <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>
@@ -168,22 +179,20 @@ _catalogMachine: json.Marshal({
 		"""
 }
 
-// A selected card marks each championship once; its nested list reads only
-// that championship's already-selected games, retaining the global feed cap.
+// Preserve global rank order; date and phase headings precede their first row.
 #HomeGameFeed: H={
 	feed: "upcoming" | "recent"
 	played: string
 	empty: string
-	out: """
-		<div class="home-championships" data-live="home_game_card" data-filter="home_\(H.feed)_group=is.true&amp;limit=20" data-order="home_\(H.feed)_rank.asc" data-empty="\(H.empty)" data-exit-motion="none">
-		  <template data-item>
-		    <section class="home-championship" data-championship="{championship_id}">
-		      <h3><a data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}"></span></a></h3>
-		\((#GameList & {table: "home_game_card", filter: "championship_id=eq.{championship_id}&played=is.\(H.played)&home_\(H.feed)_rank=gt.0&limit=20", order: "home_\(H.feed)_rank.asc", empty: "", where: false}).out)
-		    </section>
-		  </template>
-		</div>
-		"""
+	out: (#GameList & {
+		table: "home_game_card"
+		filter: "played=is.\(H.played)&home_\(H.feed)_rank=gt.0&limit=20"
+		order: "home_\(H.feed)_rank.asc"
+		empty: H.empty
+		cls: "games home-championships"
+		where: false
+		homeFeed: H.feed
+	}).out
 }
 
 // The games page's two lists, switched by a machine over the tab's view row.

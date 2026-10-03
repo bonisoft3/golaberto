@@ -3833,6 +3833,7 @@
     "services/database/migrations/017_game_countries.sql",
     "services/database/migrations/018_route_performance.sql",
     "services/database/migrations/019_normalized_game_flags.sql",
+    "services/database/migrations/020_home_reference_order.sql",
     "services/database/migrations/900_seed.sql"
   ],
   "pipelines": [

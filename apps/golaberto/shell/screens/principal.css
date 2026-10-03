@@ -3,10 +3,13 @@
 /* The reference site's game feeds lead; the featured table and catalogue follow. */
 .home-games { display: flex; flex-direction: column; gap: var(--sp-lg); margin-block-end: var(--sp-lg); }
 .home-games-title { margin: 0; padding: var(--sp-sm) var(--sp-md); background: var(--table-head); color: var(--table-head-ink); }
-.home-championships { display: flex; flex-direction: column; gap: var(--sp-md); }
-.home-championship h3 { margin: 0; padding: var(--sp-sm) var(--sp-md); font-size: var(--type-caption); border-bottom: var(--border-size-1) solid var(--border); }
-.home-championship h3 a { color: var(--accent); }
-.home-championship .game-row { grid-template-columns: 9.5em minmax(0, 1fr) 4.5em minmax(0, 1fr); grid-template-areas: "when home score away"; }
+.home-championships { margin: 0; }
+.home-phase { margin: 0; padding: var(--sp-sm) var(--sp-md); font-size: var(--type-caption); border-bottom: var(--border-size-1) solid var(--border); }
+.home-phase a { color: var(--accent); }
+.home-day { margin: 0; padding: var(--sp-sm) var(--sp-md); font-size: var(--type-label); color: var(--secondary); background: var(--surface); border-bottom: var(--border-size-1) solid var(--border); }
+.home-day:not(:has(.home-day-label)), .home-phase:not(:has(.home-phase-context)), .home-phase:has(.home-phase-context[data-same-day="true"][data-same-phase="true"][data-first="false"]) { display: none; }
+.home-phase small { margin-inline-start: var(--sp-sm); font-size: var(--type-label); color: var(--secondary); }
+.home-championship .game-row { grid-template-columns: 3.5em minmax(0, 1fr) 4.5em minmax(0, 1fr); grid-template-areas: "when home score away"; }
 .home-championship .home, .home-championship .away { overflow-wrap: anywhere; }
 .feature-body { display: flex; flex-direction: column; gap: var(--sp-md); }
 .feature-head {
@@ -42,7 +45,7 @@
 .more { margin: 0; font-weight: 700; }
 
 @media (max-width: 720px) {
-  .home-championship .game-row { grid-template-columns: 6em minmax(0, 1fr) 4em minmax(0, 1fr); }
+  .home-championship .game-row { grid-template-columns: 3.5em minmax(0, 1fr) 4em minmax(0, 1fr); }
   .regions { grid-template-columns: minmax(0, 1fr); }
   .round .game-row { padding-block: var(--sp-md); }
 }

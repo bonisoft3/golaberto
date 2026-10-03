@@ -137,6 +137,11 @@
         },
         {
           "action": "rebuild",
+          "path": "../services/database/migrations/020_home_reference_order.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
           "path": "../services/database/migrations/900_seed.sql",
           "target": "/docker-entrypoint-initdb.d"
         }
@@ -177,6 +182,7 @@
           "services/database/migrations/017_game_countries.sql",
           "services/database/migrations/018_route_performance.sql",
           "services/database/migrations/019_normalized_game_flags.sql",
+          "services/database/migrations/020_home_reference_order.sql",
           "services/database/migrations/900_seed.sql"
         ],
         "dst": "/docker-entrypoint-initdb.d/",
@@ -232,6 +238,7 @@
       "services/database/migrations/017_game_countries.sql",
       "services/database/migrations/018_route_performance.sql",
       "services/database/migrations/019_normalized_game_flags.sql",
+      "services/database/migrations/020_home_reference_order.sql",
       "services/database/migrations/900_seed.sql"
     ],
     "exclude": []
@@ -338,6 +345,7 @@
           "services/database/migrations/017_game_countries.sql",
           "services/database/migrations/018_route_performance.sql",
           "services/database/migrations/019_normalized_game_flags.sql",
+          "services/database/migrations/020_home_reference_order.sql",
           "services/database/migrations/900_seed.sql"
         ],
         "exclude": []

@@ -60,8 +60,11 @@ agree with their results, readers who correct the record, and a serious odds eng
 
 The homepage leads with up to 20 upcoming fixtures and 20 recent results across
 competitions. It follows the original site's team-strength, match-importance
-and proximity ranking within rolling seven-day windows, refreshed every 30
-seconds. Dates and kickoff times use Brasília time. The featured championship's
+and proximity ranking. Upcoming fixtures span three hours ago to fourteen days
+ahead; played results use fourteen days on either side of the clock shifted back
+three hours, as in the reference. Both feeds refresh every 30 seconds and retain
+global rank order under shared date headings and phase headings. Dates and
+kickoff times use Brasília time. The featured championship's
 table and the championship catalogue follow the game feeds.
 
 Launch automatically upgrades existing databases through the pgroll migration

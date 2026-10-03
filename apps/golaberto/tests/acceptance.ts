@@ -176,7 +176,9 @@ test("test-home-featured: the front page keeps the featured season and its top s
 test("test-home-games: fixtures and results lead the page, retain competition and open game details", async () => {
   const upcoming = await psql("SELECT id FROM game WHERE NOT played ORDER BY id LIMIT 1");
   const saved = JSON.parse(await psql(`SELECT json_agg(json_build_object('id', id, 'day', day, 'kickoff', kickoff)) FROM game WHERE id IN ('${upcoming}', '${WIN}')`));
+  await psql("CREATE TABLE home_lead_acceptance_backup AS SELECT id,kickoff FROM game_card");
   try {
+    await psql(`UPDATE game_card SET kickoff=NULL WHERE id NOT IN ('${upcoming}','${WIN}')`);
     await psql(`UPDATE game SET kickoff = now() + interval '2 hours', day = (now() + interval '2 hours')::date WHERE id = '${upcoming}'; UPDATE game SET kickoff = now() - interval '2 hours', day = (now() - interval '2 hours')::date WHERE id = '${WIN}'`);
     // Wait for the existing card stream, then select with the server clock.
     for (let attempt = 0; ; attempt++) {
@@ -188,24 +190,19 @@ test("test-home-games: fixtures and results lead the page, retain competition an
     const page = await open("/", { width: 390 });
     await page.waitForSelector(`.home-upcoming a[href$="/${upcoming}"]`, { timeout: STREAM_MS });
     await page.waitForSelector(`.home-results a[href$="/${WIN}"]`, { timeout: STREAM_MS });
-    const groups: Array<{ id: string | null; heading: string }> = await page.locator(".home-upcoming .home-championship").evaluateAll((groups: Element[]) => groups.map((group) => ({
-      id: group.getAttribute("data-championship"), heading: group.querySelector("h3 a")?.textContent?.trim() ?? "",
-    })));
-    assert(groups.length > 0 && groups.every((group) => group.heading), "each championship has a named heading");
-    assertEquals(new Set(groups.map((group) => group.id)).size, groups.length, "championships are not repeated");
-    const grouped = await page.evaluate(() => Array.from(document.querySelectorAll(".home-games .home-championship")).every((group) => {
-      const id = group.getAttribute("data-championship");
-      return group.querySelector("h3 a")?.getAttribute("href")?.endsWith(`/${id}`) &&
-        Array.from(group.querySelectorAll(".games li:not(.empty)")).every((row) => !row.querySelector(".where"));
+    const grouped = await page.evaluate(() => Array.from(document.querySelectorAll(".home-games .home-championship")).every((row) => {
+      const heading = Array.from(row.querySelectorAll(".home-phase-label")).find(el => (el as HTMLElement).checkVisibility());
+      return (!heading || (heading.textContent?.trim() && heading.getAttribute("href")?.endsWith(`/${row.getAttribute("data-championship")}`))) && !row.querySelector(".where");
     }));
-    assert(grouped, "championship headings link correctly and match rows omit repeated competition labels");
-    const ownership: Array<{ id: string | undefined; championship: string | null }> = await page.evaluate(() => Array.from(document.querySelectorAll(".home-games .home-championship")).flatMap((group) =>
-      Array.from(group.querySelectorAll(".game-row")).map((row) => ({
-        id: row.getAttribute("href")?.split("/").pop(), championship: group.getAttribute("data-championship"),
-      }))));
-    assert(ownership.length > 0, "grouped game rows are populated");
-    const cardOwners = JSON.parse(await psql(`SELECT json_object_agg(id, championship_id) FROM game_card WHERE id IN (${ownership.map((row) => `'${row.id}'`).join(",")})`));
-    assert(ownership.every((row) => cardOwners[row.id!] === row.championship), "each game belongs to its displayed championship");
+    assert(grouped, "phase headings name and link their championship without repeated row labels");
+    for (const [section, rank] of [[".home-upcoming", "home_upcoming_rank"], [".home-results", "home_recent_rank"]]) {
+      const rendered = await page.locator(`${section} .game-row`).evaluateAll((rows: Element[]) => rows.map(row => row.getAttribute("href")?.split("/").pop()));
+      const expected = JSON.parse(await psql(`SELECT json_agg(id ORDER BY ${rank}) FROM home_game_card WHERE ${rank}>0`));
+      assertEquals(rendered, expected, "rendered rows preserve the server's global date/phase rank order");
+      const transitions = JSON.parse(await psql(`SELECT json_agg(id ORDER BY ${rank}) FROM home_game_card WHERE home_${rank === "home_upcoming_rank" ? "upcoming" : "recent"}_group`));
+      const headings = await page.locator(`${section} .home-phase-label:visible`).evaluateAll((rows: Element[]) => rows.map(row => row.closest("li")?.querySelector(".game-row")?.getAttribute("href")?.split("/").pop()));
+      assertEquals(headings, transitions, "phase headings appear exactly on server-marked transitions");
+    }
     assertEquals(await page.locator(".home-games-note, .content > .lead").count(), 0);
     assert((await texts(page, ".home-results .score b")).every(Boolean), "played games show both scores");
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "home fits a phone");
@@ -213,13 +210,137 @@ test("test-home-games: fixtures and results lead the page, retain competition an
     await page.waitForSelector(".scoreboard");
     assert((await said(page, ".scoreboard")).join(" ").includes("Athletico-PR"));
   } finally {
-    for (const row of saved) {
-      await psql(`UPDATE game SET day = '${row.day}', kickoff = ${row.kickoff ? `'${row.kickoff}'` : "NULL"} WHERE id = '${row.id}'`);
+    try {
+      for (const row of saved) {
+        await psql(`UPDATE game SET day = '${row.day}', kickoff = ${row.kickoff ? `'${row.kickoff}'` : "NULL"} WHERE id = '${row.id}'`);
+      }
+      for (let attempt = 0; ; attempt++) {
+        if (await psql(`SELECT count(*) FROM game g JOIN game_card c USING (id) WHERE g.id IN ('${upcoming}', '${WIN}') AND g.kickoff IS NOT DISTINCT FROM c.kickoff`) === "2") break;
+        assert(attempt < 90, "the stream did not restore the home fixtures");
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
+    } finally {
+      await psql("UPDATE game_card g SET kickoff=b.kickoff FROM home_lead_acceptance_backup b WHERE g.id=b.id; DROP TABLE home_lead_acceptance_backup; SELECT refresh_home_games()");
     }
+  }
+});
+
+test("test-home-games: same-day games share dates and live edits regroup both feeds", async () => {
+  const fixtures: Array<{ id: string; played: boolean; championship: string }> = JSON.parse(await psql(`
+    WITH candidates AS (
+      SELECT g.id, g.played, p.championship_id AS championship,
+        row_number() OVER (PARTITION BY g.played, p.championship_id ORDER BY g.id) AS n
+      FROM home_game_card g JOIN phase p ON p.id=g.phase_id
+    ), chosen AS (
+      SELECT *, row_number() OVER (PARTITION BY played ORDER BY n, championship, id) AS pick FROM candidates
+    ) SELECT json_agg(row_to_json(f)) FROM (
+      SELECT id, played, championship FROM chosen WHERE pick<=3 ORDER BY played,pick
+    ) f
+  `));
+  assertEquals(fixtures.length, 6, "each feed needs three selected games");
+  for (const played of [false,true]) assert(new Set(fixtures.filter(row => row.played===played).map(row => row.championship)).size>=2, "shared dates span competitions in each feed");
+  const ids = fixtures.map(row => `'${row.id}'`).join(",");
+  const saved = JSON.parse(await psql(`SELECT json_agg(json_build_object('id',id,'day',day,'kickoff',kickoff)) FROM game WHERE id IN (${ids})`));
+  const waitForCards = async () => {
     for (let attempt = 0; ; attempt++) {
-      if (await psql(`SELECT count(*) FROM game g JOIN game_card c USING (id) WHERE g.id IN ('${upcoming}', '${WIN}') AND g.kickoff IS NOT DISTINCT FROM c.kickoff`) === "2") break;
-      assert(attempt < 90, "the stream did not restore the home fixtures");
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (await psql(`SELECT count(*) FROM game g JOIN game_card c USING(id)
+        WHERE g.id IN (${ids}) AND g.day=c.day AND g.kickoff IS NOT DISTINCT FROM c.kickoff`) === "6") return;
+      assert(attempt < 90, "the stream did not copy home date changes");
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+  };
+  const dates = (page: Page) => page.evaluate(() => {
+    const groups = Array.from(document.querySelectorAll(".home-upcoming, .home-results"));
+    return groups.every(group => {
+      const days = Array.from(group.querySelectorAll(".game-row .day")).map(el => el.textContent?.trim());
+      const labels = Array.from(group.querySelectorAll(".home-day-label")).map(el => el.textContent?.trim());
+      return days.length > 0 && labels.length === new Set(days).size &&
+        labels.every((day, i) => day === [...new Set(days)][i]) &&
+        Array.from(group.querySelectorAll(".game-row .day")).every(el => el.classList.contains("visually-hidden"));
+    }) && groups.length > 0;
+  });
+  await psql("CREATE TABLE home_dates_acceptance_backup AS SELECT id,kickoff FROM game_card");
+  try {
+    await psql(`UPDATE game_card SET kickoff=NULL WHERE id NOT IN (${ids})`);
+    for (const [i, row] of fixtures.entries()) {
+      const days = (row.played ? -1 : 1) * (i % 3 === 2 ? 2 : 1);
+      await psql(`UPDATE game SET kickoff=(date_trunc('day',now() AT TIME ZONE 'America/Sao_Paulo')
+        + interval '${days} days' + interval '${12 + i % 3} hours') AT TIME ZONE 'America/Sao_Paulo',
+        day=(now() AT TIME ZONE 'America/Sao_Paulo')::date + ${days} WHERE id='${row.id}'`);
+    }
+    await waitForCards();
+    await psql("SELECT refresh_home_games()");
+    for (const opts of [{ width: 390 }, { width: 1366, dark: true }]) {
+      const page = await open("/", opts);
+      for (const row of fixtures) await page.waitForSelector(`.home-games .game-row[href$='/${row.id}']`, { timeout: STREAM_MS });
+      await page.waitForFunction(() => document.querySelectorAll(".home-day-label").length >= 4);
+      assert(await dates(page), "each day has one shared date across competitions in feed order, with accessible dates on links");
+      for (const played of [false, true]) {
+        const labels = await texts(page, `${played ? '.home-results' : '.home-upcoming'} .home-day-label`);
+        const expected: string[] = JSON.parse(await psql(`SELECT json_agg(DISTINCT day_display) FROM home_game_card WHERE id IN (${fixtures.filter(row => row.played === played).map(row => `'${row.id}'`).join(',')})`));
+        assertEquals(expected.length, 2, "the fixture covers two distinct dates");
+        for (const day of expected) assertEquals(labels.filter(label => label === day).length, 1, "fixture dates each have one heading");
+      }
+      assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "shared dates and full team names fit the viewport");
+      // Move the first same-day game; its sibling must acquire the date heading without a reload.
+      const moving = fixtures[opts.width === 390 ? 0 : 3];
+      await psql(`UPDATE game SET day=day + ${moving.played ? -1 : 1}, kickoff=kickoff + interval '${moving.played ? -1 : 1} day' WHERE id='${moving.id}'`);
+      await waitForCards();
+      await psql("SELECT refresh_home_games()");
+      const newDay = await psql(`SELECT day_display FROM home_game_card WHERE id='${moving.id}'`);
+      await page.waitForFunction(({ id, day }: { id: string; day: string }) =>
+        document.querySelector(`.home-games .game-row[href$='/${id}'] .day`)?.textContent === day, { id: moving.id, day: newDay });
+      for (let attempt = 0; !(await dates(page)); attempt++) {
+        assert(attempt < 40, "live date headings did not regroup");
+        await new Promise(resolve => setTimeout(resolve, 250));
+      }
+    }
+  } finally {
+    try {
+      for (const row of saved) await psql(`UPDATE game SET day='${row.day}', kickoff=${row.kickoff ? `'${row.kickoff}'` : 'NULL'} WHERE id='${row.id}'`);
+      await waitForCards();
+    } finally {
+      await psql("UPDATE game_card g SET kickoff=b.kickoff FROM home_dates_acceptance_backup b WHERE g.id=b.id; DROP TABLE home_dates_acceptance_backup; SELECT refresh_home_games()");
+    }
+  }
+});
+
+test("test-home-games: a phase heading transfers immediately when its first kickoff is removed", async () => {
+  const ids: string[] = JSON.parse(await psql(`WITH chosen AS (
+    SELECT phase_id FROM home_game_card WHERE NOT played GROUP BY phase_id HAVING count(*)>=2 ORDER BY phase_id LIMIT 1
+  ) SELECT json_agg(id) FROM (SELECT id FROM home_game_card WHERE NOT played AND phase_id=(SELECT phase_id FROM chosen)
+    ORDER BY home_upcoming_rank LIMIT 2) selected`));
+  assertEquals(ids.length,2);
+  await psql("CREATE TABLE home_heading_acceptance_backup AS SELECT id,kickoff FROM game_card");
+  let release: (() => Promise<void>) | undefined;
+  try {
+    await psql(`UPDATE game_card SET kickoff=NULL WHERE id NOT IN (${ids.map(id => `'${id}'`).join(',')}); SELECT refresh_home_games()`);
+    // Put both games on one day, then freeze only the clock refresh to prove the UI owns adjacency.
+    await psql(`UPDATE game_card SET kickoff=now()+interval '1 hour' WHERE id IN (${ids.map(id => `'${id}'`).join(',')}); SELECT refresh_home_games()`);
+    const ordered: Array<{id:string; kickoff:string}> = JSON.parse(await psql("SELECT json_agg(json_build_object('id',id,'kickoff',kickoff) ORDER BY home_upcoming_rank) FROM home_game_card WHERE NOT played"));
+    const [first,second] = ordered;
+    const page = await open("/",{width:390});
+    await page.waitForFunction(() => document.querySelectorAll('.home-upcoming .game-row').length===2);
+    await page.locator('.home-upcoming .home-phase-label:visible').waitFor();
+    const holder = new Deno.Command("docker", {args:["compose","-p",Deno.env.get("COMPOSE_PROJECT_NAME")!,"exec","-T","apps_golaberto-database","psql","-U","postgres","-d","golaberto","-v","ON_ERROR_STOP=1","-Atq"],stdin:"piped",stdout:"piped",stderr:"piped"}).spawn();
+    const writer=holder.stdin.getWriter(), reader=holder.stdout.getReader();
+    const errors=new Response(holder.stderr).text();
+    release=async () => {await writer.write(new TextEncoder().encode("ROLLBACK;\n")); await writer.close(); await reader.cancel(); assert((await holder.status).success,await errors);};
+    await writer.write(new TextEncoder().encode("BEGIN;\nSELECT pg_advisory_xact_lock(715015,1);\nSELECT 'lock-ready';\n"));
+    let output="";
+    while (!output.includes('lock-ready')) {const chunk=await reader.read(); assert(!chunk.done,'clock lock holder stopped'); output+=new TextDecoder().decode(chunk.value);}
+    assertEquals(await psql(`SELECT home_upcoming_group FROM game_card WHERE id='${second.id}'`),'f');
+    await psql(`UPDATE game_card SET kickoff=NULL WHERE id='${first.id}'`);
+    await page.locator(`.home-upcoming .game-row[href$='/${first.id}']`).waitFor({state:'detached'});
+    await page.locator(`.home-championship:has(.game-row[href$='/${second.id}']) .home-phase-label:visible`).waitFor();
+    assertEquals(await page.locator('.home-upcoming .home-phase-label:visible').count(),1);
+    assertEquals(await psql(`SELECT home_upcoming_group FROM game_card WHERE id='${second.id}'`),'f','heading moved without a server marker refresh');
+    await psql(`UPDATE game_card SET kickoff='${first.kickoff}' WHERE id='${first.id}'`);
+    await page.locator(`.home-championship:has(.game-row[href$='/${first.id}']) .home-phase-label:visible`).waitFor();
+    assertEquals(await page.locator('.home-upcoming .home-phase-label:visible').count(),1,'restoring the first row removes the successor heading');
+  } finally {
+    try {if (release) await release();} finally {
+      await psql("UPDATE game_card g SET kickoff=b.kickoff FROM home_heading_acceptance_backup b WHERE g.id=b.id; DROP TABLE home_heading_acceptance_backup; SELECT refresh_home_games()");
     }
   }
 });
@@ -227,16 +348,17 @@ test("test-home-games: fixtures and results lead the page, retain competition an
 // These cases deliberately leave refresh_home_games to the running clock stream.
 test("test-home-games: a fixture expires without another write or a manual refresh", async () => {
   const id = await psql("SELECT id FROM game_card WHERE NOT played ORDER BY home_upcoming_rank > 0 DESC, id LIMIT 1");
-  const saved = await psql(`SELECT kickoff::text FROM game_card WHERE id = '${id}'`);
+  await psql("CREATE TABLE home_expiry_acceptance_backup AS SELECT id,kickoff FROM game_card");
   try {
-    await psql(`UPDATE game_card SET kickoff = now() + interval '70 seconds' WHERE id = '${id}'`);
+    await psql(`UPDATE game_card SET kickoff=NULL WHERE NOT played AND id<>'${id}'`);
+    await psql(`UPDATE game_card SET kickoff = now() - interval '3 hours' + interval '70 seconds' WHERE id = '${id}'`);
     const page = await open("/");
     const link = `.home-upcoming a[href$="/${id}"]`;
     await page.waitForSelector(link, { timeout: 45_000 });
     await page.waitForSelector(link, { state: "detached", timeout: 115_000 });
     assertEquals(await psql(`SELECT home_upcoming_rank FROM game_card WHERE id = '${id}'`), "0");
   } finally {
-    await psql(`UPDATE game_card SET kickoff = ${saved ? `'${saved}'` : "NULL"} WHERE id = '${id}'`);
+    await psql("UPDATE game_card g SET kickoff=b.kickoff FROM home_expiry_acceptance_backup b WHERE g.id=b.id; DROP TABLE home_expiry_acceptance_backup");
   }
 });
 
@@ -249,8 +371,8 @@ test("test-home-games: empty windows remove stale rows and explain both feeds", 
     await page.waitForFunction(() => {
       const upcoming = document.querySelector(".home-upcoming .home-championships");
       const recent = document.querySelector(".home-results .home-championships");
-      return upcoming?.textContent?.includes("Nenhum jogo com horário marcado nos próximos sete dias.") &&
-        recent?.textContent?.includes("Nenhum resultado com horário registrado nos últimos sete dias.") &&
+      return upcoming?.textContent?.includes("Nenhum jogo com horário marcado nesta janela de duas semanas.") &&
+        recent?.textContent?.includes("Nenhum resultado com horário registrado nesta janela de duas semanas.") &&
         !document.querySelector(".home-games .games li:not(.empty)");
     }, undefined, { timeout: 45_000 });
     assertEquals(await page.locator(".home-games .games li:not(.empty)").count(), 0);

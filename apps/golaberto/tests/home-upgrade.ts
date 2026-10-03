@@ -51,6 +51,7 @@ Deno.test("home schema upgrades retained data before readers start and does not 
     assert(Number(await sql(clone, "SELECT count(*) FROM game_card WHERE show_country")) > 0);
     assertEquals(await sql(clone, "SELECT count(*) FROM team_game t JOIN game_card g ON g.id=t.game_id WHERE (t.show_country,t.opponent_country) IS DISTINCT FROM (g.show_country,CASE WHEN t.side='home' THEN g.away_country ELSE g.home_country END)"), "0");
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='019_normalized_game_flags' AND done"), "1");
+    assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='020_home_reference_order' AND done"), "1");
     // Existing stale metadata must never trigger a bounded-copy rewrite.
     await sql(clone, "UPDATE home_game_card SET show_country=NOT show_country, home_country='Retired'; UPDATE matches_game_card SET show_country=NOT show_country, home_country='Retired'");
     const versions = () => sql(clone, "SELECT md5(string_agg(id::text||':'||txid::text, ',' ORDER BY id)) FROM (SELECT id,txid FROM home_game_card UNION ALL SELECT id,txid FROM matches_game_card) rows");
@@ -62,7 +63,14 @@ Deno.test("home schema upgrades retained data before readers start and does not 
     assert(Number(await sql(clone, "SELECT count(*) FROM game_card WHERE home_recent_rank > 0")) > 0, "the upgraded results feed populates");
     assertEquals(await sql(clone, "SELECT count(*) FROM game_card WHERE home_upcoming_rank > 0 OR home_recent_rank > 0"), await sql(clone, "SELECT count(*) FROM home_game_order(now())"));
     assertEquals(await sql(clone, "SELECT count(*) FROM home_game_card"), await sql(clone, "SELECT count(*) FROM game_card WHERE home_upcoming_rank > 0 OR home_recent_rank > 0"));
-    assertEquals(await sql(clone, "SELECT count(*) FROM home_game_card h JOIN game_card g USING(id) WHERE (to_jsonb(h)-ARRAY['txid','show_country','home_country','away_country']) IS DISTINCT FROM (to_jsonb(g)-ARRAY['txid','show_country','home_country','away_country'])"), "0");
+    assertEquals(await sql(clone, "SELECT count(*) FROM home_game_card h JOIN game_card g USING(id) WHERE (to_jsonb(h)-ARRAY['txid','day','day_display','show_country','home_country','away_country']) IS DISTINCT FROM (to_jsonb(g)-ARRAY['txid','day','day_display','show_country','home_country','away_country'])"), "0");
+    assertEquals(await sql(clone, "SELECT count(*) FROM home_game_card WHERE day IS DISTINCT FROM (kickoff AT TIME ZONE 'America/Sao_Paulo')::date"), "0", "projected day follows local kickoff date");
+    await sql(clone, `DO $$ DECLARE picked home_game_card; BEGIN
+      SELECT * INTO picked FROM home_game_card LIMIT 1;
+      UPDATE game_card SET kickoff=NULL WHERE id=picked.id;
+      IF EXISTS (SELECT 1 FROM home_game_card WHERE id=picked.id) THEN RAISE EXCEPTION 'upgraded projection retained an unknown kickoff'; END IF;
+      UPDATE game_card SET kickoff=picked.kickoff WHERE id=picked.id;
+    END $$`);
     assertEquals(await sql(clone, "SELECT count(*) FROM pg_publication_tables WHERE pubname='electric_publication_default' AND tablename='home_game_card'"), "1");
     assertEquals(await sql(clone, "SELECT count(*) FROM pg_publication_tables WHERE pubname='golaberto_cdc' AND tablename='home_game_card'"), "0");
     assertEquals(await sql(clone, "SELECT count(*) FROM pg_attribute h JOIN pg_attribute g ON g.attrelid='game_card'::regclass AND h.attname=g.attname WHERE h.attrelid='home_game_card'::regclass AND h.attnum>0 AND NOT h.attisdropped AND h.atttypid<>g.atttypid"), "0");
@@ -77,6 +85,7 @@ Deno.test("home schema upgrades retained data before readers start and does not 
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name = '014_home_championships' AND done"), "1");
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name = '015_home_performance' AND done"), "1");
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name = '016_matches_performance' AND done"), "1");
+    assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='020_home_reference_order' AND done"), "1", "the new migration is recorded once on replay");
   } finally {
     await sql("postgres", `DROP DATABASE ${clone} WITH (FORCE)`);
   }

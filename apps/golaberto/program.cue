@@ -30,6 +30,9 @@ _gameCountriesUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_ga
 _normalizedGameFlagsSql: string @embed(file="services/database/sql/019_normalized_game_flags.sql", type=text)
 _normalizedGameFlagsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_normalizedGameFlagsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
+_homeReferenceSql: string @embed(file="services/database/sql/020_home_reference_order.sql", type=text)
+_homeReferenceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeReferenceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
 _routePerformanceSql: string @embed(file="services/database/sql/018_route_performance.sql", type=text)
 _routePerformanceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_routePerformanceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
@@ -870,6 +873,7 @@ code: pronto.#App & {
 		{name: "017_game_countries.sql", src: "services/database/sql/017_game_countries.sql"},
 		{name: "018_route_performance.sql", src: "services/database/sql/018_route_performance.sql"},
 		{name: "019_normalized_game_flags.sql", src: "services/database/sql/019_normalized_game_flags.sql"},
+		{name: "020_home_reference_order.sql", src: "services/database/sql/020_home_reference_order.sql"},
 		// Large archive fixtures are copied at build, never expanded through CUE.
 		{name: "900_seed.sql", src: "services/database/sql/900_seed.sql"},
 	]
@@ -883,6 +887,7 @@ code: pronto.#App & {
 	state: migrations: "017_game_countries": {operations: [{sql: {up: _gameCountriesUpgrade, onComplete: true}}]}
 	state: migrations: "018_route_performance": {operations: [{sql: {up: _routePerformanceUpgrade, onComplete: true}}]}
 	state: migrations: "019_normalized_game_flags": {operations: [{sql: {up: _normalizedGameFlagsUpgrade, onComplete: true}}]}
+	state: migrations: "020_home_reference_order": {operations: [{sql: {up: _homeReferenceUpgrade, onComplete: true}}]}
 	// The numeric stage (ir decision-chances).
 	// The chances read each game's power from team_rating, so they rerun
 	// whenever the ratings change.
@@ -1433,7 +1438,7 @@ code: pronto.#App & {
 			}
 			"test-home-games": {
 				of: "principal"
-				says: "upcoming fixtures and recent results across competitions lead the home page and open their games"
+				says: "upcoming fixtures and recent results lead the home page in server rank order under shared date headings and phase subheadings, and open their games"
 				given: {upcoming: true, recent: true}
 				when: "arrive"
 				then: "output.upcoming.size() > 0 && output.recent.size() > 0"

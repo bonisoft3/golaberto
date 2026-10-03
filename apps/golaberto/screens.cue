@@ -778,9 +778,6 @@ _campeonatoMarkup: """
 	"""}, ""][0]
 	_country: [if D.withCountry {"""
 			          <div class="geography-group">
-			            <label class="field" for="teams-region"><span data-text="{msg.geography_region}"></span>
-			              <select id="teams-region" data-value="{region_selection}"><option value="*" data-text="{msg.geography_world}"></option><optgroup data-live="geography_region" data-filter="limit=6" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{msg[message_key]}"></option></template></optgroup></select>
-			            </label>
 			            <div class="field country-picker"><span id="teams-country-label" data-text="{msg.geography_country}"></span>
 			              <button id="teams-country-open" type="button" class="country-open" command="toggle-popover" commandfor="teams-country-pop" aria-labelledby="teams-country-label teams-country-readout" aria-haspopup="dialog" aria-controls="teams-country-pop" data-country-selection="{country_selection}" data-country-query="{country}">
 			                <span id="teams-country-readout" class="country-readout">
@@ -790,6 +787,9 @@ _campeonatoMarkup: """
 			                </span>
 			              </button>
 			            </div>
+			            <label class="field" for="teams-region"><span data-text="{msg.geography_region}"></span>
+			              <select id="teams-region" data-value="{region_selection}"><option value="*" data-text="{msg.geography_world}"></option><optgroup data-live="geography_region" data-filter="limit=6" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{msg[message_key]}"></option></template></optgroup></select>
+			            </label>
 			            <div id="teams-country-pop" class="country-pop" popover role="dialog" aria-label="{msg.geography_country}">
 			              <label class="field" for="teams-country"><span data-text="{msg.geography_search_country}"></span>
 			                <input id="teams-country" type="text" role="searchbox" data-value="{country}" placeholder="{msg.geography_search_country}" maxlength="60" autocomplete="off" autofocus>
@@ -824,8 +824,8 @@ _campeonatoMarkup: """
 		          <label class="field grow" for="\(D._input)"><span data-text="{msg.search_label}"></span>
 		            <input id="\(D._input)" type="search" value="{q}" placeholder="{msg.\(D.row)_placeholder}" maxlength="80" autocomplete="off">
 		          </label>
-		\(D._type)
 		\(D._country)
+		\(D._type)
 		        </div>
 		        <table class="grid catalog-table">
 		          <thead><tr>

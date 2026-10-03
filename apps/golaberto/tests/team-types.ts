@@ -130,6 +130,19 @@ for (const width of [390, 1366]) {
       });
       await page.goto(`${base}/equipes?lang=pt-BR`);
       await page.waitForSelector("#teams-type");
+      const controlIds = ["teams-q", "teams-country-open", "teams-region", "teams-type"];
+      const controlOrder = await page.locator(".filters [id]").evaluateAll((elements, ids) =>
+        elements.map((element) => element.id).filter((id) => ids.includes(id)), controlIds);
+      assertEquals(controlOrder, controlIds, "reading and keyboard order follows name, country, region, type");
+      const positions = await page.evaluate((ids) => ids.map((id) => {
+        const rect = document.getElementById(id)!.getBoundingClientRect();
+        return { x: rect.x, y: rect.y };
+      }), controlIds);
+      for (let i = 1; i < positions.length; i++) {
+        assert(positions[i].y > positions[i - 1].y ||
+          (positions[i].y === positions[i - 1].y && positions[i].x > positions[i - 1].x),
+          "wrapped visual order must follow the reading order");
+      }
       const typeSelect = page.locator("#teams-type");
       const countryOpen = page.locator("#teams-country-open");
       const countryPop = page.locator("#teams-country-pop");

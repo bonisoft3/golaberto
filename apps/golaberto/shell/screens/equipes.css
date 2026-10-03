@@ -3,7 +3,8 @@
 
 /* Geography stays compact while the searchable country list opens in a native
    popover beside its trigger. */
-.geography-group { display: flex; flex: 1 1 16rem; gap: var(--sp-md); min-width: 0; flex-wrap: wrap; align-items: flex-end; }
+.geography-group { display: contents; }
+.filters > .field.grow { flex: 1 1 16rem; min-width: 0; }
 .geography-group .field { flex: 1 1 8rem; min-width: 0; }
 .geography-group select { width: 100%; min-width: 0; }
 .geography-group > .country-picker { flex: 1 1 12rem; }

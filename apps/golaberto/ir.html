@@ -138,6 +138,7 @@ graph TD
 <tr data-ordinal="12"><td>season</td><td>string</td><td></td><td>generated; 2026, or 2026/2027 across a year</td></tr>
 <tr data-ordinal="13"><td>full_name</td><td>string</td><td></td><td>generated; Brasil - Campeonato Brasileiro 2026</td></tr>
 <tr data-ordinal="14"><td>featured</td><td>bool</td><td></td><td>default false; the championship table below the home feeds (<a href="#decision-home">decision-home</a>)</td></tr>
+<tr data-ordinal="15"><td>search_name</td><td>string</td><td></td><td>generated: the full championship label; search-only ICU collation ignores case and accents</td></tr>
 </table>
 <p data-extract="invariant">Row invariant: <code class="cel">this.ends &gt;= this.begins</code> — a season does not end before it begins.</p>
 </section>
@@ -209,6 +210,7 @@ graph TD
 <tr data-ordinal="3"><td>full_name</td><td>string</td><td><code class="cel">this.size() &lt;= 160</code></td><td>optional</td></tr>
 <tr data-ordinal="4"><td>city</td><td>string</td><td><code class="cel">this.size() &lt;= 80</code></td><td>optional</td></tr>
 <tr data-ordinal="5"><td>country</td><td>string</td><td><code class="cel">this.size() &lt;= 60</code></td><td>optional</td></tr>
+<tr data-ordinal="6"><td>search_name</td><td>string</td><td></td><td>generated: name; search-only ICU collation ignores case and accents</td></tr>
 </table>
 </section>
 
@@ -226,6 +228,7 @@ graph TD
 <tr data-ordinal="7"><td>stadium_id</td><td>uuid</td><td></td><td>references stadium; optional</td></tr>
 <tr data-ordinal="8"><td>team_type</td><td>string</td><td><code class="cel">this in [&#x27;club&#x27;, &#x27;national&#x27;]</code></td><td>default &#x27;club&#x27;; club or national</td></tr>
 <tr data-ordinal="9"><td>foundation_display</td><td>string</td><td></td><td>generated: the foundation as dd/mm/yyyy</td></tr>
+<tr data-ordinal="10"><td>search_name</td><td>string</td><td></td><td>generated: name; search-only ICU collation ignores case and accents</td></tr>
 </table>
 </section>
 
@@ -237,6 +240,7 @@ graph TD
 <tr data-ordinal="1"><td>id</td><td>uuid</td><td></td><td>pk</td></tr>
 <tr data-ordinal="2"><td>name</td><td>string</td><td><code class="cel">this.size() &gt; 0 &amp;&amp; this.size() &lt;= 80</code></td><td></td></tr>
 <tr data-ordinal="3"><td>location</td><td>string</td><td><code class="cel">this.size() &lt;= 80</code></td><td>optional</td></tr>
+<tr data-ordinal="4"><td>search_name</td><td>string</td><td></td><td>generated: name; search-only ICU collation ignores case and accents</td></tr>
 </table>
 </section>
 
@@ -2536,6 +2540,7 @@ The catalogue lists all thirteen seeded championships, <code class="cel">output.
 </p>
 <p id="test-catalog-search" data-kind="test" data-of="campeonatos" data-accepts="accept-catalog-search">
 Typing <code class="cel">input.q == "libertadores"</code> narrows to <code class="cel">output.rows == ["América do Sul - Copa Libertadores 2026"]</code>, and picking <code class="cel">input.region == "continental"</code> with no text leaves the three continental championships.
+The accent-search integration check compares result IDs for atletico, atlético, uppercase and decomposed spellings against accented and plain fixtures in every text search: championships, teams, stadiums, referees, and both editor pickers. Phone and desktop checks preserve the typed query, confirm 40-row pagination reaches all 42 team fixtures, and select a matching picker result. SQL checks cover retained and declared-baseline upgrades, replay with dependent views, and search values updating after a name edit.
 </p>
 <p id="test-catalog-no-match" data-kind="test" data-of="campeonatos" data-accepts="accept-catalog-search">
 A search nothing matches, <code class="cel">input.q == "xyzzy"</code>, shows the catalogue's own words, <code class="cel">output.empty == "Nenhum campeonato com esse nome nesta esfera."</code>.
@@ -2556,6 +2561,7 @@ The 2026 Libertadores has two phases and no groups yet: <code class="cel">output
 An address naming no championship says so rather than showing a blank page: opening <code class="cel">input.id == "00000000-0000-4000-8000-000000000000"</code> shows <code class="cel">output.empty == "Este campeonato não existe ou foi removido."</code>.
 </p>
 <p id="test-languages" data-kind="test" data-of="campeonatos" data-accepts="accept-languages">
+With an English browser at 390px and 1366px, choosing Portuguese from every other supported language opens <code>/?lang=pt-BR</code>. Reloads, catalogue menu navigation and a championship round trip retain Portuguese, its current-language marker and the championship ID. The read-only <code>tests/language-switch.ts</code> regression runs at integrate.
 The catalogue answers at <code>/es/campeonatos</code> and <code>/en/championships</code> with <code class="cel">output.title["es-AR"] == "Campeonatos" &amp;&amp; output.title["en-GB"] == "Championships"</code>; on a championship's page the English link keeps the championship, <code class="cel">output.path == "/en/championship/" + input.id</code>.
 </p>
 <p id="test-dark" data-kind="test" data-of="principal" data-accepts="accept-dark">
@@ -2715,10 +2721,12 @@ The terminal draws the navigation strip before the screen's mount and owns it �
 <p id="decision-screen-range" data-kind="decision"><strong>One layout that bends, not four.</strong>
 Above 720px the page is content beside a side column in a column up to 960px wide; below it the side column follows the content, the masthead and band shrink, and the strip scrolls sideways on one line rather than wrapping. A table keeps its identifying columns on a phone and drops the least informative ones. No page scrolls sideways at 390, 768, 1366 or 1920px, and the acceptance driver measures it.</p>
 <p id="decision-languages" data-kind="decision"><strong>Six football traditions: pt-BR, es-AR, en-GB, then it-IT, de-DE, fr-FR.</strong>
+An explicit Portuguese choice carries <code>?lang=pt-BR</code> on the unprefixed address and subsequent navigation, including the menu, row links and navigate forms. The terminal retains that query on translated routes so browser language preferences cannot override it on reload. Canonical and alternate metadata keep their query-free addresses. The switcher keeps the current route and its row ID at desktop and phone widths; the existing masthead layout is the accepted oracle.
 Brazil's is the archive's own language and served unprefixed. Argentina's Spanish is the River Plate's and South America's, and it takes the bare <code>es</code> a reader's browser sends. England's English is the game's codifying tradition. Italy's, Germany's and France's follow, each at its own address (<code>/it</code>, <code>/de</code>, <code>/fr</code>), in its own football vocabulary. Six names do not fit beside the wordmark on a phone, so below 720px each language shows its code. Rows are not translated: a championship is named as its own country names it, and the level of play is a catalogue word chosen by the row's own value (<code>{msg[region]}</code>).</p>
 <p id="decision-machines" data-kind="decision"><strong>Every interaction is a machine; no screen has a plain form.</strong>
 A form is two implicit states with no timeout, no coordinated rollback and nothing a checker can walk. A machine states its states, its arrows and the effects it emits, the terminal's walk fires every arrow, and a write it makes is answered with <code>sync_ack</code> or <code>refused</code> where the chart draws an arrow for each. The catalogue's search is the first: two arrows over a tab row. Every later write — a comment, an editor's correction — is a machine whose effect is the write.</p>
 <p id="decision-catalog-tab" data-kind="decision"><strong>The catalogue's search is a tab row, written by a form on change.</strong>
+Every text search uses the generated search_name column with PostgreSQL 18 LIKE and ICU primary-strength collation (und-u-ks-level1, nondeterministic), mirroring the linked upstream utf8mb3_unicode_ci rule for case and accents. Both atletico and atlético match both spellings, including uppercase and decomposed Unicode. This applies to the championship catalogue, team/stadium/referee directories, and both editor pickers; pagination probes use the same predicate. Names, uniqueness and display ordering retain their original spelling and collation. Queries retain what the reader typed and existing bounded server reads; no client-only filtering or layout change. The additive 023 migration installs the collation on fresh and retained databases.
 Filtering is a live query over the championship table interpolating the search row's columns; a machine over that row assigns them from the controls' own events, so every keystroke narrows the list and nothing leaves the browser. The catalogue is rebuilt on every visit (<code>keep: 0</code>), so the search a reader returns to is the row's, which is the claim. A URL parameter would be the alternative; it would make a search shareable, but the archive's catalogue is short enough that a shared search is not worth an address.</p>
 <p id="decision-phases-stacked" data-kind="decision"><strong>A championship shows every phase, stacked, with chips that jump to each.</strong>
 Upstream shows one phase at a time behind buttons. Phases are rows, and a selection machine's states are fixed when the program is written, so a tab per phase would need a machine per championship shape. Stacked sections under anchor chips show a league (one phase) and a cup (several) the same way, and a phone reads them as one scroll.</p>

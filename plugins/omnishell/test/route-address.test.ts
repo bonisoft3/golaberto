@@ -49,6 +49,14 @@ describe("a route's address", () => {
     expect(routeHref(CFG, "regras", {}, "pt-BR")).toBe("/regras")
   })
 
+  it("keeps an explicit default-locale choice above browser negotiation", () => {
+    expect(routeHref(CFG, "arena", {}, "pt-BR", { explicitLocale: true })).toBe("/?lang=pt-BR")
+    expect(routeHref(CFG, "article", { slug: "a b/c" }, "pt-BR", { explicitLocale: true })).toBe("/artigo/a%20b%2Fc?lang=pt-BR")
+    expect(routeHref({ ...CFG, prefix: "/archive" }, "arena", {}, "pt-BR", { explicitLocale: true })).toBe("/archive?lang=pt-BR")
+    expect(routeHref(CFG, "arena", {}, "en", { explicitLocale: true })).toBe("/en")
+    expect(routeHref(PLAIN, "note", { id: "7" }, "pt", { explicitLocale: true })).toBe("/note/7")
+  })
+
   it("wears the segment the locale declares, on the pattern that locale states", () => {
     expect(routeHref(CFG, "regras", {}, "es")).toBe("/es/reglas")
     expect(routeHref(CFG, "regras", {}, "en")).toBe("/en/rules")

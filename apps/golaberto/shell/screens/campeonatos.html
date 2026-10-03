@@ -35,7 +35,7 @@
             <th scope="col" class="narrow" data-text="{msg.col_region}"></th>
             <th scope="col" class="narrow" data-text="{msg.col_category}"></th>
           </tr></thead>
-          <tbody data-live="championship" data-filter="full_name=ilike.*{q}*&region=like.*{region}*&offset={offset}&limit=40" data-order="region_name.asc,name.asc,begins.desc" data-empty="{msg.catalog_empty}">
+          <tbody data-live="championship" data-filter="search_name=like.*{q}*&region=like.*{region}*&offset={offset}&limit=40" data-order="region_name.asc,name.asc,begins.desc" data-empty="{msg.catalog_empty}">
             <template data-item>
               <tr>
                 <td><a data-route="campeonato" data-param-id="{id}"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}"></span></a></td>
@@ -48,7 +48,7 @@
 <nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
   <button id="catalog-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
   <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
-  <span data-live="championship" data-filter="full_name=ilike.*{q}*&region=like.*{region}*&amp;offset={next_offset}&amp;limit=1" data-order="region_name.asc,name.asc,begins.desc" data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <span data-live="championship" data-filter="search_name=like.*{q}*&region=like.*{region}*&amp;offset={next_offset}&amp;limit=1" data-order="region_name.asc,name.asc,begins.desc" data-empty=""><template data-item><i data-next-page hidden></i></template></span>
   <button id="catalog-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
 </nav>
       </div>

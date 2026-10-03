@@ -60,6 +60,6 @@ describe("a language switcher's current option", () => {
     // for another language still links to that language's spelling of the page.
     const m = await at("pt-BR")
     expect((m.one("#ar") as El).getAttribute("href")).toBe("/ar")
-    expect((m.one("#br") as El).getAttribute("href")).toBe("/")
+    expect((m.one("#br") as El).getAttribute("href")).toBe("/?lang=pt-BR")
   })
 })

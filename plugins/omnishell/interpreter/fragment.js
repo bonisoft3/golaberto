@@ -578,7 +578,9 @@ export function routePattern(route, locale) {
 
 /** Where a route lives, in one locale. The default locale is served
  * unprefixed — its prefixed spelling is an alias the server redirects — and
- * every other locale wears the segment it declares.
+ * every other locale wears the segment it declares. Navigation passes
+ * explicitLocale so the unprefixed default carries ?lang= above browser
+ * negotiation; canonical and alternate addresses remain query-free.
  *
  * Undefined when the address cannot be composed from data the row holds, and
  * the caller drops the attribute rather than writing a broken one. That is the
@@ -586,7 +588,7 @@ export function routePattern(route, locale) {
  * what the renderer's URL check gives for a refused one: a reader's data must
  * not take the screen down. A NAME the app got wrong still throws, because
  * that is the author's mistake and no row can fix it. */
-export function routeHref(cfg, screen, params, locale) {
+export function routeHref(cfg, screen, params, locale, { explicitLocale = false } = {}) {
   const route = cfg.routes?.find((r) => r.screen === screen);
   if (route === undefined) throw new ProgramError(`data-route names "${screen}", which is no route of this app`);
   const pattern = routePattern(route, locale);
@@ -610,7 +612,10 @@ export function routeHref(cfg, screen, params, locale) {
   });
   if (unaddressed) return undefined;
   // An app declaring no locales has one language and no prefixes at all.
-  if (cfg.i18n === undefined || locale === cfg.i18n.default) return mounted(cfg, filled);
+  if (cfg.i18n === undefined) return mounted(cfg, filled);
+  if (locale === cfg.i18n.default) {
+    return mounted(cfg, explicitLocale ? `${filled}?lang=${encodeURIComponent(locale)}` : filled);
+  }
   const declared = localeTable(cfg.i18n)[locale];
   if (declared === undefined) throw new ProgramError(`locale "${locale}" is not one this app declares`);
   return mounted(cfg, `/${declared.path}${filled === "/" ? "" : filled}`);

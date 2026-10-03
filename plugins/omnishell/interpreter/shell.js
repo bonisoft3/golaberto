@@ -629,10 +629,10 @@ export async function createShell({ config, mount }) {
     // someone else's :params.
     const localizeStrip = (locale) => {
       for (const a of nav?.querySelectorAll("a[data-route]") ?? []) {
-        const href = routeHref(cfg, a.dataset.route, routeParams(a), locale);
+        const href = routeHref(cfg, a.dataset.route, routeParams(a), locale, { explicitLocale: true });
         if (href === undefined) a.removeAttribute("href");
         else a.setAttribute("href", href);
-        if (a.getAttribute("href") === location.pathname) a.setAttribute("aria-current", "page");
+        if (href !== undefined && new URL(href, location.href).pathname === location.pathname) a.setAttribute("aria-current", "page");
         else a.removeAttribute("aria-current");
       }
       // The strip's own links, and not the person's: renderSession's anchor
@@ -713,9 +713,10 @@ export async function createShell({ config, mount }) {
       let { route, params, locale, written } = currentRoute();
       // A localized route has one address, so `?lang=` on one is replaced by
       // the address it names rather than rendered — the server answers the
-      // same case with a 301.
+      // same case with a 301. The default locale keeps its explicit query so
+      // a reload cannot negotiate the reader back into another language.
       if (route.paths !== undefined && new URLSearchParams(location.search).has("lang")) {
-        const canonical = routeHref(cfg, route.screen, params, locale);
+        const canonical = routeHref(cfg, route.screen, params, locale, { explicitLocale: true });
         if (canonical !== undefined) history.replaceState(null, "", canonical);
         ({ route, params, locale, written } = currentRoute());
       }

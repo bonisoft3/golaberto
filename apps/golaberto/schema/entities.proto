@@ -50,6 +50,7 @@ message Championship {
   optional string season = 12 [json_name = "season"];
   optional string full_name = 13 [json_name = "full_name"];
   optional bool featured = 14 [json_name = "featured"];
+  optional string search_name = 15 [json_name = "search_name"];
 }
 
 message Comment {
@@ -354,6 +355,7 @@ message Referee {
   optional string id = 1 [json_name = "id"];
   optional string name = 2 [json_name = "name"];
   optional string location = 3 [json_name = "location"];
+  optional string search_name = 4 [json_name = "search_name"];
 }
 
 message Stadium {
@@ -362,6 +364,7 @@ message Stadium {
   optional string full_name = 3 [json_name = "full_name"];
   optional string city = 4 [json_name = "city"];
   optional string country = 5 [json_name = "country"];
+  optional string search_name = 6 [json_name = "search_name"];
 }
 
 message Standing {
@@ -396,6 +399,7 @@ message Team {
   optional string stadium_id = 7 [json_name = "stadium_id"];
   optional string team_type = 8 [json_name = "team_type"];
   optional string foundation_display = 9 [json_name = "foundation_display"];
+  optional string search_name = 10 [json_name = "search_name"];
 }
 
 message TeamChance {

@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS championship (
   "season" portable_string GENERATED ALWAYS AS (extract(year from begins)::int::text || CASE WHEN extract(year from begins) = extract(year from ends) THEN '' ELSE '/' || extract(year from ends)::int::text END) STORED,
   "full_name" portable_string GENERATED ALWAYS AS (region_name || ' - ' || name || ' ' || extract(year from begins)::int::text || CASE WHEN extract(year from begins) = extract(year from ends) THEN '' ELSE '/' || extract(year from ends)::int::text END) STORED,
   "featured" portable_bool DEFAULT false NOT NULL,
+  "search_name" portable_string GENERATED ALWAYS AS (region_name || ' - ' || name || ' ' || extract(year from begins)::int::text || CASE WHEN extract(year from begins) = extract(year from ends) THEN '' ELSE '/' || extract(year from ends)::int::text END) STORED,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL,
   CHECK (ends >= begins)
@@ -78,6 +79,7 @@ CREATE TABLE IF NOT EXISTS stadium (
   "full_name" portable_string CHECK (char_length(full_name) <= 160),
   "city" portable_string CHECK (char_length(city) <= 80),
   "country" portable_string CHECK (char_length(country) <= 60),
+  "search_name" portable_string GENERATED ALWAYS AS (name) STORED,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -92,6 +94,7 @@ CREATE TABLE IF NOT EXISTS team (
   "stadium_id" uuid REFERENCES stadium(id) ON DELETE CASCADE,
   "team_type" portable_string DEFAULT 'club' NOT NULL CHECK (team_type IN ('club', 'national')),
   "foundation_display" portable_string GENERATED ALWAYS AS (lpad(extract(day from foundation)::int::text, 2, '0') || '/' || lpad(extract(month from foundation)::int::text, 2, '0') || '/' || extract(year from foundation)::int::text) STORED,
+  "search_name" portable_string GENERATED ALWAYS AS (name) STORED,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -100,6 +103,7 @@ CREATE TABLE IF NOT EXISTS referee (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   "name" portable_string NOT NULL CHECK (char_length(name) > 0 AND char_length(name) <= 80),
   "location" portable_string CHECK (char_length(location) <= 80),
+  "search_name" portable_string GENERATED ALWAYS AS (name) STORED,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );

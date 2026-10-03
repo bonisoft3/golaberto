@@ -36,6 +36,12 @@ say:
       favicon:
         cmds:
           - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/favicon.ts
+      language-switch:
+        cmds:
+          - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/language-switch.ts
+      accent-search:
+        cmds:
+          - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/accent-search.ts
       game-countries:
         cmds:
           - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/game-countries.ts

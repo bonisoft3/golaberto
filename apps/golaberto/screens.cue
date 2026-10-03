@@ -328,11 +328,11 @@ _editarMarkup: """
 	              <div class="fields">
 	                <label class="field wide" for="edit-stadium"><span data-text="{msg.game_stadium}"></span>
 	                  <input id="edit-stadium-q" type="search" value="{stadium_q}" placeholder="{msg.choice_search}" aria-label="{msg.game_stadium}" maxlength="80" autocomplete="off">
-	                  <select id="edit-stadium" data-value="{stadium_id}"><option value="" data-text="{msg.edit_unknown}"></option><optgroup data-live="stadium" data-filter="id=eq.{stadium_id}" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup><optgroup data-live="stadium" data-filter="name=ilike.*{stadium_q}*&limit=40" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select>
+	                  <select id="edit-stadium" data-value="{stadium_id}"><option value="" data-text="{msg.edit_unknown}"></option><optgroup data-live="stadium" data-filter="id=eq.{stadium_id}" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup><optgroup data-live="stadium" data-filter="search_name=like.*{stadium_q}*&limit=40" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select>
 	                </label>
 	                <label class="field wide" for="edit-referee"><span data-text="{msg.game_referee}"></span>
 	                  <input id="edit-referee-q" type="search" value="{referee_q}" placeholder="{msg.choice_search}" aria-label="{msg.game_referee}" maxlength="80" autocomplete="off">
-	                  <select id="edit-referee" data-value="{referee_id}"><option value="" data-text="{msg.edit_unknown}"></option><optgroup data-live="referee" data-filter="id=eq.{referee_id}" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup><optgroup data-live="referee" data-filter="name=ilike.*{referee_q}*&limit=40" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select>
+	                  <select id="edit-referee" data-value="{referee_id}"><option value="" data-text="{msg.edit_unknown}"></option><optgroup data-live="referee" data-filter="id=eq.{referee_id}" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup><optgroup data-live="referee" data-filter="search_name=like.*{referee_q}*&limit=40" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select>
 	                </label>
 	                <label class="field" for="edit-attendance"><span data-text="{msg.game_attendance}"></span>
 	                  <input id="edit-attendance" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="{msg.edit_unrecorded}" data-value="{attendance}">
@@ -640,7 +640,7 @@ _campeonatosMarkup: """
 	            <th scope="col" class="narrow" data-text="{msg.col_region}"></th>
 	            <th scope="col" class="narrow" data-text="{msg.col_category}"></th>
 	          </tr></thead>
-	          <tbody data-live="championship" data-filter="full_name=ilike.*{q}*&region=like.*{region}*&offset={offset}&limit=40" data-order="region_name.asc,name.asc,begins.desc" data-empty="{msg.catalog_empty}">
+	          <tbody data-live="championship" data-filter="search_name=like.*{q}*&region=like.*{region}*&offset={offset}&limit=40" data-order="region_name.asc,name.asc,begins.desc" data-empty="{msg.catalog_empty}">
 	            <template data-item>
 	              <tr>
 	                <td><a data-route="campeonato" data-param-id="{id}"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}"></span></a></td>
@@ -650,7 +650,7 @@ _campeonatosMarkup: """
 	            </template>
 	          </tbody>
 	        </table>
-	\((#PageArrows & {key: "catalog", table: "championship", filter: "full_name=ilike.*{q}*&region=like.*{region}*", order: "region_name.asc,name.asc,begins.desc"}).out)
+	\((#PageArrows & {key: "catalog", table: "championship", filter: "search_name=like.*{q}*&region=like.*{region}*", order: "region_name.asc,name.asc,begins.desc"}).out)
 	      </div>
 	    </template>
 	  </div>
@@ -787,7 +787,7 @@ _campeonatoMarkup: """
 		          <thead><tr>
 		\(D._head)
 		          </tr></thead>
-		          <tbody data-live="\(D.table)" data-filter="name=ilike.*{q}*&offset={offset}&limit=40" data-order="name.asc" data-empty="{msg.\(D.row)_empty}">
+		          <tbody data-live="\(D.table)" data-filter="search_name=like.*{q}*&offset={offset}&limit=40" data-order="name.asc" data-empty="{msg.\(D.row)_empty}">
 		            <template data-item>
 		              <tr>
 		\(D._cells)
@@ -795,7 +795,7 @@ _campeonatoMarkup: """
 		            </template>
 		          </tbody>
 		        </table>
-		\((#PageArrows & {key: D.row, table: D.table, filter: "name=ilike.*{q}*", order: "name.asc"}).out)
+		\((#PageArrows & {key: D.row, table: D.table, filter: "search_name=like.*{q}*", order: "name.asc"}).out)
 		      </div>
 		    </template>
 		  </div>

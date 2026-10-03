@@ -777,6 +777,9 @@ schema:
         name: featured
         type: bool
         required: true
+      - name: search_name
+        type: string
+        required: true
   phase:
     durability: server
     fields:
@@ -911,6 +914,9 @@ schema:
         name: country
         type: string
         required: false
+      - name: search_name
+        type: string
+        required: true
   team:
     durability: server
     fields:
@@ -958,6 +964,9 @@ schema:
       - name: foundation_display
         type: string
         required: true
+      - name: search_name
+        type: string
+        required: true
   referee:
     durability: server
     fields:
@@ -977,6 +986,9 @@ schema:
         name: location
         type: string
         required: false
+      - name: search_name
+        type: string
+        required: true
   player:
     durability: server
     fields:
@@ -2686,6 +2698,7 @@ migrations:
   - services/database/migrations/019_normalized_game_flags.sql
   - services/database/migrations/020_home_reference_order.sql
   - services/database/migrations/021_home_highlights.sql
+  - services/database/migrations/023_search_collation.sql
   - services/database/migrations/900_seed.sql
 pipelines:
   - name: standings

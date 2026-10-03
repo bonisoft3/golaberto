@@ -1216,7 +1216,7 @@ function bindElementAttributes(el, ctx) {
     // `:not([href])` treatment is what the reader gets. A param the markup
     // never declared is a different thing and still raises: routeHref reads
     // undefined, and the link lint refused it at generate.
-    const href = routeHref(ctx.cfg, el.dataset.route, args, el.dataset.locale ?? ctx.locale);
+    const href = routeHref(ctx.cfg, el.dataset.route, args, el.dataset.locale ?? ctx.locale, { explicitLocale: true });
     if (href === undefined) el.removeAttribute("href");
     else el.setAttribute("href", href);
   }
@@ -1354,7 +1354,7 @@ export async function interpretScreen(mount, appBase, route, store, params = {},
     for (const el of screen.querySelectorAll("[data-route]:not(form)")) {
       const routeArgs = routeParams(el);
       if (Object.values(routeArgs).some((v) => PLACEHOLDER.test(v))) continue;
-      const href = routeHref(cfg, el.dataset.route, routeArgs, el.dataset.locale ?? currentLocale);
+      const href = routeHref(cfg, el.dataset.route, routeArgs, el.dataset.locale ?? currentLocale, { explicitLocale: true });
       if (href === undefined) el.removeAttribute("href");
       else el.setAttribute("href", href);
       // Which option of a language switcher is the page the reader is already
@@ -1665,7 +1665,7 @@ export async function interpretScreen(mount, appBase, route, store, params = {},
         }
         // A form whose route has no address yet submits to nowhere, which is
         // not an error: the same row that empties a link empties this.
-        const target = routeHref(cfg, form.dataset.route, formParams(form), currentLocale);
+        const target = routeHref(cfg, form.dataset.route, formParams(form), currentLocale, { explicitLocale: true });
         if (target !== undefined) screenOpts.navigate(target);
         return;
       }

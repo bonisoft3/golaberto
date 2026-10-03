@@ -33,6 +33,9 @@ _normalizedGameFlagsUpgrade: strings.Join(strings.Split(strings.Join(strings.Spl
 _homeReferenceSql: string @embed(file="services/database/sql/020_home_reference_order.sql", type=text)
 _homeReferenceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeReferenceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
+_searchCollationSql: string @embed(file="services/database/sql/023_search_collation.sql", type=text)
+_searchCollationUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_searchCollationSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
 _homeHighlightsSql: string @embed(file="services/database/sql/021_home_highlights.sql", type=text)
 _homeHighlightsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeHighlightsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
@@ -132,6 +135,7 @@ code: pronto.#App & {
 				{ordinal: 13, name: "full_name", type: "string", generated: "region_name || ' - ' || name || ' ' || \(_season)"},
 				// The championship table highlighted below the home game feeds.
 				{ordinal: 14, name: "featured", type: "bool", default: "false"},
+				{ordinal: 15, name: "search_name", type: "string", generated: "region_name || ' - ' || name || ' ' || \(_season)"},
 			]
 			invariant: {cel: "this.ends >= this.begins"}
 			indexes: [{on: "begins"}]
@@ -193,6 +197,7 @@ code: pronto.#App & {
 				{ordinal: 3, name: "full_name", type: "string", required: false, cel: "this.size() <= 160"},
 				{ordinal: 4, name: "city", type: "string", required: false, cel: "this.size() <= 80"},
 				{ordinal: 5, name: "country", type: "string", required: false, cel: "this.size() <= 60"},
+				{ordinal: 6, name: "search_name", type: "string", generated: "name"},
 			]
 		}
 		Team: {
@@ -210,6 +215,7 @@ code: pronto.#App & {
 				{ordinal: 7, name: "stadium_id", type: "uuid", required: false, ref: "stadium"},
 				{ordinal: 8, name: "team_type", type: "string", default: "'club'", cel: "this in ['club', 'national']"},
 				{ordinal: 9, name: "foundation_display", type: "string", generated: (#dmy & {col: "foundation"}).out},
+				{ordinal: 10, name: "search_name", type: "string", generated: "name"},
 			]
 			indexes: [{on: "name"}]
 		}
@@ -238,6 +244,7 @@ code: pronto.#App & {
 				{ordinal: 1, name: "id", type: "uuid", pk: true, default: "gen_random_uuid()"},
 				{ordinal: 2, name: "name", type: "string", cel: "this.size() > 0 && this.size() <= 80"},
 				{ordinal: 3, name: "location", type: "string", required: false, cel: "this.size() <= 80"},
+				{ordinal: 4, name: "search_name", type: "string", generated: "name"},
 			]
 		}
 		Player: {
@@ -879,6 +886,7 @@ code: pronto.#App & {
 		{name: "019_normalized_game_flags.sql", src: "services/database/sql/019_normalized_game_flags.sql"},
 		{name: "020_home_reference_order.sql", src: "services/database/sql/020_home_reference_order.sql"},
 		{name: "021_home_highlights.sql", src: "services/database/sql/021_home_highlights.sql"},
+		{name: "023_search_collation.sql", src: "services/database/sql/023_search_collation.sql"},
 		// Large archive fixtures are copied at build, never expanded through CUE.
 		{name: "900_seed.sql", src: "services/database/sql/900_seed.sql"},
 	]
@@ -894,6 +902,7 @@ code: pronto.#App & {
 	state: migrations: "019_normalized_game_flags": {operations: [{sql: {up: _normalizedGameFlagsUpgrade, onComplete: true}}]}
 	state: migrations: "020_home_reference_order": {operations: [{sql: {up: _homeReferenceUpgrade, onComplete: true}}]}
 	state: migrations: "021_home_highlights": {operations: [{sql: {up: _homeHighlightsUpgrade, onComplete: true}}]}
+	state: migrations: "023_search_collation": {operations: [{sql: {up: _searchCollationUpgrade, onComplete: true}}]}
 	// The numeric stage (ir decision-chances).
 	// The chances read each game's power from team_rating, so they rerun
 	// whenever the ratings change.
@@ -1903,6 +1912,18 @@ loop: surface: checks: "favicon": {
 	verb: "integrate"
 	cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/favicon.ts"]
 	note: "public icon packaging, localized entry documents and browser decoding; read-only against the running archive"
+}
+
+loop: surface: checks: "language-switch": {
+	verb: "integrate"
+	cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/language-switch.ts"]
+	note: "read-only browser regression: Portuguese overrides browser preferences through switches, navigation and reloads at phone and desktop widths"
+}
+
+loop: surface: checks: "accent-search": {
+	verb: "integrate"
+	cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/accent-search.ts"]
+	note: "search collation and every text search box match accented, plain, uppercase and decomposed names; bounded pages and picker selections survive filtering"
 }
 
 loop: surface: checks: "game-countries": {

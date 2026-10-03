@@ -280,7 +280,7 @@ Deno.test({
     app.userScrollsTo(500);
     await app.goto("other");
     // The click became a history entry rather than a document load.
-    assert(app.at() === "/other", `pushed ${app.at()}`);
+    assert(app.at() === "/other?lang=pt-BR", `pushed ${app.at()}`);
     assert(shown(app)[0]?.dataset.screen === "other", "the pushed link did not mount its screen");
     await app.back("/");
     assert(scrollY === 500, `the traverse resumed at ${scrollY}, not 500`);
@@ -468,6 +468,24 @@ Deno.test({
 });
 
 Deno.test({
+  name: "an explicit default locale survives translated routes and strip navigation",
+  sanitizeOps: false,
+  sanitizeResources: false,
+  async fn() {
+    const app = await start({at: "/regras?lang=pt-BR", languages: ["en"]});
+    assert(app.at() === "/regras?lang=pt-BR", `settled at ${app.at()}`);
+    assert(shown(app)[0]?.dataset.locale === "pt-BR", `read as ${shown(app)[0]?.dataset.locale}`);
+    assert(app.link("regras").getAttribute("aria-current") === "page", "the current strip link lost its mark");
+    const href = app.link("home").getAttribute("href");
+    assert(href === "/?lang=pt-BR", `linked to ${href}`);
+    await app.goto(href);
+    assert(shown(app)[0]?.dataset.locale === "pt-BR", `navigation read as ${shown(app)[0]?.dataset.locale}`);
+    assert(shown(app)[0].querySelector("a.rules").getAttribute("href") === "/regras?lang=pt-BR", "the screen link lost the language choice");
+    assert(head(app, 'link[rel="canonical"]')[0].getAttribute("href") === "http://localhost:8080/", "the canonical acquired the language override");
+  },
+});
+
+Deno.test({
   name: "a link names a route, and the terminal writes its address in the page's language",
   sanitizeOps: false,
   sanitizeResources: false,
@@ -522,7 +540,7 @@ Deno.test({
     form.querySelector("[name=q]").value = "truco";
     form.dispatchEvent(new app.Event("submit", {bubbles: true, cancelable: true}));
     await settle(120);
-    assert(app.at() === "/search/truco", `submitted to ${app.at()}`);
+    assert(app.at() === "/search/truco?lang=pt-BR", `submitted to ${app.at()}`);
     assert(shown(app)[0]?.dataset.screen === "search", "the search screen never mounted");
   },
 });

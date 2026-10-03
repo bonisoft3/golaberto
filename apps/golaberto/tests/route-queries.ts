@@ -31,7 +31,7 @@ const plans: Array<[string, string, string]> = [
   ],
   [
     "championship catalog",
-    `SELECT id FROM championship WHERE full_name ILIKE '%cup%' AND region LIKE '%national%' ORDER BY region_name,name,begins DESC,id`,
+    `SELECT id FROM championship WHERE search_name LIKE '%cup%' AND region LIKE '%national%' ORDER BY region_name,name,begins DESC,id`,
     "championship_routes_catalog_order_idx",
   ],
   [
@@ -41,17 +41,17 @@ const plans: Array<[string, string, string]> = [
   ],
   [
     "team directory",
-    `SELECT id,name FROM team WHERE name ILIKE '%united%' ORDER BY name,id`,
+    `SELECT id,name FROM team WHERE search_name LIKE '%united%' ORDER BY name,id`,
     "team_routes_name_id_idx",
   ],
   [
     "stadium directory",
-    `SELECT id,name FROM stadium WHERE name ILIKE '%park%' ORDER BY name,id`,
+    `SELECT id,name FROM stadium WHERE search_name LIKE '%park%' ORDER BY name,id`,
     "stadium_routes_name_id_idx",
   ],
   [
     "referee directory",
-    `SELECT id,name FROM referee WHERE name ILIKE '%silva%' ORDER BY name,id`,
+    `SELECT id,name FROM referee WHERE search_name LIKE '%silva%' ORDER BY name,id`,
     "referee_routes_name_id_idx",
   ],
   [

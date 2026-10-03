@@ -57,6 +57,12 @@
     "team_directory": {
       "scope": "public"
     },
+    "geography_region": {
+      "scope": "public"
+    },
+    "geography_country": {
+      "scope": "public"
+    },
     "player_rating": {
       "scope": "public"
     },
@@ -137,6 +143,8 @@
     "game",
     "game_card",
     "game_importance",
+    "geography_country",
+    "geography_region",
     "goal",
     "phase",
     "phase_round",
@@ -214,10 +222,14 @@
         "q": "",
         "country": "",
         "country_key": "",
+        "country_selection": "*",
         "next_offset": 40,
         "offset": 0,
         "page": 1,
         "q_key": "",
+        "region_key": "",
+        "region_q": "",
+        "region_selection": "*",
         "state": "browsing"
       },
       {
@@ -225,10 +237,14 @@
         "q": "",
         "country": "",
         "country_key": "",
+        "country_selection": "*",
         "next_offset": 40,
         "offset": 0,
         "page": 1,
         "q_key": "",
+        "region_key": "",
+        "region_q": "",
+        "region_selection": "*",
         "state": "browsing"
       },
       {
@@ -236,10 +252,14 @@
         "q": "",
         "country": "",
         "country_key": "",
+        "country_selection": "*",
         "next_offset": 40,
         "offset": 0,
         "page": 1,
         "q_key": "",
+        "region_key": "",
+        "region_q": "",
+        "region_selection": "*",
         "state": "browsing"
       }
     ],
@@ -282,7 +302,8 @@
         "renderers": [
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
-          "shell/renderers/home-date.js"
+          "shell/renderers/home-date.js",
+          "shell/renderers/geography-label.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -324,7 +345,8 @@
         "adapters": [],
         "renderers": [
           "shell/renderers/team-badge.js",
-          "shell/renderers/country-flag.js"
+          "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -371,7 +393,8 @@
         "adapters": [],
         "renderers": [
           "shell/renderers/team-badge.js",
-          "shell/renderers/country-flag.js"
+          "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -412,7 +435,8 @@
         "adapters": [],
         "renderers": [
           "shell/renderers/team-badge.js",
-          "shell/renderers/country-flag.js"
+          "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -454,7 +478,8 @@
         "adapters": [],
         "renderers": [
           "shell/renderers/team-badge.js",
-          "shell/renderers/country-flag.js"
+          "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -499,7 +524,8 @@
         "adapters": [],
         "renderers": [
           "shell/renderers/team-badge.js",
-          "shell/renderers/country-flag.js"
+          "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -546,13 +572,15 @@
         "html": "shell/screens/equipes.html",
         "css": "shell/screens/equipes.css",
         "handlers": [
+          "shell/handlers/geography-selection.js",
           "shell/handlers/page-value.js",
           "shell/handlers/search-key.js"
         ],
         "adapters": [],
         "renderers": [
           "shell/renderers/team-badge.js",
-          "shell/renderers/country-flag.js"
+          "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -604,7 +632,8 @@
         "adapters": [],
         "renderers": [
           "shell/renderers/team-badge.js",
-          "shell/renderers/country-flag.js"
+          "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -646,7 +675,8 @@
         "adapters": [],
         "renderers": [
           "shell/renderers/team-badge.js",
-          "shell/renderers/country-flag.js"
+          "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -697,7 +727,8 @@
         "adapters": [],
         "renderers": [
           "shell/renderers/team-badge.js",
-          "shell/renderers/country-flag.js"
+          "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -739,7 +770,8 @@
         "adapters": [],
         "renderers": [
           "shell/renderers/team-badge.js",
-          "shell/renderers/country-flag.js"
+          "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -780,7 +812,8 @@
         "adapters": [],
         "renderers": [
           "shell/renderers/team-badge.js",
-          "shell/renderers/country-flag.js"
+          "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -821,7 +854,8 @@
         "adapters": [],
         "renderers": [
           "shell/renderers/team-badge.js",
-          "shell/renderers/country-flag.js"
+          "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -860,7 +894,8 @@
         "adapters": [],
         "renderers": [
           "shell/renderers/team-badge.js",
-          "shell/renderers/country-flag.js"
+          "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -894,6 +929,8 @@
     "game",
     "game_card",
     "game_importance",
+    "geography_country",
+    "geography_region",
     "goal",
     "home_championship",
     "home_game_card",
@@ -2245,6 +2282,97 @@
           "name": "country_key",
           "type": "string",
           "required": true
+        },
+        {
+          "default": "''",
+          "name": "country_id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "default": "''",
+          "name": "region_id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "default": "''",
+          "name": "country_search_key",
+          "type": "string",
+          "required": true
+        },
+        {
+          "default": "''",
+          "name": "region_search_key",
+          "type": "string",
+          "required": true
+        }
+      ]
+    },
+    "geography_region": {
+      "durability": "live",
+      "fields": [
+        {
+          "name": "id",
+          "pk": true,
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "message_key",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "search_key",
+          "type": "string",
+          "required": true
+        }
+      ]
+    },
+    "geography_country": {
+      "durability": "live",
+      "fields": [
+        {
+          "name": "id",
+          "pk": true,
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "region_id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "message_key",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "aliases",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "search_key",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "region_search_key",
+          "type": "string",
+          "required": true
         }
       ]
     },
@@ -3512,6 +3640,42 @@
           "name": "country_key",
           "type": "string",
           "required": true
+        },
+        {
+          "bounds": {
+            "sizeMax": 80
+          },
+          "default": "''",
+          "name": "region_q",
+          "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "sizeMax": 160
+          },
+          "default": "''",
+          "name": "region_key",
+          "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "sizeMax": 60
+          },
+          "default": "'*'",
+          "name": "region_selection",
+          "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "sizeMax": 60
+          },
+          "default": "'*'",
+          "name": "country_selection",
+          "type": "string",
+          "required": true
         }
       ]
     },
@@ -4058,6 +4222,7 @@
     "services/database/migrations/023_search_collation.sql",
     "services/database/migrations/024_team_directory.sql",
     "services/database/migrations/025_search_letter_equivalences.sql",
+    "services/database/migrations/026_team_geography.sql",
     "services/database/migrations/900_seed.sql"
   ],
   "pipelines": [

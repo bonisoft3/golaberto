@@ -311,3 +311,13 @@ Deno.test("game flags require the championship switch and a known country", () =
   assertEquals(flag("true|Brasil"), flag("Brazil"));
   assertEquals(flag("true|Argentina"), flag("Argentina"));
 });
+
+Deno.test("geography labels translate countries and tournament prefixes while preserving archive text", async () => {
+  const { default: render } = await import("../shell/renderers/geography-label.js");
+  const labels = JSON.stringify([["Germany", "Alemanha"], ["Europe", "Europa"]]);
+  assertEquals(render(`Germany|${labels}`), ["Alemanha"]);
+  assertEquals(render(`Europe - League 2026|${labels}`), ["Europa - League 2026"]);
+  assertEquals(render(`Unmappedland|${labels}`), ["Unmappedland"]);
+  assertEquals(render(`constructor|${labels}`), ["constructor"]);
+  assertEquals(render(`Germany|⟦${labels}⟧`), ["Alemanha"]);
+});

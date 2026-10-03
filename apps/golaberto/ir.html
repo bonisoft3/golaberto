@@ -566,6 +566,33 @@ graph TD
 </table>
 </section>
 
+<section id="GeographyRegion" data-kind="entity" data-durability="live" data-type-id="0xbd185e5ceb027f7d">
+<h3>GeographyRegion — live, public; migration-owned fixed reference set</h3>
+<p>The original archive fixes six football regions and 225 countries; canonical names and parent memberships stay stable while message keys choose the reader's translation. Only service writes; readers select.</p>
+<table data-extract="fields">
+<tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
+<tr data-ordinal="1"><td>id</td><td>string</td><td></td><td>pk</td></tr>
+<tr data-ordinal="2"><td>name</td><td>string</td><td></td><td></td></tr>
+<tr data-ordinal="3"><td>message_key</td><td>string</td><td></td><td></td></tr>
+<tr data-ordinal="4"><td>search_key</td><td>string</td><td></td><td></td></tr>
+</table>
+</section>
+
+<section id="GeographyCountry" data-kind="entity" data-durability="live" data-type-id="0xb37475df2e5b43d6">
+<h3>GeographyCountry — live, public; migration-owned fixed reference set</h3>
+<p>The original archive fixes six football regions and 225 countries; canonical names and parent memberships stay stable while message keys choose the reader's translation. Only service writes; readers select.</p>
+<table data-extract="fields">
+<tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
+<tr data-ordinal="1"><td>id</td><td>string</td><td></td><td>pk</td></tr>
+<tr data-ordinal="2"><td>name</td><td>string</td><td></td><td></td></tr>
+<tr data-ordinal="3"><td>region_id</td><td>string</td><td></td><td></td></tr>
+<tr data-ordinal="4"><td>message_key</td><td>string</td><td></td><td></td></tr>
+<tr data-ordinal="5"><td>aliases</td><td>string</td><td></td><td></td></tr>
+<tr data-ordinal="6"><td>search_key</td><td>string</td><td></td><td></td></tr>
+<tr data-ordinal="7"><td>region_search_key</td><td>string</td><td></td><td></td></tr>
+</table>
+</section>
+
 <section id="TeamDirectory" data-kind="entity" data-durability="live" data-type-id="0x93d75c8ddada8190">
 <h3>TeamDirectory — live, public; pipeline-owned</h3>
 <p>Every team with its latest stored rating, selected by measure_date descending and id ascending. A missing rating remains null. Electric delivers this projection; it stays outside CDC. The raw migration owns accent-insensitive search collations and the rating/name/id ordering index.</p>
@@ -582,6 +609,10 @@ graph TD
 <tr data-ordinal="9"><td>rating_display</td><td>string</td><td></td><td>generated: CASE WHEN rating IS NULL THEN '—' ELSE round(rating::numeric, 2)::text END</td></tr>
 <tr data-ordinal="10"><td>search_key</td><td>string</td><td></td><td>generated: maps ı to i and Þ/þ to th in name; golaberto_search</td></tr>
 <tr data-ordinal="11"><td>country_key</td><td>string</td><td></td><td>generated: maps ı to i and Þ/þ to th in coalesce(country, ''); golaberto_search</td></tr>
+<tr data-ordinal="12"><td>country_id</td><td>string</td><td></td><td>default empty</td></tr>
+<tr data-ordinal="13"><td>region_id</td><td>string</td><td></td><td>default empty</td></tr>
+<tr data-ordinal="14"><td>country_search_key</td><td>string</td><td></td><td>default empty</td></tr>
+<tr data-ordinal="15"><td>region_search_key</td><td>string</td><td></td><td>default empty</td></tr>
 </table>
 </section>
 
@@ -599,6 +630,10 @@ graph TD
 <tr data-ordinal="7"><td>country</td><td>string</td><td><code class="cel">this.size() &lt;= 60</code></td><td>default ''; teams country/region search</td></tr>
 <tr ><td>q_key</td><td>string</td><td><code class="cel">this.size() &lt;= 160</code></td><td>default empty; search-key handler folds the typed query</td></tr>
 <tr data-ordinal="9"><td>country_key</td><td>string</td><td><code class="cel">this.size() &lt;= 120</code></td><td>default ''; mapped country search</td></tr>
+<tr data-ordinal="10"><td>region_q</td><td>string</td><td><code class="cel">this.size() &lt;= 80</code></td><td>default empty</td></tr>
+<tr data-ordinal="11"><td>region_key</td><td>string</td><td><code class="cel">this.size() &lt;= 160</code></td><td>default empty</td></tr>
+<tr data-ordinal="12"><td>region_selection</td><td>string</td><td><code class="cel">this.size() &lt;= 60</code></td><td>default *</td></tr>
+<tr data-ordinal="13"><td>country_selection</td><td>string</td><td><code class="cel">this.size() &lt;= 60</code></td><td>default *</td></tr>
 </table>
 </section>
 
@@ -1616,7 +1651,7 @@ graph TD
 </section>
 <section id="equipes" data-kind="screen" data-route="/equipes">
 <h3>equipes — every team</h3>
-<p data-extract="reads">Reads: <a href="#DirectoryFilter">DirectoryFilter</a> by <code>id=eq.teams</code>, holding the name and country/region searches. Nested <a href="#TeamDirectory">TeamDirectory</a> uses <code>search_key=like.*{q_key}*&amp;country_key=like.*{country_key}*</code> and <code>rating.desc.nullslast,name.asc,id.asc</code>. Both searches ignore case and diacritics, match ı/i and Þ/þ/th, and combine. Typed names and countries stay unchanged; mapped query fields are separate. Forty rows per page and a one-row next-page probe use identical filters and order. Either input resets the page; searches survive detail/back within the tab.</p>
+<p data-extract="reads">Reads: <a href="#DirectoryFilter">DirectoryFilter</a> by <code>id=eq.teams</code> holds name, region and country text plus exact selections. <a href="#GeographyRegion">GeographyRegion</a> supplies six searchable translated region options; World is the all-scope sentinel. <a href="#GeographyCountry">GeographyCountry</a> supplies all 225 fixed options, restricted by region selection, region text and country text; countries without teams remain selectable. Nested <a href="#TeamDirectory">TeamDirectory</a> uses <code>search_key=like.*{q_key}*&amp;country_search_key=like.*{country_key}*&amp;region_search_key=like.*{region_key}*&amp;region_id=like.{region_selection}&amp;country_id=like.{country_selection}</code> and <code>rating.desc.nullslast,name.asc,id.asc</code>. All text searches use ICU primary strength and the existing ı/i and Þ/þ/th mappings, preserving typed input. List and next-page probe use identical predicates with forty plus one rows. Every filter resets pagination; region changes clear dependent country state. Searches survive detail/back in the tab. Country and region labels, including championship geography prefixes elsewhere in the archive, read all six translated catalogues.</p>
 <p id="teams-directory-oracle">Stitch project 3684321283098058780, screen c431b5b26c8f4599a9560f4df0fe0efe, refines the existing accepted directory: two compact labelled search fields, rating after team name, highest latest ratings first, city hidden on phones while country and rating remain visible. Preserve existing masthead, sidebar, colours, typography, pager and empty/loading styles; the canvas’s extra heading and pager changes are outside this slice.</p>
 <p data-extract="mutations">Mutations: none.</p>
 <div class="storyboard frames">
@@ -2894,3 +2929,6 @@ No vendored unit, no container, no external endpoint; the one Wasm module is ups
 
 </body>
 </html>
+
+<section id="handler-geography-selection" data-kind="handler"><h3>geography-selection</h3><p>A dropdown value is an exact stable geography identifier; clearing it means the wildcard scope. Region changes clear dependent country state and every changed filter resets pagination.</p></section>
+<p id="teams-geography-oracle">The user specified World → regions → fixed countries, both dropdown selection and text search, translated throughout the UI. Stitch project 3684321283098058780 screen 28e8d04ffc8e42cfae832d0fa2efd2a1 refines the accepted directory: keep the name search, group each geography search with its native select, wrap at phone widths, retain ratings and country while hiding City. Existing tokens and layout remain the oracle; no new aesthetic choice is open. Fixed upstream football membership includes Australia in Asia and Greenland at World only. Each country and region is translated in all six catalogues; searches match all translations with the existing ICU equivalences. Dropdowns use exact identifiers; text filters combine with those identifiers and the name query. Both list and next-page probe share all five predicates. World and all-countries sentinels preserve unknown historical values. The additive 026 migration seeds fixed reference tables and refreshes all retained teams before readers start.</p>

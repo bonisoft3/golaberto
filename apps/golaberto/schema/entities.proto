@@ -79,6 +79,10 @@ message DirectoryFilter {
   optional string country = 7 [json_name = "country"];
   optional string q_key = 8 [json_name = "q_key"];
   optional string country_key = 9 [json_name = "country_key"];
+  optional string region_q = 10 [json_name = "region_q"];
+  optional string region_key = 11 [json_name = "region_key"];
+  optional string region_selection = 12 [json_name = "region_selection"];
+  optional string country_selection = 13 [json_name = "country_selection"];
 }
 
 message Editor {
@@ -176,6 +180,23 @@ message GameImportance {
 message GamesView {
   optional string id = 1 [json_name = "id"];
   optional string state = 2 [json_name = "state"];
+}
+
+message GeographyCountry {
+  optional string id = 1 [json_name = "id"];
+  optional string name = 2 [json_name = "name"];
+  optional string region_id = 3 [json_name = "region_id"];
+  optional string message_key = 4 [json_name = "message_key"];
+  optional string aliases = 5 [json_name = "aliases"];
+  optional string search_key = 6 [json_name = "search_key"];
+  optional string region_search_key = 7 [json_name = "region_search_key"];
+}
+
+message GeographyRegion {
+  optional string id = 1 [json_name = "id"];
+  optional string name = 2 [json_name = "name"];
+  optional string message_key = 3 [json_name = "message_key"];
+  optional string search_key = 4 [json_name = "search_key"];
 }
 
 message Goal {
@@ -442,6 +463,10 @@ message TeamDirectory {
   optional string rating_display = 9 [json_name = "rating_display"];
   optional string search_key = 10 [json_name = "search_key"];
   optional string country_key = 11 [json_name = "country_key"];
+  optional string country_id = 12 [json_name = "country_id"];
+  optional string region_id = 13 [json_name = "region_id"];
+  optional string country_search_key = 14 [json_name = "country_search_key"];
+  optional string region_search_key = 15 [json_name = "region_search_key"];
 }
 
 message TeamGame {

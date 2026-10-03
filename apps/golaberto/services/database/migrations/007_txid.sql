@@ -70,6 +70,12 @@ CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_rating
 DROP TRIGGER IF EXISTS restamp_txid ON team_directory;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_directory
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+DROP TRIGGER IF EXISTS restamp_txid ON geography_region;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON geography_region
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+DROP TRIGGER IF EXISTS restamp_txid ON geography_country;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON geography_country
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON player_rating;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON player_rating
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();

@@ -276,6 +276,31 @@ CREATE TABLE IF NOT EXISTS team_directory (
   "rating_display" portable_string GENERATED ALWAYS AS (CASE WHEN rating IS NULL THEN '—' ELSE round(rating::numeric, 2)::text END) STORED,
   "search_key" portable_string GENERATED ALWAYS AS (replace(replace(replace(name, 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED,
   "country_key" portable_string GENERATED ALWAYS AS (replace(replace(replace(coalesce(country, ''), 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED,
+  "country_id" portable_string DEFAULT '' NOT NULL,
+  "region_id" portable_string DEFAULT '' NOT NULL,
+  "country_search_key" portable_string DEFAULT '' NOT NULL,
+  "region_search_key" portable_string DEFAULT '' NOT NULL,
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS geography_region (
+  "id" portable_string PRIMARY KEY,
+  "name" portable_string NOT NULL,
+  "message_key" portable_string NOT NULL,
+  "search_key" portable_string NOT NULL,
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS geography_country (
+  "id" portable_string PRIMARY KEY,
+  "name" portable_string NOT NULL,
+  "region_id" portable_string NOT NULL,
+  "message_key" portable_string NOT NULL,
+  "aliases" portable_string NOT NULL,
+  "search_key" portable_string NOT NULL,
+  "region_search_key" portable_string NOT NULL,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );

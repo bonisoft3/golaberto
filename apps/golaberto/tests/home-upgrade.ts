@@ -39,7 +39,7 @@ Deno.test("home schema upgrades retained data before readers start and does not 
     await sql(clone, "DROP FUNCTION refresh_home_games(); DROP FUNCTION IF EXISTS home_game_order(timestamptz); DROP FUNCTION IF EXISTS home_game_selection(timestamptz); ALTER TABLE game_card DROP COLUMN home_upcoming_rank, DROP COLUMN home_recent_rank, DROP COLUMN home_upcoming_group, DROP COLUMN home_recent_group; UPDATE championship SET name = 'Preserved homepage upgrade' WHERE id = '02000000-0000-4000-8000-000000000001'");
     const count = await sql(clone, "SELECT count(*) FROM game_card");
     await sql(clone, "ALTER TABLE game_card DROP COLUMN show_country, DROP COLUMN home_country, DROP COLUMN away_country; ALTER TABLE team_game DROP COLUMN show_country, DROP COLUMN opponent_country; UPDATE championship SET show_country=true WHERE id=(SELECT championship_id FROM game_card ORDER BY id LIMIT 1)");
-    await sql(clone, "DROP TABLE IF EXISTS team_directory; DROP FUNCTION IF EXISTS refresh_team_directory()");
+    await sql(clone, "DROP TABLE IF EXISTS team_directory; DROP FUNCTION IF EXISTS refresh_team_directory(); DROP TABLE IF EXISTS geography_country, geography_region CASCADE");
     const migrate = () => docker("run", "--rm", "--network", network, "-e", `DATABASE_URL=postgres://postgres:postgres@${host}:5432/${clone}?sslmode=disable`, image);
     await migrate();
     assertEquals(await sql(clone, "SELECT name FROM championship WHERE id = '02000000-0000-4000-8000-000000000001'"), "Preserved homepage upgrade");
@@ -96,13 +96,19 @@ Deno.test("home schema upgrades retained data before readers start and does not 
     assertEquals(await sql(clone, "SELECT has_function_privilege('anon','home_game_selection(timestamptz)','EXECUTE') OR has_function_privilege('app_user','home_game_selection(timestamptz)','EXECUTE') OR NOT has_function_privilege('service','home_game_selection(timestamptz)','EXECUTE')"), "f");
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='024_team_directory' AND done"), "1");
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='025_search_letter_equivalences' AND done"), "1");
+    assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='026_team_geography' AND done"), "1");
+    assertEquals(await sql(clone, "SELECT count(*) FROM geography_region"), "6", "the migration seeds the fixed football regions");
+    assertEquals(await sql(clone, "SELECT count(*) FROM geography_country"), "225", "the migration seeds the fixed country catalog");
     assertEquals(await sql(clone, "SELECT atttypid='portable_date'::regtype FROM pg_attribute WHERE attrelid='team_directory'::regclass AND attname='measure_date'"), "t", "fresh and retained projections use the same date domain");
     assertEquals(await sql(clone, "SELECT count(*) FROM team_directory"), await sql(clone, "SELECT count(*) FROM team"), "retained teams are backfilled before readers start");
     assertEquals(await sql(clone, "SELECT count(*) FROM pg_attribute WHERE attrelid='team_directory'::regclass AND attname IN ('search_name','search_country') AND attcollation='golaberto_search'::regcollation"), "2");
     assertEquals(await sql(clone, "SELECT count(*) FROM pg_attribute WHERE attrelid='team_directory'::regclass AND attname IN ('search_key','country_key') AND attcollation='golaberto_search'::regcollation"), "2", "extended directory keys use the search collation");
+    assertEquals(await sql(clone, "SELECT count(*) FROM pg_attribute WHERE attrelid='team_directory'::regclass AND attname IN ('country_id','region_id','country_search_key','region_search_key')"), "4", "the geography upgrade adds ids and search fields to the projection");
+    assertEquals(await sql(clone, "SELECT count(*) FROM pg_attribute WHERE attrelid='team_directory'::regclass AND attname IN ('country_search_key','region_search_key') AND attcollation='golaberto_search'::regcollation"), "2", "geography search fields use the multilingual search collation");
     await sql(clone, "INSERT INTO team (id,name,country) VALUES ('03000000-0000-4000-8000-000000000001','Retained ı Þ æ','Þorland'); SELECT refresh_team_directory()");
     assertEquals(await sql(clone, "SELECT search_key||'|'||country_key FROM team_directory WHERE id='03000000-0000-4000-8000-000000000001'"), "Retained i th æ|thorland", "the retained directory derives both letter mappings from source fields");
     assertEquals(await sql(clone, "SELECT count(*) FROM team_directory WHERE id='03000000-0000-4000-8000-000000000001' AND search_key LIKE '%retained i th ae%' AND country_key LIKE '%thorland%'"), "1", "mapped inputs match retained team and country search keys");
+    assertEquals(await sql(clone, "SELECT country_id||'|'||region_id||'|'||country_search_key||'|'||region_search_key FROM team_directory WHERE id='03000000-0000-4000-8000-000000000001'"), "||thorland|world mundo mundial monde welt mondo", "unknown source countries remain searchable worldwide without inventing geography ids");
     assertEquals(await sql(clone, "SELECT count(*) FROM pg_publication_tables WHERE pubname='golaberto_cdc' AND tablename='team_directory'"), "0");
     await migrate();
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name = '013_home_games' AND done"), "1");
@@ -113,6 +119,8 @@ Deno.test("home schema upgrades retained data before readers start and does not 
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='021_home_highlights' AND done"), "1", "the new migration is recorded once on replay");
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='022_recent_championships' AND done"), "1", "recent championships upgrade is recorded once on replay");
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='025_search_letter_equivalences' AND done"), "1", "extended search upgrade is recorded once on replay");
+    assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='026_team_geography' AND done"), "1", "the geography upgrade is recorded once on replay");
+    assertEquals(await sql(clone, "SELECT count(*) FROM team_directory WHERE id='03000000-0000-4000-8000-000000000001' AND country_id='' AND region_id='' AND country_search_key='thorland'"), "1", "replaying the upgrade preserves the refreshed legacy-team projection");
   } finally {
     await sql("postgres", `DROP DATABASE ${clone} WITH (FORCE)`);
   }

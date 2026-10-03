@@ -31,8 +31,8 @@ code: surface: screens: {
 		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
 	}
 	equipes: {
-		reads: [{entity: "DirectoryFilter"}, {entity: "TeamDirectory"}]
-		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
+		reads: [{entity: "DirectoryFilter"}, {entity: "GeographyCountry"}, {entity: "GeographyRegion"}, {entity: "TeamDirectory"}]
+		files: {handlers: ["shell/handlers/geography-selection.js", "shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
 	}
 	estadio: {
 		reads: [{entity: "ArchivePage"}, {entity: "GameCard"}, {entity: "Stadium"}, {entity: "Team"}]

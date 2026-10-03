@@ -61,6 +61,9 @@ say:
       team-directory:
         cmds:
           - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/team-directory.ts
+      geography:
+        cmds:
+          - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/geography.ts
       replay:
         priority: 1
         cmds:

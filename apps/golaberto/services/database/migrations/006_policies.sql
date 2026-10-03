@@ -144,6 +144,20 @@ CREATE POLICY team_directory_app_user_select ON team_directory FOR SELECT TO app
 DROP POLICY IF EXISTS team_directory_service_all ON team_directory;
 CREATE POLICY team_directory_service_all ON team_directory FOR ALL TO service USING (true) WITH CHECK (true);
 
+CALL rls_protect('geography_region');
+ALTER TABLE geography_region ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS geography_region_app_user_select ON geography_region;
+CREATE POLICY geography_region_app_user_select ON geography_region FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS geography_region_service_all ON geography_region;
+CREATE POLICY geography_region_service_all ON geography_region FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('geography_country');
+ALTER TABLE geography_country ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS geography_country_app_user_select ON geography_country;
+CREATE POLICY geography_country_app_user_select ON geography_country FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS geography_country_service_all ON geography_country;
+CREATE POLICY geography_country_service_all ON geography_country FOR ALL TO service USING (true) WITH CHECK (true);
+
 CALL rls_protect('player_rating');
 ALTER TABLE player_rating ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS player_rating_app_user_select ON player_rating;

@@ -193,7 +193,8 @@ for (const width of [390, 1366]) {
           assertEquals(await page.locator(`#edit-${field}`).inputValue(), ids[table][0]);
         }
       }
-      for (const request of requests.filter((url) => url.searchParams.has("search_key"))) {
+      for (const request of requests.filter((url) =>
+        url.searchParams.has("search_key") && !["/crud/geography_country", "/crud/geography_region"].includes(url.pathname))) {
         assert(Number(request.searchParams.get("limit")) <= 40, "search and pagination probes stay bounded");
       }
     } finally {

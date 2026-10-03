@@ -1,0 +1,2952 @@
+{
+  "source": "https://github.com/galo2099/golaberto/blob/master/app/helpers/application_helper.rb",
+  "regions": [
+    {
+      "id": "africa",
+      "name": "Africa",
+      "message_key": "geography_region_africa",
+      "search_key": "áfrica africa áfrica africa afrika afrique"
+    },
+    {
+      "id": "asia",
+      "name": "Asia",
+      "message_key": "geography_region_asia",
+      "search_key": "ásia asia asia asia asien asie"
+    },
+    {
+      "id": "concacaf",
+      "name": "North/Central America & Caribbean",
+      "message_key": "geography_region_concacaf",
+      "search_key": "américa do norte/central e caribe north/central america & caribbean américa del norte/central y el caribe america del nord/centrale e caraibi nord-/mittelamerika und karibik amérique du nord/centrale et caraïbes"
+    },
+    {
+      "id": "europe",
+      "name": "Europe",
+      "message_key": "geography_region_europe",
+      "search_key": "europa europe europa europa europa europe"
+    },
+    {
+      "id": "oceania",
+      "name": "Oceania",
+      "message_key": "geography_region_oceania",
+      "search_key": "oceania oceania oceanía oceania ozeanien océanie"
+    },
+    {
+      "id": "south_america",
+      "name": "South America",
+      "message_key": "geography_region_south_america",
+      "search_key": "américa do sul south america américa del sur america del sud südamerika amérique du sud"
+    }
+  ],
+  "countries": [
+    {
+      "id": "dz",
+      "name": "Algeria",
+      "region_id": "africa",
+      "message_key": "geography_country_dz",
+      "search_key": "argélia algeria argelia algeria algerien algérie",
+      "aliases": [
+        "Algeria",
+        "Argélia",
+        "Argelia",
+        "Algerien",
+        "Algérie"
+      ]
+    },
+    {
+      "id": "ao",
+      "name": "Angola",
+      "region_id": "africa",
+      "message_key": "geography_country_ao",
+      "search_key": "angola angola angola angola angola angola",
+      "aliases": [
+        "Angola"
+      ]
+    },
+    {
+      "id": "bj",
+      "name": "Benin",
+      "region_id": "africa",
+      "message_key": "geography_country_bj",
+      "search_key": "benin benin benín benin benin bénin",
+      "aliases": [
+        "Benin",
+        "Benín",
+        "Bénin"
+      ]
+    },
+    {
+      "id": "bw",
+      "name": "Botswana",
+      "region_id": "africa",
+      "message_key": "geography_country_bw",
+      "search_key": "botswana botswana botsuana botswana botsuana botswana",
+      "aliases": [
+        "Botswana",
+        "Botsuana"
+      ]
+    },
+    {
+      "id": "bf",
+      "name": "Burkina Faso",
+      "region_id": "africa",
+      "message_key": "geography_country_bf",
+      "search_key": "burkina faso burkina faso burkina faso burkina faso burkina faso burkina faso",
+      "aliases": [
+        "Burkina Faso"
+      ]
+    },
+    {
+      "id": "bi",
+      "name": "Burundi",
+      "region_id": "africa",
+      "message_key": "geography_country_bi",
+      "search_key": "burundi burundi burundi burundi burundi burundi",
+      "aliases": [
+        "Burundi"
+      ]
+    },
+    {
+      "id": "cm",
+      "name": "Cameroon",
+      "region_id": "africa",
+      "message_key": "geography_country_cm",
+      "search_key": "camarões cameroon camerún camerun kamerun cameroun",
+      "aliases": [
+        "Cameroon",
+        "Camarões",
+        "Camerún",
+        "Camerun",
+        "Kamerun",
+        "Cameroun"
+      ]
+    },
+    {
+      "id": "cv",
+      "name": "Cape Verde",
+      "region_id": "africa",
+      "message_key": "geography_country_cv",
+      "search_key": "cabo verde cape verde cabo verde capo verde cabo verde cap-vert",
+      "aliases": [
+        "Cape Verde",
+        "Cabo Verde",
+        "Capo Verde",
+        "Cap-Vert"
+      ]
+    },
+    {
+      "id": "cf",
+      "name": "Central African Republic",
+      "region_id": "africa",
+      "message_key": "geography_country_cf",
+      "search_key": "república centro-africana central african republic república centroafricana repubblica centrafricana zentralafrikanische republik république centrafricaine",
+      "aliases": [
+        "Central African Republic",
+        "República Centro-Africana",
+        "República Centroafricana",
+        "Repubblica Centrafricana",
+        "Zentralafrikanische Republik",
+        "République centrafricaine"
+      ]
+    },
+    {
+      "id": "td",
+      "name": "Chad",
+      "region_id": "africa",
+      "message_key": "geography_country_td",
+      "search_key": "chade chad chad ciad tschad tchad",
+      "aliases": [
+        "Chad",
+        "Chade",
+        "Ciad",
+        "Tschad",
+        "Tchad"
+      ]
+    },
+    {
+      "id": "km",
+      "name": "Comoros",
+      "region_id": "africa",
+      "message_key": "geography_country_km",
+      "search_key": "comores comoros comoras comore komoren comores",
+      "aliases": [
+        "Comoros",
+        "Comores",
+        "Comoras",
+        "Comore",
+        "Komoren"
+      ]
+    },
+    {
+      "id": "cg",
+      "name": "Congo",
+      "region_id": "africa",
+      "message_key": "geography_country_cg",
+      "search_key": "congo congo república del congo congo-brazzaville kongo-brazzaville congo-brazzaville",
+      "aliases": [
+        "Congo",
+        "República del Congo",
+        "Congo-Brazzaville",
+        "Kongo-Brazzaville"
+      ]
+    },
+    {
+      "id": "cd",
+      "name": "DR Congo",
+      "region_id": "africa",
+      "message_key": "geography_country_cd",
+      "search_key": "congo rd dr congo república democrática del congo congo - kinshasa kongo-kinshasa congo-kinshasa",
+      "aliases": [
+        "DR Congo",
+        "Congo RD",
+        "República Democrática del Congo",
+        "Congo - Kinshasa",
+        "Kongo-Kinshasa",
+        "Congo-Kinshasa"
+      ]
+    },
+    {
+      "id": "dj",
+      "name": "Djibouti",
+      "region_id": "africa",
+      "message_key": "geography_country_dj",
+      "search_key": "djibouti djibouti yibuti gibuti dschibuti djibouti",
+      "aliases": [
+        "Djibouti",
+        "Yibuti",
+        "Gibuti",
+        "Dschibuti"
+      ]
+    },
+    {
+      "id": "eg",
+      "name": "Egypt",
+      "region_id": "africa",
+      "message_key": "geography_country_eg",
+      "search_key": "egito egypt egipto egitto ägypten égypte",
+      "aliases": [
+        "Egypt",
+        "Egito",
+        "Egipto",
+        "Egitto",
+        "Ägypten",
+        "Égypte"
+      ]
+    },
+    {
+      "id": "gq",
+      "name": "Equatorial Guinea",
+      "region_id": "africa",
+      "message_key": "geography_country_gq",
+      "search_key": "guiné equatorial equatorial guinea guinea ecuatorial guinea equatoriale äquatorialguinea guinée équatoriale",
+      "aliases": [
+        "Equatorial Guinea",
+        "Guiné Equatorial",
+        "Guinea Ecuatorial",
+        "Guinea Equatoriale",
+        "Äquatorialguinea",
+        "Guinée équatoriale"
+      ]
+    },
+    {
+      "id": "er",
+      "name": "Eritrea",
+      "region_id": "africa",
+      "message_key": "geography_country_er",
+      "search_key": "eritréia eritrea eritrea eritrea eritrea érythrée",
+      "aliases": [
+        "Eritrea",
+        "Eritréia",
+        "Érythrée"
+      ]
+    },
+    {
+      "id": "et",
+      "name": "Ethiopia",
+      "region_id": "africa",
+      "message_key": "geography_country_et",
+      "search_key": "etiópia ethiopia etiopía etiopia äthiopien éthiopie",
+      "aliases": [
+        "Ethiopia",
+        "Etiópia",
+        "Etiopía",
+        "Etiopia",
+        "Äthiopien",
+        "Éthiopie"
+      ]
+    },
+    {
+      "id": "ga",
+      "name": "Gabon",
+      "region_id": "africa",
+      "message_key": "geography_country_ga",
+      "search_key": "gabão gabon gabón gabon gabun gabon",
+      "aliases": [
+        "Gabon",
+        "Gabão",
+        "Gabón",
+        "Gabun"
+      ]
+    },
+    {
+      "id": "gm",
+      "name": "Gambia",
+      "region_id": "africa",
+      "message_key": "geography_country_gm",
+      "search_key": "gâmbia gambia gambia gambia gambia gambie",
+      "aliases": [
+        "Gambia",
+        "Gâmbia",
+        "Gambie"
+      ]
+    },
+    {
+      "id": "gh",
+      "name": "Ghana",
+      "region_id": "africa",
+      "message_key": "geography_country_gh",
+      "search_key": "gana ghana ghana ghana ghana ghana",
+      "aliases": [
+        "Ghana",
+        "Gana"
+      ]
+    },
+    {
+      "id": "gn",
+      "name": "Guinea",
+      "region_id": "africa",
+      "message_key": "geography_country_gn",
+      "search_key": "guiné guinea guinea guinea guinea guinée",
+      "aliases": [
+        "Guinea",
+        "Guiné",
+        "Guinée"
+      ]
+    },
+    {
+      "id": "gw",
+      "name": "Guinea-Bissau",
+      "region_id": "africa",
+      "message_key": "geography_country_gw",
+      "search_key": "guiné-bissau guinea-bissau guinea-bisáu guinea-bissau guinea-bissau guinée-bissau",
+      "aliases": [
+        "Guinea-Bissau",
+        "Guiné-Bissau",
+        "Guinea-Bisáu",
+        "Guinée-Bissau"
+      ]
+    },
+    {
+      "id": "ci",
+      "name": "Ivory Coast",
+      "region_id": "africa",
+      "message_key": "geography_country_ci",
+      "search_key": "costa do marfim ivory coast costa de marfil costa d’avorio côte d’ivoire côte d’ivoire",
+      "aliases": [
+        "Ivory Coast",
+        "Costa do Marfim",
+        "Costa de Marfil",
+        "Costa d’Avorio",
+        "Côte d’Ivoire"
+      ]
+    },
+    {
+      "id": "ke",
+      "name": "Kenya",
+      "region_id": "africa",
+      "message_key": "geography_country_ke",
+      "search_key": "quênia kenya kenia kenya kenia kenya",
+      "aliases": [
+        "Kenya",
+        "Quênia",
+        "Kenia"
+      ]
+    },
+    {
+      "id": "ls",
+      "name": "Lesotho",
+      "region_id": "africa",
+      "message_key": "geography_country_ls",
+      "search_key": "lesoto lesotho lesoto lesotho lesotho lesotho",
+      "aliases": [
+        "Lesotho",
+        "Lesoto"
+      ]
+    },
+    {
+      "id": "lr",
+      "name": "Liberia",
+      "region_id": "africa",
+      "message_key": "geography_country_lr",
+      "search_key": "libéria liberia liberia liberia liberia liberia",
+      "aliases": [
+        "Liberia",
+        "Libéria"
+      ]
+    },
+    {
+      "id": "ly",
+      "name": "Libya",
+      "region_id": "africa",
+      "message_key": "geography_country_ly",
+      "search_key": "líbia libya libia libia libyen libye",
+      "aliases": [
+        "Libya",
+        "Líbia",
+        "Libia",
+        "Libyen",
+        "Libye"
+      ]
+    },
+    {
+      "id": "mg",
+      "name": "Madagascar",
+      "region_id": "africa",
+      "message_key": "geography_country_mg",
+      "search_key": "madagascar madagascar madagascar madagascar madagaskar madagascar",
+      "aliases": [
+        "Madagascar",
+        "Madagaskar"
+      ]
+    },
+    {
+      "id": "mw",
+      "name": "Malawi",
+      "region_id": "africa",
+      "message_key": "geography_country_mw",
+      "search_key": "malaui malawi malaui malawi malawi malawi",
+      "aliases": [
+        "Malawi",
+        "Malaui"
+      ]
+    },
+    {
+      "id": "ml",
+      "name": "Mali",
+      "region_id": "africa",
+      "message_key": "geography_country_ml",
+      "search_key": "mali mali mali mali mali mali",
+      "aliases": [
+        "Mali"
+      ]
+    },
+    {
+      "id": "mr",
+      "name": "Mauritania",
+      "region_id": "africa",
+      "message_key": "geography_country_mr",
+      "search_key": "mauritânia mauritania mauritania mauritania mauretanien mauritanie",
+      "aliases": [
+        "Mauritania",
+        "Mauritânia",
+        "Mauretanien",
+        "Mauritanie"
+      ]
+    },
+    {
+      "id": "mu",
+      "name": "Mauritius",
+      "region_id": "africa",
+      "message_key": "geography_country_mu",
+      "search_key": "maurício mauritius mauricio mauritius mauritius maurice",
+      "aliases": [
+        "Mauritius",
+        "Maurício",
+        "Mauricio",
+        "Maurice"
+      ]
+    },
+    {
+      "id": "ma",
+      "name": "Morocco",
+      "region_id": "africa",
+      "message_key": "geography_country_ma",
+      "search_key": "marrocos morocco marruecos marocco marokko maroc",
+      "aliases": [
+        "Morocco",
+        "Marrocos",
+        "Marruecos",
+        "Marocco",
+        "Marokko",
+        "Maroc"
+      ]
+    },
+    {
+      "id": "mz",
+      "name": "Mozambique",
+      "region_id": "africa",
+      "message_key": "geography_country_mz",
+      "search_key": "moçambique mozambique mozambique mozambico mosambik mozambique",
+      "aliases": [
+        "Mozambique",
+        "Moçambique",
+        "Mozambico",
+        "Mosambik"
+      ]
+    },
+    {
+      "id": "na",
+      "name": "Namibia",
+      "region_id": "africa",
+      "message_key": "geography_country_na",
+      "search_key": "namíbia namibia namibia namibia namibia namibie",
+      "aliases": [
+        "Namibia",
+        "Namíbia",
+        "Namibie"
+      ]
+    },
+    {
+      "id": "ne",
+      "name": "Niger",
+      "region_id": "africa",
+      "message_key": "geography_country_ne",
+      "search_key": "níger niger níger niger niger niger",
+      "aliases": [
+        "Niger",
+        "Níger"
+      ]
+    },
+    {
+      "id": "ng",
+      "name": "Nigeria",
+      "region_id": "africa",
+      "message_key": "geography_country_ng",
+      "search_key": "nigéria nigeria nigeria nigeria nigeria nigeria",
+      "aliases": [
+        "Nigeria",
+        "Nigéria"
+      ]
+    },
+    {
+      "id": "re",
+      "name": "Reunion",
+      "region_id": "africa",
+      "message_key": "geography_country_re",
+      "search_key": "reunião reunion reunión riunione réunion la réunion",
+      "aliases": [
+        "Reunion",
+        "Reunião",
+        "Reunión",
+        "Riunione",
+        "Réunion",
+        "La Réunion"
+      ]
+    },
+    {
+      "id": "rw",
+      "name": "Rwanda",
+      "region_id": "africa",
+      "message_key": "geography_country_rw",
+      "search_key": "ruanda rwanda ruanda ruanda ruanda rwanda",
+      "aliases": [
+        "Rwanda",
+        "Ruanda"
+      ]
+    },
+    {
+      "id": "st",
+      "name": "Sao Tome and Principe",
+      "region_id": "africa",
+      "message_key": "geography_country_st",
+      "search_key": "são tomé e príncipe sao tome and principe santo tomé y príncipe são tomé e príncipe são tomé und príncipe sao tomé-et-principe",
+      "aliases": [
+        "Sao Tome and Principe",
+        "São Tomé e Príncipe",
+        "Santo Tomé y Príncipe",
+        "São Tomé und Príncipe",
+        "Sao Tomé-et-Principe"
+      ]
+    },
+    {
+      "id": "sn",
+      "name": "Senegal",
+      "region_id": "africa",
+      "message_key": "geography_country_sn",
+      "search_key": "senegal senegal senegal senegal senegal sénégal",
+      "aliases": [
+        "Senegal",
+        "Sénégal"
+      ]
+    },
+    {
+      "id": "sc",
+      "name": "Seychelles",
+      "region_id": "africa",
+      "message_key": "geography_country_sc",
+      "search_key": "seychelles seychelles seychelles seychelles seychellen seychelles",
+      "aliases": [
+        "Seychelles",
+        "Seychellen"
+      ]
+    },
+    {
+      "id": "sl",
+      "name": "Sierra Leone",
+      "region_id": "africa",
+      "message_key": "geography_country_sl",
+      "search_key": "serra leoa sierra leone sierra leona sierra leone sierra leone sierra leone",
+      "aliases": [
+        "Sierra Leone",
+        "Serra Leoa",
+        "Sierra Leona"
+      ]
+    },
+    {
+      "id": "so",
+      "name": "Somalia",
+      "region_id": "africa",
+      "message_key": "geography_country_so",
+      "search_key": "somália somalia somalia somalia somalia somalie",
+      "aliases": [
+        "Somalia",
+        "Somália",
+        "Somalie"
+      ]
+    },
+    {
+      "id": "za",
+      "name": "South Africa",
+      "region_id": "africa",
+      "message_key": "geography_country_za",
+      "search_key": "áfrica do sul south africa sudáfrica sudafrica südafrika afrique du sud",
+      "aliases": [
+        "South Africa",
+        "África do Sul",
+        "Sudáfrica",
+        "Sudafrica",
+        "Südafrika",
+        "Afrique du Sud"
+      ]
+    },
+    {
+      "id": "ss",
+      "name": "South Sudan",
+      "region_id": "africa",
+      "message_key": "geography_country_ss",
+      "search_key": "sudão do sul south sudan sudán del sur sud sudan südsudan soudan du sud",
+      "aliases": [
+        "South Sudan",
+        "Sudão do Sul",
+        "Sudán del Sur",
+        "Sud Sudan",
+        "Südsudan",
+        "Soudan du Sud"
+      ]
+    },
+    {
+      "id": "sd",
+      "name": "Sudan",
+      "region_id": "africa",
+      "message_key": "geography_country_sd",
+      "search_key": "sudão sudan sudán sudan sudan soudan",
+      "aliases": [
+        "Sudan",
+        "Sudão",
+        "Sudán",
+        "Soudan"
+      ]
+    },
+    {
+      "id": "sz",
+      "name": "Swaziland",
+      "region_id": "africa",
+      "message_key": "geography_country_sz",
+      "search_key": "suazilândia swaziland esuatini eswatini eswatini eswatini",
+      "aliases": [
+        "Swaziland",
+        "Suazilândia",
+        "Esuatini",
+        "Eswatini"
+      ]
+    },
+    {
+      "id": "tz",
+      "name": "Tanzania",
+      "region_id": "africa",
+      "message_key": "geography_country_tz",
+      "search_key": "tanzânia tanzania tanzania tanzania tansania tanzanie",
+      "aliases": [
+        "Tanzania",
+        "Tanzânia",
+        "Tansania",
+        "Tanzanie"
+      ]
+    },
+    {
+      "id": "tg",
+      "name": "Togo",
+      "region_id": "africa",
+      "message_key": "geography_country_tg",
+      "search_key": "togo togo togo togo togo togo",
+      "aliases": [
+        "Togo"
+      ]
+    },
+    {
+      "id": "tn",
+      "name": "Tunisia",
+      "region_id": "africa",
+      "message_key": "geography_country_tn",
+      "search_key": "tunísia tunisia túnez tunisia tunesien tunisie",
+      "aliases": [
+        "Tunisia",
+        "Tunísia",
+        "Túnez",
+        "Tunesien",
+        "Tunisie"
+      ]
+    },
+    {
+      "id": "ug",
+      "name": "Uganda",
+      "region_id": "africa",
+      "message_key": "geography_country_ug",
+      "search_key": "uganda uganda uganda uganda uganda ouganda",
+      "aliases": [
+        "Uganda",
+        "Ouganda"
+      ]
+    },
+    {
+      "id": "zm",
+      "name": "Zambia",
+      "region_id": "africa",
+      "message_key": "geography_country_zm",
+      "search_key": "zâmbia zambia zambia zambia sambia zambie",
+      "aliases": [
+        "Zambia",
+        "Zâmbia",
+        "Sambia",
+        "Zambie"
+      ]
+    },
+    {
+      "id": "zw",
+      "name": "Zimbabwe",
+      "region_id": "africa",
+      "message_key": "geography_country_zw",
+      "search_key": "zimbábue zimbabwe zimbabue zimbabwe simbabwe zimbabwe",
+      "aliases": [
+        "Zimbabwe",
+        "Zimbábue",
+        "Zimbabue",
+        "Simbabwe"
+      ]
+    },
+    {
+      "id": "af",
+      "name": "Afghanistan",
+      "region_id": "asia",
+      "message_key": "geography_country_af",
+      "search_key": "afeganistão afghanistan afganistán afghanistan afghanistan afghanistan",
+      "aliases": [
+        "Afghanistan",
+        "Afeganistão",
+        "Afganistán"
+      ]
+    },
+    {
+      "id": "au",
+      "name": "Australia",
+      "region_id": "asia",
+      "message_key": "geography_country_au",
+      "search_key": "austrália australia australia australia australien australie",
+      "aliases": [
+        "Australia",
+        "Austrália",
+        "Australien",
+        "Australie"
+      ]
+    },
+    {
+      "id": "bh",
+      "name": "Bahrain",
+      "region_id": "asia",
+      "message_key": "geography_country_bh",
+      "search_key": "bahrein bahrain baréin bahrein bahrain bahreïn",
+      "aliases": [
+        "Bahrain",
+        "Bahrein",
+        "Baréin",
+        "Bahreïn"
+      ]
+    },
+    {
+      "id": "bd",
+      "name": "Bangladesh",
+      "region_id": "asia",
+      "message_key": "geography_country_bd",
+      "search_key": "bangladesh bangladesh bangladés bangladesh bangladesch bangladesh",
+      "aliases": [
+        "Bangladesh",
+        "Bangladés",
+        "Bangladesch"
+      ]
+    },
+    {
+      "id": "bt",
+      "name": "Bhutan",
+      "region_id": "asia",
+      "message_key": "geography_country_bt",
+      "search_key": "butão bhutan bután bhutan bhutan bhoutan",
+      "aliases": [
+        "Bhutan",
+        "Butão",
+        "Bután",
+        "Bhoutan"
+      ]
+    },
+    {
+      "id": "bn",
+      "name": "Brunei",
+      "region_id": "asia",
+      "message_key": "geography_country_bn",
+      "search_key": "brunei brunei brunéi brunei brunei darussalam brunei",
+      "aliases": [
+        "Brunei",
+        "Brunéi",
+        "Brunei Darussalam"
+      ]
+    },
+    {
+      "id": "kh",
+      "name": "Cambodia",
+      "region_id": "asia",
+      "message_key": "geography_country_kh",
+      "search_key": "camboja cambodia camboya cambogia kambodscha cambodge",
+      "aliases": [
+        "Cambodia",
+        "Camboja",
+        "Camboya",
+        "Cambogia",
+        "Kambodscha",
+        "Cambodge"
+      ]
+    },
+    {
+      "id": "cn",
+      "name": "China",
+      "region_id": "asia",
+      "message_key": "geography_country_cn",
+      "search_key": "china china china cina china chine",
+      "aliases": [
+        "China",
+        "Cina",
+        "Chine"
+      ]
+    },
+    {
+      "id": "tl",
+      "name": "East Timor",
+      "region_id": "asia",
+      "message_key": "geography_country_tl",
+      "search_key": "timor leste east timor timor-leste timor est timor-leste timor oriental",
+      "aliases": [
+        "East Timor",
+        "Timor Leste",
+        "Timor-Leste",
+        "Timor Est",
+        "Timor oriental"
+      ]
+    },
+    {
+      "id": "gu",
+      "name": "Guam",
+      "region_id": "asia",
+      "message_key": "geography_country_gu",
+      "search_key": "guam guam guam guam guam guam",
+      "aliases": [
+        "Guam"
+      ]
+    },
+    {
+      "id": "hk",
+      "name": "Hong Kong",
+      "region_id": "asia",
+      "message_key": "geography_country_hk",
+      "search_key": "hong kong hong kong rae de hong kong (china) ras di hong kong sonderverwaltungsregion hongkong r.a.s. chinoise de hong kong",
+      "aliases": [
+        "Hong Kong",
+        "RAE de Hong Kong (China)",
+        "RAS di Hong Kong",
+        "Sonderverwaltungsregion Hongkong",
+        "R.A.S. chinoise de Hong Kong"
+      ]
+    },
+    {
+      "id": "in",
+      "name": "India",
+      "region_id": "asia",
+      "message_key": "geography_country_in",
+      "search_key": "índia india india india indien inde",
+      "aliases": [
+        "India",
+        "Índia",
+        "Indien",
+        "Inde"
+      ]
+    },
+    {
+      "id": "ir",
+      "name": "Iran",
+      "region_id": "asia",
+      "message_key": "geography_country_ir",
+      "search_key": "irã iran irán iran iran iran",
+      "aliases": [
+        "Iran",
+        "Irã",
+        "Irán"
+      ]
+    },
+    {
+      "id": "id",
+      "name": "Indonesia",
+      "region_id": "asia",
+      "message_key": "geography_country_id",
+      "search_key": "indonésia indonesia indonesia indonesia indonesien indonésie",
+      "aliases": [
+        "Indonesia",
+        "Indonésia",
+        "Indonesien",
+        "Indonésie"
+      ]
+    },
+    {
+      "id": "iq",
+      "name": "Iraq",
+      "region_id": "asia",
+      "message_key": "geography_country_iq",
+      "search_key": "iraque iraq irak iraq irak irak",
+      "aliases": [
+        "Iraq",
+        "Iraque",
+        "Irak"
+      ]
+    },
+    {
+      "id": "jp",
+      "name": "Japan",
+      "region_id": "asia",
+      "message_key": "geography_country_jp",
+      "search_key": "japão japan japón giappone japan japon",
+      "aliases": [
+        "Japan",
+        "Japão",
+        "Japón",
+        "Giappone",
+        "Japon"
+      ]
+    },
+    {
+      "id": "jo",
+      "name": "Jordan",
+      "region_id": "asia",
+      "message_key": "geography_country_jo",
+      "search_key": "jordânia jordan jordania giordania jordanien jordanie",
+      "aliases": [
+        "Jordan",
+        "Jordânia",
+        "Jordania",
+        "Giordania",
+        "Jordanien",
+        "Jordanie"
+      ]
+    },
+    {
+      "id": "kw",
+      "name": "Kuwait",
+      "region_id": "asia",
+      "message_key": "geography_country_kw",
+      "search_key": "kuwait kuwait kuwait kuwait kuwait koweït",
+      "aliases": [
+        "Kuwait",
+        "Koweït"
+      ]
+    },
+    {
+      "id": "kg",
+      "name": "Kyrgyzstan",
+      "region_id": "asia",
+      "message_key": "geography_country_kg",
+      "search_key": "quirguistão kyrgyzstan kirguistán kirghizistan kirgisistan kirghizstan",
+      "aliases": [
+        "Kyrgyzstan",
+        "Quirguistão",
+        "Kirguistán",
+        "Kirghizistan",
+        "Kirgisistan",
+        "Kirghizstan"
+      ]
+    },
+    {
+      "id": "la",
+      "name": "Lao People's Democratic Republic",
+      "region_id": "asia",
+      "message_key": "geography_country_la",
+      "search_key": "laos lao people's democratic republic laos laos laos laos",
+      "aliases": [
+        "Lao People's Democratic Republic",
+        "Laos"
+      ]
+    },
+    {
+      "id": "lb",
+      "name": "Lebanon",
+      "region_id": "asia",
+      "message_key": "geography_country_lb",
+      "search_key": "líbano lebanon líbano libano libanon liban",
+      "aliases": [
+        "Lebanon",
+        "Líbano",
+        "Libano",
+        "Libanon",
+        "Liban"
+      ]
+    },
+    {
+      "id": "mo",
+      "name": "Macau",
+      "region_id": "asia",
+      "message_key": "geography_country_mo",
+      "search_key": "macau macau rae de macao (china) ras di macao sonderverwaltungsregion macau r.a.s. chinoise de macao",
+      "aliases": [
+        "Macau",
+        "RAE de Macao (China)",
+        "RAS di Macao",
+        "Sonderverwaltungsregion Macau",
+        "R.A.S. chinoise de Macao"
+      ]
+    },
+    {
+      "id": "my",
+      "name": "Malaysia",
+      "region_id": "asia",
+      "message_key": "geography_country_my",
+      "search_key": "malásia malaysia malasia malaysia malaysia malaisie",
+      "aliases": [
+        "Malaysia",
+        "Malásia",
+        "Malasia",
+        "Malaisie"
+      ]
+    },
+    {
+      "id": "mv",
+      "name": "Maldives",
+      "region_id": "asia",
+      "message_key": "geography_country_mv",
+      "search_key": "maldivas maldives maldivas maldive malediven maldives",
+      "aliases": [
+        "Maldives",
+        "Maldivas",
+        "Maldive",
+        "Malediven"
+      ]
+    },
+    {
+      "id": "mn",
+      "name": "Mongolia",
+      "region_id": "asia",
+      "message_key": "geography_country_mn",
+      "search_key": "mongólia mongolia mongolia mongolia mongolei mongolie",
+      "aliases": [
+        "Mongolia",
+        "Mongólia",
+        "Mongolei",
+        "Mongolie"
+      ]
+    },
+    {
+      "id": "mm",
+      "name": "Myanmar",
+      "region_id": "asia",
+      "message_key": "geography_country_mm",
+      "search_key": "myanmar myanmar myanmar (birmania) myanmar (birmania) myanmar myanmar (birmanie)",
+      "aliases": [
+        "Myanmar",
+        "Myanmar (Birmania)",
+        "Myanmar (Birmanie)"
+      ]
+    },
+    {
+      "id": "np",
+      "name": "Nepal",
+      "region_id": "asia",
+      "message_key": "geography_country_np",
+      "search_key": "nepal nepal nepal nepal nepal népal",
+      "aliases": [
+        "Nepal",
+        "Népal"
+      ]
+    },
+    {
+      "id": "kp",
+      "name": "North Korea",
+      "region_id": "asia",
+      "message_key": "geography_country_kp",
+      "search_key": "coréia do norte north korea corea del norte corea del nord nordkorea corée du nord",
+      "aliases": [
+        "North Korea",
+        "Coréia do Norte",
+        "Corea del Norte",
+        "Corea del Nord",
+        "Nordkorea",
+        "Corée du Nord"
+      ]
+    },
+    {
+      "id": "mp",
+      "name": "Northern Mariana Islands",
+      "region_id": "asia",
+      "message_key": "geography_country_mp",
+      "search_key": "marianas setentrionais northern mariana islands islas marianas del norte isole marianne settentrionali nördliche marianen îles mariannes du nord",
+      "aliases": [
+        "Northern Mariana Islands",
+        "Marianas Setentrionais",
+        "Islas Marianas del Norte",
+        "Isole Marianne Settentrionali",
+        "Nördliche Marianen",
+        "Îles Mariannes du Nord"
+      ]
+    },
+    {
+      "id": "om",
+      "name": "Oman",
+      "region_id": "asia",
+      "message_key": "geography_country_om",
+      "search_key": "omã oman omán oman oman oman",
+      "aliases": [
+        "Oman",
+        "Omã",
+        "Omán"
+      ]
+    },
+    {
+      "id": "pk",
+      "name": "Pakistan",
+      "region_id": "asia",
+      "message_key": "geography_country_pk",
+      "search_key": "paquistão pakistan pakistán pakistan pakistan pakistan",
+      "aliases": [
+        "Pakistan",
+        "Paquistão",
+        "Pakistán"
+      ]
+    },
+    {
+      "id": "ps",
+      "name": "Palestine",
+      "region_id": "asia",
+      "message_key": "geography_country_ps",
+      "search_key": "palestina palestine territorios palestinos territori palestinesi palästinensische autonomiegebiete territoires palestiniens",
+      "aliases": [
+        "Palestine",
+        "Palestina",
+        "Territorios Palestinos",
+        "Territori Palestinesi",
+        "Palästinensische Autonomiegebiete",
+        "Territoires palestiniens"
+      ]
+    },
+    {
+      "id": "ph",
+      "name": "Philippines",
+      "region_id": "asia",
+      "message_key": "geography_country_ph",
+      "search_key": "filipinas philippines filipinas filippine philippinen philippines",
+      "aliases": [
+        "Philippines",
+        "Filipinas",
+        "Filippine",
+        "Philippinen"
+      ]
+    },
+    {
+      "id": "qa",
+      "name": "Qatar",
+      "region_id": "asia",
+      "message_key": "geography_country_qa",
+      "search_key": "qatar qatar catar qatar katar qatar",
+      "aliases": [
+        "Qatar",
+        "Catar",
+        "Katar"
+      ]
+    },
+    {
+      "id": "sa",
+      "name": "Saudi Arabia",
+      "region_id": "asia",
+      "message_key": "geography_country_sa",
+      "search_key": "arábia saudita saudi arabia arabia saudita arabia saudita saudi-arabien arabie saoudite",
+      "aliases": [
+        "Saudi Arabia",
+        "Arábia Saudita",
+        "Arabia Saudita",
+        "Saudi-Arabien",
+        "Arabie saoudite"
+      ]
+    },
+    {
+      "id": "sg",
+      "name": "Singapore",
+      "region_id": "asia",
+      "message_key": "geography_country_sg",
+      "search_key": "cingapura singapore singapur singapore singapur singapour",
+      "aliases": [
+        "Singapore",
+        "Cingapura",
+        "Singapur",
+        "Singapour"
+      ]
+    },
+    {
+      "id": "kr",
+      "name": "South Korea",
+      "region_id": "asia",
+      "message_key": "geography_country_kr",
+      "search_key": "coréia do sul south korea corea del sur corea del sud südkorea corée du sud coreia do sul",
+      "aliases": [
+        "South Korea",
+        "Coréia do Sul",
+        "Corea del Sur",
+        "Corea del Sud",
+        "Südkorea",
+        "Corée du Sud",
+        "Coreia do Sul"
+      ]
+    },
+    {
+      "id": "lk",
+      "name": "Sri Lanka",
+      "region_id": "asia",
+      "message_key": "geography_country_lk",
+      "search_key": "sri lanka sri lanka sri lanka sri lanka sri lanka sri lanka",
+      "aliases": [
+        "Sri Lanka"
+      ]
+    },
+    {
+      "id": "sy",
+      "name": "Syria",
+      "region_id": "asia",
+      "message_key": "geography_country_sy",
+      "search_key": "síria syria siria siria syrien syrie",
+      "aliases": [
+        "Syria",
+        "Síria",
+        "Siria",
+        "Syrien",
+        "Syrie"
+      ]
+    },
+    {
+      "id": "tw",
+      "name": "Taiwan",
+      "region_id": "asia",
+      "message_key": "geography_country_tw",
+      "search_key": "taiwan taiwan taiwán taiwan taiwan taïwan",
+      "aliases": [
+        "Taiwan",
+        "Taiwán",
+        "Taïwan"
+      ]
+    },
+    {
+      "id": "tj",
+      "name": "Tajikistan",
+      "region_id": "asia",
+      "message_key": "geography_country_tj",
+      "search_key": "tadjiquistão tajikistan tayikistán tagikistan tadschikistan tadjikistan",
+      "aliases": [
+        "Tajikistan",
+        "Tadjiquistão",
+        "Tayikistán",
+        "Tagikistan",
+        "Tadschikistan",
+        "Tadjikistan"
+      ]
+    },
+    {
+      "id": "th",
+      "name": "Thailand",
+      "region_id": "asia",
+      "message_key": "geography_country_th",
+      "search_key": "tailândia thailand tailandia thailandia thailand thaïlande",
+      "aliases": [
+        "Thailand",
+        "Tailândia",
+        "Tailandia",
+        "Thailandia",
+        "Thaïlande"
+      ]
+    },
+    {
+      "id": "tm",
+      "name": "Turkmenistan",
+      "region_id": "asia",
+      "message_key": "geography_country_tm",
+      "search_key": "turcomenistão turkmenistan turkmenistán turkmenistan turkmenistan turkménistan",
+      "aliases": [
+        "Turkmenistan",
+        "Turcomenistão",
+        "Turkmenistán",
+        "Turkménistan"
+      ]
+    },
+    {
+      "id": "ae",
+      "name": "United Arab Emirates",
+      "region_id": "asia",
+      "message_key": "geography_country_ae",
+      "search_key": "emirados árabes unidos united arab emirates emiratos árabes unidos emirati arabi uniti vereinigte arabische emirate émirats arabes unis",
+      "aliases": [
+        "United Arab Emirates",
+        "Emirados Árabes Unidos",
+        "Emiratos Árabes Unidos",
+        "Emirati Arabi Uniti",
+        "Vereinigte Arabische Emirate",
+        "Émirats arabes unis"
+      ]
+    },
+    {
+      "id": "uz",
+      "name": "Uzbekistan",
+      "region_id": "asia",
+      "message_key": "geography_country_uz",
+      "search_key": "uzbequistão uzbekistan uzbekistán uzbekistan usbekistan ouzbékistan",
+      "aliases": [
+        "Uzbekistan",
+        "Uzbequistão",
+        "Uzbekistán",
+        "Usbekistan",
+        "Ouzbékistan"
+      ]
+    },
+    {
+      "id": "vn",
+      "name": "Viet Nam",
+      "region_id": "asia",
+      "message_key": "geography_country_vn",
+      "search_key": "vietnã viet nam vietnam vietnam vietnam viêt nam",
+      "aliases": [
+        "Viet Nam",
+        "Vietnã",
+        "Vietnam",
+        "Viêt Nam"
+      ]
+    },
+    {
+      "id": "ye",
+      "name": "Yemen",
+      "region_id": "asia",
+      "message_key": "geography_country_ye",
+      "search_key": "iêmen yemen yemen yemen jemen yémen",
+      "aliases": [
+        "Yemen",
+        "Iêmen",
+        "Jemen",
+        "Yémen"
+      ]
+    },
+    {
+      "id": "ai",
+      "name": "Anguilla",
+      "region_id": "concacaf",
+      "message_key": "geography_country_ai",
+      "search_key": "anguilla anguilla anguila anguilla anguilla anguilla",
+      "aliases": [
+        "Anguilla",
+        "Anguila"
+      ]
+    },
+    {
+      "id": "ag",
+      "name": "Antigua And Barbuda",
+      "region_id": "concacaf",
+      "message_key": "geography_country_ag",
+      "search_key": "antígua e barbuda antigua and barbuda antigua y barbuda antigua e barbuda antigua und barbuda antigua-et-barbuda",
+      "aliases": [
+        "Antigua And Barbuda",
+        "Antígua e Barbuda",
+        "Antigua y Barbuda",
+        "Antigua e Barbuda",
+        "Antigua und Barbuda",
+        "Antigua-et-Barbuda"
+      ]
+    },
+    {
+      "id": "aw",
+      "name": "Aruba",
+      "region_id": "concacaf",
+      "message_key": "geography_country_aw",
+      "search_key": "aruba aruba aruba aruba aruba aruba",
+      "aliases": [
+        "Aruba"
+      ]
+    },
+    {
+      "id": "bs",
+      "name": "Bahamas",
+      "region_id": "concacaf",
+      "message_key": "geography_country_bs",
+      "search_key": "bahamas bahamas bahamas bahamas bahamas bahamas",
+      "aliases": [
+        "Bahamas"
+      ]
+    },
+    {
+      "id": "bb",
+      "name": "Barbados",
+      "region_id": "concacaf",
+      "message_key": "geography_country_bb",
+      "search_key": "barbados barbados barbados barbados barbados barbade",
+      "aliases": [
+        "Barbados",
+        "Barbade"
+      ]
+    },
+    {
+      "id": "bz",
+      "name": "Belize",
+      "region_id": "concacaf",
+      "message_key": "geography_country_bz",
+      "search_key": "belize belize belice belize belize belize",
+      "aliases": [
+        "Belize",
+        "Belice"
+      ]
+    },
+    {
+      "id": "bm",
+      "name": "Bermuda",
+      "region_id": "concacaf",
+      "message_key": "geography_country_bm",
+      "search_key": "bermuda bermuda bermudas bermuda bermuda bermudes",
+      "aliases": [
+        "Bermuda",
+        "Bermudas",
+        "Bermudes"
+      ]
+    },
+    {
+      "id": "ca",
+      "name": "Canada",
+      "region_id": "concacaf",
+      "message_key": "geography_country_ca",
+      "search_key": "canadá canada canadá canada kanada canada",
+      "aliases": [
+        "Canada",
+        "Canadá",
+        "Kanada"
+      ]
+    },
+    {
+      "id": "ky",
+      "name": "Cayman Islands",
+      "region_id": "concacaf",
+      "message_key": "geography_country_ky",
+      "search_key": "ilhas caiman cayman islands islas caimán isole cayman kaimaninseln îles caïmans",
+      "aliases": [
+        "Cayman Islands",
+        "Ilhas Caiman",
+        "Islas Caimán",
+        "Isole Cayman",
+        "Kaimaninseln",
+        "Îles Caïmans"
+      ]
+    },
+    {
+      "id": "cr",
+      "name": "Costa Rica",
+      "region_id": "concacaf",
+      "message_key": "geography_country_cr",
+      "search_key": "costa rica costa rica costa rica costa rica costa rica costa rica",
+      "aliases": [
+        "Costa Rica"
+      ]
+    },
+    {
+      "id": "cu",
+      "name": "Cuba",
+      "region_id": "concacaf",
+      "message_key": "geography_country_cu",
+      "search_key": "cuba cuba cuba cuba kuba cuba",
+      "aliases": [
+        "Cuba",
+        "Kuba"
+      ]
+    },
+    {
+      "id": "cw",
+      "name": "Curacao",
+      "region_id": "concacaf",
+      "message_key": "geography_country_cw",
+      "search_key": "curaçao curacao curazao curaçao curaçao curaçao",
+      "aliases": [
+        "Curacao",
+        "Curaçao",
+        "Curazao"
+      ]
+    },
+    {
+      "id": "dm",
+      "name": "Dominica",
+      "region_id": "concacaf",
+      "message_key": "geography_country_dm",
+      "search_key": "dominica dominica dominica dominica dominica dominique",
+      "aliases": [
+        "Dominica",
+        "Dominique"
+      ]
+    },
+    {
+      "id": "do",
+      "name": "Dominican Republic",
+      "region_id": "concacaf",
+      "message_key": "geography_country_do",
+      "search_key": "república dominicana dominican republic república dominicana repubblica dominicana dominikanische republik république dominicaine",
+      "aliases": [
+        "Dominican Republic",
+        "República Dominicana",
+        "Repubblica Dominicana",
+        "Dominikanische Republik",
+        "République dominicaine"
+      ]
+    },
+    {
+      "id": "sv",
+      "name": "El Salvador",
+      "region_id": "concacaf",
+      "message_key": "geography_country_sv",
+      "search_key": "el salvador el salvador el salvador el salvador el salvador salvador",
+      "aliases": [
+        "El Salvador",
+        "Salvador"
+      ]
+    },
+    {
+      "id": "gf",
+      "name": "French Guiana",
+      "region_id": "concacaf",
+      "message_key": "geography_country_gf",
+      "search_key": "guiana francesa french guiana guayana francesa guyana francese französisch-guayana guyane française",
+      "aliases": [
+        "French Guiana",
+        "Guiana Francesa",
+        "Guayana Francesa",
+        "Guyana Francese",
+        "Französisch-Guayana",
+        "Guyane française"
+      ]
+    },
+    {
+      "id": "gd",
+      "name": "Grenada",
+      "region_id": "concacaf",
+      "message_key": "geography_country_gd",
+      "search_key": "granada grenada granada grenada grenada grenade",
+      "aliases": [
+        "Grenada",
+        "Granada",
+        "Grenade"
+      ]
+    },
+    {
+      "id": "gp",
+      "name": "Guadeloupe",
+      "region_id": "concacaf",
+      "message_key": "geography_country_gp",
+      "search_key": "guadalupe guadeloupe guadalupe guadalupa guadeloupe guadeloupe",
+      "aliases": [
+        "Guadeloupe",
+        "Guadalupe",
+        "Guadalupa"
+      ]
+    },
+    {
+      "id": "gt",
+      "name": "Guatemala",
+      "region_id": "concacaf",
+      "message_key": "geography_country_gt",
+      "search_key": "guatemala guatemala guatemala guatemala guatemala guatemala",
+      "aliases": [
+        "Guatemala"
+      ]
+    },
+    {
+      "id": "gy",
+      "name": "Guyana",
+      "region_id": "concacaf",
+      "message_key": "geography_country_gy",
+      "search_key": "guiana guyana guyana guyana guyana guyana",
+      "aliases": [
+        "Guyana",
+        "Guiana"
+      ]
+    },
+    {
+      "id": "ht",
+      "name": "Haiti",
+      "region_id": "concacaf",
+      "message_key": "geography_country_ht",
+      "search_key": "haiti haiti haití haiti haiti haïti",
+      "aliases": [
+        "Haiti",
+        "Haití",
+        "Haïti"
+      ]
+    },
+    {
+      "id": "hn",
+      "name": "Honduras",
+      "region_id": "concacaf",
+      "message_key": "geography_country_hn",
+      "search_key": "honduras honduras honduras honduras honduras honduras",
+      "aliases": [
+        "Honduras"
+      ]
+    },
+    {
+      "id": "jm",
+      "name": "Jamaica",
+      "region_id": "concacaf",
+      "message_key": "geography_country_jm",
+      "search_key": "jamaica jamaica jamaica giamaica jamaika jamaïque",
+      "aliases": [
+        "Jamaica",
+        "Giamaica",
+        "Jamaika",
+        "Jamaïque"
+      ]
+    },
+    {
+      "id": "mq",
+      "name": "Martinique",
+      "region_id": "concacaf",
+      "message_key": "geography_country_mq",
+      "search_key": "martinica martinique martinica martinica martinique martinique",
+      "aliases": [
+        "Martinique",
+        "Martinica"
+      ]
+    },
+    {
+      "id": "mx",
+      "name": "Mexico",
+      "region_id": "concacaf",
+      "message_key": "geography_country_mx",
+      "search_key": "méxico mexico méxico messico mexiko mexique",
+      "aliases": [
+        "Mexico",
+        "México",
+        "Messico",
+        "Mexiko",
+        "Mexique"
+      ]
+    },
+    {
+      "id": "ms",
+      "name": "Montserrat",
+      "region_id": "concacaf",
+      "message_key": "geography_country_ms",
+      "search_key": "montserrat montserrat montserrat montserrat montserrat montserrat",
+      "aliases": [
+        "Montserrat"
+      ]
+    },
+    {
+      "id": "ni",
+      "name": "Nicaragua",
+      "region_id": "concacaf",
+      "message_key": "geography_country_ni",
+      "search_key": "nicarágua nicaragua nicaragua nicaragua nicaragua nicaragua",
+      "aliases": [
+        "Nicaragua",
+        "Nicarágua"
+      ]
+    },
+    {
+      "id": "pa",
+      "name": "Panama",
+      "region_id": "concacaf",
+      "message_key": "geography_country_pa",
+      "search_key": "panamá panama panamá panama panama panama",
+      "aliases": [
+        "Panama",
+        "Panamá"
+      ]
+    },
+    {
+      "id": "pr",
+      "name": "Puerto Rico",
+      "region_id": "concacaf",
+      "message_key": "geography_country_pr",
+      "search_key": "porto rico puerto rico puerto rico portorico puerto rico porto rico",
+      "aliases": [
+        "Puerto Rico",
+        "Porto Rico",
+        "Portorico"
+      ]
+    },
+    {
+      "id": "kn",
+      "name": "Saint Kitts and Nevis",
+      "region_id": "concacaf",
+      "message_key": "geography_country_kn",
+      "search_key": "são cristóvão e neves saint kitts and nevis san cristóbal y nieves saint kitts e nevis st. kitts und nevis saint-christophe-et-niévès",
+      "aliases": [
+        "Saint Kitts and Nevis",
+        "São Cristóvão e Neves",
+        "San Cristóbal y Nieves",
+        "Saint Kitts e Nevis",
+        "St. Kitts und Nevis",
+        "Saint-Christophe-et-Niévès"
+      ]
+    },
+    {
+      "id": "lc",
+      "name": "Saint Lucia",
+      "region_id": "concacaf",
+      "message_key": "geography_country_lc",
+      "search_key": "santa lúcia saint lucia santa lucía saint lucia st. lucia sainte-lucie",
+      "aliases": [
+        "Saint Lucia",
+        "Santa Lúcia",
+        "Santa Lucía",
+        "St. Lucia",
+        "Sainte-Lucie"
+      ]
+    },
+    {
+      "id": "mf",
+      "name": "Saint Martin",
+      "region_id": "concacaf",
+      "message_key": "geography_country_mf",
+      "search_key": "são martinho (frança) saint martin san martín saint martin st. martin saint-martin",
+      "aliases": [
+        "Saint Martin",
+        "São Martinho (França)",
+        "San Martín",
+        "St. Martin",
+        "Saint-Martin"
+      ]
+    },
+    {
+      "id": "vc",
+      "name": "Saint Vincent and the Grenadines",
+      "region_id": "concacaf",
+      "message_key": "geography_country_vc",
+      "search_key": "são vicente e granadinas saint vincent and the grenadines san vicente y las granadinas saint vincent e grenadine st. vincent und die grenadinen saint-vincent-et-les grenadines",
+      "aliases": [
+        "Saint Vincent and the Grenadines",
+        "São Vicente e Granadinas",
+        "San Vicente y las Granadinas",
+        "Saint Vincent e Grenadine",
+        "St. Vincent und die Grenadinen",
+        "Saint-Vincent-et-les Grenadines"
+      ]
+    },
+    {
+      "id": "sx",
+      "name": "Sint Maarten",
+      "region_id": "concacaf",
+      "message_key": "geography_country_sx",
+      "search_key": "são martinho (holanda) sint maarten sint maarten sint maarten sint maarten saint-martin (partie néerlandaise)",
+      "aliases": [
+        "Sint Maarten",
+        "São Martinho (Holanda)",
+        "Saint-Martin (partie néerlandaise)"
+      ]
+    },
+    {
+      "id": "sr",
+      "name": "Suriname",
+      "region_id": "concacaf",
+      "message_key": "geography_country_sr",
+      "search_key": "suriname suriname surinam suriname suriname suriname",
+      "aliases": [
+        "Suriname",
+        "Surinam"
+      ]
+    },
+    {
+      "id": "tt",
+      "name": "Trinidad and Tobago",
+      "region_id": "concacaf",
+      "message_key": "geography_country_tt",
+      "search_key": "trindade e tobago trinidad and tobago trinidad y tobago trinidad e tobago trinidad und tobago trinité-et-tobago",
+      "aliases": [
+        "Trinidad and Tobago",
+        "Trindade e Tobago",
+        "Trinidad y Tobago",
+        "Trinidad e Tobago",
+        "Trinidad und Tobago",
+        "Trinité-et-Tobago"
+      ]
+    },
+    {
+      "id": "tc",
+      "name": "Turks and Caicos Islands",
+      "region_id": "concacaf",
+      "message_key": "geography_country_tc",
+      "search_key": "turks e caicos turks and caicos islands islas turcas y caicos isole turks e caicos turks- und caicosinseln îles turques-et-caïques",
+      "aliases": [
+        "Turks and Caicos Islands",
+        "Turks e Caicos",
+        "Islas Turcas y Caicos",
+        "Isole Turks e Caicos",
+        "Turks- und Caicosinseln",
+        "Îles Turques-et-Caïques"
+      ]
+    },
+    {
+      "id": "us",
+      "name": "United States",
+      "region_id": "concacaf",
+      "message_key": "geography_country_us",
+      "search_key": "estados unidos united states estados unidos stati uniti vereinigte staaten états-unis",
+      "aliases": [
+        "United States",
+        "Estados Unidos",
+        "Stati Uniti",
+        "Vereinigte Staaten",
+        "États-Unis"
+      ]
+    },
+    {
+      "id": "vg",
+      "name": "Virgin Islands (British)",
+      "region_id": "concacaf",
+      "message_key": "geography_country_vg",
+      "search_key": "ilhas virgens britânicas virgin islands (british) islas vírgenes británicas isole vergini britanniche britische jungferninseln îles vierges britanniques",
+      "aliases": [
+        "Virgin Islands (British)",
+        "Ilhas Virgens Britânicas",
+        "Islas Vírgenes Británicas",
+        "Isole Vergini Britanniche",
+        "Britische Jungferninseln",
+        "Îles Vierges britanniques"
+      ]
+    },
+    {
+      "id": "vi",
+      "name": "Virgin Islands (U.S.)",
+      "region_id": "concacaf",
+      "message_key": "geography_country_vi",
+      "search_key": "ilhas virgens americanas virgin islands (u.s.) islas vírgenes de ee. uu. isole vergini americane amerikanische jungferninseln îles vierges des états-unis",
+      "aliases": [
+        "Virgin Islands (U.S.)",
+        "Ilhas Virgens Americanas",
+        "Islas Vírgenes de EE. UU.",
+        "Isole Vergini Americane",
+        "Amerikanische Jungferninseln",
+        "Îles Vierges des États-Unis"
+      ]
+    },
+    {
+      "id": "al",
+      "name": "Albania",
+      "region_id": "europe",
+      "message_key": "geography_country_al",
+      "search_key": "albânia albania albania albania albanien albanie",
+      "aliases": [
+        "Albania",
+        "Albânia",
+        "Albanien",
+        "Albanie"
+      ]
+    },
+    {
+      "id": "ad",
+      "name": "Andorra",
+      "region_id": "europe",
+      "message_key": "geography_country_ad",
+      "search_key": "andorra andorra andorra andorra andorra andorre",
+      "aliases": [
+        "Andorra",
+        "Andorre"
+      ]
+    },
+    {
+      "id": "am",
+      "name": "Armenia",
+      "region_id": "europe",
+      "message_key": "geography_country_am",
+      "search_key": "armênia armenia armenia armenia armenien arménie",
+      "aliases": [
+        "Armenia",
+        "Armênia",
+        "Armenien",
+        "Arménie"
+      ]
+    },
+    {
+      "id": "at",
+      "name": "Austria",
+      "region_id": "europe",
+      "message_key": "geography_country_at",
+      "search_key": "áustria austria austria austria österreich autriche",
+      "aliases": [
+        "Austria",
+        "Áustria",
+        "Österreich",
+        "Autriche"
+      ]
+    },
+    {
+      "id": "az",
+      "name": "Azerbaijan",
+      "region_id": "europe",
+      "message_key": "geography_country_az",
+      "search_key": "azerbeijão azerbaijan azerbaiyán azerbaigian aserbaidschan azerbaïdjan",
+      "aliases": [
+        "Azerbaijan",
+        "Azerbeijão",
+        "Azerbaiyán",
+        "Azerbaigian",
+        "Aserbaidschan",
+        "Azerbaïdjan"
+      ]
+    },
+    {
+      "id": "by",
+      "name": "Belarus",
+      "region_id": "europe",
+      "message_key": "geography_country_by",
+      "search_key": "bielorrússia belarus bielorrusia bielorussia belarus biélorussie",
+      "aliases": [
+        "Belarus",
+        "Bielorrússia",
+        "Bielorrusia",
+        "Bielorussia",
+        "Biélorussie"
+      ]
+    },
+    {
+      "id": "be",
+      "name": "Belgium",
+      "region_id": "europe",
+      "message_key": "geography_country_be",
+      "search_key": "bélgica belgium bélgica belgio belgien belgique",
+      "aliases": [
+        "Belgium",
+        "Bélgica",
+        "Belgio",
+        "Belgien",
+        "Belgique"
+      ]
+    },
+    {
+      "id": "ba",
+      "name": "Bosnia and Herzegovina",
+      "region_id": "europe",
+      "message_key": "geography_country_ba",
+      "search_key": "bósnia e herzegovina bosnia and herzegovina bosnia y herzegovina bosnia ed erzegovina bosnien und herzegowina bosnie-herzégovine",
+      "aliases": [
+        "Bosnia and Herzegovina",
+        "Bósnia e Herzegovina",
+        "Bosnia y Herzegovina",
+        "Bosnia ed Erzegovina",
+        "Bosnien und Herzegowina",
+        "Bosnie-Herzégovine"
+      ]
+    },
+    {
+      "id": "bg",
+      "name": "Bulgaria",
+      "region_id": "europe",
+      "message_key": "geography_country_bg",
+      "search_key": "bulgária bulgaria bulgaria bulgaria bulgarien bulgarie",
+      "aliases": [
+        "Bulgaria",
+        "Bulgária",
+        "Bulgarien",
+        "Bulgarie"
+      ]
+    },
+    {
+      "id": "hr",
+      "name": "Croatia",
+      "region_id": "europe",
+      "message_key": "geography_country_hr",
+      "search_key": "croácia croatia croacia croazia kroatien croatie",
+      "aliases": [
+        "Croatia",
+        "Croácia",
+        "Croacia",
+        "Croazia",
+        "Kroatien",
+        "Croatie"
+      ]
+    },
+    {
+      "id": "cy",
+      "name": "Cyprus",
+      "region_id": "europe",
+      "message_key": "geography_country_cy",
+      "search_key": "chipre cyprus chipre cipro zypern chypre",
+      "aliases": [
+        "Cyprus",
+        "Chipre",
+        "Cipro",
+        "Zypern",
+        "Chypre"
+      ]
+    },
+    {
+      "id": "cz",
+      "name": "Czech Republic",
+      "region_id": "europe",
+      "message_key": "geography_country_cz",
+      "search_key": "república checa czech republic chequia cechia tschechien tchéquie",
+      "aliases": [
+        "Czech Republic",
+        "República Checa",
+        "Chequia",
+        "Cechia",
+        "Tschechien",
+        "Tchéquie"
+      ]
+    },
+    {
+      "id": "dk",
+      "name": "Denmark",
+      "region_id": "europe",
+      "message_key": "geography_country_dk",
+      "search_key": "dinamarca denmark dinamarca danimarca dänemark danemark",
+      "aliases": [
+        "Denmark",
+        "Dinamarca",
+        "Danimarca",
+        "Dänemark",
+        "Danemark"
+      ]
+    },
+    {
+      "id": "gb_eng",
+      "name": "England",
+      "region_id": "europe",
+      "message_key": "geography_country_gb_eng",
+      "search_key": "inglaterra england inglaterra inghilterra england angleterre",
+      "aliases": [
+        "England",
+        "Inglaterra",
+        "Inghilterra",
+        "Angleterre"
+      ]
+    },
+    {
+      "id": "ee",
+      "name": "Estonia",
+      "region_id": "europe",
+      "message_key": "geography_country_ee",
+      "search_key": "estônia estonia estonia estonia estland estonie",
+      "aliases": [
+        "Estonia",
+        "Estônia",
+        "Estland",
+        "Estonie"
+      ]
+    },
+    {
+      "id": "fo",
+      "name": "Faroe Islands",
+      "region_id": "europe",
+      "message_key": "geography_country_fo",
+      "search_key": "ilhas feroe faroe islands islas feroe isole fær øer färöer îles féroé",
+      "aliases": [
+        "Faroe Islands",
+        "Ilhas Feroe",
+        "Islas Feroe",
+        "Isole Fær Øer",
+        "Färöer",
+        "Îles Féroé"
+      ]
+    },
+    {
+      "id": "fi",
+      "name": "Finland",
+      "region_id": "europe",
+      "message_key": "geography_country_fi",
+      "search_key": "finlândia finland finlandia finlandia finnland finlande",
+      "aliases": [
+        "Finland",
+        "Finlândia",
+        "Finlandia",
+        "Finnland",
+        "Finlande"
+      ]
+    },
+    {
+      "id": "fr",
+      "name": "France",
+      "region_id": "europe",
+      "message_key": "geography_country_fr",
+      "search_key": "frança france francia francia frankreich france",
+      "aliases": [
+        "France",
+        "França",
+        "Francia",
+        "Frankreich"
+      ]
+    },
+    {
+      "id": "ge",
+      "name": "Georgia",
+      "region_id": "europe",
+      "message_key": "geography_country_ge",
+      "search_key": "geórgia georgia georgia georgia georgien géorgie",
+      "aliases": [
+        "Georgia",
+        "Geórgia",
+        "Georgien",
+        "Géorgie"
+      ]
+    },
+    {
+      "id": "de",
+      "name": "Germany",
+      "region_id": "europe",
+      "message_key": "geography_country_de",
+      "search_key": "alemanha germany alemania germania deutschland allemagne",
+      "aliases": [
+        "Germany",
+        "Alemanha",
+        "Alemania",
+        "Germania",
+        "Deutschland",
+        "Allemagne"
+      ]
+    },
+    {
+      "id": "gi",
+      "name": "Gibraltar",
+      "region_id": "europe",
+      "message_key": "geography_country_gi",
+      "search_key": "gibraltar gibraltar gibraltar gibilterra gibraltar gibraltar",
+      "aliases": [
+        "Gibraltar",
+        "Gibilterra"
+      ]
+    },
+    {
+      "id": "gr",
+      "name": "Greece",
+      "region_id": "europe",
+      "message_key": "geography_country_gr",
+      "search_key": "grécia greece grecia grecia griechenland grèce",
+      "aliases": [
+        "Greece",
+        "Grécia",
+        "Grecia",
+        "Griechenland",
+        "Grèce"
+      ]
+    },
+    {
+      "id": "hu",
+      "name": "Hungary",
+      "region_id": "europe",
+      "message_key": "geography_country_hu",
+      "search_key": "hungria hungary hungría ungheria ungarn hongrie",
+      "aliases": [
+        "Hungary",
+        "Hungria",
+        "Hungría",
+        "Ungheria",
+        "Ungarn",
+        "Hongrie"
+      ]
+    },
+    {
+      "id": "is",
+      "name": "Iceland",
+      "region_id": "europe",
+      "message_key": "geography_country_is",
+      "search_key": "islândia iceland islandia islanda island islande",
+      "aliases": [
+        "Iceland",
+        "Islândia",
+        "Islandia",
+        "Islanda",
+        "Island",
+        "Islande"
+      ]
+    },
+    {
+      "id": "ie",
+      "name": "Ireland",
+      "region_id": "europe",
+      "message_key": "geography_country_ie",
+      "search_key": "irlanda ireland irlanda irlanda irland irlande",
+      "aliases": [
+        "Ireland",
+        "Irlanda",
+        "Irland",
+        "Irlande"
+      ]
+    },
+    {
+      "id": "il",
+      "name": "Israel",
+      "region_id": "europe",
+      "message_key": "geography_country_il",
+      "search_key": "israel israel israel israele israel israël",
+      "aliases": [
+        "Israel",
+        "Israele",
+        "Israël"
+      ]
+    },
+    {
+      "id": "it",
+      "name": "Italy",
+      "region_id": "europe",
+      "message_key": "geography_country_it",
+      "search_key": "itália italy italia italia italien italie",
+      "aliases": [
+        "Italy",
+        "Itália",
+        "Italia",
+        "Italien",
+        "Italie"
+      ]
+    },
+    {
+      "id": "kz",
+      "name": "Kazakhstan",
+      "region_id": "europe",
+      "message_key": "geography_country_kz",
+      "search_key": "cazaquistão kazakhstan kazajistán kazakistan kasachstan kazakhstan",
+      "aliases": [
+        "Kazakhstan",
+        "Cazaquistão",
+        "Kazajistán",
+        "Kazakistan",
+        "Kasachstan"
+      ]
+    },
+    {
+      "id": "xk",
+      "name": "Kosovo",
+      "region_id": "europe",
+      "message_key": "geography_country_xk",
+      "search_key": "kosovo kosovo kosovo kosovo kosovo kosovo",
+      "aliases": [
+        "Kosovo"
+      ]
+    },
+    {
+      "id": "lv",
+      "name": "Latvia",
+      "region_id": "europe",
+      "message_key": "geography_country_lv",
+      "search_key": "letônia latvia letonia lettonia lettland lettonie",
+      "aliases": [
+        "Latvia",
+        "Letônia",
+        "Letonia",
+        "Lettonia",
+        "Lettland",
+        "Lettonie"
+      ]
+    },
+    {
+      "id": "li",
+      "name": "Liechtenstein",
+      "region_id": "europe",
+      "message_key": "geography_country_li",
+      "search_key": "liechtenstein liechtenstein liechtenstein liechtenstein liechtenstein liechtenstein",
+      "aliases": [
+        "Liechtenstein"
+      ]
+    },
+    {
+      "id": "lt",
+      "name": "Lithuania",
+      "region_id": "europe",
+      "message_key": "geography_country_lt",
+      "search_key": "lituânia lithuania lituania lituania litauen lituanie",
+      "aliases": [
+        "Lithuania",
+        "Lituânia",
+        "Lituania",
+        "Litauen",
+        "Lituanie"
+      ]
+    },
+    {
+      "id": "lu",
+      "name": "Luxembourg",
+      "region_id": "europe",
+      "message_key": "geography_country_lu",
+      "search_key": "luxemburgo luxembourg luxemburgo lussemburgo luxemburg luxembourg",
+      "aliases": [
+        "Luxembourg",
+        "Luxemburgo",
+        "Lussemburgo",
+        "Luxemburg"
+      ]
+    },
+    {
+      "id": "mk",
+      "name": "Macedonia",
+      "region_id": "europe",
+      "message_key": "geography_country_mk",
+      "search_key": "macedônia macedonia macedonia del norte macedonia del nord nordmazedonien macédoine du nord",
+      "aliases": [
+        "Macedonia",
+        "Macedônia",
+        "Macedonia del Norte",
+        "Macedonia del Nord",
+        "Nordmazedonien",
+        "Macédoine du Nord"
+      ]
+    },
+    {
+      "id": "mt",
+      "name": "Malta",
+      "region_id": "europe",
+      "message_key": "geography_country_mt",
+      "search_key": "malta malta malta malta malta malte",
+      "aliases": [
+        "Malta",
+        "Malte"
+      ]
+    },
+    {
+      "id": "md",
+      "name": "Moldova",
+      "region_id": "europe",
+      "message_key": "geography_country_md",
+      "search_key": "moldávia moldova moldavia moldavia republik moldau moldavie",
+      "aliases": [
+        "Moldova",
+        "Moldávia",
+        "Moldavia",
+        "Republik Moldau",
+        "Moldavie"
+      ]
+    },
+    {
+      "id": "mc",
+      "name": "Monaco",
+      "region_id": "europe",
+      "message_key": "geography_country_mc",
+      "search_key": "mônaco monaco mónaco monaco monaco monaco",
+      "aliases": [
+        "Monaco",
+        "Mônaco",
+        "Mónaco"
+      ]
+    },
+    {
+      "id": "me",
+      "name": "Montenegro",
+      "region_id": "europe",
+      "message_key": "geography_country_me",
+      "search_key": "montenegro montenegro montenegro montenegro montenegro monténégro",
+      "aliases": [
+        "Montenegro",
+        "Monténégro"
+      ]
+    },
+    {
+      "id": "nl",
+      "name": "Netherlands",
+      "region_id": "europe",
+      "message_key": "geography_country_nl",
+      "search_key": "holanda netherlands países bajos paesi bassi niederlande pays-bas países baixos",
+      "aliases": [
+        "Netherlands",
+        "Holanda",
+        "Países Bajos",
+        "Paesi Bassi",
+        "Niederlande",
+        "Pays-Bas",
+        "Países Baixos"
+      ]
+    },
+    {
+      "id": "gb_nir",
+      "name": "Northern Ireland",
+      "region_id": "europe",
+      "message_key": "geography_country_gb_nir",
+      "search_key": "irlanda do norte northern ireland irlanda del norte irlanda del nord nordirland irlande du nord",
+      "aliases": [
+        "Northern Ireland",
+        "Irlanda do Norte",
+        "Irlanda del Norte",
+        "Irlanda del Nord",
+        "Nordirland",
+        "Irlande du Nord"
+      ]
+    },
+    {
+      "id": "no",
+      "name": "Norway",
+      "region_id": "europe",
+      "message_key": "geography_country_no",
+      "search_key": "noruega norway noruega norvegia norwegen norvège",
+      "aliases": [
+        "Norway",
+        "Noruega",
+        "Norvegia",
+        "Norwegen",
+        "Norvège"
+      ]
+    },
+    {
+      "id": "pl",
+      "name": "Poland",
+      "region_id": "europe",
+      "message_key": "geography_country_pl",
+      "search_key": "polônia poland polonia polonia polen pologne",
+      "aliases": [
+        "Poland",
+        "Polônia",
+        "Polonia",
+        "Polen",
+        "Pologne"
+      ]
+    },
+    {
+      "id": "pt",
+      "name": "Portugal",
+      "region_id": "europe",
+      "message_key": "geography_country_pt",
+      "search_key": "portugal portugal portugal portogallo portugal portugal",
+      "aliases": [
+        "Portugal",
+        "Portogallo"
+      ]
+    },
+    {
+      "id": "ro",
+      "name": "Romania",
+      "region_id": "europe",
+      "message_key": "geography_country_ro",
+      "search_key": "romênia romania rumania romania rumänien roumanie",
+      "aliases": [
+        "Romania",
+        "Romênia",
+        "Rumania",
+        "Rumänien",
+        "Roumanie"
+      ]
+    },
+    {
+      "id": "ru",
+      "name": "Russia",
+      "region_id": "europe",
+      "message_key": "geography_country_ru",
+      "search_key": "rússia russia rusia russia russland russie",
+      "aliases": [
+        "Russia",
+        "Rússia",
+        "Rusia",
+        "Russland",
+        "Russie"
+      ]
+    },
+    {
+      "id": "sm",
+      "name": "San Marino",
+      "region_id": "europe",
+      "message_key": "geography_country_sm",
+      "search_key": "san marino san marino san marino san marino san marino saint-marin",
+      "aliases": [
+        "San Marino",
+        "Saint-Marin"
+      ]
+    },
+    {
+      "id": "gb_sct",
+      "name": "Scotland",
+      "region_id": "europe",
+      "message_key": "geography_country_gb_sct",
+      "search_key": "escócia scotland escocia scozia schottland écosse",
+      "aliases": [
+        "Scotland",
+        "Escócia",
+        "Escocia",
+        "Scozia",
+        "Schottland",
+        "Écosse"
+      ]
+    },
+    {
+      "id": "rs",
+      "name": "Serbia",
+      "region_id": "europe",
+      "message_key": "geography_country_rs",
+      "search_key": "sérvia serbia serbia serbia serbien serbie",
+      "aliases": [
+        "Serbia",
+        "Sérvia",
+        "Serbien",
+        "Serbie"
+      ]
+    },
+    {
+      "id": "cs",
+      "name": "Serbia and Montenegro",
+      "region_id": "europe",
+      "message_key": "geography_country_cs",
+      "search_key": "sérvia e montenegro serbia and montenegro serbia y montenegro serbia e montenegro serbien und montenegro serbie-et-monténégro",
+      "aliases": [
+        "Serbia and Montenegro",
+        "Sérvia e Montenegro",
+        "Serbia y Montenegro",
+        "Serbia e Montenegro",
+        "Serbien und Montenegro",
+        "Serbie-et-Monténégro"
+      ]
+    },
+    {
+      "id": "sk",
+      "name": "Slovakia",
+      "region_id": "europe",
+      "message_key": "geography_country_sk",
+      "search_key": "eslováquia slovakia eslovaquia slovacchia slowakei slovaquie",
+      "aliases": [
+        "Slovakia",
+        "Eslováquia",
+        "Eslovaquia",
+        "Slovacchia",
+        "Slowakei",
+        "Slovaquie"
+      ]
+    },
+    {
+      "id": "si",
+      "name": "Slovenia",
+      "region_id": "europe",
+      "message_key": "geography_country_si",
+      "search_key": "eslovênia slovenia eslovenia slovenia slowenien slovénie",
+      "aliases": [
+        "Slovenia",
+        "Eslovênia",
+        "Eslovenia",
+        "Slowenien",
+        "Slovénie"
+      ]
+    },
+    {
+      "id": "es",
+      "name": "Spain",
+      "region_id": "europe",
+      "message_key": "geography_country_es",
+      "search_key": "espanha spain españa spagna spanien espagne",
+      "aliases": [
+        "Spain",
+        "Espanha",
+        "España",
+        "Spagna",
+        "Spanien",
+        "Espagne"
+      ]
+    },
+    {
+      "id": "se",
+      "name": "Sweden",
+      "region_id": "europe",
+      "message_key": "geography_country_se",
+      "search_key": "suécia sweden suecia svezia schweden suède",
+      "aliases": [
+        "Sweden",
+        "Suécia",
+        "Suecia",
+        "Svezia",
+        "Schweden",
+        "Suède"
+      ]
+    },
+    {
+      "id": "ch",
+      "name": "Switzerland",
+      "region_id": "europe",
+      "message_key": "geography_country_ch",
+      "search_key": "suíça switzerland suiza svizzera schweiz suisse",
+      "aliases": [
+        "Switzerland",
+        "Suíça",
+        "Suiza",
+        "Svizzera",
+        "Schweiz",
+        "Suisse"
+      ]
+    },
+    {
+      "id": "tr",
+      "name": "Turkey",
+      "region_id": "europe",
+      "message_key": "geography_country_tr",
+      "search_key": "turquia turkey turquía turchia türkei turquie",
+      "aliases": [
+        "Turkey",
+        "Turquia",
+        "Turquía",
+        "Turchia",
+        "Türkei",
+        "Turquie"
+      ]
+    },
+    {
+      "id": "ua",
+      "name": "Ukraine",
+      "region_id": "europe",
+      "message_key": "geography_country_ua",
+      "search_key": "ucrânia ukraine ucrania ucraina ukraine ukraine",
+      "aliases": [
+        "Ukraine",
+        "Ucrânia",
+        "Ucrania",
+        "Ucraina"
+      ]
+    },
+    {
+      "id": "gb",
+      "name": "United Kingdom",
+      "region_id": "europe",
+      "message_key": "geography_country_gb",
+      "search_key": "reino unido united kingdom reino unido regno unito vereinigtes königreich royaume-uni",
+      "aliases": [
+        "United Kingdom",
+        "Reino Unido",
+        "Regno Unito",
+        "Vereinigtes Königreich",
+        "Royaume-Uni"
+      ]
+    },
+    {
+      "id": "gb_wls",
+      "name": "Wales",
+      "region_id": "europe",
+      "message_key": "geography_country_gb_wls",
+      "search_key": "país de gales wales gales galles wales pays de galles",
+      "aliases": [
+        "Wales",
+        "País de Gales",
+        "Gales",
+        "Galles",
+        "Pays de Galles"
+      ]
+    },
+    {
+      "id": "as",
+      "name": "American Samoa",
+      "region_id": "oceania",
+      "message_key": "geography_country_as",
+      "search_key": "samoa americana american samoa samoa americana samoa americane amerikanisch-samoa samoa américaines",
+      "aliases": [
+        "American Samoa",
+        "Samoa Americana",
+        "Samoa Americane",
+        "Amerikanisch-Samoa",
+        "Samoa américaines"
+      ]
+    },
+    {
+      "id": "ck",
+      "name": "Cook Islands",
+      "region_id": "oceania",
+      "message_key": "geography_country_ck",
+      "search_key": "ilhas cook cook islands islas cook isole cook cookinseln îles cook",
+      "aliases": [
+        "Cook Islands",
+        "Ilhas Cook",
+        "Islas Cook",
+        "Isole Cook",
+        "Cookinseln",
+        "Îles Cook"
+      ]
+    },
+    {
+      "id": "fj",
+      "name": "Fiji",
+      "region_id": "oceania",
+      "message_key": "geography_country_fj",
+      "search_key": "fiji fiji fiyi figi fidschi fidji",
+      "aliases": [
+        "Fiji",
+        "Fiyi",
+        "Figi",
+        "Fidschi",
+        "Fidji"
+      ]
+    },
+    {
+      "id": "pf",
+      "name": "French Polynesia",
+      "region_id": "oceania",
+      "message_key": "geography_country_pf",
+      "search_key": "polinésia francesa french polynesia polinesia francesa polinesia francese französisch-polynesien polynésie française",
+      "aliases": [
+        "French Polynesia",
+        "Polinésia Francesa",
+        "Polinesia Francesa",
+        "Polinesia Francese",
+        "Französisch-Polynesien",
+        "Polynésie française"
+      ]
+    },
+    {
+      "id": "ki",
+      "name": "Kiribati",
+      "region_id": "oceania",
+      "message_key": "geography_country_ki",
+      "search_key": "kiribati kiribati kiribati kiribati kiribati kiribati",
+      "aliases": [
+        "Kiribati"
+      ]
+    },
+    {
+      "id": "nc",
+      "name": "New Caledonia",
+      "region_id": "oceania",
+      "message_key": "geography_country_nc",
+      "search_key": "nova caledônia new caledonia nueva caledonia nuova caledonia neukaledonien nouvelle-calédonie",
+      "aliases": [
+        "New Caledonia",
+        "Nova Caledônia",
+        "Nueva Caledonia",
+        "Nuova Caledonia",
+        "Neukaledonien",
+        "Nouvelle-Calédonie"
+      ]
+    },
+    {
+      "id": "nz",
+      "name": "New Zealand",
+      "region_id": "oceania",
+      "message_key": "geography_country_nz",
+      "search_key": "nova zelândia new zealand nueva zelanda nuova zelanda neuseeland nouvelle-zélande",
+      "aliases": [
+        "New Zealand",
+        "Nova Zelândia",
+        "Nueva Zelanda",
+        "Nuova Zelanda",
+        "Neuseeland",
+        "Nouvelle-Zélande"
+      ]
+    },
+    {
+      "id": "nu",
+      "name": "Niue",
+      "region_id": "oceania",
+      "message_key": "geography_country_nu",
+      "search_key": "niue niue niue niue niue niue",
+      "aliases": [
+        "Niue"
+      ]
+    },
+    {
+      "id": "pg",
+      "name": "Papua New Guinea",
+      "region_id": "oceania",
+      "message_key": "geography_country_pg",
+      "search_key": "papua-nova guiné papua new guinea papúa nueva guinea papua nuova guinea papua-neuguinea papouasie-nouvelle-guinée",
+      "aliases": [
+        "Papua New Guinea",
+        "Papua-Nova Guiné",
+        "Papúa Nueva Guinea",
+        "Papua Nuova Guinea",
+        "Papua-Neuguinea",
+        "Papouasie-Nouvelle-Guinée"
+      ]
+    },
+    {
+      "id": "ws",
+      "name": "Samoa",
+      "region_id": "oceania",
+      "message_key": "geography_country_ws",
+      "search_key": "samoa samoa samoa samoa samoa samoa",
+      "aliases": [
+        "Samoa"
+      ]
+    },
+    {
+      "id": "sb",
+      "name": "Solomon Islands",
+      "region_id": "oceania",
+      "message_key": "geography_country_sb",
+      "search_key": "ilhas salomão solomon islands islas salomón isole salomone salomonen îles salomon",
+      "aliases": [
+        "Solomon Islands",
+        "Ilhas Salomão",
+        "Islas Salomón",
+        "Isole Salomone",
+        "Salomonen",
+        "Îles Salomon"
+      ]
+    },
+    {
+      "id": "to",
+      "name": "Tonga",
+      "region_id": "oceania",
+      "message_key": "geography_country_to",
+      "search_key": "tonga tonga tonga tonga tonga tonga",
+      "aliases": [
+        "Tonga"
+      ]
+    },
+    {
+      "id": "tv",
+      "name": "Tuvalu",
+      "region_id": "oceania",
+      "message_key": "geography_country_tv",
+      "search_key": "tuvalu tuvalu tuvalu tuvalu tuvalu tuvalu",
+      "aliases": [
+        "Tuvalu"
+      ]
+    },
+    {
+      "id": "vu",
+      "name": "Vanuatu",
+      "region_id": "oceania",
+      "message_key": "geography_country_vu",
+      "search_key": "vanuatu vanuatu vanuatu vanuatu vanuatu vanuatu",
+      "aliases": [
+        "Vanuatu"
+      ]
+    },
+    {
+      "id": "ar",
+      "name": "Argentina",
+      "region_id": "south_america",
+      "message_key": "geography_country_ar",
+      "search_key": "argentina argentina argentina argentina argentinien argentine",
+      "aliases": [
+        "Argentina",
+        "Argentinien",
+        "Argentine"
+      ]
+    },
+    {
+      "id": "bo",
+      "name": "Bolivia",
+      "region_id": "south_america",
+      "message_key": "geography_country_bo",
+      "search_key": "bolívia bolivia bolivia bolivia bolivien bolivie",
+      "aliases": [
+        "Bolivia",
+        "Bolívia",
+        "Bolivien",
+        "Bolivie"
+      ]
+    },
+    {
+      "id": "br",
+      "name": "Brazil",
+      "region_id": "south_america",
+      "message_key": "geography_country_br",
+      "search_key": "brasil brazil brasil brasile brasilien brésil",
+      "aliases": [
+        "Brazil",
+        "Brasil",
+        "Brasile",
+        "Brasilien",
+        "Brésil"
+      ]
+    },
+    {
+      "id": "cl",
+      "name": "Chile",
+      "region_id": "south_america",
+      "message_key": "geography_country_cl",
+      "search_key": "chile chile chile cile chile chili",
+      "aliases": [
+        "Chile",
+        "Cile",
+        "Chili"
+      ]
+    },
+    {
+      "id": "co",
+      "name": "Colombia",
+      "region_id": "south_america",
+      "message_key": "geography_country_co",
+      "search_key": "colômbia colombia colombia colombia kolumbien colombie",
+      "aliases": [
+        "Colombia",
+        "Colômbia",
+        "Kolumbien",
+        "Colombie"
+      ]
+    },
+    {
+      "id": "ec",
+      "name": "Ecuador",
+      "region_id": "south_america",
+      "message_key": "geography_country_ec",
+      "search_key": "equador ecuador ecuador ecuador ecuador équateur",
+      "aliases": [
+        "Ecuador",
+        "Equador",
+        "Équateur"
+      ]
+    },
+    {
+      "id": "py",
+      "name": "Paraguay",
+      "region_id": "south_america",
+      "message_key": "geography_country_py",
+      "search_key": "paraguai paraguay paraguay paraguay paraguay paraguay",
+      "aliases": [
+        "Paraguay",
+        "Paraguai"
+      ]
+    },
+    {
+      "id": "pe",
+      "name": "Peru",
+      "region_id": "south_america",
+      "message_key": "geography_country_pe",
+      "search_key": "peru peru perú perù peru pérou",
+      "aliases": [
+        "Peru",
+        "Perú",
+        "Perù",
+        "Pérou"
+      ]
+    },
+    {
+      "id": "uy",
+      "name": "Uruguay",
+      "region_id": "south_america",
+      "message_key": "geography_country_uy",
+      "search_key": "uruguai uruguay uruguay uruguay uruguay uruguay",
+      "aliases": [
+        "Uruguay",
+        "Uruguai"
+      ]
+    },
+    {
+      "id": "ve",
+      "name": "Venezuela",
+      "region_id": "south_america",
+      "message_key": "geography_country_ve",
+      "search_key": "venezuela venezuela venezuela venezuela venezuela venezuela",
+      "aliases": [
+        "Venezuela"
+      ]
+    },
+    {
+      "id": "gl",
+      "name": "Greenland",
+      "region_id": "",
+      "message_key": "geography_country_gl",
+      "search_key": "groelândia greenland groenlandia groenlandia grönland groenland",
+      "aliases": [
+        "Greenland",
+        "Groelândia",
+        "Groenlandia",
+        "Grönland",
+        "Groenland"
+      ]
+    }
+  ]
+}

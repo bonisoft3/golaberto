@@ -153,12 +153,16 @@ for (const width of [390, 1366]) {
           const url = new URL(r.url());
           return url.pathname === "/crud/team_directory" &&
             url.searchParams.get("search_key") === `like.*${mapSearchEquivalences(name)}*` &&
-            url.searchParams.get("country_key") === `like.*${mapSearchEquivalences(country)}*`;
+            url.searchParams.get("country_search_key") === `like.*${mapSearchEquivalences(country)}*`;
         });
         await page.fill("#teams-q", name);
         await page.fill("#teams-country", country);
         assert((await response).ok(), "combined name and country search should succeed");
-        await waitForRows(expectedIds.length);
+        await page.waitForFunction((expected) => {
+          const actual = [...document.querySelectorAll<HTMLAnchorElement>('.catalog-table a[data-route="equipe"]')]
+            .map((link) => new URL(link.href).pathname.split("/").at(-1));
+          return JSON.stringify(actual) === JSON.stringify(expected);
+        }, expectedIds);
         const actualIds = await page.locator('.catalog-table a[data-route="equipe"]').evaluateAll((links) =>
           links.map((link) => new URL((link as HTMLAnchorElement).href).pathname.split("/").at(-1)));
         assertEquals(actualIds, expectedIds);
@@ -202,7 +206,7 @@ for (const width of [390, 1366]) {
         const url = new URL(r.url());
         return url.pathname === "/crud/team_directory" &&
           url.searchParams.get("search_key") === `like.*${prefix}*` &&
-          url.searchParams.get("country_key") === "like.*colombia*";
+          url.searchParams.get("country_search_key") === "like.*colombia*";
       });
       await page.fill("#teams-country", "colombia");
       assert((await countryResponse).ok(), "changing country on page two should issue the combined filtered query");

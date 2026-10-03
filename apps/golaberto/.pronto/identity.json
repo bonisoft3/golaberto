@@ -951,6 +951,91 @@
         "name": "country_key",
         "type": "string",
         "retired": false
+      },
+      "12": {
+        "name": "country_id",
+        "type": "string",
+        "retired": false
+      },
+      "13": {
+        "name": "region_id",
+        "type": "string",
+        "retired": false
+      },
+      "14": {
+        "name": "country_search_key",
+        "type": "string",
+        "retired": false
+      },
+      "15": {
+        "name": "region_search_key",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0xbd185e5ceb027f7d": {
+    "name": "geography_region",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "name",
+        "type": "string",
+        "retired": false
+      },
+      "3": {
+        "name": "message_key",
+        "type": "string",
+        "retired": false
+      },
+      "4": {
+        "name": "search_key",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0xb37475df2e5b43d6": {
+    "name": "geography_country",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "name",
+        "type": "string",
+        "retired": false
+      },
+      "3": {
+        "name": "region_id",
+        "type": "string",
+        "retired": false
+      },
+      "4": {
+        "name": "message_key",
+        "type": "string",
+        "retired": false
+      },
+      "5": {
+        "name": "aliases",
+        "type": "string",
+        "retired": false
+      },
+      "6": {
+        "name": "search_key",
+        "type": "string",
+        "retired": false
+      },
+      "7": {
+        "name": "region_search_key",
+        "type": "string",
+        "retired": false
       }
     }
   },
@@ -2014,6 +2099,26 @@
       },
       "9": {
         "name": "country_key",
+        "type": "string",
+        "retired": false
+      },
+      "10": {
+        "name": "region_q",
+        "type": "string",
+        "retired": false
+      },
+      "11": {
+        "name": "region_key",
+        "type": "string",
+        "retired": false
+      },
+      "12": {
+        "name": "region_selection",
+        "type": "string",
+        "retired": false
+      },
+      "13": {
+        "name": "country_selection",
         "type": "string",
         "retired": false
       }

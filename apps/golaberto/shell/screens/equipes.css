@@ -1,2 +1,7 @@
 @import url("shared/chrome.css");
 @import url("shared/catalog.css");
+
+/* Search and selection share one compact geography group. */
+.geography-group { display: flex; flex: 1 1 16rem; gap: var(--sp-md); min-width: 0; flex-wrap: wrap; }
+.geography-group .field { flex: 1 1 8rem; min-width: 0; }
+.geography-group input, .geography-group select { width: 100%; min-width: 0; }

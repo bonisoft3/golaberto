@@ -85,6 +85,9 @@ services:
         path: ../services/database/migrations/025_search_letter_equivalences.sql
         target: /docker-entrypoint-initdb.d
       - action: rebuild
+        path: ../services/database/migrations/026_team_geography.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
         path: ../services/database/migrations/900_seed.sql
         target: /docker-entrypoint-initdb.d
     environment:

@@ -238,6 +238,11 @@
         },
         {
           "action": "sync+restart",
+          "path": "../shell/handlers/geography-selection.js",
+          "target": "/srv/shell/handlers/geography-selection.js"
+        },
+        {
+          "action": "sync+restart",
           "path": "../shell/handlers/page-value.js",
           "target": "/srv/shell/handlers/page-value.js"
         },
@@ -255,6 +260,11 @@
           "action": "sync+restart",
           "path": "../shell/renderers/country-flag.js",
           "target": "/srv/shell/renderers/country-flag.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/geography-label.js",
+          "target": "/srv/shell/renderers/geography-label.js"
         },
         {
           "action": "sync+restart",
@@ -867,6 +877,16 @@
       {
         "from": null,
         "srcs": [
+          "shell/handlers/geography-selection.js"
+        ],
+        "dst": "/srv/shell/handlers/geography-selection.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
           "shell/handlers/page-value.js"
         ],
         "dst": "/srv/shell/handlers/page-value.js",
@@ -900,6 +920,16 @@
           "shell/renderers/country-flag.js"
         ],
         "dst": "/srv/shell/renderers/country-flag.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/renderers/geography-label.js"
+        ],
+        "dst": "/srv/shell/renderers/geography-label.js",
         "link": true,
         "parents": false,
         "exclude": []
@@ -1384,10 +1414,12 @@
       "shell/handlers/blank-null.js",
       "shell/handlers/both-scored.js",
       "shell/handlers/count-or-null.js",
+      "shell/handlers/geography-selection.js",
       "shell/handlers/page-value.js",
       "shell/handlers/row-id.js",
       "shell/handlers/search-key.js",
       "shell/renderers/country-flag.js",
+      "shell/renderers/geography-label.js",
       "shell/renderers/home-date.js",
       "shell/renderers/team-badge.js",
       "shell/shared/catalog.css",
@@ -1531,10 +1563,12 @@
           "shell/handlers/blank-null.js",
           "shell/handlers/both-scored.js",
           "shell/handlers/count-or-null.js",
+          "shell/handlers/geography-selection.js",
           "shell/handlers/page-value.js",
           "shell/handlers/row-id.js",
           "shell/handlers/search-key.js",
           "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js",
           "shell/renderers/home-date.js",
           "shell/renderers/team-badge.js",
           "shell/shared/catalog.css",

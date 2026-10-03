@@ -96,9 +96,9 @@ Deno.test("live country joins update open screens without rewriting games; badge
       const errors: string[] = [];
       page.on("pageerror", error => errors.push(error.message));
       await page.goto(base);
-      const row = page.locator(`.home-games .game-row[href$='${id}']`);
+      const row = page.locator(`.home-games .game-row[data-param-id='${id}']`);
       await row.waitFor({ state: "visible" });
-      await page.locator(`.home-games .game-row[href$='${id}'][data-show-country='false']`).waitFor({ state: "visible" });
+      await page.locator(`.home-games .game-row[data-param-id='${id}'][data-show-country='false']`).waitFor({ state: "visible" });
       await row.locator(".team-flag img").first().waitFor({ state: "detached" });
       assertEquals(await row.locator(".team-flag img").count(), 0);
       await alignment(page);

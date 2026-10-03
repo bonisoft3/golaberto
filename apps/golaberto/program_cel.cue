@@ -707,6 +707,10 @@ code: state: entities: {
 			country?: strings.MaxRunes(60)
 			q_key?: strings.MaxRunes(160)
 			country_key?: strings.MaxRunes(120)
+			region_q?: strings.MaxRunes(80)
+			region_key?: strings.MaxRunes(160)
+			region_selection?: strings.MaxRunes(60)
+			country_selection?: strings.MaxRunes(60)
 		}]
 		enums: {
 			state: ["browsing"]
@@ -720,6 +724,10 @@ code: state: entities: {
 			country: {sizeMax: 60}
 			q_key: {sizeMax: 160}
 			country_key: {sizeMax: 120}
+			region_q: {sizeMax: 80}
+			region_key: {sizeMax: 160}
+			region_selection: {sizeMax: 60}
+			country_selection: {sizeMax: 60}
 		}
 	}
 	CatalogFilter: {

@@ -47,6 +47,9 @@ _teamDirectoryUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_te
 _extendedSearchCollationSql: string @embed(file="services/database/sql/025_search_letter_equivalences.sql", type=text)
 _extendedSearchCollationUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_extendedSearchCollationSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
+_teamGeographySql: string @embed(file="services/database/sql/026_team_geography.sql", type=text)
+_teamGeographyUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamGeographySql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
 _homeHighlightsSql: string @embed(file="services/database/sql/021_home_highlights.sql", type=text)
 _homeHighlightsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeHighlightsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
@@ -92,6 +95,8 @@ code: pronto.#App & {
 		GameImportance: onDemand: true
 		TeamRating: onDemand: true
 		TeamDirectory: onDemand: true
+		GeographyRegion: onDemand: true
+		GeographyCountry: onDemand: true
 		PlayerRating: onDemand: true
 		GameCard: onDemand: true
 		TeamGame: onDemand: true
@@ -277,6 +282,35 @@ code: pronto.#App & {
 				{ordinal: 5, name: "search_key", type: "string", generated: (#SearchKey & {col: "name"}).out},
 			]
 		}
+		GeographyRegion: {
+			id: "0xbd185e5ceb027f7d"
+			table: "geography_region"
+			durability: "live"
+			writers: "pipeline"
+			access: {scope: "public"}
+			fields: [
+				{ordinal: 1, name: "id", type: "string", pk: true},
+				{ordinal: 2, name: "name", type: "string"},
+				{ordinal: 3, name: "message_key", type: "string"},
+				{ordinal: 4, name: "search_key", type: "string"},
+			]
+		}
+		GeographyCountry: {
+			id: "0xb37475df2e5b43d6"
+			table: "geography_country"
+			durability: "live"
+			writers: "pipeline"
+			access: {scope: "public"}
+			fields: [
+				{ordinal: 1, name: "id", type: "string", pk: true},
+				{ordinal: 2, name: "name", type: "string"},
+				{ordinal: 3, name: "region_id", type: "string"},
+				{ordinal: 4, name: "message_key", type: "string"},
+				{ordinal: 5, name: "aliases", type: "string"},
+				{ordinal: 6, name: "search_key", type: "string"},
+				{ordinal: 7, name: "region_search_key", type: "string"},
+			]
+		}
 		TeamDirectory: {
 			id: "0x93d75c8ddada8190"
 			table: "team_directory"
@@ -295,6 +329,10 @@ code: pronto.#App & {
 				{ordinal: 9, name: "rating_display", type: "string", generated: "CASE WHEN rating IS NULL THEN '—' ELSE round(rating::numeric, 2)::text END"},
 				{ordinal: 10, name: "search_key", type: "string", generated: (#SearchKey & {col: "name"}).out},
 				{ordinal: 11, name: "country_key", type: "string", generated: (#SearchKey & {col: "coalesce(country, '')"}).out},
+				{ordinal: 12, name: "country_id", type: "string", default: "''"},
+				{ordinal: 13, name: "region_id", type: "string", default: "''"},
+				{ordinal: 14, name: "country_search_key", type: "string", default: "''"},
+				{ordinal: 15, name: "region_search_key", type: "string", default: "''"},
 			]
 		}
 		Player: {
@@ -878,8 +916,12 @@ code: pronto.#App & {
 				{ordinal: 7, name: "country", type: "string", default: "''", cel: "this.size() <= 60"},
 				{ordinal: 8, name: "q_key", type: "string", default: "''", cel: "this.size() <= 160"},
 				{ordinal: 9, name: "country_key", type: "string", default: "''", cel: "this.size() <= 120"},
+				{ordinal: 10, name: "region_q", type: "string", default: "''", cel: "this.size() <= 80"},
+				{ordinal: 11, name: "region_key", type: "string", default: "''", cel: "this.size() <= 160"},
+				{ordinal: 12, name: "region_selection", type: "string", default: "'*'", cel: "this.size() <= 60"},
+				{ordinal: 13, name: "country_selection", type: "string", default: "'*'", cel: "this.size() <= 60"},
 			]
-			seed: [{id: "teams", q: "", country: "", q_key: "", country_key: "", state: "browsing", offset: 0, next_offset: 40, page: 1}, {id: "stadiums", q: "", country: "", q_key: "", country_key: "", state: "browsing", offset: 0, next_offset: 40, page: 1}, {id: "referees", q: "", country: "", q_key: "", country_key: "", state: "browsing", offset: 0, next_offset: 40, page: 1}]
+			seed: [{id: "teams", q: "", country: "", q_key: "", country_key: "", region_q: "", region_key: "", region_selection: "*", country_selection: "*", state: "browsing", offset: 0, next_offset: 40, page: 1}, {id: "stadiums", q: "", country: "", q_key: "", country_key: "", region_q: "", region_key: "", region_selection: "*", country_selection: "*", state: "browsing", offset: 0, next_offset: 40, page: 1}, {id: "referees", q: "", country: "", q_key: "", country_key: "", region_q: "", region_key: "", region_selection: "*", country_selection: "*", state: "browsing", offset: 0, next_offset: 40, page: 1}]
 		}
 		// The catalogue's search, held by the tab: what a reader typed survives a
 		// trip to a championship and back, and belongs to nobody else.
@@ -946,6 +988,7 @@ code: pronto.#App & {
 		{name: "023_search_collation.sql", src: "services/database/sql/023_search_collation.sql"},
 		{name: "024_team_directory.sql", src: "services/database/sql/024_team_directory.sql"},
 		{name: "025_search_letter_equivalences.sql", src: "services/database/sql/025_search_letter_equivalences.sql"},
+		{name: "026_team_geography.sql", src: "services/database/sql/026_team_geography.sql"},
 		// Large archive fixtures are copied at build, never expanded through CUE.
 		{name: "900_seed.sql", src: "services/database/sql/900_seed.sql"},
 	]
@@ -966,6 +1009,7 @@ code: pronto.#App & {
 	state: migrations: "024_team_directory": {operations: [{sql: {up: _teamDirectoryUpgrade, onComplete: true}}]}
 	state: pipelines: "team-directory": {raw: true, from: "Team", to: "TeamDirectory", group: "golaberto-team-directory"}
 	state: migrations: "025_search_letter_equivalences": {operations: [{sql: {up: _extendedSearchCollationUpgrade, onComplete: true}}]}
+	state: migrations: "026_team_geography": {operations: [{sql: {up: _teamGeographyUpgrade, onComplete: true}}]}
 	// The numeric stage (ir decision-chances).
 	// The chances read each game's power from team_rating, so they rerun
 	// whenever the ratings change.
@@ -1017,6 +1061,7 @@ code: pronto.#App & {
 	}
 
 	surface: handlers: {
+		"geography-selection": {ir: "handler-geography-selection", of: "equipes", src: "shell/handlers/geography-selection.js", note: "a cleared dropdown selects the whole scope using the wildcard sentinel"}
 		"search-key": {ir: "handler-search-key", of: "campeonatos", src: "shell/handlers/search-key.js", note: "fold dotless i and thorn in bounded search predicates while preserving typed input"}
 		"page-value": {ir: "handler-page-value", of: "campeonatos", src: "shell/handlers/page-value.js", note: "a forty-row page changes its offset, next-page probe and displayed page together; previous never passes page one"}
 		"blank-null": {ir: "handler-blank-null", of: "editar", src: "shell/handlers/blank-null.js", note: "an unset optional choice clears the game's reference rather than pointing it at an empty string"}
@@ -1038,7 +1083,7 @@ code: pronto.#App & {
 				quiet: {states: ["populated", "no-games", "populated"], accepts: ["accept-home-games"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/home-date.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/home-date.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		campeonatos: {
@@ -1058,7 +1103,7 @@ code: pronto.#App & {
 				search: {states: ["populated", "filtered", "no-match", "populated"], accepts: ["accept-catalog-search"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		jogos: {
@@ -1074,7 +1119,7 @@ code: pronto.#App & {
 				switch: {states: ["populated", "results", "populated"], accepts: ["accept-games-results"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		jogo: {
@@ -1095,7 +1140,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-game-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		chances: {
@@ -1112,7 +1157,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-chances"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		editar: {
@@ -1130,7 +1175,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-game-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		equipes: {
@@ -1150,7 +1195,7 @@ code: pronto.#App & {
 				search: {states: ["populated", "filtered", "no-match", "populated"], accepts: ["accept-teams"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		estadios: {
@@ -1168,7 +1213,7 @@ code: pronto.#App & {
 				search: {states: ["populated", "filtered", "no-match", "populated"], accepts: ["accept-venues"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		estadio: {
@@ -1185,7 +1230,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-venue-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		arbitros: {
@@ -1203,7 +1248,7 @@ code: pronto.#App & {
 				search: {states: ["populated", "filtered", "no-match", "populated"], accepts: ["accept-venues"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		arbitro: {
@@ -1220,7 +1265,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-venue-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		equipe: {
@@ -1237,7 +1282,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-team-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		jogador: {
@@ -1254,7 +1299,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-team-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		campeonato: {
@@ -1272,7 +1317,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-championship-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 	}
@@ -2025,4 +2070,10 @@ loop: surface: checks: "team-directory": {
 	verb: "integrate"
 	cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/team-directory.ts"]
 	note: "latest-rating order, unrated/tied teams, combined accent-insensitive country/name filters, pagination, refresh and phone/desktop layout"
+}
+
+loop: surface: checks: geography: {
+  note: "fixed translated football regions and countries narrow teams while preserving latest rating order"
+  verb: "integrate"
+  cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/geography.ts"]
 }

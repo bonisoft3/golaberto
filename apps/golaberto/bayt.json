@@ -1315,6 +1315,7 @@
           "shell/handlers/blank-null.js",
           "shell/handlers/both-scored.js",
           "shell/handlers/count-or-null.js",
+          "shell/handlers/country-option.js",
           "shell/handlers/geography-selection.js",
           "shell/handlers/page-value.js",
           "shell/handlers/row-id.js",
@@ -1757,6 +1758,16 @@
               "shell/handlers/count-or-null.js"
             ],
             "dst": "/srv/shell/handlers/count-or-null.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          {
+            "from": null,
+            "srcs": [
+              "shell/handlers/country-option.js"
+            ],
+            "dst": "/srv/shell/handlers/country-option.js",
             "link": true,
             "parents": false,
             "exclude": []
@@ -2507,6 +2518,11 @@
               "action": "sync+restart",
               "path": "../shell/handlers/count-or-null.js",
               "target": "/srv/shell/handlers/count-or-null.js"
+            },
+            {
+              "action": "sync+restart",
+              "path": "../shell/handlers/country-option.js",
+              "target": "/srv/shell/handlers/country-option.js"
             },
             {
               "action": "sync+restart",

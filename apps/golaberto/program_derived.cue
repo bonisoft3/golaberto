@@ -32,7 +32,7 @@ code: surface: screens: {
 	}
 	equipes: {
 		reads: [{entity: "DirectoryFilter"}, {entity: "GeographyCountry"}, {entity: "GeographyRegion"}, {entity: "TeamDirectory"}]
-		files: {handlers: ["shell/handlers/geography-selection.js", "shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
+		files: {handlers: ["shell/handlers/country-option.js", "shell/handlers/geography-selection.js", "shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
 	}
 	estadio: {
 		reads: [{entity: "ArchivePage"}, {entity: "GameCard"}, {entity: "Stadium"}, {entity: "Team"}]

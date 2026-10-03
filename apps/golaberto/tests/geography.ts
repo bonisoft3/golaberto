@@ -19,7 +19,6 @@ const psql = async (sql: string) => {
   return new TextDecoder().decode(result.stdout).trim();
 };
 const quote = (value: string) => `'${value.replaceAll("'", "''")}'`;
-const mapSearchEquivalences = (value: string) => value.replaceAll("ı", "i").replaceAll("þ", "th").replaceAll("Þ", "th");
 const geographyCatalog = JSON.parse(await Deno.readTextFile("geography.json"));
 const locales = ["pt-BR", "en-GB", "es-AR", "it-IT", "de-DE", "fr-FR"];
 const localeMessages = Object.fromEntries(await Promise.all(locales.map(async (locale) => [
@@ -121,7 +120,7 @@ for (const width of [390, 1366]) {
         if (url.pathname === "/crud/geography_country" || url.pathname === "/crud/geography_region") geographyRequests.push(url);
       });
       await page.goto(`${base}/equipes?lang=pt-BR`);
-      await page.waitForSelector("#teams-region-q");
+      await page.waitForSelector("#teams-region");
       const waitForTeams = (count: number) => page.waitForFunction((expected) =>
         document.querySelectorAll('.catalog-table a[data-route="equipe"]').length === expected, count);
       const responseFor = (criteria: Record<string, string>) => page.waitForResponse((response) => {
@@ -129,14 +128,28 @@ for (const width of [390, 1366]) {
         return url.pathname === "/crud/team_directory" && Object.entries(criteria).every(([key, value]) => url.searchParams.get(key) === value);
       });
       const regionSelect = page.locator("#teams-region");
-      const countrySelect = page.locator("#teams-country-select");
+      const countryOpen = page.locator("#teams-country-open");
+      const countryPop = page.locator("#teams-country-pop");
+      const countryOptions = page.locator("#teams-country-options");
       const countryText = page.locator("#teams-country");
+      const openCountries = async () => {
+        if (!(await countryPop.isVisible())) await countryOpen.click();
+        await countryPop.waitFor({ state: "visible" });
+      };
+      const chooseCountry = async (id: string) => {
+        await openCountries();
+        await countryOptions.locator(`button[value="${id}"]`).click();
+        await countryPop.waitFor({ state: "hidden" });
+      };
 
       assertEquals(await regionSelect.inputValue(), "*", "region selector should start at World");
-      assertEquals(await countrySelect.inputValue(), "*", "country selector should start at all countries");
-      await page.waitForFunction(() => document.querySelectorAll("#teams-country-select option").length === 226);
-      assertEquals(await countrySelect.locator("option").count(), 226, "all 225 fixed countries remain available at World");
-      assert(await countrySelect.locator(`option[value="${geometry.worldless}"]`).count().then((n) => n === 1), "Greenland remains selectable without a football region");
+      assertEquals(await countryOpen.innerText(), localeMessages["pt-BR"].geography_all_countries, "country trigger should start at all countries");
+      assertEquals(await countryOpen.getAttribute("data-country-selection"), "*", "all countries has no exact selection");
+      await openCountries();
+      await page.waitForFunction(() => document.querySelectorAll("#teams-country-options button[value]").length === 225);
+      assertEquals(await countryOptions.locator("button[value]").count(), 225, "all 225 fixed countries remain available at World");
+      assertEquals(await countryOptions.locator(`button[value="${geometry.worldless}"]`).count(), 1, "Greenland remains selectable without a football region");
+      await countryOpen.click();
       const nameResponse = responseFor({ search_key: `like.*${prefix}*` });
       await page.fill("#teams-q", prefix);
       assert((await nameResponse).ok());
@@ -145,40 +158,75 @@ for (const width of [390, 1366]) {
       await regionSelect.focus();
       await page.selectOption("#teams-region", geometry.asia);
       await waitForTeams(1);
+      await openCountries();
       await page.waitForFunction(([australia, germany]) => {
-        const values = [...document.querySelectorAll<HTMLSelectElement>("#teams-country-select option")].map((option) => option.value);
+        const values = [...document.querySelectorAll<HTMLButtonElement>("#teams-country-options button[value]")].map((button) => button.value);
         return values.includes(australia) && !values.includes(germany) && values.length > 2;
       }, [geometry.australia, geometry.germany]);
-      assert(await countrySelect.locator("option").count().then((count) => count > 2), "region selection narrows the fixed country catalog to Asian countries");
-      await countrySelect.focus();
-      await page.selectOption("#teams-country-select", geometry.australia);
+      assert(await countryOptions.locator("button[value]").count().then((count) => count > 2), "region selection narrows the fixed country catalog to Asian countries");
+      await countryOpen.click();
+      const australiaResponse = responseFor({ country_id: `like.${geometry.australia}` });
+      await chooseCountry(geometry.australia);
+      assert((await australiaResponse).ok());
+      assertEquals(await countryOpen.getAttribute("data-country-selection"), geometry.australia, "choosing a country records its exact id");
+      await page.waitForFunction((label) => document.querySelector<HTMLElement>("#teams-country-open")?.innerText.trim() === label, localeMessages["pt-BR"].geography_country_au);
       await waitForTeams(1);
+      await openCountries();
+      await page.waitForFunction((id) => document.querySelector(`#teams-country-option-${id}`)?.getAttribute("aria-pressed") === "true", geometry.australia);
+      assertEquals(await countryOptions.locator('[aria-pressed="true"]').count(), 1, "the reopened list identifies exactly the selected country");
+      assertEquals(await countryOptions.locator(`button[value="${geometry.australia}"]`).evaluate((button) => getComputedStyle(button, "::after").content), '"✓"', "the selected country has a visible checkmark");
+      await page.locator("#teams-country-all").click();
+      await page.waitForFunction(() => document.querySelector("#teams-country-open")?.getAttribute("data-country-selection") === "*");
+      assertEquals(await countryOpen.getAttribute("data-country-selection"), "*");
+      await waitForTeams(1);
+      await page.waitForFunction(() => document.querySelectorAll('#teams-country-options [aria-pressed="true"]').length === 0);
+      if (await countryPop.isVisible()) await countryOpen.click();
+      await chooseCountry(geometry.australia);
+      await page.waitForFunction((id) => document.querySelector("#teams-country-open")?.getAttribute("data-country-selection") === id, geometry.australia);
+      assertEquals(await countryOpen.getAttribute("data-country-selection"), geometry.australia);
+      await regionSelect.selectOption(geometry.europe);
+      await page.waitForFunction(() => document.querySelector("#teams-country-open")?.getAttribute("data-country-selection") === "*");
+      assertEquals(await countryOpen.getAttribute("data-country-selection"), "*");
+      await waitForTeams(1);
+      await regionSelect.selectOption(geometry.asia);
+      await waitForTeams(1);
+      await chooseCountry(geometry.australia);
+      await page.waitForFunction((id) => document.querySelector("#teams-country-open")?.getAttribute("data-country-selection") === id, geometry.australia);
+      await openCountries();
       await countryText.fill("Germany");
       await waitForTeams(0);
-      assertEquals(await countrySelect.inputValue(), "*", "typing a country resets the dropdown selection");
+      assertEquals(await countryOpen.getAttribute("data-country-selection"), "*", "typing clears the selected country label and id");
+      await waitForTeams(0);
+      await countryOpen.click();
       await regionSelect.focus();
       await page.selectOption("#teams-region", geometry.europe);
       await waitForTeams(1);
-      assertEquals(await countrySelect.inputValue(), "*", "changing the region dropdown clears the country selection");
       assertEquals(await countryText.inputValue(), "", "changing the region dropdown clears typed country text");
+      assertEquals(await countryOpen.getAttribute("data-country-selection"), "*", "changing region clears any exact country selection");
 
-      const regionResponse = responseFor({ region_search_key: `like.*${mapSearchEquivalences("Europa")}*` });
-      await page.fill("#teams-region-q", "Europa");
-      assert((await regionResponse).ok(), "translated region search should succeed");
-      await waitForTeams(1);
-      assertEquals(await regionSelect.inputValue(), "*", "typing a translated region clears its selection");
-      assertEquals(await countrySelect.inputValue(), "*", "changing region text clears stale country selection");
-      assertEquals(await countryText.inputValue(), "", "changing region text clears typed country text");
-
-      for (const spelling of ["Ásia", "Asia"]) {
-        const asiaResponse = responseFor({ region_search_key: `like.*${mapSearchEquivalences(spelling)}*` });
-        await page.fill("#teams-region-q", spelling);
-        assert((await asiaResponse).ok(), "region search accepts accented and unaccented spellings");
-        await page.waitForFunction((id) => {
-          const links = document.querySelectorAll<HTMLAnchorElement>('.catalog-table a[data-route="equipe"]');
-          return links.length === 1 && new URL(links[0].href).pathname.split("/").at(-1) === id;
-        }, teamIds[2]);
-      }
+      // The country popover supports ordinary keyboard navigation and dismissal.
+      await openCountries();
+      await countryText.focus();
+      await countryText.press("Tab");
+      const clearAll = page.locator("#teams-country-all");
+      assert(await clearAll.evaluate((button) => button === document.activeElement), "Tab moves from search to the All countries button");
+      await page.keyboard.press("Tab");
+      const firstOption = countryOptions.locator("button[value]").first();
+      await firstOption.waitFor({ state: "visible" });
+      assert(await firstOption.evaluate((option) => option === document.activeElement), "Tab moves focus from country search to the first option");
+      const keyboardCountry = await firstOption.getAttribute("value");
+      assert(keyboardCountry);
+      await page.keyboard.press("Enter");
+      await countryPop.waitFor({ state: "hidden" });
+      await page.waitForFunction((id) => document.querySelector("#teams-country-open")?.getAttribute("data-country-selection") === id, keyboardCountry);
+      await openCountries();
+      if (width < 600) assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "open country popover should fit within a phone viewport");
+      await countryText.press("Escape");
+      await countryPop.waitFor({ state: "hidden" });
+      await openCountries();
+      await page.locator("h1").click();
+      await countryPop.waitFor({ state: "hidden" });
+      if (width < 600) assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "country popover should not create horizontal overflow on a phone");
 
       const localeRoutes: Record<string, string> = {
         "pt-BR": "/equipes?lang=pt-BR",
@@ -190,35 +238,33 @@ for (const width of [390, 1366]) {
       };
       for (const locale of locales) {
         await page.goto(`${base}${localeRoutes[locale]}`);
-        await page.waitForSelector("#teams-country-select");
-        await page.waitForFunction(() => document.querySelectorAll("#teams-country-select option").length === 226);
+        await page.waitForSelector("#teams-country-open");
+        assertEquals(await countryOpen.innerText(), localeMessages[locale].geography_all_countries, `${locale} translates the all-countries trigger`);
         const messages = localeMessages[locale];
         const germanLabel = messages.geography_country_de;
         const europeLabel = messages.geography_region_europe;
-        assert(await countrySelect.locator("option").allTextContents().then((labels) => labels.includes(germanLabel)), `${locale} renders Germany as ${germanLabel}`);
+        await openCountries();
+        assert(await countryOptions.locator("button[value]").allTextContents().then((labels) => labels.includes(germanLabel)), `${locale} renders Germany as ${germanLabel}`);
         assert(await regionSelect.locator("option").allTextContents().then((labels) => labels.includes(europeLabel)), `${locale} renders Europe as ${europeLabel}`);
+        await countryOpen.click();
         await page.fill("#teams-q", prefix);
         await waitForTeams(3);
-        const countryQuery = mapSearchEquivalences(germanLabel);
-        const countryResponse = responseFor({ country_search_key: `like.*${countryQuery}*` });
+        await openCountries();
         await countryText.fill(germanLabel);
-        assert((await countryResponse).ok(), `${locale} translated Germany search should succeed`);
         await waitForTeams(1);
         const germanyId = await page.locator('.catalog-table a[data-route="equipe"]').evaluate((link) =>
           new URL((link as HTMLAnchorElement).href).pathname.split("/").at(-1));
         assertEquals(germanyId, teamIds[0], `${locale} country search returns the Germany fixture`);
-        const regionQuery = mapSearchEquivalences(europeLabel);
-        const regionAliasResponse = responseFor({ region_search_key: `like.*${regionQuery}*` });
-        await page.locator("#teams-region-q").fill(europeLabel);
-        assert((await regionAliasResponse).ok(), `${locale} translated Europe search should succeed`);
-        await waitForTeams(1);
-        assertEquals(await countryText.inputValue(), "", `${locale} region search clears country text`);
-        const regionGermanyId = await page.locator('.catalog-table a[data-route="equipe"]').evaluate((link) =>
-          new URL((link as HTMLAnchorElement).href).pathname.split("/").at(-1));
-        assertEquals(regionGermanyId, teamIds[0], `${locale} region alias search returns the Germany fixture`);
+        await countryOptions.locator(`button[value="${geometry.germany}"]`).click();
+        await countryPop.waitFor({ state: "hidden" });
+        await page.waitForFunction(([id, label]) =>
+          document.querySelector("#teams-country-open")?.getAttribute("data-country-selection") === id &&
+          document.querySelector<HTMLElement>("#teams-country-open")?.innerText.trim() === label,
+        [geometry.germany, germanLabel]);
       }
 
       assert(requests.some((url) => url.searchParams.get("search_key") === `like.*${prefix}*`), "name search continues to combine with geography filters");
+      assert(requests.every((url) => !url.searchParams.has("region_search_key")), "region filtering uses only the native region selector");
       assert(requests.some((url) => url.searchParams.get("country_id") === `like.${geometry.australia}`));
       assert(requests.some((url) => url.searchParams.get("region_id") === `like.${geometry.asia}`));
       assert(requests.every((url) => Number(url.searchParams.get("limit")) <= 40), "directory reads stay bounded");

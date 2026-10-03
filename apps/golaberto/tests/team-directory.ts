@@ -148,6 +148,14 @@ for (const width of [390, 1366]) {
       await page.waitForSelector("#teams-q");
       const waitForRows = async (count: number) => page.waitForFunction((expected) =>
         document.querySelectorAll('.catalog-table a[data-route="equipe"]').length === expected, count);
+      const fillCountry = async (value: string) => {
+        const popover = page.locator("#teams-country-pop");
+        if (!(await popover.isVisible())) await page.locator("#teams-country-open").click();
+        await popover.waitFor({ state: "visible" });
+        await page.fill("#teams-country", value);
+        await page.locator("#teams-country").press("Escape");
+        await popover.waitFor({ state: "hidden" });
+      };
       const query = async (name: string, country: string, expectedIds: string[]) => {
         const response = page.waitForResponse((r) => {
           const url = new URL(r.url());
@@ -156,7 +164,7 @@ for (const width of [390, 1366]) {
             url.searchParams.get("country_search_key") === `like.*${mapSearchEquivalences(country)}*`;
         });
         await page.fill("#teams-q", name);
-        await page.fill("#teams-country", country);
+        await fillCountry(country);
         assert((await response).ok(), "combined name and country search should succeed");
         await page.waitForFunction((expected) => {
           const actual = [...document.querySelectorAll<HTMLAnchorElement>('.catalog-table a[data-route="equipe"]')]
@@ -187,7 +195,7 @@ for (const width of [390, 1366]) {
       assertEquals(await rows.nth(2).locator("td").nth(1).textContent(), "0.00", "zero rating should render in its rating cell with two decimals");
       assert((await page.locator("body").innerText()).includes("12.35"), "rating display should show the generated two-decimal value");
 
-      await page.fill("#teams-country", "");
+      await fillCountry("");
       await waitForRows(4);
       await page.fill("#teams-q", prefix);
       await waitForRows(40);
@@ -208,7 +216,7 @@ for (const width of [390, 1366]) {
           url.searchParams.get("search_key") === `like.*${prefix}*` &&
           url.searchParams.get("country_search_key") === "like.*colombia*";
       });
-      await page.fill("#teams-country", "colombia");
+      await fillCountry("colombia");
       assert((await countryResponse).ok(), "changing country on page two should issue the combined filtered query");
       await waitForRows(4);
       const countryFilteredIds = await page.locator('.catalog-table a[data-route="equipe"]').evaluateAll((links) =>
@@ -224,7 +232,7 @@ for (const width of [390, 1366]) {
       assert(requests.some((url) => url.searchParams.get("limit") === "1"), "directory paging should use a separate one-row next probe");
       for (const url of requests) assert(Number(url.searchParams.get("limit")) <= 40, "directory requests should stay bounded");
 
-      await page.fill("#teams-country", "");
+      await fillCountry("");
       await waitForRows(40);
       await page.fill("#teams-q", `${prefix} unmatched`);
       await waitForRows(0);

@@ -254,6 +254,7 @@
   "geography_all_countries": "All countries",
   "geography_search_region": "Search region",
   "geography_search_country": "Search country",
+  "geography_country_empty": "No countries found.",
   "geography_world": "World",
   "geography_region_africa": "Africa",
   "geography_region_asia": "Asia",

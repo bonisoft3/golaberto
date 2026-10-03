@@ -238,6 +238,11 @@
         },
         {
           "action": "sync+restart",
+          "path": "../shell/handlers/country-option.js",
+          "target": "/srv/shell/handlers/country-option.js"
+        },
+        {
+          "action": "sync+restart",
           "path": "../shell/handlers/geography-selection.js",
           "target": "/srv/shell/handlers/geography-selection.js"
         },
@@ -877,6 +882,16 @@
       {
         "from": null,
         "srcs": [
+          "shell/handlers/country-option.js"
+        ],
+        "dst": "/srv/shell/handlers/country-option.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
           "shell/handlers/geography-selection.js"
         ],
         "dst": "/srv/shell/handlers/geography-selection.js",
@@ -1414,6 +1429,7 @@
       "shell/handlers/blank-null.js",
       "shell/handlers/both-scored.js",
       "shell/handlers/count-or-null.js",
+      "shell/handlers/country-option.js",
       "shell/handlers/geography-selection.js",
       "shell/handlers/page-value.js",
       "shell/handlers/row-id.js",
@@ -1563,6 +1579,7 @@
           "shell/handlers/blank-null.js",
           "shell/handlers/both-scored.js",
           "shell/handlers/count-or-null.js",
+          "shell/handlers/country-option.js",
           "shell/handlers/geography-selection.js",
           "shell/handlers/page-value.js",
           "shell/handlers/row-id.js",

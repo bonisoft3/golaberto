@@ -130,6 +130,9 @@ services:
         path: ../shell/handlers/count-or-null.js
         target: /srv/shell/handlers/count-or-null.js
       - action: sync+restart
+        path: ../shell/handlers/country-option.js
+        target: /srv/shell/handlers/country-option.js
+      - action: sync+restart
         path: ../shell/handlers/geography-selection.js
         target: /srv/shell/handlers/geography-selection.js
       - action: sync+restart

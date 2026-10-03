@@ -439,6 +439,7 @@ routes:
       html: shell/screens/equipes.html
       css: shell/screens/equipes.css
       handlers:
+        - shell/handlers/country-option.js
         - shell/handlers/geography-selection.js
         - shell/handlers/page-value.js
         - shell/handlers/search-key.js

@@ -131,6 +131,17 @@ for (const width of [390, 1366]) {
       await page.goto(`${base}/equipes?lang=pt-BR`);
       await page.waitForSelector("#teams-type");
       const typeSelect = page.locator("#teams-type");
+      const countryOpen = page.locator("#teams-country-open");
+      const countryPop = page.locator("#teams-country-pop");
+      const openCountries = async () => {
+        if (!(await countryPop.isVisible())) await countryOpen.click();
+        await countryPop.waitFor({ state: "visible" });
+      };
+      const chooseCountry = async (id: string) => {
+        await openCountries();
+        await page.locator(`#teams-country-options button[value="${id}"]`).click();
+        await countryPop.waitFor({ state: "hidden" });
+      };
       const waitForIds = async (expectedIds: string[]) => {
         await page.waitForFunction((expected) => {
           const actual = [...document.querySelectorAll<HTMLAnchorElement>('.catalog-table a[data-route="equipe"]')]
@@ -162,8 +173,9 @@ for (const width of [390, 1366]) {
       await page.fill("#teams-q", prefix);
       await page.locator("#teams-region").focus();
       await page.selectOption("#teams-region", geography.region);
-      await page.locator("#teams-country-select").focus();
-      await page.selectOption("#teams-country-select", geography.country);
+      const exactCountryResponse = waitForResponse({ ...filters("club", 0), country_id: `like.${geography.country}` });
+      await chooseCountry(geography.country);
+      assert((await exactCountryResponse).ok(), "choosing a catalog country applies its exact id");
       assert((await initial).ok(), "default club directory query should succeed");
       await waitForIds(firstClubIds);
       assert((await initialProbe).ok(), "club next-page probe should use the same exact type and geography filters");
@@ -178,7 +190,7 @@ for (const width of [390, 1366]) {
       await waitForIds(nationalIds);
       assertEquals(await page.locator("#teams-q").inputValue(), prefix, "type change preserves the name search");
       assertEquals(await page.locator("#teams-region").inputValue(), geography.region, "type change preserves region selection");
-      assertEquals(await page.locator("#teams-country-select").inputValue(), geography.country, "type change preserves country selection");
+      assertEquals(await countryOpen.getAttribute("data-country-selection"), geography.country, "type change preserves the exact country selection");
       assert(requests.some((url) => url.searchParams.get("team_type") === "eq.club" && url.searchParams.get("limit") === "1"), "the next probe carries the selected type");
       assert(requests.filter((url) => url.pathname === "/crud/team_directory").every((url) => url.searchParams.get("team_type") === "eq.club" || url.searchParams.get("team_type") === "eq.national"), "every list and probe request carries one exact team type");
 
@@ -189,7 +201,7 @@ for (const width of [390, 1366]) {
       assertEquals(await typeSelect.inputValue(), "national", "selected type survives detail/back navigation");
       assertEquals(await page.locator("#teams-q").inputValue(), prefix);
       assertEquals(await page.locator("#teams-region").inputValue(), geography.region);
-      assertEquals(await page.locator("#teams-country-select").inputValue(), geography.country);
+      assertEquals(await countryOpen.getAttribute("data-country-selection"), geography.country);
 
       await typeSelect.focus();
       await page.selectOption("#teams-type", "club");

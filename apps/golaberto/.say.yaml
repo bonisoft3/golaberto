@@ -29,6 +29,9 @@ say:
       archive-images:
         cmds:
           - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/archive-images.ts
+      favicon:
+        cmds:
+          - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/favicon.ts
       replay:
         priority: 1
         cmds:

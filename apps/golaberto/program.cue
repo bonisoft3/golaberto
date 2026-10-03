@@ -7,6 +7,7 @@ package golaberto
 
 import (
 	pronto "bonisoft.org/plugins/pronto"
+	"list"
 	"strings"
 )
 
@@ -1079,9 +1080,10 @@ code: pronto.#App & {
 			}
 			catalogues: _catalogues
 		}
-		ir: sha256: "7563bc99e41b78f99adfbfe78a94195208c517dc3d302dcf1fa1b1461dc54a65"
+		ir: sha256: "1a239d15c86b218482f8e1c6ad8b7439bfdd7dfcc3313111866f27c5f40acf28"
 		targets: []
 		decisions: {
+			"decision-favicon": {}
 			"decision-archive-images": {}
 			"decision-uuid-keys": {}
 			"decision-points": {}
@@ -1675,11 +1677,19 @@ code: pronto.#App & {
 	}
 }
 
-cluster:  (pronto.#DefaultCluster & {"code": code, statics: terminal.surface.statics}).out
+cluster: (pronto.#DefaultCluster & {"code": code, statics: list.Concat([
+	terminal.surface.statics,
+	[for kind in ["svg", "ico"] {
+		file: "branding/favicon.\(kind)"
+		target: "/srv/shell/favicon.\(kind)"
+		watch: true
+	}],
+])}).out
 // Keep the archive in PostgreSQL's mounted volume when launch recreates services.
 cluster: meta: databaseDataDir: "/var/lib/postgresql/18/docker"
 cluster: meta: databaseVolume: "golaberto-archive"
 terminal: (pronto.#DefaultTerminal & {"code": code}).out
+terminal: favicon: "/shell/favicon.ico"
 loop:     (pronto.#DefaultLoop & {"code": code, "cluster": cluster, "terminal": terminal}).out
 loop: surface: checks: "seed-data": {
 	verb: "test"
@@ -1738,3 +1748,10 @@ loop: surface: checks: "image-renderers": {
 }
 
 out: pronto.#emit & {"code": code, "cluster": cluster, "terminal": terminal, "loop": loop, "build": build}
+
+
+loop: surface: checks: "favicon": {
+	verb: "integrate"
+	cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/favicon.ts"]
+	note: "public icon packaging, localized entry documents and browser decoding; read-only against the running archive"
+}

@@ -1102,6 +1102,8 @@
           "messages/it-IT.json",
           "messages/de-DE.json",
           "messages/fr-FR.json",
+          "branding/favicon.svg",
+          "branding/favicon.ico",
           "brief.html",
           "ir.html",
           "acceptance.md",
@@ -1880,6 +1882,26 @@
           {
             "from": null,
             "srcs": [
+              "branding/favicon.svg"
+            ],
+            "dst": "/srv/shell/favicon.svg",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          {
+            "from": null,
+            "srcs": [
+              "branding/favicon.ico"
+            ],
+            "dst": "/srv/shell/favicon.ico",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          {
+            "from": null,
+            "srcs": [
               "brief.html"
             ],
             "dst": "/srv/docs/brief.html",
@@ -2360,6 +2382,16 @@
               "action": "sync+restart",
               "path": "../../../plugins/omnishell/components/wallclock.js",
               "target": "/omnishell/components/wallclock.js"
+            },
+            {
+              "action": "sync+restart",
+              "path": "../branding/favicon.svg",
+              "target": "/srv/shell/favicon.svg"
+            },
+            {
+              "action": "sync+restart",
+              "path": "../branding/favicon.ico",
+              "target": "/srv/shell/favicon.ico"
             },
             {
               "action": "sync+restart",

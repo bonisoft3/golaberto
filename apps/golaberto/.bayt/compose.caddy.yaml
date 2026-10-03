@@ -223,6 +223,12 @@ services:
         path: ../../../plugins/omnishell/components/wallclock.js
         target: /omnishell/components/wallclock.js
       - action: sync+restart
+        path: ../branding/favicon.svg
+        target: /srv/shell/favicon.svg
+      - action: sync+restart
+        path: ../branding/favicon.ico
+        target: /srv/shell/favicon.ico
+      - action: sync+restart
         path: ../brief.html
         target: /srv/docs/brief.html
       - action: sync+restart

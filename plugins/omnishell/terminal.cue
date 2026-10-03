@@ -59,6 +59,9 @@ _swJsAsset:      _ @embed(file="offline-first-sw.js", type=text)
 	// all for a crawler that runs none. The emitter resolves it from `language`
 	// against #RtlLanguages.
 	direction: *"ltr" | "rtl"
+	// Absolute app asset URL, resolved independently of the shell's base path.
+	favicon: *"data:," | string
+	favicon: !~ "\""
 
 	state: {
 		navigation: true
@@ -244,13 +247,13 @@ _swJsAsset:      _ @embed(file="offline-first-sw.js", type=text)
 		sw: *"offline-first-sw.js" | string
 
 		assets: {
-			html: strings.Replace(
+			html: strings.Replace(strings.Replace(
 				strings.Replace(
 					strings.Replace(
 						strings.Replace(_shellHtmlAsset, "{description}", T.description, 1),
 						"{language}", T.language, 1),
 					"{direction}", T.direction, 1),
-				"{modulepreload}", _preloadHtml, 1)
+				"{modulepreload}", _preloadHtml, 1), "{favicon}", T.favicon, 1)
 			css:  _shellCssAsset
 			boot: *_bootJsAsset | string
 			sw:   _swJsAsset

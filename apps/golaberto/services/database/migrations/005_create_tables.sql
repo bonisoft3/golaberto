@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS championship (
   "full_name" portable_string GENERATED ALWAYS AS (region_name || ' - ' || name || ' ' || extract(year from begins)::int::text || CASE WHEN extract(year from begins) = extract(year from ends) THEN '' ELSE '/' || extract(year from ends)::int::text END) STORED,
   "featured" portable_bool DEFAULT false NOT NULL,
   "search_name" portable_string GENERATED ALWAYS AS (region_name || ' - ' || name || ' ' || extract(year from begins)::int::text || CASE WHEN extract(year from begins) = extract(year from ends) THEN '' ELSE '/' || extract(year from ends)::int::text END) STORED,
+  "search_key" portable_string GENERATED ALWAYS AS (replace(replace(replace(region_name || ' - ' || name || ' ' || extract(year from begins)::int::text || CASE WHEN extract(year from begins) = extract(year from ends) THEN '' ELSE '/' || extract(year from ends)::int::text END, 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL,
   CHECK (ends >= begins)
@@ -80,6 +81,7 @@ CREATE TABLE IF NOT EXISTS stadium (
   "city" portable_string CHECK (char_length(city) <= 80),
   "country" portable_string CHECK (char_length(country) <= 60),
   "search_name" portable_string GENERATED ALWAYS AS (name) STORED,
+  "search_key" portable_string GENERATED ALWAYS AS (replace(replace(replace(name, 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -95,6 +97,7 @@ CREATE TABLE IF NOT EXISTS team (
   "team_type" portable_string DEFAULT 'club' NOT NULL CHECK (team_type IN ('club', 'national')),
   "foundation_display" portable_string GENERATED ALWAYS AS (lpad(extract(day from foundation)::int::text, 2, '0') || '/' || lpad(extract(month from foundation)::int::text, 2, '0') || '/' || extract(year from foundation)::int::text) STORED,
   "search_name" portable_string GENERATED ALWAYS AS (name) STORED,
+  "search_key" portable_string GENERATED ALWAYS AS (replace(replace(replace(name, 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -104,6 +107,7 @@ CREATE TABLE IF NOT EXISTS referee (
   "name" portable_string NOT NULL CHECK (char_length(name) > 0 AND char_length(name) <= 80),
   "location" portable_string CHECK (char_length(location) <= 80),
   "search_name" portable_string GENERATED ALWAYS AS (name) STORED,
+  "search_key" portable_string GENERATED ALWAYS AS (replace(replace(replace(name, 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -270,6 +274,8 @@ CREATE TABLE IF NOT EXISTS team_directory (
   "search_name" portable_string GENERATED ALWAYS AS (name) STORED,
   "search_country" portable_string GENERATED ALWAYS AS (coalesce(country, '')) STORED,
   "rating_display" portable_string GENERATED ALWAYS AS (CASE WHEN rating IS NULL THEN '—' ELSE round(rating::numeric, 2)::text END) STORED,
+  "search_key" portable_string GENERATED ALWAYS AS (replace(replace(replace(name, 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED,
+  "country_key" portable_string GENERATED ALWAYS AS (replace(replace(replace(coalesce(country, ''), 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );

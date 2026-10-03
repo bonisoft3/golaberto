@@ -28,6 +28,7 @@ message CatalogFilter {
   optional int32 offset = 5 [json_name = "offset"];
   optional int32 next_offset = 6 [json_name = "next_offset"];
   optional int32 page = 7 [json_name = "page"];
+  optional string q_key = 8 [json_name = "q_key"];
 }
 
 message Category {
@@ -51,6 +52,7 @@ message Championship {
   optional string full_name = 13 [json_name = "full_name"];
   optional bool featured = 14 [json_name = "featured"];
   optional string search_name = 15 [json_name = "search_name"];
+  optional string search_key = 16 [json_name = "search_key"];
 }
 
 message Comment {
@@ -75,6 +77,8 @@ message DirectoryFilter {
   optional int32 next_offset = 5 [json_name = "next_offset"];
   optional int32 page = 6 [json_name = "page"];
   optional string country = 7 [json_name = "country"];
+  optional string q_key = 8 [json_name = "q_key"];
+  optional string country_key = 9 [json_name = "country_key"];
 }
 
 message Editor {
@@ -159,6 +163,8 @@ message GameEdit {
   optional string away_name = 12 [json_name = "away_name"];
   optional string stadium_q = 13 [json_name = "stadium_q"];
   optional string referee_q = 14 [json_name = "referee_q"];
+  optional string stadium_q_key = 15 [json_name = "stadium_q_key"];
+  optional string referee_q_key = 16 [json_name = "referee_q_key"];
 }
 
 message GameImportance {
@@ -365,6 +371,7 @@ message Referee {
   optional string name = 2 [json_name = "name"];
   optional string location = 3 [json_name = "location"];
   optional string search_name = 4 [json_name = "search_name"];
+  optional string search_key = 5 [json_name = "search_key"];
 }
 
 message Stadium {
@@ -374,6 +381,7 @@ message Stadium {
   optional string city = 4 [json_name = "city"];
   optional string country = 5 [json_name = "country"];
   optional string search_name = 6 [json_name = "search_name"];
+  optional string search_key = 7 [json_name = "search_key"];
 }
 
 message Standing {
@@ -409,6 +417,7 @@ message Team {
   optional string team_type = 8 [json_name = "team_type"];
   optional string foundation_display = 9 [json_name = "foundation_display"];
   optional string search_name = 10 [json_name = "search_name"];
+  optional string search_key = 11 [json_name = "search_key"];
 }
 
 message TeamChance {
@@ -431,6 +440,8 @@ message TeamDirectory {
   optional string search_name = 7 [json_name = "search_name"];
   optional string search_country = 8 [json_name = "search_country"];
   optional string rating_display = 9 [json_name = "rating_display"];
+  optional string search_key = 10 [json_name = "search_key"];
+  optional string country_key = 11 [json_name = "country_key"];
 }
 
 message TeamGame {

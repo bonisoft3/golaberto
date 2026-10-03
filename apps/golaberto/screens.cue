@@ -135,9 +135,9 @@ _standingsCells: strings.Join(list.Concat([[for c in _standings {
 _catalogMachine: json.Marshal({
 	field:   "state"
 	initial: "browsing"
-	context: {q: "", region: "", offset: 0, next_offset: 40, page: 1}
+	context: {q: "", q_key: "", region: "", offset: 0, next_offset: 40, page: 1}
 	states: browsing: on: (#PageActions & {key: "catalog"}).out & {
-		"input@catalog-q": assign: {q: {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}
+		"input@catalog-q": assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}
 		"change@catalog-region": assign: {region: {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}
 	}
 })
@@ -255,9 +255,9 @@ _editKeys: {
 	"input@edit-away": {assign: {away_score: "count-or-null", played: {type: "both-scored", params: other: "home_score"}}}
 	"input@edit-attendance": {assign: attendance: "count-or-null"}
 	"change@edit-stadium":   {assign: stadium_id: "blank-null"}
-	"input@edit-stadium-q": {assign: stadium_q: {type: "event", params: field: "value"}}
+	"input@edit-stadium-q": {assign: {stadium_q: {type: "event", params: field: "value"}, stadium_q_key: {type: "search-key"}}}
 	"change@edit-referee":   {assign: referee_id: "blank-null"}
-	"input@edit-referee-q": {assign: referee_q: {type: "event", params: field: "value"}}
+	"input@edit-referee-q": {assign: {referee_q: {type: "event", params: field: "value"}, referee_q_key: {type: "search-key"}}}
 	"input@goal-minute":     {assign: goal_minute: "count-or-null"}
 	"change@goal-player":    {assign: goal_player_id: "blank-null"}
 	"click@edit-save": {target: "saving", effect: {level: "replicated", op: "update", entity: "game", values: {
@@ -310,7 +310,7 @@ _editarMarkup: """
 	      <div class="page">
 	        <div class="content">
 	          <div data-live="game_edit" data-filter="id=eq.{id}" data-machine='\(_editMachine)'
-	               data-empty-row='{"id":"{id}","state":"editing","played":"{played}","home_score":"{home_score}","away_score":"{away_score}","attendance":"{attendance}","stadium_id":"{stadium_id}","referee_id":"{referee_id}","goal_minute":null,"goal_player_id":null,"home_name":"{home_name}","away_name":"{away_name}","stadium_q":"","referee_q":""}'>
+	               data-empty-row='{"id":"{id}","state":"editing","played":"{played}","home_score":"{home_score}","away_score":"{away_score}","attendance":"{attendance}","stadium_id":"{stadium_id}","referee_id":"{referee_id}","goal_minute":null,"goal_player_id":null,"home_name":"{home_name}","away_name":"{away_name}","stadium_q":"","referee_q":"","stadium_q_key":"","referee_q_key":""}'>
 	           <div class="edit" data-state="{state}">
 	            <!-- The game itself, held so the save has the row it updates. -->
 	            <span data-live="game" data-filter="id=eq.{id}" data-empty="" hidden></span>
@@ -328,11 +328,11 @@ _editarMarkup: """
 	              <div class="fields">
 	                <label class="field wide" for="edit-stadium"><span data-text="{msg.game_stadium}"></span>
 	                  <input id="edit-stadium-q" type="search" value="{stadium_q}" placeholder="{msg.choice_search}" aria-label="{msg.game_stadium}" maxlength="80" autocomplete="off">
-	                  <select id="edit-stadium" data-value="{stadium_id}"><option value="" data-text="{msg.edit_unknown}"></option><optgroup data-live="stadium" data-filter="id=eq.{stadium_id}" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup><optgroup data-live="stadium" data-filter="search_name=like.*{stadium_q}*&limit=40" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select>
+	                  <select id="edit-stadium" data-value="{stadium_id}"><option value="" data-text="{msg.edit_unknown}"></option><optgroup data-live="stadium" data-filter="id=eq.{stadium_id}" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup><optgroup data-live="stadium" data-filter="search_key=like.*{stadium_q_key}*&limit=40" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select>
 	                </label>
 	                <label class="field wide" for="edit-referee"><span data-text="{msg.game_referee}"></span>
 	                  <input id="edit-referee-q" type="search" value="{referee_q}" placeholder="{msg.choice_search}" aria-label="{msg.game_referee}" maxlength="80" autocomplete="off">
-	                  <select id="edit-referee" data-value="{referee_id}"><option value="" data-text="{msg.edit_unknown}"></option><optgroup data-live="referee" data-filter="id=eq.{referee_id}" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup><optgroup data-live="referee" data-filter="search_name=like.*{referee_q}*&limit=40" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select>
+	                  <select id="edit-referee" data-value="{referee_id}"><option value="" data-text="{msg.edit_unknown}"></option><optgroup data-live="referee" data-filter="id=eq.{referee_id}" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup><optgroup data-live="referee" data-filter="search_key=like.*{referee_q_key}*&limit=40" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select>
 	                </label>
 	                <label class="field" for="edit-attendance"><span data-text="{msg.game_attendance}"></span>
 	                  <input id="edit-attendance" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="{msg.edit_unrecorded}" data-value="{attendance}">
@@ -640,7 +640,7 @@ _campeonatosMarkup: """
 	            <th scope="col" class="narrow" data-text="{msg.col_region}"></th>
 	            <th scope="col" class="narrow" data-text="{msg.col_category}"></th>
 	          </tr></thead>
-	          <tbody data-live="championship" data-filter="search_name=like.*{q}*&region=like.*{region}*&offset={offset}&limit=40" data-order="region_name.asc,name.asc,begins.desc" data-empty="{msg.catalog_empty}">
+	          <tbody data-live="championship" data-filter="search_key=like.*{q_key}*&region=like.*{region}*&offset={offset}&limit=40" data-order="region_name.asc,name.asc,begins.desc" data-empty="{msg.catalog_empty}">
 	            <template data-item>
 	              <tr>
 	                <td><a data-route="campeonato" data-param-id="{id}"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}"></span></a></td>
@@ -650,7 +650,7 @@ _campeonatosMarkup: """
 	            </template>
 	          </tbody>
 	        </table>
-	\((#PageArrows & {key: "catalog", table: "championship", filter: "search_name=like.*{q}*&region=like.*{region}*", order: "region_name.asc,name.asc,begins.desc"}).out)
+	\((#PageArrows & {key: "catalog", table: "championship", filter: "search_key=like.*{q_key}*&region=like.*{region}*", order: "region_name.asc,name.asc,begins.desc"}).out)
 	      </div>
 	    </template>
 	  </div>
@@ -758,11 +758,11 @@ _campeonatoMarkup: """
 	_machine: json.Marshal({
 		field:   "state"
 		initial: "browsing"
-		context: {q: "", country: "", offset: 0, next_offset: 40, page: 1}
-		states: browsing: on: (#PageActions & {key: D.row}).out & {"input@\(D._input)": assign: {q: {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}}
-		if D.withCountry {states: browsing: on: "input@teams-country": assign: {country: {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}}
+		context: {q: "", q_key: "", country: "", country_key: "", offset: 0, next_offset: 40, page: 1}
+		states: browsing: on: (#PageActions & {key: D.row}).out & {"input@\(D._input)": assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}}
+		if D.withCountry {states: browsing: on: "input@teams-country": assign: {country: {type: "event", params: field: "value"}, country_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}}
 	})
-	_filter: "search_name=like.*{q}*\([if D.withCountry {"&search_country=like.*{country}*"}, ""][0])"
+	_filter: "search_key=like.*{q_key}*\([if D.withCountry {"&country_key=like.*{country_key}*"}, ""][0])"
 	_country: [if D.withCountry {"""
 		          <label class="field grow" for="teams-country"><span data-text="{msg.country_region}"></span>
 		            <input id="teams-country" type="search" value="{country}" placeholder="{msg.country_placeholder}" maxlength="60" autocomplete="off">

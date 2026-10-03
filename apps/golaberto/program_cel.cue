@@ -671,6 +671,8 @@ code: state: entities: {
 			state?: ("editing" | "saving" | "refused")
 			stadium_q?: strings.MaxRunes(80)
 			referee_q?: strings.MaxRunes(80)
+			stadium_q_key?: strings.MaxRunes(160)
+			referee_q_key?: strings.MaxRunes(160)
 		}]
 		enums: {
 			state: ["editing","saving","refused"]
@@ -678,6 +680,8 @@ code: state: entities: {
 		bounds: {
 			stadium_q: {sizeMax: 80}
 			referee_q: {sizeMax: 80}
+			stadium_q_key: {sizeMax: 160}
+			referee_q_key: {sizeMax: 160}
 		}
 	}
 	GamesView: {
@@ -701,6 +705,8 @@ code: state: entities: {
 			next_offset?: >=40
 			page?: >=1
 			country?: strings.MaxRunes(60)
+			q_key?: strings.MaxRunes(160)
+			country_key?: strings.MaxRunes(120)
 		}]
 		enums: {
 			state: ["browsing"]
@@ -712,6 +718,8 @@ code: state: entities: {
 			next_offset: {intMin: 40}
 			page: {intMin: 1}
 			country: {sizeMax: 60}
+			q_key: {sizeMax: 160}
+			country_key: {sizeMax: 120}
 		}
 	}
 	CatalogFilter: {
@@ -723,6 +731,7 @@ code: state: entities: {
 			offset?: >=0
 			next_offset?: >=40
 			page?: >=1
+			q_key?: strings.MaxRunes(160)
 		}]
 		enums: {
 			region: ["","world","continental","national"]
@@ -734,6 +743,7 @@ code: state: entities: {
 			offset: {intMin: 0}
 			next_offset: {intMin: 40}
 			page: {intMin: 1}
+			q_key: {sizeMax: 160}
 		}
 	}
 	ArchivePage: {

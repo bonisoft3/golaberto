@@ -248,6 +248,11 @@
         },
         {
           "action": "sync+restart",
+          "path": "../shell/handlers/search-key.js",
+          "target": "/srv/shell/handlers/search-key.js"
+        },
+        {
+          "action": "sync+restart",
           "path": "../shell/renderers/country-flag.js",
           "target": "/srv/shell/renderers/country-flag.js"
         },
@@ -882,6 +887,16 @@
       {
         "from": null,
         "srcs": [
+          "shell/handlers/search-key.js"
+        ],
+        "dst": "/srv/shell/handlers/search-key.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
           "shell/renderers/country-flag.js"
         ],
         "dst": "/srv/shell/renderers/country-flag.js",
@@ -1371,6 +1386,7 @@
       "shell/handlers/count-or-null.js",
       "shell/handlers/page-value.js",
       "shell/handlers/row-id.js",
+      "shell/handlers/search-key.js",
       "shell/renderers/country-flag.js",
       "shell/renderers/home-date.js",
       "shell/renderers/team-badge.js",
@@ -1517,6 +1533,7 @@
           "shell/handlers/count-or-null.js",
           "shell/handlers/page-value.js",
           "shell/handlers/row-id.js",
+          "shell/handlers/search-key.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/home-date.js",
           "shell/renderers/team-badge.js",

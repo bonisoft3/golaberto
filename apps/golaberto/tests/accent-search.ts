@@ -56,12 +56,68 @@ for (const baseline of [false, true]) {
   });
 }
 
+const searchVariants = [...variants, "atletico i th ae", "atlético ı þ æ", "ATLÉTICO İ Þ Æ"];
+
+for (const baseline of [false, true]) {
+  Deno.test(`extended search upgrades ${baseline ? "declared baseline" : "retained version views"} and replays`, async () => {
+    const migration = (await Deno.readTextFile("services/database/sql/025_search_letter_equivalences.sql"))
+      .replace("\nBEGIN;\n", "\n").replace("\nCOMMIT;\n", "\n");
+    const original = (await Deno.readTextFile("services/database/sql/023_search_collation.sql"))
+      .replace("\nBEGIN;\n", "\n").replace("\nCOMMIT;\n", "\n");
+    const output = await psql(`BEGIN;
+      CREATE SCHEMA letter_search_probe;
+      SET LOCAL search_path = letter_search_probe, public;
+      CREATE TABLE championship (name portable_string, region_name portable_string, begins date, ends date);
+      CREATE TABLE team (name portable_string);
+      CREATE TABLE stadium (name portable_string);
+      CREATE TABLE referee (name portable_string);
+      CREATE TABLE team_directory (name portable_string, country portable_string);
+      ${original}
+      CREATE VIEW previous_version AS SELECT search_name FROM team;
+      ALTER TABLE team_directory ADD COLUMN search_name portable_string COLLATE golaberto_search GENERATED ALWAYS AS (name) STORED;
+      ALTER TABLE team_directory ADD COLUMN search_country portable_string COLLATE golaberto_search GENERATED ALWAYS AS (coalesce(country, '')) STORED;
+      ${baseline ? `ALTER TABLE championship ADD COLUMN search_key portable_string GENERATED ALWAYS AS
+        (replace(replace(replace(region_name || ' - ' || name || ' ' || extract(year from begins)::int::text ||
+        CASE WHEN extract(year from begins) = extract(year from ends) THEN '' ELSE '/' || extract(year from ends)::int::text END, 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED;
+        ALTER TABLE team ADD COLUMN search_key portable_string GENERATED ALWAYS AS (replace(replace(replace(name, 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED;
+        ALTER TABLE stadium ADD COLUMN search_key portable_string GENERATED ALWAYS AS (replace(replace(replace(name, 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED;
+        ALTER TABLE referee ADD COLUMN search_key portable_string GENERATED ALWAYS AS (replace(replace(replace(name, 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED;
+        ALTER TABLE team_directory ADD COLUMN search_key portable_string GENERATED ALWAYS AS (replace(replace(replace(name, 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED;
+        ALTER TABLE team_directory ADD COLUMN country_key portable_string GENERATED ALWAYS AS (replace(replace(replace(coalesce(country, ''), 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED;` : ""}
+      INSERT INTO championship (name,region_name,begins,ends) VALUES
+        ('Atlético ı Þ æ','Brasil','2026-01-01','2027-12-31'),('Atletico i th ae','Brasil','2026-01-01','2027-12-31'),('Atlântico j t oe','Brasil','2026-01-01','2027-12-31');
+      INSERT INTO team (name) SELECT name FROM championship;
+      INSERT INTO stadium (name) SELECT name FROM team;
+      INSERT INTO referee (name) SELECT name FROM team;
+      INSERT INTO team_directory (name,country) VALUES ('Atletico ı Þ æ','Þorland'),('Atletico i th ae','Thorland');
+      ${migration}
+      CREATE VIEW current_version AS SELECT search_key FROM team;
+      ${migration}
+      ${["championship", "team", "stadium", "referee"].flatMap(table => searchVariants.map(q =>
+        `SELECT count(*) FROM ${table} WHERE search_key LIKE replace(replace(replace('%${q}%', 'ı', 'i'), 'þ', 'th'), 'Þ', 'th');`)).join("\n")}
+      SELECT replace(replace(replace('ı', 'ı', 'i'), 'þ', 'th'), 'Þ', 'th') COLLATE golaberto_search LIKE 'i';
+      SELECT replace(replace(replace('Þ', 'ı', 'i'), 'þ', 'th'), 'Þ', 'th') COLLATE golaberto_search LIKE 'th';
+      SELECT 'æ' COLLATE golaberto_search LIKE 'ae';
+      SELECT replace(replace(replace('Þ', 'ı', 'i'), 'þ', 'th'), 'Þ', 'th') COLLATE golaberto_search LIKE 't';
+      SELECT replace(replace(replace('ı', 'ı', 'i'), 'þ', 'th'), 'Þ', 'th') COLLATE golaberto_search LIKE 'j';
+      SELECT count(*) FROM previous_version;
+      SELECT count(*) FROM current_version WHERE search_key LIKE '%atletico i th ae%';
+      SELECT count(*) FROM team_directory WHERE search_key LIKE '%atletico i th ae%' AND country_key LIKE '%THORLAND%';
+      SELECT count(*) FROM team WHERE name='Atlético ı Þ æ';
+      UPDATE team SET name='Changed ı Þ æ' WHERE name='Atlético ı Þ æ';
+      SELECT count(*) FROM team WHERE search_key LIKE '%changed i th ae%';
+      ROLLBACK;`);
+    assertEquals(output.split("\n"), [...Array(4 * searchVariants.length).fill("2"), "t", "t", "t", "f", "f", "3", "2", "2", "1", "1"]);
+  });
+}
+
 const { chromium } = await import("npm:playwright@1.59.1");
 const { SignJWT } = await import("npm:jose@6.0.11");
 const base = await baseUrl(".");
 const tag = crypto.randomUUID().replaceAll("-", "").slice(0, 8);
 const prefix = `Accent${tag}`;
-const names = [`${prefix} Atlético`, `${prefix} Atletico`];
+const names = [`${prefix} Atlético I Þ Æ`, `${prefix} Atletico ı th ae`];
+const foldSearch = (value: string) => value.replaceAll("ı", "i").replaceAll("þ", "th").replaceAll("Þ", "th");
 const quote = (value: string) => `'${value.replaceAll("'", "''")}'`;
 
 for (const width of [390, 1366]) {
@@ -92,7 +148,7 @@ for (const width of [390, 1366]) {
       const search = async (input: string, table: string, q: string) => {
         const response = page.waitForResponse((r) => {
           const url = new URL(r.url());
-          return url.pathname === `/crud/${table}` && url.searchParams.get("search_name") === `like.*${q}*`;
+          return url.pathname === `/crud/${table}` && url.searchParams.get("search_key") === `like.*${foldSearch(q)}*`;
         });
         await page.fill(input, q);
         assert((await response).ok(), `${table} search must succeed`);
@@ -102,7 +158,7 @@ for (const width of [390, 1366]) {
         await page.goto(`${base}/${path}?lang=pt-BR`);
         await page.waitForSelector(`#${input}-q`);
         let first: string[] = [];
-        for (const [index, spelling] of variants.entries()) {
+        for (const [index, spelling] of searchVariants.entries()) {
           const q = `${prefix} ${spelling}`;
           await search(`#${input}-q`, table, q);
           const expected = table === "team_directory" ? 40 : 2;
@@ -127,7 +183,7 @@ for (const width of [390, 1366]) {
       await page.goto(`${base}/editar/${gameId}?lang=pt-BR`);
       await page.waitForSelector('.edit[data-state="editing"]');
       for (const [table, field] of [["stadium", "stadium"], ["referee", "referee"]]) {
-        for (const spelling of variants) {
+        for (const spelling of searchVariants) {
           await search(`#edit-${field}-q`, table, `${prefix} ${spelling}`);
           await page.waitForFunction(([field, expected]) => {
             const ids = [...document.querySelectorAll(`#edit-${field} optgroup:last-child option`)].map((e) => (e as HTMLOptionElement).value).sort();
@@ -137,7 +193,7 @@ for (const width of [390, 1366]) {
           assertEquals(await page.locator(`#edit-${field}`).inputValue(), ids[table][0]);
         }
       }
-      for (const request of requests.filter((url) => url.searchParams.has("search_name"))) {
+      for (const request of requests.filter((url) => url.searchParams.has("search_key"))) {
         assert(Number(request.searchParams.get("limit")) <= 40, "search and pagination probes stay bounded");
       }
     } finally {

@@ -111,6 +111,11 @@
         "name": "search_name",
         "type": "string",
         "retired": false
+      },
+      "16": {
+        "name": "search_key",
+        "type": "string",
+        "retired": false
       }
     }
   },
@@ -246,6 +251,11 @@
         "name": "search_name",
         "type": "string",
         "retired": false
+      },
+      "7": {
+        "name": "search_key",
+        "type": "string",
+        "retired": false
       }
     }
   },
@@ -301,6 +311,11 @@
         "name": "search_name",
         "type": "string",
         "retired": false
+      },
+      "11": {
+        "name": "search_key",
+        "type": "string",
+        "retired": false
       }
     }
   },
@@ -324,6 +339,11 @@
       },
       "4": {
         "name": "search_name",
+        "type": "string",
+        "retired": false
+      },
+      "5": {
+        "name": "search_key",
         "type": "string",
         "retired": false
       }
@@ -919,6 +939,16 @@
       },
       "9": {
         "name": "rating_display",
+        "type": "string",
+        "retired": false
+      },
+      "10": {
+        "name": "search_key",
+        "type": "string",
+        "retired": false
+      },
+      "11": {
+        "name": "country_key",
         "type": "string",
         "retired": false
       }
@@ -1911,6 +1941,16 @@
         "name": "referee_q",
         "type": "string",
         "retired": false
+      },
+      "15": {
+        "name": "stadium_q_key",
+        "type": "string",
+        "retired": false
+      },
+      "16": {
+        "name": "referee_q_key",
+        "type": "string",
+        "retired": false
       }
     }
   },
@@ -1966,6 +2006,16 @@
         "name": "country",
         "type": "string",
         "retired": false
+      },
+      "8": {
+        "name": "q_key",
+        "type": "string",
+        "retired": false
+      },
+      "9": {
+        "name": "country_key",
+        "type": "string",
+        "retired": false
       }
     }
   },
@@ -2005,6 +2055,11 @@
       "7": {
         "name": "page",
         "type": "int32",
+        "retired": false
+      },
+      "8": {
+        "name": "q_key",
+        "type": "string",
         "retired": false
       }
     }

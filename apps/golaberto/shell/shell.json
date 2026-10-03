@@ -213,27 +213,33 @@
         "id": "teams",
         "q": "",
         "country": "",
+        "country_key": "",
         "next_offset": 40,
         "offset": 0,
         "page": 1,
+        "q_key": "",
         "state": "browsing"
       },
       {
         "id": "stadiums",
         "q": "",
         "country": "",
+        "country_key": "",
         "next_offset": 40,
         "offset": 0,
         "page": 1,
+        "q_key": "",
         "state": "browsing"
       },
       {
         "id": "referees",
         "q": "",
         "country": "",
+        "country_key": "",
         "next_offset": 40,
         "offset": 0,
         "page": 1,
+        "q_key": "",
         "state": "browsing"
       }
     ],
@@ -241,11 +247,12 @@
       {
         "id": "catalog",
         "q": "",
-        "region": "",
-        "state": "browsing",
-        "offset": 0,
         "next_offset": 40,
-        "page": 1
+        "offset": 0,
+        "page": 1,
+        "q_key": "",
+        "region": "",
+        "state": "browsing"
       }
     ]
   },
@@ -311,7 +318,8 @@
         "html": "shell/screens/campeonatos.html",
         "css": "shell/screens/campeonatos.css",
         "handlers": [
-          "shell/handlers/page-value.js"
+          "shell/handlers/page-value.js",
+          "shell/handlers/search-key.js"
         ],
         "adapters": [],
         "renderers": [
@@ -485,7 +493,8 @@
           "shell/handlers/blank-null.js",
           "shell/handlers/both-scored.js",
           "shell/handlers/count-or-null.js",
-          "shell/handlers/row-id.js"
+          "shell/handlers/row-id.js",
+          "shell/handlers/search-key.js"
         ],
         "adapters": [],
         "renderers": [
@@ -537,7 +546,8 @@
         "html": "shell/screens/equipes.html",
         "css": "shell/screens/equipes.css",
         "handlers": [
-          "shell/handlers/page-value.js"
+          "shell/handlers/page-value.js",
+          "shell/handlers/search-key.js"
         ],
         "adapters": [],
         "renderers": [
@@ -588,7 +598,8 @@
         "html": "shell/screens/estadios.html",
         "css": "shell/screens/estadios.css",
         "handlers": [
-          "shell/handlers/page-value.js"
+          "shell/handlers/page-value.js",
+          "shell/handlers/search-key.js"
         ],
         "adapters": [],
         "renderers": [
@@ -680,7 +691,8 @@
         "html": "shell/screens/arbitros.html",
         "css": "shell/screens/arbitros.css",
         "handlers": [
-          "shell/handlers/page-value.js"
+          "shell/handlers/page-value.js",
+          "shell/handlers/search-key.js"
         ],
         "adapters": [],
         "renderers": [
@@ -1039,6 +1051,11 @@
           "name": "search_name",
           "type": "string",
           "required": true
+        },
+        {
+          "name": "search_key",
+          "type": "string",
+          "required": true
         }
       ]
     },
@@ -1245,6 +1262,11 @@
           "name": "search_name",
           "type": "string",
           "required": true
+        },
+        {
+          "name": "search_key",
+          "type": "string",
+          "required": true
         }
       ]
     },
@@ -1322,6 +1344,11 @@
           "name": "search_name",
           "type": "string",
           "required": true
+        },
+        {
+          "name": "search_key",
+          "type": "string",
+          "required": true
         }
       ]
     },
@@ -1354,6 +1381,11 @@
         },
         {
           "name": "search_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "search_key",
           "type": "string",
           "required": true
         }
@@ -2201,6 +2233,16 @@
         },
         {
           "name": "rating_display",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "search_key",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "country_key",
           "type": "string",
           "required": true
         }
@@ -3340,6 +3382,24 @@
           "name": "referee_q",
           "type": "string",
           "required": true
+        },
+        {
+          "bounds": {
+            "sizeMax": 160
+          },
+          "default": "''",
+          "name": "stadium_q_key",
+          "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "sizeMax": 160
+          },
+          "default": "''",
+          "name": "referee_q_key",
+          "type": "string",
+          "required": true
         }
       ]
     },
@@ -3434,6 +3494,24 @@
           "name": "country",
           "type": "string",
           "required": true
+        },
+        {
+          "bounds": {
+            "sizeMax": 160
+          },
+          "default": "''",
+          "name": "q_key",
+          "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "sizeMax": 120
+          },
+          "default": "''",
+          "name": "country_key",
+          "type": "string",
+          "required": true
         }
       ]
     },
@@ -3505,6 +3583,15 @@
           "default": "1",
           "name": "page",
           "type": "int32",
+          "required": true
+        },
+        {
+          "bounds": {
+            "sizeMax": 160
+          },
+          "default": "''",
+          "name": "q_key",
+          "type": "string",
           "required": true
         }
       ]
@@ -3970,6 +4057,7 @@
     "services/database/migrations/022_recent_championships.sql",
     "services/database/migrations/023_search_collation.sql",
     "services/database/migrations/024_team_directory.sql",
+    "services/database/migrations/025_search_letter_equivalences.sql",
     "services/database/migrations/900_seed.sql"
   ],
   "pipelines": [

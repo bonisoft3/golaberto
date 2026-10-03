@@ -31,7 +31,7 @@ const plans: Array<[string, string, string]> = [
   ],
   [
     "championship catalog",
-    `SELECT id FROM championship WHERE search_name LIKE '%cup%' AND region LIKE '%national%' ORDER BY region_name,name,begins DESC,id`,
+    `SELECT id FROM championship WHERE search_key LIKE '%cup%' AND region LIKE '%national%' ORDER BY region_name,name,begins DESC,id`,
     "championship_routes_catalog_order_idx",
   ],
   [
@@ -41,17 +41,17 @@ const plans: Array<[string, string, string]> = [
   ],
   [
     "team directory",
-    `SELECT id,name FROM team_directory WHERE search_name LIKE '%united%' ORDER BY rating DESC NULLS LAST,name,id`,
+    `SELECT id,name FROM team_directory WHERE search_key LIKE '%united%' ORDER BY rating DESC NULLS LAST,name,id`,
     "team_directory_rating_order_idx",
   ],
   [
     "stadium directory",
-    `SELECT id,name FROM stadium WHERE search_name LIKE '%park%' ORDER BY name,id`,
+    `SELECT id,name FROM stadium WHERE search_key LIKE '%park%' ORDER BY name,id`,
     "stadium_routes_name_id_idx",
   ],
   [
     "referee directory",
-    `SELECT id,name FROM referee WHERE search_name LIKE '%silva%' ORDER BY name,id`,
+    `SELECT id,name FROM referee WHERE search_key LIKE '%silva%' ORDER BY name,id`,
     "referee_routes_name_id_idx",
   ],
   [
@@ -126,6 +126,10 @@ Deno.test("route list queries use ordered indexes without a sort", async () => {
   const sql = `BEGIN;
     SET LOCAL enable_seqscan=off;
     SET LOCAL enable_bitmapscan=off;
+    -- This gate checks full-order index availability; small fixture tables
+    -- can otherwise make a partial-order index plus a cheap sort preferable.
+    SET LOCAL enable_sort=off;
+    SET LOCAL enable_incremental_sort=off;
     DO $$ DECLARE route record; plan json; BEGIN
       FOR route IN SELECT * FROM (VALUES ${values}) AS routes(label,query,index_name) LOOP
         EXECUTE 'EXPLAIN (FORMAT JSON) ' || route.query INTO plan;

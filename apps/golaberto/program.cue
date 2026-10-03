@@ -41,6 +41,11 @@ _searchCollationUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_
 
 _teamDirectorySql: string @embed(file="services/database/sql/024_team_directory.sql", type=text)
 _teamDirectoryUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamDirectorySql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+// SQLite tab queries and PostgreSQL stored keys share the same two mappings.
+#SearchKey: {col: string, out: "replace(replace(replace(\(col), 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')"}
+
+_extendedSearchCollationSql: string @embed(file="services/database/sql/025_search_letter_equivalences.sql", type=text)
+_extendedSearchCollationUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_extendedSearchCollationSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
 _homeHighlightsSql: string @embed(file="services/database/sql/021_home_highlights.sql", type=text)
 _homeHighlightsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeHighlightsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
@@ -143,6 +148,7 @@ code: pronto.#App & {
 				// The championship table highlighted below the home game feeds.
 				{ordinal: 14, name: "featured", type: "bool", default: "false"},
 				{ordinal: 15, name: "search_name", type: "string", generated: "region_name || ' - ' || name || ' ' || \(_season)"},
+				{ordinal: 16, name: "search_key", type: "string", generated: (#SearchKey & {col: "region_name || ' - ' || name || ' ' || \(_season)"}).out},
 			]
 			invariant: {cel: "this.ends >= this.begins"}
 			indexes: [{on: "begins"}]
@@ -219,6 +225,7 @@ code: pronto.#App & {
 				{ordinal: 4, name: "city", type: "string", required: false, cel: "this.size() <= 80"},
 				{ordinal: 5, name: "country", type: "string", required: false, cel: "this.size() <= 60"},
 				{ordinal: 6, name: "search_name", type: "string", generated: "name"},
+				{ordinal: 7, name: "search_key", type: "string", generated: (#SearchKey & {col: "name"}).out},
 			]
 		}
 		Team: {
@@ -237,6 +244,7 @@ code: pronto.#App & {
 				{ordinal: 8, name: "team_type", type: "string", default: "'club'", cel: "this in ['club', 'national']"},
 				{ordinal: 9, name: "foundation_display", type: "string", generated: (#dmy & {col: "foundation"}).out},
 				{ordinal: 10, name: "search_name", type: "string", generated: "name"},
+				{ordinal: 11, name: "search_key", type: "string", generated: (#SearchKey & {col: "name"}).out},
 			]
 			indexes: [{on: "name"}]
 		}
@@ -266,6 +274,7 @@ code: pronto.#App & {
 				{ordinal: 2, name: "name", type: "string", cel: "this.size() > 0 && this.size() <= 80"},
 				{ordinal: 3, name: "location", type: "string", required: false, cel: "this.size() <= 80"},
 				{ordinal: 4, name: "search_name", type: "string", generated: "name"},
+				{ordinal: 5, name: "search_key", type: "string", generated: (#SearchKey & {col: "name"}).out},
 			]
 		}
 		TeamDirectory: {
@@ -284,6 +293,8 @@ code: pronto.#App & {
 				{ordinal: 7, name: "search_name", type: "string", generated: "name"},
 				{ordinal: 8, name: "search_country", type: "string", generated: "coalesce(country, '')"},
 				{ordinal: 9, name: "rating_display", type: "string", generated: "CASE WHEN rating IS NULL THEN '—' ELSE round(rating::numeric, 2)::text END"},
+				{ordinal: 10, name: "search_key", type: "string", generated: (#SearchKey & {col: "name"}).out},
+				{ordinal: 11, name: "country_key", type: "string", generated: (#SearchKey & {col: "coalesce(country, '')"}).out},
 			]
 		}
 		Player: {
@@ -787,6 +798,8 @@ code: pronto.#App & {
 				{ordinal: 12, name: "away_name", type: "string", required: false},
 				{ordinal: 13, name: "stadium_q", type: "string", default: "''", cel: "this.size() <= 80"},
 				{ordinal: 14, name: "referee_q", type: "string", default: "''", cel: "this.size() <= 80"},
+				{ordinal: 15, name: "stadium_q_key", type: "string", default: "''", cel: "this.size() <= 160"},
+				{ordinal: 16, name: "referee_q_key", type: "string", default: "''", cel: "this.size() <= 160"},
 			]
 		}
 		// A player's season for one team in one championship, recounted by the
@@ -863,8 +876,10 @@ code: pronto.#App & {
 				{ordinal: 5, name: "next_offset", type: "int32", default: "40", cel: "this >= 40"},
 				{ordinal: 6, name: "page", type: "int32", default: "1", cel: "this >= 1"},
 				{ordinal: 7, name: "country", type: "string", default: "''", cel: "this.size() <= 60"},
+				{ordinal: 8, name: "q_key", type: "string", default: "''", cel: "this.size() <= 160"},
+				{ordinal: 9, name: "country_key", type: "string", default: "''", cel: "this.size() <= 120"},
 			]
-			seed: [{id: "teams", q: "", country: "", state: "browsing", offset: 0, next_offset: 40, page: 1}, {id: "stadiums", q: "", country: "", state: "browsing", offset: 0, next_offset: 40, page: 1}, {id: "referees", q: "", country: "", state: "browsing", offset: 0, next_offset: 40, page: 1}]
+			seed: [{id: "teams", q: "", country: "", q_key: "", country_key: "", state: "browsing", offset: 0, next_offset: 40, page: 1}, {id: "stadiums", q: "", country: "", q_key: "", country_key: "", state: "browsing", offset: 0, next_offset: 40, page: 1}, {id: "referees", q: "", country: "", q_key: "", country_key: "", state: "browsing", offset: 0, next_offset: 40, page: 1}]
 		}
 		// The catalogue's search, held by the tab: what a reader typed survives a
 		// trip to a championship and back, and belongs to nobody else.
@@ -882,8 +897,9 @@ code: pronto.#App & {
 				{ordinal: 5, name: "offset", type: "int32", default: "0", cel: "this >= 0"},
 				{ordinal: 6, name: "next_offset", type: "int32", default: "40", cel: "this >= 40"},
 				{ordinal: 7, name: "page", type: "int32", default: "1", cel: "this >= 1"},
+				{ordinal: 8, name: "q_key", type: "string", default: "''", cel: "this.size() <= 160"},
 			]
-			seed: [{id: "catalog", q: "", region: "", state: "browsing", offset: 0, next_offset: 40, page: 1}]
+			seed: [{id: "catalog", q: "", q_key: "", region: "", state: "browsing", offset: 0, next_offset: 40, page: 1}]
 		}
 		ArchivePage: {
 			id: "0x93cef5ac14f2a64a"
@@ -929,6 +945,7 @@ code: pronto.#App & {
 		{name: "022_recent_championships.sql", src: "services/database/sql/022_recent_championships.sql"},
 		{name: "023_search_collation.sql", src: "services/database/sql/023_search_collation.sql"},
 		{name: "024_team_directory.sql", src: "services/database/sql/024_team_directory.sql"},
+		{name: "025_search_letter_equivalences.sql", src: "services/database/sql/025_search_letter_equivalences.sql"},
 		// Large archive fixtures are copied at build, never expanded through CUE.
 		{name: "900_seed.sql", src: "services/database/sql/900_seed.sql"},
 	]
@@ -948,6 +965,7 @@ code: pronto.#App & {
 	state: migrations: "023_search_collation": {operations: [{sql: {up: _searchCollationUpgrade, onComplete: true}}]}
 	state: migrations: "024_team_directory": {operations: [{sql: {up: _teamDirectoryUpgrade, onComplete: true}}]}
 	state: pipelines: "team-directory": {raw: true, from: "Team", to: "TeamDirectory", group: "golaberto-team-directory"}
+	state: migrations: "025_search_letter_equivalences": {operations: [{sql: {up: _extendedSearchCollationUpgrade, onComplete: true}}]}
 	// The numeric stage (ir decision-chances).
 	// The chances read each game's power from team_rating, so they rerun
 	// whenever the ratings change.
@@ -999,6 +1017,7 @@ code: pronto.#App & {
 	}
 
 	surface: handlers: {
+		"search-key": {ir: "handler-search-key", of: "campeonatos", src: "shell/handlers/search-key.js", note: "fold dotless i and thorn in bounded search predicates while preserving typed input"}
 		"page-value": {ir: "handler-page-value", of: "campeonatos", src: "shell/handlers/page-value.js", note: "a forty-row page changes its offset, next-page probe and displayed page together; previous never passes page one"}
 		"blank-null": {ir: "handler-blank-null", of: "editar", src: "shell/handlers/blank-null.js", note: "an unset optional choice clears the game's reference rather than pointing it at an empty string"}
 		"count-or-null": {ir: "handler-count-or-null", of: "editar", src: "shell/handlers/count-or-null.js", note: "a typed score, minute or crowd as the integer the game stores; a cleared box is an unknown count"}

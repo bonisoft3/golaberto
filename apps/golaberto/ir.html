@@ -145,7 +145,8 @@ graph TD
 <tr data-ordinal="12"><td>season</td><td>string</td><td></td><td>generated; 2026, or 2026/2027 across a year</td></tr>
 <tr data-ordinal="13"><td>full_name</td><td>string</td><td></td><td>generated; Brasil - Campeonato Brasileiro 2026</td></tr>
 <tr data-ordinal="14"><td>featured</td><td>bool</td><td></td><td>default false; the championship table below the home feeds (<a href="#decision-home">decision-home</a>)</td></tr>
-<tr data-ordinal="15"><td>search_name</td><td>string</td><td></td><td>generated: the full championship label; search-only ICU collation ignores case and accents</td></tr>
+<tr data-ordinal="15"><td>search_name</td><td>string</td><td></td><td>generated: the full championship label; original search collation retained for schema-version readers</td></tr>
+<tr data-ordinal="16"><td>search_key</td><td>string</td><td></td><td>generated: the full championship label; fold ı to i and Þ/þ to th; ICU search collation ignores case and accents and matches æ with ae</td></tr>
 </table>
 <p data-extract="invariant">Row invariant: <code class="cel">this.ends &gt;= this.begins</code> — a season does not end before it begins.</p>
 </section>
@@ -230,7 +231,8 @@ graph TD
 <tr data-ordinal="3"><td>full_name</td><td>string</td><td><code class="cel">this.size() &lt;= 160</code></td><td>optional</td></tr>
 <tr data-ordinal="4"><td>city</td><td>string</td><td><code class="cel">this.size() &lt;= 80</code></td><td>optional</td></tr>
 <tr data-ordinal="5"><td>country</td><td>string</td><td><code class="cel">this.size() &lt;= 60</code></td><td>optional</td></tr>
-<tr data-ordinal="6"><td>search_name</td><td>string</td><td></td><td>generated: name; search-only ICU collation ignores case and accents</td></tr>
+<tr data-ordinal="6"><td>search_name</td><td>string</td><td></td><td>generated: name; original search collation retained for schema-version readers</td></tr>
+<tr data-ordinal="7"><td>search_key</td><td>string</td><td></td><td>generated: name; fold ı to i and Þ/þ to th; ICU search collation ignores case and accents and matches æ with ae</td></tr>
 </table>
 </section>
 
@@ -248,7 +250,8 @@ graph TD
 <tr data-ordinal="7"><td>stadium_id</td><td>uuid</td><td></td><td>references stadium; optional</td></tr>
 <tr data-ordinal="8"><td>team_type</td><td>string</td><td><code class="cel">this in [&#x27;club&#x27;, &#x27;national&#x27;]</code></td><td>default &#x27;club&#x27;; club or national</td></tr>
 <tr data-ordinal="9"><td>foundation_display</td><td>string</td><td></td><td>generated: the foundation as dd/mm/yyyy</td></tr>
-<tr data-ordinal="10"><td>search_name</td><td>string</td><td></td><td>generated: name; search-only ICU collation ignores case and accents</td></tr>
+<tr data-ordinal="10"><td>search_name</td><td>string</td><td></td><td>generated: name; original search collation retained for schema-version readers</td></tr>
+<tr data-ordinal="11"><td>search_key</td><td>string</td><td></td><td>generated: name; fold ı to i and Þ/þ to th; ICU search collation ignores case and accents and matches æ with ae</td></tr>
 </table>
 </section>
 
@@ -260,7 +263,8 @@ graph TD
 <tr data-ordinal="1"><td>id</td><td>uuid</td><td></td><td>pk</td></tr>
 <tr data-ordinal="2"><td>name</td><td>string</td><td><code class="cel">this.size() &gt; 0 &amp;&amp; this.size() &lt;= 80</code></td><td></td></tr>
 <tr data-ordinal="3"><td>location</td><td>string</td><td><code class="cel">this.size() &lt;= 80</code></td><td>optional</td></tr>
-<tr data-ordinal="4"><td>search_name</td><td>string</td><td></td><td>generated: name; search-only ICU collation ignores case and accents</td></tr>
+<tr data-ordinal="4"><td>search_name</td><td>string</td><td></td><td>generated: name; original search collation retained for schema-version readers</td></tr>
+<tr data-ordinal="5"><td>search_key</td><td>string</td><td></td><td>generated: name; fold ı to i and Þ/þ to th; ICU search collation ignores case and accents and matches æ with ae</td></tr>
 </table>
 </section>
 
@@ -576,6 +580,8 @@ graph TD
 <tr data-ordinal="7"><td>search_name</td><td>string</td><td></td><td>generated: name; golaberto_search collation</td></tr>
 <tr data-ordinal="8"><td>search_country</td><td>string</td><td></td><td>generated: coalesce(country, ''); golaberto_search collation</td></tr>
 <tr data-ordinal="9"><td>rating_display</td><td>string</td><td></td><td>generated: CASE WHEN rating IS NULL THEN '—' ELSE round(rating::numeric, 2)::text END</td></tr>
+<tr data-ordinal="10"><td>search_key</td><td>string</td><td></td><td>generated: maps ı to i and Þ/þ to th in name; golaberto_search</td></tr>
+<tr data-ordinal="11"><td>country_key</td><td>string</td><td></td><td>generated: maps ı to i and Þ/þ to th in coalesce(country, ''); golaberto_search</td></tr>
 </table>
 </section>
 
@@ -591,6 +597,8 @@ graph TD
 <tr data-ordinal="5"><td>next_offset</td><td>int32</td><td><code class="cel">this &gt;= 40</code></td><td>default 40</td></tr>
 <tr data-ordinal="6"><td>page</td><td>int32</td><td><code class="cel">this &gt;= 1</code></td><td>default 1</td></tr>
 <tr data-ordinal="7"><td>country</td><td>string</td><td><code class="cel">this.size() &lt;= 60</code></td><td>default ''; teams country/region search</td></tr>
+<tr ><td>q_key</td><td>string</td><td><code class="cel">this.size() &lt;= 160</code></td><td>default empty; search-key handler folds the typed query</td></tr>
+<tr data-ordinal="9"><td>country_key</td><td>string</td><td><code class="cel">this.size() &lt;= 120</code></td><td>default ''; mapped country search</td></tr>
 </table>
 </section>
 
@@ -741,6 +749,8 @@ graph TD
 <tr data-ordinal="12"><td>away_name</td><td>string</td><td></td><td>optional</td></tr>
 <tr data-ordinal="13"><td>stadium_q</td><td>string</td><td><code class="cel">this.size() &lt;= 80</code></td><td>default ''</td></tr>
 <tr data-ordinal="14"><td>referee_q</td><td>string</td><td><code class="cel">this.size() &lt;= 80</code></td><td>default ''</td></tr>
+<tr data-ordinal="15"><td>stadium_q_key</td><td>string</td><td><code class="cel">this.size() &lt;= 160</code></td><td>default empty; search-key handler folds the typed query</td></tr>
+<tr data-ordinal="16"><td>referee_q_key</td><td>string</td><td><code class="cel">this.size() &lt;= 160</code></td><td>default empty; search-key handler folds the typed query</td></tr>
 </table>
 </section>
 
@@ -767,6 +777,7 @@ graph TD
 <tr data-ordinal="5"><td>offset</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td>default 0</td></tr>
 <tr data-ordinal="6"><td>next_offset</td><td>int32</td><td><code class="cel">this &gt;= 40</code></td><td>default 40</td></tr>
 <tr data-ordinal="7"><td>page</td><td>int32</td><td><code class="cel">this &gt;= 1</code></td><td>default 1</td></tr>
+<tr data-ordinal="8"><td>q_key</td><td>string</td><td><code class="cel">this.size() &lt;= 160</code></td><td>default empty; search-key handler folds the typed query</td></tr>
 </table>
 </section>
 
@@ -942,7 +953,7 @@ graph TD
 
 <section id="campeonatos" data-kind="screen" data-route="/campeonatos">
 <h3>campeonatos — the catalogue</h3>
-<p data-extract="reads">Reads: <a href="#CatalogFilter">CatalogFilter</a> by <code>id=eq.catalog</code>, the tab's one search row; inside it <a href="#Championship">Championship</a> by <code>full_name=ilike.*{q}*&amp;region=like.*{region}*</code>, ordered <code>region_name.asc,name.asc,begins.desc</code>; nested per row, <a href="#Category">Category</a> by <code>id=eq.{category_id}</code>, empty meaning professional. Catalog and directory reads use the current offset and a forty-row limit, with a one-row next-page probe. The <a href="#handler-page-value">page-value</a> machine updates page state.</p>
+<p data-extract="reads">Reads: <a href="#CatalogFilter">CatalogFilter</a> by <code>id=eq.catalog</code>, the tab's one search row; inside it <a href="#Championship">Championship</a> by <code>search_key=like.*{q_key}*&amp;region=like.*{region}*</code>, ordered <code>region_name.asc,name.asc,begins.desc</code>; nested per row, <a href="#Category">Category</a> by <code>id=eq.{category_id}</code>, empty meaning professional. Catalog and directory reads use the current offset and a forty-row limit, with a one-row next-page probe. The <a href="#handler-page-value">page-value</a> machine updates page state.</p>
 <p data-extract="mutations">Mutations: none through a form. The search is a machine over the tab's row: typing assigns <code>q</code> on every keystroke and picking a level assigns <code>region</code>, so the list narrows as the reader types; nothing reaches the cluster (<a href="#decision-machines">decision-machines</a>).</p>
 <div class="storyboard frames">
 <figure id="campeonatos-loading" data-kind="state" data-of="campeonatos" data-state="loading">
@@ -1605,7 +1616,7 @@ graph TD
 </section>
 <section id="equipes" data-kind="screen" data-route="/equipes">
 <h3>equipes — every team</h3>
-<p data-extract="reads">Reads: <a href="#DirectoryFilter">DirectoryFilter</a> by <code>id=eq.teams</code>, holding the name and country/region searches. Nested <a href="#TeamDirectory">TeamDirectory</a> uses <code>search_name=like.*{q}*&amp;search_country=like.*{country}*</code> and <code>rating.desc.nullslast,name.asc,id.asc</code>. Both searches ignore case and diacritics and combine. Forty rows per page and a one-row next-page probe use identical filters and order. Either input resets the page; searches survive detail/back within the tab.</p>
+<p data-extract="reads">Reads: <a href="#DirectoryFilter">DirectoryFilter</a> by <code>id=eq.teams</code>, holding the name and country/region searches. Nested <a href="#TeamDirectory">TeamDirectory</a> uses <code>search_key=like.*{q_key}*&amp;country_key=like.*{country_key}*</code> and <code>rating.desc.nullslast,name.asc,id.asc</code>. Both searches ignore case and diacritics, match ı/i and Þ/þ/th, and combine. Typed names and countries stay unchanged; mapped query fields are separate. Forty rows per page and a one-row next-page probe use identical filters and order. Either input resets the page; searches survive detail/back within the tab.</p>
 <p id="teams-directory-oracle">Stitch project 3684321283098058780, screen c431b5b26c8f4599a9560f4df0fe0efe, refines the existing accepted directory: two compact labelled search fields, rating after team name, highest latest ratings first, city hidden on phones while country and rating remain visible. Preserve existing masthead, sidebar, colours, typography, pager and empty/loading styles; the canvas’s extra heading and pager changes are outside this slice.</p>
 <p data-extract="mutations">Mutations: none.</p>
 <div class="storyboard frames">
@@ -1932,7 +1943,7 @@ graph TD
 </section>
 <section id="estadios" data-kind="screen" data-route="/estadios">
 <h3>estadios — every stadium</h3>
-<p data-extract="reads">Reads: <a href="#DirectoryFilter">DirectoryFilter</a> by <code>id=eq.stadiums</code>, the search row its machine writes; nested, <a href="#Stadium">Stadium</a> by <code>name=ilike.*{q}*</code> (<code>name.asc</code>). Catalog and directory reads use the current offset and a forty-row limit, with a one-row next-page probe. The <a href="#handler-page-value">page-value</a> machine updates page state.</p>
+<p data-extract="reads">Reads: <a href="#DirectoryFilter">DirectoryFilter</a> by <code>id=eq.stadiums</code>, the search row its machine writes; nested, <a href="#Stadium">Stadium</a> by <code>search_key=like.*{q_key}*</code> (<code>name.asc</code>). Catalog and directory reads use the current offset and a forty-row limit, with a one-row next-page probe. The <a href="#handler-page-value">page-value</a> machine updates page state.</p>
 <p data-extract="mutations">Mutations: none.</p>
 <div class="storyboard frames">
 <figure id="estadios-loading" data-kind="state" data-of="estadios" data-state="loading">
@@ -2146,7 +2157,7 @@ graph TD
 </section>
 <section id="arbitros" data-kind="screen" data-route="/arbitros">
 <h3>arbitros — every referee</h3>
-<p data-extract="reads">Reads: <a href="#DirectoryFilter">DirectoryFilter</a> by <code>id=eq.referees</code>, the search row its machine writes; nested, <a href="#Referee">Referee</a> by <code>name=ilike.*{q}*</code> (<code>name.asc</code>). Catalog and directory reads use the current offset and a forty-row limit, with a one-row next-page probe. The <a href="#handler-page-value">page-value</a> machine updates page state.</p>
+<p data-extract="reads">Reads: <a href="#DirectoryFilter">DirectoryFilter</a> by <code>id=eq.referees</code>, the search row its machine writes; nested, <a href="#Referee">Referee</a> by <code>search_key=like.*{q_key}*</code> (<code>name.asc</code>). Catalog and directory reads use the current offset and a forty-row limit, with a one-row next-page probe. The <a href="#handler-page-value">page-value</a> machine updates page state.</p>
 <p data-extract="mutations">Mutations: none.</p>
 <div class="storyboard frames">
 <figure id="arbitros-loading" data-kind="state" data-of="arbitros" data-state="loading">
@@ -2590,7 +2601,7 @@ The catalogue lists all thirteen seeded championships, <code class="cel">output.
 </p>
 <p id="test-catalog-search" data-kind="test" data-of="campeonatos" data-accepts="accept-catalog-search">
 Typing <code class="cel">input.q == "libertadores"</code> narrows to <code class="cel">output.rows == ["América do Sul - Copa Libertadores 2026"]</code>, and picking <code class="cel">input.region == "continental"</code> with no text leaves the three continental championships.
-The accent-search integration check compares result IDs for atletico, atlético, uppercase and decomposed spellings against accented and plain fixtures in every text search: championships, teams, stadiums, referees, and both editor pickers. Phone and desktop checks preserve the typed query, confirm 40-row pagination reaches all 42 team fixtures, and select a matching picker result. SQL checks cover retained and declared-baseline upgrades, replay with dependent views, and search values updating after a name edit.
+The accent-search integration check compares result IDs for atletico, atlético, uppercase and decomposed spellings against accented and plain fixtures in every text search, including ı/i, Þ/þ/th and æ/ae equivalences: championships, teams, stadiums, referees, and both editor pickers. Phone and desktop checks preserve the typed query, confirm 40-row pagination reaches all 42 team fixtures, and select a matching picker result. SQL checks cover retained and declared-baseline upgrades, replay with dependent views, and search values updating after a name edit.
 </p>
 
 <p id="test-catalog-no-match" data-kind="test" data-of="campeonatos" data-accepts="accept-catalog-search">
@@ -2777,7 +2788,7 @@ Brazil's is the archive's own language and served unprefixed. Argentina's Spanis
 <p id="decision-machines" data-kind="decision"><strong>Every interaction is a machine; no screen has a plain form.</strong>
 A form is two implicit states with no timeout, no coordinated rollback and nothing a checker can walk. A machine states its states, its arrows and the effects it emits, the terminal's walk fires every arrow, and a write it makes is answered with <code>sync_ack</code> or <code>refused</code> where the chart draws an arrow for each. The catalogue's search is the first: two arrows over a tab row. Every later write — a comment, an editor's correction — is a machine whose effect is the write.</p>
 <p id="decision-catalog-tab" data-kind="decision"><strong>The catalogue's search is a tab row, written by a form on change.</strong>
-Every text search uses the generated search_name column with PostgreSQL 18 LIKE and ICU primary-strength collation (und-u-ks-level1, nondeterministic), mirroring the linked upstream utf8mb3_unicode_ci rule for case and accents. Both atletico and atlético match both spellings, including uppercase and decomposed Unicode. This applies to the championship catalogue, team/stadium/referee directories, and both editor pickers; pagination probes use the same predicate. Names, uniqueness and display ordering retain their original spelling and collation. Queries retain what the reader typed and existing bounded server reads; no client-only filtering or layout change. The additive 023 migration installs the collation on fresh and retained databases.
+Every text search uses the generated search_key column with PostgreSQL 18 LIKE and ICU primary-strength collation (und-u-ks-level1, nondeterministic), mirroring the linked upstream utf8mb3_unicode_ci rule for case and accents. Both atletico and atlético match both spellings, including uppercase and decomposed Unicode. This applies to the championship catalogue, team/stadium/referee directories, and both editor pickers; pagination probes use the same predicate. Names, uniqueness and display ordering retain their original spelling and collation. Queries retain what the reader typed and existing bounded server reads; no client-only filtering or layout change. The additive 025 migration adds keys on fresh and retained databases. Keys fold ı to i and Þ/þ to th before the original ICU collation compares them; æ remains equal ae. Tab filters and editor drafts use the same mapping through the search-key handler for query predicates, while inputs keep the typed spelling. PostgreSQL custom ICU rules force tertiary strength, so the original primary-strength collation is preserved. The original search_name columns and their version views remain available. The new keys follow every name edit without changing displayed spelling.
 Filtering is a live query over the championship table interpolating the search row's columns; a machine over that row assigns them from the controls' own events, so every keystroke narrows the list and nothing leaves the browser. The catalogue is rebuilt on every visit (<code>keep: 0</code>), so the search a reader returns to is the row's, which is the claim. A URL parameter would be the alternative; it would make a search shareable, but the archive's catalogue is short enough that a shared search is not worth an address.</p>
 <p id="decision-phases-stacked" data-kind="decision"><strong>A championship shows every phase, stacked, with chips that jump to each.</strong>
 Upstream shows one phase at a time behind buttons. Phases are rows, and a selection machine's states are fixed when the program is written, so a tab per phase would need a machine per championship shape. Stacked sections under anchor chips show a league (one phase) and a cup (several) the same way, and a phone reads them as one scroll.</p>
@@ -2829,6 +2840,11 @@ The screen reads one flat list in server rank order. Each date appears once acro
 <p id="decision-hatches" data-kind="decision"><strong>Escape hatches: none.</strong>
 No vendored unit, no container, no external endpoint; the one Wasm module is upstream's odds-rust, which the numeric stage runs (<a href="#decision-chances">decision-chances</a>). Everything the archive shows is rows, generated columns, pipelines and the terminal's machines; the maps upstream draws need a map service and are out of scope in the brief.</p>
 
+<section id="handler-search-key" data-kind="handler">
+<h3>search-key</h3>
+<p>Search machines preserve typed values and separately map ı → i, Þ/þ → th for the server predicate. The same mapping is used by stored keys. Case, accents and æ/ae remain ICU's responsibility. <code>shell/handlers/search-key.js</code>.</p>
+<p>A query with dotless i and either thorn case produces i and th; empty input stays empty, unrelated letters and accents keep their spelling. Browser integration tests cover every search and pagination.</p>
+</section>
 <section id="handler-page-value" data-kind="handler">
 <h3>page-value <span class="kind handler">handler · jessie</span></h3>
 <p>A pure forty-row step from the current offset updates the offset, next-page probe and displayed page together, clamped at zero. <code>shell/handlers/page-value.js</code>, listed in <a href="#campeonatos">campeonatos</a>, <a href="#equipes">equipes</a>, <a href="#estadios">estadios</a>, <a href="#arbitros">arbitros</a>, <a href="#equipe">equipe</a>, <a href="#jogador">jogador</a>, <a href="#estadio">estadio</a>, <a href="#arbitro">arbitro</a> and <a href="#jogo">jogo</a>.</p>

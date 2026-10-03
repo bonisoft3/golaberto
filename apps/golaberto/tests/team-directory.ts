@@ -22,6 +22,7 @@ const fixtureIds = Array.from({ length: 5 }, () => crypto.randomUUID()).sort();
 const [equalA, equalB, future, zero, unrated] = fixtureIds;
 const ratingIds = Array.from({ length: 6 }, () => crypto.randomUUID()).sort();
 const quote = (value: string) => `'${value.replaceAll("'", "''")}'`;
+const mapSearchEquivalences = (value: string) => value.replaceAll("ı", "i").replaceAll("þ", "th").replaceAll("Þ", "th");
 
 Deno.test("team directory refresh chooses latest stored ratings and changes only changed rows", async () => {
   const output = await psql(`BEGIN;
@@ -119,7 +120,8 @@ for (const width of [390, 1366]) {
     try {
       const values = teamIds.map((id, i) => {
         const name = `${prefix} ${i < 4 ? "Atlético" : "Other"} ${String(i).padStart(2, "0")}`;
-        const country = quote(i < 4 ? "Colômbia" : "Brasil");
+        const countries = ["Colômbia", "Colômbia", "Colômbia", "Colômbia", "Iceland", "ıceland", "Þorland", "Thorland", "Ærø", "Aero"];
+        const country = quote(countries[i] ?? "Brasil");
         const city = i === 2 ? "A very long city name that should wrap safely inside the team directory" : `City ${i}`;
         return `(${quote(id)},${quote(name)},${quote(city)},${country})`;
       });
@@ -150,8 +152,8 @@ for (const width of [390, 1366]) {
         const response = page.waitForResponse((r) => {
           const url = new URL(r.url());
           return url.pathname === "/crud/team_directory" &&
-            url.searchParams.get("search_name") === `like.*${name}*` &&
-            url.searchParams.get("search_country") === `like.*${country}*`;
+            url.searchParams.get("search_key") === `like.*${mapSearchEquivalences(name)}*` &&
+            url.searchParams.get("country_key") === `like.*${mapSearchEquivalences(country)}*`;
         });
         await page.fill("#teams-q", name);
         await page.fill("#teams-country", country);
@@ -165,6 +167,12 @@ for (const width of [390, 1366]) {
       await query(`${prefix} atletico`, "colombia", [teamIds[2], teamIds[1], teamIds[0], teamIds[3]]);
       await query(`${prefix} ATLÉTICO`, "COLÔMBIA", [teamIds[2], teamIds[1], teamIds[0], teamIds[3]]);
       await query(`${prefix} atletico`, "colo\u0302mbia", [teamIds[2], teamIds[1], teamIds[0], teamIds[3]]);
+      await query(prefix, "ıceland", [teamIds[4], teamIds[5]]);
+      await query(prefix, "ICELAND", [teamIds[4], teamIds[5]]);
+      await query(prefix, "þorland", [teamIds[6], teamIds[7]]);
+      await query(prefix, "THORLAND", [teamIds[6], teamIds[7]]);
+      await query(prefix, "AERO", [teamIds[8], teamIds[9]]);
+      await query(`${prefix} atletico`, "colombia", [teamIds[2], teamIds[1], teamIds[0], teamIds[3]]);
       const rows = page.locator(".catalog-table tbody tr");
       const firstRow = rows.nth(0);
       const cityCell = firstRow.locator("td").nth(2);
@@ -185,7 +193,7 @@ for (const width of [390, 1366]) {
       const tail = await page.locator('.catalog-table a[data-route="equipe"]').evaluateAll((links) => links.map((link) => new URL((link as HTMLAnchorElement).href).pathname));
       assertEquals(new Set([...firstPage, ...tail]).size, 42, "pager should traverse all matches with a one-row next probe");
       await query(`${prefix} atletico`, "", [teamIds[2], teamIds[1], teamIds[0], teamIds[3]]);
-      assert(requests.some((url) => url.searchParams.get("search_name") === `like.*${prefix} atletico*` && url.searchParams.get("offset") === "0"), "changing name on page two resets the offset");
+      assert(requests.some((url) => url.searchParams.get("search_key") === `like.*${prefix} atletico*` && url.searchParams.get("offset") === "0"), "changing name on page two resets the offset");
       await page.fill("#teams-q", prefix);
       await waitForRows(40);
       await page.click("#teams-next");
@@ -193,8 +201,8 @@ for (const width of [390, 1366]) {
       const countryResponse = page.waitForResponse((r) => {
         const url = new URL(r.url());
         return url.pathname === "/crud/team_directory" &&
-          url.searchParams.get("search_name") === `like.*${prefix}*` &&
-          url.searchParams.get("search_country") === "like.*colombia*";
+          url.searchParams.get("search_key") === `like.*${prefix}*` &&
+          url.searchParams.get("country_key") === "like.*colombia*";
       });
       await page.fill("#teams-country", "colombia");
       assert((await countryResponse).ok(), "changing country on page two should issue the combined filtered query");

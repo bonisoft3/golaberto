@@ -95,9 +95,14 @@ Deno.test("home schema upgrades retained data before readers start and does not 
     assertEquals(await sql(clone, "SELECT count(*) FROM pg_attribute h JOIN pg_attribute g ON g.attrelid='game_card'::regclass AND h.attname=g.attname WHERE h.attrelid='matches_game_card'::regclass AND h.attnum>0 AND NOT h.attisdropped AND h.atttypid<>g.atttypid"), "0");
     assertEquals(await sql(clone, "SELECT has_function_privilege('anon','home_game_selection(timestamptz)','EXECUTE') OR has_function_privilege('app_user','home_game_selection(timestamptz)','EXECUTE') OR NOT has_function_privilege('service','home_game_selection(timestamptz)','EXECUTE')"), "f");
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='024_team_directory' AND done"), "1");
+    assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='025_search_letter_equivalences' AND done"), "1");
     assertEquals(await sql(clone, "SELECT atttypid='portable_date'::regtype FROM pg_attribute WHERE attrelid='team_directory'::regclass AND attname='measure_date'"), "t", "fresh and retained projections use the same date domain");
     assertEquals(await sql(clone, "SELECT count(*) FROM team_directory"), await sql(clone, "SELECT count(*) FROM team"), "retained teams are backfilled before readers start");
     assertEquals(await sql(clone, "SELECT count(*) FROM pg_attribute WHERE attrelid='team_directory'::regclass AND attname IN ('search_name','search_country') AND attcollation='golaberto_search'::regcollation"), "2");
+    assertEquals(await sql(clone, "SELECT count(*) FROM pg_attribute WHERE attrelid='team_directory'::regclass AND attname IN ('search_key','country_key') AND attcollation='golaberto_search'::regcollation"), "2", "extended directory keys use the search collation");
+    await sql(clone, "INSERT INTO team (id,name,country) VALUES ('03000000-0000-4000-8000-000000000001','Retained ı Þ æ','Þorland'); SELECT refresh_team_directory()");
+    assertEquals(await sql(clone, "SELECT search_key||'|'||country_key FROM team_directory WHERE id='03000000-0000-4000-8000-000000000001'"), "Retained i th æ|thorland", "the retained directory derives both letter mappings from source fields");
+    assertEquals(await sql(clone, "SELECT count(*) FROM team_directory WHERE id='03000000-0000-4000-8000-000000000001' AND search_key LIKE '%retained i th ae%' AND country_key LIKE '%thorland%'"), "1", "mapped inputs match retained team and country search keys");
     assertEquals(await sql(clone, "SELECT count(*) FROM pg_publication_tables WHERE pubname='golaberto_cdc' AND tablename='team_directory'"), "0");
     await migrate();
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name = '013_home_games' AND done"), "1");
@@ -107,6 +112,7 @@ Deno.test("home schema upgrades retained data before readers start and does not 
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='020_home_reference_order' AND done"), "1");
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='021_home_highlights' AND done"), "1", "the new migration is recorded once on replay");
     assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='022_recent_championships' AND done"), "1", "recent championships upgrade is recorded once on replay");
+    assertEquals(await sql(clone, "SELECT count(*) FROM pgroll.migrations WHERE name='025_search_letter_equivalences' AND done"), "1", "extended search upgrade is recorded once on replay");
   } finally {
     await sql("postgres", `DROP DATABASE ${clone} WITH (FORCE)`);
   }

@@ -38,6 +38,14 @@ access:
     scope: public
   team_directory:
     scope: public
+  team_championship:
+    scope: public
+  team_roster:
+    scope: public
+  team_player_history:
+    scope: public
+  team_group:
+    scope: public
   geography_region:
     scope: public
   geography_country:
@@ -53,6 +61,16 @@ access:
   player_stat:
     scope: public
   phase_round:
+    scope: public
+  team_comment:
+    scope: public
+  team_campaign_point:
+    scope: public
+  team_rating_chart:
+    scope: public
+  team_odds_chart:
+    scope: public
+  team_roster_total:
     scope: public
   home_championship:
     scope: public
@@ -93,6 +111,8 @@ local:
   comment_draft: tab
   game_edit: tab
   directory_filter: tab
+  team_comment_draft: tab
+  team_chart_state: tab
 onDemand:
   - category
   - championship
@@ -115,10 +135,19 @@ onDemand:
   - stage_group
   - standing
   - team
+  - team_campaign_point
+  - team_championship
   - team_chance
+  - team_comment
   - team_directory
   - team_game
+  - team_group
+  - team_odds_chart
+  - team_player_history
   - team_rating
+  - team_rating_chart
+  - team_roster
+  - team_roster_total
   - zone
   - zone_chance
 optional:
@@ -629,14 +658,18 @@ routes:
       css: shell/screens/equipe.css
       handlers:
         - shell/handlers/page-value.js
+        - shell/handlers/search-key.js
       adapters: []
       renderers:
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
+        - shell/renderers/team-chart.js
+        - shell/renderers/team-location.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
+        - shell/shared/team.css
     slug: route_team
     paths:
       pt-BR: '/equipe/:id'
@@ -650,6 +683,47 @@ routes:
       - loading
       - populated
       - gone
+      - populated-dark
+  - keep: 3
+    path: '/equipe-campeonato/:id/:championship'
+    screen: equipe-campeonato
+    nav:
+      label: Equipe no campeonato
+      strip: false
+    files:
+      html: shell/screens/equipe-campeonato.html
+      css: shell/screens/equipe-campeonato.css
+      handlers:
+        - shell/handlers/chart-compare.js
+        - shell/handlers/chart-metric.js
+        - shell/handlers/page-value.js
+        - shell/handlers/search-key.js
+        - shell/handlers/team-chart-fold.js
+        - shell/handlers/team-chart-seed.js
+      adapters: []
+      renderers:
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
+        - shell/renderers/geography-label.js
+        - shell/renderers/team-chart.js
+        - shell/renderers/team-location.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+    slug: route_team_championship
+    paths:
+      pt-BR: '/equipe-campeonato/:id/:championship'
+      es-AR: '/equipo-campeonato/:id/:championship'
+      en-GB: '/team-championship/:id/:championship'
+      it-IT: '/squadra-campionato/:id/:championship'
+      de-DE: '/mannschaft-meisterschaft/:id/:championship'
+      fr-FR: '/equipe-championnat/:id/:championship'
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - empty
       - populated-dark
   - keep: 3
     path: '/jogador/:id'
@@ -743,10 +817,19 @@ tables:
   - stage_group
   - standing
   - team
+  - team_campaign_point
+  - team_championship
   - team_chance
+  - team_comment
   - team_directory
   - team_game
+  - team_group
+  - team_odds_chart
+  - team_player_history
   - team_rating
+  - team_rating_chart
+  - team_roster
+  - team_roster_total
   - zone
   - zone_chance
 schema:
@@ -1037,6 +1120,18 @@ schema:
       - name: search_key
         type: string
         required: true
+      - bounds:
+          intMin: -90
+          intMax: 90
+        name: latitude
+        type: double
+        required: false
+      - bounds:
+          intMin: -180
+          intMax: 180
+        name: longitude
+        type: double
+        required: false
   referee:
     durability: server
     fields:
@@ -1300,6 +1395,12 @@ schema:
       - name: day_display
         type: string
         required: true
+      - name: off_rating
+        type: double
+        required: false
+      - name: def_rating
+        type: double
+        required: false
     uniques:
       - name: uq_player_game
         cols:
@@ -1649,6 +1750,223 @@ schema:
         name: team_type
         type: string
         required: true
+  team_championship:
+    durability: live
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: team_id
+        ref: team
+        type: uuid
+        required: true
+      - name: championship_id
+        ref: championship
+        type: uuid
+        required: true
+      - name: championship_name
+        type: string
+        required: true
+      - name: begins
+        type: date
+        required: true
+      - name: ends
+        type: date
+        required: true
+      - enum:
+          - current
+          - upcoming
+          - past
+        name: status
+        type: string
+        required: true
+  team_roster:
+    durability: live
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: team_id
+        ref: team
+        type: uuid
+        required: true
+      - name: championship_id
+        ref: championship
+        type: uuid
+        required: true
+      - name: player_id
+        ref: player
+        type: uuid
+        required: true
+      - name: player_name
+        type: string
+        required: true
+      - enum:
+          - ''
+          - g
+          - dr
+          - dc
+          - dl
+          - dm
+          - cm
+          - am
+          - fw
+        name: position
+        type: string
+        required: true
+      - bounds:
+          intMin: 0
+        name: played
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: started
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: came_on
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: bench
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: minutes
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: goals
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: penalties
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: own_goals
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: yellow
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: red
+        type: int32
+        required: true
+      - name: championship_name
+        type: string
+        required: true
+      - name: off_rating
+        type: double
+        required: false
+      - name: def_rating
+        type: double
+        required: false
+      - name: contribution
+        type: double
+        required: false
+      - name: contribution_per90
+        type: double
+        required: false
+      - name: goals_per90
+        type: double
+        required: false
+      - name: search_key
+        type: string
+        required: true
+  team_player_history:
+    durability: live
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: team_id
+        ref: team
+        type: uuid
+        required: true
+      - name: player_id
+        ref: player
+        type: uuid
+        required: true
+      - name: player_name
+        type: string
+        required: true
+      - enum:
+          - ''
+          - g
+          - dr
+          - dc
+          - dl
+          - dm
+          - cm
+          - am
+          - fw
+        name: position
+        type: string
+        required: true
+      - name: country
+        type: string
+        required: false
+      - name: is_current
+        type: bool
+        required: true
+      - name: search_key
+        type: string
+        required: true
+  team_group:
+    durability: server
+    fields:
+      - default: gen_random_uuid()
+        name: id
+        pk: true
+        type: uuid
+        required: true
+      - name: group_id
+        ref: stage_group
+        type: uuid
+        required: true
+      - name: team_id
+        ref: team
+        type: uuid
+        required: true
+      - bounds:
+          intMin: -99
+          intMax: 99
+        default: '0'
+        name: add_sub
+        type: int32
+        required: true
+      - bounds:
+          intMin: -99
+          intMax: 99
+        default: '0'
+        name: bias
+        type: int32
+        required: true
+      - bounds:
+          sizeMax: 500
+        name: comment
+        type: string
+        required: false
+    uniques:
+      - name: uq_team_group
+        cols:
+          - group_id
+          - team_id
   geography_region:
     durability: live
     fields:
@@ -1906,6 +2224,16 @@ schema:
       - name: kickoff_local
         type: string
         required: true
+      - name: category_id
+        ref: category
+        type: uuid
+        required: false
+      - name: phase_key
+        type: string
+        required: true
+      - name: category_key
+        type: string
+        required: true
   comment:
     durability: server
     fields:
@@ -2024,6 +2352,21 @@ schema:
       - name: team_name
         type: string
         required: true
+      - name: off_rating
+        type: double
+        required: false
+      - name: def_rating
+        type: double
+        required: false
+      - name: contribution
+        type: double
+        required: false
+      - name: contribution_per90
+        type: double
+        required: false
+      - name: goals_per90
+        type: double
+        required: false
   phase_round:
     durability: live
     fields:
@@ -2044,6 +2387,204 @@ schema:
           intMin: 1
         name: next
         type: int32
+        required: false
+  team_comment:
+    durability: server
+    fields:
+      - default: gen_random_uuid()
+        name: id
+        pk: true
+        type: uuid
+        required: true
+      - name: team_id
+        ref: team
+        type: uuid
+        required: true
+      - default: auth_uid()
+        name: app_user_id
+        ref: app_user
+        type: uuid
+        required: true
+      - bounds:
+          sizeMin: 1
+          sizeMax: 1000
+        name: body
+        type: string
+        required: true
+      - default: now()
+        name: created_at
+        type: timestamp
+        required: true
+  team_campaign_point:
+    durability: live
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: group_id
+        ref: stage_group
+        type: uuid
+        required: true
+      - name: team_id
+        ref: team
+        type: uuid
+        required: true
+      - name: game_id
+        ref: game
+        type: uuid
+        required: true
+      - bounds:
+          intMin: 1
+        name: sequence
+        type: int32
+        required: true
+      - name: day
+        type: date
+        required: true
+      - name: points
+        type: int32
+        required: true
+      - bounds:
+          intMin: 1
+        name: position
+        type: int32
+        required: true
+      - enum:
+          - w
+          - d
+          - l
+        name: result
+        type: string
+        required: true
+  team_rating_chart:
+    durability: live
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: team_id
+        ref: team
+        type: uuid
+        required: true
+      - enum:
+          - 1m
+          - 3m
+          - 6m
+          - 1y
+          - 5y
+          - all
+        name: period
+        type: string
+        required: true
+      - name: series_json
+        type: string
+        required: true
+  team_odds_chart:
+    durability: live
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: group_id
+        ref: stage_group
+        type: uuid
+        required: true
+      - name: team_id
+        ref: team
+        type: uuid
+        required: true
+      - name: zone_id
+        ref: zone
+        type: uuid
+        required: true
+      - name: series_json
+        type: string
+        required: true
+  team_roster_total:
+    durability: live
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: team_id
+        ref: team
+        type: uuid
+        required: true
+      - name: championship_id
+        ref: championship
+        type: uuid
+        required: true
+      - name: championship_name
+        type: string
+        required: true
+      - bounds:
+          intMin: 0
+        name: played
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: started
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: came_on
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: bench
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: minutes
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: goals
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: penalties
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: own_goals
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: yellow
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+        name: red
+        type: int32
+        required: true
+      - name: off_rating
+        type: double
+        required: false
+      - name: def_rating
+        type: double
+        required: false
+      - name: contribution
+        type: double
+        required: false
+      - name: contribution_per90
+        type: double
+        required: false
+      - name: goals_per90
+        type: double
         required: false
   home_championship:
     durability: live
@@ -2603,6 +3144,59 @@ schema:
         name: q_key
         type: string
         required: true
+  team_comment_draft:
+    durability: tab
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - bounds:
+          sizeMax: 1000
+        default: ''''''
+        name: body
+        type: string
+        required: true
+      - default: '''writing'''
+        enum:
+          - writing
+          - sending
+          - refused
+        name: state
+        type: string
+        required: true
+  team_chart_state:
+    durability: tab
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: group_id
+        type: uuid
+        required: true
+      - name: team_id
+        type: uuid
+        required: true
+      - name: compare_id
+        type: uuid
+        required: true
+      - default: '''points'''
+        enum:
+          - points
+          - position
+          - percent
+        name: metric
+        type: string
+        required: true
+      - default: '''{}'''
+        name: series_json
+        type: string
+        required: true
+      - default: '''/jogo/'''
+        name: game_prefix
+        type: string
+        required: true
   archive_page:
     durability: tab
     fields:
@@ -2635,6 +3229,57 @@ schema:
         enum:
           - browsing
         name: state
+        type: string
+        required: true
+      - bounds:
+          sizeMax: 80
+        default: ''''''
+        name: q
+        type: string
+        required: true
+      - bounds:
+          sizeMax: 160
+        default: ''''''
+        name: q_key
+        type: string
+        required: true
+      - default: '''name'''
+        enum:
+          - name
+          - played
+          - minutes
+          - goals
+          - goals_per90
+          - contribution
+          - contribution_per90
+        name: sort
+        type: string
+        required: true
+      - default: '''1y'''
+        enum:
+          - 1m
+          - 3m
+          - 6m
+          - 1y
+          - 5y
+          - all
+        name: period
+        type: string
+        required: true
+      - default: '''*'''
+        enum:
+          - '*'
+          - home
+          - away
+        name: side
+        type: string
+        required: true
+      - default: '''*'''
+        name: phase
+        type: string
+        required: true
+      - default: '''*'''
+        name: category
         type: string
         required: true
 types:
@@ -2966,6 +3611,8 @@ migrations:
   - services/database/migrations/025_search_letter_equivalences.sql
   - services/database/migrations/026_team_geography.sql
   - services/database/migrations/027_team_directory_type.sql
+  - services/database/migrations/028_team_profiles.sql
+  - services/database/migrations/029_team_enrichment.sql
   - services/database/migrations/900_seed.sql
 pipelines:
   - name: standings
@@ -2973,6 +3620,9 @@ pipelines:
     raw: true
   - name: team-directory
     to: team_directory
+    raw: true
+  - name: team-profiles
+    to: team_championship
     raw: true
   - name: game-cards
     to: game_card
@@ -2991,6 +3641,12 @@ pipelines:
     raw: true
   - name: rounds
     to: phase_round
+    raw: true
+  - name: team-campaign
+    to: team_campaign_point
+    raw: true
+  - name: team-enrichment
+    to: team_rating_chart
     raw: true
 uniques:
   player_game:

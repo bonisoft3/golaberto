@@ -203,6 +203,16 @@
         },
         {
           "action": "sync+restart",
+          "path": "../shell/screens/equipe-campeonato.html",
+          "target": "/srv/shell/screens/equipe-campeonato.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/equipe-campeonato.css",
+          "target": "/srv/shell/screens/equipe-campeonato.css"
+        },
+        {
+          "action": "sync+restart",
           "path": "../shell/screens/jogador.html",
           "target": "/srv/shell/screens/jogador.html"
         },
@@ -230,6 +240,16 @@
           "action": "sync+restart",
           "path": "../shell/handlers/both-scored.js",
           "target": "/srv/shell/handlers/both-scored.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/chart-compare.js",
+          "target": "/srv/shell/handlers/chart-compare.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/chart-metric.js",
+          "target": "/srv/shell/handlers/chart-metric.js"
         },
         {
           "action": "sync+restart",
@@ -263,6 +283,16 @@
         },
         {
           "action": "sync+restart",
+          "path": "../shell/handlers/team-chart-fold.js",
+          "target": "/srv/shell/handlers/team-chart-fold.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/team-chart-seed.js",
+          "target": "/srv/shell/handlers/team-chart-seed.js"
+        },
+        {
+          "action": "sync+restart",
           "path": "../shell/renderers/country-flag.js",
           "target": "/srv/shell/renderers/country-flag.js"
         },
@@ -283,6 +313,16 @@
         },
         {
           "action": "sync+restart",
+          "path": "../shell/renderers/team-chart.js",
+          "target": "/srv/shell/renderers/team-chart.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/team-location.js",
+          "target": "/srv/shell/renderers/team-location.js"
+        },
+        {
+          "action": "sync+restart",
           "path": "../shell/shared/catalog.css",
           "target": "/srv/shell/shared/catalog.css"
         },
@@ -295,6 +335,11 @@
           "action": "sync+restart",
           "path": "../shell/shared/games.css",
           "target": "/srv/shell/shared/games.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/shared/team.css",
+          "target": "/srv/shell/shared/team.css"
         },
         {
           "action": "sync+restart",
@@ -812,6 +857,26 @@
       {
         "from": null,
         "srcs": [
+          "shell/screens/equipe-campeonato.html"
+        ],
+        "dst": "/srv/shell/screens/equipe-campeonato.html",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/screens/equipe-campeonato.css"
+        ],
+        "dst": "/srv/shell/screens/equipe-campeonato.css",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
           "shell/screens/jogador.html"
         ],
         "dst": "/srv/shell/screens/jogador.html",
@@ -865,6 +930,26 @@
           "shell/handlers/both-scored.js"
         ],
         "dst": "/srv/shell/handlers/both-scored.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/handlers/chart-compare.js"
+        ],
+        "dst": "/srv/shell/handlers/chart-compare.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/handlers/chart-metric.js"
+        ],
+        "dst": "/srv/shell/handlers/chart-metric.js",
         "link": true,
         "parents": false,
         "exclude": []
@@ -932,6 +1017,26 @@
       {
         "from": null,
         "srcs": [
+          "shell/handlers/team-chart-fold.js"
+        ],
+        "dst": "/srv/shell/handlers/team-chart-fold.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/handlers/team-chart-seed.js"
+        ],
+        "dst": "/srv/shell/handlers/team-chart-seed.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
           "shell/renderers/country-flag.js"
         ],
         "dst": "/srv/shell/renderers/country-flag.js",
@@ -972,6 +1077,26 @@
       {
         "from": null,
         "srcs": [
+          "shell/renderers/team-chart.js"
+        ],
+        "dst": "/srv/shell/renderers/team-chart.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/renderers/team-location.js"
+        ],
+        "dst": "/srv/shell/renderers/team-location.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
           "shell/shared/catalog.css"
         ],
         "dst": "/srv/shell/shared/catalog.css",
@@ -995,6 +1120,16 @@
           "shell/shared/games.css"
         ],
         "dst": "/srv/shell/shared/games.css",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/shared/team.css"
+        ],
+        "dst": "/srv/shell/shared/team.css",
         "link": true,
         "parents": false,
         "exclude": []
@@ -1422,25 +1557,34 @@
       "shell/screens/arbitro.css",
       "shell/screens/equipe.html",
       "shell/screens/equipe.css",
+      "shell/screens/equipe-campeonato.html",
+      "shell/screens/equipe-campeonato.css",
       "shell/screens/jogador.html",
       "shell/screens/jogador.css",
       "shell/screens/campeonato.html",
       "shell/screens/campeonato.css",
       "shell/handlers/blank-null.js",
       "shell/handlers/both-scored.js",
+      "shell/handlers/chart-compare.js",
+      "shell/handlers/chart-metric.js",
       "shell/handlers/count-or-null.js",
       "shell/handlers/country-option.js",
       "shell/handlers/geography-selection.js",
       "shell/handlers/page-value.js",
       "shell/handlers/row-id.js",
       "shell/handlers/search-key.js",
+      "shell/handlers/team-chart-fold.js",
+      "shell/handlers/team-chart-seed.js",
       "shell/renderers/country-flag.js",
       "shell/renderers/geography-label.js",
       "shell/renderers/home-date.js",
       "shell/renderers/team-badge.js",
+      "shell/renderers/team-chart.js",
+      "shell/renderers/team-location.js",
       "shell/shared/catalog.css",
       "shell/shared/chrome.css",
       "shell/shared/games.css",
+      "shell/shared/team.css",
       "messages/pt-BR.json",
       "messages/es-AR.json",
       "messages/en-GB.json",
@@ -1572,25 +1716,34 @@
           "shell/screens/arbitro.css",
           "shell/screens/equipe.html",
           "shell/screens/equipe.css",
+          "shell/screens/equipe-campeonato.html",
+          "shell/screens/equipe-campeonato.css",
           "shell/screens/jogador.html",
           "shell/screens/jogador.css",
           "shell/screens/campeonato.html",
           "shell/screens/campeonato.css",
           "shell/handlers/blank-null.js",
           "shell/handlers/both-scored.js",
+          "shell/handlers/chart-compare.js",
+          "shell/handlers/chart-metric.js",
           "shell/handlers/count-or-null.js",
           "shell/handlers/country-option.js",
           "shell/handlers/geography-selection.js",
           "shell/handlers/page-value.js",
           "shell/handlers/row-id.js",
           "shell/handlers/search-key.js",
+          "shell/handlers/team-chart-fold.js",
+          "shell/handlers/team-chart-seed.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js",
           "shell/renderers/home-date.js",
           "shell/renderers/team-badge.js",
+          "shell/renderers/team-chart.js",
+          "shell/renderers/team-location.js",
           "shell/shared/catalog.css",
           "shell/shared/chrome.css",
           "shell/shared/games.css",
+          "shell/shared/team.css",
           "messages/pt-BR.json",
           "messages/es-AR.json",
           "messages/en-GB.json",

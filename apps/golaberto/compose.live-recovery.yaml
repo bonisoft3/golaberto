@@ -1,0 +1,11 @@
+# Local recovery override: use only with COMPOSE_PROJECT_NAME=golaberto.
+# Retains the original archive volume. Other project names require their own
+# pre-existing recovered volume and cannot silently mount the live database.
+services:
+  apps_golaberto-transform:
+    environment:
+      PLAYER_STATS_BOOTSTRAP: "false"
+volumes:
+  golaberto-archive:
+    external: true
+    name: ${COMPOSE_PROJECT_NAME:-golaberto}-restored-20261004

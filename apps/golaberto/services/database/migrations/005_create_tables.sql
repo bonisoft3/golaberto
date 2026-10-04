@@ -98,6 +98,8 @@ CREATE TABLE IF NOT EXISTS team (
   "foundation_display" portable_string GENERATED ALWAYS AS (lpad(extract(day from foundation)::int::text, 2, '0') || '/' || lpad(extract(month from foundation)::int::text, 2, '0') || '/' || extract(year from foundation)::int::text) STORED,
   "search_name" portable_string GENERATED ALWAYS AS (name) STORED,
   "search_key" portable_string GENERATED ALWAYS AS (replace(replace(replace(name, 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED,
+  "latitude" portable_double CHECK (latitude >= -90 AND latitude <= 90),
+  "longitude" portable_double CHECK (longitude >= -180 AND longitude <= 180),
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -176,6 +178,8 @@ CREATE TABLE IF NOT EXISTS player_game (
   "bench" portable_bool DEFAULT false NOT NULL,
   "day" portable_date,
   "day_display" portable_string GENERATED ALWAYS AS (lpad(extract(day from day)::int::text, 2, '0') || '/' || lpad(extract(month from day)::int::text, 2, '0') || '/' || extract(year from day)::int::text) STORED,
+  "off_rating" portable_double,
+  "def_rating" portable_double,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL,
   CHECK (bench = false OR (on_minute = 0 AND (off_minute IS NOT NULL) = false))
@@ -285,6 +289,70 @@ CREATE TABLE IF NOT EXISTS team_directory (
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS team_championship (
+  "id" portable_string PRIMARY KEY,
+  "team_id" uuid NOT NULL REFERENCES team(id) ON DELETE CASCADE,
+  "championship_id" uuid NOT NULL REFERENCES championship(id) ON DELETE CASCADE,
+  "championship_name" portable_string NOT NULL,
+  "begins" portable_date NOT NULL,
+  "ends" portable_date NOT NULL,
+  "status" portable_string NOT NULL CHECK (status IN ('current', 'upcoming', 'past')),
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS team_roster (
+  "id" portable_string PRIMARY KEY,
+  "team_id" uuid NOT NULL REFERENCES team(id) ON DELETE CASCADE,
+  "championship_id" uuid NOT NULL REFERENCES championship(id) ON DELETE CASCADE,
+  "player_id" uuid NOT NULL REFERENCES player(id) ON DELETE CASCADE,
+  "player_name" portable_string NOT NULL,
+  "position" portable_string NOT NULL CHECK (position IN ('', 'g', 'dr', 'dc', 'dl', 'dm', 'cm', 'am', 'fw')),
+  "played" portable_int32 NOT NULL CHECK (played >= 0),
+  "started" portable_int32 NOT NULL CHECK (started >= 0),
+  "came_on" portable_int32 NOT NULL CHECK (came_on >= 0),
+  "bench" portable_int32 NOT NULL CHECK (bench >= 0),
+  "minutes" portable_int32 NOT NULL CHECK (minutes >= 0),
+  "goals" portable_int32 NOT NULL CHECK (goals >= 0),
+  "penalties" portable_int32 NOT NULL CHECK (penalties >= 0),
+  "own_goals" portable_int32 NOT NULL CHECK (own_goals >= 0),
+  "yellow" portable_int32 NOT NULL CHECK (yellow >= 0),
+  "red" portable_int32 NOT NULL CHECK (red >= 0),
+  "championship_name" portable_string NOT NULL,
+  "off_rating" portable_double,
+  "def_rating" portable_double,
+  "contribution" portable_double,
+  "contribution_per90" portable_double,
+  "goals_per90" portable_double,
+  "search_key" portable_string GENERATED ALWAYS AS (replace(replace(replace(player_name, 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED,
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS team_player_history (
+  "id" portable_string PRIMARY KEY,
+  "team_id" uuid NOT NULL REFERENCES team(id) ON DELETE CASCADE,
+  "player_id" uuid NOT NULL REFERENCES player(id) ON DELETE CASCADE,
+  "player_name" portable_string NOT NULL,
+  "position" portable_string NOT NULL CHECK (position IN ('', 'g', 'dr', 'dc', 'dl', 'dm', 'cm', 'am', 'fw')),
+  "country" portable_string,
+  "is_current" portable_bool NOT NULL,
+  "search_key" portable_string GENERATED ALWAYS AS (replace(replace(replace(player_name, 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED,
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS team_group (
+  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  "group_id" uuid NOT NULL REFERENCES stage_group(id) ON DELETE CASCADE,
+  "team_id" uuid NOT NULL REFERENCES team(id) ON DELETE CASCADE,
+  "add_sub" portable_int32 DEFAULT 0 NOT NULL CHECK (add_sub >= -99 AND add_sub <= 99),
+  "bias" portable_int32 DEFAULT 0 NOT NULL CHECK (bias >= -99 AND bias <= 99),
+  "comment" portable_string CHECK (char_length(comment) <= 500),
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS geography_region (
   "id" portable_string PRIMARY KEY,
   "name" portable_string NOT NULL,
@@ -370,6 +438,9 @@ CREATE TABLE IF NOT EXISTS team_game (
   "kickoff_local" portable_string GENERATED ALWAYS AS (CASE WHEN kickoff IS NULL THEN '' ELSE lpad(extract(hour from (kickoff AT TIME ZONE 'America/Sao_Paulo'))::int::text, 2, '0') || ':' || lpad(extract(minute from (kickoff AT TIME ZONE 'America/Sao_Paulo'))::int::text, 2, '0') END) STORED,
   "show_country" portable_bool DEFAULT false,
   "opponent_country" portable_string DEFAULT '',
+  "category_id" uuid REFERENCES category(id) ON DELETE CASCADE,
+  "phase_key" portable_string NOT NULL,
+  "category_key" portable_string NOT NULL,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -403,6 +474,11 @@ CREATE TABLE IF NOT EXISTS player_stat (
   "red" portable_int32 NOT NULL CHECK (red >= 0),
   "championship_name" portable_string NOT NULL,
   "team_name" portable_string NOT NULL,
+  "off_rating" portable_double,
+  "def_rating" portable_double,
+  "contribution" portable_double,
+  "contribution_per90" portable_double,
+  "goals_per90" portable_double,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -416,23 +492,92 @@ CREATE TABLE IF NOT EXISTS phase_round (
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS team_comment (
+  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  "team_id" uuid NOT NULL REFERENCES team(id) ON DELETE CASCADE,
+  "app_user_id" uuid DEFAULT auth_uid() NOT NULL REFERENCES app_user(id) ON DELETE CASCADE,
+  "body" portable_string NOT NULL CHECK (char_length(regexp_replace(body, '^[\s\u0085\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]+|[\s\u0085\u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]+$', '', 'g')) > 0 AND char_length(body) <= 1000),
+  "created_at" portable_timestamp DEFAULT now() NOT NULL,
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS team_campaign_point (
+  "id" portable_string PRIMARY KEY,
+  "group_id" uuid NOT NULL REFERENCES stage_group(id) ON DELETE CASCADE,
+  "team_id" uuid NOT NULL REFERENCES team(id) ON DELETE CASCADE,
+  "game_id" uuid NOT NULL REFERENCES game(id) ON DELETE CASCADE,
+  "sequence" portable_int32 NOT NULL CHECK (sequence >= 1),
+  "day" portable_date NOT NULL,
+  "points" portable_int32 NOT NULL,
+  "position" portable_int32 NOT NULL CHECK (position >= 1),
+  "result" portable_string NOT NULL CHECK (result IN ('w', 'd', 'l')),
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS team_odds_history (
+  "id" portable_string PRIMARY KEY,
+  "group_id" uuid NOT NULL REFERENCES stage_group(id) ON DELETE CASCADE,
+  "team_id" uuid NOT NULL REFERENCES team(id) ON DELETE CASCADE,
+  "recorded_on" portable_date NOT NULL,
+  "captured_at" portable_timestamp,
+  "position" portable_int32 NOT NULL CHECK (position >= 1),
+  "percent" portable_double NOT NULL CHECK (percent >= 0 AND percent <= 100),
+  "source" portable_string NOT NULL CHECK (source IN ('imported', 'computed')),
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS team_rating_chart (
+  "id" portable_string PRIMARY KEY,
+  "team_id" uuid NOT NULL REFERENCES team(id) ON DELETE CASCADE,
+  "period" portable_string NOT NULL CHECK (period IN ('1m', '3m', '6m', '1y', '5y', 'all')),
+  "series_json" portable_string NOT NULL,
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS team_odds_chart (
+  "id" portable_string PRIMARY KEY,
+  "group_id" uuid NOT NULL REFERENCES stage_group(id) ON DELETE CASCADE,
+  "team_id" uuid NOT NULL REFERENCES team(id) ON DELETE CASCADE,
+  "zone_id" uuid NOT NULL REFERENCES zone(id) ON DELETE CASCADE,
+  "series_json" portable_string NOT NULL,
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS team_roster_total (
+  "id" portable_string PRIMARY KEY,
+  "team_id" uuid NOT NULL REFERENCES team(id) ON DELETE CASCADE,
+  "championship_id" uuid NOT NULL REFERENCES championship(id) ON DELETE CASCADE,
+  "championship_name" portable_string NOT NULL,
+  "played" portable_int32 NOT NULL CHECK (played >= 0),
+  "started" portable_int32 NOT NULL CHECK (started >= 0),
+  "came_on" portable_int32 NOT NULL CHECK (came_on >= 0),
+  "bench" portable_int32 NOT NULL CHECK (bench >= 0),
+  "minutes" portable_int32 NOT NULL CHECK (minutes >= 0),
+  "goals" portable_int32 NOT NULL CHECK (goals >= 0),
+  "penalties" portable_int32 NOT NULL CHECK (penalties >= 0),
+  "own_goals" portable_int32 NOT NULL CHECK (own_goals >= 0),
+  "yellow" portable_int32 NOT NULL CHECK (yellow >= 0),
+  "red" portable_int32 NOT NULL CHECK (red >= 0),
+  "off_rating" portable_double,
+  "def_rating" portable_double,
+  "contribution" portable_double,
+  "contribution_per90" portable_double,
+  "goals_per90" portable_double,
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS home_championship (
   "id" uuid PRIMARY KEY REFERENCES championship(id) ON DELETE CASCADE,
   "region" portable_string NOT NULL,
   "region_name" portable_string NOT NULL,
   "full_name" portable_string NOT NULL,
   "strength" portable_double NOT NULL,
-  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
-  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS team_group (
-  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  "group_id" uuid NOT NULL REFERENCES stage_group(id) ON DELETE CASCADE,
-  "team_id" uuid NOT NULL REFERENCES team(id) ON DELETE CASCADE,
-  "add_sub" portable_int32 DEFAULT 0 NOT NULL CHECK (add_sub >= -99 AND add_sub <= 99),
-  "bias" portable_int32 DEFAULT 0 NOT NULL CHECK (bias >= -99 AND bias <= 99),
-  "comment" portable_string CHECK (char_length(comment) <= 500),
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -558,6 +703,10 @@ CREATE INDEX IF NOT EXISTS idx_team_chance_group_id ON team_chance USING btree (
 CREATE INDEX IF NOT EXISTS idx_zone_chance_group_id ON zone_chance USING btree (group_id);
 CREATE INDEX IF NOT EXISTS idx_position_chance_group_id ON position_chance USING btree (group_id);
 CREATE INDEX IF NOT EXISTS idx_team_rating_team_id ON team_rating USING btree (team_id);
+CREATE INDEX IF NOT EXISTS idx_team_championship_team_id ON team_championship USING btree (team_id);
+CREATE INDEX IF NOT EXISTS idx_team_roster_team_id ON team_roster USING btree (team_id);
+CREATE INDEX IF NOT EXISTS idx_team_player_history_team_id ON team_player_history USING btree (team_id);
+CREATE INDEX IF NOT EXISTS idx_team_group_team_id ON team_group USING btree (team_id);
 CREATE INDEX IF NOT EXISTS idx_game_card_phase_id ON game_card USING btree (phase_id);
 CREATE INDEX IF NOT EXISTS idx_game_card_day ON game_card USING btree (day);
 CREATE INDEX IF NOT EXISTS idx_game_card_stadium_id ON game_card USING btree (stadium_id);
@@ -567,7 +716,15 @@ CREATE INDEX IF NOT EXISTS idx_team_game_game_id ON team_game USING btree (game_
 CREATE INDEX IF NOT EXISTS idx_comment_game_id ON comment USING btree (game_id);
 CREATE INDEX IF NOT EXISTS idx_player_stat_player_id ON player_stat USING btree (player_id);
 CREATE INDEX IF NOT EXISTS idx_player_stat_team_id ON player_stat USING btree (team_id);
-CREATE INDEX IF NOT EXISTS idx_team_group_team_id ON team_group USING btree (team_id);
+CREATE INDEX IF NOT EXISTS idx_team_comment_team_id ON team_comment USING btree (team_id);
+CREATE INDEX IF NOT EXISTS idx_team_campaign_point_group_id ON team_campaign_point USING btree (group_id);
+CREATE INDEX IF NOT EXISTS idx_team_campaign_point_team_id ON team_campaign_point USING btree (team_id);
+CREATE INDEX IF NOT EXISTS idx_team_odds_history_group_id ON team_odds_history USING btree (group_id);
+CREATE INDEX IF NOT EXISTS idx_team_odds_history_team_id ON team_odds_history USING btree (team_id);
+CREATE INDEX IF NOT EXISTS idx_team_rating_chart_team_id ON team_rating_chart USING btree (team_id);
+CREATE INDEX IF NOT EXISTS idx_team_odds_chart_group_id ON team_odds_chart USING btree (group_id);
+CREATE INDEX IF NOT EXISTS idx_team_odds_chart_team_id ON team_odds_chart USING btree (team_id);
+CREATE INDEX IF NOT EXISTS idx_team_roster_total_team_id ON team_roster_total USING btree (team_id);
 CREATE INDEX IF NOT EXISTS idx_team_player_player_id ON team_player USING btree (player_id);
 CREATE INDEX IF NOT EXISTS idx_team_player_team_id ON team_player USING btree (team_id);
 CREATE INDEX IF NOT EXISTS idx_home_game_card_championship_id ON home_game_card USING btree (championship_id);

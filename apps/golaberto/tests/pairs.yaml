@@ -581,10 +581,28 @@ pairs:
     of: equipe
     accepts:
       - accept-team-page
-    says: 'a team''s page shows its facts, its games and its squad''s seasons'
+    says: 'a team''s profile shows its facts, current and past championships, and deduplicated current and past players'
     given: {}
     when: view
-    then: output.squad.size() > 11
+    then: output.championships.size() > 0 && output.players.size() > 11
+  - id: test-team-championship-page
+    ir: test-team-championship-page
+    of: equipe-campeonato
+    accepts:
+      - accept-team-championship-page
+    says: 'one team in one championship shows only its fixtures, its group tables, roster and detailed probabilities'
+    given: {}
+    when: view
+    then: output.roster.size() > 11 && output.other_championship_rows == 0
+  - id: test-team-championship-gone
+    ir: test-team-championship-gone
+    of: equipe-campeonato
+    accepts:
+      - accept-team-championship-gone
+    says: a team and championship with no connection say so
+    given: {}
+    when: view
+    then: output.empty == "Esta equipe não está registrada neste campeonato."
   - id: test-player-page
     ir: test-player-page
     of: jogador

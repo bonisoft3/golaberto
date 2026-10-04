@@ -31,6 +31,7 @@ pipeline:
     - mapping: |
         let row = if this.exists("data") && this.data.type() == "string" && this.data.length() > 0 { this.data.parse_json() } else { {} }
         let table = $row.__table.or("")
+        let before = $row.__before.or("{}").parse_json()
         let scope = match {
           this.boot.or(false) => "stage_group?select=id,phase_id",
           $table == "game" => "stage_group?select=id,phase_id&phase_id=eq." + $row.phase_id,
@@ -39,6 +40,8 @@ pipeline:
           $table == "team_group" => "stage_group?select=id,phase_id&id=eq." + $row.group_id,
           $table == "zone" => "stage_group?select=id,phase_id&id=eq." + $row.group_id,
           $table == "championship" => "stage_group?select=id,phase_id,phase!inner(championship_id)&phase.championship_id=eq." + $row.id,
+          # Team metadata is joined at read time; only its sort name moves a table.
+          $table == "team" && $before.exists("name") && $before.name == $row.name => null,
           $table == "team" => "stage_group?select=id,phase_id,team_group!inner(team_id)&team_group.team_id=eq." + $row.id,
           _ => null,
         }
@@ -71,7 +74,7 @@ pipeline:
         - branch:
             processors:
               - http:
-                  url: ${CRUD_URL}/game?select=phase_id,home_id,away_id,home_score,away_score,home_aet,away_aet,home_pen,away_pen,day,kickoff&played=is.true&phase_id=eq.${! this.group.phase_id }&order=day.asc,kickoff.asc.nullsfirst
+                  url: ${CRUD_URL}/game?select=id,phase_id,round,home_id,away_id,home_score,away_score,home_aet,away_aet,home_pen,away_pen,day,kickoff&played=is.true&phase_id=eq.${! this.group.phase_id }&order=day.asc,kickoff.asc.nullsfirst,id.asc
                   verb: GET
                   headers:
                     Authorization: Bearer ${SERVICE_JWT}

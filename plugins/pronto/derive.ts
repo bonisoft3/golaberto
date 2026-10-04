@@ -27,12 +27,17 @@ import type { ParsedExpr } from "./cel-emit.ts";
 import { enumValues } from "./cel-emit.ts";
 import { parseCel } from "./cel.ts";
 import { celFixtures } from "./cel-fixtures.ts";
-import { DENIED, jessieFacts, jessieSelfTest, splitCompletion } from "./jessie.ts";
+import {
+  DENIED,
+  jessieFacts,
+  jessieSelfTest,
+  splitCompletion,
+} from "./jessie.ts";
 import {
   EXCEPTION_REASONS,
-  type Scale,
   ownedTokens,
   resolveImports,
+  type Scale,
   scaleDeclarations,
   scaleSources,
   scaleSteps,
@@ -42,32 +47,38 @@ import {
 } from "./styles.ts";
 import { scalesSelfTest } from "./scales.ts";
 import { celSites, renderCel, renderIr } from "./derive-cel.ts";
-import { renderValidations, resolveEdges, type VEntity, validationLint, validationsSelfTest } from "./validations.ts";
+import {
+  renderValidations,
+  resolveEdges,
+  validationLint,
+  validationsSelfTest,
+  type VEntity,
+} from "./validations.ts";
 import { claims, irAccepts, irPaths, LEDGER } from "./acceptance.ts";
 import { declarations, irIds, irRoutes, KINDS } from "./objects.ts";
 import { irDiagrams } from "./diagrams.ts";
 import {
   acceptanceFacts,
   artifactFacts,
-  designCssFacts,
-  importFacts,
-  mergeFacts,
-  jessieFactRows,
-  styleFacts,
-  literalFacts,
   bijectionFacts,
-  nestingFacts,
   celFacts,
+  designCssFacts,
   diagramFacts,
   type FactChart,
-  i18nFacts,
   type FactTemplateMsgRef,
   type FactTemplateProse,
+  i18nFacts,
+  importFacts,
+  jessieFactRows,
+  literalFacts,
+  mergeFacts,
+  nestingFacts,
   programFacts,
   renderFacts,
-  scanTemplateI18n,
   scaleFacts,
+  scanTemplateI18n,
   sha256Hex,
+  styleFacts,
 } from "./facts.ts";
 type Spec = { col: string; op: string; value?: string }[] | null;
 
@@ -89,7 +100,12 @@ type MachineProjection = {
   assignStrings: string[];
   filterSpec: Spec;
 };
-type ScreenProjection = { tables: string[]; handlers: string[]; adapters: string[]; machines: MachineProjection[] };
+type ScreenProjection = {
+  tables: string[];
+  handlers: string[];
+  adapters: string[];
+  machines: MachineProjection[];
+};
 
 /** The slice of a program's entity this pass reads off its own export; every
  * module it hands the entities to declares the slice it reads for itself. */
@@ -122,18 +138,30 @@ export function irDecisions(html: string): Map<string, string> {
     // OPEN_TAG ends at the first ">", so an odd quote count means one sat inside
     // an attribute value and the match stops short of the tag's real end.
     if ((open[0].match(/"/g)?.length ?? 0) % 2 !== 0) {
-      throw new Error(`a <${open[1]}> decision: a ">" inside an attribute value ends its opening tag early`);
+      throw new Error(
+        `a <${
+          open[1]
+        }> decision: a ">" inside an attribute value ends its opening tag early`,
+      );
     }
     const id = ID.exec(open[0]);
     if (!id) throw new Error(`a <${open[1]}> decision carries no id`);
     const rest = text.slice(open.index + open[0].length);
     const close = new RegExp(`</${open[1]}[\\s>]`, "i").exec(rest);
-    if (close === null) throw new Error(`decision "${id[1]}": its <${open[1]}> is never closed`);
+    if (close === null) {
+      throw new Error(`decision "${id[1]}": its <${open[1]}> is never closed`);
+    }
     const body = rest.slice(0, close.index);
     if (new RegExp(`<${open[1]}[\\s>]`, "i").test(body)) {
-      throw new Error(`decision "${id[1]}": a nested <${open[1]}> ends the body before the prose does`);
+      throw new Error(
+        `decision "${id[1]}": a nested <${
+          open[1]
+        }> ends the body before the prose does`,
+      );
     }
-    if (bodies.has(id[1])) throw new Error(`decision "${id[1]}": two elements bear this id`);
+    if (bodies.has(id[1])) {
+      throw new Error(`decision "${id[1]}": two elements bear this id`);
+    }
     bodies.set(id[1], body);
   }
   return bodies;
@@ -159,7 +187,9 @@ const ENTITY = /&[^;<>\s]*;/g;
 export function decisionNote(body: string): string {
   const text = body.replace(/<[^>]*>/g, "").replace(ENTITY, (e) => {
     const c = ENTITIES[e];
-    if (c === undefined) throw new Error(`${e} is not an entity this pass decodes`);
+    if (c === undefined) {
+      throw new Error(`${e} is not an entity this pass decodes`);
+    }
     return c;
   }).replace(/\s+/g, " ").trim();
   if (text === "") throw new Error("it holds no prose");
@@ -168,7 +198,12 @@ export function decisionNote(body: string): string {
 
 export function renderDerived(
   pkg: string,
-  screens: { name: string; entities: string[]; handlers: string[]; adapters: string[] }[],
+  screens: {
+    name: string;
+    entities: string[];
+    handlers: string[];
+    adapters: string[];
+  }[],
   // The app's own Jessie modules, by basename: an adapter it does not ship is
   // the terminal's, and the route names the path the terminal serves it at.
   available: Set<string>,
@@ -183,20 +218,33 @@ export function renderDerived(
     // The terminal serves its own under /omnishell/components/, so an app that
     // ships none of its own carries no copy to drift.
     const adapterMods = adapters
-      .map((a) => (available.has(a) ? `"shell/handlers/${a}.js"` : `"/omnishell/components/${a}.js"`))
+      .map((
+        a,
+      ) => (available.has(a)
+        ? `"shell/handlers/${a}.js"`
+        : `"/omnishell/components/${a}.js"`)
+      )
       .join(", ");
-    return `\t${quoteKey(name)}: {\n\t\treads: [${reads}]\n\t\tfiles: {handlers: [${mods}], adapters: [${adapterMods}]}\n\t}`;
+    return `\t${
+      quoteKey(name)
+    }: {\n\t\treads: [${reads}]\n\t\tfiles: {handlers: [${mods}], adapters: [${adapterMods}]}\n\t}`;
   });
   // JSON escapes are CUE escapes, and CUE reads `\(` as interpolation only
   // after a backslash JSON.stringify would have doubled.
-  const notes = decisions.map(({ id, note }) => `\t${quoteKey(id)}: ${JSON.stringify(note)}`);
-  const accepts = tests.map(({ id, accepts }) => `\t${quoteKey(id)}: ${JSON.stringify(accepts)}`);
+  const notes = decisions.map(({ id, note }) =>
+    `\t${quoteKey(id)}: ${JSON.stringify(note)}`
+  );
+  const accepts = tests.map(({ id, accepts }) =>
+    `\t${quoteKey(id)}: ${JSON.stringify(accepts)}`
+  );
   // Pattern constraints, not concrete fields: this file supplies notes and
   // citations to the decisions and tests program.cue declares and declares
   // none of its own.
   return `// generated by pronto from the ir and the screen markup — do not edit\npackage ${pkg}\n\ncode: surface: screens: {\n${
     blocks.join("\n")
-  }\n}\n\n_irNotes: {\n${notes.join("\n")}\n}\n\ncode: meta: decisions: [Id=string]: note: _irNotes[Id]\n\n_irAccepts: {\n${
+  }\n}\n\n_irNotes: {\n${
+    notes.join("\n")
+  }\n}\n\ncode: meta: decisions: [Id=string]: note: _irNotes[Id]\n\n_irAccepts: {\n${
     accepts.join("\n")
   }\n}\n\ncode: meta: tests: [Id=string]: accepts: _irAccepts[Id]\n`;
 }
@@ -214,9 +262,14 @@ export function acceptsFor(
   const present = new Set(elements);
   return Object.keys(irOf).sort().map((id) => {
     if (!present.has(irOf[id])) {
-      throw new Error(`test "${id}" has no element with id="${irOf[id]}" data-kind="test"`);
+      throw new Error(
+        `test "${id}" has no element with id="${irOf[id]}" data-kind="test"`,
+      );
     }
-    return { id, accepts: cited.filter((c) => c.test === irOf[id]).map((c) => c.accept) };
+    return {
+      id,
+      accepts: cited.filter((c) => c.test === irOf[id]).map((c) => c.accept),
+    };
   });
 }
 
@@ -238,7 +291,11 @@ export function notesFor(
   return Object.keys(irOf).sort().map((id) => {
     const body = bodies.get(irOf[id]);
     if (body === undefined) {
-      throw new Error(`decision "${id}" has no element with id="${irOf[id]}" data-kind="decision"`);
+      throw new Error(
+        `decision "${id}" has no element with id="${
+          irOf[id]
+        }" data-kind="decision"`,
+      );
     }
     try {
       return { id, note: decisionNote(body) };
@@ -255,7 +312,10 @@ async function decisionNotes(
   irOf: Record<string, string>,
 ): Promise<{ id: string; note: string }[]> {
   try {
-    return notesFor(irDecisions(await Deno.readTextFile(`${appDir}/${source}`)), irOf);
+    return notesFor(
+      irDecisions(await Deno.readTextFile(`${appDir}/${source}`)),
+      irOf,
+    );
   } catch (e) {
     fail(`${source}: ${(e as Error).message}`);
   }
@@ -264,7 +324,8 @@ async function decisionNotes(
 /** Scan the app's screens and write program_derived.cue beside program.cue. */
 export async function derive(appDir: string): Promise<void> {
   const program = await Deno.readTextFile(`${appDir}/program.cue`);
-  const pkg = /^package (\w+)$/m.exec(program)?.[1] ?? fail(`${appDir}/program.cue names no package`);
+  const pkg = /^package (\w+)$/m.exec(program)?.[1] ??
+    fail(`${appDir}/program.cue names no package`);
 
   // Both derivations unify back into the entities this export reads, so a
   // constraint the previous run derived would judge a row the current run's
@@ -281,27 +342,27 @@ export async function derive(appDir: string): Promise<void> {
       ".",
       "-e",
       "{entities: code.state.entities, ir: code.meta.ir.source, " +
-        "decisions: {for k, v in code.meta.decisions {(k): v.ir}}, " +
-        "tests: {for k, t in code.meta.tests {(k): t.ir}}, " +
-        "paths: {for k, s in code.surface.screens {(k): {for n, p in s.paths {(n): p.accepts}}}}, " +
-        // Both sides of the literal rule's join, out of this one export, and the
-        // shared stylesheets the emission itself carries. Read off disk instead, a missing or stale file
-        // would yield an empty step set and a green lint. The checked-in copies are held equal to these by the
-        // artifact hashes, so nothing is lost by grading the emission.
-        "scale: out.scale, design: code.surface.design, " +
-        "designCss: out.files[\"shell/design.css\"].text, " +
-        "shellCss: out.files[\"shell/shell.css\"].text, " +
-        "entry: out.terminal.surface.entry, " +
-        // The terminal's own paths: what this pass spawns to read the markup,
-        // and the published schema it vets each chart against.
-        "markupReader: out.terminal.surface.markupReader, " +
-        "machineSchema: out.terminal.surface.machineSchema, " +
-        "statics: [for s in out.cluster.meta.statics {file: s.file, target: s.target}], " +
-        "shared: {for k, s in code.surface.screens {(k): s.files.shared}}, " +
-        "pendingLiterals: code.meta.design.pendingLiterals, " +
-        // `program` rather than `code`: a field named for the value it holds would
-        // shadow it inside the struct literal and export an incomplete `_`.
-        "program: code}",
+      "decisions: {for k, v in code.meta.decisions {(k): v.ir}}, " +
+      "tests: {for k, t in code.meta.tests {(k): t.ir}}, " +
+      "paths: {for k, s in code.surface.screens {(k): {for n, p in s.paths {(n): p.accepts}}}}, " +
+      // Both sides of the literal rule's join, out of this one export, and the
+      // shared stylesheets the emission itself carries. Read off disk instead, a missing or stale file
+      // would yield an empty step set and a green lint. The checked-in copies are held equal to these by the
+      // artifact hashes, so nothing is lost by grading the emission.
+      "scale: out.scale, design: code.surface.design, " +
+      'designCss: out.files["shell/design.css"].text, ' +
+      'shellCss: out.files["shell/shell.css"].text, ' +
+      "entry: out.terminal.surface.entry, " +
+      // The terminal's own paths: what this pass spawns to read the markup,
+      // and the published schema it vets each chart against.
+      "markupReader: out.terminal.surface.markupReader, " +
+      "machineSchema: out.terminal.surface.machineSchema, " +
+      "statics: [for s in out.cluster.meta.statics {file: s.file, target: s.target}], " +
+      "shared: {for k, s in code.surface.screens {(k): s.files.shared}}, " +
+      "pendingLiterals: code.meta.design.pendingLiterals, " +
+      // `program` rather than `code`: a field named for the value it holds would
+      // shadow it inside the struct literal and export an incomplete `_`.
+      "program: code}",
       "--out",
       "json",
     ],
@@ -309,7 +370,11 @@ export async function derive(appDir: string): Promise<void> {
     stdout: "piped",
     stderr: "inherit",
   }).output();
-  if (!exported.success) fail("cue export of the entities, the ir source and the decision ids failed");
+  if (!exported.success) {
+    fail(
+      "cue export of the entities, the ir source and the decision ids failed",
+    );
+  }
   const exp: {
     // The export carries a whole #Entity; each module declares the slice it
     // reads, and this pass reads both the lint slice and the validation one.
@@ -340,53 +405,103 @@ export async function derive(appDir: string): Promise<void> {
     };
     state: {
       pipelines?: Record<string, { fold?: { pair: { table: string } } }>;
-      computations?: Record<string, { src: string; wasm: string[] }>;
+      computations?: Record<
+        string,
+        { src: string; wasm: string[]; onComplete?: string }
+      >;
     };
-    meta?: { i18n?: { default?: string; locales?: Record<string, { path: string }> } };
+    meta?: {
+      i18n?: { default?: string; locales?: Record<string, { path: string }> };
+    };
   };
   const defaultLocale = appMeta?.i18n?.default ?? null;
   const locales = Object.keys(appMeta?.i18n?.locales ?? {});
   const catalogs: Record<string, Record<string, unknown>> = {};
   for (const loc of locales) {
-    const text = await ifMissing(Deno.readTextFile(`${appDir}/messages/${loc}.json`), null);
-    if (text === null) fail(`messages/${loc}.json is declared in i18n.locales and missing`);
+    const text = await ifMissing(
+      Deno.readTextFile(`${appDir}/messages/${loc}.json`),
+      null,
+    );
+    if (text === null) {
+      fail(`messages/${loc}.json is declared in i18n.locales and missing`);
+    }
     let catalog: unknown;
     try {
       catalog = JSON.parse(text);
     } catch (e) {
       fail(`messages/${loc}.json does not parse: ${(e as Error).message}`);
     }
-    if (catalog === null || typeof catalog !== "object" || Array.isArray(catalog)) fail(`messages/${loc}.json is not an object`);
+    if (
+      catalog === null || typeof catalog !== "object" || Array.isArray(catalog)
+    ) fail(`messages/${loc}.json is not an object`);
     catalogs[loc] = catalog as Record<string, unknown>;
   }
   const notes = await decisionNotes(appDir, exp.ir, exp.decisions);
-  const byTable = new Map(Object.entries(entities).map(([name, e]) => [e.table, name]));
+  const byTable = new Map(
+    Object.entries(entities).map(([name, e]) => [e.table, name]),
+  );
 
   // A validation's module joins the handlers in `modules` below, so the
   // denylist and the completion rule reach it through the same fact rows.
   const TAG = "$validation$";
-  const modules: { path: string; references: string[]; completion: string; role: string }[] = [];
-  const validated: { entity: string; name: string; edges: ReturnType<typeof resolveEdges>; statements: string; completion: string }[] = [];
+  const modules: {
+    path: string;
+    references: string[];
+    completion: string;
+    role: string;
+  }[] = [];
+  const validated: {
+    entity: string;
+    name: string;
+    edges: ReturnType<typeof resolveEdges>;
+    statements: string;
+    completion: string;
+  }[] = [];
   const surfaceEndowments = surface.endowments ?? {};
   for (const [ename, e] of Object.entries(entities)) {
     for (const [vname, v] of Object.entries(e.validations ?? {})) {
       const why = validationLint(entities, ename, vname);
       if (why !== null) fail(why);
-      const src = await ifMissing(Deno.readTextFile(`${appDir}/${v.src}`), null);
-      if (src === null) fail(`entity ${ename}: validations "${vname}" src ${v.src} is not a file`);
-      if (src.includes(TAG)) fail(`entity ${ename}: validations "${vname}": ${v.src} contains the quote tag ${TAG}`);
+      const src = await ifMissing(
+        Deno.readTextFile(`${appDir}/${v.src}`),
+        null,
+      );
+      if (src === null) {
+        fail(
+          `entity ${ename}: validations "${vname}" src ${v.src} is not a file`,
+        );
+      }
+      if (src.includes(TAG)) {
+        fail(
+          `entity ${ename}: validations "${vname}": ${v.src} contains the quote tag ${TAG}`,
+        );
+      }
       const split = splitCompletion(src);
-      if (split === null) fail(`entity ${ename}: validations "${vname}": ${v.src} must end in an arrow function`);
-      const granted = surfaceEndowments[v.src] ?? surfaceEndowments[v.src.split("/").pop() ?? ""] ?? [];
+      if (split === null) {
+        fail(
+          `entity ${ename}: validations "${vname}": ${v.src} must end in an arrow function`,
+        );
+      }
+      const granted = surfaceEndowments[v.src] ??
+        surfaceEndowments[v.src.split("/").pop() ?? ""] ?? [];
       const facts = jessieFacts(src, granted);
       modules.push({ path: v.src, ...facts, role: "validation" });
       // A handler's denied name is a fact row a query reports; a validation's
       // is a refusal here, because its source is embedded in a migration and
       // there is no later seat that would catch it.
       for (const name of facts.references) {
-        fail(`entity ${ename}: validations "${vname}": ${v.src} reaches ${name} (${DENIED.find((d) => d.name === name)!.reason})`);
+        fail(
+          `entity ${ename}: validations "${vname}": ${v.src} reaches ${name} (${
+            DENIED.find((d) => d.name === name)!.reason
+          })`,
+        );
       }
-      validated.push({ entity: ename, name: vname, edges: resolveEdges(entities, ename, v.via), ...split });
+      validated.push({
+        entity: ename,
+        name: vname,
+        edges: resolveEdges(entities, ename, v.via),
+        ...split,
+      });
     }
   }
 
@@ -397,9 +512,16 @@ export async function derive(appDir: string): Promise<void> {
     const src = await ifMissing(Deno.readTextFile(`${appDir}/${c.src}`), null);
     if (src === null) fail(`computation ${cname}: src ${c.src} is not a file`);
     for (const w of c.wasm) {
-      if ((await ifMissing(Deno.stat(`${appDir}/${w}`), null)) === null) fail(`computation ${cname}: wasm ${w} is not a file`);
+      if ((await ifMissing(Deno.stat(`${appDir}/${w}`), null)) === null) {
+        fail(`computation ${cname}: wasm ${w} is not a file`);
+      }
     }
-    modules.push({ path: c.src, references: jessieFacts(src).references, completion: "exports", role: "computation" });
+    modules.push({
+      path: c.src,
+      references: jessieFacts(src).references,
+      completion: "exports",
+      role: "computation",
+    });
   }
 
   // One parse per distinct constraint, and then the parser is done: the IR
@@ -414,16 +536,27 @@ export async function derive(appDir: string): Promise<void> {
     try {
       parsed.set(s.cel, parseCel(s.cel));
     } catch (e) {
-      fail(`entity ${s.entity}: cel ${JSON.stringify(s.cel)} does not parse: ${(e as Error).message}`);
+      fail(
+        `entity ${s.entity}: cel ${JSON.stringify(s.cel)} does not parse: ${
+          (e as Error).message
+        }`,
+      );
     }
   }
   await Deno.mkdir(`${appDir}/.pronto`, { recursive: true });
   await Deno.writeTextFile(`${appDir}/.pronto/cel.json`, renderIr(parsed));
   const irs = new Map<string, ParsedExpr>(
-    Object.entries(JSON.parse(await Deno.readTextFile(`${appDir}/.pronto/cel.json`)) as Record<string, ParsedExpr>),
+    Object.entries(
+      JSON.parse(
+        await Deno.readTextFile(`${appDir}/.pronto/cel.json`),
+      ) as Record<string, ParsedExpr>,
+    ),
   );
   try {
-    await Deno.writeTextFile(`${appDir}/program_cel.cue`, renderCel(pkg, sites, irs));
+    await Deno.writeTextFile(
+      `${appDir}/program_cel.cue`,
+      renderCel(pkg, sites, irs),
+    );
   } catch (e) {
     fail((e as Error).message);
   }
@@ -437,7 +570,9 @@ export async function derive(appDir: string): Promise<void> {
   // module exactly where one is declared under the name.
   const available = new Set<string>();
   for (const f of await entries(`${appDir}/shell/handlers`)) {
-    if (f.isFile && f.name.endsWith(".js")) available.add(f.name.slice(0, -".js".length));
+    if (f.isFile && f.name.endsWith(".js")) {
+      available.add(f.name.slice(0, -".js".length));
+    }
   }
 
   // What the screens say, as the terminal reads them. Spawned like the export
@@ -445,29 +580,50 @@ export async function derive(appDir: string): Promise<void> {
   // declares is the path that resolves; --no-config because every module the
   // reader loads is a static import of its own.
   const read = await new Deno.Command("deno", {
-    args: ["run", "--no-lock", "--no-check", "--no-config", "--allow-read=.", exp.markupReader, "."],
+    args: [
+      "run",
+      "--no-lock",
+      "--no-check",
+      "--no-config",
+      "--allow-read=.",
+      exp.markupReader,
+      ".",
+    ],
     cwd: appDir,
     stdout: "piped",
     stderr: "inherit",
   }).output();
   if (!read.success) fail(`${exp.markupReader} refused this app's markup`);
-  const { screens: projected }: { screens: Record<string, ScreenProjection> } = JSON.parse(
-    new TextDecoder().decode(read.stdout),
-  );
+  const { screens: projected }: { screens: Record<string, ScreenProjection> } =
+    JSON.parse(
+      new TextDecoder().decode(read.stdout),
+    );
 
-  const screens: { name: string; entities: string[]; handlers: string[]; adapters: string[] }[] = [];
+  const screens: {
+    name: string;
+    entities: string[];
+    handlers: string[];
+    adapters: string[];
+  }[] = [];
   const machines: { screen: string; region: MachineProjection }[] = [];
   const allMsgRefs: FactTemplateMsgRef[] = [];
   const allProse: FactTemplateProse[] = [];
   for (const [name, screen] of Object.entries(projected)) {
     if (defaultLocale !== null) {
-      const html = await Deno.readTextFile(`${appDir}/shell/screens/${name}.html`);
-      const { msgRefs, prose } = scanTemplateI18n(html, name, `shell/screens/${name}.html`);
+      const html = await Deno.readTextFile(
+        `${appDir}/shell/screens/${name}.html`,
+      );
+      const { msgRefs, prose } = scanTemplateI18n(
+        html,
+        name,
+        `shell/screens/${name}.html`,
+      );
       allMsgRefs.push(...msgRefs);
       allProse.push(...prose);
     }
     const named = screen.tables.map((t) =>
-      byTable.get(t) ?? fail(`${name}.html reads "${t}", the table of no declared entity`)
+      byTable.get(t) ??
+        fail(`${name}.html reads "${t}", the table of no declared entity`)
     );
     // A machine's leaves are handler modules like any other: its references
     // (and the assign strings that resolve) join the screen's derived
@@ -475,7 +631,9 @@ export async function derive(appDir: string): Promise<void> {
     const machineNames = new Set<string>();
     for (const region of screen.machines) {
       for (const r of region.refs) machineNames.add(r);
-      for (const s of region.assignStrings) if (available.has(s)) machineNames.add(s);
+      for (const s of region.assignStrings) {
+        if (available.has(s)) machineNames.add(s);
+      }
       machines.push({ screen: name, region });
     }
     screens.push({
@@ -494,10 +652,16 @@ export async function derive(appDir: string): Promise<void> {
   // would throw at the first write. The write of program_validations.cue waits
   // for this, so a refused derivation leaves no artifact for the emitter.
   const held = new Set<string>();
-  for (const s of screens) for (const name of s.entities) held.add(entities[name].table);
+  for (const s of screens) {
+    for (const name of s.entities) held.add(entities[name].table);
+  }
   for (const [sname, s] of Object.entries(surface.screens)) {
     for (const f of s.forms ?? []) {
-      if (entities[f.entity] === undefined) fail(`screen ${sname}: form ${f.id} names undeclared entity ${f.entity}`);
+      if (entities[f.entity] === undefined) {
+        fail(
+          `screen ${sname}: form ${f.id} names undeclared entity ${f.entity}`,
+        );
+      }
       held.add(entities[f.entity].table);
     }
   }
@@ -514,7 +678,10 @@ export async function derive(appDir: string): Promise<void> {
     }
   }
   if (validated.length > 0) {
-    await Deno.writeTextFile(`${appDir}/program_validations.cue`, renderValidations(pkg, validated));
+    await Deno.writeTextFile(
+      `${appDir}/program_validations.cue`,
+      renderValidations(pkg, validated),
+    );
   }
 
   // A machine is vetted against the PUBLISHED #Machine (machine.cue), never a
@@ -541,7 +708,10 @@ export async function derive(appDir: string): Promise<void> {
           initial: string;
           context?: Record<string, unknown>;
         } | null;
-        if (typeof parsed?.field !== "string" || typeof parsed.initial !== "string") {
+        if (
+          typeof parsed?.field !== "string" ||
+          typeof parsed.initial !== "string"
+        ) {
           refuse(`${screen}.html: data-machine names no field and initial`);
         }
         const file = `.pronto/machine-${i}.json`;
@@ -552,9 +722,16 @@ export async function derive(appDir: string): Promise<void> {
           try {
             parsedRow = JSON.parse(region.emptyRow);
           } catch (e) {
-            refuse(`${screen}.html: data-empty-row does not parse: ${(e as Error).message}`);
+            refuse(
+              `${screen}.html: data-empty-row does not parse: ${
+                (e as Error).message
+              }`,
+            );
           }
-          if (parsedRow === null || typeof parsedRow !== "object" || Array.isArray(parsedRow)) {
+          if (
+            parsedRow === null || typeof parsedRow !== "object" ||
+            Array.isArray(parsedRow)
+          ) {
             refuse(`${screen}.html: data-empty-row is not an object`);
           }
           const row = parsedRow as Record<string, unknown>;
@@ -568,13 +745,21 @@ export async function derive(appDir: string): Promise<void> {
           for (const [k, v] of Object.entries(parsed.context ?? {})) {
             if (k in row && row[k] !== v) {
               refuse(
-                `${screen}.html: data-empty-row["${k}"] is ${JSON.stringify(row[k])} but the machine's ` +
+                `${screen}.html: data-empty-row["${k}"] is ${
+                  JSON.stringify(row[k])
+                } but the machine's ` +
                   `context says ${JSON.stringify(v)} — one fact, two values`,
               );
             }
           }
-        } else if (!(region.filterSpec ?? []).some((p) => p.col === "id" && p.op === "eq")) {
-          refuse(`${screen}.html: a machine region with no data-empty-row must pin its id with an eq filter`);
+        } else if (
+          !(region.filterSpec ?? []).some((p) =>
+            p.col === "id" && p.op === "eq"
+          )
+        ) {
+          refuse(
+            `${screen}.html: a machine region with no data-empty-row must pin its id with an eq filter`,
+          );
         }
       }
       const vet = await new Deno.Command("cue", {
@@ -586,7 +771,9 @@ export async function derive(appDir: string): Promise<void> {
         cwd: appDir,
         stderr: "inherit",
       }).output();
-      if (!vet.success) refuse("a data-machine does not fit the published #Machine");
+      if (!vet.success) {
+        refuse("a data-machine does not fit the published #Machine");
+      }
     } catch (e) {
       if (!(e instanceof Refused)) throw e;
       refused = e.message;
@@ -619,7 +806,10 @@ export async function derive(appDir: string): Promise<void> {
     machine: m.region.machine,
   }));
   const irHtml = await Deno.readTextFile(`${appDir}/${exp.ir}`);
-  let diagrams: { nodes: Parameters<typeof diagramFacts>[0]; edges: Parameters<typeof diagramFacts>[1] };
+  let diagrams: {
+    nodes: Parameters<typeof diagramFacts>[0];
+    edges: Parameters<typeof diagramFacts>[1];
+  };
   let ledger: ReturnType<typeof acceptanceFacts>;
   try {
     diagrams = await irDiagrams(irHtml);
@@ -628,7 +818,11 @@ export async function derive(appDir: string): Promise<void> {
   }
   let accepts: ReturnType<typeof acceptsFor>;
   try {
-    accepts = acceptsFor(irIds(irHtml).get("test") ?? [], irAccepts(irHtml), exp.tests);
+    accepts = acceptsFor(
+      irIds(irHtml).get("test") ?? [],
+      irAccepts(irHtml),
+      exp.tests,
+    );
   } catch (e) {
     fail(`${exp.ir}: ${(e as Error).message}`);
   }
@@ -643,11 +837,20 @@ export async function derive(appDir: string): Promise<void> {
   } catch (e) {
     fail(`${LEDGER}: ${(e as Error).message}`);
   }
-  await Deno.writeTextFile(`${appDir}/program_derived.cue`, renderDerived(pkg, screens, available, notes, accepts));
+  await Deno.writeTextFile(
+    `${appDir}/program_derived.cue`,
+    renderDerived(pkg, screens, available, notes, accepts),
+  );
 
   let bijection: ReturnType<typeof bijectionFacts>;
   try {
-    bijection = bijectionFacts(KINDS, irIds(irHtml), irRoutes(irHtml), declarations(exp.program), exp.program);
+    bijection = bijectionFacts(
+      KINDS,
+      irIds(irHtml),
+      irRoutes(irHtml),
+      declarations(exp.program),
+      exp.program,
+    );
   } catch (e) {
     fail(`${exp.ir}: ${(e as Error).message}`);
   }
@@ -660,12 +863,29 @@ export async function derive(appDir: string): Promise<void> {
   // does not — never a file to skip, which would drop it from both token rules.
   const sharedPaths = new Set(Object.values(exp.shared).flat());
   const appCss: { path: string; css: string }[] = [];
-  for (const rel of [...screens.map((s) => `shell/screens/${s.name}.css`), ...[...sharedPaths].sort()]) {
-    appCss.push({ path: rel, css: await Deno.readTextFile(`${appDir}/${rel}`).catch(() => fail(`${rel} does not open`)) });
+  for (
+    const rel of [
+      ...screens.map((s) => `shell/screens/${s.name}.css`),
+      ...[...sharedPaths].sort(),
+    ]
+  ) {
+    appCss.push({
+      path: rel,
+      css: await Deno.readTextFile(`${appDir}/${rel}`).catch(() =>
+        fail(`${rel} does not open`)
+      ),
+    });
   }
-  const scanned = appCss.map(({ path, css }) => ({ path, ...scanStylesheet(css) }));
+  const scanned = appCss.map(({ path, css }) => ({
+    path,
+    ...scanStylesheet(css),
+  }));
   const appTokens = scanned.map(({ path, tokens }) => ({ path, tokens }));
-  const literals = scanned.map(({ path, literals, exceptions }) => ({ path, literals, exceptions }));
+  const literals = scanned.map(({ path, literals, exceptions }) => ({
+    path,
+    literals,
+    exceptions,
+  }));
   // Where each stylesheet's imports resolve from. A screen's CSS is injected as
   // a <style> in the document, so an @import in it resolves against the
   // document's directory (#Screen.files.shared says so, and is what makes
@@ -674,12 +894,17 @@ export async function derive(appDir: string): Promise<void> {
   const servedAt = new Map(exp.statics.map((s) => [s.file, s.target]));
   const servedDir = (file: string): string => {
     const target = servedAt.get(file) ??
-      fail(`${file} is read as a stylesheet and served nowhere, so nothing can reach it`);
+      fail(
+        `${file} is read as a stylesheet and served nowhere, so nothing can reach it`,
+      );
     return target.slice(0, target.lastIndexOf("/"));
   };
   const documentDir = servedDir(exp.entry);
   const imports = resolveImports([
-    ...appCss.map((s) => ({ ...s, base: sharedPaths.has(s.path) ? servedDir(s.path) : documentDir })),
+    ...appCss.map((s) => ({
+      ...s,
+      base: sharedPaths.has(s.path) ? servedDir(s.path) : documentDir,
+    })),
     { path: "shell/design.css", css: exp.designCss, base: documentDir },
     { path: "shell/shell.css", css: exp.shellCss, base: documentDir },
   ]);
@@ -689,12 +914,23 @@ export async function derive(appDir: string): Promise<void> {
   // module named in two roles gets a row per role, so the reach is judged
   // against each cage it actually runs in.
   const adapterNames = new Set(screens.flatMap((s) => s.adapters));
-  const handlerNames = new Set(screens.flatMap((s) => s.handlers.map((h) => h.replace(/^.*\//, "").replace(/\.js$/, ""))));
+  const handlerNames = new Set(
+    screens.flatMap((s) =>
+      s.handlers.map((h) => h.replace(/^.*\//, "").replace(/\.js$/, ""))
+    ),
+  );
   for (const name of [...available].sort()) {
     const rel = `shell/handlers/${name}.js`;
-    const granted = surfaceEndowments[rel] ?? surfaceEndowments[`${name}.js`] ?? [];
-    const facts = jessieFacts(await Deno.readTextFile(`${appDir}/${rel}`), granted);
-    const roles = [...(adapterNames.has(name) ? ["adapter"] : []), ...(handlerNames.has(name) || !adapterNames.has(name) ? ["handler"] : [])];
+    const granted = surfaceEndowments[rel] ?? surfaceEndowments[`${name}.js`] ??
+      [];
+    const facts = jessieFacts(
+      await Deno.readTextFile(`${appDir}/${rel}`),
+      granted,
+    );
+    const roles = [
+      ...(adapterNames.has(name) ? ["adapter"] : []),
+      ...(handlerNames.has(name) || !adapterNames.has(name) ? ["handler"] : []),
+    ];
     for (const role of roles) modules.push({ path: rel, ...facts, role });
   }
   // A validation's module and a handler's are pushed by two passes, so the
@@ -704,33 +940,44 @@ export async function derive(appDir: string): Promise<void> {
   // Hashed after every write above, so a derived file's row is what derive left
   // on disk and a source's row is what it read.
   const shaText = (text: string) => sha256Hex(new TextEncoder().encode(text));
-  const sha = async (path: string) => sha256Hex(await Deno.readFile(`${appDir}/${path}`));
+  const sha = async (path: string) =>
+    sha256Hex(await Deno.readFile(`${appDir}/${path}`));
   const artifacts: { path: string; sha256: string; derived: boolean }[] = [];
-  for (const [path, derived] of [
-    ["program.cue", false],
-    ["DESIGN.md", false],
-    [exp.ir, false],
-    [LEDGER, false],
-    [".pronto/cel.json", true],
-    ["program_cel.cue", true],
-    ["program_derived.cue", true],
-    ...(validated.length > 0 ? [["program_validations.cue", true]] : []),
-  ] as [string, boolean][]) {
+  for (
+    const [path, derived] of [
+      ["program.cue", false],
+      ["DESIGN.md", false],
+      [exp.ir, false],
+      [LEDGER, false],
+      [".pronto/cel.json", true],
+      ["program_cel.cue", true],
+      ["program_derived.cue", true],
+      ...(validated.length > 0 ? [["program_validations.cue", true]] : []),
+    ] as [string, boolean][]
+  ) {
     artifacts.push({ path, sha256: await sha(path), derived });
   }
-  for (const c of Object.values(state.computations ?? {})) artifacts.push({ path: c.src, sha256: await sha(c.src), derived: false });
+  for (const c of Object.values(state.computations ?? {})) {
+    artifacts.push({ path: c.src, sha256: await sha(c.src), derived: false });
+  }
   // The stylesheets the rules above read, so that editing one and not
   // regenerating is a stale-row finding rather than a green literal lint over
   // yesterday's numbers. A screen's row hashes the STRING scanned rather than a
   // second read of the path: re-reading here would let a write between the scan
   // and the hash produce a row that matches a file no rule was derived from,
   // which is the race the guard exists to close.
-  for (const { path, css } of appCss) artifacts.push({ path, sha256: await shaText(css), derived: false });
+  for (const { path, css } of appCss) {
+    artifacts.push({ path, sha256: await shaText(css), derived: false });
+  }
   // design.css is emitted, so it is graded by the declaration rules rather than
   // scanned, and its row exists only to catch a hand-edit to the emission.
   // Hashed off disk because that is the artifact the claim is about, and
   // because write.ts prefixes a provenance header the export does not carry.
-  artifacts.push({ path: "shell/design.css", sha256: await sha("shell/design.css"), derived: true });
+  artifacts.push({
+    path: "shell/design.css",
+    sha256: await sha("shell/design.css"),
+    derived: true,
+  });
 
   await Deno.mkdir(`${appDir}/.pronto`, { recursive: true });
   await Deno.writeTextFile(
@@ -743,7 +990,12 @@ export async function derive(appDir: string): Promise<void> {
       artifactFacts(artifacts),
       celFacts(sites, [...irs.keys()]),
       styleFacts(ownedTokens(shared), appTokens),
-      literalFacts(scaleSteps(exp.scale, exp.design), literals, EXCEPTION_REASONS, exp.pendingLiterals),
+      literalFacts(
+        scaleSteps(exp.scale, exp.design),
+        literals,
+        EXCEPTION_REASONS,
+        exp.pendingLiterals,
+      ),
       scaleFacts(scaleSources(exp.scale), scaleDeclarations(exp.scale)),
       designCssFacts(tokenDeclarations(exp.designCss)),
       importFacts(exp.statics, imports),
@@ -753,7 +1005,6 @@ export async function derive(appDir: string): Promise<void> {
       i18nFacts(defaultLocale, locales, catalogs, allMsgRefs, allProse),
     )),
   );
-
 }
 
 function selfTest(): void {
@@ -761,16 +1012,75 @@ function selfTest(): void {
   // brackets, an apostrophe, a parenthesis before the closing period, and an
   // opening letter no rule may lowercase. A transform this size is pinned
   // against what a reviewer writes, not a fixture written to pass it.
-  const notes: { name: string; body: string; note?: string; throws?: string }[] = [
-    { name: "decision-01", body: "<p>Every entity is tab: a\ngallery's state is the visit's, so nothing here emits a table, a policy, a\npublication or a pipeline; the durability ladder is demonstrated by the rows\ndying with the tab, not documented.</p>", note: "Every entity is tab: a gallery's state is the visit's, so nothing here emits a table, a policy, a publication or a pipeline; the durability ladder is demonstrated by the rows dying with the tab, not documented" },
-    { name: "decision-02", body: "<p>Behavior is data, not code:\neach stateful component carries a #Machine — the XState-JSON subset whose one\naction is writing the target state into the row's field — executed by the\nterminal through the same path as a Jessie reduce, so replay, tempo and the\nrefusal event apply with the machine knowing nothing; a guard is the cliff\nwhere an app writes the reduce instead, and this gallery crosses it once, for\na value and never for a decision (<a href=\"#decision-34\">decision-34</a>).</p>", note: "Behavior is data, not code: each stateful component carries a #Machine — the XState-JSON subset whose one action is writing the target state into the row's field — executed by the terminal through the same path as a Jessie reduce, so replay, tempo and the refusal event apply with the machine knowing nothing; a guard is the cliff where an app writes the reduce instead, and this gallery crosses it once, for a value and never for a decision (decision-34)" },
-    { name: "decision-03", body: "<p>State names are the ARIA\nattribute's values: the switch's states are 'true' and 'false' because\naria-checked speaks that vocabulary, so one field binds the semantics and the\nstyling hook and no component carries two spellings of one\nfact.</p>", note: "State names are the ARIA attribute's values: the switch's states are 'true' and 'false' because aria-checked speaks that vocabulary, so one field binds the semantics and the styling hook and no component carries two spellings of one fact" },
-    { name: "decision-04", body: "<p>Components are CUE\ndefinitions composed into #Screen.markup at emit; the omnishell-- tag\nsurvives in the served HTML as an inert wrapper — visible to devtools, CSS\nand the visual battery, registered with nothing, no customElements.define and\nno shadow DOM.</p>", note: "Components are CUE definitions composed into #Screen.markup at emit; the omnishell-- tag survives in the served HTML as an inert wrapper — visible to devtools, CSS and the visual battery, registered with nothing, no customElements.define and no shadow DOM" },
-    { name: "decision-05", body: "<p>shadcn's theming is CSS\nvariables, so its palette lands on the design-token contract and dark mode is\neach token's light-dark() twin; there is no theme-switch control because\nappearance is a token resolution, reviewed as the storyboard's -dark\nframes.</p>", note: "shadcn's theming is CSS variables, so its palette lands on the design-token contract and dark mode is each token's light-dark() twin; there is no theme-switch control because appearance is a token resolution, reviewed as the storyboard's -dark frames" },
-    { name: "decision-06", body: "<p>No auth block: a component\ngallery gates nobody, and a sign-in in front of a reference is a\ntoll.</p>", note: "No auth block: a component gallery gates nobody, and a sign-in in front of a reference is a toll" },
-    { name: "decision-07", body: "<p>The machine is the writer\nof the initial fact: the switch region carries no data-empty-row and the\nterminal synthesizes its fallback row from the filter's pinned id plus the\nmachine's initial; the row-readout pane keeps a data-empty-row because it\nshows a fuller row than the machine's one field, and the generate-time\nagreement check keeps the two declarations one fact.</p>", note: "The machine is the writer of the initial fact: the switch region carries no data-empty-row and the terminal synthesizes its fallback row from the filter's pinned id plus the machine's initial; the row-readout pane keeps a data-empty-row because it shows a fuller row than the machine's one field, and the generate-time agreement check keeps the two declarations one fact" },
-    { name: "decision-08", body: "<p>The combobox is\ndeliberately last in the catalog: its virtual-focus behavior is the one part\nwith no declarative precedent, and it is where the widget tier died the first\ntime.</p>", note: "The combobox is deliberately last in the catalog: its virtual-focus behavior is the one part with no declarative precedent, and it is where the widget tier died the first time" },
-    { name: "decision-09", body: "<p>N triggers share one\nmachine, so the discrimination is component-generated: #Tabs writes one\n<code>click@trigger-&lt;name&gt;</code> transition per (state, trigger) pair —\na grammar the interpreter resolves and no author learns — and each\ntransition's literal assigns keep one <code>aria-selected</code> column per\ntrigger in step, so the ARIA contract stays plain bindings over the\nrow.</p>", note: "N triggers share one machine, so the discrimination is component-generated: #Tabs writes one click@trigger-<name> transition per (state, trigger) pair — a grammar the interpreter resolves and no author learns — and each transition's literal assigns keep one aria-selected column per trigger in step, so the ARIA contract stays plain bindings over the row" },
+  const notes: {
+    name: string;
+    body: string;
+    note?: string;
+    throws?: string;
+  }[] = [
+    {
+      name: "decision-01",
+      body:
+        "<p>Every entity is tab: a\ngallery's state is the visit's, so nothing here emits a table, a policy, a\npublication or a pipeline; the durability ladder is demonstrated by the rows\ndying with the tab, not documented.</p>",
+      note:
+        "Every entity is tab: a gallery's state is the visit's, so nothing here emits a table, a policy, a publication or a pipeline; the durability ladder is demonstrated by the rows dying with the tab, not documented",
+    },
+    {
+      name: "decision-02",
+      body:
+        '<p>Behavior is data, not code:\neach stateful component carries a #Machine — the XState-JSON subset whose one\naction is writing the target state into the row\'s field — executed by the\nterminal through the same path as a Jessie reduce, so replay, tempo and the\nrefusal event apply with the machine knowing nothing; a guard is the cliff\nwhere an app writes the reduce instead, and this gallery crosses it once, for\na value and never for a decision (<a href="#decision-34">decision-34</a>).</p>',
+      note:
+        "Behavior is data, not code: each stateful component carries a #Machine — the XState-JSON subset whose one action is writing the target state into the row's field — executed by the terminal through the same path as a Jessie reduce, so replay, tempo and the refusal event apply with the machine knowing nothing; a guard is the cliff where an app writes the reduce instead, and this gallery crosses it once, for a value and never for a decision (decision-34)",
+    },
+    {
+      name: "decision-03",
+      body:
+        "<p>State names are the ARIA\nattribute's values: the switch's states are 'true' and 'false' because\naria-checked speaks that vocabulary, so one field binds the semantics and the\nstyling hook and no component carries two spellings of one\nfact.</p>",
+      note:
+        "State names are the ARIA attribute's values: the switch's states are 'true' and 'false' because aria-checked speaks that vocabulary, so one field binds the semantics and the styling hook and no component carries two spellings of one fact",
+    },
+    {
+      name: "decision-04",
+      body:
+        "<p>Components are CUE\ndefinitions composed into #Screen.markup at emit; the omnishell-- tag\nsurvives in the served HTML as an inert wrapper — visible to devtools, CSS\nand the visual battery, registered with nothing, no customElements.define and\nno shadow DOM.</p>",
+      note:
+        "Components are CUE definitions composed into #Screen.markup at emit; the omnishell-- tag survives in the served HTML as an inert wrapper — visible to devtools, CSS and the visual battery, registered with nothing, no customElements.define and no shadow DOM",
+    },
+    {
+      name: "decision-05",
+      body:
+        "<p>shadcn's theming is CSS\nvariables, so its palette lands on the design-token contract and dark mode is\neach token's light-dark() twin; there is no theme-switch control because\nappearance is a token resolution, reviewed as the storyboard's -dark\nframes.</p>",
+      note:
+        "shadcn's theming is CSS variables, so its palette lands on the design-token contract and dark mode is each token's light-dark() twin; there is no theme-switch control because appearance is a token resolution, reviewed as the storyboard's -dark frames",
+    },
+    {
+      name: "decision-06",
+      body:
+        "<p>No auth block: a component\ngallery gates nobody, and a sign-in in front of a reference is a\ntoll.</p>",
+      note:
+        "No auth block: a component gallery gates nobody, and a sign-in in front of a reference is a toll",
+    },
+    {
+      name: "decision-07",
+      body:
+        "<p>The machine is the writer\nof the initial fact: the switch region carries no data-empty-row and the\nterminal synthesizes its fallback row from the filter's pinned id plus the\nmachine's initial; the row-readout pane keeps a data-empty-row because it\nshows a fuller row than the machine's one field, and the generate-time\nagreement check keeps the two declarations one fact.</p>",
+      note:
+        "The machine is the writer of the initial fact: the switch region carries no data-empty-row and the terminal synthesizes its fallback row from the filter's pinned id plus the machine's initial; the row-readout pane keeps a data-empty-row because it shows a fuller row than the machine's one field, and the generate-time agreement check keeps the two declarations one fact",
+    },
+    {
+      name: "decision-08",
+      body:
+        "<p>The combobox is\ndeliberately last in the catalog: its virtual-focus behavior is the one part\nwith no declarative precedent, and it is where the widget tier died the first\ntime.</p>",
+      note:
+        "The combobox is deliberately last in the catalog: its virtual-focus behavior is the one part with no declarative precedent, and it is where the widget tier died the first time",
+    },
+    {
+      name: "decision-09",
+      body:
+        "<p>N triggers share one\nmachine, so the discrimination is component-generated: #Tabs writes one\n<code>click@trigger-&lt;name&gt;</code> transition per (state, trigger) pair —\na grammar the interpreter resolves and no author learns — and each\ntransition's literal assigns keep one <code>aria-selected</code> column per\ntrigger in step, so the ARIA contract stays plain bindings over the\nrow.</p>",
+      note:
+        "N triggers share one machine, so the discrimination is component-generated: #Tabs writes one click@trigger-<name> transition per (state, trigger) pair — a grammar the interpreter resolves and no author learns — and each transition's literal assigns keep one aria-selected column per trigger in step, so the ARIA contract stays plain bindings over the row",
+    },
     {
       name: "the typographic entities and an escaped ampersand",
       body: `<p>It said &ldquo;a &mdash; b&rdquo; &amp; meant &lt;b&gt;.</p>`,
@@ -778,7 +1088,8 @@ function selfTest(): void {
     },
     {
       name: "a nested <a> and <code>",
-      body: `<p>See <a href="#decision-33">decision-33</a> and <code>role="grid"</code>.</p>`,
+      body:
+        `<p>See <a href="#decision-33">decision-33</a> and <code>role="grid"</code>.</p>`,
       note: `See decision-33 and role="grid"`,
     },
     {
@@ -798,12 +1109,22 @@ function selfTest(): void {
       body: `<strong>A lead.</strong> And the rest.`,
       note: "A lead. And the rest",
     },
-    { name: "an element holding only markup", body: `<p> <em> </em> </p>`, throws: "it holds no prose" },
+    {
+      name: "an element holding only markup",
+      body: `<p> <em> </em> </p>`,
+      throws: "it holds no prose",
+    },
   ];
 
   // Whatever element an ir wraps its prose in, the body ends at that element's
   // own close tag.
-  const scans: { name: string; html: string; expect?: string[]; note?: string; throws?: string }[] = [
+  const scans: {
+    name: string;
+    html: string;
+    expect?: string[];
+    note?: string;
+    throws?: string;
+  }[] = [
     {
       name: "section, p and li all carry a decision",
       html: `<section id="a" data-kind="decision"><p>a.</p></section>` +
@@ -813,13 +1134,15 @@ function selfTest(): void {
     },
     {
       name: "a css selector is not a decision",
-      html: `<style>[data-kind="decision"] { color: red }</style><p id="a" data-kind="decision">a.</p>`,
+      html:
+        `<style>[data-kind="decision"] { color: red }</style><p id="a" data-kind="decision">a.</p>`,
       expect: ["a"],
     },
     {
       name: "a > inside an attribute value",
       html: `<p id="a" data-kind="decision" title="a > b">real prose.</p>`,
-      throws: 'a <p> decision: a ">" inside an attribute value ends its opening tag early',
+      throws:
+        'a <p> decision: a ">" inside an attribute value ends its opening tag early',
     },
     {
       name: "a decision element bearing no id",
@@ -836,7 +1159,8 @@ function selfTest(): void {
     },
     {
       name: "one id on two elements",
-      html: `<p id="a" data-kind="decision">first.</p><p id="a" data-kind="decision">second.</p>`,
+      html:
+        `<p id="a" data-kind="decision">first.</p><p id="a" data-kind="decision">second.</p>`,
       throws: 'decision "a": two elements bear this id',
     },
     {
@@ -848,7 +1172,12 @@ function selfTest(): void {
 
   // `ir` defaults to the decision's own id and may name another element; a
   // decision naming none is the one shape that cannot reach a note.
-  const maps: { name: string; irOf: Record<string, string>; expect?: [string, string][]; throws?: string }[] = [
+  const maps: {
+    name: string;
+    irOf: Record<string, string>;
+    expect?: [string, string][];
+    throws?: string;
+  }[] = [
     {
       name: "a decision names another element",
       irOf: { "decision-blob-keys-v2": "decision-blob-keys" },
@@ -862,19 +1191,27 @@ function selfTest(): void {
     {
       name: "a decision whose element the ir does not carry",
       irOf: { "decision-99": "decision-99" },
-      throws: 'decision "decision-99" has no element with id="decision-99" data-kind="decision"',
+      throws:
+        'decision "decision-99" has no element with id="decision-99" data-kind="decision"',
     },
   ];
-  const bodies = new Map([["decision-blob-keys", "<p>keys.</p>"], ["decision-01", "<p>one.</p>"]]);
+  const bodies = new Map([["decision-blob-keys", "<p>keys.</p>"], [
+    "decision-01",
+    "<p>one.</p>",
+  ]]);
 
   // Rendering, not just transforming: the key is where a backslash gets a
   // second chance to be read as an escape.
-  const rendered = renderDerived("p", [], new Set(), [{ id: "decision\\blob", note: 'a "q" and a \\ and \\(x)' }], [
+  const rendered = renderDerived("p", [], new Set(), [{
+    id: "decision\\blob",
+    note: 'a "q" and a \\ and \\(x)',
+  }], [
     { id: "test-one", accepts: ["accept-a", "accept-b"] },
     { id: "test-none", accepts: [] },
   ]);
   const wantKey = '\t"decision\\\\blob": "a \\"q\\" and a \\\\ and \\\\(x)"';
-  const wantAccepts = '_irAccepts: {\n\t"test-one": ["accept-a","accept-b"]\n\t"test-none": []\n}\n\ncode: meta: tests: [Id=string]: accepts: _irAccepts[Id]\n';
+  const wantAccepts =
+    '_irAccepts: {\n\t"test-one": ["accept-a","accept-b"]\n\t"test-none": []\n}\n\ncode: meta: tests: [Id=string]: accepts: _irAccepts[Id]\n';
   // The cel emitters are pinned here too: one self-test, wired to one rule.
   const celFindings = celFixtures();
   for (const f of celFindings) console.error(`FAIL ${f.message}`);
@@ -886,25 +1223,58 @@ function selfTest(): void {
   for (const f of validationFailures) console.error(`FAIL ${f}`);
   const scaleFailures = scalesSelfTest();
   for (const f of scaleFailures) console.error(`FAIL ${f}`);
-  let failed = celFindings.length + styleFailures.length + jessieFailures.length + validationFailures.length +
+  let failed = celFindings.length + styleFailures.length +
+    jessieFailures.length + validationFailures.length +
     scaleFailures.length;
   if (!rendered.includes(wantKey)) {
     failed++;
-    console.error(`FAIL a backslash in a decision id:\n  got  ${JSON.stringify(rendered.split("_irNotes: {")[1]?.split("\n")[1])}\n  want ${JSON.stringify(wantKey)}`);
+    console.error(
+      `FAIL a backslash in a decision id:\n  got  ${
+        JSON.stringify(rendered.split("_irNotes: {")[1]?.split("\n")[1])
+      }\n  want ${JSON.stringify(wantKey)}`,
+    );
   }
   if (!rendered.endsWith(wantAccepts)) {
     failed++;
-    console.error(`FAIL a test's citations render as its constraint:\n  got  ${JSON.stringify(rendered.slice(-wantAccepts.length))}\n  want ${JSON.stringify(wantAccepts)}`);
+    console.error(
+      `FAIL a test's citations render as its constraint:\n  got  ${
+        JSON.stringify(rendered.slice(-wantAccepts.length))
+      }\n  want ${JSON.stringify(wantAccepts)}`,
+    );
   }
   // The element must exist; what it cites may be nothing.
-  const acceptsCases: { name: string; elements: string[]; irOf: Record<string, string>; want?: string; throws?: string }[] = [
-    { name: "cites through the ir id", elements: ["t-ir"], irOf: { "t-key": "t-ir" }, want: '[["t-key",["accept-a"]]]' },
-    { name: "an element citing nothing", elements: ["t-ir", "t-quiet"], irOf: { "t-quiet": "t-quiet" }, want: '[["t-quiet",[]]]' },
-    { name: "a test with no element", elements: [], irOf: { "t-key": "t-ir" }, throws: 'test "t-key" has no element with id="t-ir" data-kind="test"' },
+  const acceptsCases: {
+    name: string;
+    elements: string[];
+    irOf: Record<string, string>;
+    want?: string;
+    throws?: string;
+  }[] = [
+    {
+      name: "cites through the ir id",
+      elements: ["t-ir"],
+      irOf: { "t-key": "t-ir" },
+      want: '[["t-key",["accept-a"]]]',
+    },
+    {
+      name: "an element citing nothing",
+      elements: ["t-ir", "t-quiet"],
+      irOf: { "t-quiet": "t-quiet" },
+      want: '[["t-quiet",[]]]',
+    },
+    {
+      name: "a test with no element",
+      elements: [],
+      irOf: { "t-key": "t-ir" },
+      throws: 'test "t-key" has no element with id="t-ir" data-kind="test"',
+    },
   ];
   for (const t of acceptsCases) {
     try {
-      const got = JSON.stringify(acceptsFor(t.elements, [{ test: "t-ir", accept: "accept-a" }], t.irOf).map((x) => [x.id, x.accepts]));
+      const got = JSON.stringify(
+        acceptsFor(t.elements, [{ test: "t-ir", accept: "accept-a" }], t.irOf)
+          .map((x) => [x.id, x.accepts]),
+      );
       if (t.throws !== undefined || got !== t.want) {
         failed++;
         console.error(`FAIL ${t.name}: got ${got}, want ${t.throws ?? t.want}`);
@@ -912,7 +1282,9 @@ function selfTest(): void {
     } catch (e) {
       if ((e as Error).message !== t.throws) {
         failed++;
-        console.error(`FAIL ${t.name}: threw ${JSON.stringify((e as Error).message)}`);
+        console.error(
+          `FAIL ${t.name}: threw ${JSON.stringify((e as Error).message)}`,
+        );
       }
     }
   }
@@ -929,10 +1301,18 @@ function selfTest(): void {
     }
     if (t.throws !== undefined) {
       failed++;
-      console.error(`FAIL ${t.name}: returned ${JSON.stringify(got)} where it must throw ${JSON.stringify(t.throws)}`);
+      console.error(
+        `FAIL ${t.name}: returned ${JSON.stringify(got)} where it must throw ${
+          JSON.stringify(t.throws)
+        }`,
+      );
     } else if (JSON.stringify(got) !== JSON.stringify(t.expect)) {
       failed++;
-      console.error(`FAIL ${t.name}: got ${JSON.stringify(got)}, want ${JSON.stringify(t.expect)}`);
+      console.error(
+        `FAIL ${t.name}: got ${JSON.stringify(got)}, want ${
+          JSON.stringify(t.expect)
+        }`,
+      );
     }
   }
   for (const t of notes) {
@@ -948,10 +1328,18 @@ function selfTest(): void {
     }
     if (t.throws !== undefined) {
       failed++;
-      console.error(`FAIL ${t.name}: returned ${JSON.stringify(got)} where it must throw ${JSON.stringify(t.throws)}`);
+      console.error(
+        `FAIL ${t.name}: returned ${JSON.stringify(got)} where it must throw ${
+          JSON.stringify(t.throws)
+        }`,
+      );
     } else if (got !== t.note) {
       failed++;
-      console.error(`FAIL ${t.name}:\n  got  ${JSON.stringify(got)}\n  want ${JSON.stringify(t.note)}`);
+      console.error(
+        `FAIL ${t.name}:\n  got  ${JSON.stringify(got)}\n  want ${
+          JSON.stringify(t.note)
+        }`,
+      );
     }
   }
   for (const t of scans) {
@@ -970,30 +1358,57 @@ function selfTest(): void {
     }
     if (t.throws !== undefined) {
       failed++;
-      console.error(`FAIL ${t.name}: found ${JSON.stringify(got)} where it must throw ${JSON.stringify(t.throws)}`);
+      console.error(
+        `FAIL ${t.name}: found ${JSON.stringify(got)} where it must throw ${
+          JSON.stringify(t.throws)
+        }`,
+      );
     } else if (JSON.stringify(got) !== JSON.stringify(t.expect)) {
       failed++;
-      console.error(`FAIL ${t.name}: found ${JSON.stringify(got)}, want ${JSON.stringify(t.expect)}`);
+      console.error(
+        `FAIL ${t.name}: found ${JSON.stringify(got)}, want ${
+          JSON.stringify(t.expect)
+        }`,
+      );
     } else if (t.note !== undefined && note !== t.note) {
       failed++;
-      console.error(`FAIL ${t.name}: body reads ${JSON.stringify(note)}, want ${JSON.stringify(t.note)}`);
+      console.error(
+        `FAIL ${t.name}: body reads ${JSON.stringify(note)}, want ${
+          JSON.stringify(t.note)
+        }`,
+      );
     }
   }
   // Template i18n scan assertions: unlocalized prose and msg refs.
-  const i18nSample = '<section><h1 data-text="{msg.hello}">Fallback</h1><p>Unlocalized prose</p><span aria-label="Missing key">★</span></section>';
-  const { msgRefs, prose } = scanTemplateI18n(i18nSample, "sample", "sample.html");
+  const i18nSample =
+    '<section><h1 data-text="{msg.hello}">Fallback</h1><p>Unlocalized prose</p><span aria-label="Missing key">★</span></section>';
+  const { msgRefs, prose } = scanTemplateI18n(
+    i18nSample,
+    "sample",
+    "sample.html",
+  );
   if (msgRefs.length !== 1 || msgRefs[0].key !== "hello") {
     failed++;
-    console.error(`FAIL i18n scan: expected 1 msgRef ('hello'), got ${JSON.stringify(msgRefs)}`);
+    console.error(
+      `FAIL i18n scan: expected 1 msgRef ('hello'), got ${
+        JSON.stringify(msgRefs)
+      }`,
+    );
   }
   if (prose.length !== 2) {
     failed++;
-    console.error(`FAIL i18n scan: expected 2 prose leaks (p and aria-label), got ${JSON.stringify(prose)}`);
+    console.error(
+      `FAIL i18n scan: expected 2 prose leaks (p and aria-label), got ${
+        JSON.stringify(prose)
+      }`,
+    );
   }
 
   if (failed > 0) Deno.exit(1);
   console.error(
-    `derive self-test: ${notes.length + scans.length + maps.length + 1} derivation cases, ` +
+    `derive self-test: ${
+      notes.length + scans.length + maps.length + 1
+    } derivation cases, ` +
       "the cel fixtures, the style scanner, the jessie scanner, the validation resolver, the tree reader and the i18n template scanner passed",
   );
 }

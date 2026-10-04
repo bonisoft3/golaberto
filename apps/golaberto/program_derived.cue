@@ -27,8 +27,12 @@ code: surface: screens: {
 		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/both-scored.js", "shell/handlers/count-or-null.js", "shell/handlers/row-id.js", "shell/handlers/search-key.js"], adapters: []}
 	}
 	equipe: {
-		reads: [{entity: "ArchivePage"}, {entity: "PlayerStat"}, {entity: "Stadium"}, {entity: "Team"}, {entity: "TeamGame"}, {entity: "TeamRating"}]
-		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
+		reads: [{entity: "ArchivePage"}, {entity: "Category"}, {entity: "Stadium"}, {entity: "Team"}, {entity: "TeamChampionship"}, {entity: "TeamComment"}, {entity: "TeamCommentDraft"}, {entity: "TeamGame"}, {entity: "TeamPlayerHistory"}, {entity: "TeamRating"}, {entity: "TeamRatingChart"}]
+		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
+	}
+	"equipe-campeonato": {
+		reads: [{entity: "ArchivePage"}, {entity: "Phase"}, {entity: "PositionChance"}, {entity: "Standing"}, {entity: "TeamCampaignPoint"}, {entity: "TeamChampionship"}, {entity: "TeamChance"}, {entity: "TeamChartState"}, {entity: "TeamGame"}, {entity: "TeamGroup"}, {entity: "TeamOddsChart"}, {entity: "TeamRoster"}, {entity: "TeamRosterTotal"}, {entity: "ZoneChance"}]
+		files: {handlers: ["shell/handlers/chart-compare.js", "shell/handlers/chart-metric.js", "shell/handlers/page-value.js", "shell/handlers/search-key.js", "shell/handlers/team-chart-fold.js", "shell/handlers/team-chart-seed.js"], adapters: []}
 	}
 	equipes: {
 		reads: [{entity: "DirectoryFilter"}, {entity: "GeographyCountry"}, {entity: "GeographyRegion"}, {entity: "TeamDirectory"}]
@@ -95,6 +99,7 @@ _irNotes: {
 	"decision-sides": "A goal and an appearance name a side, not a team. Upstream stores a team id on each, and nothing ties it to the game's two teams: an editor who corrects a game's home team leaves its goals counting for a team that did not play. A side, home or away, is one of the two by construction, and the team is read through the game"
 	"decision-standings-boot": "The stream recounts every group once when it starts. Change capture hears writes, and the archive's seeded games were written by the database's first migration, before anything listened. A one-shot input beside the bus recounts every group at start, so a fresh cluster shows tables, and a stream that restarts after missing events repairs itself"
 	"decision-standings-derived": "A table is recounted from its games, never typed, and kept as rows. Upstream computes a table in Ruby on every request. Here the terminal cannot sort by a ladder of eleven keys or sum across a collection, and a table is read on every visit to a championship, so it earns materialization: one stream, absolute recounts, a live sink. The price is a sink that trails a game's edit by the stream's latency, a line that outlives a team removed from its group, and an old group that keeps counting a game or member moved out of it — the change event carries only the row as it now stands — until the editing turn, the first writer that can move one, gives the stream the before-image and a delete"
+	"decision-team-page-split": "Whole-team profile and championship participationThe reader approved compact headings and tables for two distinct page types, with small section links on the championship page. Stitch explored the arrangement in project 3684321283098058780, screen 8e9552fe015b4245b909b3999a1b9a16; the approved inline comparison is supporting evidence. Preserve the established chrome, tokens and responsive table conventions. The main profile contains facts, latest rating, current/upcoming and past championships, and current and past players. Every participation links to /equipe-campeonato/:id/:championship; fixtures, full relevant group standings, roster and detailed stored zone/position probabilities stay within that pair. Both IDs survive language switches. Current players means recorded in a non-ended championship, including upcoming registrations; it does not assert transfer dates. Registered players with zero appearances remain in a roster. Unsupported club-period or final-phase columns are omitted. Empty participation, tables, roster and probabilities have truthful messages"
 	"decision-uuid-keys": "Keys are UUIDs, not upstream's integers. A form mints its key at the boundary where randomness exists, so a retried write is the same write; an auto-increment integer is minted by the store and cannot be. Upstream's numeric ids survive only in upstream's URLs, which this clone does not serve"
 	"decision-zones": "A table's zones are rows, not a serialized list on the group. Upstream keeps them as YAML inside groups.zones. A row per zone is what a form can write and a live region can read, and its colour becomes a closed role (champion, promotion, qualify, playoff, relegation) that the design resolves in both appearances instead of a hex an editor typed"
 }
@@ -171,6 +176,8 @@ _irAccepts: {
 	"test-standings-live": ["accept-standings-live"]
 	"test-standings-page": ["accept-standings"]
 	"test-standings-zones": ["accept-standings"]
+	"test-team-championship-gone": ["accept-team-championship-gone"]
+	"test-team-championship-page": ["accept-team-championship-page"]
 	"test-team-gone": ["accept-team-gone"]
 	"test-team-page": ["accept-team-page"]
 	"test-team-rating": ["accept-ratings"]

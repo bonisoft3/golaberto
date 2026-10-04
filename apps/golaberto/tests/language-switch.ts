@@ -4,6 +4,8 @@ import { baseUrl } from "../../../plugins/omnishell/base-url.ts";
 
 const { chromium } = await import("npm:playwright@1.59.1");
 const base = await baseUrl(Deno.args[0] ?? ".");
+const ATHLETICO = "07000000-0000-4000-8000-000000000003";
+const BRASILEIRO_2026 = "02000000-0000-4000-8000-000000000001";
 
 for (const width of [390, 1366]) {
   Deno.test(`Portuguese choice survives navigation and reload at ${width}px`, async () => {
@@ -59,6 +61,15 @@ for (const width of [390, 1366]) {
       await page.click(portuguese);
       await page.waitForURL(`${base}/campeonato/${id}?lang=pt-BR`);
       await assertPortuguese();
+      await page.reload();
+      await assertPortuguese();
+
+      await page.goto(`${base}/en/team-championship/${ATHLETICO}/${BRASILEIRO_2026}`);
+      await page.waitForSelector(ready);
+      await page.click(portuguese);
+      await page.waitForURL(`${base}/equipe-campeonato/${ATHLETICO}/${BRASILEIRO_2026}?lang=pt-BR`);
+      await assertPortuguese();
+      assertEquals(new URL(page.url()).pathname, `/equipe-campeonato/${ATHLETICO}/${BRASILEIRO_2026}`);
       await page.reload();
       await assertPortuguese();
 

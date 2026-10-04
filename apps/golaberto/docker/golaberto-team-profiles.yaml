@@ -1,0 +1,20 @@
+# Source triggers enqueue only teams whose profile inputs changed. Rebuild a
+# bounded batch on every tick; the database queue retains work across retries.
+input:
+  generate:
+    interval: 2s
+    auto_replay_nacks: false
+    mapping: 'root = {"batch_size": 50}'
+pipeline:
+  threads: 1
+output:
+  http_client:
+    url: ${CRUD_URL}/rpc/refresh_team_profiles
+    verb: POST
+    max_in_flight: 1
+    timeout: 25s
+    retries: 0
+    headers:
+      Content-Type: application/json
+      Authorization: Bearer ${SERVICE_JWT}
+    successful_on: [200, 204]

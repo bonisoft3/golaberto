@@ -22,12 +22,34 @@
             <dt data-text="{msg.team_city}"></dt><dd data-text="{city}"></dd>
             <dt data-text="{msg.team_country}"></dt><dd><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{country}|{msg.geography_names}" data-text-format="geography-label"></span></dd>
             <dt data-text="{msg.team_founded}"></dt><dd data-text="{foundation_display}"></dd>
-            <dt data-text="{msg.team_rating}"></dt><dd class="rating" data-live="team_rating" data-filter="team_id=eq.{id}&limit=1" data-order="measure_date.desc" data-empty=""><template data-item><abbr title="{msg.team_rating_long}" data-text="{rating}" data-text-format="number"></abbr></template></dd>
-            <dt data-text="{msg.game_stadium}"></dt><dd data-live="stadium" data-filter="id=eq.{stadium_id}" data-empty=""><template data-item><span data-text="{name}"></span></template></dd>
+            <dt data-text="{msg.team_rating}"></dt><dd class="rating" data-live="team_rating" data-filter="team_id=eq.{id}&limit=1" data-order="measure_date.desc,id.asc" data-empty=""><template data-item><abbr title="{msg.team_rating_long}" data-text="{rating}" data-text-format="number"></abbr></template></dd>
+            <dt data-text="{msg.game_stadium}"></dt><dd data-live="stadium" data-filter="id=eq.{stadium_id}" data-empty=""><template data-item><a data-route="estadio" data-param-id="{id}" data-text="{name}"></a></template></dd>
           </dl>
-          <section class="team-next">
-            <h2 data-text="{msg.team_next}"></h2>
-<ol class="games team-games" data-live="team_game" data-select="*,championship(show_country),opponent:opponent_id(country)" data-filter="team_id=eq.{id}&played=is.false&limit=5" data-order="day.asc,kickoff.asc" data-empty="{msg.games_none_upcoming}">
+          <div data-text="{latitude}|{longitude}|{msg.team_location}|{msg.team_location_none}" data-text-format="team-location"></div>
+          <section class="team-rating-history"><h2 data-text="{msg.team_rating_history}"></h2>
+<div class="paged-read" data-live="archive_page" data-filter="id=eq.team-rating-history-{param.id}" data-machine='{"field":"state","initial":"browsing","context":{"owner_id":"{param.id}","offset":0,"next_offset":40,"page":1,"period":"1y"},"states":{"browsing":{"on":{"change@team-rating-period":{"assign":{"period":{"type":"event","params":{"field":"value"}}}},"click@team-rating-history-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@team-rating-history-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}' data-empty-row='{"id":"team-rating-history-{param.id}","owner_id":"{param.id}","offset":0,"next_offset":40,"page":1,"period":"1y","state":"browsing"}'>
+  <div class="page-window">
+<label class="team-filter"><span data-text="{msg.team_period}"></span><select id="team-rating-period" data-value="{period}"><option value="1m" data-text="{msg.period_1m}"></option><option value="3m" data-text="{msg.period_3m}"></option><option value="6m" data-text="{msg.period_6m}"></option><option value="1y" data-text="{msg.period_1y}"></option><option value="5y" data-text="{msg.period_5y}"></option><option value="all" data-text="{msg.all}"></option></select></label>
+<div data-live="team_rating_chart" data-filter="team_id=eq.{owner_id}&period=eq.{period}&limit=1" data-empty="{msg.team_history_none}"><template data-item><div data-text="{series_json}{msg.team_rating_history}{msg.chart_locale}{msg.team_history_none}" data-text-format="team-chart"></div></template></div>
+<p class="team-chart-note" data-text="{msg.team_chart_sample}"></p>
+<details><summary data-text="{msg.team_history_table}"></summary><table class="grid"><thead><tr><th data-text="{msg.team_date}"></th><th data-text="{msg.team_rating}"></th><th data-text="{msg.col_off_rating}"></th><th data-text="{msg.col_def_rating}"></th></tr></thead><tbody data-live="team_rating" data-filter="team_id=eq.{owner_id}&offset={offset}&limit=40" data-order="measure_date.desc,id.asc" data-empty="{msg.team_history_none}"><template data-item><tr><th scope="row" data-text="{measure_date}"></th><td data-text="{rating}" data-text-format="number"></td><td data-text="{offense}" data-text-format="number"></td><td data-text="{defense}" data-text-format="number"></td></tr></template></tbody></table></details>
+<nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
+  <button id="team-rating-history-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
+  <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
+  <span data-live="team_rating" data-filter="team_id=eq.{owner_id}&amp;offset={next_offset}&amp;limit=1" data-order='measure_date.desc,id.asc' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <button id="team-rating-history-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
+</nav>
+  </div>
+</div>
+</section>
+          <section><h2 data-text="{msg.games_upcoming}"></h2><div class="paged-read" data-live="archive_page" data-filter="id=eq.team-upcoming-{param.id}" data-machine='{"field":"state","initial":"browsing","context":{"category":"*","owner_id":"{param.id}","offset":0,"next_offset":40,"page":1,"side":"*","phase":"*"},"states":{"browsing":{"on":{"click@team-upcoming-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@team-upcoming-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}},"change@team-upcoming-category":{"assign":{"category":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}},"change@team-upcoming-side":{"assign":{"side":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}},"change@team-upcoming-phase":{"assign":{"phase":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}}}}}}' data-empty-row='{"category":"*","id":"team-upcoming-{param.id}","owner_id":"{param.id}","offset":0,"next_offset":40,"page":1,"side":"*","phase":"*","state":"browsing"}'>
+  <div class="page-window">
+<div class="team-filters">
+<label><span data-text="{msg.team_category}"></span><select id="team-upcoming-category" data-value="{category}"><option value="*" data-text="{msg.all}"></option><option value="professional" data-text="{msg.team_professional}"></option><optgroup data-live="category" data-filter="id=not.is.null&limit=40" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select></label>
+<label><span data-text="{msg.team_venue}"></span><select id="team-upcoming-side" data-value="{side}"><option value="*" data-text="{msg.all}"></option><option value="home" data-text="{msg.home}"></option><option value="away" data-text="{msg.away}"></option></select></label>
+
+</div>
+<ol class="games team-games" data-live="team_game" data-select="*,championship(show_country),opponent:opponent_id(country)" data-filter="team_id=eq.{owner_id}&played=is.false&side=like.{side}&phase_key=like.{phase}&category_key=like.{category}&offset={offset}&limit=40" data-order="day.asc,kickoff.asc,id.asc" data-empty="{msg.games_none_upcoming}">
   <template data-item>
     <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{game_id}" data-played="{played}" data-result="{result}">
       <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
@@ -38,10 +60,22 @@
     </a></li>
   </template>
 </ol>
-          </section>
-          <section class="team-results">
-            <h2 data-text="{msg.team_results}"></h2>
-<ol class="games team-games" data-live="team_game" data-select="*,championship(show_country),opponent:opponent_id(country)" data-filter="team_id=eq.{id}&played=is.true&limit=10" data-order="day.desc,kickoff.desc" data-empty="{msg.games_none_results}">
+<nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
+  <button id="team-upcoming-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
+  <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
+  <span data-live="team_game" data-filter="team_id=eq.{owner_id}&played=is.false&side=like.{side}&phase_key=like.{phase}&category_key=like.{category}&amp;offset={next_offset}&amp;limit=1" data-order='day.asc,kickoff.asc,id.asc' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <button id="team-upcoming-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
+</nav>
+  </div>
+</div></section>
+          <section><h2 data-text="{msg.games_results}"></h2><div class="paged-read" data-live="archive_page" data-filter="id=eq.team-results-{param.id}" data-machine='{"field":"state","initial":"browsing","context":{"category":"*","owner_id":"{param.id}","offset":0,"next_offset":40,"page":1,"side":"*","phase":"*"},"states":{"browsing":{"on":{"click@team-results-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@team-results-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}},"change@team-results-category":{"assign":{"category":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}},"change@team-results-side":{"assign":{"side":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}},"change@team-results-phase":{"assign":{"phase":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}}}}}}' data-empty-row='{"category":"*","id":"team-results-{param.id}","owner_id":"{param.id}","offset":0,"next_offset":40,"page":1,"side":"*","phase":"*","state":"browsing"}'>
+  <div class="page-window">
+<div class="team-filters">
+<label><span data-text="{msg.team_category}"></span><select id="team-results-category" data-value="{category}"><option value="*" data-text="{msg.all}"></option><option value="professional" data-text="{msg.team_professional}"></option><optgroup data-live="category" data-filter="id=not.is.null&limit=40" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select></label>
+<label><span data-text="{msg.team_venue}"></span><select id="team-results-side" data-value="{side}"><option value="*" data-text="{msg.all}"></option><option value="home" data-text="{msg.home}"></option><option value="away" data-text="{msg.away}"></option></select></label>
+
+</div>
+<ol class="games team-games" data-live="team_game" data-select="*,championship(show_country),opponent:opponent_id(country)" data-filter="team_id=eq.{owner_id}&played=is.true&side=like.{side}&phase_key=like.{phase}&category_key=like.{category}&offset={offset}&limit=40" data-order="day.desc,kickoff.desc,id.asc" data-empty="{msg.games_none_results}">
   <template data-item>
     <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{game_id}" data-played="{played}" data-result="{result}">
       <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
@@ -52,26 +86,98 @@
     </a></li>
   </template>
 </ol>
-          </section>
-          <section class="squads">
-            <h2 data-text="{msg.team_squads}"></h2>
-<div class="paged-read" data-live="archive_page" data-filter="id=eq.team-squads-{id}" data-machine='{"field":"state","initial":"browsing","context":{"offset":0,"next_offset":40,"page":1},"states":{"browsing":{"on":{"click@team-squads-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@team-squads-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}' data-empty-row='{"id":"team-squads-{id}","owner_id":"{id}","offset":0,"next_offset":40,"page":1,"state":"browsing"}'>
-  <div class="page-window">
-            <table class="grid squad-table">
-              <thead><tr><th scope="col" class="champ" data-text="{msg.col_championship}"></th><th scope="col" class="name"><abbr title="{msg.col_player_long}" data-text="{msg.col_player}"></abbr></th><th scope="col" class="num"><abbr title="{msg.col_pos_long}" data-text="{msg.col_pos}"></abbr></th><th scope="col" class="num"><abbr title="{msg.col_played_long}" data-text="{msg.col_played}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_started_long}" data-text="{msg.col_started}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_came_on_long}" data-text="{msg.col_came_on}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_minutes_long}" data-text="{msg.col_minutes}"></abbr></th><th scope="col" class="num"><abbr title="{msg.col_goals_long}" data-text="{msg.col_goals}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_yellow_long}" data-text="{msg.col_yellow}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_red_long}" data-text="{msg.col_red}"></abbr></th></tr></thead>
-              <tbody data-live="player_stat" data-filter="team_id=eq.{owner_id}&offset={offset}&limit=40" data-order="championship_name.asc,played.desc,minutes.desc,player_name.asc" data-empty="{msg.team_no_squads}">
-                <template data-item><tr><td class="champ"><a data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span></a></td><td class="name"><a data-route="jogador" data-param-id="{player_id}" data-text="{player_name}"></a></td><td class="num" data-text="{position}"></td><td class="num" data-text="{played}"></td><td class="num wide" data-text="{started}"></td><td class="num wide" data-text="{came_on}"></td><td class="num wide" data-text="{minutes}"></td><td class="num" data-text="{goals}"></td><td class="num wide" data-text="{yellow}"></td><td class="num wide" data-text="{red}"></td></tr></template>
-              </tbody>
-            </table>
 <nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
-  <button id="team-squads-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
+  <button id="team-results-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
   <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
-  <span data-live="player_stat" data-filter="team_id=eq.{owner_id}&amp;offset={next_offset}&amp;limit=1" data-order="championship_name.asc,played.desc,minutes.desc,player_name.asc" data-empty=""><template data-item><i data-next-page hidden></i></template></span>
-  <button id="team-squads-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
+  <span data-live="team_game" data-filter="team_id=eq.{owner_id}&played=is.true&side=like.{side}&phase_key=like.{phase}&category_key=like.{category}&amp;offset={next_offset}&amp;limit=1" data-order='day.desc,kickoff.desc,id.asc' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <button id="team-results-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
+</nav>
+  </div>
+</div></section>
+          <section class="team-current-championships">
+            <h2 data-text="{msg.team_current_championships}"></h2>
+            <div class="paged-read" data-live="archive_page" data-filter="id=eq.team-current-championships-{id}" data-machine='{"field":"state","initial":"browsing","context":{"owner_id":"{id}","offset":0,"next_offset":40,"page":1},"states":{"browsing":{"on":{"click@team-current-championships-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@team-current-championships-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}' data-empty-row='{"id":"team-current-championships-{id}","owner_id":"{id}","offset":0,"next_offset":40,"page":1,"state":"browsing"}'>
+  <div class="page-window">
+
+<ul class="team-championship-list" data-live="team_championship" data-filter="team_id=eq.{owner_id}&status=neq.past&offset={offset}&limit=40" data-order='status.asc,begins.desc,championship_id.asc' data-empty="{msg.team_no_current_championships}">
+  <template data-item><li><a data-route="equipe-campeonato" data-param-id="{team_id}" data-param-championship="{championship_id}"><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span><span class="chip" data-text="{msg[status]}"></span></a></li></template>
+</ul>
+<nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
+  <button id="team-current-championships-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
+  <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
+  <span data-live="team_championship" data-filter="team_id=eq.{owner_id}&status=neq.past&amp;offset={next_offset}&amp;limit=1" data-order='status.asc,begins.desc,championship_id.asc' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <button id="team-current-championships-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
 </nav>
   </div>
 </div>
           </section>
+          <section class="team-past-championships">
+            <h2 data-text="{msg.team_past_championships}"></h2>
+            <div class="paged-read" data-live="archive_page" data-filter="id=eq.team-past-championships-{id}" data-machine='{"field":"state","initial":"browsing","context":{"owner_id":"{id}","offset":0,"next_offset":40,"page":1},"states":{"browsing":{"on":{"click@team-past-championships-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@team-past-championships-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}' data-empty-row='{"id":"team-past-championships-{id}","owner_id":"{id}","offset":0,"next_offset":40,"page":1,"state":"browsing"}'>
+  <div class="page-window">
+
+<ul class="team-championship-list" data-live="team_championship" data-filter="team_id=eq.{owner_id}&status=eq.past&offset={offset}&limit=40" data-order='begins.desc,championship_id.asc' data-empty="{msg.team_no_past_championships}">
+  <template data-item><li><a data-route="equipe-campeonato" data-param-id="{team_id}" data-param-championship="{championship_id}"><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span><span class="chip" data-text="{msg[status]}"></span></a></li></template>
+</ul>
+<nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
+  <button id="team-past-championships-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
+  <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
+  <span data-live="team_championship" data-filter="team_id=eq.{owner_id}&status=eq.past&amp;offset={next_offset}&amp;limit=1" data-order='begins.desc,championship_id.asc' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <button id="team-past-championships-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
+</nav>
+  </div>
+</div>
+          </section>
+          <section class="team-current-players">
+            <h2 data-text="{msg.team_current_players}"></h2>
+            <div class="paged-read" data-live="archive_page" data-filter="id=eq.team-current-players-{id}" data-machine='{"field":"state","initial":"browsing","context":{"owner_id":"{id}","offset":0,"next_offset":40,"page":1,"q":"","q_key":""},"states":{"browsing":{"on":{"click@team-current-players-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@team-current-players-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}},"input@team-current-players-q":{"assign":{"q":{"type":"event","params":{"field":"value"}},"q_key":{"type":"search-key"},"offset":0,"next_offset":40,"page":1}}}}}}' data-empty-row='{"id":"team-current-players-{id}","owner_id":"{id}","offset":0,"next_offset":40,"page":1,"q":"","q_key":"","state":"browsing"}'>
+  <div class="page-window">
+<label class="team-filter"><span data-text="{msg.team_player_search}"></span><input id="team-current-players-q" type="search" value="{q}" maxlength="80"></label>
+<ul class="team-player-list" data-live="team_player_history" data-filter="team_id=eq.{owner_id}&is_current=is.true&search_key=like.*{q_key}*&offset={offset}&limit=40" data-order='player_name.asc,player_id.asc' data-empty="{msg.team_no_current_players}">
+  <template data-item><li><a data-route="jogador" data-param-id="{player_id}"><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{player_name}"></span> <small data-text="{position}"></small></a></li></template>
+</ul>
+<nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
+  <button id="team-current-players-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
+  <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
+  <span data-live="team_player_history" data-filter="team_id=eq.{owner_id}&is_current=is.true&search_key=like.*{q_key}*&amp;offset={next_offset}&amp;limit=1" data-order='player_name.asc,player_id.asc' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <button id="team-current-players-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
+</nav>
+  </div>
+</div>
+          </section>
+          <section class="team-past-players">
+            <h2 data-text="{msg.team_past_players}"></h2>
+            <div class="paged-read" data-live="archive_page" data-filter="id=eq.team-past-players-{id}" data-machine='{"field":"state","initial":"browsing","context":{"owner_id":"{id}","offset":0,"next_offset":40,"page":1,"q":"","q_key":""},"states":{"browsing":{"on":{"click@team-past-players-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@team-past-players-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}},"input@team-past-players-q":{"assign":{"q":{"type":"event","params":{"field":"value"}},"q_key":{"type":"search-key"},"offset":0,"next_offset":40,"page":1}}}}}}' data-empty-row='{"id":"team-past-players-{id}","owner_id":"{id}","offset":0,"next_offset":40,"page":1,"q":"","q_key":"","state":"browsing"}'>
+  <div class="page-window">
+<label class="team-filter"><span data-text="{msg.team_player_search}"></span><input id="team-past-players-q" type="search" value="{q}" maxlength="80"></label>
+<ul class="team-player-list" data-live="team_player_history" data-filter="team_id=eq.{owner_id}&is_current=is.false&search_key=like.*{q_key}*&offset={offset}&limit=40" data-order='player_name.asc,player_id.asc' data-empty="{msg.team_no_past_players}">
+  <template data-item><li><a data-route="jogador" data-param-id="{player_id}"><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{player_name}"></span> <small data-text="{position}"></small></a></li></template>
+</ul>
+<nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
+  <button id="team-past-players-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
+  <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
+  <span data-live="team_player_history" data-filter="team_id=eq.{owner_id}&is_current=is.false&search_key=like.*{q_key}*&amp;offset={next_offset}&amp;limit=1" data-order='player_name.asc,player_id.asc' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <button id="team-past-players-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
+</nav>
+  </div>
+</div>
+          </section>
+
+          <section class="comments"><h2 data-text="{msg.comments_title}"></h2>
+<div class="composer" data-live="team_comment_draft" data-filter="id=eq.{param.id}" data-machine='{"field":"state","initial":"writing","context":{"body":""},"on":{"refused":{"target":"refused"}},"states":{"writing":{"on":{"input@team-comment-body":{"assign":{"body":{"type":"event","params":{"field":"value"}}}},"click@team-comment-post":{"target":"sending","effect":{"level":"replicated","op":"create","entity":"team_comment","values":{"team_id":"{id}","body":"{body}"}}}}},"sending":{"on":{"sync_ack":{"target":"writing","assign":{"body":""}}}},"refused":{"on":{"input@team-comment-body":{"assign":{"body":{"type":"event","params":{"field":"value"}}},"target":"writing"},"click@team-comment-post":{"target":"sending","effect":{"level":"replicated","op":"create","entity":"team_comment","values":{"team_id":"{id}","body":"{body}"}}}}}}}' data-state="{state}"><label class="field" for="team-comment-body"><span data-text="{msg.comment_label}"></span><textarea id="team-comment-body" data-value="{body}" maxlength="1000" rows="3" placeholder="{msg.team_comment_placeholder}"></textarea></label><p class="refusal" role="alert" data-text="{msg.comment_refused}"></p><button id="team-comment-post" type="button" class="btn post"><span class="idle" data-text="{msg.comment_post}"></span><span class="busy" data-text="{msg.comment_posting}"></span></button></div>
+<div class="paged-read" data-live="archive_page" data-filter="id=eq.team-comments-{param.id}" data-machine='{"field":"state","initial":"browsing","context":{"owner_id":"{param.id}","offset":0,"next_offset":40,"page":1},"states":{"browsing":{"on":{"click@team-comments-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@team-comments-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}' data-empty-row='{"id":"team-comments-{param.id}","owner_id":"{param.id}","offset":0,"next_offset":40,"page":1,"state":"browsing"}'>
+  <div class="page-window">
+
+<ol class="comment-list" data-live="team_comment" data-select="*,app_user(handle)" data-filter="team_id=eq.{owner_id}&offset={offset}&limit=40" data-order="created_at.desc,id.asc" data-empty="{msg.team_comment_empty}"><template data-item><li><p class="byline"><b data-text="{app_user.handle}"></b> <time data-text="{created_at}" data-text-format="datetime"></time></p><p class="body" data-text="{body}"></p></li></template></ol>
+<nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
+  <button id="team-comments-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
+  <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
+  <span data-live="team_comment" data-filter="team_id=eq.{owner_id}&amp;offset={next_offset}&amp;limit=1" data-order='created_at.desc,id.asc' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <button id="team-comments-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
+</nav>
+  </div>
+</div>
+</section>
         </div>
         <aside class="side">
           <p><a data-route="equipes" data-text="{msg.back_teams}"></a></p>

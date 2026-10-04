@@ -800,6 +800,20 @@ export async function createShell({ config, mount }) {
       "navigation" in globalThis
         ? navigation.navigate(href)
         : (history.pushState(null, "", href), show("push"));
+    // The entry document's <base> locates shell assets. A section fragment
+    // still belongs to the visible address; preserve native scrolling/history
+    // by resolving it there before the browser follows the anchor.
+    const fragments = new WeakMap();
+    addEventListener("click", (e) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = e.target?.closest?.("a[href]");
+      if (!a || a.target || a.hasAttribute("download")) return;
+      const href = a.getAttribute("href");
+      if (href.startsWith("#")) fragments.set(a, href);
+      // Held screens reuse their anchors after a language/address change.
+      const fragment = fragments.get(a);
+      if (fragment !== undefined) a.href = new URL(fragment, location.href).href;
+    }, true);
     // The Navigation API is the platform's own navigation stack, and the only
     // thing that can tell a push from a traverse — which is what decides
     // whether a held screen resumes its scroll. It also takes scroll policy as
@@ -832,6 +846,7 @@ export async function createShell({ config, mount }) {
         if (href.startsWith("#")) return;
         const url = new URL(href, location.href);
         if (url.origin !== location.origin || addresses(url) === null) return;
+        if (url.pathname === location.pathname && url.search === (location.search ?? "")) return;
         e.preventDefault();
         navigate(url.pathname + url.search);
       }, true);

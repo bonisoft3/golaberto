@@ -70,19 +70,29 @@ const plans: Array<[string, string, string]> = [
     "game_card_routes_referee_history_idx",
   ],
   [
-    "team upcoming games",
-    `SELECT id FROM team_game WHERE team_id='00000000-0000-4000-8000-000000000001' AND NOT played ORDER BY day,kickoff,id LIMIT 5`,
-    "team_game_routes_upcoming_idx",
+    "team championship upcoming games",
+    `SELECT id FROM team_game WHERE team_id='00000000-0000-4000-8000-000000000001' AND championship_id='00000000-0000-4000-8000-000000000002' AND NOT played ORDER BY day,kickoff,id LIMIT 40`,
+    "team_game_team_champ_upcoming_idx",
   ],
   [
-    "team results",
-    `SELECT id FROM team_game WHERE team_id='00000000-0000-4000-8000-000000000001' AND played ORDER BY day DESC,kickoff DESC,id LIMIT 10`,
-    "team_game_routes_results_idx",
+    "team championship results",
+    `SELECT id FROM team_game WHERE team_id='00000000-0000-4000-8000-000000000001' AND championship_id='00000000-0000-4000-8000-000000000002' AND played ORDER BY day DESC,kickoff DESC,id LIMIT 40`,
+    "team_game_team_champ_results_idx",
   ],
   [
-    "team squad",
-    `SELECT id FROM player_stat WHERE team_id='00000000-0000-4000-8000-000000000001' ORDER BY championship_name,played DESC,minutes DESC,player_name,id`,
-    "player_stat_routes_team_idx",
+    "team championship roster",
+    `SELECT id FROM team_roster WHERE team_id='07000000-0000-4000-8000-000000000003' AND championship_id='02000000-0000-4000-8000-000000000001' ORDER BY player_name,player_id LIMIT 41`,
+    "team_roster_team_championship_order_idx",
+  ],
+  [
+    "current team player history",
+    `SELECT id FROM team_player_history WHERE team_id='00000000-0000-4000-8000-000000000001' AND is_current ORDER BY player_name,player_id`,
+    "team_player_history_team_current_order_idx",
+  ],
+  [
+    "past team player history",
+    `SELECT id FROM team_player_history WHERE team_id='00000000-0000-4000-8000-000000000001' AND NOT is_current ORDER BY player_name,player_id`,
+    "team_player_history_team_current_order_idx",
   ],
   [
     "player seasons",

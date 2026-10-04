@@ -397,7 +397,7 @@ _sqlType: {
 				"'\(k)', " + _valSql
 			}], ", ") + ")"
 		},
-		"'{}'::jsonb"
+		"'{}'::jsonb",
 	][0]
 
 	_sagaSql: [if _isSaga {
@@ -1433,7 +1433,7 @@ _cdcBeforeField: "__before"
 	seeded: [for _, e in M.code.state.entities if len(e.seed) > 0 if e.server {e}]
 	accessed: [for _, e in M.code.state.entities if e.access != _|_ {e}]
 	machines: [if M.code.state.machines != _|_ {[for _, m in M.code.state.machines {m}]}, []][0]
-	sagas:    [if M.code.state.sagas != _|_ {[for _, s in M.code.state.sagas {s}]}, []][0]
+	sagas: [if M.code.state.sagas != _|_ {[for _, s in M.code.state.sagas {s}]}, []][0]
 	raw: [if M.code.state.rawMigrations != _|_ {M.code.state.rawMigrations}, []][0]
 	// The cluster copies this list into its database image, so it follows the
 	// predicate that emits the database: a migration named without one would be
@@ -1547,6 +1547,7 @@ _cdcBeforeField: "__before"
 				if len([for _, s in D.code.surface.screens if s.prerender {s}]) > 0 {
 					prerender: {verb: "test", cmds: [_prerender], note: "Pronto prerender"}
 				}
+
 				// A computation's tests run it as mecha's compute service does.
 				if len(D.code.state.computations) > 0 {
 					computations: {verb: "test", cmds: [_distribution.checks.computations], note: "Pronto computations"}
@@ -1587,7 +1588,7 @@ _cdcBeforeField: "__before"
 }
 
 #DefaultTerminal: D={
-	code: #App
+	code:  #App
 	boot?: string
 	// An adapter the terminal serves is the terminal's file and not the app's,
 	// so only an app's own module joins the set.
@@ -1692,11 +1693,13 @@ _cdcBeforeField: "__before"
 			}]
 			schedules: [for _, sc in D.code.state.schedules {sc.name}]
 			computations: [for _, c in D.code.state.computations {
-				name:     "\(D.code.meta.name)-\(c.name)"
-				file:     c.src
-				every:    c.every
+				name:  "\(D.code.meta.name)-\(c.name)"
+				file:  c.src
+				every: c.every
 				to: [for t in c.to {D.code.state.entities[t].table}]
-				wasm:     c.wasm
+				wasm: c.wasm
+				if c.onComplete != _|_ {onComplete: c.onComplete}
+
 				// A sink in the publication would feed the change it answers.
 				_live: [for t in c.to {D.code.state.entities[t].durability & "live"}]
 			}]

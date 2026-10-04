@@ -181,8 +181,10 @@ const assertBounded = (label: string, reads: Read[]) => {
     const filters = [...url.searchParams.keys()].filter((key) =>
       !["select", "order", "limit", "offset"].includes(key)
     );
+    // The region dropdown reads the database's complete fixed set of six.
+    const fixedRegions = read.table === "geography_region" && limit === 6 && read.rows <= 6;
     assert(
-      filters.length > 0,
+      filters.length > 0 || fixedRegions,
       `${label}: ${read.table} request has no row filter`,
     );
     if (url.searchParams.has("limit")) {
@@ -272,7 +274,12 @@ const routePatterns: Array<{
   {
     pattern: "/equipe/:id",
     path: `/en/team/${ATHLETICO}`,
-    visible: ".team-results .game-row",
+    visible: ".team-current-championships a[data-route='equipe-campeonato']",
+  },
+  {
+    pattern: "/equipe-campeonato/:id/:championship",
+    path: `/en/team-championship/${ATHLETICO}/${BRASILEIRO_2026}`,
+    visible: ".team-roster .squad-table tbody tr",
   },
   {
     pattern: "/jogador/:id",

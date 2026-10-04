@@ -55,7 +55,7 @@
                             <template data-item>
                               <tr data-zone="{zone}">
 	                                <td class="pos" data-text="{position}"></td>
-	                                <td class="name"><a data-route="equipe" data-param-id="{team_id}"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></td>
+	                                <td class="name"><span class="team-name-cell"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><a class="team-name" title="{team_name}" data-route="equipe-campeonato" data-param-id="{team_id}" data-param-championship="{param.id}" data-text="{team_name}"></a></span></td>
 	                                <td class="num pts" data-text="{points}"></td>
 	                                <td class="num" data-text="{played}"></td>
 	                                <td class="num wide" data-text="{wins}"></td>

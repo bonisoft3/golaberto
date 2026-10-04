@@ -106,8 +106,22 @@ their own, which the page keeps while they type.
 
 - [[equipes]]: every team, with its city and country, narrowed by a name typed.
 - [[equipe]]: one team: its full name, city, country, the day it was founded
-  and its stadium; its next games and its latest results; and for each
-  championship it played, its squad with each player's season.
+  and its stadium, its latest rating, current and past championships, and
+  current and past players. Each championship links to the team in that season.
+  Rating history has period choices and exact values; all-competition games
+  have category and home/away filters. Readers can search player history,
+  follow a recorded location on a map, and discuss the team.
+- [[equipe-campeonato]]: one team in one championship: its fixtures and results,
+  the tables of its groups, its roster including players yet to appear, and
+  detailed probabilities for each zone and final position. Readers can switch
+  to another team in the same championship, filter matches by phase and
+  home/away, and search or sort the roster. Category is fixed for the championship.
+  Fixtures show home and away teams around the score, without repeating the
+  championship name. Team links stay on one line, use ellipsis when necessary,
+  and expose the full name on hover. Recorded player contributions
+  and per-90 statistics have full-roster totals. Points and position charts
+  compare teams and link to matches; recorded zone probabilities show their
+  history. Missing observations remain missing, while recorded zeroes show zero.
 - [[jogador]]: one player: name, position and country; their season in each
   championship and team; and the games they played, with their minutes, goals
   and cards.
@@ -121,7 +135,8 @@ their own, which the page keeps while they type.
 - [[arbitro]]: one referee: their name, where they are from, and the games
   they refereed, newest first.
 
-Every team's name links to its page, every player's name in a line-up to
+Team names in championship tables link to the team in that championship;
+team names in the directory link to the main profile. Every player's name in a line-up links to
 theirs, and a game's stadium and referee to theirs.
 
 A phase's current round and the next are a [[PhaseRound]]; which list of
@@ -132,9 +147,9 @@ are recorded, for every reader at once.
 
 ## Behavior
 
-- The archive looks like golaberto.com.br — the brown ground, the parchment
-  column, the olive masthead and strip — in a light and a dark appearance,
-  following the reader's system.
+- The archive keeps its existing compact headings, tables and visual tokens
+  in light and dark appearances, following the reader's system. The team pages
+  take their functionality from golaberto.com.br without copying its design.
 - Every page reads well on a phone, a tablet, a laptop and a desktop, with no
   sideways scrolling.
 - Every page is in Brazilian Portuguese, Argentine Spanish and British English,

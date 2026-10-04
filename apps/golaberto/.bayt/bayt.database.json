@@ -3,12 +3,27 @@
   "compose": {
     "up": false,
     "manual": false,
+    "command": [
+      "postgres",
+      "-c",
+      "wal_level=logical",
+      "-c",
+      "fsync=on",
+      "-c",
+      "synchronous_commit=on",
+      "-c",
+      "full_page_writes=on",
+      "-c",
+      "shared_buffers=32MB",
+      "-c",
+      "max_connections=200"
+    ],
     "environment": {
       "PGDATA": "/var/lib/postgresql/18/docker",
       "POSTGRES_USER": "${POSTGRES_USER:-postgres}",
       "POSTGRES_PASSWORD": "${POSTGRES_PASSWORD:-postgres}",
       "POSTGRES_DB": "${POSTGRES_DB:-golaberto}",
-      "POSTGRES_INITDB_ARGS": "--no-sync --encoding=UTF8 --auth=trust --locale-provider=icu --icu-locale=und --locale=C"
+      "POSTGRES_INITDB_ARGS": "--encoding=UTF8 --auth=trust --locale-provider=icu --icu-locale=und --locale=C"
     },
     "ports": [
       "5432"
@@ -177,6 +192,16 @@
         },
         {
           "action": "rebuild",
+          "path": "../services/database/migrations/028_team_profiles.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
+          "path": "../services/database/migrations/029_team_enrichment.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
           "path": "../services/database/migrations/900_seed.sql",
           "target": "/docker-entrypoint-initdb.d"
         }
@@ -225,6 +250,8 @@
           "services/database/migrations/025_search_letter_equivalences.sql",
           "services/database/migrations/026_team_geography.sql",
           "services/database/migrations/027_team_directory_type.sql",
+          "services/database/migrations/028_team_profiles.sql",
+          "services/database/migrations/029_team_enrichment.sql",
           "services/database/migrations/900_seed.sql"
         ],
         "dst": "/docker-entrypoint-initdb.d/",
@@ -288,6 +315,8 @@
       "services/database/migrations/025_search_letter_equivalences.sql",
       "services/database/migrations/026_team_geography.sql",
       "services/database/migrations/027_team_directory_type.sql",
+      "services/database/migrations/028_team_profiles.sql",
+      "services/database/migrations/029_team_enrichment.sql",
       "services/database/migrations/900_seed.sql"
     ],
     "exclude": []
@@ -402,6 +431,8 @@
           "services/database/migrations/025_search_letter_equivalences.sql",
           "services/database/migrations/026_team_geography.sql",
           "services/database/migrations/027_team_directory_type.sql",
+          "services/database/migrations/028_team_profiles.sql",
+          "services/database/migrations/029_team_enrichment.sql",
           "services/database/migrations/900_seed.sql"
         ],
         "exclude": []

@@ -23,7 +23,7 @@ import (
 // A path relative to the app directory, resolved by derive and by the
 // terminal's module loader. No scheme and no `..`: the source is read from the
 // app's own tree and embedded in emitted artifacts.
-#Jessie: string & =~"^([a-z0-9_-]+/)*[a-z0-9_-]+\\.js$"
+#Jessie:        string & =~"^([a-z0-9_-]+/)*[a-z0-9_-]+\\.js$"
 #SafeEndowment: "Intl" | "TextEncoder" | "TextDecoder" | "URL" | "URLSearchParams"
 
 // The seven pre-composed shadow inks. Open Props' elevation carries a real
@@ -51,9 +51,9 @@ import (
 	colors: {for n in #shadowInks {(n): string}}
 	dark: [string]: string
 	dark: {for n in #shadowInks {(n): string}}
-	rounded: [string]:  string
-	spacing: [string]:  string
-	motion: [string]:   string
+	rounded: [string]:   string
+	spacing: [string]:   string
+	motion: [string]:    string
 	control: [string]:   string
 	measures: [string]:  string
 	type: [string]:      string
@@ -122,12 +122,12 @@ import (
 	// decides its size and its leading together, the shape Material's typescale
 	// takes and a bare ladder cannot state. #Design.type states the tier's rules.
 	type: {
-		display:           "2.5rem"
-		title:             "2rem"
-		subtitle:          "1.25rem"
-		body:              "1rem"
-		caption:           "0.875rem"
-		label:             "0.75rem"
+		display:  "2.5rem"
+		title:    "2rem"
+		subtitle: "1.25rem"
+		body:     "1rem"
+		caption:  "0.875rem"
+		label:    "0.75rem"
 		// TWO leadings, not one per purpose. The vendored ladder has five steps and
 		// two roles at one norm raise, so a preset that named four would leave an
 		// app a single free value and any override it made would cascade. Prose and headings are the two readings a
@@ -186,6 +186,7 @@ import (
 		url:       string
 		integrity: string
 	}
+
 	// An own source has no archive, so it has no version an archive could pin;
 	// the only honest one is this repository. A constraint as well as a rule: a relabelled vendor source,
 	// `{kind: "own", origin: "open-props", version: "1.7.23"}`, fails here before
@@ -459,7 +460,7 @@ import (
 	type: #Type | #LegacyType
 	if type == "decimal" {
 		precision!: int & >=1 & <=38
-		scale!: int & >=0 & <=precision
+		scale!:     int & >=0 & <=precision
 	}
 	pk:       *false | bool
 	required: *true | bool
@@ -484,15 +485,15 @@ import (
 // Column names (`owner`, `on`, `user`) are of the entity's own table;
 // `via` is a table name, `parent` an entity name whose access is private.
 #Access: {
-	scope:  "private"
-	owner:  string
+	scope: "private"
+	owner: string
 	shared?: {via: string, on: string, user: string}
 } | {
 	scope:  "folder"
 	parent: string
 	on:     string
 } | {
-	scope: "public"
+	scope:  "public"
 	write?: bool
 } | {
 	scope: "internal"
@@ -556,6 +557,7 @@ import (
 		server: true
 		access: scope: "public"
 	}
+
 	// Whether the rows live in the cluster: every durability but the two the browser keeps.
 	// The one spelling of that boundary; the emitter reads this, never the names.
 	server: durability != "tab" && durability != "device"
@@ -565,6 +567,7 @@ import (
 	if durability != "tab" && durability != "device" {
 		access?: #Access
 	}
+
 	// "pipeline" entities are never mutated by forms; role-level enforcement
 	// is an open question in SPEC.md.
 	writers: *"forms" | "pipeline"
@@ -662,7 +665,7 @@ import (
 	// The references the predicate may follow. A field of the entity that
 	// carries `ref` walks forward to the one referenced row; "<Entity>.<field>"
 	// whose field refs this entity walks backward to every row pointing here.
-	via:  *[] | [...string]
+	via: *[] | [...string]
 	note: string
 	// Resolved by derive (program_validations.cue): each edge as the SQL and
 	// the store read it: rows of `table` whose `key` equals the row's `from`.
@@ -684,6 +687,10 @@ import (
 	// App-relative paths of the committed wasm modules its jobs call, each
 	// named in a job by its file's stem.
 	wasm: *[] | [...string]
+	// Optional service-only PostgREST RPC called without arguments after all
+	// sink rows are written; the target must be idempotent because failed
+	// requests leave the computation eligible to retry.
+	onComplete?: string & =~"^[a-z_][a-z0-9_]{0,62}$"
 }
 
 #Pipeline: {
@@ -697,21 +704,22 @@ import (
 	// cannot see inside).
 	raw?: true
 	if raw != _|_ {
-		src: *"pipelines/\(name).yaml" | string
+		src:        *"pipelines/\(name).yaml" | string
 		transform?: _|_
 		key?:       _|_
 	}
-	from?:   string // source entity name (CDC events); cdc pipelines set it
-	to:      string // sink entity name (upsert, or scheduled mutation target)
-	group?:  string // bus consumer group; cdc pipelines set it
+
+	from?:  string // source entity name (CDC events); cdc pipelines set it
+	to:     string // sink entity name (upsert, or scheduled mutation target)
+	group?: string // bus consumer group; cdc pipelines set it
 	// Keyed aggregate: the transform groups source rows by this column and
 	// emits an ARRAY of sink rows; the sink upsert conflicts on the sink pk.
 	// Unset = singleton transform emitting one row.
 	key?: string
 	transform?: {
-		aggregate: string // PostgREST query the transform reads from the source table
-		src: *"pipelines/\(name).blobl" | string // assembly file holding the mapping
-		bloblang: string // its content — inlined where the consumer cannot reference files
+		aggregate: string                              // PostgREST query the transform reads from the source table
+		src:       *"pipelines/\(name).blobl" | string // assembly file holding the mapping
+		bloblang:  string                              // its content — inlined where the consumer cannot reference files
 	}
 	// A keyed aggregate's transform, written as a fold: empty(key),
 	// step(acc, row), combine(a, b), result(acc), with `harden` supplied by
@@ -774,6 +782,7 @@ import (
 		shim?: _|_
 		key:   string // a fold groups; the singleton case has no key to seed empty() with
 	}
+
 	// Scheduled pipelines: a generate input ticks every `interval` and the
 	// action mutates `to` rows matched by `filter` (PostgREST fragment;
 	// tokens {cutoff} and {nowts} resolve to bloblang metadata at runtime).
@@ -860,19 +869,19 @@ import (
 #RelationalOp: "insert" | "ensure" | "upsert" | "accumulate" | "update" | "delete"
 
 #RelationalEffect: {
-	op:            #RelationalOp
-	table:         string
-	values?:       {[string]: _}
-	key?:          [...string]
-	where?:        {[string]: _}
-	rawWhere?:     string
-	accumulate?:   [...string]
+	op:    #RelationalOp
+	table: string
+	values?: {[string]: _}
+	key?: [...string]
+	where?: {[string]: _}
+	rawWhere?: string
+	accumulate?: [...string]
 	updateValues?: {[string]: _}
 }
 
 #FunctionEffect: {
-	call:  string
-	args?: [..._] | {[string]: _}
+	call: string
+	args?: [...] | {[string]: _}
 }
 
 #NotifyEffect: {
@@ -881,15 +890,15 @@ import (
 }
 
 #SagaEffect: {
-	saga:            string
+	saga: string
 	idempotencyKey?: string | {raw: string}
-	payload?:        {[string]: _}
+	payload?: {[string]: _}
 }
 
 #StreamEffect: {
 	stream:  string
 	signal?: "refresh" | "checkpoint" | "flush"
-	key?:    string | {raw: string}
+	key?: string | {raw: string}
 }
 
 #MechaEffect: #RelationalEffect | #FunctionEffect | #NotifyEffect | #SagaEffect | #StreamEffect
@@ -897,30 +906,30 @@ import (
 #MechaAction: {
 	assign?: {[string]: _}
 	effect?: #MechaEffect | [...#MechaEffect]
-	raise?:  string
+	raise?: string
 }
 
 #MechaTransition: {
-	target?:  string
-	guard?:   string
+	target?: string
+	guard?:  string
 	actions?: #MechaAction | [...#MechaAction]
 }
 
 #MechaTransitionValue: string | #MechaTransition | [...#MechaTransition]
 
 #MechaState: {
-	type?:    "final" | "normal"
-	on?: [Event=string]: #MechaTransitionValue
+	type?: "final" | "normal"
+	on?: [Event=string]:      #MechaTransitionValue
 	after?: [DelayMs=string]: #MechaTransitionValue
 	entry?: #MechaAction | [...#MechaAction]
-	exit?:  #MechaAction | [...#MechaAction]
+	exit?: #MechaAction | [...#MechaAction]
 }
 
 #MechaMachine: {
-	name:    string
-	ir?:     string
-	entity:  string
-	timing?: "BEFORE" | "AFTER"
+	name:     string
+	ir?:      string
+	entity:   string
+	timing?:  "BEFORE" | "AFTER"
 	field?:   string
 	initial?: string
 	states?: [StateName=string]: #MechaState
@@ -934,10 +943,10 @@ import (
 // A Cortex durable saga executed via DBOS over PostgreSQL — Level 4 exterior effects,
 // automatic step idempotency, and transactional compensation.
 #Saga: {
-	name:        string
-	ir:          *name | string
-	entity?:     string
-	steps?:      [...string]
+	name:    string
+	ir:      *name | string
+	entity?: string
+	steps?: [...string]
 	timeout?:    string
 	maxRetries?: int
 }
@@ -945,12 +954,12 @@ import (
 // A DuckStream streaming IVM pipeline executed via Feldera on the server
 // and emulated reactively via DuckDB-WASM in the client browser.
 #DuckStreamPipeline: {
-	name:       string
-	ir:         *name | string
-	sql:        string
-	sources:    [...string]
-	sink:       string
-	tempo:      *"hot" | "cold"
+	name: string
+	ir:   *name | string
+	sql:  string
+	sources: [...string]
+	sink:  string
+	tempo: *"hot" | "cold"
 	operators?: [...("tumble" | "hop" | "session" | "distinct" | "interval_join" | "cross_join")]
 }
 
@@ -961,8 +970,8 @@ import (
 	// resulting key string.
 	// "date" submits day precision: empty → JSON null, else the picked day
 	// pinned to 00:00:00Z — the one-clock day convention.
-	control:  "text" | "checkbox" | "textarea" | "select" | "hidden" | "datetime" | "date" | "file"
-	required: *false | bool
+	control:         "text" | "checkbox" | "textarea" | "select" | "hidden" | "datetime" | "date" | "file"
+	required:        *false | bool
 	maxLength?:      int
 	placeholder?:    string
 	invalidMessage?: string
@@ -1018,9 +1027,11 @@ import (
 	ssr: *"spa" | "ssg" | "ssr"
 	if S.prerender {ssr: "ssg"}
 	if S.ssr == "ssg" {prerender: true}
+
 	// A slugged route's authored pattern is what the default locale's
 	// catalogue must agree with, so it needs a first segment to translate.
 	if S.slug != _|_ {route: =~"^/[a-z0-9][a-z0-9-]*(/|$)"}
+
 	// filter/select are PostgREST query fragments passed through verbatim;
 	// `{param.x}` placeholders resolve in the interpreter.
 	// Derived from the markup (program_derived.cue). An assembly screen's html
@@ -1035,6 +1046,7 @@ import (
 	if S.markup != _|_ {
 		reads: *[] | [...{entity: string, order?: string, filter?: string, select?: string}]
 	}
+
 	// A component-bearing screen is authored HERE, in CUE: `markup` is the
 	// screen's whole HTML, composed by interpolating component definitions
 	// (their tags survive in it as inert wrappers), and files.html becomes an
@@ -1077,6 +1089,7 @@ import (
 		if S.markup != _|_ {
 			handlers: *[] | [...string]
 		}
+
 		// The control adapters the screen's markup names (data-value-adapter).
 		// Apart from handlers because the role decides the cage: an adapter ends
 		// in a map of pure functions, and its compartment is endowed with Intl.
@@ -1246,7 +1259,7 @@ import (
 		// itself. They are served as statics like any other app file, so a unit
 		// reaches no further over the network than the app already does.
 		vendored: [Name=string]: {
-			ir: *Name | string
+			ir:        *Name | string
 			isolation: "compartment" | "iframe" | "worker"
 			capabilities: [...string]
 			src: string
@@ -1315,12 +1328,11 @@ import (
 		let sReadsEntities = [if s.reads != _|_ for r in s.reads if r.entity != _|_ {[if eLookup[r.entity] != _|_ {eLookup[r.entity]}, r.entity][0]}]
 		let sFormsEntities = [if s.forms != _|_ for f in s.forms if f.entity != _|_ {[if eLookup[f.entity] != _|_ {eLookup[f.entity]}, f.entity][0]}]
 		if list.Contains(sReadsEntities, plSinkEntity)
-		if len([for fe in sFormsEntities if list.Contains(plSourceEntities, fe) {fe}]) > 0
-		{
+		if len([for fe in sFormsEntities if list.Contains(plSourceEntities, fe) {fe}]) > 0 {
 			pipeline: plName
 			screen:   sName
 			sink:     pl.sink
-		}
+		},
 	]
 	_hotRefusal: [if len(_hotViolations) == 0 {true}, "cold pipeline cannot feed an active screen mutation loop: \(_hotViolations[0].pipeline) feeds \(_hotViolations[0].sink) on screen \(_hotViolations[0].screen)"][0] & true
 
@@ -1335,7 +1347,7 @@ import (
 				[if m.states != _|_ for _, st in m.states if st.on != _|_ for _, tr in st.on for t in [if (tr & string) != _|_ {[]}, if (tr & [...]) != _|_ {tr}, [tr]][0] if t.actions != _|_ for a in [if (t.actions & [...]) != _|_ {t.actions}, [t.actions]][0] {a}],
 				[if m.states != _|_ for _, st in m.states if st.after != _|_ for _, tr in st.after for t in [if (tr & string) != _|_ {[]}, if (tr & [...]) != _|_ {tr}, [tr]][0] if t.actions != _|_ for a in [if (t.actions & [...]) != _|_ {t.actions}, [t.actions]][0] {a}],
 			])
-		}
+		},
 	]
 
 	_declaredSagas: [for sName, _ in [if A.state.sagas != _|_ {A.state.sagas}, {}][0] {sName}]
@@ -1344,11 +1356,10 @@ import (
 		for act in ma.actions
 		for eff in [if act.effect != _|_ {[if (act.effect & [...]) != _|_ {act.effect}, [act.effect]][0]}, []][0]
 		if (eff & #SagaEffect) != _|_
-		if !list.Contains(_declaredSagas, eff.saga)
-		{
+		if !list.Contains(_declaredSagas, eff.saga) {
 			machine: ma.machine
 			saga:    eff.saga
-		}
+		},
 	]
 	_sagaRefusal: [if len(_undeclaredSagas) == 0 {true}, "machine \(_undeclaredSagas[0].machine) references undeclared saga: \(_undeclaredSagas[0].saga)"][0] & true
 
@@ -1358,11 +1369,10 @@ import (
 		for act in ma.actions
 		for eff in [if act.effect != _|_ {[if (act.effect & [...]) != _|_ {act.effect}, [act.effect]][0]}, []][0]
 		if (eff & #StreamEffect) != _|_
-		if !list.Contains(_declaredStreams, eff.stream)
-		{
+		if !list.Contains(_declaredStreams, eff.stream) {
 			machine: ma.machine
 			stream:  eff.stream
-		}
+		},
 	]
 	_streamRefusal: [if len(_undeclaredStreams) == 0 {true}, "machine \(_undeclaredStreams[0].machine) references undeclared duckstream: \(_undeclaredStreams[0].stream)"][0] & true
 
@@ -1378,21 +1388,19 @@ import (
 					if st.on != _|_ if st.on.delete != _|_
 					for tr in [if (st.on.delete & string) != _|_ {[]}, if (st.on.delete & [...]) != _|_ {st.on.delete}, [st.on.delete]][0]
 					if tr.actions != _|_
-					for a in [if (tr.actions & [...]) != _|_ {tr.actions}, [tr.actions]][0]
-					{a}
+					for a in [if (tr.actions & [...]) != _|_ {tr.actions}, [tr.actions]][0] {a},
 				],
 			])
-		}
+		},
 	]
 
 	_deleteNewViolations: [
 		for da in _deleteActions
 		for act in da.actions
-		if strings.Contains(json.Marshal(act), "NEW.")
-		{
+		if strings.Contains(json.Marshal(act), "NEW.") {
 			machine: da.machine
 			action:  json.Marshal(act)
-		}
+		},
 	]
 	_deleteNewRefusal: [if len(_deleteNewViolations) == 0 {true}, "machine \(_deleteNewViolations[0].machine) references NEW in delete action: \(_deleteNewViolations[0].action)"][0] & true
 }

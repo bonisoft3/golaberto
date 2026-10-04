@@ -4,6 +4,7 @@
 package emit
 
 import "strings"
+
 import pronto "bonisoft.org/plugins/pronto"
 
 _computed: _code & {
@@ -13,17 +14,22 @@ _computed: _code & {
 			durability: "live"
 			fields: [{name: "id", type: "uuid", pk: true}, {name: "odds", type: "int"}]
 		}
-		computations: chances: to: ["Chance"]
+		computations: chances: {
+			to: ["Chance"]
+			onComplete: "capture_team_odds_history"
+		}
 	}
 }
 
 _computedLoop: (pronto.#DefaultLoop & {
-	code:     _computed
+	code: _computed
 	terminal: (pronto.#DefaultTerminal & {code: _computed}).out
 	cluster: (pronto.#DefaultCluster & {code: _computed, statics: []}).out
 }).out
+_computedCluster: (pronto.#DefaultCluster & {code: _computed, statics: []}).out
 _admit: _computedLoop.surface.checks.admit
 
-admitLints:       _admit.verb & "lint"
-admitLoadsModule: strings.HasSuffix(_admit.cmds[0], #"admit.ts) "computations/chances.js""#) & true
-admitUnderPins:   strings.Contains(_admit.cmds[0], "services compute deno.json") & true
+admitLints:               _admit.verb & "lint"
+admitLoadsModule:         strings.HasSuffix(_admit.cmds[0], #"admit.ts) "computations/chances.js""#) & true
+admitUnderPins:           strings.Contains(_admit.cmds[0], "services compute deno.json") & true
+completionRpcIsForwarded: strings.Contains(_computedCluster.surface.targets.compute.compose.environment.COMPUTATIONS, #""onComplete":"capture_team_odds_history""#) & true

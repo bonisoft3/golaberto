@@ -206,6 +206,63 @@ graph TD
 <p data-extract="invariant">Row invariant: <code class="cel">this.last &gt;= this.first</code> — a zone's last position is not above its first.</p>
 </section>
 
+<section id="TeamChampionship" data-kind="entity" data-durability="live" data-type-id="0xfaf8931af57f6e66">
+<h3>TeamChampionship — live, public</h3>
+<p>Written by the service-only <a href="#team-profiles">team-profiles</a> projection, read in bounded team scopes.</p>
+<table data-extract="fields"><tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
+<tr data-ordinal="1"><td>id</td><td>string</td><td></td><td>pk</td></tr>
+<tr data-ordinal="2"><td>team_id</td><td>uuid</td><td></td><td>references team</td></tr>
+<tr data-ordinal="3"><td>championship_id</td><td>uuid</td><td></td><td>references championship</td></tr>
+<tr data-ordinal="4"><td>championship_name</td><td>string</td><td></td><td></td></tr>
+<tr data-ordinal="5"><td>begins</td><td>date</td><td></td><td></td></tr>
+<tr data-ordinal="6"><td>ends</td><td>date</td><td></td><td></td></tr>
+<tr data-ordinal="7"><td>status</td><td>string</td><td><code class="cel">this in ['current', 'upcoming', 'past']</code></td><td></td></tr>
+</table>
+</section>
+<section id="TeamRoster" data-kind="entity" data-durability="live" data-type-id="0xbf8641dc49e18232">
+<h3>TeamRoster — live, public</h3>
+<p>Written by the service-only <a href="#team-profiles">team-profiles</a> projection, read in bounded team scopes.</p>
+<table data-extract="fields"><tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
+<tr data-ordinal="1"><td>id</td><td>string</td><td></td><td>pk</td></tr>
+<tr data-ordinal="2"><td>team_id</td><td>uuid</td><td></td><td>references team</td></tr>
+<tr data-ordinal="3"><td>championship_id</td><td>uuid</td><td></td><td>references championship</td></tr>
+<tr data-ordinal="4"><td>player_id</td><td>uuid</td><td></td><td>references player</td></tr>
+<tr data-ordinal="5"><td>player_name</td><td>string</td><td></td><td></td></tr>
+<tr data-ordinal="6"><td>position</td><td>string</td><td><code class="cel">this in ['', 'g', 'dr', 'dc', 'dl', 'dm', 'cm', 'am', 'fw']</code></td><td></td></tr>
+<tr data-ordinal="7"><td>played</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="8"><td>started</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="9"><td>came_on</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="10"><td>bench</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="11"><td>minutes</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="12"><td>goals</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="13"><td>penalties</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="14"><td>own_goals</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="15"><td>yellow</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="16"><td>red</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="17"><td>championship_name</td><td>string</td><td></td><td></td></tr>
+<tr data-ordinal="18"><td>off_rating</td><td>double</td><td></td><td>optional</td></tr>
+<tr data-ordinal="19"><td>def_rating</td><td>double</td><td></td><td>optional</td></tr>
+<tr data-ordinal="20"><td>contribution</td><td>double</td><td></td><td>optional</td></tr>
+<tr data-ordinal="21"><td>contribution_per90</td><td>double</td><td></td><td>optional</td></tr>
+<tr data-ordinal="22"><td>goals_per90</td><td>double</td><td></td><td>optional</td></tr>
+<tr data-ordinal="23"><td>search_key</td><td>string</td><td></td><td>generated: replace(replace(replace(player_name, &#x27;ı&#x27;, &#x27;i&#x27;), &#x27;þ&#x27;, &#x27;th&#x27;), &#x27;þ&#x27;, &#x27;th&#x27;)</td></tr>
+</table>
+</section>
+<section id="TeamPlayerHistory" data-kind="entity" data-durability="live" data-type-id="0x8fdba800739aa0f7">
+<h3>TeamPlayerHistory — live, public</h3>
+<p>Written by the service-only <a href="#team-profiles">team-profiles</a> projection, read in bounded team scopes.</p>
+<table data-extract="fields"><tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
+<tr data-ordinal="1"><td>id</td><td>string</td><td></td><td>pk</td></tr>
+<tr data-ordinal="2"><td>team_id</td><td>uuid</td><td></td><td>references team</td></tr>
+<tr data-ordinal="3"><td>player_id</td><td>uuid</td><td></td><td>references player</td></tr>
+<tr data-ordinal="4"><td>player_name</td><td>string</td><td></td><td></td></tr>
+<tr data-ordinal="5"><td>position</td><td>string</td><td><code class="cel">this in ['', 'g', 'dr', 'dc', 'dl', 'dm', 'cm', 'am', 'fw']</code></td><td></td></tr>
+<tr data-ordinal="6"><td>country</td><td>string</td><td></td><td>optional</td></tr>
+<tr data-ordinal="7"><td>is_current</td><td>bool</td><td></td><td></td></tr>
+<tr data-ordinal="8"><td>search_key</td><td>string</td><td></td><td>generated: replace(replace(replace(player_name, &#x27;ı&#x27;, &#x27;i&#x27;), &#x27;þ&#x27;, &#x27;th&#x27;), &#x27;þ&#x27;, &#x27;th&#x27;)</td></tr>
+</table>
+</section>
+
 <section id="TeamGroup" data-kind="entity" data-durability="server" data-type-id="0xa881d0753d2d99d0">
 <h3>TeamGroup — server, public</h3>
 <p>A team's place in a group, with the organiser's adjustments: <code>add_sub</code> points added or taken, <code>bias</code> the organiser's own tiebreak, and the note that explains them.</p>
@@ -252,6 +309,8 @@ graph TD
 <tr data-ordinal="9"><td>foundation_display</td><td>string</td><td></td><td>generated: the foundation as dd/mm/yyyy</td></tr>
 <tr data-ordinal="10"><td>search_name</td><td>string</td><td></td><td>generated: name; original search collation retained for schema-version readers</td></tr>
 <tr data-ordinal="11"><td>search_key</td><td>string</td><td></td><td>generated: name; fold ı to i and Þ/þ to th; ICU search collation ignores case and accents and matches æ with ae</td></tr>
+<tr data-ordinal="12"><td>latitude</td><td>double</td><td><code class="cel">this &gt;= -90 &amp;&amp; this &lt;= 90</code></td><td>optional</td></tr>
+<tr data-ordinal="13"><td>longitude</td><td>double</td><td><code class="cel">this &gt;= -180 &amp;&amp; this &lt;= 180</code></td><td>optional</td></tr>
 </table>
 </section>
 
@@ -358,6 +417,8 @@ graph TD
 <tr data-ordinal="9"><td>bench</td><td>bool</td><td></td><td>default false; named among the substitutes and never brought on (<a href="#decision-bench">decision-bench</a>)</td></tr>
 <tr data-ordinal="10"><td>day</td><td>date</td><td></td><td>optional; the game's day, kept by a trigger (<a href="#decision-local-reads">decision-local-reads</a>)</td></tr>
 <tr data-ordinal="11"><td>day_display</td><td>string</td><td></td><td>generated: the day as dd/mm/yyyy</td></tr>
+<tr data-ordinal="12"><td>off_rating</td><td>double</td><td></td><td>optional</td></tr>
+<tr data-ordinal="13"><td>def_rating</td><td>double</td><td></td><td>optional</td></tr>
 </table>
 <p>Unique <code>uq_player_game</code> over (game_id, player_id): a player appears in a game once. A substitute never brought on came on at nothing and went off at nothing: <code class="cel">this.bench == false || (this.on_minute == 0 &amp;&amp; has(this.off_minute) == false)</code>.</p>
 </section>
@@ -537,6 +598,9 @@ graph TD
 <tr data-ordinal="14"><td>result</td><td>string</td><td><code class="cel">this in [&#x27;&#x27;, &#x27;w&#x27;, &#x27;d&#x27;, &#x27;l&#x27;]</code></td><td>the regular-time result for this team, empty until played</td></tr>
 <tr data-ordinal="15"><td>day_display</td><td>string</td><td></td><td>generated</td></tr>
 <tr data-ordinal="16"><td>kickoff_local</td><td>string</td><td></td><td>generated</td></tr>
+<tr data-ordinal="19"><td>category_id</td><td>uuid</td><td></td><td>optional; ref: category</td></tr>
+<tr data-ordinal="20"><td>phase_key</td><td>string</td><td></td><td></td></tr>
+<tr data-ordinal="21"><td>category_key</td><td>string</td><td></td><td></td></tr>
 </table>
 </section>
 
@@ -563,6 +627,11 @@ graph TD
 <tr data-ordinal="16"><td>red</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
 <tr data-ordinal="17"><td>championship_name</td><td>string</td><td></td><td>the championship's name at the recount, so a season reads one synced table</td></tr>
 <tr data-ordinal="18"><td>team_name</td><td>string</td><td></td><td>the team's name at the recount</td></tr>
+<tr data-ordinal="19"><td>off_rating</td><td>double</td><td></td><td>optional</td></tr>
+<tr data-ordinal="20"><td>def_rating</td><td>double</td><td></td><td>optional</td></tr>
+<tr data-ordinal="21"><td>contribution</td><td>double</td><td></td><td>optional</td></tr>
+<tr data-ordinal="22"><td>contribution_per90</td><td>double</td><td></td><td>optional</td></tr>
+<tr data-ordinal="23"><td>goals_per90</td><td>double</td><td></td><td>optional</td></tr>
 </table>
 </section>
 
@@ -818,6 +887,81 @@ graph TD
 </table>
 </section>
 
+<section id="TeamComment" data-kind="entity" data-durability="server" data-type-id="0xec225aa743df8214"><h3>TeamComment — server</h3><table data-extract="fields"><tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
+<tr data-ordinal="1"><td>id</td><td>uuid</td><td></td><td>pk: true; default: gen_random_uuid()</td></tr>
+<tr data-ordinal="2"><td>team_id</td><td>uuid</td><td></td><td>ref: team</td></tr>
+<tr data-ordinal="3"><td>app_user_id</td><td>uuid</td><td></td><td>ref: app_user; default: auth_uid()</td></tr>
+<tr data-ordinal="4"><td>body</td><td>string</td><td><code class="cel">this.trim().size() &gt; 0 &amp;&amp; this.size() &lt;= 1000</code></td><td></td></tr>
+<tr data-ordinal="5"><td>created_at</td><td>timestamp</td><td></td><td>default: now()</td></tr>
+</table></section>
+<section id="TeamCommentDraft" data-kind="entity" data-durability="tab" data-type-id="0xca07330d6663ef60"><h3>TeamCommentDraft — tab</h3><table data-extract="fields"><tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
+<tr data-ordinal="1"><td>id</td><td>string</td><td></td><td>pk: true</td></tr>
+<tr data-ordinal="2"><td>body</td><td>string</td><td><code class="cel">this.size() &lt;= 1000</code></td><td>default: &#x27;&#x27;</td></tr>
+<tr data-ordinal="3"><td>state</td><td>string</td><td><code class="cel">this in [&#x27;writing&#x27;, &#x27;sending&#x27;, &#x27;refused&#x27;]</code></td><td>default: &#x27;writing&#x27;</td></tr>
+</table></section>
+<section id="TeamCampaignPoint" data-kind="entity" data-durability="live" data-type-id="0x9baa066851e521e0"><h3>TeamCampaignPoint — live</h3><table data-extract="fields"><tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
+<tr data-ordinal="1"><td>id</td><td>string</td><td></td><td>pk: true</td></tr>
+<tr data-ordinal="2"><td>group_id</td><td>uuid</td><td></td><td>ref: stage_group</td></tr>
+<tr data-ordinal="3"><td>team_id</td><td>uuid</td><td></td><td>ref: team</td></tr>
+<tr data-ordinal="4"><td>game_id</td><td>uuid</td><td></td><td>ref: game</td></tr>
+<tr data-ordinal="5"><td>sequence</td><td>int32</td><td><code class="cel">this &gt;= 1</code></td><td></td></tr>
+<tr data-ordinal="6"><td>day</td><td>date</td><td></td><td></td></tr>
+<tr data-ordinal="7"><td>points</td><td>int32</td><td></td><td></td></tr>
+<tr data-ordinal="8"><td>position</td><td>int32</td><td><code class="cel">this &gt;= 1</code></td><td></td></tr>
+<tr data-ordinal="9"><td>result</td><td>string</td><td><code class="cel">this in [&#x27;w&#x27;, &#x27;d&#x27;, &#x27;l&#x27;]</code></td><td></td></tr>
+</table></section>
+<section id="TeamOddsHistory" data-kind="entity" data-durability="live" data-type-id="0xbef4d34708f58150"><h3>TeamOddsHistory — live</h3><table data-extract="fields"><tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
+<tr data-ordinal="1"><td>id</td><td>string</td><td></td><td>pk: true</td></tr>
+<tr data-ordinal="2"><td>group_id</td><td>uuid</td><td></td><td>ref: stage_group</td></tr>
+<tr data-ordinal="3"><td>team_id</td><td>uuid</td><td></td><td>ref: team</td></tr>
+<tr data-ordinal="4"><td>recorded_on</td><td>date</td><td></td><td></td></tr>
+<tr data-ordinal="5"><td>captured_at</td><td>timestamp</td><td></td><td>optional</td></tr>
+<tr data-ordinal="6"><td>position</td><td>int32</td><td><code class="cel">this &gt;= 1</code></td><td></td></tr>
+<tr data-ordinal="7"><td>percent</td><td>double</td><td><code class="cel">this &gt;= 0 &amp;&amp; this &lt;= 100</code></td><td></td></tr>
+<tr data-ordinal="8"><td>source</td><td>string</td><td><code class="cel">this in [&#x27;imported&#x27;, &#x27;computed&#x27;]</code></td><td></td></tr>
+</table></section>
+<section id="TeamRatingChart" data-kind="entity" data-durability="live" data-type-id="0xee726246d2463572"><h3>TeamRatingChart — live</h3><table data-extract="fields"><tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
+<tr data-ordinal="1"><td>id</td><td>string</td><td></td><td>pk: true</td></tr>
+<tr data-ordinal="2"><td>team_id</td><td>uuid</td><td></td><td>ref: team</td></tr>
+<tr data-ordinal="3"><td>period</td><td>string</td><td><code class="cel">this in [&#x27;1m&#x27;, &#x27;3m&#x27;, &#x27;6m&#x27;, &#x27;1y&#x27;, &#x27;5y&#x27;, &#x27;all&#x27;]</code></td><td></td></tr>
+<tr data-ordinal="4"><td>series_json</td><td>string</td><td></td><td></td></tr>
+</table></section>
+<section id="TeamOddsChart" data-kind="entity" data-durability="live" data-type-id="0xc3d5774bc952a01a"><h3>TeamOddsChart — live</h3><table data-extract="fields"><tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
+<tr data-ordinal="1"><td>id</td><td>string</td><td></td><td>pk: true</td></tr>
+<tr data-ordinal="2"><td>group_id</td><td>uuid</td><td></td><td>ref: stage_group</td></tr>
+<tr data-ordinal="3"><td>team_id</td><td>uuid</td><td></td><td>ref: team</td></tr>
+<tr data-ordinal="4"><td>zone_id</td><td>uuid</td><td></td><td>ref: zone</td></tr>
+<tr data-ordinal="5"><td>series_json</td><td>string</td><td></td><td></td></tr>
+</table></section>
+<section id="TeamRosterTotal" data-kind="entity" data-durability="live" data-type-id="0xcb46033cabbd7525"><h3>TeamRosterTotal — live</h3><table data-extract="fields"><tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
+<tr data-ordinal="1"><td>id</td><td>string</td><td></td><td>pk: true</td></tr>
+<tr data-ordinal="2"><td>team_id</td><td>uuid</td><td></td><td>ref: team</td></tr>
+<tr data-ordinal="3"><td>championship_id</td><td>uuid</td><td></td><td>ref: championship</td></tr>
+<tr data-ordinal="4"><td>championship_name</td><td>string</td><td></td><td></td></tr>
+<tr data-ordinal="5"><td>played</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="6"><td>started</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="7"><td>came_on</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="8"><td>bench</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="9"><td>minutes</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="10"><td>goals</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="11"><td>penalties</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="12"><td>own_goals</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="13"><td>yellow</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="14"><td>red</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td></td></tr>
+<tr data-ordinal="15"><td>off_rating</td><td>double</td><td></td><td>optional</td></tr>
+<tr data-ordinal="16"><td>def_rating</td><td>double</td><td></td><td>optional</td></tr>
+<tr data-ordinal="17"><td>contribution</td><td>double</td><td></td><td>optional</td></tr>
+<tr data-ordinal="18"><td>contribution_per90</td><td>double</td><td></td><td>optional</td></tr>
+<tr data-ordinal="19"><td>goals_per90</td><td>double</td><td></td><td>optional</td></tr>
+</table></section>
+<section id="TeamChartState" data-kind="entity" data-durability="tab" data-type-id="0xd717db218a646b83"><h3>TeamChartState — tab</h3><table data-extract="fields"><tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
+<tr data-ordinal="1"><td>id</td><td>string</td><td></td><td>pk: true</td></tr>
+<tr data-ordinal="2"><td>group_id</td><td>uuid</td><td></td><td></td></tr>
+<tr data-ordinal="3"><td>team_id</td><td>uuid</td><td></td><td></td></tr>
+<tr data-ordinal="4"><td>compare_id</td><td>uuid</td><td></td><td></td></tr>
+<tr data-ordinal="5"><td>metric</td><td>string</td><td><code class="cel">this in [&#x27;points&#x27;, &#x27;position&#x27;, &#x27;percent&#x27;]</code></td><td>default: &#x27;points&#x27;</td></tr>
+<tr data-ordinal="6"><td>series_json</td><td>string</td><td></td><td>default: &#x27;{}&#x27;</td></tr>
+<tr data-ordinal="7"><td>game_prefix</td><td>string</td><td></td><td>default: /jogo/</td></tr></table></section>
 <section id="ArchivePage" data-kind="entity" data-durability="tab" data-type-id="0x93cef5ac14f2a64a">
 <h3>ArchivePage — tab</h3>
 <p>A history’s current forty-row page, keyed by list and owner. The reader can return to it without downloading the whole history (<a href="#decision-bounded-route-reads">decision-bounded-route-reads</a>).</p>
@@ -829,6 +973,13 @@ graph TD
 <tr data-ordinal="4"><td>next_offset</td><td>int32</td><td><code class="cel">this &gt;= 40</code></td><td>default 40</td></tr>
 <tr data-ordinal="5"><td>page</td><td>int32</td><td><code class="cel">this &gt;= 1</code></td><td>default 1</td></tr>
 <tr data-ordinal="6"><td>state</td><td>string</td><td><code class="cel">this in [&#x27;browsing&#x27;]</code></td><td>default 'browsing'</td></tr>
+<tr data-ordinal="7"><td>q</td><td>string</td><td><code class="cel">this.size() &lt;= 80</code></td><td>default: &#x27;&#x27;</td></tr>
+<tr data-ordinal="8"><td>q_key</td><td>string</td><td><code class="cel">this.size() &lt;= 160</code></td><td>default: &#x27;&#x27;</td></tr>
+<tr data-ordinal="9"><td>sort</td><td>string</td><td><code class="cel">this in [&#x27;name&#x27;, &#x27;played&#x27;, &#x27;minutes&#x27;, &#x27;goals&#x27;, &#x27;goals_per90&#x27;, &#x27;contribution&#x27;, &#x27;contribution_per90&#x27;]</code></td><td>default: &#x27;name&#x27;</td></tr>
+<tr data-ordinal="10"><td>period</td><td>string</td><td><code class="cel">this in [&#x27;1m&#x27;, &#x27;3m&#x27;, &#x27;6m&#x27;, &#x27;1y&#x27;, &#x27;5y&#x27;, &#x27;all&#x27;]</code></td><td>default: &#x27;1y&#x27;</td></tr>
+<tr data-ordinal="11"><td>side</td><td>string</td><td><code class="cel">this in [&#x27;*&#x27;, &#x27;home&#x27;, &#x27;away&#x27;]</code></td><td>default: &#x27;*&#x27;</td></tr>
+<tr data-ordinal="12"><td>phase</td><td>string</td><td></td><td>default: &#x27;*&#x27;</td></tr>
+<tr data-ordinal="13"><td>category</td><td>string</td><td></td><td>default: &#x27;*&#x27;</td></tr>
 </table>
 </section>
 
@@ -867,6 +1018,7 @@ graph TD
 <section id="home-games" data-kind="pipeline" data-from="Game" data-to="HomeGameCard">
 <h3>home-games</h3><p>A clock-driven refresh of home ranks every thirty seconds, through the service-only refresh_home_games SQL function. Selection reads the declared fourteen-day GameCard windows, including the upcoming three-hour grace period, seeks the latest TeamRating only for candidate teams, and reads GameImportance. The two ranks and forty-row HomeGameCard projection are updated in one transaction and only when changed; replay is idempotent. Concurrent refreshes skip under an advisory transaction lock. GameCard stays off the CDC publication. The pure home_game_selection function accepts a clock for deterministic window, quality and highlighting tests; home_game_order retains the three-column ranking interface. Highlight flags belong only to the bounded HomeGameCard projection and settle atomically with its ranks.</p>
 </section>
+<section id="team-profiles" data-kind="pipeline" data-from="Team" data-to="TeamChampionship"><h3>team-profiles — scoped membership and roster projection</h3><p>Source and player-stat triggers enqueue affected team IDs in an internal revisioned queue. A service-only bounded worker refreshes only those teams: participation unions group membership, actual game sides, registrations and observed player seasons; rosters union registrations and observed players, preserving zero-appearance entries and copied season counters. Current names come from Player. Main-page players are deduplicated with current association precedence: ongoing and upcoming championships have ends on or after Brasília’s day, and past players have no such association. A clock check queues date-boundary changes. Projection upserts suppress unchanged writes; revision comparisons preserve work enqueued during refresh. One additive migration backfills retained memberships and protects projection writes to service only. These sinks remain outside source CDC.</p></section>
 <section id="team-directory" data-kind="pipeline" data-from="Team" data-to="TeamDirectory">
 <h3>team-directory — latest rating projection</h3><p>Every thirty seconds the service-only refresh_team_directory function reads all teams, their source-owned team_type and latest stored TeamRating (measure_date descending, id ascending), atomically prunes deleted teams and upserts changed names, locations, type and ratings. Unchanged rows are not written. An advisory transaction lock skips overlaps. Null ratings sort last; zero is rated. The initial migration backfills retained teams, and migration 027 backfills team_type before readers start. The pipeline-owned sink belongs to Electric and stays outside source CDC.</p>
 </section>
@@ -1773,77 +1925,25 @@ graph TD
 }
 </script>
 </section>
+<section id="decision-team-page-split" data-kind="decision"><h3>Whole-team profile and championship participation</h3><p>The reader approved compact headings and tables for two distinct page types, with small section links on the championship page. Stitch explored the arrangement in project 3684321283098058780, screen 8e9552fe015b4245b909b3999a1b9a16; the approved inline comparison is supporting evidence. Preserve the established chrome, tokens and responsive table conventions. The main profile contains facts, latest rating, current/upcoming and past championships, and current and past players. Every participation links to <code>/equipe-campeonato/:id/:championship</code>; fixtures, full relevant group standings, roster and detailed stored zone/position probabilities stay within that pair. Both IDs survive language switches. Current players means recorded in a non-ended championship, including upcoming registrations; it does not assert transfer dates. Registered players with zero appearances remain in a roster. Unsupported club-period or final-phase columns are omitted. Empty participation, tables, roster and probabilities have truthful messages.</p></section>
 <section id="equipe" data-kind="screen" data-route="/equipe/:id">
-<h3>equipe — one team</h3>
-<p data-extract="reads">Reads: <a href="#Team">Team</a> by <code>id=eq.{param.id}</code>; nested, <a href="#Stadium">Stadium</a> by <code>id=eq.{stadium_id}</code>, <a href="#TeamGame">TeamGame</a> twice — <code>team_id=eq.{id}&amp;played=is.false</code> (<code>day.asc</code>, five) and <code>…played=is.true</code> (<code>day.desc</code>, ten) — and the team's squads: <a href="#PlayerStat">PlayerStat</a> by <code>team_id=eq.{id}</code> (<code>championship_name.asc,played.desc</code>), one line per player and championship — a squad is who played, so a cup with no groups has one too. Long lists use <a href="#ArchivePage">ArchivePage</a> by list and owner, forty rows per page with a one-row next-page probe. The <a href="#handler-page-value">page-value</a> machine updates page state.</p>
-<p data-extract="mutations">Mutations: none.</p>
+<h3>equipe — Whole-team facts, current/upcoming and past championships, and deduplicated current and past players.</h3>
+<p data-extract="reads">Reads: <a href="#Team">Team</a> by route ID, its <a href="#Stadium">Stadium</a> link and recorded coordinates for an OpenStreetMap link; latest <a href="#TeamRating">TeamRating</a> plus one <a href="#TeamRatingChart">TeamRatingChart</a> for the selected 1m/3m/6m/1y/5y/all period. The chart uses at most 600 real observations; exact rating rows remain paged. <a href="#TeamChampionship">TeamChampionship</a> separates current/upcoming from past participation and links both IDs to the championship page. <a href="#TeamPlayerHistory">TeamPlayerHistory</a> separates current/past players and searches normalized names. <a href="#TeamGame">TeamGame</a> shows upcoming/results across competitions with category and venue filters. <a href="#TeamComment">TeamComment</a> includes author handles and <a href="#TeamCommentDraft">TeamCommentDraft</a> holds the composer. Each long list uses <a href="#ArchivePage">ArchivePage</a>, forty rows and a one-row next-page probe with stable ordering. Filter changes reset the page.</p>
+<p data-extract="mutations">Mutations: signed-in team discussion through TeamCommentDraft; chart and search filters stay in tab state.</p>
 <div class="storyboard frames">
 <figure id="equipe-loading" data-kind="state" data-of="equipe" data-state="loading">
-<svg viewBox="0 0 320 420" width="240" role="img" aria-label="The band and the facts hold their place."><g font-family="Arial, sans-serif" font-size="9">
-<rect width="320" height="420" fill="#3b3008"/><rect x="10" width="300" height="420" fill="#e3efca"/>
-<rect x="10" width="300" height="34" fill="#8f983b"/><text x="18" y="24" font-size="18" font-weight="900" fill="#fff" stroke="#111" stroke-width=".6">GOL</text><text x="62" y="24" font-size="11" font-weight="900" fill="#f5c542">aberto</text>
-<text x="222" y="21" fill="#000000" font-weight="700">PT · ES · EN</text>
-<rect x="10" y="34" width="300" height="14" fill="#abb561"/><text x="86" y="44" fill="#000000" font-weight="700">Principal | Campeonatos | Jogos | Equipes</text>
-<rect x="10" y="48" width="300" height="22" fill="#474d0f"/><text x="16" y="63" font-size="12" font-weight="700" fill="#ffffff"></text>
-<rect x="234" y="78" width="76" height="342" fill="#b8c26e"/>
-<rect x="16" y="78" width="212" height="10" fill="#cee3a3"/>
-<rect x="16" y="92" width="212" height="10" fill="#cee3a3"/>
-<rect x="16" y="106" width="212" height="10" fill="#cee3a3"/>
-<rect x="16" y="120" width="212" height="10" fill="#cee3a3"/>
-<rect x="16" y="134" width="212" height="10" fill="#cee3a3"/>
-<rect x="16" y="148" width="212" height="10" fill="#cee3a3"/>
-<rect x="16" y="162" width="212" height="10" fill="#cee3a3"/>
-<rect x="16" y="176" width="212" height="10" fill="#cee3a3"/>
-<rect x="16" y="190" width="212" height="10" fill="#cee3a3"/>
-<rect x="16" y="204" width="212" height="10" fill="#cee3a3"/>
-</g></svg>
-<figcaption>The band and the facts hold their place.</figcaption></figure>
+<svg viewBox="0 0 320 480" width="240" role="img" aria-label="equipe, loading"><g font-family="Arial, sans-serif" font-size="9"><rect width="320" height="480" fill="#3b3008"/><rect x="10" width="300" height="480" fill="#e3efca"/><rect x="10" width="300" height="34" fill="#8f983b"/><text x="18" y="24" font-size="18" font-weight="700" fill="#fff">GOLaberto</text><text x="222" y="21" fill="#000000">PT · ES · EN</text><rect x="10" y="34" width="300" height="14" fill="#8f983b"/><text x="16" y="44" fill="#000000">Principal | Campeonatos | Jogos | Equipes</text><rect x="10" y="48" width="300" height="22" fill="#474d0f"/><text x="16" y="63" font-size="12" font-weight="700" fill="#ffffff"></text><rect x="18" y="85" width="210" height="10" fill="#8f983b"/><rect x="18" y="105" width="210" height="10" fill="#8f983b"/><rect x="18" y="125" width="210" height="10" fill="#8f983b"/><rect x="18" y="145" width="210" height="10" fill="#8f983b"/><rect x="18" y="165" width="210" height="10" fill="#8f983b"/><rect x="18" y="185" width="210" height="10" fill="#8f983b"/><rect x="18" y="205" width="210" height="10" fill="#8f983b"/><rect x="18" y="225" width="210" height="10" fill="#8f983b"/><rect x="18" y="245" width="210" height="10" fill="#8f983b"/><rect x="18" y="265" width="210" height="10" fill="#8f983b"/><rect x="18" y="285" width="210" height="10" fill="#8f983b"/></g></svg>
+<figcaption>loading</figcaption></figure>
 <figure id="equipe-populated" data-kind="state" data-of="equipe" data-state="populated">
-<svg viewBox="0 0 320 420" width="240" role="img" aria-label="A team: its facts, its next games and latest results from its own side, and its squad&#x27;s seasons in each championship."><g font-family="Arial, sans-serif" font-size="9">
-<rect width="320" height="420" fill="#3b3008"/><rect x="10" width="300" height="420" fill="#e3efca"/>
-<rect x="10" width="300" height="34" fill="#8f983b"/><text x="18" y="24" font-size="18" font-weight="900" fill="#fff" stroke="#111" stroke-width=".6">GOL</text><text x="62" y="24" font-size="11" font-weight="900" fill="#f5c542">aberto</text>
-<text x="222" y="21" fill="#000000" font-weight="700">PT · ES · EN</text>
-<rect x="10" y="34" width="300" height="14" fill="#abb561"/><text x="86" y="44" fill="#000000" font-weight="700">Principal | Campeonatos | Jogos | Equipes</text>
-<rect x="10" y="48" width="300" height="22" fill="#474d0f"/><text x="16" y="63" font-size="12" font-weight="700" fill="#ffffff">Athletico-PR</text>
-<rect x="234" y="78" width="76" height="342" fill="#b8c26e"/>
-<text x="18" y="87" fill="#4a4a1f">Club Athletico Paranaense · Curitiba · Brasil · 26/03/1924 · Arena da Baixada</text>
-<text x="18" y="102" font-size="10" font-weight="700" fill="#000000">Próximos jogos</text>
-<rect x="16" y="108" width="212" height="12" fill="#cee3a3"/><text x="20" y="117" fill="#784d1e">08/10  Brasileiro  Fora  Atlético-MG</text>
-<text x="18" y="130" font-size="10" font-weight="700" fill="#000000">Últimos resultados</text>
-<rect x="16" y="136" width="212" height="12" fill="#cee3a3"/><text x="20" y="145" fill="#784d1e">20/09  Brasileiro  Casa  Bahia-BA  2 x 1  ●</text>
-<text x="18" y="158" font-size="10" font-weight="700" fill="#000000">Elencos · Brasil - Campeonato Brasileiro 2026</text>
-<rect x="16" y="164" width="212" height="12" fill="#00008b"/><text x="20" y="173" fill="#fff">Jogador · Pos · J · Min · G · CA</text>
-<rect x="16" y="177" width="212" height="12" fill="#e3efca"/><text x="20" y="186" fill="#784d1e">K. Viveros  fw  26  2286  18  6</text>
-<rect x="16" y="190" width="212" height="12" fill="#cee3a3"/><text x="20" y="199" fill="#784d1e">Mycael  g  28  2520  0  1</text>
-</g></svg>
-<figcaption>A team: its facts, its next games and latest results from its own side, and its squad&#x27;s seasons in each championship.</figcaption></figure>
+<svg viewBox="0 0 320 480" width="240" role="img" aria-label="equipe, populated"><g font-family="Arial, sans-serif" font-size="9"><rect width="320" height="480" fill="#3b3008"/><rect x="10" width="300" height="480" fill="#e3efca"/><rect x="10" width="300" height="34" fill="#8f983b"/><text x="18" y="24" font-size="18" font-weight="700" fill="#fff">GOLaberto</text><text x="222" y="21" fill="#000000">PT · ES · EN</text><rect x="10" y="34" width="300" height="14" fill="#8f983b"/><text x="16" y="44" fill="#000000">Principal | Campeonatos | Jogos | Equipes</text><rect x="10" y="48" width="300" height="22" fill="#474d0f"/><text x="16" y="63" font-size="12" font-weight="700" fill="#ffffff">Athletico-PR</text><text x="18" y="87" fill="#784d1e" font-weight="400">Club Athletico Paranaense · Curitiba · Brasil</text><text x="18" y="102" fill="#784d1e" font-weight="400">26/03/1924 · Arena da Baixada · Rating</text><text x="18" y="132" fill="#000000" font-weight="700">Campeonatos atuais e próximos</text><text x="18" y="151" fill="#784d1e" font-weight="400">Brasil - Campeonato Brasileiro 2026 →</text><text x="18" y="170" fill="#784d1e" font-weight="400">Copa do Brasil 2026 →</text><text x="18" y="200" fill="#000000" font-weight="700">Campeonatos anteriores</text><text x="18" y="219" fill="#784d1e" font-weight="400">Brasil - Campeonato Brasileiro 2025 →</text><text x="18" y="249" fill="#000000" font-weight="700">Jogadores atuais</text><text x="18" y="268" fill="#784d1e" font-weight="400">Kevin Viveros · Atacante</text><text x="18" y="287" fill="#784d1e" font-weight="400">João Cruz · Meio-campista</text><text x="18" y="317" fill="#000000" font-weight="700">Jogadores anteriores</text><text x="18" y="336" fill="#784d1e" font-weight="400">Bento · Goleiro</text><text x="18" y="355" fill="#784d1e" font-weight="400">Fernandinho · Meio-campista</text></g></svg>
+<figcaption>Whole-team facts, current/upcoming and past championships, and deduplicated current and past players.</figcaption></figure>
 <figure id="equipe-gone" data-kind="state" data-of="equipe" data-state="gone">
-<svg viewBox="0 0 320 420" width="240" role="img" aria-label="An address naming no team: the terminal&#x27;s gone state, with words."><g font-family="Arial, sans-serif" font-size="9">
-<rect width="320" height="420" fill="#3b3008"/><rect x="10" width="300" height="420" fill="#e3efca"/>
-<rect x="10" width="300" height="34" fill="#8f983b"/><text x="18" y="24" font-size="18" font-weight="900" fill="#fff" stroke="#111" stroke-width=".6">GOL</text><text x="62" y="24" font-size="11" font-weight="900" fill="#f5c542">aberto</text>
-<text x="222" y="21" fill="#000000" font-weight="700">PT · ES · EN</text>
-<rect x="10" y="34" width="300" height="14" fill="#abb561"/><text x="86" y="44" fill="#000000" font-weight="700">Principal | Campeonatos | Jogos | Equipes</text>
-<rect x="10" y="48" width="300" height="22" fill="#474d0f"/><text x="16" y="63" font-size="12" font-weight="700" fill="#ffffff"></text>
-<text x="18" y="87" fill="#4a4a1f">Esta equipe não existe ou foi removida.</text>
-</g></svg>
-<figcaption>An address naming no team: the terminal&#x27;s gone state, with words.</figcaption></figure>
+<svg viewBox="0 0 320 480" width="240" role="img" aria-label="equipe, gone"><g font-family="Arial, sans-serif" font-size="9"><rect width="320" height="480" fill="#3b3008"/><rect x="10" width="300" height="480" fill="#e3efca"/><rect x="10" width="300" height="34" fill="#8f983b"/><text x="18" y="24" font-size="18" font-weight="700" fill="#fff">GOLaberto</text><text x="222" y="21" fill="#000000">PT · ES · EN</text><rect x="10" y="34" width="300" height="14" fill="#8f983b"/><text x="16" y="44" fill="#000000">Principal | Campeonatos | Jogos | Equipes</text><rect x="10" y="48" width="300" height="22" fill="#474d0f"/><text x="16" y="63" font-size="12" font-weight="700" fill="#ffffff"></text><text x="18" y="95" fill="#000000">Esta equipe não existe ou foi removida.</text></g></svg>
+<figcaption>gone</figcaption></figure>
 <figure id="equipe-populated-dark" data-kind="state" data-of="equipe" data-state="populated-dark">
-<svg viewBox="0 0 320 420" width="240" role="img" aria-label="The dark twin."><g font-family="Arial, sans-serif" font-size="9">
-<rect width="320" height="420" fill="#141103"/><rect x="10" width="300" height="420" fill="#23260f"/>
-<rect x="10" width="300" height="34" fill="#4a4f1d"/><text x="18" y="24" font-size="18" font-weight="900" fill="#fff" stroke="#111" stroke-width=".6">GOL</text><text x="62" y="24" font-size="11" font-weight="900" fill="#f5c542">aberto</text>
-<text x="222" y="21" fill="#e8efd6" font-weight="700">PT · ES · EN</text>
-<rect x="10" y="34" width="300" height="14" fill="#5c6230"/><text x="86" y="44" fill="#e8efd6" font-weight="700">Principal | Campeonatos | Jogos | Equipes</text>
-<rect x="10" y="48" width="300" height="22" fill="#0f1103"/><text x="16" y="63" font-size="12" font-weight="700" fill="#f5c542">Athletico-PR</text>
-<rect x="234" y="78" width="76" height="342" fill="#33371b"/>
-<text x="18" y="87" fill="#c3cc9a">Club Athletico Paranaense · Curitiba · Brasil</text>
-<text x="18" y="102" font-size="10" font-weight="700" fill="#e8efd6">Últimos resultados</text>
-<rect x="16" y="108" width="212" height="12" fill="#2e3314"/><text x="20" y="117" fill="#e0b07a">20/09  Brasileiro  Casa  Bahia-BA  2 x 1  ●</text>
-<rect x="16" y="121" width="212" height="12" fill="#1d2a6b"/><text x="20" y="130" fill="#fff">Jogador · Pos · J · Min · G · CA</text>
-<rect x="16" y="134" width="212" height="12" fill="#2e3314"/><text x="20" y="143" fill="#e0b07a">K. Viveros  fw  26  2286  18  6</text>
-</g></svg>
-<figcaption>The dark twin.</figcaption></figure>
+<svg viewBox="0 0 320 480" width="240" role="img" aria-label="equipe, populated-dark"><g font-family="Arial, sans-serif" font-size="9"><rect width="320" height="480" fill="#141103"/><rect x="10" width="300" height="480" fill="#23260f"/><rect x="10" width="300" height="34" fill="#4a4f1d"/><text x="18" y="24" font-size="18" font-weight="700" fill="#fff">GOLaberto</text><text x="222" y="21" fill="#e8efd6">PT · ES · EN</text><rect x="10" y="34" width="300" height="14" fill="#4a4f1d"/><text x="16" y="44" fill="#e8efd6">Principal | Campeonatos | Jogos | Equipes</text><rect x="10" y="48" width="300" height="22" fill="#0f1103"/><text x="16" y="63" font-size="12" font-weight="700" fill="#ffffff">Athletico-PR</text><text x="18" y="87" fill="#e0b07a" font-weight="400">Club Athletico Paranaense · Curitiba · Brasil</text><text x="18" y="102" fill="#e0b07a" font-weight="400">26/03/1924 · Arena da Baixada · Rating</text><text x="18" y="132" fill="#e8efd6" font-weight="700">Campeonatos atuais e próximos</text><text x="18" y="151" fill="#e0b07a" font-weight="400">Brasil - Campeonato Brasileiro 2026 →</text><text x="18" y="170" fill="#e0b07a" font-weight="400">Copa do Brasil 2026 →</text><text x="18" y="200" fill="#e8efd6" font-weight="700">Campeonatos anteriores</text><text x="18" y="219" fill="#e0b07a" font-weight="400">Brasil - Campeonato Brasileiro 2025 →</text><text x="18" y="249" fill="#e8efd6" font-weight="700">Jogadores atuais</text><text x="18" y="268" fill="#e0b07a" font-weight="400">Kevin Viveros · Atacante</text><text x="18" y="287" fill="#e0b07a" font-weight="400">João Cruz · Meio-campista</text><text x="18" y="317" fill="#e8efd6" font-weight="700">Jogadores anteriores</text><text x="18" y="336" fill="#e0b07a" font-weight="400">Bento · Goleiro</text><text x="18" y="355" fill="#e0b07a" font-weight="400">Fernandinho · Meio-campista</text></g></svg>
+<figcaption>Whole-team facts, current/upcoming and past championships, and deduplicated current and past players.</figcaption></figure>
 </div>
-
 <script type="application/json" data-kind="paths" data-of="equipe">
 {
   "read": {
@@ -1852,8 +1952,7 @@ graph TD
       "populated"
     ],
     "accepts": [
-      "accept-team-page",
-      "accept-player-stats"
+      "accept-team-page"
     ]
   },
   "missing": {
@@ -1863,6 +1962,58 @@ graph TD
     ],
     "accepts": [
       "accept-team-gone"
+    ]
+  },
+  "night": {
+    "states": [
+      "populated",
+      "populated-dark"
+    ],
+    "accepts": [
+      "accept-dark"
+    ]
+  }
+}
+</script>
+</section>
+<section id="equipe-campeonato" data-kind="screen" data-route="/equipe-campeonato/:id/:championship">
+<h3>equipe-campeonato — One team in one championship: fixtures, full relevant group tables, registered roster and detailed stored probabilities.</h3>
+<p data-extract="reads">Reads: <a href="#TeamChampionship">TeamChampionship</a> by both route IDs validates participation, with embedded <a href="#Team">Team</a> facts. A bounded selector navigates among teams in the same championship. <a href="#TeamGame">TeamGame</a> fixtures/results use both IDs plus phase and home/away filters. Category is fixed by the championship and has no selector or repeated label on this page. <a href="#TeamRoster">TeamRoster</a> searches normalized player names and uses a closed sort selection; <a href="#TeamRosterTotal">TeamRosterTotal</a> gives full-roster counters and recorded contribution/per-90 metrics independently of the displayed page or search. Relevant <a href="#TeamGroup">TeamGroup</a> groups embed phase/championship; <a href="#Standing">Standing</a> displays their full table with the team highlighted. <a href="#TeamCampaignPoint">TeamCampaignPoint</a> provides up to 800 observations for a two-team points/position chart, with paged exact rows and game links; <a href="#TeamChartState">TeamChartState</a> holds tab-only chart selections and payload. <a href="#TeamChance">TeamChance</a>, <a href="#ZoneChance">ZoneChance</a> and <a href="#PositionChance">PositionChance</a> show current stored probabilities, a finish-position bar chart and reach marks. <a href="#TeamOddsChart">TeamOddsChart</a> gives bounded recorded zone histories, omitting incomplete vectors and using current zone boundaries. Group-free cups and missing data have explicit empty states. All long exact lists use <a href="#ArchivePage">ArchivePage</a>, forty rows and a stable one-row next-page probe. Both route IDs survive locale switches; filters reset pagination.</p>
+<p data-extract="mutations">Mutations: none.</p>
+<div class="storyboard frames">
+<figure id="equipe-campeonato-loading" data-kind="state" data-of="equipe-campeonato" data-state="loading">
+<svg viewBox="0 0 320 480" width="240" role="img" aria-label="equipe-campeonato, loading"><g font-family="Arial, sans-serif" font-size="9"><rect width="320" height="480" fill="#3b3008"/><rect x="10" width="300" height="480" fill="#e3efca"/><rect x="10" width="300" height="34" fill="#8f983b"/><text x="18" y="24" font-size="18" font-weight="700" fill="#fff">GOLaberto</text><text x="222" y="21" fill="#000000">PT · ES · EN</text><rect x="10" y="34" width="300" height="14" fill="#8f983b"/><text x="16" y="44" fill="#000000">Principal | Campeonatos | Jogos | Equipes</text><rect x="10" y="48" width="300" height="22" fill="#474d0f"/><text x="16" y="63" font-size="12" font-weight="700" fill="#ffffff"></text><rect x="18" y="85" width="210" height="10" fill="#8f983b"/><rect x="18" y="105" width="210" height="10" fill="#8f983b"/><rect x="18" y="125" width="210" height="10" fill="#8f983b"/><rect x="18" y="145" width="210" height="10" fill="#8f983b"/><rect x="18" y="165" width="210" height="10" fill="#8f983b"/><rect x="18" y="185" width="210" height="10" fill="#8f983b"/><rect x="18" y="205" width="210" height="10" fill="#8f983b"/><rect x="18" y="225" width="210" height="10" fill="#8f983b"/><rect x="18" y="245" width="210" height="10" fill="#8f983b"/><rect x="18" y="265" width="210" height="10" fill="#8f983b"/><rect x="18" y="285" width="210" height="10" fill="#8f983b"/></g></svg>
+<figcaption>loading</figcaption></figure>
+<figure id="equipe-campeonato-populated" data-kind="state" data-of="equipe-campeonato" data-state="populated">
+<svg viewBox="0 0 320 480" width="240" role="img" aria-label="equipe-campeonato, populated"><g font-family="Arial, sans-serif" font-size="9"><rect width="320" height="480" fill="#3b3008"/><rect x="10" width="300" height="480" fill="#e3efca"/><rect x="10" width="300" height="34" fill="#8f983b"/><text x="18" y="24" font-size="18" font-weight="700" fill="#fff">GOLaberto</text><text x="222" y="21" fill="#000000">PT · ES · EN</text><rect x="10" y="34" width="300" height="14" fill="#8f983b"/><text x="16" y="44" fill="#000000">Principal | Campeonatos | Jogos | Equipes</text><rect x="10" y="48" width="300" height="22" fill="#474d0f"/><text x="16" y="63" font-size="12" font-weight="700" fill="#ffffff">Athletico-PR</text><text x="18" y="87" fill="#784d1e" font-weight="400">← Perfil da equipe</text><text x="18" y="106" fill="#784d1e" font-weight="400">Brasil - Campeonato Brasileiro 2026</text><text x="18" y="125" fill="#784d1e" font-weight="400">Jogos · Tabela · Elenco · Chances</text><text x="18" y="155" fill="#000000" font-weight="700">Jogos</text><text x="18" y="174" fill="#784d1e" font-weight="400">Próximo: Athletico-PR × Santos-SP</text><text x="18" y="193" fill="#784d1e" font-weight="400">Resultado: Flamengo-RJ 1–1 Athletico-PR</text><text x="18" y="223" fill="#000000" font-weight="700">Tabela · Fase única · Grupo único</text><text x="18" y="242" fill="#784d1e" font-weight="400">#   Equipe                 Pts   J   SG</text><text x="18" y="261" fill="#784d1e" font-weight="400">7   Athletico-PR          42   28   +4</text><text x="18" y="291" fill="#000000" font-weight="700">Elenco deste campeonato</text><text x="18" y="310" fill="#784d1e" font-weight="400">Kevin Viveros             J   Min   G   CA</text><text x="18" y="329" fill="#784d1e" font-weight="400">Jogador registrado       0     0    0     0</text><text x="18" y="359" fill="#000000" font-weight="700">Chances detalhadas · Fase única · Grupo único</text><text x="18" y="378" fill="#784d1e" font-weight="400">Campeão · Libertadores · Rebaixamento</text><text x="18" y="397" fill="#784d1e" font-weight="400">Probabilidade por posição final</text><text x="18" y="416" fill="#784d1e" font-weight="400">1º 3,0%   2º 5,0%   3º 6,0%   …   20º 6,0%</text></g></svg>
+<figcaption>One team in one championship: fixtures, full relevant group tables, registered roster and detailed stored probabilities.</figcaption></figure>
+<figure id="equipe-campeonato-empty" data-kind="state" data-of="equipe-campeonato" data-state="empty">
+<svg viewBox="0 0 320 480" width="240" role="img" aria-label="equipe-campeonato, empty"><g font-family="Arial, sans-serif" font-size="9"><rect width="320" height="480" fill="#3b3008"/><rect x="10" width="300" height="480" fill="#e3efca"/><rect x="10" width="300" height="34" fill="#8f983b"/><text x="18" y="24" font-size="18" font-weight="700" fill="#fff">GOLaberto</text><text x="222" y="21" fill="#000000">PT · ES · EN</text><rect x="10" y="34" width="300" height="14" fill="#8f983b"/><text x="16" y="44" fill="#000000">Principal | Campeonatos | Jogos | Equipes</text><rect x="10" y="48" width="300" height="22" fill="#474d0f"/><text x="16" y="63" font-size="12" font-weight="700" fill="#ffffff"></text><text x="18" y="95" fill="#000000">Esta equipe não está registrada neste campeonato.</text></g></svg>
+<figcaption>gone</figcaption></figure>
+<figure id="equipe-campeonato-populated-dark" data-kind="state" data-of="equipe-campeonato" data-state="populated-dark">
+<svg viewBox="0 0 320 480" width="240" role="img" aria-label="equipe-campeonato, populated-dark"><g font-family="Arial, sans-serif" font-size="9"><rect width="320" height="480" fill="#141103"/><rect x="10" width="300" height="480" fill="#23260f"/><rect x="10" width="300" height="34" fill="#4a4f1d"/><text x="18" y="24" font-size="18" font-weight="700" fill="#fff">GOLaberto</text><text x="222" y="21" fill="#e8efd6">PT · ES · EN</text><rect x="10" y="34" width="300" height="14" fill="#4a4f1d"/><text x="16" y="44" fill="#e8efd6">Principal | Campeonatos | Jogos | Equipes</text><rect x="10" y="48" width="300" height="22" fill="#0f1103"/><text x="16" y="63" font-size="12" font-weight="700" fill="#ffffff">Athletico-PR</text><text x="18" y="87" fill="#e0b07a" font-weight="400">← Perfil da equipe</text><text x="18" y="106" fill="#e0b07a" font-weight="400">Brasil - Campeonato Brasileiro 2026</text><text x="18" y="125" fill="#e0b07a" font-weight="400">Jogos · Tabela · Elenco · Chances</text><text x="18" y="155" fill="#e8efd6" font-weight="700">Jogos</text><text x="18" y="174" fill="#e0b07a" font-weight="400">Próximo: Athletico-PR × Santos-SP</text><text x="18" y="193" fill="#e0b07a" font-weight="400">Resultado: Flamengo-RJ 1–1 Athletico-PR</text><text x="18" y="223" fill="#e8efd6" font-weight="700">Tabela · Fase única · Grupo único</text><text x="18" y="242" fill="#e0b07a" font-weight="400">#   Equipe                 Pts   J   SG</text><text x="18" y="261" fill="#e0b07a" font-weight="400">7   Athletico-PR          42   28   +4</text><text x="18" y="291" fill="#e8efd6" font-weight="700">Elenco deste campeonato</text><text x="18" y="310" fill="#e0b07a" font-weight="400">Kevin Viveros             J   Min   G   CA</text><text x="18" y="329" fill="#e0b07a" font-weight="400">Jogador registrado       0     0    0     0</text><text x="18" y="359" fill="#e8efd6" font-weight="700">Chances detalhadas · Fase única · Grupo único</text><text x="18" y="378" fill="#e0b07a" font-weight="400">Campeão · Libertadores · Rebaixamento</text><text x="18" y="397" fill="#e0b07a" font-weight="400">Probabilidade por posição final</text><text x="18" y="416" fill="#e0b07a" font-weight="400">1º 3,0%   2º 5,0%   3º 6,0%   …   20º 6,0%</text></g></svg>
+<figcaption>One team in one championship: fixtures, full relevant group tables, registered roster and detailed stored probabilities.</figcaption></figure>
+</div>
+<script type="application/json" data-kind="paths" data-of="equipe-campeonato">
+{
+  "read": {
+    "states": [
+      "loading",
+      "populated"
+    ],
+    "accepts": [
+      "accept-team-championship-page",
+      "accept-player-stats",
+      "accept-chances"
+    ]
+  },
+  "missing": {
+    "states": [
+      "loading",
+      "empty"
+    ],
+    "accepts": [
+      "accept-team-championship-gone"
     ]
   },
   "night": {
@@ -2712,9 +2863,11 @@ A 2–1 home win yields a card with both names and two team lines, each from its
 <p id="test-teams" data-kind="test" data-of="equipes" data-accepts="accept-teams">
 Latest stored ratings order all teams descending, with unrated teams last and ties by name/id. Country/region and name searches combine without accents or case; either resets pagination. Part of a name narrows the teams as the reader types: <code class="cel">input.q == "athletico"</code> shows <code class="cel">output.rows == ["Athletico-PR"]</code>.
 </p>
-<p id="test-team-page" data-kind="test" data-of="equipe" data-accepts="accept-team-page">
-Athletico-PR's page shows its full name, city and stadium, its latest results from its own side, and its squad in the 2026 Brasileiro with every player's season: <code class="cel">output.squad.size() &gt; 11</code>.
-</p>
+<p id="test-team-page" data-kind="test" data-of="equipe" data-accepts="accept-team-page">The main team profile shows facts and separate current/upcoming and past championships and players. <code class="cel">output.championships.size() &gt; 0 &amp;&amp; output.players.size() &gt; 11</code>.</p>
+<p id="test-team-championship-page" data-kind="test" data-of="equipe-campeonato" data-accepts="accept-team-championship-page">One team in one championship has only that scope’s fixtures, tables, roster and stored probabilities: <code class="cel">output.roster.size() &gt; 11 &amp;&amp; output.other_championship_rows == 0</code>. Fixture checks verify home-first names and scores for both venues, no repeated championship names or category controls, single-line ellipsis and full-name hover titles, ordinary scoped team links, and a 390px layout without horizontal overflow.</p>
+<p id="team-fixture-layout-oracle"><strong>Championship fixtures.</strong> The user requested removal of repeated championship names, clearer home/away presentation, and single-line team names. Their refinement removes category controls and labels because category is fixed within a championship; venue and phase remain selectable. Stitch project 3684321283098058780, screen a52fb90438cd42ab90f393cedcba17ef refines the accepted compact archive layout: localized Home and Away headings appear once above mirrored team columns, with crests beside the score and the selected team emphasized. Actual home goals precede actual away goals in visual and reading order. Date and score link to the match. Team names are ordinary scoped links without arrows or disclosure controls, use all available width, and show ellipsis when truncated with the full name in a hover title. Championship standings use the same name treatment. On phones the date sits above the match row and names never wrap. Existing all-competition lists retain championship context and category filtering.</p>
+<p id="test-team-championship-gone" data-kind="test" data-of="equipe-campeonato" data-accepts="accept-team-championship-gone">A disconnected pair says so: <code class="cel">output.empty == "Esta equipe não está registrada neste campeonato."</code>.</p>
+
 <p id="test-player-page" data-kind="test" data-of="jogador" data-accepts="accept-player-page">
 K. Viveros's page shows his 2026 Brasileiro for Athletico-PR, eighteen goals as upstream counts them, and his games newest first: <code class="cel">output.goals == 18</code>.
 </p>
@@ -2884,7 +3037,7 @@ No vendored unit, no container, no external endpoint; the one Wasm module is ups
 </section>
 <section id="handler-page-value" data-kind="handler">
 <h3>page-value <span class="kind handler">handler · jessie</span></h3>
-<p>A pure forty-row step from the current offset updates the offset, next-page probe and displayed page together, clamped at zero. <code>shell/handlers/page-value.js</code>, listed in <a href="#campeonatos">campeonatos</a>, <a href="#equipes">equipes</a>, <a href="#estadios">estadios</a>, <a href="#arbitros">arbitros</a>, <a href="#equipe">equipe</a>, <a href="#jogador">jogador</a>, <a href="#estadio">estadio</a>, <a href="#arbitro">arbitro</a> and <a href="#jogo">jogo</a>.</p>
+<p>A pure forty-row step from the current offset updates the offset, next-page probe and displayed page together, clamped at zero. <code>shell/handlers/page-value.js</code>, listed in <a href="#campeonatos">campeonatos</a>, <a href="#equipes">equipes</a>, <a href="#estadios">estadios</a>, <a href="#arbitros">arbitros</a>, <a href="#equipe">equipe</a>, <a href="#equipe-campeonato">equipe-campeonato</a>, <a href="#jogador">jogador</a>, <a href="#estadio">estadio</a>, <a href="#arbitro">arbitro</a> and <a href="#jogo">jogo</a>.</p>
 </section>
 
 <section id="handler-blank-null" data-kind="handler">
@@ -2929,6 +3082,9 @@ No vendored unit, no container, no external endpoint; the one Wasm module is ups
 <p>Verdict: approved. Evidence at integrate: 29 constraint pairs in the cluster's Postgres, each arm of each row invariant violated alone (the bench rule's two arms included); 35 cases walked by tests/acceptance.ts in a browser, among them a goal recorded and an appearance removed after the fact moving a player's season on an open page; visual lint at four widths in both appearances. At test: the streams' transforms over crawled data — the 2026 Série A's table and its 885 players' seasons equal to golaberto.com.br's, every column — and the cards, lines and rounds a game yields. Known gaps, owned by the editing turn: a correction that moves a goal or an appearance to another player, or a game to another phase, recounts only where it moved to (decision-standings-derived). Coverage that is happy-path only: accept-languages, accept-dark and accept-screen-range assert what renders and have no refusal to test; accept-championship-gone covers the one unhappy road of the championship page. The goal-side rule is structural (a side, not a team; decision-sides), graded by test-side.</p>
 </section>
 
+<section id="handler-team-chart-fold" data-kind="handler" data-of="equipe-campeonato"><h3>team-chart-fold</h3><p>bounded source rows become a pure chart payload, with comparison and accessible source tables</p></section>
+<p id="team-enrichment-oracle"><strong>Team functionality oracle.</strong> The user requested inspiration from golaberto.com.br, keeping our approved visual design. Stitch project 3684321283098058780, screen b29b07ab96df4f8798169552a25af2a4 refines compact analytical sections: rating ranges and exact history; location; all-competition games with categories; searchable current/past players and discussion. Championship scope adds team switching, phase/home-away filters, searchable sortable roster with aggregate totals and recorded contributions, finish-position bars, zone odds history and points/position comparison with linked games and accessible tables. Missing source data is explicit. Charts downsample only real observations, preserving extrema; rankings are reconstructed under current rules. Zone history uses the currently declared zone boundaries.</p><section id="handler-chart-metric" data-kind="handler" data-of="equipe-campeonato"><h3>chart-metric</h3><p>Typed chart control retains existing state for unrelated gestures.</p></section><section id="handler-chart-compare" data-kind="handler" data-of="equipe-campeonato"><h3>chart-compare</h3><p>Typed chart control retains existing state for unrelated gestures.</p></section><section id="handler-team-chart-seed" data-kind="handler" data-of="equipe-campeonato"><h3>team-chart-seed</h3><p>Initialize one typed tab chart row from its explicit fallback.</p></section><section id="team-campaign" data-kind="pipeline" data-from="Game" data-to="TeamCampaignPoint"><h3>team-campaign</h3><p>One atomic reconstruction per group using championship points and current tiebreak rules; source events and boot rebuild the affected groups, including both previous and current scopes when a match or membership moves.</p></section>
+<section id="team-enrichment" data-kind="pipeline" data-from="TeamRating" data-to="TeamRatingChart"><h3>team-enrichment</h3><p>Service-only bounded dirty queues refresh rating and zone-history charts and full roster totals. Rating-only appearance updates coalesce durably by player and championship, provide the sole writer of recorded player metrics and per-90 rates; counter recounts omit these fields and enqueue reconciliation after inserts or denominator changes, and avoid repeating full-career CDC recounts; other appearance changes keep the existing event path. Real extrema and endpoints are preserved; unchanged projections are not written.</p></section>
 </body>
 </html>
 

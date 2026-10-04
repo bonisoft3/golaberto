@@ -102,7 +102,7 @@ _devElectricSecret: "dev-electric-secret"
 		// Numeric programs over the lake (services/compute/main.ts states the
 		// contract): a module each, the tables it alone writes (`to`),
 		// and the wasm modules its jobs call, shipped by their file names.
-		computations: [...{name: string, file: string, every: int & >0, to: [...string] & [_, ...], wasm: [...string]}]
+		computations: [...{name: string, file: string, every: int & >0, to: [...string] & [_, ...], wasm: [...string], onComplete?: string & =~"^[a-z_][a-z0-9_]{0,62}$"}]
 		// Names only: the cluster needs to know whether any schedule exists,
 		// never what it says. One brings the ticker, its clock and the table
 		// they sweep (#ScheduleMigration); the caller's migrations seed it.
@@ -175,7 +175,6 @@ _devElectricSecret: "dev-electric-secret"
 		activate: ""
 	}
 
-
 	// What a service that reads the schema waits on: the database, and the
 	// migrations that carry it forward when there are any. A migration that
 	// fails therefore stops every reader from starting, rather than leaving
@@ -242,18 +241,24 @@ _devElectricSecret: "dev-electric-secret"
 							[if len(X.state.schedules) > 0 {
 								from: (_from & {in: X.meta.images.database}).out
 								srcs: ["\(#StagedDir)/\(#ScheduleMigration)"]
-								dst:  "\(#InitdbDir)/\(#ScheduleMigration)"
+								dst: "\(#InitdbDir)/\(#ScheduleMigration)"
 							}],
 						])
 					}
 					compose: {
+						// Retained archives need crash-safe writes even when the base
+						// image uses non-durable settings for disposable fixtures.
+						if X.meta.databaseVolume != "" {
+							command: ["postgres", "-c", "wal_level=logical", "-c", "fsync=on", "-c", "synchronous_commit=on",
+								"-c", "full_page_writes=on", "-c", "shared_buffers=32MB", "-c", "max_connections=200"]
+						}
 						ports: ["5432"]
 						volumes: [if X.meta.databaseVolume != "" {"\(X.meta.databaseVolume):/var/lib/postgresql"}]
 						environment: {
-							PGDATA:               X.meta.databaseDataDir
-							POSTGRES_USER:        "${POSTGRES_USER:-postgres}"
-							POSTGRES_PASSWORD:    "${POSTGRES_PASSWORD:-postgres}"
-							POSTGRES_DB:          "${POSTGRES_DB:-\(X.meta.app)}"
+							PGDATA:            X.meta.databaseDataDir
+							POSTGRES_USER:     "${POSTGRES_USER:-postgres}"
+							POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-postgres}"
+							POSTGRES_DB:       "${POSTGRES_DB:-\(X.meta.app)}"
 							// ORDER BY on text reaches a reader, so it sorts the way a
 							// dictionary does, not by byte: bytes put every accent past all
 							// of ASCII and split the alphabet by case, so "ana" follows "Zoe".
@@ -265,7 +270,7 @@ _devElectricSecret: "dev-electric-secret"
 							// ICU and not a libc locale: glibc reorders between versions and
 							// silently invalidates text indexes, where postgres records the
 							// ICU version and warns. --locale=C keeps ctype off libc too.
-							POSTGRES_INITDB_ARGS: "--no-sync --encoding=UTF8 --auth=trust --locale-provider=icu --icu-locale=und --locale=C"
+							POSTGRES_INITDB_ARGS: [if X.meta.databaseVolume == "" {"--no-sync "}, ""][0] + "--encoding=UTF8 --auth=trust --locale-provider=icu --icu-locale=und --locale=C"
 						}
 						// One rebuild entry per migration: the list is the consumer's, and
 						// mecha's own stack keeps a fixture outside the migrations directory.
@@ -291,7 +296,7 @@ _devElectricSecret: "dev-electric-secret"
 							}]
 						}
 						compose: {
-							depends_on: database: _healthy
+							depends_on: database:      _healthy
 							environment: DATABASE_URL: "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-\(X.meta.app)}?sslmode=disable"
 						}
 					}
@@ -578,6 +583,7 @@ _devElectricSecret: "dev-electric-secret"
 					}
 				}
 			}
+
 			// The numeric stage: an app's computations, each reading the lake
 			// the service publishes from Postgres, writing back through crud
 			// as the service role, the path every pipeline writes by.
@@ -606,6 +612,7 @@ _devElectricSecret: "dev-electric-secret"
 								every: c.every
 								to:    c.to
 								wasm: [for w in c.wasm {_target[w]}]
+								if c.onComplete != _|_ {onComplete: c.onComplete}
 							}])
 							if X.capabilities.auth {
 								SERVICE_JWT: "${SERVICE_JWT:-\(_devServiceJwt)}"
@@ -627,6 +634,7 @@ _devElectricSecret: "dev-electric-secret"
 					}
 				}
 			}
+
 			// Only an app that declares a schedule gets a clock. A ticker with
 			// nothing to sweep is a container answering pokes nobody sends.
 			if len(X.state.schedules) > 0 {
@@ -664,6 +672,7 @@ _devElectricSecret: "dev-electric-secret"
 					}
 				}
 			}
+
 			// The aggregate a consumer brings up: a container that does nothing
 			// but wait on everything else, so `up --wait launch` returns when
 			// the whole plane is healthy.
@@ -698,6 +707,7 @@ _devElectricSecret: "dev-electric-secret"
 							"rclone-s3": _healthy
 							imgproxy:    _healthy
 						}
+
 						// A clock absent from here is a clock nothing starts. It
 						// pulls the ticker in behind it.
 						if len(X.state.schedules) > 0 {
@@ -778,20 +788,20 @@ _devElectricSecret: "dev-electric-secret"
 		app: string
 		// Consumers retaining an archive place this inside their database mount.
 		databaseDataDir: *"/postgresql-data" | string
-		databaseVolume: *"" | string
+		databaseVolume:  *"" | string
 		// The images mecha builds, one per service that carries mecha's own
 		// content (bayt.cue, the `*-image` targets). Stated by the consumer:
 		// same-project refs in mecha's own stack, cross-project refs from an
 		// app in the monorepo, pinned names where the images are pulled.
 		images: {
-			database:   #From
-			migrate:    #From
-			mesh:       #From
-			conduit:    #From
-			auth:       #From
-			ticker:     #From
-			clock:      #From
-			compute:    #From
+			database:    #From
+			migrate:     #From
+			mesh:        #From
+			conduit:     #From
+			auth:        #From
+			ticker:      #From
+			clock:       #From
+			compute:     #From
 			"rclone-s3": #From
 		}
 		// The proxy's config, relative to the app dir.

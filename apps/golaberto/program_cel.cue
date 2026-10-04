@@ -152,6 +152,8 @@ code: state: entities: {
 			city: "char_length(city) <= 80"
 			country: "char_length(country) > 0 AND char_length(country) <= 60"
 			team_type: "team_type IN ('club', 'national')"
+			latitude: "latitude >= -90 AND latitude <= 90"
+			longitude: "longitude >= -180 AND longitude <= 180"
 		}
 		seed: [...{
 			name?: strings.MinRunes(1) & strings.MaxRunes(60)
@@ -159,6 +161,8 @@ code: state: entities: {
 			city?: strings.MaxRunes(80)
 			country?: strings.MinRunes(1) & strings.MaxRunes(60)
 			team_type?: ("club" | "national")
+			latitude?: >=-90 & <=90
+			longitude?: >=-180 & <=180
 		}]
 		enums: {
 			team_type: ["club","national"]
@@ -168,6 +172,8 @@ code: state: entities: {
 			full_name: {sizeMax: 160}
 			city: {sizeMax: 80}
 			country: {sizeMin: 1, sizeMax: 60}
+			latitude: {intMin: -90, intMax: 90}
+			longitude: {intMin: -180, intMax: 180}
 		}
 	}
 	Referee: {
@@ -433,6 +439,88 @@ code: state: entities: {
 			team_type: ["club","national"]
 		}
 	}
+	TeamChampionship: {
+		checks: {
+			status: "status IN ('current', 'upcoming', 'past')"
+		}
+		seed: [...{
+			status?: ("current" | "upcoming" | "past")
+		}]
+		enums: {
+			status: ["current","upcoming","past"]
+		}
+	}
+	TeamRoster: {
+		checks: {
+			position: "position IN ('', 'g', 'dr', 'dc', 'dl', 'dm', 'cm', 'am', 'fw')"
+			played: "played >= 0"
+			started: "started >= 0"
+			came_on: "came_on >= 0"
+			bench: "bench >= 0"
+			minutes: "minutes >= 0"
+			goals: "goals >= 0"
+			penalties: "penalties >= 0"
+			own_goals: "own_goals >= 0"
+			yellow: "yellow >= 0"
+			red: "red >= 0"
+		}
+		seed: [...{
+			position?: ("" | "g" | "dr" | "dc" | "dl" | "dm" | "cm" | "am" | "fw")
+			played?: >=0
+			started?: >=0
+			came_on?: >=0
+			bench?: >=0
+			minutes?: >=0
+			goals?: >=0
+			penalties?: >=0
+			own_goals?: >=0
+			yellow?: >=0
+			red?: >=0
+		}]
+		enums: {
+			position: ["","g","dr","dc","dl","dm","cm","am","fw"]
+		}
+		bounds: {
+			played: {intMin: 0}
+			started: {intMin: 0}
+			came_on: {intMin: 0}
+			bench: {intMin: 0}
+			minutes: {intMin: 0}
+			goals: {intMin: 0}
+			penalties: {intMin: 0}
+			own_goals: {intMin: 0}
+			yellow: {intMin: 0}
+			red: {intMin: 0}
+		}
+	}
+	TeamPlayerHistory: {
+		checks: {
+			position: "position IN ('', 'g', 'dr', 'dc', 'dl', 'dm', 'cm', 'am', 'fw')"
+		}
+		seed: [...{
+			position?: ("" | "g" | "dr" | "dc" | "dl" | "dm" | "cm" | "am" | "fw")
+		}]
+		enums: {
+			position: ["","g","dr","dc","dl","dm","cm","am","fw"]
+		}
+	}
+	TeamGroup: {
+		checks: {
+			add_sub: "add_sub >= -99 AND add_sub <= 99"
+			bias: "bias >= -99 AND bias <= 99"
+			comment: "char_length(comment) <= 500"
+		}
+		seed: [...{
+			add_sub?: >=-99 & <=99
+			bias?: >=-99 & <=99
+			comment?: strings.MaxRunes(500)
+		}]
+		bounds: {
+			add_sub: {intMin: -99, intMax: 99}
+			bias: {intMin: -99, intMax: 99}
+			comment: {sizeMax: 500}
+		}
+	}
 	GameCard: {
 		checks: {
 			round: "round >= 1 AND round <= 99"
@@ -561,21 +649,102 @@ code: state: entities: {
 			next: {intMin: 1}
 		}
 	}
-	TeamGroup: {
+	TeamComment: {
 		checks: {
-			add_sub: "add_sub >= -99 AND add_sub <= 99"
-			bias: "bias >= -99 AND bias <= 99"
-			comment: "char_length(comment) <= 500"
+			body: "char_length(regexp_replace(body, '^[\\s\\u0085\\u00a0\\u1680\\u2000-\\u200a\\u2028\\u2029\\u202f\\u205f\\u3000]+|[\\s\\u0085\\u00a0\\u1680\\u2000-\\u200a\\u2028\\u2029\\u202f\\u205f\\u3000]+$', '', 'g')) > 0 AND char_length(body) <= 1000"
 		}
 		seed: [...{
-			add_sub?: >=-99 & <=99
-			bias?: >=-99 & <=99
-			comment?: strings.MaxRunes(500)
+			body?: =~ "[^\\s\\v\\x{85}\\x{a0}\\x{1680}\\x{2000}-\\x{200a}\\x{2028}\\x{2029}\\x{202f}\\x{205f}\\x{3000}]" & strings.MaxRunes(1000)
 		}]
 		bounds: {
-			add_sub: {intMin: -99, intMax: 99}
-			bias: {intMin: -99, intMax: 99}
-			comment: {sizeMax: 500}
+			body: {sizeMin: 1, sizeMax: 1000}
+		}
+	}
+	TeamCampaignPoint: {
+		checks: {
+			sequence: "sequence >= 1"
+			position: "position >= 1"
+			result: "result IN ('w', 'd', 'l')"
+		}
+		seed: [...{
+			sequence?: >=1
+			position?: >=1
+			result?: ("w" | "d" | "l")
+		}]
+		enums: {
+			result: ["w","d","l"]
+		}
+		bounds: {
+			sequence: {intMin: 1}
+			position: {intMin: 1}
+		}
+	}
+	TeamOddsHistory: {
+		checks: {
+			position: "position >= 1"
+			percent: "percent >= 0 AND percent <= 100"
+			source: "source IN ('imported', 'computed')"
+		}
+		seed: [...{
+			position?: >=1
+			percent?: >=0 & <=100
+			source?: ("imported" | "computed")
+		}]
+		enums: {
+			source: ["imported","computed"]
+		}
+		bounds: {
+			position: {intMin: 1}
+			percent: {intMin: 0, intMax: 100}
+		}
+	}
+	TeamRatingChart: {
+		checks: {
+			period: "period IN ('1m', '3m', '6m', '1y', '5y', 'all')"
+		}
+		seed: [...{
+			period?: ("1m" | "3m" | "6m" | "1y" | "5y" | "all")
+		}]
+		enums: {
+			period: ["1m","3m","6m","1y","5y","all"]
+		}
+	}
+	TeamRosterTotal: {
+		checks: {
+			played: "played >= 0"
+			started: "started >= 0"
+			came_on: "came_on >= 0"
+			bench: "bench >= 0"
+			minutes: "minutes >= 0"
+			goals: "goals >= 0"
+			penalties: "penalties >= 0"
+			own_goals: "own_goals >= 0"
+			yellow: "yellow >= 0"
+			red: "red >= 0"
+		}
+		seed: [...{
+			played?: >=0
+			started?: >=0
+			came_on?: >=0
+			bench?: >=0
+			minutes?: >=0
+			goals?: >=0
+			penalties?: >=0
+			own_goals?: >=0
+			yellow?: >=0
+			red?: >=0
+		}]
+		bounds: {
+			played: {intMin: 0}
+			started: {intMin: 0}
+			came_on: {intMin: 0}
+			bench: {intMin: 0}
+			minutes: {intMin: 0}
+			goals: {intMin: 0}
+			penalties: {intMin: 0}
+			own_goals: {intMin: 0}
+			yellow: {intMin: 0}
+			red: {intMin: 0}
 		}
 	}
 	RatingEval: {
@@ -767,20 +936,50 @@ code: state: entities: {
 			q_key: {sizeMax: 160}
 		}
 	}
+	TeamCommentDraft: {
+		seed: [...{
+			body?: strings.MaxRunes(1000)
+			state?: ("writing" | "sending" | "refused")
+		}]
+		enums: {
+			state: ["writing","sending","refused"]
+		}
+		bounds: {
+			body: {sizeMax: 1000}
+		}
+	}
+	TeamChartState: {
+		seed: [...{
+			metric?: ("points" | "position" | "percent")
+		}]
+		enums: {
+			metric: ["points","position","percent"]
+		}
+	}
 	ArchivePage: {
 		seed: [...{
 			offset?: >=0
 			next_offset?: >=40
 			page?: >=1
 			state?: ("browsing")
+			q?: strings.MaxRunes(80)
+			q_key?: strings.MaxRunes(160)
+			sort?: ("name" | "played" | "minutes" | "goals" | "goals_per90" | "contribution" | "contribution_per90")
+			period?: ("1m" | "3m" | "6m" | "1y" | "5y" | "all")
+			side?: ("*" | "home" | "away")
 		}]
 		enums: {
 			state: ["browsing"]
+			sort: ["name","played","minutes","goals","goals_per90","contribution","contribution_per90"]
+			period: ["1m","3m","6m","1y","5y","all"]
+			side: ["*","home","away"]
 		}
 		bounds: {
 			offset: {intMin: 0}
 			next_offset: {intMin: 40}
 			page: {intMin: 1}
+			q: {sizeMax: 80}
+			q_key: {sizeMax: 160}
 		}
 	}
 }

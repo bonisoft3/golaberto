@@ -140,6 +140,13 @@ admits it, which is narrower than ECMAScript — `while (n --> 0)`, the text
 `eval(` in a string, and top-level await are each refused — without the
 clock, randomness, time zone and locale.
 
+A computation may also declare `onComplete: "capture_name"`, one lowercase
+SQL/PostgREST RPC identifier of at most 63 characters. After every sink write
+succeeds, the compute service calls `POST /rpc/capture_name` with `{}` and its
+service JWT. The RPC must be idempotent because a failed request leaves the
+input eligible for retry. Failed calculations or sink writes and unchanged
+inputs do not call the RPC.
+
 What pronto holds: write fails on a module or Wasm file that is not there; the
 module joins the fact rows as the `computation` role, so `lint` reports a
 denied identifier in it as in a handler (a scan, not a Jessie parser); `lint`

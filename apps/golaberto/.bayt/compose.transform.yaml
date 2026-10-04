@@ -27,6 +27,9 @@ services:
         path: ../docker/golaberto-team-directory.yaml
         target: /pipelines/golaberto-team-directory.yaml
       - action: sync+restart
+        path: ../docker/golaberto-team-profiles.yaml
+        target: /pipelines/golaberto-team-profiles.yaml
+      - action: sync+restart
         path: ../docker/golaberto-game-cards.yaml
         target: /pipelines/golaberto-game-cards.yaml
       - action: sync+restart
@@ -44,6 +47,12 @@ services:
       - action: sync+restart
         path: ../docker/golaberto-rounds.yaml
         target: /pipelines/golaberto-rounds.yaml
+      - action: sync+restart
+        path: ../docker/golaberto-team-campaign.yaml
+        target: /pipelines/golaberto-team-campaign.yaml
+      - action: sync+restart
+        path: ../docker/golaberto-team-enrichment.yaml
+        target: /pipelines/golaberto-team-enrichment.yaml
     environment:
       CRUD_URL: http://crud:3000
       REDIS_URL: redis://redis:6379

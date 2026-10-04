@@ -109,6 +109,20 @@ with open("pipelines/standings_benthos_test.yaml", "w") as f:
             "target_processors": TRANSFORM,
             "input_batch": [{"content": json.dumps(case, ensure_ascii=False)}],
             "output_batches": [[{"bloblang": f"this.map_each(r -> r.team_name) == {json.dumps(want)}"}]],
-        } for name, case, want in ladders],
+        } for name, case, want in ladders] + [{
+            "name": "location-only team edits do not recount standings",
+            "target_processors": "/pipeline/processors/0",
+            "input_batch": [{"content": json.dumps({"data": json.dumps({
+                "__table": "team", "id": "team", "name": "Atlético", "latitude": 1,
+                "__before": json.dumps({"name": "Atlético", "latitude": None})})})}],
+            "output_batches": [],
+        }, {
+            "name": "team name changes still recount their standings",
+            "target_processors": "/pipeline/processors/0",
+            "input_batch": [{"content": json.dumps({"data": json.dumps({
+                "__table": "team", "id": "team", "name": "Atlético",
+                "__before": json.dumps({"name": "Old name"})})})}],
+            "output_batches": [[{"json_equals": {"scope": "stage_group?select=id,phase_id,team_group!inner(team_id)&team_group.team_id=eq.team"}}]],
+        }],
     }, f, ensure_ascii=False, indent=1)
     f.write("\n")

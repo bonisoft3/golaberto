@@ -34,25 +34,34 @@ COPY shell/screens/arbitro.html /srv/shell/screens/arbitro.html
 COPY shell/screens/arbitro.css /srv/shell/screens/arbitro.css
 COPY shell/screens/equipe.html /srv/shell/screens/equipe.html
 COPY shell/screens/equipe.css /srv/shell/screens/equipe.css
+COPY shell/screens/equipe-campeonato.html /srv/shell/screens/equipe-campeonato.html
+COPY shell/screens/equipe-campeonato.css /srv/shell/screens/equipe-campeonato.css
 COPY shell/screens/jogador.html /srv/shell/screens/jogador.html
 COPY shell/screens/jogador.css /srv/shell/screens/jogador.css
 COPY shell/screens/campeonato.html /srv/shell/screens/campeonato.html
 COPY shell/screens/campeonato.css /srv/shell/screens/campeonato.css
 COPY shell/handlers/blank-null.js /srv/shell/handlers/blank-null.js
 COPY shell/handlers/both-scored.js /srv/shell/handlers/both-scored.js
+COPY shell/handlers/chart-compare.js /srv/shell/handlers/chart-compare.js
+COPY shell/handlers/chart-metric.js /srv/shell/handlers/chart-metric.js
 COPY shell/handlers/count-or-null.js /srv/shell/handlers/count-or-null.js
 COPY shell/handlers/country-option.js /srv/shell/handlers/country-option.js
 COPY shell/handlers/geography-selection.js /srv/shell/handlers/geography-selection.js
 COPY shell/handlers/page-value.js /srv/shell/handlers/page-value.js
 COPY shell/handlers/row-id.js /srv/shell/handlers/row-id.js
 COPY shell/handlers/search-key.js /srv/shell/handlers/search-key.js
+COPY shell/handlers/team-chart-fold.js /srv/shell/handlers/team-chart-fold.js
+COPY shell/handlers/team-chart-seed.js /srv/shell/handlers/team-chart-seed.js
 COPY shell/renderers/country-flag.js /srv/shell/renderers/country-flag.js
 COPY shell/renderers/geography-label.js /srv/shell/renderers/geography-label.js
 COPY shell/renderers/home-date.js /srv/shell/renderers/home-date.js
 COPY shell/renderers/team-badge.js /srv/shell/renderers/team-badge.js
+COPY shell/renderers/team-chart.js /srv/shell/renderers/team-chart.js
+COPY shell/renderers/team-location.js /srv/shell/renderers/team-location.js
 COPY shell/shared/catalog.css /srv/shell/shared/catalog.css
 COPY shell/shared/chrome.css /srv/shell/shared/chrome.css
 COPY shell/shared/games.css /srv/shell/shared/games.css
+COPY shell/shared/team.css /srv/shell/shared/team.css
 COPY messages/pt-BR.json /srv/messages/pt-BR.json
 COPY messages/es-AR.json /srv/messages/es-AR.json
 COPY messages/en-GB.json /srv/messages/en-GB.json
@@ -86,13 +95,13 @@ COPY acceptance.md /srv/docs/acceptance.md
 COPY DESIGN.md /srv/docs/DESIGN.md
 COPY robots.txt /srv/robots.txt
 COPY sitemap.xml /srv/sitemap.xml
-COPY --parents docker/Caddyfile shell/index.html shell/shell.css shell/boot.js offline-first-sw.js shell/shell.yaml shell/shell.json shell/design.css shell/screens/principal.html shell/screens/principal.css shell/screens/campeonatos.html shell/screens/campeonatos.css shell/screens/jogos.html shell/screens/jogos.css shell/screens/jogo.html shell/screens/jogo.css shell/screens/chances.html shell/screens/chances.css shell/screens/editar.html shell/screens/editar.css shell/screens/equipes.html shell/screens/equipes.css shell/screens/estadios.html shell/screens/estadios.css shell/screens/estadio.html shell/screens/estadio.css shell/screens/arbitros.html shell/screens/arbitros.css shell/screens/arbitro.html shell/screens/arbitro.css shell/screens/equipe.html shell/screens/equipe.css shell/screens/jogador.html shell/screens/jogador.css shell/screens/campeonato.html shell/screens/campeonato.css shell/handlers/blank-null.js shell/handlers/both-scored.js shell/handlers/count-or-null.js shell/handlers/country-option.js shell/handlers/geography-selection.js shell/handlers/page-value.js shell/handlers/row-id.js shell/handlers/search-key.js shell/renderers/country-flag.js shell/renderers/geography-label.js shell/renderers/home-date.js shell/renderers/team-badge.js shell/shared/catalog.css shell/shared/chrome.css shell/shared/games.css messages/pt-BR.json messages/es-AR.json messages/en-GB.json messages/it-IT.json messages/de-DE.json messages/fr-FR.json branding/favicon.svg branding/favicon.ico brief.html ir.html acceptance.md DESIGN.md robots.txt sitemap.xml ./
+COPY --parents docker/Caddyfile shell/index.html shell/shell.css shell/boot.js offline-first-sw.js shell/shell.yaml shell/shell.json shell/design.css shell/screens/principal.html shell/screens/principal.css shell/screens/campeonatos.html shell/screens/campeonatos.css shell/screens/jogos.html shell/screens/jogos.css shell/screens/jogo.html shell/screens/jogo.css shell/screens/chances.html shell/screens/chances.css shell/screens/editar.html shell/screens/editar.css shell/screens/equipes.html shell/screens/equipes.css shell/screens/estadios.html shell/screens/estadios.css shell/screens/estadio.html shell/screens/estadio.css shell/screens/arbitros.html shell/screens/arbitros.css shell/screens/arbitro.html shell/screens/arbitro.css shell/screens/equipe.html shell/screens/equipe.css shell/screens/equipe-campeonato.html shell/screens/equipe-campeonato.css shell/screens/jogador.html shell/screens/jogador.css shell/screens/campeonato.html shell/screens/campeonato.css shell/handlers/blank-null.js shell/handlers/both-scored.js shell/handlers/chart-compare.js shell/handlers/chart-metric.js shell/handlers/count-or-null.js shell/handlers/country-option.js shell/handlers/geography-selection.js shell/handlers/page-value.js shell/handlers/row-id.js shell/handlers/search-key.js shell/handlers/team-chart-fold.js shell/handlers/team-chart-seed.js shell/renderers/country-flag.js shell/renderers/geography-label.js shell/renderers/home-date.js shell/renderers/team-badge.js shell/renderers/team-chart.js shell/renderers/team-location.js shell/shared/catalog.css shell/shared/chrome.css shell/shared/games.css shell/shared/team.css messages/pt-BR.json messages/es-AR.json messages/en-GB.json messages/it-IT.json messages/de-DE.json messages/fr-FR.json branding/favicon.svg branding/favicon.ico brief.html ir.html acceptance.md DESIGN.md robots.txt sitemap.xml ./
 COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.caddy.json ./.bayt/
 HEALTHCHECK --interval=5s --timeout=5s --retries=30 --start-period=10s CMD ["httpcheck","http://127.0.0.1:8080/health"]
 
 FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS caddy_ctxs
 WORKDIR /monorepo/apps/golaberto
-COPY --parents docker/Caddyfile shell/index.html shell/shell.css shell/boot.js offline-first-sw.js shell/shell.yaml shell/shell.json shell/design.css shell/screens/principal.html shell/screens/principal.css shell/screens/campeonatos.html shell/screens/campeonatos.css shell/screens/jogos.html shell/screens/jogos.css shell/screens/jogo.html shell/screens/jogo.css shell/screens/chances.html shell/screens/chances.css shell/screens/editar.html shell/screens/editar.css shell/screens/equipes.html shell/screens/equipes.css shell/screens/estadios.html shell/screens/estadios.css shell/screens/estadio.html shell/screens/estadio.css shell/screens/arbitros.html shell/screens/arbitros.css shell/screens/arbitro.html shell/screens/arbitro.css shell/screens/equipe.html shell/screens/equipe.css shell/screens/jogador.html shell/screens/jogador.css shell/screens/campeonato.html shell/screens/campeonato.css shell/handlers/blank-null.js shell/handlers/both-scored.js shell/handlers/count-or-null.js shell/handlers/country-option.js shell/handlers/geography-selection.js shell/handlers/page-value.js shell/handlers/row-id.js shell/handlers/search-key.js shell/renderers/country-flag.js shell/renderers/geography-label.js shell/renderers/home-date.js shell/renderers/team-badge.js shell/shared/catalog.css shell/shared/chrome.css shell/shared/games.css messages/pt-BR.json messages/es-AR.json messages/en-GB.json messages/it-IT.json messages/de-DE.json messages/fr-FR.json branding/favicon.svg branding/favicon.ico brief.html ir.html acceptance.md DESIGN.md robots.txt sitemap.xml ./
+COPY --parents docker/Caddyfile shell/index.html shell/shell.css shell/boot.js offline-first-sw.js shell/shell.yaml shell/shell.json shell/design.css shell/screens/principal.html shell/screens/principal.css shell/screens/campeonatos.html shell/screens/campeonatos.css shell/screens/jogos.html shell/screens/jogos.css shell/screens/jogo.html shell/screens/jogo.css shell/screens/chances.html shell/screens/chances.css shell/screens/editar.html shell/screens/editar.css shell/screens/equipes.html shell/screens/equipes.css shell/screens/estadios.html shell/screens/estadios.css shell/screens/estadio.html shell/screens/estadio.css shell/screens/arbitros.html shell/screens/arbitros.css shell/screens/arbitro.html shell/screens/arbitro.css shell/screens/equipe.html shell/screens/equipe.css shell/screens/equipe-campeonato.html shell/screens/equipe-campeonato.css shell/screens/jogador.html shell/screens/jogador.css shell/screens/campeonato.html shell/screens/campeonato.css shell/handlers/blank-null.js shell/handlers/both-scored.js shell/handlers/chart-compare.js shell/handlers/chart-metric.js shell/handlers/count-or-null.js shell/handlers/country-option.js shell/handlers/geography-selection.js shell/handlers/page-value.js shell/handlers/row-id.js shell/handlers/search-key.js shell/handlers/team-chart-fold.js shell/handlers/team-chart-seed.js shell/renderers/country-flag.js shell/renderers/geography-label.js shell/renderers/home-date.js shell/renderers/team-badge.js shell/renderers/team-chart.js shell/renderers/team-location.js shell/shared/catalog.css shell/shared/chrome.css shell/shared/games.css shell/shared/team.css messages/pt-BR.json messages/es-AR.json messages/en-GB.json messages/it-IT.json messages/de-DE.json messages/fr-FR.json branding/favicon.svg branding/favicon.ico brief.html ir.html acceptance.md DESIGN.md robots.txt sitemap.xml ./
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
 RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/apps/golaberto -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && touch -hd @${SOURCE_DATE_EPOCH:-0} /monorepo /monorepo/apps; fi

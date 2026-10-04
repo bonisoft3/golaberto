@@ -1,0 +1,21 @@
+# Team-scoped projections are queued by their source tables and drained in
+# bounded batches. Historical odds are captured only by the chances completion
+# hook, after every odds sink has committed.
+input:
+  generate:
+    interval: 2s
+    auto_replay_nacks: false
+    mapping: 'root = {"roster_batch": 50, "rating_batch": 10, "odds_batch": 5}'
+pipeline:
+  threads: 1
+output:
+  http_client:
+    url: ${CRUD_URL}/rpc/refresh_team_enrichment
+    verb: POST
+    max_in_flight: 1
+    timeout: 25s
+    retries: 0
+    headers:
+      Content-Type: application/json
+      Authorization: Bearer ${SERVICE_JWT}
+    successful_on: [200, 204]

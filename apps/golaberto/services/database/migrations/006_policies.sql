@@ -144,6 +144,34 @@ CREATE POLICY team_directory_app_user_select ON team_directory FOR SELECT TO app
 DROP POLICY IF EXISTS team_directory_service_all ON team_directory;
 CREATE POLICY team_directory_service_all ON team_directory FOR ALL TO service USING (true) WITH CHECK (true);
 
+CALL rls_protect('team_championship');
+ALTER TABLE team_championship ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS team_championship_app_user_select ON team_championship;
+CREATE POLICY team_championship_app_user_select ON team_championship FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS team_championship_service_all ON team_championship;
+CREATE POLICY team_championship_service_all ON team_championship FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('team_roster');
+ALTER TABLE team_roster ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS team_roster_app_user_select ON team_roster;
+CREATE POLICY team_roster_app_user_select ON team_roster FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS team_roster_service_all ON team_roster;
+CREATE POLICY team_roster_service_all ON team_roster FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('team_player_history');
+ALTER TABLE team_player_history ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS team_player_history_app_user_select ON team_player_history;
+CREATE POLICY team_player_history_app_user_select ON team_player_history FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS team_player_history_service_all ON team_player_history;
+CREATE POLICY team_player_history_service_all ON team_player_history FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('team_group');
+ALTER TABLE team_group ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS team_group_app_user_select ON team_group;
+CREATE POLICY team_group_app_user_select ON team_group FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS team_group_service_all ON team_group;
+CREATE POLICY team_group_service_all ON team_group FOR ALL TO service USING (true) WITH CHECK (true);
+
 CALL rls_protect('geography_region');
 ALTER TABLE geography_region ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS geography_region_app_user_select ON geography_region;
@@ -200,19 +228,54 @@ CREATE POLICY phase_round_app_user_select ON phase_round FOR SELECT TO app_user 
 DROP POLICY IF EXISTS phase_round_service_all ON phase_round;
 CREATE POLICY phase_round_service_all ON phase_round FOR ALL TO service USING (true) WITH CHECK (true);
 
+CALL rls_protect('team_comment');
+ALTER TABLE team_comment ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS team_comment_app_user_select ON team_comment;
+CREATE POLICY team_comment_app_user_select ON team_comment FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS team_comment_service_all ON team_comment;
+CREATE POLICY team_comment_service_all ON team_comment FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('team_campaign_point');
+ALTER TABLE team_campaign_point ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS team_campaign_point_app_user_select ON team_campaign_point;
+CREATE POLICY team_campaign_point_app_user_select ON team_campaign_point FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS team_campaign_point_service_all ON team_campaign_point;
+CREATE POLICY team_campaign_point_service_all ON team_campaign_point FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('team_odds_history');
+ALTER TABLE team_odds_history ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS team_odds_history_app_user_select ON team_odds_history;
+CREATE POLICY team_odds_history_app_user_select ON team_odds_history FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS team_odds_history_service_all ON team_odds_history;
+CREATE POLICY team_odds_history_service_all ON team_odds_history FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('team_rating_chart');
+ALTER TABLE team_rating_chart ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS team_rating_chart_app_user_select ON team_rating_chart;
+CREATE POLICY team_rating_chart_app_user_select ON team_rating_chart FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS team_rating_chart_service_all ON team_rating_chart;
+CREATE POLICY team_rating_chart_service_all ON team_rating_chart FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('team_odds_chart');
+ALTER TABLE team_odds_chart ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS team_odds_chart_app_user_select ON team_odds_chart;
+CREATE POLICY team_odds_chart_app_user_select ON team_odds_chart FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS team_odds_chart_service_all ON team_odds_chart;
+CREATE POLICY team_odds_chart_service_all ON team_odds_chart FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('team_roster_total');
+ALTER TABLE team_roster_total ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS team_roster_total_app_user_select ON team_roster_total;
+CREATE POLICY team_roster_total_app_user_select ON team_roster_total FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS team_roster_total_service_all ON team_roster_total;
+CREATE POLICY team_roster_total_service_all ON team_roster_total FOR ALL TO service USING (true) WITH CHECK (true);
+
 CALL rls_protect('home_championship');
 ALTER TABLE home_championship ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS home_championship_app_user_select ON home_championship;
 CREATE POLICY home_championship_app_user_select ON home_championship FOR SELECT TO app_user USING (true);
 DROP POLICY IF EXISTS home_championship_service_all ON home_championship;
 CREATE POLICY home_championship_service_all ON home_championship FOR ALL TO service USING (true) WITH CHECK (true);
-
-CALL rls_protect('team_group');
-ALTER TABLE team_group ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS team_group_app_user_select ON team_group;
-CREATE POLICY team_group_app_user_select ON team_group FOR SELECT TO app_user USING (true);
-DROP POLICY IF EXISTS team_group_service_all ON team_group;
-CREATE POLICY team_group_service_all ON team_group FOR ALL TO service USING (true) WITH CHECK (true);
 
 CALL rls_protect('team_player');
 ALTER TABLE team_player ENABLE ROW LEVEL SECURITY;

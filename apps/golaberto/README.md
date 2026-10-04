@@ -81,6 +81,9 @@ The list refreshes every 30 seconds, with no six-tournament cap.
 
 Launch automatically upgrades existing databases through the pgroll migration
 ledger before starting readers and pipelines, while preserving their data.
+Retained database volumes enable `fsync`, synchronous commits and full-page
+writes, including a synced initialization. Disposable databases without a
+retained volume keep the base image’s faster fixture settings.
 
 The compute worker is disabled in the default development launch (zero
 replicas). Its JavaScript and WASM implementation remains available for future
@@ -96,6 +99,18 @@ cd apps/golaberto
 COMPOSE_PROJECT_NAME=golaberto-checks CADDY_TLS_HOST_PORT=8444 \
   ../../plugins/sayt/sayt.sh integrate # the acceptance suite in a disposable stack
 ```
+
+The local `golaberto` instance recovered on 2026-10-04 uses
+`compose.live-recovery.yaml` to select its restored volume; the original archive
+remains preserved. Run it explicitly, with the existing certificates and port:
+
+```sh
+APP_URL=https://localhost:8443 CADDY_TLS_HOST_PORT=8443 \
+  docker compose -p golaberto -f compose.yaml -f compose.live-recovery.yaml up -d
+```
+
+This override is for the recovered local instance. Acceptance stacks use their
+own project names and volumes through the normal Sayt command.
 
 The Docker daemon must be running. On macOS with Colima, run `colima start`
 first and use the `colima` Docker context (`docker context use colima`).

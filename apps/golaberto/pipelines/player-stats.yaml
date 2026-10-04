@@ -21,7 +21,9 @@ input:
       - generate:
           count: 1
           interval: ""
-          mapping: 'root = {"boot": true}'
+          mapping: 'root = if ${PLAYER_STATS_BOOTSTRAP:true} { {"boot": true} } else { deleted() }'
+        # Retained archives with verified complete counters may skip the startup
+        # recount during an additive metrics import; source CDC stays active.
         # Enumerate small championship scopes before the normal event path.
         processors:
           - try:
@@ -53,6 +55,12 @@ pipeline:
     - mapping: |
         let row = if this.exists("data") && this.data.type() == "string" && this.data.length() > 0 { this.data.parse_json() } else { {} }
         let table = $row.__table.or("")
+        # SQL queues rating-only updates durably by player/championship. The
+        # queue worker computes these absolutely; replay here must not recount
+        # every career season for each imported appearance.
+        let before = $row.__before.or("{}").parse_json()
+        let metric_only = $table == "player_game" && $row.exists("__before") &&
+          $row.without("off_rating", "def_rating", "txid", "__before") == $before.without("off_rating", "def_rating", "txid", "__before")
         let via = "select=player_id,game!inner(phase!inner(championship_id))"
         let scopes = match {
           this.boot.or(false) => throw("Championship bootstrap failed"),
@@ -63,7 +71,7 @@ pipeline:
           _ => [],
         }
         let player = if $table == "player_game" || $table == "goal" { $row.player_id } else { null }
-        root = if $scopes.length() == 0 { deleted() } else { {"scopes": $scopes, "player": $player} }
+        root = if $metric_only || $scopes.length() == 0 { deleted() } else { {"scopes": $scopes, "player": $player} }
     # A failing step skips the rest, and the output rejects the message.
     - try:
         # Every scope read in one message, so a pair two of them name is
@@ -141,6 +149,8 @@ pipeline:
               let goals = this.goals.filter(q -> q.team == $team)
               let named = this.apps.concat(this.goals).filter(x -> x.team == $team)
               let on = $apps.filter(a -> !a.bench)
+              let minutes = $on.map_each(a -> a.off_minute.or([a.on_minute, 90].max()) - a.on_minute).sum().or(0)
+              let goal_count = $goals.filter(q -> !q.own_goal).length()
               root.id = this.championship + ":" + $team + ":" + this.player
               root.championship_id = this.championship
               root.team_id = $team
@@ -154,8 +164,8 @@ pipeline:
               root.came_on = $on.filter(a -> a.on_minute > 0).length()
               root.bench = $apps.filter(a -> a.bench).length()
               # On at the end of stoppage time and never off is on until then.
-              root.minutes = $on.map_each(a -> a.off_minute.or([a.on_minute, 90].max()) - a.on_minute).sum().or(0)
-              root.goals = $goals.filter(q -> !q.own_goal).length()
+              root.minutes = $minutes
+              root.goals = $goal_count
               root.penalties = $goals.filter(q -> q.penalty && !q.own_goal).length()
               root.own_goals = $goals.filter(q -> q.own_goal).length()
               root.yellow = $apps.filter(a -> a.yellow).length()
@@ -177,7 +187,9 @@ pipeline:
         - mapping: |
             meta sink = this.sink
             meta filter = this.filter.or("")
-            root = if this.sink == "delete" { "" } else { this.rows }
+            # Only the SQL metric queue writes metrics. A delayed recount must
+            # never overwrite newer ratings read by the queue worker.
+            root = if this.sink == "delete" { "" } else { this.rows.map_each(r -> r.without("off_rating", "def_rating", "contribution", "contribution_per90", "goals_per90")) }
 output:
   reject_errored:
     switch:

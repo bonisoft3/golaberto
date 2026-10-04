@@ -1,6 +1,8 @@
 # generated from bayt.cue — do not edit
 include:
-- path: ./compose.replay.yaml
+- path: ./compose.browser.yaml
+  required: false
+- path: ./compose.caddy.yaml
   required: false
 - path: ./compose.setup.yaml
   required: false
@@ -10,13 +12,15 @@ include:
   required: false
 - path: ./compose.integrate.yaml
   required: false
+- path: ./compose.check-constraints.yaml
+  required: false
+- path: ./compose.check-acceptance.yaml
+  required: false
 - path: ./compose.database.yaml
   required: false
 - path: ./compose.crud.yaml
   required: false
 - path: ./compose.auth.yaml
-  required: false
-- path: ./compose.caddy.yaml
   required: false
 - path: ./compose.electric.yaml
   required: false
@@ -29,8 +33,4 @@ include:
 - path: ./compose.transform.yaml
   required: false
 - path: ./compose.compute.yaml
-  required: false
-- path: ../.runtime/.bayt/compose.bayt.yaml
-  required: false
-- path: ../.runtime/libraries/mecha/.bayt/compose.bayt.yaml
   required: false

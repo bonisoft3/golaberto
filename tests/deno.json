@@ -1,3 +1,6 @@
 {
-  "nodeModulesDir": "none"
+  "nodeModulesDir": "none",
+  "imports": {
+    "omnishell/": "/omnishell/"
+  }
 }

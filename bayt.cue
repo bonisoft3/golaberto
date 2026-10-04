@@ -7,10 +7,10 @@
 package golaberto
 
 import (
-	bayt "bonisoft.org/.runtime/plugins/bayt/core:bayt"
-	mecha "bonisoft.org/.runtime/plugins/pronto/clusters:mecha"
-	omnishell "bonisoft.org/.runtime/plugins/pronto/terminals:omnishell"
-	prontoloop "bonisoft.org/.runtime/plugins/pronto/loops:sayt"
+	bayt "github.com/bonisoft3/bayt/core:bayt"
+	mecha "github.com/bonisoft3/pronto/clusters:mecha"
+	omnishell "github.com/bonisoft3/pronto/terminals:omnishell"
+	prontoloop "github.com/bonisoft3/pronto/loops:sayt"
 )
 
 // Escape hatches: none (ir.html) — the default runtime,

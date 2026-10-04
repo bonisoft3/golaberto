@@ -1,14 +1,17 @@
 {
   "_generated_from": "bayt.cue (do not edit)",
   "name": "test",
-  "project": "apps_golaberto",
-  "dir": "",
+  "project": "golaberto",
+  "dir": ".",
   "activate": "mise x --",
   "srcs": {
     "globs": [
       "*.cue",
       "bayt.json",
       "DESIGN.md",
+      "cue.mod/**",
+      "pronto/**",
+      ".say.yaml",
       "[p]ipelines/*.blobl",
       "[m]essages/*.json",
       "[s]hell/boot.js"
@@ -40,35 +43,16 @@
     "build",
     "setup"
   ],
-  "transitiveCrossDeps": [
-    {
-      "name": "setup",
-      "project": "workspaceroot",
-      "dir": ".runtime",
-      "outs": {
-        "globs": [
-          "[m]ise.toml",
-          "[.]mise.toml",
-          "[m]ise.lock",
-          "[.]tool-versions",
-          "gradle/libs.versions.toml",
-          "plugins/devserver/dind.sh",
-          ".task/bayt/setup.hash"
-        ],
-        "exclude": []
-      }
-    }
-  ],
+  "transitiveCrossDeps": [],
   "upClosure": [
-    ".bayt/compose.build.yaml",
-    ".bayt/compose.setup.yaml",
-    ".bayt/compose.setup.yaml"
+    "./.bayt/compose.build.yaml",
+    "./.bayt/compose.setup.yaml"
   ],
   "chainedDeps": [
     {
       "name": "build",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []
@@ -76,8 +60,8 @@
     },
     {
       "name": "setup",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []
@@ -91,6 +75,9 @@
           "*.cue",
           "bayt.json",
           "DESIGN.md",
+          "cue.mod/**",
+          "pronto/**",
+          ".say.yaml",
           "[p]ipelines/*.blobl",
           "[m]essages/*.json",
           "[s]hell/boot.js"

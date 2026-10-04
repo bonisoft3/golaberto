@@ -11,7 +11,7 @@
       "label": "test",
       "type": "shell",
       "options": {
-        "cwd": "${workspaceFolder}"
+        "cwd": "${workspaceFolder}/."
       }
     }
   ]

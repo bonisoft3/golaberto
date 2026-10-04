@@ -7,34 +7,34 @@
     "ports": [],
     "volumes": [],
     "depends_on": {
-      "apps_golaberto-caddy": {
+      "golaberto-caddy": {
         "condition": "service_healthy"
       },
-      "apps_golaberto-database": {
+      "golaberto-database": {
         "condition": "service_healthy"
       },
-      "apps_golaberto-crud": {
+      "golaberto-crud": {
         "condition": "service_healthy"
       },
-      "apps_golaberto-electric": {
+      "golaberto-electric": {
         "condition": "service_healthy"
       },
-      "apps_golaberto-redis": {
+      "golaberto-redis": {
         "condition": "service_healthy"
       },
-      "apps_golaberto-mesh-events": {
+      "golaberto-mesh-events": {
         "condition": "service_healthy"
       },
-      "apps_golaberto-conduit": {
+      "golaberto-conduit": {
         "condition": "service_healthy"
       },
-      "apps_golaberto-transform": {
+      "golaberto-transform": {
         "condition": "service_started"
       },
-      "apps_golaberto-compute": {
+      "golaberto-compute": {
         "condition": "service_started"
       },
-      "apps_golaberto-auth": {
+      "golaberto-auth": {
         "condition": "service_started"
       }
     },
@@ -79,8 +79,8 @@
     ]
   },
   "name": "launch",
-  "project": "apps_golaberto",
-  "dir": "",
+  "project": "golaberto",
+  "dir": ".",
   "activate": "",
   "skaffold": {
     "profiles": {
@@ -136,8 +136,8 @@
   "synthetics": {
     "bayt": {
       "name": "launch_bayt",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -150,7 +150,13 @@
           ".bayt/bayt.launch.json",
           ".bayt/Taskfile.yml",
           ".bayt/Taskfile.bayt.yml",
-          ".bayt/compose.launch.closure.yaml"
+          ".bayt/compose.launch.closure.yaml",
+          ".bayt/compose.*.yaml",
+          ".bayt/Dockerfile.*",
+          ".bayt/bayt.*.json",
+          ".bayt/Taskfile.*.yaml",
+          "mecha/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml",
+          "omnishell/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml"
         ],
         "exclude": []
       },
@@ -166,28 +172,23 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.launch.yaml",
-        ".bayt/compose.caddy.yaml",
-        ".bayt/compose.database.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml",
-        ".bayt/compose.crud.yaml",
-        ".bayt/compose.electric.yaml",
-        ".bayt/compose.redis.yaml",
-        ".bayt/compose.mesh-events.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.mesh-image.yaml",
-        ".bayt/compose.conduit.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.conduit-image.yaml",
-        ".bayt/compose.transform.yaml",
-        ".bayt/compose.compute.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.compute-image.yaml",
-        ".bayt/compose.auth.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.auth-image.yaml"
+        "./.bayt/compose.launch.yaml",
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.mesh-events.yaml",
+        "./.bayt/compose.conduit.yaml",
+        "./.bayt/compose.transform.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.auth.yaml"
       ]
     },
     "outs": {
       "name": "launch_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -209,22 +210,17 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.launch.yaml",
-        ".bayt/compose.caddy.yaml",
-        ".bayt/compose.database.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml",
-        ".bayt/compose.crud.yaml",
-        ".bayt/compose.electric.yaml",
-        ".bayt/compose.redis.yaml",
-        ".bayt/compose.mesh-events.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.mesh-image.yaml",
-        ".bayt/compose.conduit.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.conduit-image.yaml",
-        ".bayt/compose.transform.yaml",
-        ".bayt/compose.compute.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.compute-image.yaml",
-        ".bayt/compose.auth.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.auth-image.yaml"
+        "./.bayt/compose.launch.yaml",
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.mesh-events.yaml",
+        "./.bayt/compose.conduit.yaml",
+        "./.bayt/compose.transform.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.auth.yaml"
       ]
     }
   },
@@ -268,28 +264,23 @@
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
-    ".bayt/compose.launch.yaml",
-    ".bayt/compose.caddy.yaml",
-    ".bayt/compose.database.yaml",
-    ".runtime/libraries/mecha/.bayt/compose.database-image.yaml",
-    ".bayt/compose.crud.yaml",
-    ".bayt/compose.electric.yaml",
-    ".bayt/compose.redis.yaml",
-    ".bayt/compose.mesh-events.yaml",
-    ".runtime/libraries/mecha/.bayt/compose.mesh-image.yaml",
-    ".bayt/compose.conduit.yaml",
-    ".runtime/libraries/mecha/.bayt/compose.conduit-image.yaml",
-    ".bayt/compose.transform.yaml",
-    ".bayt/compose.compute.yaml",
-    ".runtime/libraries/mecha/.bayt/compose.compute-image.yaml",
-    ".bayt/compose.auth.yaml",
-    ".runtime/libraries/mecha/.bayt/compose.auth-image.yaml"
+    "./.bayt/compose.launch.yaml",
+    "./.bayt/compose.caddy.yaml",
+    "./.bayt/compose.database.yaml",
+    "./.bayt/compose.crud.yaml",
+    "./.bayt/compose.electric.yaml",
+    "./.bayt/compose.redis.yaml",
+    "./.bayt/compose.mesh-events.yaml",
+    "./.bayt/compose.conduit.yaml",
+    "./.bayt/compose.transform.yaml",
+    "./.bayt/compose.compute.yaml",
+    "./.bayt/compose.auth.yaml"
   ],
   "chainedDeps": [
     {
       "name": "caddy_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []
@@ -297,8 +288,8 @@
     },
     {
       "name": "database_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []
@@ -306,8 +297,8 @@
     },
     {
       "name": "crud_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []
@@ -315,8 +306,8 @@
     },
     {
       "name": "electric_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []
@@ -324,8 +315,8 @@
     },
     {
       "name": "redis_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []
@@ -333,8 +324,8 @@
     },
     {
       "name": "mesh-events_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []
@@ -342,8 +333,8 @@
     },
     {
       "name": "conduit_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []
@@ -351,8 +342,8 @@
     },
     {
       "name": "transform_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []
@@ -360,8 +351,8 @@
     },
     {
       "name": "compute_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []
@@ -369,8 +360,8 @@
     },
     {
       "name": "auth_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []

@@ -1,6 +1,6 @@
 # generated from bayt.cue — do not edit
 FROM libraries_mecha-compute-image AS compute
-WORKDIR /monorepo
+WORKDIR /monorepo/.
 COPY computations/ratings.js /app/computations/golaberto-ratings.js
 COPY computations/chances.js /app/computations/golaberto-chances.js
 COPY computations/golaberto-odds.wasm /app/computations/golaberto-odds.wasm
@@ -8,23 +8,21 @@ COPY --parents computations/ratings.js computations/chances.js computations/gola
 COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.compute.json ./.bayt/
 
 FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS compute_ctxs
-WORKDIR /monorepo
+WORKDIR /monorepo/.
 COPY --parents computations/ratings.js computations/chances.js computations/golaberto-odds.wasm ./
-COPY --from=libraries_mecha-compute-image_srcs /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
-RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && touch -hd @${SOURCE_DATE_EPOCH:-0} /monorepo; fi
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/. -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && touch -hd @${SOURCE_DATE_EPOCH:-0} /monorepo; fi
 FROM scratch AS compute_srcs
 COPY --from=compute_ctxs /monorepo /monorepo
 
 FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS compute_bayt_ctxs
-WORKDIR /monorepo
+WORKDIR /monorepo/.
 COPY --parents .bayt/compose.compute.yaml .bayt/Dockerfile.compute .bayt/bayt.compute.json .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml ./
-COPY --from=libraries_mecha-compute-image_bayt /monorepo /monorepo
-COPY --from=apps_golaberto-crud_bayt /monorepo /monorepo
-COPY --from=apps_golaberto-database_bayt /monorepo /monorepo
+COPY --from=golaberto-crud_bayt /monorepo /monorepo
+COPY --from=golaberto-database_bayt /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
-RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && touch -hd @${SOURCE_DATE_EPOCH:-0} /monorepo; fi
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/. -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && touch -hd @${SOURCE_DATE_EPOCH:-0} /monorepo; fi
 FROM scratch AS compute_bayt
 COPY --from=compute_bayt_ctxs /monorepo /monorepo

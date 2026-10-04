@@ -1,6 +1,0 @@
-say:
-  test:
-    rulemap:
-      native:
-        cmds:
-          - do: "swift test"

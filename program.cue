@@ -1,4 +1,4 @@
-// The machine rung of apps/golaberto: a pronto.#App compiled from ir.html
+// The machine rung of golaberto: a pronto.#App compiled from ir.html
 // (pinned below). Nobody reviews this; it must merely be checkable — cue vet,
 // the ir bijection and the emitted surface are the contract.
 @extern(embed)
@@ -6,7 +6,7 @@
 package golaberto
 
 import (
-	pronto "bonisoft.org/.runtime/plugins/pronto"
+	pronto "github.com/bonisoft3/pronto"
 )
 
 _designMd: _ @embed(file="DESIGN.md", type=text)
@@ -1585,17 +1585,9 @@ code: pronto.#App & {
 	}
 }
 
-cluster:  (pronto.#DefaultCluster & {"code": code, statics: terminal.surface.statics}).out
+cluster:  (pronto.#DefaultCluster & {"code": code, statics: terminal.surface.statics, local: loop.surface.sources.pronto != ""}).out
 terminal: (pronto.#DefaultTerminal & {"code": code}).out
 loop:     (pronto.#DefaultLoop & {"code": code, "cluster": cluster, "terminal": terminal}).out
-// The archive's constraints live in Postgres, so they are graded there.
-loop: surface: checks: "constraints": {
-	verb:     "integrate"
-	priority: 1
-	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker tests/constraints.ts"]
-	note: "each test pair of the ir run as a rolled-back transaction in the cluster's Postgres"
-}
-
 // The standings transform over the crawled 2026 Série A, asserting the table
 // golaberto.com.br shows (tools/standings_fixture.py writes the fixture).
 loop: surface: checks: "standings": {
@@ -1604,14 +1596,23 @@ loop: surface: checks: "standings": {
 	note: "the derived streams over crawled data: the 2026 Serie A's table and its 885 players' seasons as golaberto.com.br shows them, a phase's current and next rounds, and a game's card and team lines"
 }
 
-// The screens' invariants, walked in a browser against the running archive.
-loop: surface: checks: "acceptance": {
-	verb:     "integrate"
+build:    (pronto.#DefaultBuild & {"code": code, "loop": loop, "cluster": cluster, "terminal": terminal}).out
+
+// The archive's constraints live in Postgres, so they are graded there.
+build: checks: "constraints": {
 	priority: 1
-	cmds: ["deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/acceptance.ts"]
-	note: "the ir's screen invariants against the running archive: levels, catalogue and search, a championship's structure, three languages, the dark twin and the screen range"
+	database: true
+	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-net --allow-read --allow-sys tests/constraints.ts"]
+	note: "each test pair of the ir run as a rolled-back transaction in the cluster's Postgres"
 }
 
-build:    (pronto.#DefaultBuild & {"code": code, "loop": loop, "cluster": cluster}).out
+// The screens' invariants, walked in a browser against the running archive.
+build: checks: "acceptance": {
+	priority: 1
+	browser:  true
+	database: true
+	cmds: ["deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=caddy tests/acceptance.ts"]
+	note: "the ir's screen invariants against the running archive: levels, catalogue and search, a championship's structure, three languages, the dark twin and the screen range"
+}
 
 out: pronto.#emit & {"code": code, "cluster": cluster, "terminal": terminal, "loop": loop, "build": build}

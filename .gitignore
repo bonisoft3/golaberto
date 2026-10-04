@@ -1,0 +1,6 @@
+# The monorepo layout compose reads (copybara leaves it out).
+!.bayt/.env
+# The certificate setup issues, its private key beside it.
+/.certs/
+# mise writes what this checkout resolved mise.local.toml to.
+/mise.local.lock

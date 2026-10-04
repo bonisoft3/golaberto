@@ -3,6 +3,13 @@
   "compose": {
     "up": false,
     "manual": false,
+    "build": {
+      "additional_contexts": {
+        "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.4.0@sha256:e838451bfba0b0c65a91e94e22e6f0d759a095ecff4f3f485386efd7547ba4c8}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+      },
+      "secrets": [],
+      "args": {}
+    },
     "environment": {
       "POSTGRES_USER": "${POSTGRES_USER:-postgres}",
       "POSTGRES_PASSWORD": "${POSTGRES_PASSWORD:-postgres}",
@@ -109,7 +116,6 @@
     "preamble": [],
     "preambleCopyContexts": [],
     "from": {
-      "ref": "libraries_mecha:database-image",
       "name": "libraries_mecha-database-image"
     },
     "add": [],
@@ -164,8 +170,8 @@
     "cmd": null
   },
   "name": "database",
-  "project": "apps_golaberto",
-  "dir": "",
+  "project": "golaberto",
+  "dir": ".",
   "activate": "",
   "srcs": {
     "globs": [
@@ -195,8 +201,8 @@
   "synthetics": {
     "bayt": {
       "name": "database_bayt",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -224,14 +230,13 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.database.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml"
+        "./.bayt/compose.database.yaml"
       ]
     },
     "outs": {
       "name": "database_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -253,14 +258,13 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.database.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml"
+        "./.bayt/compose.database.yaml"
       ]
     },
     "srcs": {
       "name": "database_srcs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -287,20 +291,7 @@
       "visibility": "internal",
       "deps": [],
       "transitiveDeps": [],
-      "transitiveCrossDeps": [
-        {
-          "name": "database-image_srcs",
-          "project": "libraries_mecha",
-          "dir": ".runtime/libraries/mecha",
-          "outs": {
-            "globs": [
-              "services/database/rls/rls.sql",
-              "services/ticker/schedule.sql"
-            ],
-            "exclude": []
-          }
-        }
-      ],
+      "transitiveCrossDeps": [],
       "chainedDeps": [],
       "cmds": [],
       "cache": {
@@ -308,8 +299,7 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.database.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml"
+        "./.bayt/compose.database.yaml"
       ]
     }
   },
@@ -318,32 +308,11 @@
   "deps": [],
   "sameProjectDeps": [],
   "transitiveDeps": [],
-  "transitiveCrossDeps": [
-    {
-      "name": "database-image",
-      "project": "libraries_mecha",
-      "dir": ".runtime/libraries/mecha",
-      "outs": {
-        "globs": [],
-        "exclude": []
-      }
-    }
-  ],
+  "transitiveCrossDeps": [],
   "upClosure": [
-    ".bayt/compose.database.yaml",
-    ".runtime/libraries/mecha/.bayt/compose.database-image.yaml"
+    "./.bayt/compose.database.yaml"
   ],
-  "chainedDeps": [
-    {
-      "name": "database-image",
-      "project": "libraries_mecha",
-      "dir": ".runtime/libraries/mecha",
-      "outs": {
-        "globs": [],
-        "exclude": []
-      }
-    }
-  ],
+  "chainedDeps": [],
   "cmds": [],
   "cache": {
     "full": false,

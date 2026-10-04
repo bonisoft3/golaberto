@@ -4,7 +4,7 @@
     {
       "label": "build",
       "type": "shell",
-      "command": "deno run --allow-read --allow-write=. --allow-run --allow-env .runtime/plugins/pronto/write.ts .",
+      "command": "./saytw build",
       "group": {
         "kind": "build",
         "isDefault": true

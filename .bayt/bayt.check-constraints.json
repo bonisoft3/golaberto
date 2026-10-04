@@ -1,0 +1,324 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "compose": {
+    "up": true,
+    "manual": true,
+    "build": {
+      "additional_contexts": {
+        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.5.0@sha256:63d6d0cd5aefe274828e096301423de0adf9d1411ff151bfc1201e6c2ec178d1}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+      },
+      "secrets": [],
+      "args": {}
+    },
+    "command": [
+      "mise",
+      "x",
+      "--",
+      "sh",
+      "-c",
+      "deno test --config tests/deno.json --no-lock --allow-env --allow-net --allow-read --allow-sys tests/constraints.ts"
+    ],
+    "depends_on": {
+      "golaberto-launch": {
+        "condition": "service_healthy"
+      }
+    },
+    "environment": {
+      "APP_URL": "https://caddy:8443",
+      "DATABASE_URL": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
+      "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}"
+    },
+    "ports": [],
+    "volumes": []
+  },
+  "dockerfile": {
+    "preamble": [],
+    "preambleCopyContexts": [],
+    "from": {
+      "ref": ":setup",
+      "name": "golaberto-setup"
+    },
+    "add": [],
+    "mounts": [],
+    "secrets": {},
+    "extra_hosts": [],
+    "epilogue": [],
+    "copy": [
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "/"
+        ],
+        "dst": "/omnishell",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      }
+    ],
+    "healthcheck": null,
+    "expose": [],
+    "entrypoint": null,
+    "incremental": false,
+    "cmd": null
+  },
+  "name": "check-constraints",
+  "project": "golaberto",
+  "dir": ".",
+  "activate": "",
+  "srcs": {
+    "globs": [
+      "tests/**"
+    ],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {
+    "MISE_ALWAYS_KEEP_DOWNLOAD": "1"
+  },
+  "synthetics": {
+    "bayt": {
+      "name": "check-constraints_bayt",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.check-constraints.yaml",
+          ".bayt/Dockerfile.check-constraints",
+          ".bayt/bayt.check-constraints.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/Taskfile.check-constraints.yaml",
+          ".bayt/compose.check-constraints.closure.yaml",
+          ".bayt/compose.*.yaml",
+          ".bayt/Dockerfile.*",
+          ".bayt/bayt.*.json",
+          ".bayt/Taskfile.*.yaml",
+          "mecha/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml",
+          "omnishell/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.check-constraints.yaml",
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.launch.yaml",
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.mesh-events.yaml",
+        "./.bayt/compose.conduit.yaml",
+        "./.bayt/compose.transform.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.auth.yaml"
+      ]
+    },
+    "outs": {
+      "name": "check-constraints_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.check-constraints.yaml",
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.launch.yaml",
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.mesh-events.yaml",
+        "./.bayt/compose.conduit.yaml",
+        "./.bayt/compose.transform.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.auth.yaml"
+      ]
+    },
+    "srcs": {
+      "name": "check-constraints_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          "tests/**"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [
+        "setup_srcs",
+        "launch_outs_srcs"
+      ],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.check-constraints.yaml",
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.launch.yaml",
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.mesh-events.yaml",
+        "./.bayt/compose.conduit.yaml",
+        "./.bayt/compose.transform.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.auth.yaml"
+      ]
+    }
+  },
+  "taskfile": {
+    "run": "once",
+    "incremental": true,
+    "preconditions": []
+  },
+  "visibility": "internal",
+  "emitsSrcs": true,
+  "deps": [
+    "setup",
+    "launch_outs"
+  ],
+  "sameProjectDeps": [
+    "setup",
+    "launch_outs"
+  ],
+  "transitiveDeps": [
+    "setup",
+    "launch_outs"
+  ],
+  "transitiveCrossDeps": [],
+  "upClosure": [
+    "./.bayt/compose.check-constraints.yaml",
+    "./.bayt/compose.setup.yaml",
+    "./.bayt/compose.launch.yaml",
+    "./.bayt/compose.caddy.yaml",
+    "./.bayt/compose.database.yaml",
+    "./.bayt/compose.crud.yaml",
+    "./.bayt/compose.electric.yaml",
+    "./.bayt/compose.redis.yaml",
+    "./.bayt/compose.mesh-events.yaml",
+    "./.bayt/compose.conduit.yaml",
+    "./.bayt/compose.transform.yaml",
+    "./.bayt/compose.compute.yaml",
+    "./.bayt/compose.auth.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "setup",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "launch_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [
+    {
+      "srcs": {
+        "globs": [
+          "tests/**",
+          "[m]ise.toml",
+          "[.]mise.toml",
+          "[m]ise.lock",
+          "[.]tool-versions"
+        ],
+        "exclude": [],
+        "defaultGlobs": null,
+        "defaultExclude": null
+      },
+      "do": "mise install",
+      "dockerfile": {
+        "do": "d=/root/.local/share/mise/downloads; s=/mise-tarball-store; mkdir -p \"$d\" \"$s\"; cp -r \"$s\"/. \"$d\"/ 2>/dev/null || true; mise install || exit; cd \"$d\" && for f in */*/*; do [ -f \"$f\" ] || continue; o=\"$s/$f\"; [ -e \"$o\" ] && continue; mkdir -p \"$(dirname \"$o\")\"; t=\"$(mktemp \"$(dirname \"$o\")/.pXXXXXX\")\" && cp \"$f\" \"$t\" && mv -f \"$t\" \"$o\"; done; :",
+        "mounts": [
+          {
+            "type": "cache",
+            "target": "/root/.local/share/mise/downloads",
+            "scope": "project",
+            "required": false
+          },
+          {
+            "type": "cache",
+            "target": "/mise-tarball-store",
+            "scope": "global",
+            "required": false
+          }
+        ],
+        "shell": "sh"
+      },
+      "name": "builtin",
+      "shell": "exec",
+      "stop": false
+    }
+  ],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

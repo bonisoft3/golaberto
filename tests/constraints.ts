@@ -3,21 +3,16 @@
 // database is left as it was found. A case is a test pair of the ir.
 
 import { assert, assertEquals, assertStringIncludes } from "jsr:@std/assert@1";
+import { query, refused as isRefusal } from "./db.ts";
 
-const project = Deno.env.get("COMPOSE_PROJECT_NAME") || "golaberto";
-
+// A refusal ends the transaction where it stands; the connection closing rolls it back.
 const psql = async (sql: string) => {
-  const out = await new Deno.Command("docker", {
-    args: ["compose", "-p", project, "exec", "-T", "apps_golaberto-database", "psql", "-U", "postgres", "-d", "golaberto", "-v", "ON_ERROR_STOP=1", "-qAt"],
-    stdin: "piped",
-    stdout: "piped",
-    stderr: "piped",
-  }).spawn();
-  const writer = out.stdin.getWriter();
-  await writer.write(new TextEncoder().encode(`BEGIN;\n${sql}\nROLLBACK;\n`));
-  await writer.close();
-  const { success, stdout, stderr } = await out.output();
-  return { success, stdout: new TextDecoder().decode(stdout).trim(), stderr: new TextDecoder().decode(stderr).trim() };
+  try {
+    return { success: true, stdout: await query(`BEGIN;\n${sql}\nROLLBACK;`), stderr: "" };
+  } catch (e) {
+    if (!isRefusal(e)) throw e;
+    return { success: false, stdout: "", stderr: e.message };
+  }
 };
 
 const kept = async (sql: string) => {
@@ -49,9 +44,13 @@ INSERT INTO team (id, name, country) VALUES ('${HOME}', 'Flamengo-RJ', 'Brasil')
 const game = (cols: string, vals: string, away = AWAY) =>
   `INSERT INTO game (phase_id, day, home_id, away_id${cols}) VALUES ('${PHASE}', '2026-10-01', '${HOME}', '${away}'${vals})`;
 
-// A goal on a played game between the fixtures' two teams.
+// A played game between the fixtures' two teams, which goals, appearances and
+// comments hang off.
+const PLAYED = "aaaaaaaa-0000-4000-8000-000000000007";
+const played = `${fixtures}\n${game(", id, played, home_score, away_score", `, '${PLAYED}', true, 1, 0`)};`;
+
 const goal = (cols: string, vals: string) =>
-  `${fixtures}\n${game(", played, home_score, away_score", ", true, 1, 0")} RETURNING id \\gset\nINSERT INTO player (id, name) VALUES ('${PLAYER}', 'Pedro');\nINSERT INTO goal (game_id, player_id, minute${cols}) VALUES (:'id', '${PLAYER}', 30${vals});`;
+  `${played}\nINSERT INTO player (id, name) VALUES ('${PLAYER}', 'Pedro');\nINSERT INTO goal (game_id, player_id, minute${cols}) VALUES ('${PLAYED}', '${PLAYER}', 30${vals});`;
 
 Deno.test("test-score-whole: a half-typed score is refused", async () => {
   await refused(`${fixtures}\n${game(", played, home_score", ", true, 2")};`, "game_check");
@@ -145,14 +144,14 @@ Deno.test("test-goal-kind: a goal is not both a penalty and an own goal", async 
 });
 
 const appearance = (cols: string, vals: string) =>
-  `${fixtures}\n${game(", played, home_score, away_score", ", true, 1, 0")} RETURNING id \\gset\nINSERT INTO player (id, name) VALUES ('${PLAYER}', 'Pedro');\nINSERT INTO player_game (game_id, player_id, side${cols}) VALUES (:'id', '${PLAYER}', 'home'${vals});`;
+  `${played}\nINSERT INTO player (id, name) VALUES ('${PLAYER}', 'Pedro');\nINSERT INTO player_game (game_id, player_id, side${cols}) VALUES ('${PLAYED}', '${PLAYER}', 'home'${vals});`;
 
 // Blanks beyond the space: Postgres's btrim() kept a newline or a no-break
 // space, and the cluster stored a body the composer's CEL refuses.
 Deno.test("test-comment-empty: a comment of blanks, or past 1000 characters, is refused", async () => {
   for (const body of ["'   '", "E'\\n\\t'", "U&'\\00A0\\3000'", "repeat('a', 1001)"]) {
     await refused(
-      `${fixtures}\n${game(", played, home_score, away_score", ", true, 1, 0")} RETURNING id \\gset\nINSERT INTO app_user (id, handle) VALUES ('${PLAYER}', 'reader');\nINSERT INTO comment (game_id, app_user_id, body) VALUES (:'id', '${PLAYER}', ${body});`,
+      `${played}\nINSERT INTO app_user (id, handle) VALUES ('${PLAYER}', 'reader');\nINSERT INTO comment (game_id, app_user_id, body) VALUES ('${PLAYED}', '${PLAYER}', ${body});`,
       "comment_body_check",
     );
   }

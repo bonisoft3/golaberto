@@ -32,8 +32,8 @@ agree with their results, readers who correct the record, and a serious odds eng
 
 - **One program.** `program.cue` declares the entities, screens, machines,
   streams, computations, tests and languages; `ir.html` holds the decisions
-  behind them. Everything else under this repository — SQL, policies,
-  migrations, screens, the cluster — is emitted by `.runtime/plugins/pronto/write.ts`
+  behind them. Everything else here — SQL, policies, migrations,
+  screens, the cluster — is emitted by [pronto](https://github.com/bonisoft3/pronto)
   and committed. There is no build step.
 - **Local-first.** Screens read tables synced into the browser and render
   from them, so navigation is instant and a page keeps working through a
@@ -60,8 +60,8 @@ agree with their results, readers who correct the record, and a serious odds eng
 With Docker:
 
 ```sh
-.runtime/plugins/sayt/sayt.sh launch      # the whole cluster, served over https
-.runtime/plugins/sayt/sayt.sh integrate   # the acceptance suite against it
+./saytw launch      # the whole cluster, served over https
+./saytw integrate   # the acceptance suite against it
 ```
 
 ## How it was made
@@ -72,12 +72,12 @@ prose, and every screen as a storyboard of its states before any of it was
 built. Here is the game editor's — loading, editing, saving, refused, missing,
 dark:
 
-![The game editor's storyboard in ir.html: six states of one machine](https://raw.githubusercontent.com/bonisoft3/golaberto/main/docs/ir-storyboard.jpg)
+![The game editor's storyboard in ir.html: six states of one machine](docs/ir-storyboard.jpg)
 
 Every turn then ended with a report from the running cluster: what changed,
 what was decided, and what the gates caught.
 
-![The turn 9 report: chances, ratings and what each game is worth](https://raw.githubusercontent.com/bonisoft3/golaberto/main/docs/turn-report.jpg)
+![The turn 9 report: chances, ratings and what each game is worth](docs/turn-report.jpg)
 
 ## A note from the builder
 
@@ -131,7 +131,7 @@ than about Rails or React, and some of its walls I had to build myself.
 
 ## Licence
 
-Everything in this repository is free software under the GNU General Public
+Everything here is free software under the GNU General Public
 License, version 2, as golaberto is; see `COPYING`. The odds
 engine's source, with the patch that builds it for WebAssembly, is in
 `tools/odds-wasm/upstream`.

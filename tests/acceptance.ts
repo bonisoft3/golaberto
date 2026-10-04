@@ -4,12 +4,13 @@
 // integrate check. Each case names the test pair it realizes.
 
 import { assert, assertEquals } from "jsr:@std/assert@1";
-import { baseUrl } from "../.runtime/plugins/omnishell/base-url.ts";
+import { baseUrl } from "omnishell/base-url.ts";
+import { query } from "./db.ts";
 
 const { chromium } = await import("npm:playwright@1.61.1");
 const { SignJWT } = await import("npm:jose@6.0.11");
 const base = await baseUrl(Deno.args[0] ?? ".");
-const browser = await chromium.launch();
+const browser = await chromium.launch({ args: ["--ignore-certificate-errors"] });
 
 // deno-lint-ignore no-explicit-any
 type Page = any;
@@ -31,8 +32,10 @@ const test = (name: string, fn: () => Promise<void>) =>
 // not; mecha's auth suite covers it.
 const signedIn = async (handle: string) => {
   const id = crypto.randomUUID();
-  await psql(`INSERT INTO app_user (id, handle) VALUES ('${id}', '${handle}')`);
-  const secret = new TextEncoder().encode(Deno.env.get("PGRST_JWT_SECRET") ?? "mecha-dev-secret-please-override-32ch");
+  await query(`INSERT INTO app_user (id, handle) VALUES ('${id}', '${handle}')`);
+  const jwt = Deno.env.get("PGRST_JWT_SECRET");
+  if (jwt === undefined) throw new Error("PGRST_JWT_SECRET is unset: the check runs beside the stack, which sets it");
+  const secret = new TextEncoder().encode(jwt);
   const token = await new SignJWT({ role: "app_user", handle, guest: false }).setProtectedHeader({ alg: "HS256" }).setSubject(id)
     .setExpirationTime("1h").sign(secret);
   return { token, user: { id, handle } };
@@ -40,7 +43,6 @@ const signedIn = async (handle: string) => {
 
 const context = async (opts: { width?: number; dark?: boolean; session?: unknown } = {}) => {
   const c = await browser.newContext({
-    ignoreHTTPSErrors: true,
     viewport: { width: opts.width ?? 1366, height: 900 },
     colorScheme: opts.dark ? "dark" : "light",
     // A Brazilian reader: the unprefixed addresses negotiate to the language a browser asks for.
@@ -91,15 +93,6 @@ const VIVEROS = "0c000000-0000-4000-8000-000000000126";
 const PACAEMBU = "06000000-0000-4000-8000-000000000050";
 const ABADE = "0b000000-0000-4000-8000-000000000003";
 const DERBY_2006 = "0a000000-0000-4000-8000-000000001015";
-
-const psql = async (sql: string): Promise<string> => {
-  const project = Deno.env.get("COMPOSE_PROJECT_NAME") || "golaberto";
-  const { success, stdout, stderr } = await new Deno.Command("docker", {
-    args: ["compose", "-p", project, "exec", "-T", "apps_golaberto-database", "psql", "-U", "postgres", "-d", "golaberto", "-v", "ON_ERROR_STOP=1", "-Atqc", sql],
-  }).output();
-  assert(success, new TextDecoder().decode(stderr));
-  return new TextDecoder().decode(stdout).trim();
-};
 
 const pointsOf = (page: Page, team: string): Promise<string> =>
   page.$$eval(".standings tbody tr", (rows: Element[], team: string) => {
@@ -215,10 +208,10 @@ test("test-standings-live: a result recorded after the fact moves the table", as
   await page.waitForFunction(() => document.querySelectorAll(".standings tbody tr").length === 20);
   const before = Number(await pointsOf(page, "Botafogo-RJ"));
   try {
-    await psql(`UPDATE game SET home_score = 1 WHERE id = '${DRAW}'`);
+    await query(`UPDATE game SET home_score = 1 WHERE id = '${DRAW}'`);
     await awaitPoints(page, "Botafogo-RJ", before + 2);
   } finally {
-    await psql(`UPDATE game SET home_score = 0 WHERE id = '${DRAW}'`);
+    await query(`UPDATE game SET home_score = 0 WHERE id = '${DRAW}'`);
   }
   await awaitPoints(page, "Botafogo-RJ", before);
 });
@@ -348,10 +341,10 @@ test("test-player-stats-live: a goal recorded after the fact moves the season wi
   const page = await open(`/jogador/${VIVEROS}`);
   await season(page, GOALS, "18");
   try {
-    await psql(`INSERT INTO goal (id, game_id, player_id, side, minute) VALUES ('0e000000-0000-4000-8000-0000000fffff', '${WIN}', '${VIVEROS}', 'home', 90)`);
+    await query(`INSERT INTO goal (id, game_id, player_id, side, minute) VALUES ('0e000000-0000-4000-8000-0000000fffff', '${WIN}', '${VIVEROS}', 'home', 90)`);
     await season(page, GOALS, "19");
   } finally {
-    await psql(`DELETE FROM goal WHERE id = '0e000000-0000-4000-8000-0000000fffff'`);
+    await query(`DELETE FROM goal WHERE id = '0e000000-0000-4000-8000-0000000fffff'`);
   }
   await season(page, GOALS, "18");
 });
@@ -362,12 +355,12 @@ test("test-appearance-live: an appearance removed after the fact moves the seaso
   await played("26");
   const cols = "id, game_id, player_id, side, on_minute, off_minute, yellow, red, bench";
   // His latest appearance, whichever game it was.
-  await psql(`CREATE TABLE kept_appearance AS SELECT ${cols} FROM player_game WHERE player_id = '${VIVEROS}' ORDER BY day DESC LIMIT 1`);
+  await query(`CREATE TABLE kept_appearance AS SELECT ${cols} FROM player_game WHERE player_id = '${VIVEROS}' ORDER BY day DESC LIMIT 1`);
   try {
-    await psql(`DELETE FROM player_game WHERE id IN (SELECT id FROM kept_appearance)`);
+    await query(`DELETE FROM player_game WHERE id IN (SELECT id FROM kept_appearance)`);
     await played("25");
   } finally {
-    await psql(`INSERT INTO player_game (${cols}) SELECT ${cols} FROM kept_appearance; DROP TABLE kept_appearance`);
+    await query(`INSERT INTO player_game (${cols}) SELECT ${cols} FROM kept_appearance; DROP TABLE kept_appearance`);
   }
   await played("26");
 });
@@ -433,11 +426,11 @@ test("test-venue-gone: an address naming no stadium, or no referee, says so", as
 // as an operator would.
 const editor = async (handle: string) => {
   const reader = await signedIn(handle);
-  await psql(`INSERT INTO editor (app_user_id) VALUES ('${reader.user.id}')`);
+  await query(`INSERT INTO editor (app_user_id) VALUES ('${reader.user.id}')`);
   return reader;
 };
 const forget = (reader: { user: { id: string } }) =>
-  psql(`DELETE FROM comment WHERE app_user_id = '${reader.user.id}'; DELETE FROM app_user WHERE id = '${reader.user.id}'`);
+  query(`DELETE FROM comment WHERE app_user_id = '${reader.user.id}'; DELETE FROM app_user WHERE id = '${reader.user.id}'`);
 
 test("test-edit-link: an editor is offered the editor on a game's page, and a reader who is not is offered nothing", async () => {
   const ed = await editor(`editor-${Date.now()}`);
@@ -460,7 +453,7 @@ test("test-edit-link: an editor is offered the editor on a game's page, and a re
 
 test("test-edit-game: an editor's correction of the score and the crowd reaches the game's page", async () => {
   const ed = await editor(`editor-${Date.now()}`);
-  const before = await psql(`SELECT home_score || ',' || coalesce(attendance::text, 'NULL') FROM game WHERE id = '${WIN}'`);
+  const before = await query(`SELECT home_score || ',' || coalesce(attendance::text, 'NULL') FROM game WHERE id = '${WIN}'`);
   const [score, crowd] = before.split(",");
   try {
     const page = await open(`/editar/${WIN}`, { session: ed });
@@ -481,7 +474,7 @@ test("test-edit-game: an editor's correction of the score and the crowd reaches 
       [...document.querySelectorAll(".game-facts dd")].some((d) => d.textContent?.replace(/\D/g, "") === "38000"), null, { timeout: 30_000 });
     await page.waitForSelector('.edit[data-state="editing"]');
   } finally {
-    await psql(`UPDATE game SET home_score = ${score}, attendance = ${crowd} WHERE id = '${WIN}'`);
+    await query(`UPDATE game SET home_score = ${score}, attendance = ${crowd} WHERE id = '${WIN}'`);
     await forget(ed);
   }
 });
@@ -489,7 +482,7 @@ test("test-edit-game: an editor's correction of the score and the crowd reaches 
 test("test-edit-goal: a goal an editor adds and then removes moves the game's goals and the scorer's season each time", async () => {
   const ed = await editor(`editor-${Date.now()}`);
   // A home starter of the game, whose season this championship's first row is.
-  const player = await psql(`SELECT player_id FROM player_game WHERE game_id = '${WIN}' AND side = 'home' AND NOT bench ORDER BY on_minute, player_id LIMIT 1`);
+  const player = await query(`SELECT player_id FROM player_game WHERE game_id = '${WIN}' AND side = 'home' AND NOT bench ORDER BY on_minute, player_id LIMIT 1`);
   try {
     const page = await open(`/editar/${WIN}`, { session: ed });
     const reader = await open(`/jogo/${WIN}`);
@@ -509,7 +502,7 @@ test("test-edit-goal: a goal an editor adds and then removes moves the game's go
     await reader.waitForFunction((n: number) => document.querySelectorAll(".goals li").length === n, goals, { timeout: 30_000 });
     await season(scorer, GOALS, String(before));
   } finally {
-    await psql(`DELETE FROM goal WHERE game_id = '${WIN}' AND minute = 90`);
+    await query(`DELETE FROM goal WHERE game_id = '${WIN}' AND minute = 90`);
     await forget(ed);
   }
 });
@@ -519,7 +512,7 @@ const REFUSED = "Não foi possível salvar: só editores alteram jogos, um jogo 
 test("test-edit-refused: a non-editor's save and a goal with no scorer are refused with the reason, and the edits stay", async () => {
   const plain = await signedIn(`reader-${Date.now()}`);
   const ed = await editor(`editor-${Date.now()}`);
-  const score = await psql(`SELECT home_score FROM game WHERE id = '${WIN}'`);
+  const score = await query(`SELECT home_score FROM game WHERE id = '${WIN}'`);
   try {
     const page = await open(`/editar/${WIN}`, { session: plain });
     await page.waitForSelector('.edit[data-state="editing"]');
@@ -528,7 +521,7 @@ test("test-edit-refused: a non-editor's save and a goal with no scorer are refus
     await page.waitForSelector('.edit[data-state="refused"]', { timeout: 30_000 });
     assertEquals(await said(page, ".edit .refusal"), [REFUSED]);
     assertEquals(await page.inputValue("#edit-home"), "7");
-    assertEquals(await psql(`SELECT home_score FROM game WHERE id = '${WIN}'`), score);
+    assertEquals(await query(`SELECT home_score FROM game WHERE id = '${WIN}'`), score);
 
     // An editor's goal with a minute and no scorer: the archive refuses a
     // goal nobody scored, and the minute stays to be given its scorer.
@@ -590,17 +583,17 @@ test("test-chances-reach: in the 2026 Série A every chance that shows 0 says wh
 
 test("test-chances-live: a result recorded for a game still to play moves the chances on a page left open, and undoing it brings them back", async () => {
   // Flamengo's next home game, lost heavily: the leader's title chance must fall.
-  const game = await psql(`SELECT g.id FROM game g JOIN team t ON t.id = g.home_id JOIN stage_group sg ON sg.phase_id = g.phase_id WHERE sg.id = '${SERIE_A_2026}' AND t.name = 'Flamengo-RJ' AND NOT g.played ORDER BY g.day LIMIT 1`);
+  const game = await query(`SELECT g.id FROM game g JOIN team t ON t.id = g.home_id JOIN stage_group sg ON sg.phase_id = g.phase_id WHERE sg.id = '${SERIE_A_2026}' AND t.name = 'Flamengo-RJ' AND NOT g.played ORDER BY g.day LIMIT 1`);
   const page = await open(`/chances/${SERIE_A_2026}`);
   await page.waitForSelector(".zone-odds .rows .row .pct", { timeout: STREAM_MS });
   const before = await titleOf(page);
   try {
-    await psql(`UPDATE game SET played = true, home_score = 0, away_score = 5 WHERE id = '${game}'`);
+    await query(`UPDATE game SET played = true, home_score = 0, away_score = 5 WHERE id = '${game}'`);
     await page.waitForFunction((before: string) =>
       document.querySelector(".zone-odds .rows .row:first-child .pct")?.textContent !== before, before, { timeout: STREAM_MS });
     assert(percent(await titleOf(page)) < percent(before), "a heavy home defeat lowered the leader's title chance");
   } finally {
-    await psql(`UPDATE game SET played = false, home_score = NULL, away_score = NULL WHERE id = '${game}'`);
+    await query(`UPDATE game SET played = false, home_score = NULL, away_score = NULL WHERE id = '${game}'`);
   }
   // The same lake gives the same draw.
   await page.waitForFunction((before: string) =>
@@ -616,7 +609,7 @@ test("test-team-rating: a team's page shows its latest rating, a number from 0 t
 });
 
 test("test-game-importance: a game still to play shows how much its result matters to each side", async () => {
-  const game = await psql(`SELECT g.id FROM game g JOIN stage_group sg ON sg.phase_id = g.phase_id WHERE sg.id = '${SERIE_A_2026}' AND NOT g.played ORDER BY g.day, g.id LIMIT 1`);
+  const game = await query(`SELECT g.id FROM game g JOIN stage_group sg ON sg.phase_id = g.phase_id WHERE sg.id = '${SERIE_A_2026}' AND NOT g.played ORDER BY g.day, g.id LIMIT 1`);
   const page = await open(`/jogo/${game}`);
   await page.waitForSelector(".importance abbr", { timeout: STREAM_MS });
   const sides = (await said(page, ".importance abbr span")).map(percent);
@@ -635,7 +628,7 @@ test("test-comment: a signed-in reader's comment appears for every reader of the
   // An older comment already there: with one row, the first is first in
   // either order, and "newest first" would pass oldest first.
   const earlier = `Antes do jogo ${Date.now()}`;
-  await psql(`INSERT INTO comment (game_id, app_user_id, body, created_at) VALUES ('${WIN}', '${author.user.id}', '${earlier}', now() - interval '1 day')`);
+  await query(`INSERT INTO comment (game_id, app_user_id, body, created_at) VALUES ('${WIN}', '${author.user.id}', '${earlier}', now() - interval '1 day')`);
   try {
     const writer = await open(`/jogo/${WIN}`, { session: author });
     const reader = await open(`/jogo/${WIN}`);
@@ -650,7 +643,7 @@ test("test-comment: a signed-in reader's comment appears for every reader of the
     assertEquals((await said(reader, ".comment-list .body")).slice(0, 2), [body, earlier]);
     await writer.waitForFunction(() => (document.querySelector("#comment-body") as HTMLTextAreaElement).value === "");
   } finally {
-    await psql(`DELETE FROM comment WHERE app_user_id = '${author.user.id}'; DELETE FROM app_user WHERE id = '${author.user.id}'`);
+    await query(`DELETE FROM comment WHERE app_user_id = '${author.user.id}'; DELETE FROM app_user WHERE id = '${author.user.id}'`);
   }
 });
 

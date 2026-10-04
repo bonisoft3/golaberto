@@ -3,9 +3,9 @@
 package golaberto
 
 terminal: surface: {
-  runtime: ".runtime/plugins/omnishell/runtime"
-  interpreterRoot: ".runtime/plugins/omnishell/interpreter"
-  componentsRoot: ".runtime/plugins/omnishell/components"
-  markupReader: ".runtime/plugins/omnishell/read-markup.ts"
-  machineSchema: ".runtime/plugins/omnishell/machine.cue"
+  runtime: ""
+  interpreterRoot: "interpreter"
+  componentsRoot: "components"
+  markupReader: "read-markup.ts"
+  machineSchema: "machine.cue"
 }

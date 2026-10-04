@@ -5,10 +5,43 @@
   # driver measured in hundreds of KiB; compression at the door is what keeps
   # a cold cache from paying for that in seconds on a slow link.
   encode zstd gzip
-  # Chromium probes /favicon.ico unsolicited; answering 204 prevents console
-  # errors that break Best Practices audits without paying for an asset.
+  # Chromium probes /favicon.ico unsolicited; serve the file if present, or
+  # answer 204 to prevent console errors that break Best Practices audits
+  # without paying for an asset.
   handle /favicon.ico {
-    respond "" 204
+    root * /srv
+    @favicon file /favicon.ico /shell/favicon.ico /favicon.svg /shell/favicon.svg /favicon.png /shell/favicon.png
+    handle @favicon {
+      header Cache-Control "no-cache"
+      rewrite {http.matchers.file.relative}
+      file_server
+    }
+    handle {
+      respond "" 204
+    }
+  }
+  # Web App Manifest: serve with application/manifest+json; alias /manifest.json.
+  handle /manifest.webmanifest {
+    root * /srv
+    @manifest file /manifest.webmanifest /shell/manifest.webmanifest
+    handle @manifest {
+      header Content-Type "application/manifest+json"
+      header Cache-Control "no-cache"
+      rewrite {http.matchers.file.relative}
+      file_server
+    }
+    handle {
+      respond "" 404
+    }
+  }
+  handle /shell/manifest.webmanifest {
+    root * /srv
+    header Content-Type "application/manifest+json"
+    header Cache-Control "no-cache"
+    file_server
+  }
+  handle /manifest.json {
+    redir /manifest.webmanifest 308
   }
   handle /crud/* {
     uri strip_prefix /crud
@@ -44,6 +77,15 @@
         flush_interval -1
         transport http {
           read_timeout 300s
+        }
+        # Electric's 5xx reaches the client without its text: mecha's services/proxy/Caddyfile says why.
+        @fault status 5xx
+        handle_response @fault {
+          copy_response_headers {
+            exclude Content-Type Content-Length Content-Encoding Server
+          }
+          header Content-Type application/json
+          respond `{"message":"electric failed"}` {rp.status_code}
         }
       }
     }
@@ -94,6 +136,40 @@
     templates {
       mime application/xml text/xml
     }
+    file_server
+  }
+  # LLM discovery documents. Served from the root with markdown typing.
+  handle /llms.txt {
+    root * /srv
+    @llms file /llms.txt
+    handle @llms {
+      header Content-Type "text/markdown; charset=utf-8"
+      header Cache-Control "no-cache"
+      file_server
+    }
+    handle {
+      respond "" 404
+    }
+  }
+  handle /llms-full.txt {
+    root * /srv
+    @llmsfull file /llms-full.txt
+    handle @llmsfull {
+      header Content-Type "text/markdown; charset=utf-8"
+      header Cache-Control "no-cache"
+      file_server
+    }
+    handle {
+      respond "" 404
+    }
+  }
+  # Platform well-knowns (Universal Links, App Links, passkeys).
+  # iOS apple-app-site-association has no file extension; set application/json.
+  handle /.well-known/* {
+    root * /srv
+    @extensionless path_regexp ^/\.well-known/[^/.]+$
+    header @extensionless Content-Type "application/json"
+    header Cache-Control "no-cache"
     file_server
   }
   handle /omnishell/* {

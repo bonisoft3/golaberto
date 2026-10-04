@@ -2,8 +2,6 @@
 version: v2
 modules:
   - path: .
-    excludes:
-      - .runtime
 breaking:
   use:
     - WIRE_JSON

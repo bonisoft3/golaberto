@@ -55,8 +55,8 @@
     "cmd": null
   },
   "name": "redis",
-  "project": "apps_golaberto",
-  "dir": "",
+  "project": "golaberto",
+  "dir": ".",
   "activate": "",
   "srcs": {
     "globs": [],
@@ -73,8 +73,8 @@
   "synthetics": {
     "bayt": {
       "name": "redis_bayt",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -102,13 +102,13 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.redis.yaml"
+        "./.bayt/compose.redis.yaml"
       ]
     },
     "outs": {
       "name": "redis_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -130,7 +130,7 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.redis.yaml"
+        "./.bayt/compose.redis.yaml"
       ]
     }
   },
@@ -141,7 +141,7 @@
   "transitiveDeps": [],
   "transitiveCrossDeps": [],
   "upClosure": [
-    ".bayt/compose.redis.yaml"
+    "./.bayt/compose.redis.yaml"
   ],
   "chainedDeps": [],
   "cmds": [],

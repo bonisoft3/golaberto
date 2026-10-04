@@ -1,6 +1,5 @@
 {
   "written": [
-    ".config/mise/conf.d/omnishell.toml",
     ".github/workflows/cd.yml",
     ".goreleaser.yaml",
     ".say.yaml",
@@ -15,7 +14,11 @@
     "docker/golaberto-player-stats.yaml",
     "docker/golaberto-rounds.yaml",
     "docker/golaberto-standings.yaml",
+    "mecha/docker-image.yaml",
+    "mecha/service.yaml",
     "offline-first-sw.js",
+    "omnishell/docker-image.yaml",
+    "omnishell/service.yaml",
     "robots.txt",
     "schema/entities.proto",
     "services/database/migrations/000_extensions.sql",

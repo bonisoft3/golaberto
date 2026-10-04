@@ -5,7 +5,7 @@
     "preambleCopyContexts": [],
     "from": {
       "ref": ":setup",
-      "name": "apps_golaberto-setup"
+      "name": "golaberto-setup"
     },
     "add": [],
     "mounts": [],
@@ -20,14 +20,17 @@
     "cmd": null
   },
   "name": "build",
-  "project": "apps_golaberto",
-  "dir": "",
+  "project": "golaberto",
+  "dir": ".",
   "activate": "mise x --",
   "srcs": {
     "globs": [
       "*.cue",
       "bayt.json",
       "DESIGN.md",
+      "cue.mod/**",
+      "pronto/**",
+      ".say.yaml",
       "[p]ipelines/*.blobl",
       "[m]essages/*.json",
       "[s]hell/boot.js",
@@ -36,6 +39,7 @@
       "shell/**",
       "pipelines/**",
       "services/**",
+      "saytw",
       "seed.json"
     ],
     "exclude": []
@@ -51,8 +55,8 @@
   "synthetics": {
     "bayt": {
       "name": "build_bayt",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -81,15 +85,14 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.build.yaml",
-        ".bayt/compose.setup.yaml",
-        ".bayt/compose.setup.yaml"
+        "./.bayt/compose.build.yaml",
+        "./.bayt/compose.setup.yaml"
       ]
     },
     "outs": {
       "name": "build_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -111,15 +114,14 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.build.yaml",
-        ".bayt/compose.setup.yaml",
-        ".bayt/compose.setup.yaml"
+        "./.bayt/compose.build.yaml",
+        "./.bayt/compose.setup.yaml"
       ]
     },
     "srcs": {
       "name": "build_srcs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -130,6 +132,9 @@
           "*.cue",
           "bayt.json",
           "DESIGN.md",
+          "cue.mod/**",
+          "pronto/**",
+          ".say.yaml",
           "[p]ipelines/*.blobl",
           "[m]essages/*.json",
           "[s]hell/boot.js",
@@ -138,6 +143,7 @@
           "shell/**",
           "pipelines/**",
           "services/**",
+          "saytw",
           "seed.json"
         ],
         "exclude": []
@@ -148,24 +154,7 @@
       "transitiveDeps": [
         "setup_srcs"
       ],
-      "transitiveCrossDeps": [
-        {
-          "name": "setup_srcs",
-          "project": "workspaceroot",
-          "dir": ".runtime",
-          "outs": {
-            "globs": [
-              "[m]ise.toml",
-              "[.]mise.toml",
-              "[m]ise.lock",
-              "[.]tool-versions",
-              "gradle/libs.versions.toml",
-              "plugins/devserver/dind.sh"
-            ],
-            "exclude": []
-          }
-        }
-      ],
+      "transitiveCrossDeps": [],
       "chainedDeps": [],
       "cmds": [],
       "cache": {
@@ -173,9 +162,8 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.build.yaml",
-        ".bayt/compose.setup.yaml",
-        ".bayt/compose.setup.yaml"
+        "./.bayt/compose.build.yaml",
+        "./.bayt/compose.setup.yaml"
       ]
     }
   },
@@ -195,35 +183,16 @@
   "transitiveDeps": [
     "setup"
   ],
-  "transitiveCrossDeps": [
-    {
-      "name": "setup",
-      "project": "workspaceroot",
-      "dir": ".runtime",
-      "outs": {
-        "globs": [
-          "[m]ise.toml",
-          "[.]mise.toml",
-          "[m]ise.lock",
-          "[.]tool-versions",
-          "gradle/libs.versions.toml",
-          "plugins/devserver/dind.sh",
-          ".task/bayt/setup.hash"
-        ],
-        "exclude": []
-      }
-    }
-  ],
+  "transitiveCrossDeps": [],
   "upClosure": [
-    ".bayt/compose.build.yaml",
-    ".bayt/compose.setup.yaml",
-    ".bayt/compose.setup.yaml"
+    "./.bayt/compose.build.yaml",
+    "./.bayt/compose.setup.yaml"
   ],
   "chainedDeps": [
     {
       "name": "setup",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []
@@ -237,6 +206,9 @@
           "*.cue",
           "bayt.json",
           "DESIGN.md",
+          "cue.mod/**",
+          "pronto/**",
+          ".say.yaml",
           "[p]ipelines/*.blobl",
           "[m]essages/*.json",
           "[s]hell/boot.js",
@@ -245,13 +217,14 @@
           "shell/**",
           "pipelines/**",
           "services/**",
+          "saytw",
           "seed.json"
         ],
         "exclude": [],
         "defaultGlobs": null,
         "defaultExclude": null
       },
-      "do": "deno run --allow-read --allow-write=. --allow-run --allow-env .runtime/plugins/pronto/write.ts .",
+      "do": "./saytw build",
       "name": "builtin",
       "shell": "exec",
       "stop": false

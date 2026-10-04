@@ -1,64 +1,61 @@
+[env]
+[env._]
+file = '.bayt/.env'
+
 [settings]
+github_attestations = false
 locked = true
 lockfile = true
-experimental = true
-# Global verification toggles must be set alongside the backend-scoped
-# ones; the backend settings don't override the globals.
+slsa = false
+
+[settings.aqua]
+cosign = false
+github_attestations = false
+minisign = false
+slsa = false
+
+[settings.github]
 github_attestations = false
 slsa = false
-github.slsa = false
-github.github_attestations = false
-aqua.github_attestations = false
-aqua.cosign = false
-aqua.slsa = false
-aqua.minisign = false
 
 [tools]
-# The repo-wide CUE pin; exports must be byte-identical everywhere.
-"github:cue-lang/cue" = "0.16.1"
+'github:FiloSottile/mkcert' = 'v1.4.4'
+'github:bonisoft3/bayt' = '0.58.2'
+'github:bonisoft3/mecha' = '0.4.0'
+'github:bonisoft3/omnishell' = '0.5.0'
+'github:bonisoft3/pronto' = '0.6.0'
+'github:bonisoft3/sayt' = '0.42.0'
+'github:bufbuild/buf' = '1.73.0'
+'github:caddyserver/caddy' = '2.10.0'
+'github:cue-lang/cue' = '0.16.1'
+'github:denoland/deno' = 'v2.9.7'
+'github:redpanda-data/connect' = '4.46.0'
+'github:sbdchd/squawk' = '2.66.0'
 
-# Compares every proto the app does not withhold against its own git history
-# (plugins/pronto/check-proto.ts). Ships windows-x64 and windows-arm64.
-"github:bufbuild/buf" = "1.73.0"
-# Runs write.ts and the pronto/omnishell checkers.
-"github:denoland/deno" = "v2.9.7"
-# Lint + config validator for the emitted pipeline files.
-"github:redpanda-data/connect" = "4.46.0"
-# The cluster's own lint check validates docker/Caddyfile.
-"github:caddyserver/caddy" = "2.10.0"
-# Issues the locally-trusted cert the https door serves (cluster setup check).
-"github:FiloSottile/mkcert" = "v1.4.4"
+[tools.'http:duckdb']
+version = '1.5.5'
 
-# Reads every SQL file the app does not withhold (plugins/pronto/check-sql.ts).
-# One binary per platform, windows-x64 included, so the lint runs wherever the
-# toolchain does.
-"github:sbdchd/squawk" = "2.66.0"
+[tools.'http:duckdb'.platforms]
+[tools.'http:duckdb'.platforms.linux-arm64]
+url = 'https://github.com/duckdb/duckdb/releases/download/v{{ version }}/duckdb_cli-linux-arm64.zip'
 
-# Evaluates the fact-store invariants at lint (plugins/pronto/check-facts.ts).
-# http:, not github:, and the URL is spelled out per platform: the release ships
-# libduckdb-* — a header and a shared object — beside the CLI, and the github
-# backend picks the library on linux and windows while picking the CLI on macos,
-# so the rule would pass on a laptop and report 'duckdb: command not found' in CI.
-[tools."http:duckdb"]
-version = "1.5.5"
-url = 'https://github.com/duckdb/duckdb/releases/download/v{{ version }}/duckdb_cli-{{ os(macos="osx") }}-{{ arch(x64="amd64") }}.zip'
+[tools.'http:duckdb'.platforms.linux-arm64-musl]
+url = 'https://github.com/duckdb/duckdb/releases/download/v{{ version }}/duckdb_cli-linux-arm64-musl.zip'
 
-# Spelled out per platform because the template cannot say musl: duckdb ships a
-# separate build and an alpine image would otherwise fetch the glibc zip.
-# `mise lock` only ever records the platform it runs on, so mise.lock's entries
-# for this tool are written by hand, as kubectl's and skaffold's are.
-[tools."http:duckdb".platforms]
-linux-x64 = { url = 'https://github.com/duckdb/duckdb/releases/download/v{{ version }}/duckdb_cli-linux-amd64.zip' }
-linux-arm64 = { url = 'https://github.com/duckdb/duckdb/releases/download/v{{ version }}/duckdb_cli-linux-arm64.zip' }
-linux-x64-musl = { url = 'https://github.com/duckdb/duckdb/releases/download/v{{ version }}/duckdb_cli-linux-amd64-musl.zip' }
-linux-arm64-musl = { url = 'https://github.com/duckdb/duckdb/releases/download/v{{ version }}/duckdb_cli-linux-arm64-musl.zip' }
-macos-arm64 = { url = 'https://github.com/duckdb/duckdb/releases/download/v{{ version }}/duckdb_cli-osx-arm64.zip' }
-macos-x64 = { url = 'https://github.com/duckdb/duckdb/releases/download/v{{ version }}/duckdb_cli-osx-amd64.zip' }
-windows-x64 = { url = 'https://github.com/duckdb/duckdb/releases/download/v{{ version }}/duckdb_cli-windows-amd64.zip' }
+[tools.'http:duckdb'.platforms.linux-x64]
+url = 'https://github.com/duckdb/duckdb/releases/download/v{{ version }}/duckdb_cli-linux-amd64.zip'
 
-[env]
-# `.say.yaml` holds every project to this and says why it differs per checkout.
-# The activated branch must not read the variable back: mise renders before it
-# drops its previous injection, so `get_env` there carries the last directory's
-# name across a cd. Unactivated, there is no hook and nothing stale to read.
-COMPOSE_PROJECT_NAME = '''{% if get_env(name='MISE_SHELL', default='') != '' %}{{ exec(command='mise tool-stub .runtime/plugins/sayt/nu.toml .runtime/plugins/sayt/compose.nu compose-project') }}{% else %}{{ get_env(name='COMPOSE_PROJECT_NAME', default='') }}{% endif %}'''
+[tools.'http:duckdb'.platforms.linux-x64-musl]
+url = 'https://github.com/duckdb/duckdb/releases/download/v{{ version }}/duckdb_cli-linux-amd64-musl.zip'
+
+[tools.'http:duckdb'.platforms.macos-arm64]
+url = 'https://github.com/duckdb/duckdb/releases/download/v{{ version }}/duckdb_cli-osx-arm64.zip'
+
+[tools.'http:duckdb'.platforms.macos-x64]
+url = 'https://github.com/duckdb/duckdb/releases/download/v{{ version }}/duckdb_cli-osx-amd64.zip'
+
+[tools.'http:duckdb'.platforms.windows-arm64]
+url = 'https://github.com/duckdb/duckdb/releases/download/v{{ version }}/duckdb_cli-windows-arm64.zip'
+
+[tools.'http:duckdb'.platforms.windows-x64]
+url = 'https://github.com/duckdb/duckdb/releases/download/v{{ version }}/duckdb_cli-windows-amd64.zip'

@@ -1,11 +1,12 @@
 # generated from bayt.cue — do not edit
 services:
-  apps_golaberto-mesh-events:
+  golaberto-mesh-events:
     build:
       additional_contexts:
-        libraries_mecha-mesh-image: service:libraries_mecha-mesh-image
-        apps_golaberto-caddy: service:apps_golaberto-caddy
-        apps_golaberto-redis: service:apps_golaberto-redis
+        golaberto-caddy: service:golaberto-caddy
+        golaberto-redis: service:golaberto-redis
+        libraries_mecha-mesh-image: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.4.0@sha256:b8d8c6dab3a33fedf09a0ef8f3d79b71de6408f70e1c2e04194a5f47d391da8f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}
       context: ..
       dockerfile: .bayt/Dockerfile.mesh-events
       target: mesh-events
@@ -13,9 +14,9 @@ services:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
     depends_on:
-      apps_golaberto-caddy:
+      golaberto-caddy:
         condition: service_started
-      apps_golaberto-redis:
+      golaberto-redis:
         condition: service_started
     healthcheck:
       test:
@@ -28,23 +29,22 @@ services:
       retries: 30
       start_period: 30s
       start_interval: 500ms
-    image: bayt-apps_golaberto-mesh-events:${BAYT_IMAGE_TAG:-latest}
+    image: bayt-golaberto-mesh-events:${BAYT_IMAGE_TAG:-latest}
     networks:
       default:
         aliases:
         - mesh-events
     restart: on-failure
-  apps_golaberto-mesh-events_bayt:
+  golaberto-mesh-events_bayt:
     build:
       additional_contexts:
-        libraries_mecha-mesh-image_bayt: service:libraries_mecha-mesh-image_bayt
-        apps_golaberto-caddy_bayt: service:apps_golaberto-caddy_bayt
-        apps_golaberto-redis_bayt: service:apps_golaberto-redis_bayt
+        golaberto-caddy_bayt: service:golaberto-caddy_bayt
+        golaberto-redis_bayt: service:golaberto-redis_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.mesh-events
       target: mesh-events_bayt
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-apps_golaberto-mesh-events_bayt:latest
+    image: bayt-golaberto-mesh-events_bayt:latest
     scale: 0

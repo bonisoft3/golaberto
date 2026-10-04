@@ -1,0 +1,58 @@
+# generated from bayt.cue — do not edit
+services:
+  golaberto-check-constraints:
+    build:
+      additional_contexts:
+        golaberto-setup: service:golaberto-setup
+        golaberto-launch: service:golaberto-launch
+        plugins_omnishell-runtime-image: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.5.0@sha256:63d6d0cd5aefe274828e096301423de0adf9d1411ff151bfc1201e6c2ec178d1}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}
+      context: ..
+      dockerfile: .bayt/Dockerfile.check-constraints
+      target: check-constraints
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    command:
+    - mise
+    - x
+    - --
+    - sh
+    - -c
+    - >-
+      deno test --config tests/deno.json --no-lock --allow-env --allow-net
+      --allow-read --allow-sys tests/constraints.ts
+    depends_on:
+      golaberto-launch:
+        condition: service_healthy
+        restart: true
+    environment:
+      APP_URL: https://caddy:8443
+      DATABASE_URL: >-
+        postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}
+      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
+    image: bayt-golaberto-check-constraints:${BAYT_IMAGE_TAG:-latest}
+    scale: 0
+  golaberto-check-constraints_bayt:
+    build:
+      additional_contexts:
+        golaberto-setup_bayt: service:golaberto-setup_bayt
+        golaberto-launch_bayt: service:golaberto-launch_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.check-constraints
+      target: check-constraints_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-check-constraints_bayt:latest
+    scale: 0
+  golaberto-check-constraints_srcs:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.check-constraints
+      target: check-constraints_srcs
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-check-constraints_srcs:latest
+    scale: 0

@@ -1,9 +1,10 @@
 # generated from bayt.cue — do not edit
 services:
-  apps_golaberto-database:
+  golaberto-database:
     build:
       additional_contexts:
-        libraries_mecha-database-image: service:libraries_mecha-database-image
+        libraries_mecha-database-image: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.4.0@sha256:e838451bfba0b0c65a91e94e22e6f0d759a095ecff4f3f485386efd7547ba4c8}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}
       context: ..
       dockerfile: .bayt/Dockerfile.database
       target: database
@@ -72,34 +73,30 @@ services:
       retries: 30
       start_period: 5m
       start_interval: 100ms
-    image: bayt-apps_golaberto-database:${BAYT_IMAGE_TAG:-latest}
+    image: bayt-golaberto-database:${BAYT_IMAGE_TAG:-latest}
     networks:
       default:
         aliases:
         - database
     ports:
     - "5432"
-  apps_golaberto-database_bayt:
+  golaberto-database_bayt:
     build:
-      additional_contexts:
-        libraries_mecha-database-image_bayt: service:libraries_mecha-database-image_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.database
       target: database_bayt
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-apps_golaberto-database_bayt:latest
+    image: bayt-golaberto-database_bayt:latest
     scale: 0
-  apps_golaberto-database_srcs:
+  golaberto-database_srcs:
     build:
-      additional_contexts:
-        libraries_mecha-database-image_srcs: service:libraries_mecha-database-image_srcs
       context: ..
       dockerfile: .bayt/Dockerfile.database
       target: database_srcs
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-apps_golaberto-database_srcs:latest
+    image: bayt-golaberto-database_srcs:latest
     scale: 0

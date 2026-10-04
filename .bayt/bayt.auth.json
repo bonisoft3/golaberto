@@ -3,6 +3,13 @@
   "compose": {
     "up": false,
     "manual": false,
+    "build": {
+      "additional_contexts": {
+        "libraries_mecha-auth-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.4.0@sha256:9daff300f4ddd0b4e026cd25ba10df29edaee6bb3edf34312768a8dca8a12249}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}"
+      },
+      "secrets": [],
+      "args": {}
+    },
     "environment": {
       "DATABASE_URL": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
       "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}",
@@ -12,7 +19,7 @@
     "ports": [],
     "volumes": [],
     "depends_on": {
-      "apps_golaberto-database": {
+      "golaberto-database": {
         "condition": "service_healthy"
       }
     },
@@ -28,7 +35,6 @@
     "preamble": [],
     "preambleCopyContexts": [],
     "from": {
-      "ref": "libraries_mecha:auth-image",
       "name": "libraries_mecha-auth-image"
     },
     "workdir": "/app",
@@ -45,8 +51,8 @@
     "cmd": null
   },
   "name": "auth",
-  "project": "apps_golaberto",
-  "dir": "",
+  "project": "golaberto",
+  "dir": ".",
   "activate": "",
   "srcs": {
     "globs": [],
@@ -63,8 +69,8 @@
   "synthetics": {
     "bayt": {
       "name": "auth_bayt",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -92,16 +98,14 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.auth.yaml",
-        ".bayt/compose.database.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.auth-image.yaml"
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.database.yaml"
       ]
     },
     "outs": {
       "name": "auth_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -123,10 +127,8 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.auth.yaml",
-        ".bayt/compose.database.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.auth-image.yaml"
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.database.yaml"
       ]
     }
   },
@@ -141,37 +143,16 @@
   "transitiveDeps": [
     "database_outs"
   ],
-  "transitiveCrossDeps": [
-    {
-      "name": "auth-image",
-      "project": "libraries_mecha",
-      "dir": ".runtime/libraries/mecha",
-      "outs": {
-        "globs": [],
-        "exclude": []
-      }
-    }
-  ],
+  "transitiveCrossDeps": [],
   "upClosure": [
-    ".bayt/compose.auth.yaml",
-    ".bayt/compose.database.yaml",
-    ".runtime/libraries/mecha/.bayt/compose.database-image.yaml",
-    ".runtime/libraries/mecha/.bayt/compose.auth-image.yaml"
+    "./.bayt/compose.auth.yaml",
+    "./.bayt/compose.database.yaml"
   ],
   "chainedDeps": [
     {
-      "name": "auth-image",
-      "project": "libraries_mecha",
-      "dir": ".runtime/libraries/mecha",
-      "outs": {
-        "globs": [],
-        "exclude": []
-      }
-    },
-    {
       "name": "database_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []

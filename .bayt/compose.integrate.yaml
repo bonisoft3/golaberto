@@ -1,10 +1,11 @@
 # generated from bayt.cue — do not edit
 services:
-  apps_golaberto-integrate:
+  golaberto-integrate:
     build:
       additional_contexts:
-        apps_golaberto-launch: service:apps_golaberto-launch
-        root: ..
+        golaberto-launch: service:golaberto-launch
+        plugins_omnishell-runtime-image: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.5.0@sha256:63d6d0cd5aefe274828e096301423de0adf9d1411ff151bfc1201e6c2ec178d1}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}
       context: ..
       dockerfile: .bayt/Dockerfile.integrate
       target: integrate
@@ -25,26 +26,26 @@ services:
     - /omnishell/check-visual.ts
     - '.'
     depends_on:
-      apps_golaberto-launch:
+      golaberto-launch:
         condition: service_healthy
         restart: true
     environment:
       APP_URL: https://caddy:8443
-    image: bayt-apps_golaberto-integrate:${BAYT_IMAGE_TAG:-latest}
+    image: bayt-golaberto-integrate:${BAYT_IMAGE_TAG:-latest}
     scale: 0
-  apps_golaberto-integrate_bayt:
+  golaberto-integrate_bayt:
     build:
       additional_contexts:
-        apps_golaberto-launch_bayt: service:apps_golaberto-launch_bayt
+        golaberto-launch_bayt: service:golaberto-launch_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.integrate
       target: integrate_bayt
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-apps_golaberto-integrate_bayt:latest
+    image: bayt-golaberto-integrate_bayt:latest
     scale: 0
-  apps_golaberto-integrate_srcs:
+  golaberto-integrate_srcs:
     build:
       context: ..
       dockerfile: .bayt/Dockerfile.integrate
@@ -52,5 +53,5 @@ services:
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-apps_golaberto-integrate_srcs:latest
+    image: bayt-golaberto-integrate_srcs:latest
     scale: 0

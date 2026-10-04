@@ -5,10 +5,14 @@ tasks:
     - "::bayt:build"
     run: once
     status:
-    - "{{if eq OS \"windows\"}}mise tool-stub .runtime/plugins/bayt/runtime/nu.toml .runtime/plugins/bayt/runtime/bayt.nu{{else}}.runtime/plugins/bayt/runtime/bayt{{end}} fingerprint --manifest '{{.TASKFILE_DIR}}/bayt.test.json' --stamp-file .task/bayt/test.hash"
+    - >-
+      mise x -- bayt fingerprint --manifest '{{.TASKFILE_DIR}}/bayt.test.json'
+      --stamp-file .task/bayt/test.hash
     vars:
-      BAYTW: "{{if eq OS \"windows\"}}mise tool-stub .runtime/plugins/bayt/runtime/nu.toml .runtime/plugins/bayt/runtime/bayt.nu{{else}}.runtime/plugins/bayt/runtime/bayt{{end}} cache run --manifest '{{.TASKFILE_DIR}}/bayt.test.json' -- mise x --"
+      BAYTW: >-
+        mise x -- bayt cache run --manifest '{{.TASKFILE_DIR}}/bayt.test.json' -- mise
+        x --
     cmds:
     - "{{.BAYTW}} cue vet -c ./..."
-    - defer: "{{if not .EXIT_CODE}}{{if eq OS \"windows\"}}mise tool-stub .runtime/plugins/bayt/runtime/nu.toml .runtime/plugins/bayt/runtime/bayt.nu{{else}}.runtime/plugins/bayt/runtime/bayt{{end}} fingerprint --manifest '{{.TASKFILE_DIR}}/bayt.test.json' --stamp-file .task/bayt/test.hash --update-stamp{{end}}"
+    - defer: "{{if not .EXIT_CODE}}mise x -- bayt fingerprint --manifest '{{.TASKFILE_DIR}}/bayt.test.json' --stamp-file .task/bayt/test.hash --update-stamp{{end}}"
 version: "3"

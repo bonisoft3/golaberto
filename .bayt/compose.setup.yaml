@@ -1,26 +1,22 @@
 # generated from bayt.cue — do not edit
 services:
-  apps_golaberto-setup:
+  golaberto-setup:
     build:
-      additional_contexts:
-        workspaceroot-setup: service:workspaceroot-setup
       context: ..
       dockerfile: .bayt/Dockerfile.setup
       target: setup
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-apps_golaberto-setup:${BAYT_IMAGE_TAG:-latest}
+    image: bayt-golaberto-setup:${BAYT_IMAGE_TAG:-latest}
     scale: 0
-  apps_golaberto-setup_bayt:
+  golaberto-setup_bayt:
     build:
-      additional_contexts:
-        workspaceroot-setup_bayt: service:workspaceroot-setup_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.setup
       target: setup_bayt
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-apps_golaberto-setup_bayt:latest
+    image: bayt-golaberto-setup_bayt:latest
     scale: 0

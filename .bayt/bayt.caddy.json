@@ -5,7 +5,8 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "root": ".."
+        "root": "..",
+        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.5.0@sha256:63d6d0cd5aefe274828e096301423de0adf9d1411ff151bfc1201e6c2ec178d1}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
       },
       "secrets": [],
       "args": {}
@@ -296,101 +297,6 @@
         },
         {
           "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/interpreter/shell.js",
-          "target": "/omnishell/interpreter/shell.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/interpreter/chrome.js",
-          "target": "/omnishell/interpreter/chrome.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/interpreter/screen.js",
-          "target": "/omnishell/interpreter/screen.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/interpreter/fragment.js",
-          "target": "/omnishell/interpreter/fragment.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/interpreter/data-sync.js",
-          "target": "/omnishell/interpreter/data-sync.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/interpreter/validate.js",
-          "target": "/omnishell/interpreter/validate.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/interpreter/render.js",
-          "target": "/omnishell/interpreter/render.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/interpreter/hatch.js",
-          "target": "/omnishell/interpreter/hatch.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/interpreter/hatch-worker.js",
-          "target": "/omnishell/interpreter/hatch-worker.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/interpreter/storybook.js",
-          "target": "/omnishell/interpreter/storybook.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/interpreter/jessie.js",
-          "target": "/omnishell/interpreter/jessie.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/interpreter/kinetic.js",
-          "target": "/omnishell/interpreter/kinetic.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/interpreter/prng.js",
-          "target": "/omnishell/interpreter/prng.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/interpreter/vendor/mecha-client.js",
-          "target": "/omnishell/interpreter/vendor/mecha-client.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/interpreter/vendor/js-yaml.js",
-          "target": "/omnishell/interpreter/vendor/js-yaml.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/interpreter/vendor/ses.umd.min.js",
-          "target": "/omnishell/interpreter/vendor/ses.umd.min.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/interpreter/vendor/morphlex.js",
-          "target": "/omnishell/interpreter/vendor/morphlex.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/interpreter/vendor/messages.js",
-          "target": "/omnishell/interpreter/vendor/messages.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../.runtime/plugins/omnishell/components/wallclock.js",
-          "target": "/omnishell/components/wallclock.js"
-        },
-        {
-          "action": "sync+restart",
           "path": "../brief.html",
           "target": "/srv/docs/brief.html"
         },
@@ -434,6 +340,234 @@
     "extra_hosts": [],
     "epilogue": [],
     "copy": [
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "components/wallclock.js"
+        ],
+        "dst": "/omnishell/components/wallclock.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/chrome.js"
+        ],
+        "dst": "/omnishell/interpreter/chrome.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/data-sync.js"
+        ],
+        "dst": "/omnishell/interpreter/data-sync.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/fragment.js"
+        ],
+        "dst": "/omnishell/interpreter/fragment.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/hatch-worker.js"
+        ],
+        "dst": "/omnishell/interpreter/hatch-worker.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/hatch.js"
+        ],
+        "dst": "/omnishell/interpreter/hatch.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/jessie.js"
+        ],
+        "dst": "/omnishell/interpreter/jessie.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/kinetic.js"
+        ],
+        "dst": "/omnishell/interpreter/kinetic.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/prng.js"
+        ],
+        "dst": "/omnishell/interpreter/prng.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/render.js"
+        ],
+        "dst": "/omnishell/interpreter/render.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/screen.js"
+        ],
+        "dst": "/omnishell/interpreter/screen.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/shell.js"
+        ],
+        "dst": "/omnishell/interpreter/shell.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/storybook.js"
+        ],
+        "dst": "/omnishell/interpreter/storybook.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/validate.js"
+        ],
+        "dst": "/omnishell/interpreter/validate.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/vendor/js-yaml.js"
+        ],
+        "dst": "/omnishell/interpreter/vendor/js-yaml.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/vendor/mecha-client.js"
+        ],
+        "dst": "/omnishell/interpreter/vendor/mecha-client.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/vendor/messages.js"
+        ],
+        "dst": "/omnishell/interpreter/vendor/messages.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/vendor/morphlex.js"
+        ],
+        "dst": "/omnishell/interpreter/vendor/morphlex.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/vendor/ses.umd.min.js"
+        ],
+        "dst": "/omnishell/interpreter/vendor/ses.umd.min.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
       {
         "from": {
           "name": "tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa"
@@ -948,234 +1082,6 @@
         "exclude": []
       },
       {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/interpreter/shell.js"
-        ],
-        "dst": "/omnishell/interpreter/shell.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/interpreter/chrome.js"
-        ],
-        "dst": "/omnishell/interpreter/chrome.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/interpreter/screen.js"
-        ],
-        "dst": "/omnishell/interpreter/screen.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/interpreter/fragment.js"
-        ],
-        "dst": "/omnishell/interpreter/fragment.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/interpreter/data-sync.js"
-        ],
-        "dst": "/omnishell/interpreter/data-sync.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/interpreter/validate.js"
-        ],
-        "dst": "/omnishell/interpreter/validate.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/interpreter/render.js"
-        ],
-        "dst": "/omnishell/interpreter/render.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/interpreter/hatch.js"
-        ],
-        "dst": "/omnishell/interpreter/hatch.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/interpreter/hatch-worker.js"
-        ],
-        "dst": "/omnishell/interpreter/hatch-worker.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/interpreter/storybook.js"
-        ],
-        "dst": "/omnishell/interpreter/storybook.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/interpreter/jessie.js"
-        ],
-        "dst": "/omnishell/interpreter/jessie.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/interpreter/kinetic.js"
-        ],
-        "dst": "/omnishell/interpreter/kinetic.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/interpreter/prng.js"
-        ],
-        "dst": "/omnishell/interpreter/prng.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/interpreter/vendor/mecha-client.js"
-        ],
-        "dst": "/omnishell/interpreter/vendor/mecha-client.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/interpreter/vendor/js-yaml.js"
-        ],
-        "dst": "/omnishell/interpreter/vendor/js-yaml.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/interpreter/vendor/ses.umd.min.js"
-        ],
-        "dst": "/omnishell/interpreter/vendor/ses.umd.min.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/interpreter/vendor/morphlex.js"
-        ],
-        "dst": "/omnishell/interpreter/vendor/morphlex.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/interpreter/vendor/messages.js"
-        ],
-        "dst": "/omnishell/interpreter/vendor/messages.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "root"
-        },
-        "srcs": [
-          ".runtime/plugins/omnishell/components/wallclock.js"
-        ],
-        "dst": "/omnishell/components/wallclock.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
         "from": null,
         "srcs": [
           "brief.html"
@@ -1253,8 +1159,8 @@
     "cmd": null
   },
   "name": "caddy",
-  "project": "apps_golaberto",
-  "dir": "",
+  "project": "golaberto",
+  "dir": ".",
   "activate": "",
   "srcs": {
     "globs": [
@@ -1327,8 +1233,8 @@
   "synthetics": {
     "bayt": {
       "name": "caddy_bayt",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -1356,13 +1262,13 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.caddy.yaml"
+        "./.bayt/compose.caddy.yaml"
       ]
     },
     "outs": {
       "name": "caddy_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -1384,13 +1290,13 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.caddy.yaml"
+        "./.bayt/compose.caddy.yaml"
       ]
     },
     "srcs": {
       "name": "caddy_srcs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -1468,7 +1374,7 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.caddy.yaml"
+        "./.bayt/compose.caddy.yaml"
       ]
     }
   },
@@ -1479,7 +1385,7 @@
   "transitiveDeps": [],
   "transitiveCrossDeps": [],
   "upClosure": [
-    ".bayt/compose.caddy.yaml"
+    "./.bayt/compose.caddy.yaml"
   ],
   "chainedDeps": [],
   "cmds": [],

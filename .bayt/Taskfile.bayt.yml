@@ -1,7 +1,7 @@
 # generated from bayt.cue — do not edit
 includes:
-  replay:
-    taskfile: ./Taskfile.replay.yaml
+  browser:
+    taskfile: ./Taskfile.browser.yaml
     dir: ../
     optional: true
   setup:
@@ -24,19 +24,12 @@ includes:
     taskfile: ./Taskfile.integrate.yaml
     dir: ../
     optional: true
-  libraries_mecha:
-    taskfile: ../.runtime/libraries/mecha/Taskfile.yml
-    dir: ../.runtime/libraries/mecha/
+  check-constraints:
+    taskfile: ./Taskfile.check-constraints.yaml
+    dir: ../
     optional: true
-  workspaceroot:
-    taskfile: ../.runtime/Taskfile.yml
-    dir: ../.runtime/
+  check-acceptance:
+    taskfile: ./Taskfile.check-acceptance.yaml
+    dir: ../
     optional: true
-tasks:
-  cross_workspaceroot_setup:
-    internal: true
-    run: once
-    if: test -f .runtime/Taskfile.yml
-    deps:
-    - workspaceroot:bayt:setup
 version: "3"

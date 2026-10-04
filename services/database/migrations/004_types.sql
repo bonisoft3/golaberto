@@ -4,10 +4,13 @@ SET statement_timeout = '60s';
 
 BEGIN;
 
--- portable type domains for PostgreSQL 18 and PostgREST 12.2.3
+-- portable type domains and column predicates for PostgreSQL 18 and PostgREST 12.2.3
 --
--- This migration is deliberately one-shot. Domains cannot be altered safely
--- into a different type contract, so a changed type is a new migration.
+-- Regenerated whole whenever a type changes: no pronto database is deployed,
+-- so a dev or CI volume is rebuilt from it. A deployed database would take a
+-- changed type as a migration of its own (plugins/pronto/docs/
+-- schema-change-admission.md, "Retyping a column from a domain to its base
+-- type").
 SET search_path = public, pg_catalog;
 
 CREATE OR REPLACE FUNCTION public.portable_json_scalar_text(value json, expected text)
@@ -36,7 +39,7 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION public.portable_finite_double(value double precision)
+CREATE OR REPLACE FUNCTION public.portable_double_valid(value double precision)
 RETURNS boolean
 LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
 RETURN value <> 'Infinity'::double precision
@@ -48,11 +51,16 @@ RETURNS boolean
 LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
 RETURN value ~ '^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$';
 
-CREATE OR REPLACE FUNCTION public.portable_timezone(value text)
+CREATE OR REPLACE FUNCTION public.portable_timezone_valid(value text)
 RETURNS boolean
 LANGUAGE sql STABLE STRICT PARALLEL SAFE
 RETURN (value = 'UTC' OR value LIKE '%/%')
   AND EXISTS (SELECT 1 FROM pg_timezone_names WHERE name = value);
+
+CREATE OR REPLACE FUNCTION public.portable_date_valid(value date)
+RETURNS boolean
+LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
+RETURN value >= date '0001-01-01' AND value < date '10000-01-01';
 
 CREATE OR REPLACE FUNCTION public.portable_duration_valid(value interval)
 RETURNS boolean
@@ -83,7 +91,7 @@ BEGIN
   EXCEPTION WHEN numeric_value_out_of_range OR invalid_text_representation THEN
     RETURN false;
   END;
-  RETURN portable_finite_double(binary64) AND source = binary64::text::numeric;
+  RETURN portable_double_valid(binary64) AND source = binary64::text::numeric;
 END;
 $$;
 
@@ -203,7 +211,7 @@ BEGIN
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION public.portable_geojson_valid(value json)
+CREATE OR REPLACE FUNCTION public.portable_geojson_object_valid(value json)
 RETURNS boolean
 LANGUAGE plpgsql IMMUTABLE STRICT PARALLEL SAFE
 AS $$
@@ -221,7 +229,7 @@ BEGIN
     WHEN 'FeatureCollection' THEN
       IF json_object_field(value, 'features') IS NULL OR json_typeof(value -> 'features') IS DISTINCT FROM 'array' THEN RETURN false; END IF;
       FOR item IN SELECT json_array_elements(value -> 'features') LOOP
-        IF portable_geojson_valid(item) IS NOT TRUE OR item ->> 'type' IS DISTINCT FROM 'Feature' THEN RETURN false; END IF;
+        IF portable_geojson_object_valid(item) IS NOT TRUE OR item ->> 'type' IS DISTINCT FROM 'Feature' THEN RETURN false; END IF;
       END LOOP;
       RETURN true;
     ELSE RETURN portable_geojson_geometry_valid(value);
@@ -229,78 +237,17 @@ BEGIN
 END;
 $$;
 
-CREATE DOMAIN public.portable_string AS text CHECK (VALUE IS NULL OR COALESCE((true), false));
-CREATE DOMAIN public.portable_bool AS boolean CHECK (VALUE IS NULL OR COALESCE((true), false));
-CREATE DOMAIN public.portable_int32 AS integer CHECK (VALUE IS NULL OR COALESCE((true), false));
+CREATE OR REPLACE FUNCTION public.portable_geojson_valid(value json)
+RETURNS boolean
+LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
+RETURN portable_json_valid(value) AND portable_geojson_object_valid(value);
+
 CREATE DOMAIN public.portable_int64 AS bigint CHECK (VALUE IS NULL OR COALESCE((true), false));
-CREATE DOMAIN public.portable_double AS double precision CHECK (VALUE IS NULL OR COALESCE((portable_finite_double(VALUE)), false));
 CREATE DOMAIN public.portable_bytes AS bytea CHECK (VALUE IS NULL OR COALESCE((true), false));
-CREATE DOMAIN public.portable_uuid AS uuid CHECK (VALUE IS NULL OR COALESCE((true), false));
 CREATE DOMAIN public.portable_timestamp AS timestamptz CHECK (VALUE IS NULL OR COALESCE((VALUE >= timestamptz '0001-01-01 00:00:00+00' AND VALUE < timestamptz '10000-01-01 00:00:00+00'), false));
-CREATE DOMAIN public.portable_date AS date CHECK (VALUE IS NULL OR COALESCE((VALUE >= date '0001-01-01' AND VALUE < date '10000-01-01'), false));
 CREATE DOMAIN public.portable_time AS time(6) CHECK (VALUE IS NULL OR COALESCE((VALUE < time '24:00:00'), false));
-CREATE DOMAIN public.portable_timezone AS text CHECK (VALUE IS NULL OR COALESCE((portable_timezone(VALUE)), false));
 CREATE DOMAIN public.portable_duration AS interval CHECK (VALUE IS NULL OR COALESCE((portable_duration_valid(VALUE)), false));
-CREATE DOMAIN public.portable_json AS json CHECK (VALUE IS NULL OR COALESCE((portable_json_valid(VALUE)), false));
-CREATE DOMAIN public.portable_geojson AS json CHECK (VALUE IS NULL OR COALESCE((portable_json_valid(VALUE) AND portable_geojson_valid(VALUE)), false));
 
-
-CREATE OR REPLACE FUNCTION public.portable_string_from_json(value json)
-RETURNS public.portable_string
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN portable_json_scalar_text(value, 'string')::public.portable_string;
-
-CREATE OR REPLACE FUNCTION public.portable_string_from_text(value text)
-RETURNS public.portable_string
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN value::public.portable_string;
-
-CREATE OR REPLACE FUNCTION public.portable_string_to_json(value public.portable_string)
-RETURNS json
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN to_json(value::text);
-
-CREATE CAST (json AS public.portable_string) WITH FUNCTION public.portable_string_from_json(json) AS IMPLICIT;
-CREATE CAST (text AS public.portable_string) WITH FUNCTION public.portable_string_from_text(text) AS IMPLICIT;
-CREATE CAST (public.portable_string AS json) WITH FUNCTION public.portable_string_to_json(public.portable_string) AS IMPLICIT;
-
-CREATE OR REPLACE FUNCTION public.portable_bool_from_json(value json)
-RETURNS public.portable_bool
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN portable_json_scalar_text(value, 'boolean')::boolean::public.portable_bool;
-
-CREATE OR REPLACE FUNCTION public.portable_bool_from_text(value text)
-RETURNS public.portable_bool
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN CASE value WHEN 'true' THEN true WHEN 'false' THEN false ELSE portable_reject('portable_bool must be true or false')::boolean END::public.portable_bool;
-
-CREATE OR REPLACE FUNCTION public.portable_bool_to_json(value public.portable_bool)
-RETURNS json
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN to_json(value::boolean);
-
-CREATE CAST (json AS public.portable_bool) WITH FUNCTION public.portable_bool_from_json(json) AS IMPLICIT;
-CREATE CAST (text AS public.portable_bool) WITH FUNCTION public.portable_bool_from_text(text) AS IMPLICIT;
-CREATE CAST (public.portable_bool AS json) WITH FUNCTION public.portable_bool_to_json(public.portable_bool) AS IMPLICIT;
-
-CREATE OR REPLACE FUNCTION public.portable_int32_from_json(value json)
-RETURNS public.portable_int32
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN CASE WHEN portable_canonical_integer(portable_json_scalar_text(value, 'number'), -2147483648, 2147483647) THEN portable_json_scalar_text(value, 'number')::integer ELSE portable_reject('portable_int32 must be a canonical JSON integer')::integer END::public.portable_int32;
-
-CREATE OR REPLACE FUNCTION public.portable_int32_from_text(value text)
-RETURNS public.portable_int32
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN CASE WHEN portable_canonical_integer(value, -2147483648, 2147483647) THEN value::integer ELSE portable_reject('portable_int32 must be canonical')::integer END::public.portable_int32;
-
-CREATE OR REPLACE FUNCTION public.portable_int32_to_json(value public.portable_int32)
-RETURNS json
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN to_json(value::integer);
-
-CREATE CAST (json AS public.portable_int32) WITH FUNCTION public.portable_int32_from_json(json) AS IMPLICIT;
-CREATE CAST (text AS public.portable_int32) WITH FUNCTION public.portable_int32_from_text(text) AS IMPLICIT;
-CREATE CAST (public.portable_int32 AS json) WITH FUNCTION public.portable_int32_to_json(public.portable_int32) AS IMPLICIT;
 
 CREATE OR REPLACE FUNCTION public.portable_int64_from_json(value json)
 RETURNS public.portable_int64
@@ -321,25 +268,6 @@ CREATE CAST (json AS public.portable_int64) WITH FUNCTION public.portable_int64_
 CREATE CAST (text AS public.portable_int64) WITH FUNCTION public.portable_int64_from_text(text) AS IMPLICIT;
 CREATE CAST (public.portable_int64 AS json) WITH FUNCTION public.portable_int64_to_json(public.portable_int64) AS IMPLICIT;
 
-CREATE OR REPLACE FUNCTION public.portable_double_from_json(value json)
-RETURNS public.portable_double
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN portable_json_scalar_text(value, 'number')::double precision::public.portable_double;
-
-CREATE OR REPLACE FUNCTION public.portable_double_from_text(value text)
-RETURNS public.portable_double
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN value::double precision::public.portable_double;
-
-CREATE OR REPLACE FUNCTION public.portable_double_to_json(value public.portable_double)
-RETURNS json
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN to_json(value::double precision);
-
-CREATE CAST (json AS public.portable_double) WITH FUNCTION public.portable_double_from_json(json) AS IMPLICIT;
-CREATE CAST (text AS public.portable_double) WITH FUNCTION public.portable_double_from_text(text) AS IMPLICIT;
-CREATE CAST (public.portable_double AS json) WITH FUNCTION public.portable_double_to_json(public.portable_double) AS IMPLICIT;
-
 CREATE OR REPLACE FUNCTION public.portable_bytes_from_json(value json)
 RETURNS public.portable_bytes
 LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
@@ -358,25 +286,6 @@ RETURN to_json(replace(encode(value::bytea, 'base64'), E'\n', ''));
 CREATE CAST (json AS public.portable_bytes) WITH FUNCTION public.portable_bytes_from_json(json) AS IMPLICIT;
 CREATE CAST (text AS public.portable_bytes) WITH FUNCTION public.portable_bytes_from_text(text) AS IMPLICIT;
 CREATE CAST (public.portable_bytes AS json) WITH FUNCTION public.portable_bytes_to_json(public.portable_bytes) AS IMPLICIT;
-
-CREATE OR REPLACE FUNCTION public.portable_uuid_from_json(value json)
-RETURNS public.portable_uuid
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN CASE WHEN portable_json_scalar_text(value, 'string') ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' THEN portable_json_scalar_text(value, 'string')::uuid ELSE portable_reject('portable_uuid must be lowercase and hyphenated')::uuid END::public.portable_uuid;
-
-CREATE OR REPLACE FUNCTION public.portable_uuid_from_text(value text)
-RETURNS public.portable_uuid
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN CASE WHEN value ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' THEN value::uuid ELSE portable_reject('portable_uuid must be lowercase and hyphenated')::uuid END::public.portable_uuid;
-
-CREATE OR REPLACE FUNCTION public.portable_uuid_to_json(value public.portable_uuid)
-RETURNS json
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN to_json(lower(value::uuid::text));
-
-CREATE CAST (json AS public.portable_uuid) WITH FUNCTION public.portable_uuid_from_json(json) AS IMPLICIT;
-CREATE CAST (text AS public.portable_uuid) WITH FUNCTION public.portable_uuid_from_text(text) AS IMPLICIT;
-CREATE CAST (public.portable_uuid AS json) WITH FUNCTION public.portable_uuid_to_json(public.portable_uuid) AS IMPLICIT;
 
 CREATE OR REPLACE FUNCTION public.portable_timestamp_from_json(value json)
 RETURNS public.portable_timestamp
@@ -397,25 +306,6 @@ CREATE CAST (json AS public.portable_timestamp) WITH FUNCTION public.portable_ti
 CREATE CAST (text AS public.portable_timestamp) WITH FUNCTION public.portable_timestamp_from_text(text) AS IMPLICIT;
 CREATE CAST (public.portable_timestamp AS json) WITH FUNCTION public.portable_timestamp_to_json(public.portable_timestamp) AS IMPLICIT;
 
-CREATE OR REPLACE FUNCTION public.portable_date_from_json(value json)
-RETURNS public.portable_date
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN CASE WHEN portable_json_scalar_text(value, 'string') ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' THEN portable_json_scalar_text(value, 'string')::date ELSE portable_reject('portable_date must be RFC 3339 full-date')::date END::public.portable_date;
-
-CREATE OR REPLACE FUNCTION public.portable_date_from_text(value text)
-RETURNS public.portable_date
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN CASE WHEN value ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' THEN value::date ELSE portable_reject('portable_date must be RFC 3339 full-date')::date END::public.portable_date;
-
-CREATE OR REPLACE FUNCTION public.portable_date_to_json(value public.portable_date)
-RETURNS json
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN to_json(to_char(value::date, 'YYYY-MM-DD'));
-
-CREATE CAST (json AS public.portable_date) WITH FUNCTION public.portable_date_from_json(json) AS IMPLICIT;
-CREATE CAST (text AS public.portable_date) WITH FUNCTION public.portable_date_from_text(text) AS IMPLICIT;
-CREATE CAST (public.portable_date AS json) WITH FUNCTION public.portable_date_to_json(public.portable_date) AS IMPLICIT;
-
 CREATE OR REPLACE FUNCTION public.portable_time_from_json(value json)
 RETURNS public.portable_time
 LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
@@ -435,25 +325,6 @@ CREATE CAST (json AS public.portable_time) WITH FUNCTION public.portable_time_fr
 CREATE CAST (text AS public.portable_time) WITH FUNCTION public.portable_time_from_text(text) AS IMPLICIT;
 CREATE CAST (public.portable_time AS json) WITH FUNCTION public.portable_time_to_json(public.portable_time) AS IMPLICIT;
 
-CREATE OR REPLACE FUNCTION public.portable_timezone_from_json(value json)
-RETURNS public.portable_timezone
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN portable_json_scalar_text(value, 'string')::public.portable_timezone;
-
-CREATE OR REPLACE FUNCTION public.portable_timezone_from_text(value text)
-RETURNS public.portable_timezone
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN value::public.portable_timezone;
-
-CREATE OR REPLACE FUNCTION public.portable_timezone_to_json(value public.portable_timezone)
-RETURNS json
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN to_json(value::text);
-
-CREATE CAST (json AS public.portable_timezone) WITH FUNCTION public.portable_timezone_from_json(json) AS IMPLICIT;
-CREATE CAST (text AS public.portable_timezone) WITH FUNCTION public.portable_timezone_from_text(text) AS IMPLICIT;
-CREATE CAST (public.portable_timezone AS json) WITH FUNCTION public.portable_timezone_to_json(public.portable_timezone) AS IMPLICIT;
-
 CREATE OR REPLACE FUNCTION public.portable_duration_from_json(value json)
 RETURNS public.portable_duration
 LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
@@ -472,44 +343,6 @@ RETURN to_json('PT' || trim_scale(extract(epoch FROM value::interval))::text || 
 CREATE CAST (json AS public.portable_duration) WITH FUNCTION public.portable_duration_from_json(json) AS IMPLICIT;
 CREATE CAST (text AS public.portable_duration) WITH FUNCTION public.portable_duration_from_text(text) AS IMPLICIT;
 CREATE CAST (public.portable_duration AS json) WITH FUNCTION public.portable_duration_to_json(public.portable_duration) AS IMPLICIT;
-
-CREATE OR REPLACE FUNCTION public.portable_json_from_json(value json)
-RETURNS public.portable_json
-LANGUAGE sql IMMUTABLE CALLED ON NULL INPUT PARALLEL SAFE
-RETURN COALESCE(value, 'null'::json)::public.portable_json;
-
-CREATE OR REPLACE FUNCTION public.portable_json_from_text(value text)
-RETURNS public.portable_json
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN value::json::public.portable_json;
-
-CREATE OR REPLACE FUNCTION public.portable_json_to_json(value public.portable_json)
-RETURNS json
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN value::json;
-
-CREATE CAST (json AS public.portable_json) WITH FUNCTION public.portable_json_from_json(json) AS IMPLICIT;
-CREATE CAST (text AS public.portable_json) WITH FUNCTION public.portable_json_from_text(text) AS IMPLICIT;
-CREATE CAST (public.portable_json AS json) WITH FUNCTION public.portable_json_to_json(public.portable_json) AS IMPLICIT;
-
-CREATE OR REPLACE FUNCTION public.portable_geojson_from_json(value json)
-RETURNS public.portable_geojson
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN value::public.portable_geojson;
-
-CREATE OR REPLACE FUNCTION public.portable_geojson_from_text(value text)
-RETURNS public.portable_geojson
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN value::json::public.portable_geojson;
-
-CREATE OR REPLACE FUNCTION public.portable_geojson_to_json(value public.portable_geojson)
-RETURNS json
-LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
-RETURN value::json;
-
-CREATE CAST (json AS public.portable_geojson) WITH FUNCTION public.portable_geojson_from_json(json) AS IMPLICIT;
-CREATE CAST (text AS public.portable_geojson) WITH FUNCTION public.portable_geojson_from_text(text) AS IMPLICIT;
-CREATE CAST (public.portable_geojson AS json) WITH FUNCTION public.portable_geojson_to_json(public.portable_geojson) AS IMPLICIT;
 
 
 COMMIT;

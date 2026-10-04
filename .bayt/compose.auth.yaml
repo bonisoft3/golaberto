@@ -1,10 +1,11 @@
 # generated from bayt.cue — do not edit
 services:
-  apps_golaberto-auth:
+  golaberto-auth:
     build:
       additional_contexts:
-        libraries_mecha-auth-image: service:libraries_mecha-auth-image
-        apps_golaberto-database: service:apps_golaberto-database
+        golaberto-database: service:golaberto-database
+        libraries_mecha-auth-image: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.4.0@sha256:9daff300f4ddd0b4e026cd25ba10df29edaee6bb3edf34312768a8dca8a12249}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}
       context: ..
       dockerfile: .bayt/Dockerfile.auth
       target: auth
@@ -12,7 +13,7 @@ services:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
     depends_on:
-      apps_golaberto-database:
+      golaberto-database:
         condition: service_healthy
         restart: true
     environment:
@@ -21,21 +22,20 @@ services:
       PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
       WEBAUTHN_RP_ID: ${WEBAUTHN_RP_ID:-localhost}
       WEBAUTHN_ORIGIN: ${WEBAUTHN_ORIGIN:-https://localhost:*}
-    image: bayt-apps_golaberto-auth:${BAYT_IMAGE_TAG:-latest}
+    image: bayt-golaberto-auth:${BAYT_IMAGE_TAG:-latest}
     networks:
       default:
         aliases:
         - auth
-  apps_golaberto-auth_bayt:
+  golaberto-auth_bayt:
     build:
       additional_contexts:
-        libraries_mecha-auth-image_bayt: service:libraries_mecha-auth-image_bayt
-        apps_golaberto-database_bayt: service:apps_golaberto-database_bayt
+        golaberto-database_bayt: service:golaberto-database_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.auth
       target: auth_bayt
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-apps_golaberto-auth_bayt:latest
+    image: bayt-golaberto-auth_bayt:latest
     scale: 0

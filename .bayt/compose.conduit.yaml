@@ -1,11 +1,12 @@
 # generated from bayt.cue — do not edit
 services:
-  apps_golaberto-conduit:
+  golaberto-conduit:
     build:
       additional_contexts:
-        libraries_mecha-conduit-image: service:libraries_mecha-conduit-image
-        apps_golaberto-database: service:apps_golaberto-database
-        apps_golaberto-mesh-events: service:apps_golaberto-mesh-events
+        golaberto-database: service:golaberto-database
+        golaberto-mesh-events: service:golaberto-mesh-events
+        libraries_mecha-conduit-image: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-conduit:0.4.0@sha256:5b37a9074a35a9e8a3f95aa70b8c09f226927a7d9053cfa4ffc91ee07a5c302b}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image}
       context: ..
       dockerfile: .bayt/Dockerfile.conduit
       target: conduit
@@ -13,10 +14,10 @@ services:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
     depends_on:
-      apps_golaberto-database:
+      golaberto-database:
         condition: service_healthy
         restart: true
-      apps_golaberto-mesh-events:
+      golaberto-mesh-events:
         condition: service_started
     develop:
       watch:
@@ -38,27 +39,26 @@ services:
       retries: 20
       start_period: 120s
       start_interval: 500ms
-    image: bayt-apps_golaberto-conduit:${BAYT_IMAGE_TAG:-latest}
+    image: bayt-golaberto-conduit:${BAYT_IMAGE_TAG:-latest}
     networks:
       default:
         aliases:
         - conduit
     restart: on-failure
-  apps_golaberto-conduit_bayt:
+  golaberto-conduit_bayt:
     build:
       additional_contexts:
-        libraries_mecha-conduit-image_bayt: service:libraries_mecha-conduit-image_bayt
-        apps_golaberto-database_bayt: service:apps_golaberto-database_bayt
-        apps_golaberto-mesh-events_bayt: service:apps_golaberto-mesh-events_bayt
+        golaberto-database_bayt: service:golaberto-database_bayt
+        golaberto-mesh-events_bayt: service:golaberto-mesh-events_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.conduit
       target: conduit_bayt
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-apps_golaberto-conduit_bayt:latest
+    image: bayt-golaberto-conduit_bayt:latest
     scale: 0
-  apps_golaberto-conduit_srcs:
+  golaberto-conduit_srcs:
     build:
       context: ..
       dockerfile: .bayt/Dockerfile.conduit
@@ -66,5 +66,5 @@ services:
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-apps_golaberto-conduit_srcs:latest
+    image: bayt-golaberto-conduit_srcs:latest
     scale: 0

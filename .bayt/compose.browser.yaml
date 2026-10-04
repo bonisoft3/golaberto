@@ -1,0 +1,22 @@
+# generated from bayt.cue — do not edit
+services:
+  golaberto-browser:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.browser
+      target: browser
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-browser:${BAYT_IMAGE_TAG:-latest}
+    scale: 0
+  golaberto-browser_bayt:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.browser
+      target: browser_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-browser_bayt:latest
+    scale: 0

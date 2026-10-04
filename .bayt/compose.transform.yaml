@@ -1,10 +1,10 @@
 # generated from bayt.cue — do not edit
 services:
-  apps_golaberto-transform:
+  golaberto-transform:
     build:
       additional_contexts:
-        apps_golaberto-redis: service:apps_golaberto-redis
-        apps_golaberto-crud: service:apps_golaberto-crud
+        golaberto-redis: service:golaberto-redis
+        golaberto-crud: service:golaberto-crud
       context: ..
       dockerfile: .bayt/Dockerfile.transform
       target: transform
@@ -12,10 +12,10 @@ services:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
     depends_on:
-      apps_golaberto-redis:
+      golaberto-redis:
         condition: service_healthy
         restart: true
-      apps_golaberto-crud:
+      golaberto-crud:
         condition: service_healthy
         restart: true
     develop:
@@ -37,26 +37,26 @@ services:
       REDIS_URL: redis://redis:6379
       SERVICE_JWT: >-
         ${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
-    image: bayt-apps_golaberto-transform:${BAYT_IMAGE_TAG:-latest}
+    image: bayt-golaberto-transform:${BAYT_IMAGE_TAG:-latest}
     networks:
       default:
         aliases:
         - transform
     restart: on-failure
-  apps_golaberto-transform_bayt:
+  golaberto-transform_bayt:
     build:
       additional_contexts:
-        apps_golaberto-redis_bayt: service:apps_golaberto-redis_bayt
-        apps_golaberto-crud_bayt: service:apps_golaberto-crud_bayt
+        golaberto-redis_bayt: service:golaberto-redis_bayt
+        golaberto-crud_bayt: service:golaberto-crud_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.transform
       target: transform_bayt
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-apps_golaberto-transform_bayt:latest
+    image: bayt-golaberto-transform_bayt:latest
     scale: 0
-  apps_golaberto-transform_srcs:
+  golaberto-transform_srcs:
     build:
       context: ..
       dockerfile: .bayt/Dockerfile.transform
@@ -64,5 +64,5 @@ services:
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-apps_golaberto-transform_srcs:latest
+    image: bayt-golaberto-transform_srcs:latest
     scale: 0

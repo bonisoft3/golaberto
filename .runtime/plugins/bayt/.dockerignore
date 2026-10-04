@@ -1,9 +1,0 @@
-.git
-.github
-.mirror
-tests
-dist
-bayt-stage
-Dockerfile
-Dockerfile.runtime
-.dockerignore

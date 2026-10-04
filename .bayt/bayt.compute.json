@@ -3,6 +3,13 @@
   "compose": {
     "up": false,
     "manual": false,
+    "build": {
+      "additional_contexts": {
+        "libraries_mecha-compute-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.4.0@sha256:0d11c059847b28c57077f8460f3fc17f316b40fa236616c43edb8ba519cfdeec}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}"
+      },
+      "secrets": [],
+      "args": {}
+    },
     "environment": {
       "CRUD_URL": "http://crud:3000",
       "DATABASE_URL": "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
@@ -13,10 +20,10 @@
     "ports": [],
     "volumes": [],
     "depends_on": {
-      "apps_golaberto-crud": {
+      "golaberto-crud": {
         "condition": "service_healthy"
       },
-      "apps_golaberto-database": {
+      "golaberto-database": {
         "condition": "service_healthy"
       }
     },
@@ -52,7 +59,6 @@
     "preamble": [],
     "preambleCopyContexts": [],
     "from": {
-      "ref": "libraries_mecha:compute-image",
       "name": "libraries_mecha-compute-image"
     },
     "add": [],
@@ -99,8 +105,8 @@
     "cmd": null
   },
   "name": "compute",
-  "project": "apps_golaberto",
-  "dir": "",
+  "project": "golaberto",
+  "dir": ".",
   "activate": "",
   "srcs": {
     "globs": [
@@ -121,8 +127,8 @@
   "synthetics": {
     "bayt": {
       "name": "compute_bayt",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -150,17 +156,15 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.compute.yaml",
-        ".bayt/compose.crud.yaml",
-        ".bayt/compose.database.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.compute-image.yaml"
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml"
       ]
     },
     "outs": {
       "name": "compute_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -182,17 +186,15 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.compute.yaml",
-        ".bayt/compose.crud.yaml",
-        ".bayt/compose.database.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.compute-image.yaml"
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml"
       ]
     },
     "srcs": {
       "name": "compute_srcs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -213,27 +215,7 @@
         "crud_outs_srcs",
         "database_outs_srcs"
       ],
-      "transitiveCrossDeps": [
-        {
-          "name": "compute-image_srcs",
-          "project": "libraries_mecha",
-          "dir": ".runtime/libraries/mecha",
-          "outs": {
-            "globs": [
-              "services/compute/deno.json",
-              "services/compute/deno.lock",
-              "services/compute/main.ts",
-              "services/compute/workers.ts",
-              "services/compute/cage.ts",
-              "services/compute/language.ts",
-              "services/compute/job.ts",
-              "services/compute/wasi.ts",
-              "services/compute/install.ts"
-            ],
-            "exclude": []
-          }
-        }
-      ],
+      "transitiveCrossDeps": [],
       "chainedDeps": [],
       "cmds": [],
       "cache": {
@@ -241,11 +223,9 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.compute.yaml",
-        ".bayt/compose.crud.yaml",
-        ".bayt/compose.database.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.compute-image.yaml"
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml"
       ]
     }
   },
@@ -263,38 +243,17 @@
     "crud_outs",
     "database_outs"
   ],
-  "transitiveCrossDeps": [
-    {
-      "name": "compute-image",
-      "project": "libraries_mecha",
-      "dir": ".runtime/libraries/mecha",
-      "outs": {
-        "globs": [],
-        "exclude": []
-      }
-    }
-  ],
+  "transitiveCrossDeps": [],
   "upClosure": [
-    ".bayt/compose.compute.yaml",
-    ".bayt/compose.crud.yaml",
-    ".bayt/compose.database.yaml",
-    ".runtime/libraries/mecha/.bayt/compose.database-image.yaml",
-    ".runtime/libraries/mecha/.bayt/compose.compute-image.yaml"
+    "./.bayt/compose.compute.yaml",
+    "./.bayt/compose.crud.yaml",
+    "./.bayt/compose.database.yaml"
   ],
   "chainedDeps": [
     {
-      "name": "compute-image",
-      "project": "libraries_mecha",
-      "dir": ".runtime/libraries/mecha",
-      "outs": {
-        "globs": [],
-        "exclude": []
-      }
-    },
-    {
       "name": "crud_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []
@@ -302,8 +261,8 @@
     },
     {
       "name": "database_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []

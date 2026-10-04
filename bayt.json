@@ -1,264 +1,19 @@
 {
-  "dir": "",
-  "name": "apps_golaberto",
+  "dir": ".",
+  "name": "golaberto",
   "activate": "mise x --",
   "depot": false,
   "compose": {
-    "includes": []
+    "includes": [
+      "mecha/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml",
+      "omnishell/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml"
+    ]
   },
   "targets": {
-    "replay": {
-      "name": "replay",
-      "project": "apps_golaberto",
-      "dir": "",
-      "activate": "",
-      "cmd": {
-        "builtin": {
-          "name": "builtin",
-          "priority": -1,
-          "shell": "exec",
-          "do": "mise install",
-          "stop": false,
-          "dockerfile": {
-            "do": "d=/root/.local/share/mise/downloads; s=/mise-tarball-store; mkdir -p \"$d\" \"$s\"; cp -r \"$s\"/. \"$d\"/ 2>/dev/null || true; mise install || exit; cd \"$d\" && for f in */*/*; do [ -f \"$f\" ] || continue; o=\"$s/$f\"; [ -e \"$o\" ] && continue; mkdir -p \"$(dirname \"$o\")\"; t=\"$(mktemp \"$(dirname \"$o\")/.pXXXXXX\")\" && cp \"$f\" \"$t\" && mv -f \"$t\" \"$o\"; done; :",
-            "mounts": [
-              {
-                "type": "cache",
-                "target": "/root/.local/share/mise/downloads",
-                "scope": "project",
-                "required": false
-              },
-              {
-                "type": "cache",
-                "target": "/mise-tarball-store",
-                "scope": "global",
-                "required": false
-              }
-            ],
-            "shell": "sh"
-          },
-          "srcs": {
-            "globs": [
-              "[m]ise.toml",
-              "[.]mise.toml",
-              "[m]ise.lock",
-              "[.]tool-versions"
-            ],
-            "defaultGlobs": null,
-            "exclude": [],
-            "defaultExclude": null
-          }
-        }
-      },
-      "deps": [
-        ":setup"
-      ],
-      "env": {
-        "MISE_ALWAYS_KEEP_DOWNLOAD": "1"
-      },
-      "outs": {
-        "globs": [],
-        "exclude": []
-      },
-      "srcs": {
-        "globs": [
-          ".bayt/compose*.yaml",
-          "services/database/migrations/**"
-        ],
-        "defaultGlobs": {
-          "pronto-cue": {
-            "glob": "*.cue",
-            "name": "pronto-cue",
-            "priority": 1
-          },
-          "pronto-bayt": {
-            "glob": "bayt.json",
-            "name": "pronto-bayt",
-            "priority": 2
-          },
-          "pronto-design": {
-            "glob": "DESIGN.md",
-            "name": "pronto-design",
-            "priority": 3
-          },
-          "pronto-pipelines": {
-            "glob": "[p]ipelines/*.blobl",
-            "name": "pronto-pipelines",
-            "priority": 7
-          },
-          "pronto-messages": {
-            "glob": "[m]essages/*.json",
-            "name": "pronto-messages",
-            "priority": 8
-          },
-          "pronto-boot": {
-            "glob": "[s]hell/boot.js",
-            "name": "pronto-boot",
-            "priority": 9
-          }
-        },
-        "exclude": [],
-        "defaultExclude": null
-      },
-      "state": {
-        "globs": []
-      },
-      "visibility": "internal",
-      "dockerfile": {
-        "from": {
-          "ref": ":setup",
-          "name": "apps_golaberto-setup"
-        },
-        "preamble": [],
-        "defaultPreamble": {
-          "docker": {
-            "name": "docker",
-            "priority": -10,
-            "copy": {
-              "from": {
-                "name": "docker:29.7.1-cli@sha256:27a51d5ab1cd38d9eeaba7b415b8c07bc10c31e1cf1ec8d78f6413fcfab3f44f"
-              },
-              "srcs": [
-                "/usr/local/bin/docker"
-              ],
-              "dst": "/usr/local/bin/docker",
-              "link": true,
-              "parents": false,
-              "exclude": []
-            }
-          },
-          "docker-compose": {
-            "name": "docker-compose",
-            "priority": -9,
-            "copy": {
-              "from": {
-                "name": "docker:29.7.1-cli@sha256:27a51d5ab1cd38d9eeaba7b415b8c07bc10c31e1cf1ec8d78f6413fcfab3f44f"
-              },
-              "srcs": [
-                "/usr/local/libexec/docker/cli-plugins/docker-compose"
-              ],
-              "dst": "/usr/local/libexec/docker/cli-plugins/docker-compose",
-              "link": true,
-              "parents": false,
-              "exclude": []
-            }
-          },
-          "docker-path": {
-            "name": "docker-path",
-            "priority": -8,
-            "line": "ENV PATH=/usr/local/bin:$PATH"
-          }
-        },
-        "add": [],
-        "mounts": [],
-        "secrets": {},
-        "extra_hosts": [],
-        "epilogue": [],
-        "copy": [
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              "cue.mod",
-              ".runtime/.bayt",
-              ".runtime/plugins/pronto",
-              ".runtime/plugins/omnishell",
-              ".runtime/plugins/bayt",
-              ".runtime/plugins/sayt",
-              ".runtime/libraries/mecha"
-            ],
-            "dst": "/monorepo/",
-            "link": true,
-            "parents": true,
-            "exclude": []
-          }
-        ],
-        "defaultCopy": null,
-        "healthcheck": null,
-        "expose": [],
-        "entrypoint": null,
-        "incremental": false,
-        "cmd": null
-      },
-      "compose": {
-        "up": true,
-        "manual": true,
-        "build": {
-          "additional_contexts": {
-            "root": ".."
-          },
-          "secrets": [],
-          "args": {}
-        },
-        "command": [
-          "mise",
-          "x",
-          "--",
-          "sh",
-          "-c",
-          "deno run --config \".runtime/plugins/pronto/deno.json\" --allow-read --allow-write --allow-run --allow-env \".runtime/plugins/pronto/check-replay.ts\" ."
-        ],
-        "environment": {
-          "BAYT_IMAGE_TAG": "${BAYT_IMAGE_TAG:-latest}"
-        },
-        "ports": [],
-        "volumes": [
-          "//var/run/docker.sock:/var/run/docker.sock"
-        ],
-        "depends_on": {}
-      },
-      "taskfile": {
-        "run": "once",
-        "incremental": true,
-        "preconditions": []
-      },
-      "cmds": [
-        {
-          "do": "mise install",
-          "dockerfile": {
-            "do": "d=/root/.local/share/mise/downloads; s=/mise-tarball-store; mkdir -p \"$d\" \"$s\"; cp -r \"$s\"/. \"$d\"/ 2>/dev/null || true; mise install || exit; cd \"$d\" && for f in */*/*; do [ -f \"$f\" ] || continue; o=\"$s/$f\"; [ -e \"$o\" ] && continue; mkdir -p \"$(dirname \"$o\")\"; t=\"$(mktemp \"$(dirname \"$o\")/.pXXXXXX\")\" && cp \"$f\" \"$t\" && mv -f \"$t\" \"$o\"; done; :",
-            "mounts": [
-              {
-                "type": "cache",
-                "target": "/root/.local/share/mise/downloads",
-                "scope": "project",
-                "required": false
-              },
-              {
-                "type": "cache",
-                "target": "/mise-tarball-store",
-                "scope": "global",
-                "required": false
-              }
-            ],
-            "shell": "sh"
-          },
-          "srcs": {
-            "globs": [
-              "[m]ise.toml",
-              "[.]mise.toml",
-              "[m]ise.lock",
-              "[.]tool-versions"
-            ],
-            "defaultGlobs": null,
-            "exclude": [],
-            "defaultExclude": null
-          },
-          "name": "builtin",
-          "shell": "exec",
-          "stop": false
-        }
-      ],
-      "cache": {
-        "full": false,
-        "similar": false
-      }
-    },
-    "setup": {
-      "name": "setup",
-      "project": "apps_golaberto",
-      "dir": "",
+    "browser": {
+      "name": "browser",
+      "project": "golaberto",
+      "dir": ".",
       "srcs": {
         "globs": [],
         "defaultGlobs": null,
@@ -273,16 +28,32 @@
         "globs": []
       },
       "visibility": "internal",
-      "cmd": {},
-      "env": {},
+      "cmd": {
+        "builtin": null
+      },
       "deps": [],
       "dockerfile": {
         "from": {
-          "ref": "workspaceroot:setup",
-          "name": "workspaceroot-setup"
+          "name": "mcr.microsoft.com/playwright:v1.61.1-noble@sha256:5b8f294aff9041b7191c34a4bab3ac270157a28774d4b0660e9743297b697e48"
         },
         "preamble": [],
-        "defaultPreamble": null,
+        "defaultPreamble": {
+          "lazybox-copy": {
+            "name": "lazybox-copy",
+            "priority": -10,
+            "line": "COPY --from=bonitao/lazybox:0.8.3@sha256:c896a6836673d8fd217f6021a2522351fd82d580ed985159feb2f10373018e73 /lazybox/ /root/.local/share/lazybox/"
+          },
+          "path-env": {
+            "name": "path-env",
+            "priority": -9,
+            "line": "ENV PATH=/root/.local/bin:/root/.local/share/lazybox/bin:$PATH"
+          },
+          "mise-trusted": {
+            "name": "mise-trusted",
+            "priority": -8,
+            "line": "ENV MISE_TRUSTED_CONFIG_PATHS=/monorepo"
+          }
+        },
         "add": [],
         "mounts": [],
         "secrets": {},
@@ -296,6 +67,7 @@
         "incremental": false,
         "cmd": null
       },
+      "env": {},
       "taskfile": {
         "run": "when_changed",
         "incremental": true,
@@ -307,1010 +79,10 @@
         "similar": false
       }
     },
-    "lint": {
-      "name": "lint",
-      "project": "apps_golaberto",
-      "dir": "",
-      "srcs": {
-        "globs": [
-          "brief.html",
-          "ir.html",
-          "acceptance.md"
-        ],
-        "defaultGlobs": {
-          "pronto-cue": {
-            "glob": "*.cue",
-            "name": "pronto-cue",
-            "priority": 1
-          },
-          "pronto-bayt": {
-            "glob": "bayt.json",
-            "name": "pronto-bayt",
-            "priority": 2
-          },
-          "pronto-design": {
-            "glob": "DESIGN.md",
-            "name": "pronto-design",
-            "priority": 3
-          },
-          "pronto-pipelines": {
-            "glob": "[p]ipelines/*.blobl",
-            "name": "pronto-pipelines",
-            "priority": 7
-          },
-          "pronto-messages": {
-            "glob": "[m]essages/*.json",
-            "name": "pronto-messages",
-            "priority": 8
-          },
-          "pronto-boot": {
-            "glob": "[s]hell/boot.js",
-            "name": "pronto-boot",
-            "priority": 9
-          }
-        },
-        "exclude": [],
-        "defaultExclude": null
-      },
-      "outs": {
-        "globs": [],
-        "exclude": []
-      },
-      "state": {
-        "globs": []
-      },
-      "visibility": "internal",
-      "activate": "mise x --",
-      "cmd": {
-        "builtin": {
-          "name": "builtin",
-          "priority": 0,
-          "shell": "exec",
-          "do": "cue vet ./...",
-          "stop": false,
-          "srcs": {
-            "globs": [],
-            "defaultGlobs": null,
-            "exclude": [],
-            "defaultExclude": null
-          }
-        }
-      },
-      "env": {},
-      "deps": [],
-      "taskfile": {
-        "run": "always",
-        "incremental": true,
-        "preconditions": []
-      },
-      "cmds": [
-        {
-          "do": "cue vet ./...",
-          "name": "builtin",
-          "shell": "exec",
-          "stop": false,
-          "srcs": {
-            "globs": [],
-            "defaultGlobs": null,
-            "exclude": [],
-            "defaultExclude": null
-          }
-        }
-      ],
-      "cache": {
-        "full": false,
-        "similar": false
-      }
-    },
-    "build": {
-      "name": "build",
-      "project": "apps_golaberto",
-      "dir": "",
-      "srcs": {
-        "globs": [
-          "ir.html",
-          "acceptance.md",
-          "shell/**",
-          "pipelines/**",
-          "services/**",
-          "seed.json"
-        ],
-        "defaultGlobs": {
-          "pronto-cue": {
-            "glob": "*.cue",
-            "name": "pronto-cue",
-            "priority": 1
-          },
-          "pronto-bayt": {
-            "glob": "bayt.json",
-            "name": "pronto-bayt",
-            "priority": 2
-          },
-          "pronto-design": {
-            "glob": "DESIGN.md",
-            "name": "pronto-design",
-            "priority": 3
-          },
-          "pronto-pipelines": {
-            "glob": "[p]ipelines/*.blobl",
-            "name": "pronto-pipelines",
-            "priority": 7
-          },
-          "pronto-messages": {
-            "glob": "[m]essages/*.json",
-            "name": "pronto-messages",
-            "priority": 8
-          },
-          "pronto-boot": {
-            "glob": "[s]hell/boot.js",
-            "name": "pronto-boot",
-            "priority": 9
-          }
-        },
-        "exclude": [],
-        "defaultExclude": null
-      },
-      "outs": {
-        "globs": [],
-        "exclude": []
-      },
-      "state": {
-        "globs": []
-      },
-      "visibility": "internal",
-      "activate": "mise x --",
-      "cmd": {
-        "builtin": {
-          "name": "builtin",
-          "priority": 0,
-          "shell": "exec",
-          "do": "deno run --allow-read --allow-write=. --allow-run --allow-env .runtime/plugins/pronto/write.ts .",
-          "stop": false,
-          "srcs": {
-            "globs": [],
-            "defaultGlobs": null,
-            "exclude": [],
-            "defaultExclude": null
-          }
-        }
-      },
-      "deps": [
-        ":setup"
-      ],
-      "dockerfile": {
-        "from": {
-          "ref": ":setup",
-          "name": "apps_golaberto-setup"
-        },
-        "preamble": [],
-        "defaultPreamble": null,
-        "add": [],
-        "mounts": [],
-        "secrets": {},
-        "extra_hosts": [],
-        "epilogue": [],
-        "copy": [],
-        "defaultCopy": null,
-        "healthcheck": null,
-        "expose": [],
-        "entrypoint": null,
-        "incremental": false,
-        "cmd": null
-      },
-      "env": {},
-      "taskfile": {
-        "run": "once",
-        "incremental": true,
-        "preconditions": []
-      },
-      "vscode": {
-        "group": {
-          "kind": "build",
-          "isDefault": true
-        }
-      },
-      "cmds": [
-        {
-          "do": "deno run --allow-read --allow-write=. --allow-run --allow-env .runtime/plugins/pronto/write.ts .",
-          "name": "builtin",
-          "shell": "exec",
-          "stop": false,
-          "srcs": {
-            "globs": [],
-            "defaultGlobs": null,
-            "exclude": [],
-            "defaultExclude": null
-          }
-        }
-      ],
-      "cache": {
-        "full": false,
-        "similar": false
-      }
-    },
-    "test": {
-      "name": "test",
-      "project": "apps_golaberto",
-      "dir": "",
-      "srcs": {
-        "globs": [],
-        "defaultGlobs": {
-          "pronto-cue": {
-            "glob": "*.cue",
-            "name": "pronto-cue",
-            "priority": 1
-          },
-          "pronto-bayt": {
-            "glob": "bayt.json",
-            "name": "pronto-bayt",
-            "priority": 2
-          },
-          "pronto-design": {
-            "glob": "DESIGN.md",
-            "name": "pronto-design",
-            "priority": 3
-          },
-          "pronto-pipelines": {
-            "glob": "[p]ipelines/*.blobl",
-            "name": "pronto-pipelines",
-            "priority": 7
-          },
-          "pronto-messages": {
-            "glob": "[m]essages/*.json",
-            "name": "pronto-messages",
-            "priority": 8
-          },
-          "pronto-boot": {
-            "glob": "[s]hell/boot.js",
-            "name": "pronto-boot",
-            "priority": 9
-          }
-        },
-        "exclude": [],
-        "defaultExclude": null
-      },
-      "outs": {
-        "globs": [],
-        "exclude": []
-      },
-      "state": {
-        "globs": []
-      },
-      "visibility": "internal",
-      "activate": "mise x --",
-      "cmd": {
-        "builtin": {
-          "name": "builtin",
-          "priority": 0,
-          "shell": "exec",
-          "do": "cue vet -c ./...",
-          "stop": false,
-          "srcs": {
-            "globs": [],
-            "defaultGlobs": null,
-            "exclude": [],
-            "defaultExclude": null
-          }
-        }
-      },
-      "deps": [
-        ":build"
-      ],
-      "env": {},
-      "taskfile": {
-        "run": "once",
-        "incremental": true,
-        "preconditions": []
-      },
-      "vscode": {
-        "group": {
-          "kind": "test",
-          "isDefault": true
-        }
-      },
-      "cmds": [
-        {
-          "do": "cue vet -c ./...",
-          "name": "builtin",
-          "shell": "exec",
-          "stop": false,
-          "srcs": {
-            "globs": [],
-            "defaultGlobs": null,
-            "exclude": [],
-            "defaultExclude": null
-          }
-        }
-      ],
-      "cache": {
-        "full": false,
-        "similar": false
-      }
-    },
-    "launch": {
-      "name": "launch",
-      "project": "apps_golaberto",
-      "dir": "",
-      "srcs": {
-        "globs": [],
-        "defaultGlobs": null,
-        "exclude": [],
-        "defaultExclude": null
-      },
-      "outs": {
-        "globs": [],
-        "exclude": []
-      },
-      "state": {
-        "globs": []
-      },
-      "visibility": "internal",
-      "activate": "",
-      "cmd": {
-        "builtin": null
-      },
-      "env": {},
-      "deps": [
-        ":caddy:outs",
-        ":database:outs",
-        ":crud:outs",
-        ":electric:outs",
-        ":redis:outs",
-        ":mesh-events:outs",
-        ":conduit:outs",
-        ":transform:outs",
-        ":compute:outs",
-        ":auth:outs"
-      ],
-      "compose": {
-        "up": true,
-        "manual": false,
-        "environment": {},
-        "ports": [],
-        "volumes": [],
-        "depends_on": {
-          "apps_golaberto-caddy": {
-            "condition": "service_healthy"
-          },
-          "apps_golaberto-database": {
-            "condition": "service_healthy"
-          },
-          "apps_golaberto-crud": {
-            "condition": "service_healthy"
-          },
-          "apps_golaberto-electric": {
-            "condition": "service_healthy"
-          },
-          "apps_golaberto-redis": {
-            "condition": "service_healthy"
-          },
-          "apps_golaberto-mesh-events": {
-            "condition": "service_healthy"
-          },
-          "apps_golaberto-conduit": {
-            "condition": "service_healthy"
-          },
-          "apps_golaberto-transform": {
-            "condition": "service_started"
-          },
-          "apps_golaberto-compute": {
-            "condition": "service_started"
-          },
-          "apps_golaberto-auth": {
-            "condition": "service_started"
-          }
-        },
-        "networks": {
-          "default": {
-            "aliases": [
-              "launch"
-            ]
-          }
-        },
-        "healthcheck": {
-          "test": [
-            "CMD",
-            "echo",
-            "golaberto is healthy"
-          ],
-          "interval": "5s",
-          "timeout": "2s",
-          "retries": 3
-        }
-      },
-      "dockerfile": {
-        "from": {
-          "name": "busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223"
-        },
-        "preamble": [],
-        "defaultPreamble": null,
-        "add": [],
-        "mounts": [],
-        "secrets": {},
-        "extra_hosts": [],
-        "epilogue": [],
-        "copy": [],
-        "defaultCopy": null,
-        "healthcheck": null,
-        "expose": [],
-        "entrypoint": null,
-        "incremental": false,
-        "cmd": [
-          "tail",
-          "-f",
-          "/dev/null"
-        ]
-      },
-      "skaffold": {
-        "profiles": {
-          "bayt-dev": {
-            "name": "bayt-dev",
-            "activation": [
-              {
-                "command": "dev"
-              }
-            ],
-            "build": {
-              "artifact": {
-                "context": ".",
-                "sync": {
-                  "manual": [],
-                  "auto": false
-                },
-                "docker": {
-                  "dockerfile": ".bayt/Dockerfile.launch"
-                }
-              },
-              "local": {
-                "useBuildkit": true,
-                "concurrency": 64,
-                "push": false
-              },
-              "platforms": [],
-              "tagPolicy": {
-                "gitCommit": {
-                  "variant": "AbbrevCommitSha"
-                }
-              }
-            },
-            "manifests": {},
-            "test": [],
-            "verify": [],
-            "portForward": []
-          }
-        }
-      },
-      "cmds": [],
-      "cache": {
-        "full": false,
-        "similar": false
-      }
-    },
-    "integrate": {
-      "name": "integrate",
-      "project": "apps_golaberto",
-      "dir": "",
-      "cmd": {
-        "builtin": null
-      },
-      "deps": [
-        ":launch:outs"
-      ],
-      "dockerfile": {
-        "from": {
-          "name": "mcr.microsoft.com/playwright:v1.61.1-noble@sha256:5b8f294aff9041b7191c34a4bab3ac270157a28774d4b0660e9743297b697e48"
-        },
-        "preamble": [
-          "COPY --from=denoland/deno:bin-2.5.5@sha256:a8dd9a073b2b4d1beb77a8174830c5af54e32517808dcc28249ed6c04fdac979 /deno /usr/local/bin/deno",
-          "ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright",
-          "ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1",
-          "ENV DENO_DIR=/deno-cache",
-          "COPY --from=root .runtime/plugins/omnishell /omnishell",
-          "RUN deno install --node-modules-dir=auto --entrypoint /omnishell/check-visual.ts"
-        ],
-        "defaultPreamble": null,
-        "add": [],
-        "mounts": [],
-        "secrets": {},
-        "extra_hosts": [],
-        "epilogue": [],
-        "copy": [],
-        "defaultCopy": null,
-        "healthcheck": null,
-        "expose": [],
-        "entrypoint": null,
-        "incremental": false,
-        "cmd": null
-      },
-      "env": {},
-      "outs": {
-        "globs": [],
-        "exclude": []
-      },
-      "srcs": {
-        "globs": [
-          "shell/shell.yaml",
-          "shell/screens/**"
-        ],
-        "defaultGlobs": null,
-        "exclude": [],
-        "defaultExclude": null
-      },
-      "state": {
-        "globs": []
-      },
-      "visibility": "internal",
-      "compose": {
-        "up": true,
-        "manual": true,
-        "build": {
-          "additional_contexts": {
-            "root": ".."
-          },
-          "secrets": [],
-          "args": {}
-        },
-        "command": [
-          "deno",
-          "run",
-          "--node-modules-dir=auto",
-          "--allow-read",
-          "--allow-write",
-          "--allow-net",
-          "--allow-env",
-          "--allow-run",
-          "--allow-sys",
-          "--unsafely-ignore-certificate-errors=caddy",
-          "/omnishell/check-visual.ts",
-          "."
-        ],
-        "depends_on": {
-          "apps_golaberto-launch": {
-            "condition": "service_healthy"
-          }
-        },
-        "environment": {
-          "APP_URL": "https://caddy:8443"
-        },
-        "ports": [],
-        "volumes": []
-      },
-      "taskfile": {
-        "run": "once",
-        "incremental": true,
-        "preconditions": []
-      },
-      "cmds": [],
-      "cache": {
-        "full": false,
-        "similar": false
-      }
-    },
-    "database": {
-      "name": "database",
-      "project": "apps_golaberto",
-      "dir": "",
-      "srcs": {
-        "globs": [
-          "services/database/migrations/000_extensions.sql",
-          "services/database/migrations/001_roles.sql",
-          "services/database/migrations/002_grants.sql",
-          "services/database/migrations/004_types.sql",
-          "services/database/migrations/005_create_tables.sql",
-          "services/database/migrations/006_policies.sql",
-          "services/database/migrations/007_txid.sql",
-          "services/database/migrations/008_publication.sql",
-          "services/database/migrations/010_game_days.sql",
-          "services/database/migrations/011_comment_writes.sql",
-          "services/database/migrations/012_editor_writes.sql",
-          "services/database/migrations/900_seed.sql"
-        ],
-        "defaultGlobs": null,
-        "exclude": [],
-        "defaultExclude": null
-      },
-      "outs": {
-        "globs": [],
-        "exclude": []
-      },
-      "state": {
-        "globs": []
-      },
-      "visibility": "internal",
-      "activate": "",
-      "cmd": {
-        "builtin": null
-      },
-      "env": {},
-      "deps": [],
-      "dockerfile": {
-        "from": {
-          "ref": "libraries_mecha:database-image",
-          "name": "libraries_mecha-database-image"
-        },
-        "preamble": [],
-        "defaultPreamble": null,
-        "add": [],
-        "mounts": [],
-        "secrets": {},
-        "extra_hosts": [],
-        "epilogue": [],
-        "copy": [
-          {
-            "from": null,
-            "srcs": [
-              "services/database/migrations/000_extensions.sql",
-              "services/database/migrations/001_roles.sql",
-              "services/database/migrations/002_grants.sql",
-              "services/database/migrations/004_types.sql",
-              "services/database/migrations/005_create_tables.sql",
-              "services/database/migrations/006_policies.sql",
-              "services/database/migrations/007_txid.sql",
-              "services/database/migrations/008_publication.sql",
-              "services/database/migrations/010_game_days.sql",
-              "services/database/migrations/011_comment_writes.sql",
-              "services/database/migrations/012_editor_writes.sql",
-              "services/database/migrations/900_seed.sql"
-            ],
-            "dst": "/docker-entrypoint-initdb.d/",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          }
-        ],
-        "defaultCopy": null,
-        "healthcheck": {
-          "test": [
-            "CMD",
-            "pg_isready",
-            "-h",
-            "localhost",
-            "-p",
-            "5432",
-            "-d",
-            "${POSTGRES_DB:-golaberto}",
-            "-U",
-            "${POSTGRES_USER:-postgres}"
-          ],
-          "interval": "1s",
-          "timeout": "5s",
-          "retries": 30,
-          "start_period": "5m"
-        },
-        "expose": [],
-        "entrypoint": null,
-        "incremental": false,
-        "cmd": null
-      },
-      "compose": {
-        "up": false,
-        "manual": false,
-        "environment": {
-          "POSTGRES_USER": "${POSTGRES_USER:-postgres}",
-          "POSTGRES_PASSWORD": "${POSTGRES_PASSWORD:-postgres}",
-          "POSTGRES_DB": "${POSTGRES_DB:-golaberto}",
-          "POSTGRES_INITDB_ARGS": "--no-sync --encoding=UTF8 --auth=trust --locale-provider=icu --icu-locale=und --locale=C"
-        },
-        "ports": [
-          "5432"
-        ],
-        "volumes": [],
-        "depends_on": {},
-        "networks": {
-          "default": {
-            "aliases": [
-              "database"
-            ]
-          }
-        },
-        "healthcheck": {
-          "test": [
-            "CMD",
-            "pg_isready",
-            "-h",
-            "localhost",
-            "-p",
-            "5432",
-            "-d",
-            "${POSTGRES_DB:-golaberto}",
-            "-U",
-            "${POSTGRES_USER:-postgres}"
-          ],
-          "interval": "1s",
-          "timeout": "5s",
-          "retries": 30,
-          "start_period": "5m",
-          "start_interval": "100ms"
-        },
-        "develop": {
-          "watch": [
-            {
-              "action": "rebuild",
-              "path": "../services/database/migrations/000_extensions.sql",
-              "target": "/docker-entrypoint-initdb.d"
-            },
-            {
-              "action": "rebuild",
-              "path": "../services/database/migrations/001_roles.sql",
-              "target": "/docker-entrypoint-initdb.d"
-            },
-            {
-              "action": "rebuild",
-              "path": "../services/database/migrations/002_grants.sql",
-              "target": "/docker-entrypoint-initdb.d"
-            },
-            {
-              "action": "rebuild",
-              "path": "../services/database/migrations/004_types.sql",
-              "target": "/docker-entrypoint-initdb.d"
-            },
-            {
-              "action": "rebuild",
-              "path": "../services/database/migrations/005_create_tables.sql",
-              "target": "/docker-entrypoint-initdb.d"
-            },
-            {
-              "action": "rebuild",
-              "path": "../services/database/migrations/006_policies.sql",
-              "target": "/docker-entrypoint-initdb.d"
-            },
-            {
-              "action": "rebuild",
-              "path": "../services/database/migrations/007_txid.sql",
-              "target": "/docker-entrypoint-initdb.d"
-            },
-            {
-              "action": "rebuild",
-              "path": "../services/database/migrations/008_publication.sql",
-              "target": "/docker-entrypoint-initdb.d"
-            },
-            {
-              "action": "rebuild",
-              "path": "../services/database/migrations/010_game_days.sql",
-              "target": "/docker-entrypoint-initdb.d"
-            },
-            {
-              "action": "rebuild",
-              "path": "../services/database/migrations/011_comment_writes.sql",
-              "target": "/docker-entrypoint-initdb.d"
-            },
-            {
-              "action": "rebuild",
-              "path": "../services/database/migrations/012_editor_writes.sql",
-              "target": "/docker-entrypoint-initdb.d"
-            },
-            {
-              "action": "rebuild",
-              "path": "../services/database/migrations/900_seed.sql",
-              "target": "/docker-entrypoint-initdb.d"
-            }
-          ]
-        }
-      },
-      "healthcheck": {
-        "db": "${POSTGRES_DB:-golaberto}",
-        "user": "${POSTGRES_USER:-postgres}",
-        "port": 5432,
-        "host": "localhost",
-        "start_interval": "100ms",
-        "interval": "1s",
-        "timeout": "5s",
-        "retries": 30,
-        "start_period": "5m"
-      },
-      "cmds": [],
-      "cache": {
-        "full": false,
-        "similar": false
-      }
-    },
-    "crud": {
-      "name": "crud",
-      "project": "apps_golaberto",
-      "dir": "",
-      "srcs": {
-        "globs": [],
-        "defaultGlobs": null,
-        "exclude": [],
-        "defaultExclude": null
-      },
-      "outs": {
-        "globs": [],
-        "exclude": []
-      },
-      "state": {
-        "globs": []
-      },
-      "visibility": "internal",
-      "activate": "",
-      "cmd": {
-        "builtin": null
-      },
-      "env": {},
-      "deps": [
-        ":database:outs"
-      ],
-      "dockerfile": {
-        "from": {
-          "name": "postgrest/postgrest:v12.2.3@sha256:0a46780309a604cdc8b56c776c6e5e15788ce58174d709e40459ab5a2d44d228"
-        },
-        "preamble": [],
-        "defaultPreamble": null,
-        "add": [],
-        "mounts": [],
-        "secrets": {},
-        "extra_hosts": [],
-        "epilogue": [],
-        "copy": [],
-        "defaultCopy": {
-          "httpcheck": {
-            "from": {
-              "name": "tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa"
-            },
-            "name": "httpcheck",
-            "srcs": [
-              "/bin/httpcheck"
-            ],
-            "dst": "/usr/local/bin/httpcheck",
-            "chmod": "755",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          }
-        },
-        "healthcheck": {
-          "test": [
-            "CMD",
-            "httpcheck",
-            "http://127.0.0.1:3001/ready"
-          ],
-          "interval": "5s",
-          "timeout": "5s",
-          "retries": 30,
-          "start_period": "30s"
-        },
-        "expose": [],
-        "entrypoint": null,
-        "incremental": false,
-        "cmd": [
-          "postgrest"
-        ]
-      },
-      "compose": {
-        "up": false,
-        "manual": false,
-        "environment": {
-          "PGRST_DB_URI": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
-          "PGRST_DB_SCHEMA": "public",
-          "PGRST_DB_ANON_ROLE": "anon",
-          "PGRST_DB_PRE_REQUEST": "public.app_pre_request",
-          "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}",
-          "PGRST_SERVER_HOST": "*",
-          "PGRST_SERVER_PORT": "3000",
-          "PGRST_ADMIN_SERVER_PORT": "3001"
-        },
-        "ports": [],
-        "volumes": [],
-        "depends_on": {
-          "apps_golaberto-database": {
-            "condition": "service_healthy"
-          }
-        },
-        "networks": {
-          "default": {
-            "aliases": [
-              "crud"
-            ]
-          }
-        },
-        "healthcheck": {
-          "test": [
-            "CMD",
-            "httpcheck",
-            "http://127.0.0.1:3001/ready"
-          ],
-          "interval": "5s",
-          "timeout": "5s",
-          "retries": 30,
-          "start_period": "30s",
-          "start_interval": "500ms"
-        }
-      },
-      "healthcheck": {
-        "url": "http://127.0.0.1:3001/ready",
-        "interval": "5s",
-        "start_interval": "500ms",
-        "timeout": "5s",
-        "retries": 30,
-        "start_period": "30s"
-      },
-      "cmds": [],
-      "cache": {
-        "full": false,
-        "similar": false
-      }
-    },
-    "auth": {
-      "name": "auth",
-      "project": "apps_golaberto",
-      "dir": "",
-      "srcs": {
-        "globs": [],
-        "defaultGlobs": null,
-        "exclude": [],
-        "defaultExclude": null
-      },
-      "outs": {
-        "globs": [],
-        "exclude": []
-      },
-      "state": {
-        "globs": []
-      },
-      "visibility": "internal",
-      "activate": "",
-      "cmd": {
-        "builtin": null
-      },
-      "env": {},
-      "deps": [
-        ":database:outs"
-      ],
-      "dockerfile": {
-        "from": {
-          "ref": "libraries_mecha:auth-image",
-          "name": "libraries_mecha-auth-image"
-        },
-        "workdir": "/app",
-        "preamble": [],
-        "defaultPreamble": null,
-        "add": [],
-        "mounts": [],
-        "secrets": {},
-        "extra_hosts": [],
-        "epilogue": [],
-        "copy": [],
-        "defaultCopy": null,
-        "healthcheck": null,
-        "expose": [],
-        "entrypoint": null,
-        "incremental": false,
-        "cmd": null
-      },
-      "compose": {
-        "up": false,
-        "manual": false,
-        "environment": {
-          "DATABASE_URL": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
-          "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}",
-          "WEBAUTHN_RP_ID": "${WEBAUTHN_RP_ID:-localhost}",
-          "WEBAUTHN_ORIGIN": "${WEBAUTHN_ORIGIN:-https://localhost:*}"
-        },
-        "ports": [],
-        "volumes": [],
-        "depends_on": {
-          "apps_golaberto-database": {
-            "condition": "service_healthy"
-          }
-        },
-        "networks": {
-          "default": {
-            "aliases": [
-              "auth"
-            ]
-          }
-        }
-      },
-      "cmds": [],
-      "cache": {
-        "full": false,
-        "similar": false
-      }
-    },
     "caddy": {
       "name": "caddy",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "srcs": {
         "globs": [
           "docker/Caddyfile",
@@ -1900,234 +672,6 @@
             "exclude": []
           },
           {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/interpreter/shell.js"
-            ],
-            "dst": "/omnishell/interpreter/shell.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/interpreter/chrome.js"
-            ],
-            "dst": "/omnishell/interpreter/chrome.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/interpreter/screen.js"
-            ],
-            "dst": "/omnishell/interpreter/screen.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/interpreter/fragment.js"
-            ],
-            "dst": "/omnishell/interpreter/fragment.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/interpreter/data-sync.js"
-            ],
-            "dst": "/omnishell/interpreter/data-sync.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/interpreter/validate.js"
-            ],
-            "dst": "/omnishell/interpreter/validate.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/interpreter/render.js"
-            ],
-            "dst": "/omnishell/interpreter/render.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/interpreter/hatch.js"
-            ],
-            "dst": "/omnishell/interpreter/hatch.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/interpreter/hatch-worker.js"
-            ],
-            "dst": "/omnishell/interpreter/hatch-worker.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/interpreter/storybook.js"
-            ],
-            "dst": "/omnishell/interpreter/storybook.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/interpreter/jessie.js"
-            ],
-            "dst": "/omnishell/interpreter/jessie.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/interpreter/kinetic.js"
-            ],
-            "dst": "/omnishell/interpreter/kinetic.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/interpreter/prng.js"
-            ],
-            "dst": "/omnishell/interpreter/prng.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/interpreter/vendor/mecha-client.js"
-            ],
-            "dst": "/omnishell/interpreter/vendor/mecha-client.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/interpreter/vendor/js-yaml.js"
-            ],
-            "dst": "/omnishell/interpreter/vendor/js-yaml.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/interpreter/vendor/ses.umd.min.js"
-            ],
-            "dst": "/omnishell/interpreter/vendor/ses.umd.min.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/interpreter/vendor/morphlex.js"
-            ],
-            "dst": "/omnishell/interpreter/vendor/morphlex.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/interpreter/vendor/messages.js"
-            ],
-            "dst": "/omnishell/interpreter/vendor/messages.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
-            "from": {
-              "name": "root"
-            },
-            "srcs": [
-              ".runtime/plugins/omnishell/components/wallclock.js"
-            ],
-            "dst": "/omnishell/components/wallclock.js",
-            "link": true,
-            "parents": false,
-            "exclude": []
-          },
-          {
             "from": null,
             "srcs": [
               "brief.html"
@@ -2202,6 +746,253 @@
             "link": true,
             "parents": false,
             "exclude": []
+          },
+          "/omnishell/interpreter/shell.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/interpreter/shell.js",
+            "srcs": [
+              "interpreter/shell.js"
+            ],
+            "dst": "/omnishell/interpreter/shell.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          "/omnishell/interpreter/chrome.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/interpreter/chrome.js",
+            "srcs": [
+              "interpreter/chrome.js"
+            ],
+            "dst": "/omnishell/interpreter/chrome.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          "/omnishell/interpreter/screen.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/interpreter/screen.js",
+            "srcs": [
+              "interpreter/screen.js"
+            ],
+            "dst": "/omnishell/interpreter/screen.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          "/omnishell/interpreter/fragment.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/interpreter/fragment.js",
+            "srcs": [
+              "interpreter/fragment.js"
+            ],
+            "dst": "/omnishell/interpreter/fragment.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          "/omnishell/interpreter/data-sync.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/interpreter/data-sync.js",
+            "srcs": [
+              "interpreter/data-sync.js"
+            ],
+            "dst": "/omnishell/interpreter/data-sync.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          "/omnishell/interpreter/validate.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/interpreter/validate.js",
+            "srcs": [
+              "interpreter/validate.js"
+            ],
+            "dst": "/omnishell/interpreter/validate.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          "/omnishell/interpreter/render.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/interpreter/render.js",
+            "srcs": [
+              "interpreter/render.js"
+            ],
+            "dst": "/omnishell/interpreter/render.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          "/omnishell/interpreter/hatch.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/interpreter/hatch.js",
+            "srcs": [
+              "interpreter/hatch.js"
+            ],
+            "dst": "/omnishell/interpreter/hatch.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          "/omnishell/interpreter/hatch-worker.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/interpreter/hatch-worker.js",
+            "srcs": [
+              "interpreter/hatch-worker.js"
+            ],
+            "dst": "/omnishell/interpreter/hatch-worker.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          "/omnishell/interpreter/storybook.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/interpreter/storybook.js",
+            "srcs": [
+              "interpreter/storybook.js"
+            ],
+            "dst": "/omnishell/interpreter/storybook.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          "/omnishell/interpreter/jessie.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/interpreter/jessie.js",
+            "srcs": [
+              "interpreter/jessie.js"
+            ],
+            "dst": "/omnishell/interpreter/jessie.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          "/omnishell/interpreter/kinetic.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/interpreter/kinetic.js",
+            "srcs": [
+              "interpreter/kinetic.js"
+            ],
+            "dst": "/omnishell/interpreter/kinetic.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          "/omnishell/interpreter/prng.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/interpreter/prng.js",
+            "srcs": [
+              "interpreter/prng.js"
+            ],
+            "dst": "/omnishell/interpreter/prng.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          "/omnishell/interpreter/vendor/mecha-client.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/interpreter/vendor/mecha-client.js",
+            "srcs": [
+              "interpreter/vendor/mecha-client.js"
+            ],
+            "dst": "/omnishell/interpreter/vendor/mecha-client.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          "/omnishell/interpreter/vendor/js-yaml.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/interpreter/vendor/js-yaml.js",
+            "srcs": [
+              "interpreter/vendor/js-yaml.js"
+            ],
+            "dst": "/omnishell/interpreter/vendor/js-yaml.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          "/omnishell/interpreter/vendor/ses.umd.min.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/interpreter/vendor/ses.umd.min.js",
+            "srcs": [
+              "interpreter/vendor/ses.umd.min.js"
+            ],
+            "dst": "/omnishell/interpreter/vendor/ses.umd.min.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          "/omnishell/interpreter/vendor/morphlex.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/interpreter/vendor/morphlex.js",
+            "srcs": [
+              "interpreter/vendor/morphlex.js"
+            ],
+            "dst": "/omnishell/interpreter/vendor/morphlex.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          "/omnishell/interpreter/vendor/messages.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/interpreter/vendor/messages.js",
+            "srcs": [
+              "interpreter/vendor/messages.js"
+            ],
+            "dst": "/omnishell/interpreter/vendor/messages.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          "/omnishell/components/wallclock.js": {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "name": "/omnishell/components/wallclock.js",
+            "srcs": [
+              "components/wallclock.js"
+            ],
+            "dst": "/omnishell/components/wallclock.js",
+            "link": true,
+            "parents": false,
+            "exclude": []
           }
         },
         "healthcheck": {
@@ -2225,7 +1016,8 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "root": ".."
+            "root": "..",
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.5.0@sha256:63d6d0cd5aefe274828e096301423de0adf9d1411ff151bfc1201e6c2ec178d1}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -2516,101 +1308,6 @@
             },
             {
               "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/interpreter/shell.js",
-              "target": "/omnishell/interpreter/shell.js"
-            },
-            {
-              "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/interpreter/chrome.js",
-              "target": "/omnishell/interpreter/chrome.js"
-            },
-            {
-              "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/interpreter/screen.js",
-              "target": "/omnishell/interpreter/screen.js"
-            },
-            {
-              "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/interpreter/fragment.js",
-              "target": "/omnishell/interpreter/fragment.js"
-            },
-            {
-              "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/interpreter/data-sync.js",
-              "target": "/omnishell/interpreter/data-sync.js"
-            },
-            {
-              "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/interpreter/validate.js",
-              "target": "/omnishell/interpreter/validate.js"
-            },
-            {
-              "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/interpreter/render.js",
-              "target": "/omnishell/interpreter/render.js"
-            },
-            {
-              "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/interpreter/hatch.js",
-              "target": "/omnishell/interpreter/hatch.js"
-            },
-            {
-              "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/interpreter/hatch-worker.js",
-              "target": "/omnishell/interpreter/hatch-worker.js"
-            },
-            {
-              "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/interpreter/storybook.js",
-              "target": "/omnishell/interpreter/storybook.js"
-            },
-            {
-              "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/interpreter/jessie.js",
-              "target": "/omnishell/interpreter/jessie.js"
-            },
-            {
-              "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/interpreter/kinetic.js",
-              "target": "/omnishell/interpreter/kinetic.js"
-            },
-            {
-              "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/interpreter/prng.js",
-              "target": "/omnishell/interpreter/prng.js"
-            },
-            {
-              "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/interpreter/vendor/mecha-client.js",
-              "target": "/omnishell/interpreter/vendor/mecha-client.js"
-            },
-            {
-              "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/interpreter/vendor/js-yaml.js",
-              "target": "/omnishell/interpreter/vendor/js-yaml.js"
-            },
-            {
-              "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/interpreter/vendor/ses.umd.min.js",
-              "target": "/omnishell/interpreter/vendor/ses.umd.min.js"
-            },
-            {
-              "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/interpreter/vendor/morphlex.js",
-              "target": "/omnishell/interpreter/vendor/morphlex.js"
-            },
-            {
-              "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/interpreter/vendor/messages.js",
-              "target": "/omnishell/interpreter/vendor/messages.js"
-            },
-            {
-              "action": "sync+restart",
-              "path": "../.runtime/plugins/omnishell/components/wallclock.js",
-              "target": "/omnishell/components/wallclock.js"
-            },
-            {
-              "action": "sync+restart",
               "path": "../brief.html",
               "target": "/srv/docs/brief.html"
             },
@@ -2643,6 +1340,7 @@
         }
       },
       "healthcheck": {
+        "template": "http",
         "url": "http://127.0.0.1:8080/health",
         "interval": "5s",
         "start_interval": "500ms",
@@ -2656,10 +1354,1587 @@
         "similar": false
       }
     },
+    "setup": {
+      "name": "setup",
+      "project": "golaberto",
+      "dir": ".",
+      "srcs": {
+        "globs": [],
+        "defaultGlobs": null,
+        "exclude": [],
+        "defaultExclude": null
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "state": {
+        "globs": []
+      },
+      "visibility": "internal",
+      "activate": "",
+      "cmd": {
+        "builtin": {
+          "name": "builtin",
+          "priority": -1,
+          "shell": "exec",
+          "do": "mise install",
+          "stop": false,
+          "dockerfile": {
+            "do": "d=/root/.local/share/mise/downloads; s=/mise-tarball-store; mkdir -p \"$d\" \"$s\"; cp -r \"$s\"/. \"$d\"/ 2>/dev/null || true; mise install || exit; cd \"$d\" && for f in */*/*; do [ -f \"$f\" ] || continue; o=\"$s/$f\"; [ -e \"$o\" ] && continue; mkdir -p \"$(dirname \"$o\")\"; t=\"$(mktemp \"$(dirname \"$o\")/.pXXXXXX\")\" && cp \"$f\" \"$t\" && mv -f \"$t\" \"$o\"; done; :",
+            "mounts": [
+              {
+                "type": "cache",
+                "target": "/root/.local/share/mise/downloads",
+                "scope": "project",
+                "required": false
+              },
+              {
+                "type": "cache",
+                "target": "/mise-tarball-store",
+                "scope": "global",
+                "required": false
+              }
+            ],
+            "shell": "sh"
+          },
+          "srcs": {
+            "globs": [
+              "[m]ise.toml",
+              "[.]mise.toml",
+              "[m]ise.lock",
+              "[.]tool-versions"
+            ],
+            "defaultGlobs": null,
+            "exclude": [],
+            "defaultExclude": null
+          }
+        }
+      },
+      "env": {
+        "MISE_ALWAYS_KEEP_DOWNLOAD": "1"
+      },
+      "deps": [],
+      "dockerfile": {
+        "from": {
+          "name": "opensuse/leap:16.0@sha256:859560554b625c225fa767b76d61253d529b95d082c2d68579ad69168d5e3da7"
+        },
+        "preamble": [],
+        "defaultPreamble": {
+          "lazybox-copy": {
+            "name": "lazybox-copy",
+            "priority": -10,
+            "line": "COPY --from=bonitao/lazybox:0.8.3@sha256:c896a6836673d8fd217f6021a2522351fd82d580ed985159feb2f10373018e73 /lazybox/ /root/.local/share/lazybox/"
+          },
+          "mise-trusted": {
+            "name": "mise-trusted",
+            "priority": -8,
+            "line": "ENV MISE_TRUSTED_CONFIG_PATHS=/monorepo"
+          },
+          "gnu-shell-utils": {
+            "name": "gnu-shell-utils",
+            "priority": -7,
+            "do": "s=/zypper-store; d=/var/cache/zypp/packages; mkdir -p \"$s\" \"$d\"; cp -r \"$s\"/. \"$d\"/ 2>/dev/null || true; zypper -n modifyservice --no-refresh --all && sed -i 's|http://|https://|g' /etc/zypp/repos.d/*.repo || exit; zypper -n modifyrepo --keep-packages --all && zypper -n install findutils=4.10.0-160000.2.2 which=2.23-160000.2.2 git-core=2.51.0-160000.1.2 || exit; cd \"$d\" && for f in */*.rpm */*/*.rpm; do [ -f \"$f\" ] || continue; o=\"$s/$f\"; [ -e \"$o\" ] && continue; mkdir -p \"$(dirname \"$o\")\"; t=\"$(mktemp \"$(dirname \"$o\")/.pXXXXXX\")\" && cp \"$f\" \"$t\" && mv -f \"$t\" \"$o\"; done; zypper -n modifyrepo --no-keep-packages --all || true",
+            "shell": "sh",
+            "mounts": [
+              {
+                "type": "cache",
+                "target": "/zypper-store",
+                "scope": "global",
+                "required": false
+              },
+              {
+                "type": "cache",
+                "target": "/var/cache/zypp",
+                "scope": "target",
+                "required": false
+              }
+            ]
+          },
+          "path-env": {
+            "name": "path-env",
+            "priority": -9,
+            "line": "ENV PATH=/root/.local/bin:/root/.local/share/lazybox/bin:$PATH"
+          }
+        },
+        "add": [],
+        "mounts": [],
+        "secrets": {},
+        "extra_hosts": [],
+        "epilogue": [],
+        "copy": [],
+        "defaultCopy": null,
+        "healthcheck": null,
+        "expose": [],
+        "entrypoint": null,
+        "incremental": false,
+        "cmd": null
+      },
+      "taskfile": {
+        "run": "when_changed",
+        "incremental": true,
+        "preconditions": []
+      },
+      "cmds": [
+        {
+          "do": "mise install",
+          "dockerfile": {
+            "do": "d=/root/.local/share/mise/downloads; s=/mise-tarball-store; mkdir -p \"$d\" \"$s\"; cp -r \"$s\"/. \"$d\"/ 2>/dev/null || true; mise install || exit; cd \"$d\" && for f in */*/*; do [ -f \"$f\" ] || continue; o=\"$s/$f\"; [ -e \"$o\" ] && continue; mkdir -p \"$(dirname \"$o\")\"; t=\"$(mktemp \"$(dirname \"$o\")/.pXXXXXX\")\" && cp \"$f\" \"$t\" && mv -f \"$t\" \"$o\"; done; :",
+            "mounts": [
+              {
+                "type": "cache",
+                "target": "/root/.local/share/mise/downloads",
+                "scope": "project",
+                "required": false
+              },
+              {
+                "type": "cache",
+                "target": "/mise-tarball-store",
+                "scope": "global",
+                "required": false
+              }
+            ],
+            "shell": "sh"
+          },
+          "srcs": {
+            "globs": [
+              "[m]ise.toml",
+              "[.]mise.toml",
+              "[m]ise.lock",
+              "[.]tool-versions"
+            ],
+            "defaultGlobs": null,
+            "exclude": [],
+            "defaultExclude": null
+          },
+          "name": "builtin",
+          "shell": "exec",
+          "stop": false
+        }
+      ],
+      "cache": {
+        "full": false,
+        "similar": false
+      }
+    },
+    "lint": {
+      "name": "lint",
+      "project": "golaberto",
+      "dir": ".",
+      "srcs": {
+        "globs": [
+          "brief.html",
+          "ir.html",
+          "acceptance.md"
+        ],
+        "defaultGlobs": {
+          "pronto-cue": {
+            "glob": "*.cue",
+            "name": "pronto-cue",
+            "priority": 1
+          },
+          "pronto-bayt": {
+            "glob": "bayt.json",
+            "name": "pronto-bayt",
+            "priority": 2
+          },
+          "pronto-design": {
+            "glob": "DESIGN.md",
+            "name": "pronto-design",
+            "priority": 3
+          },
+          "pronto-module": {
+            "glob": "cue.mod/**",
+            "name": "pronto-module",
+            "priority": 4
+          },
+          "pronto-config": {
+            "glob": "pronto/**",
+            "name": "pronto-config",
+            "priority": 5
+          },
+          "pronto-pipelines": {
+            "glob": "[p]ipelines/*.blobl",
+            "name": "pronto-pipelines",
+            "priority": 7
+          },
+          "pronto-messages": {
+            "glob": "[m]essages/*.json",
+            "name": "pronto-messages",
+            "priority": 8
+          },
+          "pronto-boot": {
+            "glob": "[s]hell/boot.js",
+            "name": "pronto-boot",
+            "priority": 9
+          },
+          "pronto-sayt": {
+            "glob": ".say.yaml",
+            "name": "pronto-sayt",
+            "priority": 6
+          }
+        },
+        "exclude": [],
+        "defaultExclude": null
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "state": {
+        "globs": []
+      },
+      "visibility": "internal",
+      "activate": "mise x --",
+      "cmd": {
+        "builtin": {
+          "name": "builtin",
+          "priority": 0,
+          "shell": "exec",
+          "do": "cue vet ./...",
+          "stop": false,
+          "srcs": {
+            "globs": [],
+            "defaultGlobs": null,
+            "exclude": [],
+            "defaultExclude": null
+          }
+        }
+      },
+      "env": {},
+      "deps": [],
+      "taskfile": {
+        "run": "always",
+        "incremental": true,
+        "preconditions": []
+      },
+      "cmds": [
+        {
+          "do": "cue vet ./...",
+          "name": "builtin",
+          "shell": "exec",
+          "stop": false,
+          "srcs": {
+            "globs": [],
+            "defaultGlobs": null,
+            "exclude": [],
+            "defaultExclude": null
+          }
+        }
+      ],
+      "cache": {
+        "full": false,
+        "similar": false
+      }
+    },
+    "build": {
+      "name": "build",
+      "project": "golaberto",
+      "dir": ".",
+      "srcs": {
+        "globs": [
+          "ir.html",
+          "acceptance.md",
+          "shell/**",
+          "pipelines/**",
+          "services/**",
+          "saytw",
+          "seed.json"
+        ],
+        "defaultGlobs": {
+          "pronto-cue": {
+            "glob": "*.cue",
+            "name": "pronto-cue",
+            "priority": 1
+          },
+          "pronto-bayt": {
+            "glob": "bayt.json",
+            "name": "pronto-bayt",
+            "priority": 2
+          },
+          "pronto-design": {
+            "glob": "DESIGN.md",
+            "name": "pronto-design",
+            "priority": 3
+          },
+          "pronto-module": {
+            "glob": "cue.mod/**",
+            "name": "pronto-module",
+            "priority": 4
+          },
+          "pronto-config": {
+            "glob": "pronto/**",
+            "name": "pronto-config",
+            "priority": 5
+          },
+          "pronto-pipelines": {
+            "glob": "[p]ipelines/*.blobl",
+            "name": "pronto-pipelines",
+            "priority": 7
+          },
+          "pronto-messages": {
+            "glob": "[m]essages/*.json",
+            "name": "pronto-messages",
+            "priority": 8
+          },
+          "pronto-boot": {
+            "glob": "[s]hell/boot.js",
+            "name": "pronto-boot",
+            "priority": 9
+          },
+          "pronto-sayt": {
+            "glob": ".say.yaml",
+            "name": "pronto-sayt",
+            "priority": 6
+          }
+        },
+        "exclude": [],
+        "defaultExclude": null
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "state": {
+        "globs": []
+      },
+      "visibility": "internal",
+      "activate": "mise x --",
+      "cmd": {
+        "builtin": {
+          "name": "builtin",
+          "priority": 0,
+          "shell": "exec",
+          "do": "./saytw build",
+          "stop": false,
+          "srcs": {
+            "globs": [],
+            "defaultGlobs": null,
+            "exclude": [],
+            "defaultExclude": null
+          }
+        }
+      },
+      "deps": [
+        ":setup"
+      ],
+      "dockerfile": {
+        "from": {
+          "ref": ":setup",
+          "name": "golaberto-setup"
+        },
+        "preamble": [],
+        "defaultPreamble": null,
+        "add": [],
+        "mounts": [],
+        "secrets": {},
+        "extra_hosts": [],
+        "epilogue": [],
+        "copy": [],
+        "defaultCopy": null,
+        "healthcheck": null,
+        "expose": [],
+        "entrypoint": null,
+        "incremental": false,
+        "cmd": null
+      },
+      "env": {},
+      "taskfile": {
+        "run": "once",
+        "incremental": true,
+        "preconditions": []
+      },
+      "vscode": {
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        }
+      },
+      "cmds": [
+        {
+          "do": "./saytw build",
+          "name": "builtin",
+          "shell": "exec",
+          "stop": false,
+          "srcs": {
+            "globs": [],
+            "defaultGlobs": null,
+            "exclude": [],
+            "defaultExclude": null
+          }
+        }
+      ],
+      "cache": {
+        "full": false,
+        "similar": false
+      }
+    },
+    "test": {
+      "name": "test",
+      "project": "golaberto",
+      "dir": ".",
+      "srcs": {
+        "globs": [],
+        "defaultGlobs": {
+          "pronto-cue": {
+            "glob": "*.cue",
+            "name": "pronto-cue",
+            "priority": 1
+          },
+          "pronto-bayt": {
+            "glob": "bayt.json",
+            "name": "pronto-bayt",
+            "priority": 2
+          },
+          "pronto-design": {
+            "glob": "DESIGN.md",
+            "name": "pronto-design",
+            "priority": 3
+          },
+          "pronto-module": {
+            "glob": "cue.mod/**",
+            "name": "pronto-module",
+            "priority": 4
+          },
+          "pronto-config": {
+            "glob": "pronto/**",
+            "name": "pronto-config",
+            "priority": 5
+          },
+          "pronto-pipelines": {
+            "glob": "[p]ipelines/*.blobl",
+            "name": "pronto-pipelines",
+            "priority": 7
+          },
+          "pronto-messages": {
+            "glob": "[m]essages/*.json",
+            "name": "pronto-messages",
+            "priority": 8
+          },
+          "pronto-boot": {
+            "glob": "[s]hell/boot.js",
+            "name": "pronto-boot",
+            "priority": 9
+          },
+          "pronto-sayt": {
+            "glob": ".say.yaml",
+            "name": "pronto-sayt",
+            "priority": 6
+          }
+        },
+        "exclude": [],
+        "defaultExclude": null
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "state": {
+        "globs": []
+      },
+      "visibility": "internal",
+      "activate": "mise x --",
+      "cmd": {
+        "builtin": {
+          "name": "builtin",
+          "priority": 0,
+          "shell": "exec",
+          "do": "cue vet -c ./...",
+          "stop": false,
+          "srcs": {
+            "globs": [],
+            "defaultGlobs": null,
+            "exclude": [],
+            "defaultExclude": null
+          }
+        }
+      },
+      "deps": [
+        ":build"
+      ],
+      "env": {},
+      "taskfile": {
+        "run": "once",
+        "incremental": true,
+        "preconditions": []
+      },
+      "vscode": {
+        "group": {
+          "kind": "test",
+          "isDefault": true
+        }
+      },
+      "cmds": [
+        {
+          "do": "cue vet -c ./...",
+          "name": "builtin",
+          "shell": "exec",
+          "stop": false,
+          "srcs": {
+            "globs": [],
+            "defaultGlobs": null,
+            "exclude": [],
+            "defaultExclude": null
+          }
+        }
+      ],
+      "cache": {
+        "full": false,
+        "similar": false
+      }
+    },
+    "launch": {
+      "name": "launch",
+      "project": "golaberto",
+      "dir": ".",
+      "srcs": {
+        "globs": [],
+        "defaultGlobs": null,
+        "exclude": [],
+        "defaultExclude": null
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "state": {
+        "globs": []
+      },
+      "visibility": "internal",
+      "activate": "",
+      "cmd": {
+        "builtin": null
+      },
+      "env": {},
+      "deps": [
+        ":caddy:outs",
+        ":database:outs",
+        ":crud:outs",
+        ":electric:outs",
+        ":redis:outs",
+        ":mesh-events:outs",
+        ":conduit:outs",
+        ":transform:outs",
+        ":compute:outs",
+        ":auth:outs"
+      ],
+      "compose": {
+        "up": true,
+        "manual": false,
+        "environment": {},
+        "ports": [],
+        "volumes": [],
+        "depends_on": {
+          "golaberto-caddy": {
+            "condition": "service_healthy"
+          },
+          "golaberto-database": {
+            "condition": "service_healthy"
+          },
+          "golaberto-crud": {
+            "condition": "service_healthy"
+          },
+          "golaberto-electric": {
+            "condition": "service_healthy"
+          },
+          "golaberto-redis": {
+            "condition": "service_healthy"
+          },
+          "golaberto-mesh-events": {
+            "condition": "service_healthy"
+          },
+          "golaberto-conduit": {
+            "condition": "service_healthy"
+          },
+          "golaberto-transform": {
+            "condition": "service_started"
+          },
+          "golaberto-compute": {
+            "condition": "service_started"
+          },
+          "golaberto-auth": {
+            "condition": "service_started"
+          }
+        },
+        "networks": {
+          "default": {
+            "aliases": [
+              "launch"
+            ]
+          }
+        },
+        "healthcheck": {
+          "test": [
+            "CMD",
+            "echo",
+            "golaberto is healthy"
+          ],
+          "interval": "5s",
+          "timeout": "2s",
+          "retries": 3
+        }
+      },
+      "dockerfile": {
+        "from": {
+          "name": "busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223"
+        },
+        "preamble": [],
+        "defaultPreamble": null,
+        "add": [],
+        "mounts": [],
+        "secrets": {},
+        "extra_hosts": [],
+        "epilogue": [],
+        "copy": [],
+        "defaultCopy": null,
+        "healthcheck": null,
+        "expose": [],
+        "entrypoint": null,
+        "incremental": false,
+        "cmd": [
+          "tail",
+          "-f",
+          "/dev/null"
+        ]
+      },
+      "skaffold": {
+        "profiles": {
+          "bayt-dev": {
+            "name": "bayt-dev",
+            "activation": [
+              {
+                "command": "dev"
+              }
+            ],
+            "build": {
+              "artifact": {
+                "context": ".",
+                "sync": {
+                  "manual": [],
+                  "auto": false
+                },
+                "docker": {
+                  "dockerfile": ".bayt/Dockerfile.launch"
+                }
+              },
+              "local": {
+                "useBuildkit": true,
+                "concurrency": 64,
+                "push": false
+              },
+              "platforms": [],
+              "tagPolicy": {
+                "gitCommit": {
+                  "variant": "AbbrevCommitSha"
+                }
+              }
+            },
+            "manifests": {},
+            "test": [],
+            "verify": [],
+            "portForward": []
+          }
+        }
+      },
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      }
+    },
+    "integrate": {
+      "name": "integrate",
+      "project": "golaberto",
+      "dir": ".",
+      "cmd": {
+        "builtin": null
+      },
+      "deps": [
+        ":launch:outs"
+      ],
+      "dockerfile": {
+        "from": {
+          "name": "mcr.microsoft.com/playwright:v1.61.1-noble@sha256:5b8f294aff9041b7191c34a4bab3ac270157a28774d4b0660e9743297b697e48"
+        },
+        "preamble": [
+          "COPY --from=denoland/deno:bin-2.5.5@sha256:a8dd9a073b2b4d1beb77a8174830c5af54e32517808dcc28249ed6c04fdac979 /deno /usr/local/bin/deno",
+          "ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright",
+          "ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1",
+          "ENV DENO_DIR=/deno-cache",
+          "COPY --from=plugins_omnishell-runtime-image / /omnishell",
+          "RUN deno install --node-modules-dir=auto --entrypoint /omnishell/check-visual.ts"
+        ],
+        "defaultPreamble": null,
+        "add": [],
+        "mounts": [],
+        "secrets": {},
+        "extra_hosts": [],
+        "epilogue": [],
+        "copy": [],
+        "defaultCopy": null,
+        "healthcheck": null,
+        "expose": [],
+        "entrypoint": null,
+        "incremental": false,
+        "cmd": null
+      },
+      "env": {},
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "srcs": {
+        "globs": [
+          "shell/shell.yaml",
+          "shell/screens/**"
+        ],
+        "defaultGlobs": null,
+        "exclude": [],
+        "defaultExclude": null
+      },
+      "state": {
+        "globs": []
+      },
+      "visibility": "internal",
+      "compose": {
+        "up": true,
+        "manual": true,
+        "build": {
+          "additional_contexts": {
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.5.0@sha256:63d6d0cd5aefe274828e096301423de0adf9d1411ff151bfc1201e6c2ec178d1}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+          },
+          "secrets": [],
+          "args": {}
+        },
+        "command": [
+          "deno",
+          "run",
+          "--node-modules-dir=auto",
+          "--allow-read",
+          "--allow-write",
+          "--allow-net",
+          "--allow-env",
+          "--allow-run",
+          "--allow-sys",
+          "--unsafely-ignore-certificate-errors=caddy",
+          "/omnishell/check-visual.ts",
+          "."
+        ],
+        "depends_on": {
+          "golaberto-launch": {
+            "condition": "service_healthy"
+          }
+        },
+        "environment": {
+          "APP_URL": "https://caddy:8443"
+        },
+        "ports": [],
+        "volumes": []
+      },
+      "taskfile": {
+        "run": "once",
+        "incremental": true,
+        "preconditions": []
+      },
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      }
+    },
+    "check-constraints": {
+      "name": "check-constraints",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "cmd": {
+        "builtin": {
+          "name": "builtin",
+          "priority": -1,
+          "shell": "exec",
+          "do": "mise install",
+          "stop": false,
+          "dockerfile": {
+            "do": "d=/root/.local/share/mise/downloads; s=/mise-tarball-store; mkdir -p \"$d\" \"$s\"; cp -r \"$s\"/. \"$d\"/ 2>/dev/null || true; mise install || exit; cd \"$d\" && for f in */*/*; do [ -f \"$f\" ] || continue; o=\"$s/$f\"; [ -e \"$o\" ] && continue; mkdir -p \"$(dirname \"$o\")\"; t=\"$(mktemp \"$(dirname \"$o\")/.pXXXXXX\")\" && cp \"$f\" \"$t\" && mv -f \"$t\" \"$o\"; done; :",
+            "mounts": [
+              {
+                "type": "cache",
+                "target": "/root/.local/share/mise/downloads",
+                "scope": "project",
+                "required": false
+              },
+              {
+                "type": "cache",
+                "target": "/mise-tarball-store",
+                "scope": "global",
+                "required": false
+              }
+            ],
+            "shell": "sh"
+          },
+          "srcs": {
+            "globs": [
+              "[m]ise.toml",
+              "[.]mise.toml",
+              "[m]ise.lock",
+              "[.]tool-versions"
+            ],
+            "defaultGlobs": null,
+            "exclude": [],
+            "defaultExclude": null
+          }
+        }
+      },
+      "deps": [
+        ":setup",
+        ":launch:outs"
+      ],
+      "env": {
+        "MISE_ALWAYS_KEEP_DOWNLOAD": "1"
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "srcs": {
+        "globs": [
+          "tests/**"
+        ],
+        "defaultGlobs": null,
+        "exclude": [],
+        "defaultExclude": null
+      },
+      "state": {
+        "globs": []
+      },
+      "visibility": "internal",
+      "dockerfile": {
+        "from": {
+          "ref": ":setup",
+          "name": "golaberto-setup"
+        },
+        "preamble": [],
+        "defaultPreamble": null,
+        "add": [],
+        "mounts": [],
+        "secrets": {},
+        "extra_hosts": [],
+        "epilogue": [],
+        "copy": [
+          {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "srcs": [
+              "/"
+            ],
+            "dst": "/omnishell",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          }
+        ],
+        "defaultCopy": null,
+        "healthcheck": null,
+        "expose": [],
+        "entrypoint": null,
+        "incremental": false,
+        "cmd": null
+      },
+      "compose": {
+        "up": true,
+        "manual": true,
+        "build": {
+          "additional_contexts": {
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.5.0@sha256:63d6d0cd5aefe274828e096301423de0adf9d1411ff151bfc1201e6c2ec178d1}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+          },
+          "secrets": [],
+          "args": {}
+        },
+        "command": [
+          "mise",
+          "x",
+          "--",
+          "sh",
+          "-c",
+          "deno test --config tests/deno.json --no-lock --allow-env --allow-net --allow-read --allow-sys tests/constraints.ts"
+        ],
+        "depends_on": {
+          "golaberto-launch": {
+            "condition": "service_healthy"
+          }
+        },
+        "environment": {
+          "APP_URL": "https://caddy:8443",
+          "DATABASE_URL": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
+          "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}"
+        },
+        "ports": [],
+        "volumes": []
+      },
+      "taskfile": {
+        "run": "once",
+        "incremental": true,
+        "preconditions": []
+      },
+      "cmds": [
+        {
+          "do": "mise install",
+          "dockerfile": {
+            "do": "d=/root/.local/share/mise/downloads; s=/mise-tarball-store; mkdir -p \"$d\" \"$s\"; cp -r \"$s\"/. \"$d\"/ 2>/dev/null || true; mise install || exit; cd \"$d\" && for f in */*/*; do [ -f \"$f\" ] || continue; o=\"$s/$f\"; [ -e \"$o\" ] && continue; mkdir -p \"$(dirname \"$o\")\"; t=\"$(mktemp \"$(dirname \"$o\")/.pXXXXXX\")\" && cp \"$f\" \"$t\" && mv -f \"$t\" \"$o\"; done; :",
+            "mounts": [
+              {
+                "type": "cache",
+                "target": "/root/.local/share/mise/downloads",
+                "scope": "project",
+                "required": false
+              },
+              {
+                "type": "cache",
+                "target": "/mise-tarball-store",
+                "scope": "global",
+                "required": false
+              }
+            ],
+            "shell": "sh"
+          },
+          "srcs": {
+            "globs": [
+              "[m]ise.toml",
+              "[.]mise.toml",
+              "[m]ise.lock",
+              "[.]tool-versions"
+            ],
+            "defaultGlobs": null,
+            "exclude": [],
+            "defaultExclude": null
+          },
+          "name": "builtin",
+          "shell": "exec",
+          "stop": false
+        }
+      ],
+      "cache": {
+        "full": false,
+        "similar": false
+      }
+    },
+    "check-acceptance": {
+      "name": "check-acceptance",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "cmd": {
+        "builtin": {
+          "name": "builtin",
+          "priority": -1,
+          "shell": "exec",
+          "do": "mise install",
+          "stop": false,
+          "dockerfile": {
+            "do": "d=/root/.local/share/mise/downloads; s=/mise-tarball-store; mkdir -p \"$d\" \"$s\"; cp -r \"$s\"/. \"$d\"/ 2>/dev/null || true; mise install || exit; cd \"$d\" && for f in */*/*; do [ -f \"$f\" ] || continue; o=\"$s/$f\"; [ -e \"$o\" ] && continue; mkdir -p \"$(dirname \"$o\")\"; t=\"$(mktemp \"$(dirname \"$o\")/.pXXXXXX\")\" && cp \"$f\" \"$t\" && mv -f \"$t\" \"$o\"; done; :",
+            "mounts": [
+              {
+                "type": "cache",
+                "target": "/root/.local/share/mise/downloads",
+                "scope": "project",
+                "required": false
+              },
+              {
+                "type": "cache",
+                "target": "/mise-tarball-store",
+                "scope": "global",
+                "required": false
+              }
+            ],
+            "shell": "sh"
+          },
+          "srcs": {
+            "globs": [
+              "[m]ise.toml",
+              "[.]mise.toml",
+              "[m]ise.lock",
+              "[.]tool-versions"
+            ],
+            "defaultGlobs": null,
+            "exclude": [],
+            "defaultExclude": null
+          }
+        }
+      },
+      "deps": [
+        ":browser",
+        ":launch:outs"
+      ],
+      "env": {
+        "MISE_ALWAYS_KEEP_DOWNLOAD": "1"
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "srcs": {
+        "globs": [
+          "tests/**"
+        ],
+        "defaultGlobs": null,
+        "exclude": [],
+        "defaultExclude": null
+      },
+      "state": {
+        "globs": []
+      },
+      "visibility": "internal",
+      "dockerfile": {
+        "from": {
+          "ref": ":browser",
+          "name": "golaberto-browser"
+        },
+        "preamble": [],
+        "defaultPreamble": null,
+        "add": [],
+        "mounts": [],
+        "secrets": {},
+        "extra_hosts": [],
+        "epilogue": [],
+        "copy": [
+          {
+            "from": {
+              "name": "plugins_omnishell-runtime-image"
+            },
+            "srcs": [
+              "/"
+            ],
+            "dst": "/omnishell",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          }
+        ],
+        "defaultCopy": null,
+        "healthcheck": null,
+        "expose": [],
+        "entrypoint": null,
+        "incremental": false,
+        "cmd": null
+      },
+      "compose": {
+        "up": true,
+        "manual": true,
+        "build": {
+          "additional_contexts": {
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.5.0@sha256:63d6d0cd5aefe274828e096301423de0adf9d1411ff151bfc1201e6c2ec178d1}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+          },
+          "secrets": [],
+          "args": {}
+        },
+        "command": [
+          "mise",
+          "x",
+          "--",
+          "sh",
+          "-c",
+          "deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=caddy tests/acceptance.ts"
+        ],
+        "depends_on": {
+          "golaberto-launch": {
+            "condition": "service_healthy"
+          }
+        },
+        "environment": {
+          "APP_URL": "https://caddy:8443",
+          "DATABASE_URL": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
+          "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}"
+        },
+        "ports": [],
+        "volumes": []
+      },
+      "taskfile": {
+        "run": "once",
+        "incremental": true,
+        "preconditions": []
+      },
+      "cmds": [
+        {
+          "do": "mise install",
+          "dockerfile": {
+            "do": "d=/root/.local/share/mise/downloads; s=/mise-tarball-store; mkdir -p \"$d\" \"$s\"; cp -r \"$s\"/. \"$d\"/ 2>/dev/null || true; mise install || exit; cd \"$d\" && for f in */*/*; do [ -f \"$f\" ] || continue; o=\"$s/$f\"; [ -e \"$o\" ] && continue; mkdir -p \"$(dirname \"$o\")\"; t=\"$(mktemp \"$(dirname \"$o\")/.pXXXXXX\")\" && cp \"$f\" \"$t\" && mv -f \"$t\" \"$o\"; done; :",
+            "mounts": [
+              {
+                "type": "cache",
+                "target": "/root/.local/share/mise/downloads",
+                "scope": "project",
+                "required": false
+              },
+              {
+                "type": "cache",
+                "target": "/mise-tarball-store",
+                "scope": "global",
+                "required": false
+              }
+            ],
+            "shell": "sh"
+          },
+          "srcs": {
+            "globs": [
+              "[m]ise.toml",
+              "[.]mise.toml",
+              "[m]ise.lock",
+              "[.]tool-versions"
+            ],
+            "defaultGlobs": null,
+            "exclude": [],
+            "defaultExclude": null
+          },
+          "name": "builtin",
+          "shell": "exec",
+          "stop": false
+        }
+      ],
+      "cache": {
+        "full": false,
+        "similar": false
+      }
+    },
+    "database": {
+      "name": "database",
+      "project": "golaberto",
+      "dir": ".",
+      "srcs": {
+        "globs": [
+          "services/database/migrations/000_extensions.sql",
+          "services/database/migrations/001_roles.sql",
+          "services/database/migrations/002_grants.sql",
+          "services/database/migrations/004_types.sql",
+          "services/database/migrations/005_create_tables.sql",
+          "services/database/migrations/006_policies.sql",
+          "services/database/migrations/007_txid.sql",
+          "services/database/migrations/008_publication.sql",
+          "services/database/migrations/010_game_days.sql",
+          "services/database/migrations/011_comment_writes.sql",
+          "services/database/migrations/012_editor_writes.sql",
+          "services/database/migrations/900_seed.sql"
+        ],
+        "defaultGlobs": null,
+        "exclude": [],
+        "defaultExclude": null
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "state": {
+        "globs": []
+      },
+      "visibility": "internal",
+      "activate": "",
+      "cmd": {
+        "builtin": null
+      },
+      "env": {},
+      "deps": [],
+      "dockerfile": {
+        "from": {
+          "name": "libraries_mecha-database-image"
+        },
+        "preamble": [],
+        "defaultPreamble": null,
+        "add": [],
+        "mounts": [],
+        "secrets": {},
+        "extra_hosts": [],
+        "epilogue": [],
+        "copy": [
+          {
+            "from": null,
+            "srcs": [
+              "services/database/migrations/000_extensions.sql",
+              "services/database/migrations/001_roles.sql",
+              "services/database/migrations/002_grants.sql",
+              "services/database/migrations/004_types.sql",
+              "services/database/migrations/005_create_tables.sql",
+              "services/database/migrations/006_policies.sql",
+              "services/database/migrations/007_txid.sql",
+              "services/database/migrations/008_publication.sql",
+              "services/database/migrations/010_game_days.sql",
+              "services/database/migrations/011_comment_writes.sql",
+              "services/database/migrations/012_editor_writes.sql",
+              "services/database/migrations/900_seed.sql"
+            ],
+            "dst": "/docker-entrypoint-initdb.d/",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          }
+        ],
+        "defaultCopy": null,
+        "healthcheck": {
+          "test": [
+            "CMD",
+            "pg_isready",
+            "-h",
+            "localhost",
+            "-p",
+            "5432",
+            "-d",
+            "${POSTGRES_DB:-golaberto}",
+            "-U",
+            "${POSTGRES_USER:-postgres}"
+          ],
+          "interval": "1s",
+          "timeout": "5s",
+          "retries": 30,
+          "start_period": "5m"
+        },
+        "expose": [],
+        "entrypoint": null,
+        "incremental": false,
+        "cmd": null
+      },
+      "compose": {
+        "up": false,
+        "manual": false,
+        "build": {
+          "additional_contexts": {
+            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.4.0@sha256:e838451bfba0b0c65a91e94e22e6f0d759a095ecff4f3f485386efd7547ba4c8}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+          },
+          "secrets": [],
+          "args": {}
+        },
+        "environment": {
+          "POSTGRES_USER": "${POSTGRES_USER:-postgres}",
+          "POSTGRES_PASSWORD": "${POSTGRES_PASSWORD:-postgres}",
+          "POSTGRES_DB": "${POSTGRES_DB:-golaberto}",
+          "POSTGRES_INITDB_ARGS": "--no-sync --encoding=UTF8 --auth=trust --locale-provider=icu --icu-locale=und --locale=C"
+        },
+        "ports": [
+          "5432"
+        ],
+        "volumes": [],
+        "depends_on": {},
+        "networks": {
+          "default": {
+            "aliases": [
+              "database"
+            ]
+          }
+        },
+        "healthcheck": {
+          "test": [
+            "CMD",
+            "pg_isready",
+            "-h",
+            "localhost",
+            "-p",
+            "5432",
+            "-d",
+            "${POSTGRES_DB:-golaberto}",
+            "-U",
+            "${POSTGRES_USER:-postgres}"
+          ],
+          "interval": "1s",
+          "timeout": "5s",
+          "retries": 30,
+          "start_period": "5m",
+          "start_interval": "100ms"
+        },
+        "develop": {
+          "watch": [
+            {
+              "action": "rebuild",
+              "path": "../services/database/migrations/000_extensions.sql",
+              "target": "/docker-entrypoint-initdb.d"
+            },
+            {
+              "action": "rebuild",
+              "path": "../services/database/migrations/001_roles.sql",
+              "target": "/docker-entrypoint-initdb.d"
+            },
+            {
+              "action": "rebuild",
+              "path": "../services/database/migrations/002_grants.sql",
+              "target": "/docker-entrypoint-initdb.d"
+            },
+            {
+              "action": "rebuild",
+              "path": "../services/database/migrations/004_types.sql",
+              "target": "/docker-entrypoint-initdb.d"
+            },
+            {
+              "action": "rebuild",
+              "path": "../services/database/migrations/005_create_tables.sql",
+              "target": "/docker-entrypoint-initdb.d"
+            },
+            {
+              "action": "rebuild",
+              "path": "../services/database/migrations/006_policies.sql",
+              "target": "/docker-entrypoint-initdb.d"
+            },
+            {
+              "action": "rebuild",
+              "path": "../services/database/migrations/007_txid.sql",
+              "target": "/docker-entrypoint-initdb.d"
+            },
+            {
+              "action": "rebuild",
+              "path": "../services/database/migrations/008_publication.sql",
+              "target": "/docker-entrypoint-initdb.d"
+            },
+            {
+              "action": "rebuild",
+              "path": "../services/database/migrations/010_game_days.sql",
+              "target": "/docker-entrypoint-initdb.d"
+            },
+            {
+              "action": "rebuild",
+              "path": "../services/database/migrations/011_comment_writes.sql",
+              "target": "/docker-entrypoint-initdb.d"
+            },
+            {
+              "action": "rebuild",
+              "path": "../services/database/migrations/012_editor_writes.sql",
+              "target": "/docker-entrypoint-initdb.d"
+            },
+            {
+              "action": "rebuild",
+              "path": "../services/database/migrations/900_seed.sql",
+              "target": "/docker-entrypoint-initdb.d"
+            }
+          ]
+        }
+      },
+      "healthcheck": {
+        "template": "postgres",
+        "db": "${POSTGRES_DB:-golaberto}",
+        "user": "${POSTGRES_USER:-postgres}",
+        "port": 5432,
+        "host": "localhost",
+        "start_interval": "100ms",
+        "interval": "1s",
+        "timeout": "5s",
+        "retries": 30,
+        "start_period": "5m"
+      },
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      }
+    },
+    "crud": {
+      "name": "crud",
+      "project": "golaberto",
+      "dir": ".",
+      "srcs": {
+        "globs": [],
+        "defaultGlobs": null,
+        "exclude": [],
+        "defaultExclude": null
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "state": {
+        "globs": []
+      },
+      "visibility": "internal",
+      "activate": "",
+      "cmd": {
+        "builtin": null
+      },
+      "env": {},
+      "deps": [
+        ":database:outs"
+      ],
+      "dockerfile": {
+        "from": {
+          "name": "postgrest/postgrest:v12.2.3@sha256:0a46780309a604cdc8b56c776c6e5e15788ce58174d709e40459ab5a2d44d228"
+        },
+        "preamble": [],
+        "defaultPreamble": null,
+        "add": [],
+        "mounts": [],
+        "secrets": {},
+        "extra_hosts": [],
+        "epilogue": [],
+        "copy": [],
+        "defaultCopy": {
+          "httpcheck": {
+            "from": {
+              "name": "tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa"
+            },
+            "name": "httpcheck",
+            "srcs": [
+              "/bin/httpcheck"
+            ],
+            "dst": "/usr/local/bin/httpcheck",
+            "chmod": "755",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          }
+        },
+        "healthcheck": {
+          "test": [
+            "CMD",
+            "httpcheck",
+            "http://127.0.0.1:3001/ready"
+          ],
+          "interval": "5s",
+          "timeout": "5s",
+          "retries": 30,
+          "start_period": "30s"
+        },
+        "expose": [],
+        "entrypoint": null,
+        "incremental": false,
+        "cmd": [
+          "postgrest"
+        ]
+      },
+      "compose": {
+        "up": false,
+        "manual": false,
+        "environment": {
+          "PGRST_DB_URI": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
+          "PGRST_DB_SCHEMA": "public",
+          "PGRST_DB_ANON_ROLE": "anon",
+          "PGRST_DB_PRE_REQUEST": "public.app_pre_request",
+          "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}",
+          "PGRST_SERVER_HOST": "*",
+          "PGRST_SERVER_PORT": "3000",
+          "PGRST_ADMIN_SERVER_PORT": "3001"
+        },
+        "ports": [],
+        "volumes": [],
+        "depends_on": {
+          "golaberto-database": {
+            "condition": "service_healthy"
+          }
+        },
+        "networks": {
+          "default": {
+            "aliases": [
+              "crud"
+            ]
+          }
+        },
+        "healthcheck": {
+          "test": [
+            "CMD",
+            "httpcheck",
+            "http://127.0.0.1:3001/ready"
+          ],
+          "interval": "5s",
+          "timeout": "5s",
+          "retries": 30,
+          "start_period": "30s",
+          "start_interval": "500ms"
+        }
+      },
+      "healthcheck": {
+        "template": "http",
+        "url": "http://127.0.0.1:3001/ready",
+        "interval": "5s",
+        "start_interval": "500ms",
+        "timeout": "5s",
+        "retries": 30,
+        "start_period": "30s"
+      },
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      }
+    },
+    "auth": {
+      "name": "auth",
+      "project": "golaberto",
+      "dir": ".",
+      "srcs": {
+        "globs": [],
+        "defaultGlobs": null,
+        "exclude": [],
+        "defaultExclude": null
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "state": {
+        "globs": []
+      },
+      "visibility": "internal",
+      "activate": "",
+      "cmd": {
+        "builtin": null
+      },
+      "env": {},
+      "deps": [
+        ":database:outs"
+      ],
+      "dockerfile": {
+        "from": {
+          "name": "libraries_mecha-auth-image"
+        },
+        "workdir": "/app",
+        "preamble": [],
+        "defaultPreamble": null,
+        "add": [],
+        "mounts": [],
+        "secrets": {},
+        "extra_hosts": [],
+        "epilogue": [],
+        "copy": [],
+        "defaultCopy": null,
+        "healthcheck": null,
+        "expose": [],
+        "entrypoint": null,
+        "incremental": false,
+        "cmd": null
+      },
+      "compose": {
+        "up": false,
+        "manual": false,
+        "build": {
+          "additional_contexts": {
+            "libraries_mecha-auth-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.4.0@sha256:9daff300f4ddd0b4e026cd25ba10df29edaee6bb3edf34312768a8dca8a12249}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}"
+          },
+          "secrets": [],
+          "args": {}
+        },
+        "environment": {
+          "DATABASE_URL": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
+          "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}",
+          "WEBAUTHN_RP_ID": "${WEBAUTHN_RP_ID:-localhost}",
+          "WEBAUTHN_ORIGIN": "${WEBAUTHN_ORIGIN:-https://localhost:*}"
+        },
+        "ports": [],
+        "volumes": [],
+        "depends_on": {
+          "golaberto-database": {
+            "condition": "service_healthy"
+          }
+        },
+        "networks": {
+          "default": {
+            "aliases": [
+              "auth"
+            ]
+          }
+        }
+      },
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      }
+    },
     "electric": {
       "name": "electric",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "srcs": {
         "globs": [],
         "defaultGlobs": null,
@@ -2712,7 +2987,7 @@
         "ports": [],
         "volumes": [],
         "depends_on": {
-          "apps_golaberto-database": {
+          "golaberto-database": {
             "condition": "service_healthy"
           }
         },
@@ -2746,8 +3021,8 @@
     },
     "redis": {
       "name": "redis",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "srcs": {
         "globs": [],
         "defaultGlobs": null,
@@ -2824,6 +3099,7 @@
         }
       },
       "healthcheck": {
+        "template": "redis",
         "interval": "5s",
         "retries": 6,
         "start_interval": "500ms",
@@ -2838,8 +3114,8 @@
     },
     "mesh-events": {
       "name": "mesh-events",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "srcs": {
         "globs": [],
         "defaultGlobs": null,
@@ -2865,7 +3141,6 @@
       ],
       "dockerfile": {
         "from": {
-          "ref": "libraries_mecha:mesh-image",
           "name": "libraries_mecha-mesh-image"
         },
         "preamble": [],
@@ -2912,14 +3187,21 @@
       "compose": {
         "up": false,
         "manual": false,
+        "build": {
+          "additional_contexts": {
+            "libraries_mecha-mesh-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.4.0@sha256:b8d8c6dab3a33fedf09a0ef8f3d79b71de6408f70e1c2e04194a5f47d391da8f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}"
+          },
+          "secrets": [],
+          "args": {}
+        },
         "environment": {},
         "ports": [],
         "volumes": [],
         "depends_on": {
-          "apps_golaberto-caddy": {
+          "golaberto-caddy": {
             "condition": "service_started"
           },
-          "apps_golaberto-redis": {
+          "golaberto-redis": {
             "condition": "service_started"
           }
         },
@@ -2946,6 +3228,7 @@
         }
       },
       "healthcheck": {
+        "template": "tcp",
         "port": 3500,
         "interval": "5s",
         "start_interval": "500ms",
@@ -2961,8 +3244,8 @@
     },
     "conduit": {
       "name": "conduit",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "srcs": {
         "globs": [
           "docker/conduit-pipeline.yaml"
@@ -2990,7 +3273,6 @@
       ],
       "dockerfile": {
         "from": {
-          "ref": "libraries_mecha:conduit-image",
           "name": "libraries_mecha-conduit-image"
         },
         "workdir": "/app",
@@ -3052,6 +3334,13 @@
       "compose": {
         "up": false,
         "manual": false,
+        "build": {
+          "additional_contexts": {
+            "libraries_mecha-conduit-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-conduit:0.4.0@sha256:5b37a9074a35a9e8a3f95aa70b8c09f226927a7d9053cfa4ffc91ee07a5c302b}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image}"
+          },
+          "secrets": [],
+          "args": {}
+        },
         "environment": {
           "DATABASE_URL": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
           "CONDUIT_PIPELINES_PATH": "/conduit/pipelines",
@@ -3060,10 +3349,10 @@
         "ports": [],
         "volumes": [],
         "depends_on": {
-          "apps_golaberto-database": {
+          "golaberto-database": {
             "condition": "service_healthy"
           },
-          "apps_golaberto-mesh-events": {
+          "golaberto-mesh-events": {
             "condition": "service_started"
           }
         },
@@ -3098,6 +3387,7 @@
         }
       },
       "healthcheck": {
+        "template": "http",
         "url": "http://127.0.0.1:8080/healthz",
         "interval": "5s",
         "retries": 20,
@@ -3113,8 +3403,8 @@
     },
     "transform": {
       "name": "transform",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "srcs": {
         "globs": [
           "docker/golaberto-standings.yaml",
@@ -3221,10 +3511,10 @@
         "ports": [],
         "volumes": [],
         "depends_on": {
-          "apps_golaberto-redis": {
+          "golaberto-redis": {
             "condition": "service_healthy"
           },
-          "apps_golaberto-crud": {
+          "golaberto-crud": {
             "condition": "service_healthy"
           }
         },
@@ -3269,8 +3559,8 @@
     },
     "compute": {
       "name": "compute",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "srcs": {
         "globs": [
           "computations/ratings.js",
@@ -3300,7 +3590,6 @@
       ],
       "dockerfile": {
         "from": {
-          "ref": "libraries_mecha:compute-image",
           "name": "libraries_mecha-compute-image"
         },
         "preamble": [],
@@ -3352,6 +3641,13 @@
       "compose": {
         "up": false,
         "manual": false,
+        "build": {
+          "additional_contexts": {
+            "libraries_mecha-compute-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.4.0@sha256:0d11c059847b28c57077f8460f3fc17f316b40fa236616c43edb8ba519cfdeec}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}"
+          },
+          "secrets": [],
+          "args": {}
+        },
         "environment": {
           "CRUD_URL": "http://crud:3000",
           "DATABASE_URL": "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
@@ -3362,10 +3658,10 @@
         "ports": [],
         "volumes": [],
         "depends_on": {
-          "apps_golaberto-crud": {
+          "golaberto-crud": {
             "condition": "service_healthy"
           },
-          "apps_golaberto-database": {
+          "golaberto-database": {
             "condition": "service_healthy"
           }
         },

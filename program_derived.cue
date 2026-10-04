@@ -3,59 +3,177 @@ package golaberto
 
 code: surface: screens: {
 	arbitro: {
-		reads: [{entity: "GameCard"}, {entity: "Referee"}]
+		reads: [
+			{table: "referee", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "game_card", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"referee_id","op":"eq"}], embeds: [], orders: ["day","kickoff"]},
+		]
+		writes: []
 		files: {handlers: [], adapters: []}
 	}
 	arbitros: {
-		reads: [{entity: "DirectoryFilter"}, {entity: "Referee"}]
+		reads: [
+			{table: "directory_filter", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "referee", kind: "live", nested: true, lists: [0], route: "snapshot", clauses: [{"col":"name","op":"ilike"}], embeds: [], orders: ["name"]},
+		]
+		writes: []
 		files: {handlers: [], adapters: []}
 	}
 	campeonato: {
-		reads: [{entity: "Category"}, {entity: "Championship"}, {entity: "GameCard"}, {entity: "Group"}, {entity: "Phase"}, {entity: "PhaseRound"}, {entity: "Standing"}, {entity: "TeamChance"}, {entity: "Zone"}]
+		reads: [
+			{table: "championship", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "category", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "phase", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"championship_id","op":"eq"}], embeds: [], orders: ["position"]},
+			{table: "phase", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"championship_id","op":"eq"}], embeds: [], orders: ["position"]},
+			{table: "stage_group", kind: "live", nested: true, lists: [0,3], route: "view", clauses: [{"col":"phase_id","op":"eq"}], embeds: [], orders: ["position","name"]},
+			{table: "team_chance", kind: "live", nested: true, lists: [0,3,4], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"rank","op":"eq"}], embeds: [], orders: []},
+			{table: "standing", kind: "live", nested: true, lists: [0,3,4], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], orders: ["position"]},
+			{table: "zone", kind: "live", nested: true, lists: [0,3,4], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], orders: ["first","last"]},
+			{table: "phase_round", kind: "live", nested: true, lists: [0,3], route: "view", clauses: [{"col":"phase_id","op":"eq"}], embeds: [], orders: []},
+			{table: "game_card", kind: "live", nested: true, lists: [0,3,8], route: "view", clauses: [{"col":"phase_id","op":"eq"},{"col":"round","op":"eq"}], embeds: [], orders: ["day","kickoff"]},
+			{table: "phase_round", kind: "live", nested: true, lists: [0,3,8], route: "view", clauses: [{"col":"id","op":"eq"},{"col":"next","op":"notnull"}], embeds: [], orders: []},
+			{table: "game_card", kind: "live", nested: true, lists: [0,3,8,10], route: "view", clauses: [{"col":"phase_id","op":"eq"},{"col":"round","op":"eq"}], embeds: [], orders: ["day","kickoff"]},
+		]
+		writes: []
 		files: {handlers: [], adapters: []}
 	}
 	campeonatos: {
-		reads: [{entity: "CatalogFilter"}, {entity: "Category"}, {entity: "Championship"}]
+		reads: [
+			{table: "catalog_filter", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "championship", kind: "live", nested: true, lists: [0], route: "snapshot", clauses: [{"col":"full_name","op":"ilike"},{"col":"region","op":"like"}], embeds: [], orders: ["region_name","name","begins"]},
+			{table: "category", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+		]
+		writes: []
 		files: {handlers: [], adapters: []}
 	}
 	chances: {
-		reads: [{entity: "Championship"}, {entity: "Group"}, {entity: "PositionChance"}, {entity: "TeamChance"}, {entity: "Zone"}, {entity: "ZoneChance"}]
+		reads: [
+			{table: "stage_group", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: ["phase"], orders: []},
+			{table: "championship", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team_chance", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"rank","op":"eq"}], embeds: [], orders: []},
+			{table: "zone", kind: "live", nested: true, lists: [0,2], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], orders: ["first","last"]},
+			{table: "team_chance", kind: "live", nested: true, lists: [0,2], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], orders: ["rank"]},
+			{table: "zone_chance", kind: "live", nested: true, lists: [0,2,4], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], orders: ["first","last"]},
+			{table: "position_chance", kind: "live", nested: true, lists: [0,2], route: "snapshot", clauses: [{"col":"group_id","op":"eq"},{"col":"current","op":"true"}], embeds: [], orders: ["position"]},
+			{table: "team_chance", kind: "live", nested: true, lists: [0,2], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], orders: ["rank"]},
+			{table: "position_chance", kind: "live", nested: true, lists: [0,2,7], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], orders: ["position"]},
+		]
+		writes: []
 		files: {handlers: [], adapters: []}
 	}
 	editar: {
-		reads: [{entity: "Game"}, {entity: "GameCard"}, {entity: "GameEdit"}, {entity: "Goal"}, {entity: "PlayerGame"}, {entity: "Referee"}, {entity: "Stadium"}]
+		reads: [
+			{table: "game_card", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "game_edit", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "game", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "stadium", kind: "live", nested: true, lists: [0], route: "whole", clauses: [], embeds: [], orders: ["name"]},
+			{table: "referee", kind: "live", nested: true, lists: [0], route: "whole", clauses: [], embeds: [], orders: ["name"]},
+			{table: "player_game", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"game_id","op":"eq"}], embeds: ["player"], orders: ["side","bench","on_minute"]},
+			{table: "goal", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"game_id","op":"eq"},{"col":"side","op":"eq"}], embeds: ["player"], orders: ["aet","minute"]},
+			{table: "goal", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"game_id","op":"eq"},{"col":"side","op":"eq"}], embeds: ["player"], orders: ["aet","minute"]},
+		]
+		writes: [
+			{table: "goal", op: "create"},
+			{table: "goal", op: "create"},
+			{table: "game", op: "update"},
+			{table: "goal", op: "delete"},
+			{table: "goal", op: "create"},
+			{table: "goal", op: "create"},
+			{table: "game", op: "update"},
+			{table: "goal", op: "delete"},
+		]
 		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/both-scored.js", "shell/handlers/count-or-null.js", "shell/handlers/row-id.js"], adapters: []}
 	}
 	equipe: {
-		reads: [{entity: "PlayerStat"}, {entity: "Stadium"}, {entity: "Team"}, {entity: "TeamGame"}, {entity: "TeamRating"}]
+		reads: [
+			{table: "team", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team_rating", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"team_id","op":"eq"}], embeds: [], limit: 1, orders: ["measure_date"]},
+			{table: "stadium", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team_game", kind: "live", nested: true, lists: [0], route: "snapshot", clauses: [{"col":"team_id","op":"eq"},{"col":"played","op":"false"}], embeds: [], limit: 5, orders: ["day","kickoff"]},
+			{table: "team_game", kind: "live", nested: true, lists: [0], route: "snapshot", clauses: [{"col":"team_id","op":"eq"},{"col":"played","op":"true"}], embeds: [], limit: 10, orders: ["day","kickoff"]},
+			{table: "player_stat", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"team_id","op":"eq"}], embeds: [], orders: ["championship_name","played","minutes","player_name"]},
+		]
+		writes: []
 		files: {handlers: [], adapters: []}
 	}
 	equipes: {
-		reads: [{entity: "DirectoryFilter"}, {entity: "Team"}]
+		reads: [
+			{table: "directory_filter", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team", kind: "live", nested: true, lists: [0], route: "snapshot", clauses: [{"col":"name","op":"ilike"}], embeds: [], orders: ["name"]},
+		]
+		writes: []
 		files: {handlers: [], adapters: []}
 	}
 	estadio: {
-		reads: [{entity: "GameCard"}, {entity: "Stadium"}, {entity: "Team"}]
+		reads: [
+			{table: "stadium", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"stadium_id","op":"eq"}], embeds: [], orders: ["name"]},
+			{table: "game_card", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"stadium_id","op":"eq"}], embeds: [], orders: ["day","kickoff"]},
+		]
+		writes: []
 		files: {handlers: [], adapters: []}
 	}
 	estadios: {
-		reads: [{entity: "DirectoryFilter"}, {entity: "Stadium"}]
+		reads: [
+			{table: "directory_filter", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "stadium", kind: "live", nested: true, lists: [0], route: "snapshot", clauses: [{"col":"name","op":"ilike"}], embeds: [], orders: ["name"]},
+		]
+		writes: []
 		files: {handlers: [], adapters: []}
 	}
 	jogador: {
-		reads: [{entity: "GameCard"}, {entity: "Player"}, {entity: "PlayerGame"}, {entity: "PlayerRating"}, {entity: "PlayerStat"}]
+		reads: [
+			{table: "player", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "player_rating", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "player_stat", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"player_id","op":"eq"}], embeds: [], orders: ["championship_name","team_name"]},
+			{table: "player_game", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"player_id","op":"eq"}], embeds: [], limit: 40, orders: ["day"]},
+			{table: "game_card", kind: "live", nested: true, lists: [0,3], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+		]
+		writes: []
 		files: {handlers: [], adapters: []}
 	}
 	jogo: {
-		reads: [{entity: "Comment"}, {entity: "CommentDraft"}, {entity: "Editor"}, {entity: "GameCard"}, {entity: "GameImportance"}, {entity: "Goal"}, {entity: "PlayerGame"}]
+		reads: [
+			{table: "game_card", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "editor", kind: "live", nested: true, lists: [0], route: "whole", clauses: [], embeds: [], orders: []},
+			{table: "game_importance", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "goal", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"game_id","op":"eq"}], embeds: ["player"], orders: ["aet","minute"]},
+			{table: "player_game", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"game_id","op":"eq"},{"col":"side","op":"eq"}], embeds: ["player"], orders: ["bench","on_minute"]},
+			{table: "player_game", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"game_id","op":"eq"},{"col":"side","op":"eq"}], embeds: ["player"], orders: ["bench","on_minute"]},
+			{table: "comment_draft", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "comment", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"game_id","op":"eq"}], embeds: ["app_user"], orders: ["created_at"]},
+		]
+		writes: [
+			{table: "comment", op: "create"},
+			{table: "comment", op: "create"},
+		]
 		files: {handlers: [], adapters: []}
 	}
 	jogos: {
-		reads: [{entity: "GameCard"}, {entity: "GamesView"}]
+		reads: [
+			{table: "games_view", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "game_card", kind: "live", nested: true, lists: [0], route: "snapshot", clauses: [{"col":"played","op":"false"},{"col":"kickoff","op":"notnull"}], embeds: [], limit: 40, orders: ["kickoff"]},
+			{table: "game_card", kind: "live", nested: true, lists: [0], route: "snapshot", clauses: [{"col":"played","op":"true"}], embeds: [], limit: 40, orders: ["day","kickoff"]},
+		]
+		writes: []
 		files: {handlers: [], adapters: []}
 	}
 	principal: {
-		reads: [{entity: "Championship"}, {entity: "GameCard"}, {entity: "Group"}, {entity: "Phase"}, {entity: "PhaseRound"}, {entity: "Standing"}, {entity: "TeamChance"}, {entity: "ZoneChance"}]
+		reads: [
+			{table: "championship", kind: "live", nested: false, lists: [], route: "snapshot", clauses: [{"col":"featured","op":"true"}], embeds: [], limit: 1, orders: ["begins"]},
+			{table: "phase", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"championship_id","op":"eq"}], embeds: [], limit: 1, orders: ["position"]},
+			{table: "phase_round", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"phase_id","op":"eq"}], embeds: [], orders: []},
+			{table: "game_card", kind: "live", nested: true, lists: [0,1,2], route: "view", clauses: [{"col":"phase_id","op":"eq"},{"col":"round","op":"eq"}], embeds: [], orders: ["day","kickoff"]},
+			{table: "phase_round", kind: "live", nested: true, lists: [0,1,2], route: "view", clauses: [{"col":"id","op":"eq"},{"col":"next","op":"notnull"}], embeds: [], orders: []},
+			{table: "game_card", kind: "live", nested: true, lists: [0,1,2,4], route: "view", clauses: [{"col":"phase_id","op":"eq"},{"col":"round","op":"eq"}], embeds: [], orders: ["day","kickoff"]},
+			{table: "stage_group", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"phase_id","op":"eq"}], embeds: [], limit: 1, orders: ["position","name"]},
+			{table: "standing", kind: "live", nested: true, lists: [0,1,6], route: "snapshot", clauses: [{"col":"group_id","op":"eq"},{"col":"position","op":"lte"}], embeds: [], orders: ["position"]},
+			{table: "zone_chance", kind: "live", nested: true, lists: [0,1,6,7], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"},{"col":"color","op":"eq"}], embeds: [], orders: []},
+			{table: "team_chance", kind: "live", nested: true, lists: [0,1,6], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"rank","op":"eq"}], embeds: [], orders: []},
+			{table: "championship", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"region","op":"eq"}], embeds: [], limit: 6, orders: ["begins"]},
+			{table: "championship", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"region","op":"eq"}], embeds: [], limit: 6, orders: ["begins"]},
+			{table: "championship", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"region","op":"eq"}], embeds: [], limit: 6, orders: ["begins"]},
+		]
+		writes: []
 		files: {handlers: [], adapters: []}
 	}
 }

@@ -1,6 +1,6 @@
 # generated from bayt.cue — do not edit
 services:
-  apps_golaberto-redis:
+  golaberto-redis:
     build:
       context: ..
       dockerfile: .bayt/Dockerfile.redis
@@ -17,12 +17,12 @@ services:
       retries: 6
       start_period: 10s
       start_interval: 500ms
-    image: bayt-apps_golaberto-redis:${BAYT_IMAGE_TAG:-latest}
+    image: bayt-golaberto-redis:${BAYT_IMAGE_TAG:-latest}
     networks:
       default:
         aliases:
         - redis
-  apps_golaberto-redis_bayt:
+  golaberto-redis_bayt:
     build:
       context: ..
       dockerfile: .bayt/Dockerfile.redis
@@ -30,5 +30,5 @@ services:
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-apps_golaberto-redis_bayt:latest
+    image: bayt-golaberto-redis_bayt:latest
     scale: 0

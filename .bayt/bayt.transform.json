@@ -11,10 +11,10 @@
     "ports": [],
     "volumes": [],
     "depends_on": {
-      "apps_golaberto-redis": {
+      "golaberto-redis": {
         "condition": "service_healthy"
       },
-      "apps_golaberto-crud": {
+      "golaberto-crud": {
         "condition": "service_healthy"
       }
     },
@@ -118,8 +118,8 @@
     ]
   },
   "name": "transform",
-  "project": "apps_golaberto",
-  "dir": "",
+  "project": "golaberto",
+  "dir": ".",
   "activate": "",
   "srcs": {
     "globs": [
@@ -141,8 +141,8 @@
   "synthetics": {
     "bayt": {
       "name": "transform_bayt",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -170,17 +170,16 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.transform.yaml",
-        ".bayt/compose.redis.yaml",
-        ".bayt/compose.crud.yaml",
-        ".bayt/compose.database.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml"
+        "./.bayt/compose.transform.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml"
       ]
     },
     "outs": {
       "name": "transform_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -202,17 +201,16 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.transform.yaml",
-        ".bayt/compose.redis.yaml",
-        ".bayt/compose.crud.yaml",
-        ".bayt/compose.database.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml"
+        "./.bayt/compose.transform.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml"
       ]
     },
     "srcs": {
       "name": "transform_srcs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -242,11 +240,10 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.transform.yaml",
-        ".bayt/compose.redis.yaml",
-        ".bayt/compose.crud.yaml",
-        ".bayt/compose.database.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml"
+        "./.bayt/compose.transform.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml"
       ]
     }
   },
@@ -266,17 +263,16 @@
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
-    ".bayt/compose.transform.yaml",
-    ".bayt/compose.redis.yaml",
-    ".bayt/compose.crud.yaml",
-    ".bayt/compose.database.yaml",
-    ".runtime/libraries/mecha/.bayt/compose.database-image.yaml"
+    "./.bayt/compose.transform.yaml",
+    "./.bayt/compose.redis.yaml",
+    "./.bayt/compose.crud.yaml",
+    "./.bayt/compose.database.yaml"
   ],
   "chainedDeps": [
     {
       "name": "redis_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []
@@ -284,8 +280,8 @@
     },
     {
       "name": "crud_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []

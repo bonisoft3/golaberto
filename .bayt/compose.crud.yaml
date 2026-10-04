@@ -1,9 +1,9 @@
 # generated from bayt.cue — do not edit
 services:
-  apps_golaberto-crud:
+  golaberto-crud:
     build:
       additional_contexts:
-        apps_golaberto-database: service:apps_golaberto-database
+        golaberto-database: service:golaberto-database
       context: ..
       dockerfile: .bayt/Dockerfile.crud
       target: crud
@@ -11,7 +11,7 @@ services:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
     depends_on:
-      apps_golaberto-database:
+      golaberto-database:
         condition: service_healthy
         restart: true
     environment:
@@ -34,20 +34,20 @@ services:
       retries: 30
       start_period: 30s
       start_interval: 500ms
-    image: bayt-apps_golaberto-crud:${BAYT_IMAGE_TAG:-latest}
+    image: bayt-golaberto-crud:${BAYT_IMAGE_TAG:-latest}
     networks:
       default:
         aliases:
         - crud
-  apps_golaberto-crud_bayt:
+  golaberto-crud_bayt:
     build:
       additional_contexts:
-        apps_golaberto-database_bayt: service:apps_golaberto-database_bayt
+        golaberto-database_bayt: service:golaberto-database_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.crud
       target: crud_bayt
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-apps_golaberto-crud_bayt:latest
+    image: bayt-golaberto-crud_bayt:latest
     scale: 0

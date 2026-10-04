@@ -565,6 +565,16 @@ routes:
       - no-groups
       - gone
       - populated-dark
+sync:
+  player: on-demand
+  game: on-demand
+  goal: on-demand
+  player_game: on-demand
+  game_importance: on-demand
+  team_rating: on-demand
+  player_rating: on-demand
+  comment: on-demand
+  player_stat: on-demand
 tables:
   - category
   - championship
@@ -1891,7 +1901,9 @@ schema:
 types:
   types:
     string:
-      sql: portable_string
+      pg: text
+      column: plain
+      subset: true
       base:
         - text
         - varchar
@@ -1903,7 +1915,9 @@ types:
       beyond:
         - scalar-values
     bool:
-      sql: portable_bool
+      pg: boolean
+      column: plain
+      subset: true
       base:
         - bool
         - boolean
@@ -1911,7 +1925,9 @@ types:
       order: boolean
       beyond: []
     int32:
-      sql: portable_int32
+      pg: integer
+      column: plain
+      subset: true
       base:
         - int2
         - int4
@@ -1923,6 +1939,9 @@ types:
       order: number
       beyond: []
     int64:
+      pg: bigint
+      column: domain
+      subset: false
       sql: portable_int64
       base:
         - int8
@@ -1933,7 +1952,9 @@ types:
       beyond:
         - int64-range
     double:
-      sql: portable_double
+      pg: double precision
+      column: checked
+      subset: true
       base:
         - float4
         - float8
@@ -1943,6 +1964,9 @@ types:
       order: number
       beyond: []
     bytes:
+      pg: bytea
+      column: domain
+      subset: false
       sql: portable_bytes
       base:
         - bytea
@@ -1951,7 +1975,9 @@ types:
       order: none
       beyond: []
     uuid:
-      sql: portable_uuid
+      pg: uuid
+      column: plain
+      subset: true
       base:
         - uuid
       json: string
@@ -1959,6 +1985,9 @@ types:
       order: text
       beyond: []
     timestamp:
+      pg: timestamptz
+      column: domain
+      subset: false
       sql: portable_timestamp
       base:
         - timestamptz
@@ -1969,6 +1998,9 @@ types:
       beyond:
         - calendar
     duration:
+      pg: interval
+      column: domain
+      subset: false
       sql: portable_duration
       base:
         - interval
@@ -1978,6 +2010,9 @@ types:
       beyond:
         - duration-range
     decimal:
+      pg: numeric
+      column: domain
+      subset: false
       base:
         - numeric
         - decimal
@@ -1987,7 +2022,9 @@ types:
       beyond:
         - decimal-profile
     date:
-      sql: portable_date
+      pg: date
+      column: checked
+      subset: true
       base:
         - date
       json: string
@@ -1996,6 +2033,9 @@ types:
       beyond:
         - calendar
     time:
+      pg: time(6)
+      column: domain
+      subset: false
       sql: portable_time
       base:
         - time
@@ -2005,15 +2045,20 @@ types:
       order: text
       beyond: []
     timezone:
-      sql: portable_timezone
-      base: []
+      pg: text
+      column: checked
+      subset: true
+      base:
+        - text
       json: string
       pattern: '^[A-Za-z0-9+_/-]+$'
       order: none
       beyond:
         - tzdb
     json:
-      sql: portable_json
+      pg: json
+      column: checked
+      subset: false
       base:
         - json
         - jsonb
@@ -2023,8 +2068,12 @@ types:
         - scalar-values
         - finite-numbers
     geojson:
-      sql: portable_geojson
+      pg: json
+      column: checked
+      subset: false
       base:
+        - json
+        - jsonb
         - geometry
         - geography
       json: value
@@ -2042,7 +2091,9 @@ types:
 carriers:
   types:
     string:
-      sql: portable_string
+      pg: text
+      column: plain
+      subset: true
       base:
         - text
         - varchar
@@ -2054,7 +2105,9 @@ carriers:
       beyond:
         - scalar-values
     bool:
-      sql: portable_bool
+      pg: boolean
+      column: plain
+      subset: true
       base:
         - bool
         - boolean
@@ -2062,7 +2115,9 @@ carriers:
       order: boolean
       beyond: []
     int32:
-      sql: portable_int32
+      pg: integer
+      column: plain
+      subset: true
       base:
         - int2
         - int4
@@ -2074,6 +2129,9 @@ carriers:
       order: number
       beyond: []
     int64:
+      pg: bigint
+      column: domain
+      subset: false
       sql: portable_int64
       base:
         - int8
@@ -2084,7 +2142,9 @@ carriers:
       beyond:
         - int64-range
     double:
-      sql: portable_double
+      pg: double precision
+      column: checked
+      subset: true
       base:
         - float4
         - float8
@@ -2094,6 +2154,9 @@ carriers:
       order: number
       beyond: []
     bytes:
+      pg: bytea
+      column: domain
+      subset: false
       sql: portable_bytes
       base:
         - bytea
@@ -2102,7 +2165,9 @@ carriers:
       order: none
       beyond: []
     uuid:
-      sql: portable_uuid
+      pg: uuid
+      column: plain
+      subset: true
       base:
         - uuid
       json: string
@@ -2110,6 +2175,9 @@ carriers:
       order: text
       beyond: []
     timestamp:
+      pg: timestamptz
+      column: domain
+      subset: false
       sql: portable_timestamp
       base:
         - timestamptz
@@ -2120,6 +2188,9 @@ carriers:
       beyond:
         - calendar
     duration:
+      pg: interval
+      column: domain
+      subset: false
       sql: portable_duration
       base:
         - interval
@@ -2129,6 +2200,9 @@ carriers:
       beyond:
         - duration-range
     decimal:
+      pg: numeric
+      column: domain
+      subset: false
       base:
         - numeric
         - decimal
@@ -2138,7 +2212,9 @@ carriers:
       beyond:
         - decimal-profile
     date:
-      sql: portable_date
+      pg: date
+      column: checked
+      subset: true
       base:
         - date
       json: string
@@ -2147,6 +2223,9 @@ carriers:
       beyond:
         - calendar
     time:
+      pg: time(6)
+      column: domain
+      subset: false
       sql: portable_time
       base:
         - time
@@ -2156,15 +2235,20 @@ carriers:
       order: text
       beyond: []
     timezone:
-      sql: portable_timezone
-      base: []
+      pg: text
+      column: checked
+      subset: true
+      base:
+        - text
       json: string
       pattern: '^[A-Za-z0-9+_/-]+$'
       order: none
       beyond:
         - tzdb
     json:
-      sql: portable_json
+      pg: json
+      column: checked
+      subset: false
       base:
         - json
         - jsonb
@@ -2174,8 +2258,12 @@ carriers:
         - scalar-values
         - finite-numbers
     geojson:
-      sql: portable_geojson
+      pg: json
+      column: checked
+      subset: false
       base:
+        - json
+        - jsonb
         - geometry
         - geography
       json: value

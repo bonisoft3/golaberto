@@ -11,7 +11,7 @@
     "ports": [],
     "volumes": [],
     "depends_on": {
-      "apps_golaberto-database": {
+      "golaberto-database": {
         "condition": "service_healthy"
       }
     },
@@ -56,8 +56,8 @@
     "cmd": null
   },
   "name": "electric",
-  "project": "apps_golaberto",
-  "dir": "",
+  "project": "golaberto",
+  "dir": ".",
   "activate": "",
   "srcs": {
     "globs": [],
@@ -74,8 +74,8 @@
   "synthetics": {
     "bayt": {
       "name": "electric_bayt",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -103,15 +103,14 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.electric.yaml",
-        ".bayt/compose.database.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml"
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.database.yaml"
       ]
     },
     "outs": {
       "name": "electric_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "activate": "",
       "srcs": {
         "globs": [],
@@ -133,9 +132,8 @@
         "similar": false
       },
       "upClosure": [
-        ".bayt/compose.electric.yaml",
-        ".bayt/compose.database.yaml",
-        ".runtime/libraries/mecha/.bayt/compose.database-image.yaml"
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.database.yaml"
       ]
     }
   },
@@ -152,15 +150,14 @@
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
-    ".bayt/compose.electric.yaml",
-    ".bayt/compose.database.yaml",
-    ".runtime/libraries/mecha/.bayt/compose.database-image.yaml"
+    "./.bayt/compose.electric.yaml",
+    "./.bayt/compose.database.yaml"
   ],
   "chainedDeps": [
     {
       "name": "database_outs",
-      "project": "apps_golaberto",
-      "dir": "",
+      "project": "golaberto",
+      "dir": ".",
       "outs": {
         "globs": [],
         "exclude": []

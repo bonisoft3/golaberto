@@ -41,6 +41,7 @@ jobs:
       - uses: bonisoft3/sayt/.github/actions/sayt/install@v0.42.0
         with:
           version: v0.42.0
+      - run: sayt setup
       - run: sayt release@pages --snapshot --base="/${GITHUB_REPOSITORY##*/}"
         working-directory: .
       - uses: actions/configure-pages@v5

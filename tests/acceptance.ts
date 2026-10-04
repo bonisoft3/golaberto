@@ -56,8 +56,16 @@ const context = async (opts: { width?: number; dark?: boolean; session?: unknown
 };
 
 const visit = async (page: Page, path: string, ready = '.shell-screen:not([hidden]) .screen[data-state="populated"]') => {
+  // What the page logged is the only account of a screen that never got ready.
+  const logged: string[] = [];
+  page.on("console", (m: { type(): string; text(): string }) => {
+    if (m.type() === "error" || m.type() === "warning") logged.push(`${m.type()}: ${m.text()}`);
+  });
+  page.on("pageerror", (e: Error) => logged.push(`pageerror: ${e.message}`));
   await page.goto(`${base}${path}`);
-  await page.waitForSelector(ready, { timeout: 30_000 });
+  await page.waitForSelector(ready, { timeout: 30_000 }).catch((e: Error) => {
+    throw new Error(`${path} never got ready: ${e.message}${logged.length ? ` (console: ${logged.join(" | ")})` : ""}`);
+  });
   return page;
 };
 

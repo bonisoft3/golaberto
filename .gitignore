@@ -1,4 +1,5 @@
-# The monorepo layout compose reads (copybara leaves it out).
+# The monorepo layout compose reads (copybara leaves both out).
+!/.env
 !.bayt/.env
 # The certificate setup issues, its private key beside it.
 /.certs/

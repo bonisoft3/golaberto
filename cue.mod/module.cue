@@ -28,7 +28,7 @@ deps: {
 		default: true
 	}
 	"github.com/bonisoft3/pronto@v0": {
-		v:       "v0.6.0"
+		v:       "v0.6.1"
 		default: true
 	}
 	"github.com/bonisoft3/sayt@v0": {

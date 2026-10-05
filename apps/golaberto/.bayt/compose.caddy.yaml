@@ -136,9 +136,6 @@ services:
         path: ../shell/handlers/chart-compare.js
         target: /srv/shell/handlers/chart-compare.js
       - action: sync+restart
-        path: ../shell/handlers/chart-metric.js
-        target: /srv/shell/handlers/chart-metric.js
-      - action: sync+restart
         path: ../shell/handlers/count-or-null.js
         target: /srv/shell/handlers/count-or-null.js
       - action: sync+restart
@@ -148,17 +145,11 @@ services:
         path: ../shell/handlers/geography-selection.js
         target: /srv/shell/handlers/geography-selection.js
       - action: sync+restart
-        path: ../shell/handlers/odds-progress-fold.js
-        target: /srv/shell/handlers/odds-progress-fold.js
-      - action: sync+restart
         path: ../shell/handlers/odds-progress-key.js
         target: /srv/shell/handlers/odds-progress-key.js
       - action: sync+restart
         path: ../shell/handlers/odds-progress-point.js
         target: /srv/shell/handlers/odds-progress-point.js
-      - action: sync+restart
-        path: ../shell/handlers/odds-progress-pointer.js
-        target: /srv/shell/handlers/odds-progress-pointer.js
       - action: sync+restart
         path: ../shell/handlers/odds-progress-snapshot.js
         target: /srv/shell/handlers/odds-progress-snapshot.js
@@ -168,6 +159,12 @@ services:
       - action: sync+restart
         path: ../shell/handlers/page-value.js
         target: /srv/shell/handlers/page-value.js
+      - action: sync+restart
+        path: ../shell/handlers/position-odds-control.js
+        target: /srv/shell/handlers/position-odds-control.js
+      - action: sync+restart
+        path: ../shell/handlers/position-odds-fold.js
+        target: /srv/shell/handlers/position-odds-fold.js
       - action: sync+restart
         path: ../shell/handlers/row-id.js
         target: /srv/shell/handlers/row-id.js
@@ -192,6 +189,9 @@ services:
       - action: sync+restart
         path: ../shell/renderers/odds-progress.js
         target: /srv/shell/renderers/odds-progress.js
+      - action: sync+restart
+        path: ../shell/renderers/position-odds.js
+        target: /srv/shell/renderers/position-odds.js
       - action: sync+restart
         path: ../shell/renderers/team-badge.js
         target: /srv/shell/renderers/team-badge.js
@@ -258,6 +258,12 @@ services:
       - action: sync+restart
         path: ../../../plugins/omnishell/interpreter/render.js
         target: /omnishell/interpreter/render.js
+      - action: sync+restart
+        path: ../../../plugins/omnishell/interpreter/live-update.js
+        target: /omnishell/interpreter/live-update.js
+      - action: sync+restart
+        path: ../../../plugins/omnishell/interpreter/route-addresses.js
+        target: /omnishell/interpreter/route-addresses.js
       - action: sync+restart
         path: ../../../plugins/omnishell/interpreter/hatch.js
         target: /omnishell/interpreter/hatch.js

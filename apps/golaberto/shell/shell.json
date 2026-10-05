@@ -1,5 +1,8 @@
 {
   "access": {
+    "public_address": {
+      "scope": "public"
+    },
     "category": {
       "scope": "public"
     },
@@ -155,6 +158,7 @@
       }
     }
   },
+  "liveUpdates": true,
   "local": {
     "catalog_filter": "tab",
     "games_view": "tab",
@@ -183,6 +187,7 @@
     "player_rating",
     "player_stat",
     "position_chance",
+    "public_address",
     "referee",
     "stadium",
     "stage_group",
@@ -469,6 +474,15 @@
     {
       "keep": 3,
       "path": "/jogo/:id",
+      "routeParams": {
+        "id": {
+          "table": "public_address",
+          "id": "record_id",
+          "field": "slug",
+          "filter": "kind=eq.game",
+          "type": "uuid"
+        }
+      },
       "screen": "jogo",
       "nav": {
         "label": "Jogo",
@@ -516,6 +530,15 @@
     {
       "keep": 3,
       "path": "/chances/:id",
+      "routeParams": {
+        "id": {
+          "table": "public_address",
+          "id": "record_id",
+          "field": "slug",
+          "filter": "kind=eq.group",
+          "type": "uuid"
+        }
+      },
       "screen": "chances",
       "nav": {
         "label": "Chances",
@@ -558,6 +581,15 @@
     {
       "keep": 0,
       "path": "/editar/:id",
+      "routeParams": {
+        "id": {
+          "table": "public_address",
+          "id": "record_id",
+          "field": "slug",
+          "filter": "kind=eq.game",
+          "type": "uuid"
+        }
+      },
       "screen": "editar",
       "nav": {
         "label": "Editar jogo",
@@ -720,6 +752,15 @@
     {
       "keep": 3,
       "path": "/estadio/:id",
+      "routeParams": {
+        "id": {
+          "table": "public_address",
+          "id": "record_id",
+          "field": "slug",
+          "filter": "kind=eq.stadium",
+          "type": "uuid"
+        }
+      },
       "screen": "estadio",
       "nav": {
         "label": "Estádio",
@@ -819,6 +860,15 @@
     {
       "keep": 3,
       "path": "/arbitro/:id",
+      "routeParams": {
+        "id": {
+          "table": "public_address",
+          "id": "record_id",
+          "field": "slug",
+          "filter": "kind=eq.referee",
+          "type": "uuid"
+        }
+      },
       "screen": "arbitro",
       "nav": {
         "label": "Árbitro",
@@ -863,6 +913,15 @@
     {
       "keep": 3,
       "path": "/equipe/:id",
+      "routeParams": {
+        "id": {
+          "table": "public_address",
+          "id": "record_id",
+          "field": "slug",
+          "filter": "kind=eq.team",
+          "type": "uuid"
+        }
+      },
       "screen": "equipe",
       "nav": {
         "label": "Equipe",
@@ -911,6 +970,22 @@
     {
       "keep": 3,
       "path": "/equipe-campeonato/:id/:championship",
+      "routeParams": {
+        "id": {
+          "table": "public_address",
+          "id": "record_id",
+          "field": "slug",
+          "filter": "kind=eq.team",
+          "type": "uuid"
+        },
+        "championship": {
+          "table": "public_address",
+          "id": "record_id",
+          "field": "slug",
+          "filter": "kind=eq.championship",
+          "type": "uuid"
+        }
+      },
       "screen": "equipe-campeonato",
       "nav": {
         "label": "Equipe no campeonato",
@@ -921,14 +996,13 @@
         "css": "shell/screens/equipe-campeonato.css",
         "handlers": [
           "shell/handlers/chart-compare.js",
-          "shell/handlers/chart-metric.js",
-          "shell/handlers/odds-progress-fold.js",
           "shell/handlers/odds-progress-key.js",
           "shell/handlers/odds-progress-point.js",
-          "shell/handlers/odds-progress-pointer.js",
           "shell/handlers/odds-progress-snapshot.js",
           "shell/handlers/odds-progress-zone.js",
           "shell/handlers/page-value.js",
+          "shell/handlers/position-odds-control.js",
+          "shell/handlers/position-odds-fold.js",
           "shell/handlers/search-key.js",
           "shell/handlers/team-chart-fold.js",
           "shell/handlers/team-chart-seed.js"
@@ -941,6 +1015,7 @@
           "shell/renderers/team-chart.js",
           "shell/renderers/team-location.js",
           "shell/renderers/odds-progress.js",
+          "shell/renderers/position-odds.js",
           "shell/renderers/zone-color.js",
           "shell/renderers/zone-positions.js"
         ],
@@ -970,6 +1045,15 @@
     {
       "keep": 3,
       "path": "/jogador/:id",
+      "routeParams": {
+        "id": {
+          "table": "public_address",
+          "id": "record_id",
+          "field": "slug",
+          "filter": "kind=eq.player",
+          "type": "uuid"
+        }
+      },
       "screen": "jogador",
       "nav": {
         "label": "Jogador",
@@ -1014,6 +1098,15 @@
     {
       "keep": 3,
       "path": "/campeonato/:id",
+      "routeParams": {
+        "id": {
+          "table": "public_address",
+          "id": "record_id",
+          "field": "slug",
+          "filter": "kind=eq.championship",
+          "type": "uuid"
+        }
+      },
       "screen": "campeonato",
       "nav": {
         "label": "Campeonato",
@@ -1076,6 +1169,7 @@
     "player_rating",
     "player_stat",
     "position_chance",
+    "public_address",
     "referee",
     "stadium",
     "stage_group",
@@ -1098,6 +1192,60 @@
     "zone_chance"
   ],
   "schema": {
+    "public_address": {
+      "durability": "server",
+      "fields": [
+        {
+          "name": "id",
+          "pk": true,
+          "type": "string",
+          "required": true
+        },
+        {
+          "enum": [
+            "team",
+            "championship",
+            "game",
+            "group",
+            "player",
+            "stadium",
+            "referee"
+          ],
+          "name": "kind",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "record_id",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "bounds": {
+            "regex": "^[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "name": "slug",
+          "type": "string",
+          "required": true
+        }
+      ],
+      "uniques": [
+        {
+          "name": "uq_public_address_record",
+          "cols": [
+            "kind",
+            "record_id"
+          ]
+        },
+        {
+          "name": "uq_public_address_slug",
+          "cols": [
+            "kind",
+            "slug"
+          ]
+        }
+      ]
+    },
     "category": {
       "durability": "server",
       "fields": [
@@ -4742,6 +4890,42 @@
           "name": "series_json",
           "type": "string",
           "required": true
+        },
+        {
+          "default": "'{}'",
+          "name": "current_json",
+          "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": -1,
+            "intMax": 10000
+          },
+          "default": "-1",
+          "name": "position_number",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 10000
+          },
+          "default": "0",
+          "name": "position_last",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "default": "'current'",
+          "enum": [
+            "current",
+            "history"
+          ],
+          "name": "table_mode",
+          "type": "string",
+          "required": true
         }
       ]
     },
@@ -5332,6 +5516,9 @@
     "services/database/migrations/029_team_enrichment.sql",
     "services/database/migrations/030_team_odds_progress.sql",
     "services/database/migrations/031_zone_colors.sql",
+    "services/database/migrations/032_public_addresses.sql",
+    "services/database/migrations/033_campaign_delta.sql",
+    "services/database/migrations/034_campaign_queue.sql",
     "services/database/migrations/900_seed.sql"
   ],
   "pipelines": [
@@ -5392,6 +5579,16 @@
     }
   ],
   "uniques": {
+    "public_address": [
+      [
+        "kind",
+        "record_id"
+      ],
+      [
+        "kind",
+        "slug"
+      ]
+    ],
     "player_game": [
       [
         "game_id",

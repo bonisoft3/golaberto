@@ -212,6 +212,21 @@
         },
         {
           "action": "rebuild",
+          "path": "../services/database/migrations/032_public_addresses.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
+          "path": "../services/database/migrations/033_campaign_delta.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
+          "path": "../services/database/migrations/034_campaign_queue.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
           "path": "../services/database/migrations/900_seed.sql",
           "target": "/docker-entrypoint-initdb.d"
         }
@@ -264,6 +279,9 @@
           "services/database/migrations/029_team_enrichment.sql",
           "services/database/migrations/030_team_odds_progress.sql",
           "services/database/migrations/031_zone_colors.sql",
+          "services/database/migrations/032_public_addresses.sql",
+          "services/database/migrations/033_campaign_delta.sql",
+          "services/database/migrations/034_campaign_queue.sql",
           "services/database/migrations/900_seed.sql"
         ],
         "dst": "/docker-entrypoint-initdb.d/",
@@ -331,6 +349,9 @@
       "services/database/migrations/029_team_enrichment.sql",
       "services/database/migrations/030_team_odds_progress.sql",
       "services/database/migrations/031_zone_colors.sql",
+      "services/database/migrations/032_public_addresses.sql",
+      "services/database/migrations/033_campaign_delta.sql",
+      "services/database/migrations/034_campaign_queue.sql",
       "services/database/migrations/900_seed.sql"
     ],
     "exclude": []
@@ -449,6 +470,9 @@
           "services/database/migrations/029_team_enrichment.sql",
           "services/database/migrations/030_team_odds_progress.sql",
           "services/database/migrations/031_zone_colors.sql",
+          "services/database/migrations/032_public_addresses.sql",
+          "services/database/migrations/033_campaign_delta.sql",
+          "services/database/migrations/034_campaign_queue.sql",
           "services/database/migrations/900_seed.sql"
         ],
         "exclude": []

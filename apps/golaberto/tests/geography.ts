@@ -253,7 +253,7 @@ for (const width of [390, 1366]) {
         await countryText.fill(germanLabel);
         await waitForTeams(1);
         const germanyId = await page.locator('.catalog-table a[data-route="equipe"]').evaluate((link) =>
-          new URL((link as HTMLAnchorElement).href).pathname.split("/").at(-1));
+          link.getAttribute("data-param-id"));
         assertEquals(germanyId, teamIds[0], `${locale} country search returns the Germany fixture`);
         await countryOptions.locator(`button[value="${geometry.germany}"]`).click();
         await countryPop.waitFor({ state: "hidden" });

@@ -96,7 +96,8 @@ Deno.test("stacked areas keep the fixed 0–100 scale and filter overlapping zon
   const svg = full.children.find((node: any) => node.tag === "svg");
   const paths = svg.children.filter((node: any) => node.tag === "path");
   assertEquals(paths.length, 3, "one filled area is rendered per final position");
-  assertEquals(paths.map((path: any) => path.attrs.fill), ["#d3d3d3", championColor, qualifyColor]);
+  assertEquals(paths.map((path: any) => path.attrs.fill), [undefined, championColor, qualifyColor]);
+  assertStringIncludes(paths[0].attrs.class, "team-odds-progress__area--unassigned", "unzoned positions follow the light/dark page surface through CSS");
   assertEquals(paths[1].attrs.class, "team-odds-progress__area");
   assertStringIncludes(paths[2].attrs.d, ",18", "best position reaches the fixed 100% ceiling");
   assertEquals(

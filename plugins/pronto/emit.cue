@@ -1059,6 +1059,7 @@ _cdcBeforeField: "__before"
 // and pipeline topology to the filesystem. All paths are app-relative — the
 // same path language as the manifest.
 #shellConfig: S={
+	liveUpdates: *false | bool
 	code: #App
 	migrations: [...string]
 	// The terminal's measured floors, carried into the file visual lint
@@ -1082,6 +1083,8 @@ _cdcBeforeField: "__before"
 	_tablePath: {for _, s in S.code.surface.screens for f in s.forms {
 		(S.code.state.entities[f.entity].table): S.code.state.entities[f.entity].durability
 	}}
+	_tables: {for _, s in S.code.surface.screens if s.routeParams != _|_ for _, p in s.routeParams {(S.code.state.entities[p.entity].table): true}}
+	_tablePath: {for _, s in S.code.surface.screens if s.routeParams != _|_ for _, p in s.routeParams {(S.code.state.entities[p.entity].table): S.code.state.entities[p.entity].durability}}
 	// A fold's private pair joins the registry the same way: no region names it
 	// and no form writes it, but the terminal reads it on every projection, and
 	// a table the store does not know has no collection to read.
@@ -1232,6 +1235,7 @@ _cdcBeforeField: "__before"
 		if S.native {
 			native: true
 		}
+		if S.liveUpdates {liveUpdates: true}
 		if S.code.capabilities.auth != _|_ {
 			auth: S.code.capabilities.auth
 		}
@@ -1279,6 +1283,15 @@ _cdcBeforeField: "__before"
 					labels: S._navLabel[n]
 				}
 				if !s.strip {strip: false}
+			}
+			if s.routeParams != _|_ {
+				routeParams: {for param, p in s.routeParams {
+					let e = S.code.state.entities[p.entity]
+					let identity = [for f in e.fields if f.name == p.id {f}][0]
+					let spelling = [for f in e.fields if f.name == p.field {f}][0]
+					_string: spelling.type & "string"
+					(param): {table: e.table, id: p.id, field: p.field, filter: p.filter, type: identity.type}
+				}}
 			}
 			files:  s.files
 			states: s.states // storybook frame list; semantics stay in the ir storyboard
@@ -2050,7 +2063,7 @@ _cdcBeforeField: "__before"
 	// The served route table, resolved once: shell.yaml IS this, and the
 	// Caddyfile's own matcher list is read out of the same addresses, so the
 	// door and the router cannot disagree about what a route is.
-	_shell: (#shellConfig & {"code": E.code, migrations: E._migrations, floors: E.terminal.capabilities.floors, server: E._serverOn, native: E.code.capabilities.native}).out
+	_shell: (#shellConfig & {"code": E.code, migrations: E._migrations, floors: E.terminal.capabilities.floors, server: E._serverOn, native: E.code.capabilities.native, liveUpdates: E.terminal.liveUpdates}).out
 	// The locales in one order, so every artifact that lists them lists them the
 	// same way and a regenerated file has no spurious diff.
 	_locales: list.SortStrings([if E._shell.i18n != _|_ for tag, _ in E._shell.i18n.locales {tag}])

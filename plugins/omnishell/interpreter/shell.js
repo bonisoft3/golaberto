@@ -13,6 +13,7 @@
 // bypasses it entirely: the fixture adapter runs without the cluster, so no auth
 // service exists to sign against.
 
+import { createRouteAddresses } from "./route-addresses.js";
 import { chromeText } from "./chrome.js";
 import { directionOf, localeByPath, localeTable, resolveLocale, routeHref, routePattern, screenEnv } from "./fragment.js";
 import { interpretScreen, routeParams } from "./screen.js";
@@ -529,7 +530,10 @@ export async function createShell({ config, mount }) {
     }
 
     const { createStore } = await import("./data-sync.js");
+    const updates = cfg.liveUpdates ? await import("./live-update.js") : null;
+    const recovery = updates?.readUpdateRecovery(cfg, appBase);
     const store = createStore("", { ...cfg, appBase });
+    const routeAddresses = cfg.routes.some(route => route.routeParams) ? createRouteAddresses(cfg, store, addresses) : null;
 
     // Debug & visual-lint seam: pose fixture rows in-memory without page reloads.
     globalThis.__prontoStore = store;
@@ -658,7 +662,7 @@ export async function createShell({ config, mount }) {
     // language from that attribute, and a crawler that renders the page has no
     // other source for the title or for the fact that three addresses are one
     // page in three languages.
-    const describe = (route, params, locale, written, el) => {
+    const describe = (route, params, locale, written, el, publicParams = params) => {
       // The language RENDERED, which is what a screen reader has to pronounce,
       // and which way its script runs, which is what the nav strip, the
       // scrollbar and every unstyled box take their side from. It is the
@@ -694,7 +698,7 @@ export async function createShell({ config, mount }) {
       // that would otherwise make a canonical vary per reader — and a
       // canonical two readers of one URL disagree about is the one thing a
       // canonical exists not to be.
-      const here = routeHref(cfg, route.screen, params, written);
+      const here = routeHref(cfg, route.screen, publicParams, written);
       // A route whose param carries nothing has no address, so this document
       // has none to name — and none in any other locale either, since the
       // param is the same in all of them.
@@ -702,11 +706,11 @@ export async function createShell({ config, mount }) {
       link("canonical", here);
       if (cfg.i18n === undefined) return;
       for (const tag of Object.keys(localeTable(cfg.i18n))) {
-        link("alternate", routeHref(cfg, route.screen, params, tag), tag);
+        link("alternate", routeHref(cfg, route.screen, publicParams, tag), tag);
       }
       // x-default names the default locale's unprefixed address: where a
       // crawler is told to send a reader whose language matches no alternate.
-      link("alternate", routeHref(cfg, route.screen, params, cfg.i18n.default), "x-default");
+      link("alternate", routeHref(cfg, route.screen, publicParams, cfg.i18n.default), "x-default");
     };
 
     const scrollToFragment = (el) => {
@@ -719,16 +723,75 @@ export async function createShell({ config, mount }) {
       return true;
     };
 
+    let routeGeneration = 0;
+    let lookupPanel;
+    const lookupFailure = (locale, retry) => {
+      if (current) {
+        current.scrollY = window.scrollY;
+        current.handle?.pause();
+        current.el.hidden = true;
+        if (keepOf(current.route) === 0) discard(current);
+        current = null;
+      }
+      lookupPanel?.remove();
+      lookupPanel = document.createElement("div");
+      lookupPanel.className = "shell-screen";
+      const section = document.createElement("section");
+      section.className = "screen";
+      section.dataset.state = retry ? "network-error" : "gone";
+      const heading = document.createElement("h1");
+      const key = retry ? "chrome_route_failed" : "chrome_route_missing";
+      heading.textContent = chromeText(key, {messages,locale});
+      section.append(heading);
+      if (retry) {
+        const button = document.createElement("button");
+        button.textContent = chromeText("chrome_route_retry", {messages,locale});
+        button.addEventListener("click", () => show());
+        section.append(button);
+      }
+      const home = cfg.routes.find(r => r.path === "/");
+      if (home) {
+        const link = document.createElement("a");
+        link.href = routeHref(cfg, home.screen, {}, locale, {explicitLocale:true});
+        link.textContent = chromeText("chrome_route_home", {messages,locale});
+        section.append(link);
+      }
+      lookupPanel.append(section);
+      mount.append(lookupPanel);
+      if (locale) { document.documentElement.lang = locale; document.documentElement.dir = directionOf(locale); }
+      document.title = heading.textContent + " — " + cfg.app;
+      for (const link of document.head.querySelectorAll('link[rel="canonical"],link[rel="alternate"][hreflang]')) link.remove();
+      localizeStrip(locale);
+      window.scrollTo(0,0);
+    };
+
     const show = async (navigationType = "push") => {
+      const generation = ++routeGeneration;
+      lookupPanel?.remove();
       let { route, params, locale, written } = currentRoute();
-      // A localized route has one address, so `?lang=` on one is replaced by
-      // the address it names rather than rendered — the server answers the
-      // same case with a 301. The default locale keeps its explicit query so
-      // a reload cannot negotiate the reader back into another language.
-      if (route.paths !== undefined && new URLSearchParams(location.search).has("lang")) {
-        const canonical = routeHref(cfg, route.screen, params, locale, { explicitLocale: true });
-        if (canonical !== undefined) history.replaceState(null, "", canonical + location.hash);
-        ({ route, params, locale, written } = currentRoute());
+      let publicParams = params;
+      if (routeAddresses && route.routeParams) {
+        let resolved;
+        try { resolved = await routeAddresses.resolve(route, params); }
+        catch (error) {
+          if (generation === routeGeneration) lookupFailure(locale, true);
+          console.error(error);
+          return;
+        }
+        if (generation !== routeGeneration) return;
+        if (resolved === null) return lookupFailure(locale, false);
+        params = resolved.params;
+        publicParams = resolved.publicParams;
+      }
+      if (route.routeParams || (route.paths !== undefined && new URLSearchParams(location.search).has("lang"))) {
+        const canonical = routeHref(cfg, route.screen, publicParams, locale, {explicitLocale:true});
+        if (canonical !== undefined) {
+          const target = new URL(canonical, location.href);
+          for (const [key,value] of new URLSearchParams(location.search)) if (key !== "lang") target.searchParams.append(key,value);
+          target.hash = location.hash;
+          if (target.href !== location.href) history.replaceState(null,"",target.pathname+target.search+target.hash);
+          written = addresses(target)?.written ?? written;
+        }
       }
       localizeStrip(locale);
       const key = keyOf(route, params);
@@ -746,7 +809,7 @@ export async function createShell({ config, mount }) {
         enter(entry.el);
         current = entry;
         evict(route);
-        describe(route, params, locale, written, entry.el);
+        describe(route, params, locale, written, entry.el, publicParams);
         // Following a link to a screen visited before is a fresh arrival
         // however warm its DOM is. Back resumes the saved offset; an arrival
         // uses its fragment once resumed content is ready, or starts at the top.
@@ -776,16 +839,23 @@ export async function createShell({ config, mount }) {
           messages,
           locale,
           navigate,
+          addresses: routeAddresses,
+          isCurrent: () => current === fresh,
+          navigationEpoch: () => routeGeneration,
         }));
         // Left, or dropped, before the load landed: a back press during the
         // fetch is the common case.
         if (fresh.gone) return fresh.handle.stop();
         if (current !== fresh) return fresh.handle.pause();
         // After the render: the screen's own h1 is where its name comes from.
-        describe(route, params, locale, written, el);
+        describe(route, params, locale, written, el, publicParams);
         // Fragment targets exist only after hydration. Resolve within this
         // screen, since held screens can carry the same section IDs.
-        if (!scrollToFragment(el)) window.scrollTo(0, 0);
+        const saved = recovery?.pages?.[key];
+        updates?.restoreUpdatedPage(el, saved);
+        if (saved) window.scrollTo(0, saved.scrollY ?? 0);
+        else if (!scrollToFragment(el)) window.scrollTo(0, 0);
+        if (saved) delete recovery.pages[key];
       } catch (err) {
         // A slot whose load threw has no handle, and every later eviction calls
         // one: held onto, it turns the next visit to any screen into a
@@ -862,6 +932,8 @@ export async function createShell({ config, mount }) {
     }
 
     if (typeof navigator !== "undefined" && navigator.serviceWorker) {
+      if (updates) updates.installLiveUpdates({cfg,appBase,store,mount,recovery,configUrl,entries:() => [...held.values()],ready:() => booted});
+      else {
       navigator.serviceWorker.addEventListener("message", async (e) => {
         if (e.data?.type === "PRONTO_SKELETON_UPDATED" && e.data?.html) {
           const path = e.data.pathname || "";
@@ -876,10 +948,12 @@ export async function createShell({ config, mount }) {
           }
         }
       });
+      }
     }
 
     await show();
     booted = true;
+    updates?.clearUpdateRecovery();
     return { store, navigate };
   } catch (err) {
     banner(err);

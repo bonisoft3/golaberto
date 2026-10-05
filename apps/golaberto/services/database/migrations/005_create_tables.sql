@@ -4,6 +4,15 @@ SET statement_timeout = '60s';
 
 BEGIN;
 
+CREATE TABLE IF NOT EXISTS public_address (
+  "id" portable_string PRIMARY KEY,
+  "kind" portable_string NOT NULL CHECK (kind IN ('team', 'championship', 'game', 'group', 'player', 'stadium', 'referee')),
+  "record_id" uuid NOT NULL,
+  "slug" portable_string NOT NULL CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS app_user (
   "id" uuid PRIMARY KEY,
   "handle" portable_string NOT NULL UNIQUE CHECK (char_length(handle) > 0),
@@ -744,6 +753,8 @@ CREATE INDEX IF NOT EXISTS idx_team_player_team_id ON team_player USING btree (t
 CREATE INDEX IF NOT EXISTS idx_home_game_card_championship_id ON home_game_card USING btree (championship_id);
 CREATE INDEX IF NOT EXISTS idx_matches_game_card_championship_id ON matches_game_card USING btree (championship_id);
 
+CREATE UNIQUE INDEX IF NOT EXISTS uq_public_address_record ON public_address (kind, record_id);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_public_address_slug ON public_address (kind, slug);
 CREATE UNIQUE INDEX IF NOT EXISTS uq_player_game ON player_game (game_id, player_id);
 CREATE UNIQUE INDEX IF NOT EXISTS uq_team_group ON team_group (group_id, team_id);
 CREATE UNIQUE INDEX IF NOT EXISTS uq_team_odds_progress_group_team ON team_odds_progress (group_id, team_id);

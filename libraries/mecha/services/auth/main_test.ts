@@ -22,6 +22,15 @@ await sql`CREATE TABLE IF NOT EXISTS article (
   id uuid primary key default gen_random_uuid(),
   scope_id text generated always as ('public:') stored not null
 )`;
+await sql`CREATE TABLE IF NOT EXISTS scoped_article (
+  id uuid primary key default gen_random_uuid(),
+  scope_id text not null default 'public:'
+)`;
+await sql`CREATE TABLE IF NOT EXISTS owned_article (
+  id uuid primary key default gen_random_uuid(),
+  owner_id uuid not null,
+  scope_id text generated always as ('user:' || owner_id) stored not null
+)`;
 // A per-row shape is answered as the subject, so the role the gate switches
 // to has to exist, and the fixture needs a policy for it to read through:
 // gk_doc is readable by its owner, gk_line is content of a doc.
@@ -267,14 +276,40 @@ Deno.test({
   name: "the shape token carries the subject's scopes, not the client's request",
   ...opts,
   async fn() {
-    const { res, uid } = await mint("article");
+    const { res, uid } = await mint("scoped_article");
     assertEquals(res.status, 200);
     const body = await res.json();
     // The same derivation the CRUD path reads, so the two cannot disagree.
     assertEquals(body.where, `scope_id IN ('public:','user:${uid}')`);
     const claims = await verifyJwt(body.token);
-    assertEquals(claims!.table, "article");
+    assertEquals(claims!.table, "scoped_article");
     assertEquals(claims!.where, body.where);
+  },
+});
+
+Deno.test({
+  name: "constant generated public scopes share a predicate across users without widening reach",
+  ...opts,
+  async fn() {
+    const first = await mint("article");
+    const second = await mint("article");
+    assert(first.uid !== second.uid);
+    const a = await first.res.json();
+    const b = await second.res.json();
+    assertEquals(a.where, "scope_id IN ('public:')");
+    assertEquals(b.where, a.where);
+    const claims = await verifyJwt(a.token);
+    assertEquals(claims!.sub, first.uid);
+    assertEquals(claims!.where, a.where);
+    assertEquals((await handler(shapeReq(a.token, `/v1/shape?table=article&where=${encodeURIComponent(a.where)}`))).status, 200);
+    const wider = `scope_id IN ('public:','user:${first.uid}')`;
+    assertEquals((await handler(shapeReq(a.token, `/v1/shape?table=article&where=${encodeURIComponent(wider)}`))).status, 403);
+    // Neither a public default nor an owner-generated scope proves that all
+    // rows are public; both keep the subject's private reach.
+    for (const table of ["scoped_article", "owned_article"]) {
+      const minted = await mint(table);
+      assertEquals((await minted.res.json()).where, `scope_id IN ('public:','user:${minted.uid}')`);
+    }
   },
 });
 

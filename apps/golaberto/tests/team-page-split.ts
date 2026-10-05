@@ -72,7 +72,7 @@ const pastPlayer = uuid();
 const zeroPlayer = uuid();
 const rosterPlayers = Array.from({ length: 41 }, () => uuid());
 const allPlayers = [sharedPlayer, pastPlayer, zeroPlayer, ...rosterPlayers];
-const allChamps = [currentChamp, pastChamp, opponentChamp];
+const allChamps = [currentChamp, pastChamp, opponentChamp, missingChamp];
 const allTeams = [team, opponent];
 const tableReady = '.shell-screen:not([hidden]) .screen[data-state="populated"]';
 
@@ -101,6 +101,7 @@ const addFixtures = async () => {
   const otherTeamChance = await uuid5(`${opponentGroup}:${team}`);
   const otherOpponentChance = await uuid5(`${opponentGroup}:${opponent}`);
   const currentTeamPosition = await uuid5(`${currentGroup}:${team}:1`);
+  const currentTeamPosition2 = await uuid5(`${currentGroup}:${team}:2`);
   const otherTeamPosition = await uuid5(`${opponentGroup}:${team}:1`);
   const otherOpponentPosition = await uuid5(`${opponentGroup}:${opponent}:1`);
   const currentTeamZone = await uuid5(`${currentGroup}:${team}:${currentZone}`);
@@ -115,7 +116,8 @@ const addFixtures = async () => {
     INSERT INTO championship (id,name,region_name,begins,ends) VALUES
       (${q(currentChamp)},'Split Current','Brasil',(now() AT TIME ZONE 'America/Sao_Paulo')::date - 20,(now() AT TIME ZONE 'America/Sao_Paulo')::date + 20),
       (${q(pastChamp)},'Split Past','Brasil',(now() AT TIME ZONE 'America/Sao_Paulo')::date - 100,(now() AT TIME ZONE 'America/Sao_Paulo')::date - 60),
-      (${q(opponentChamp)},'Other Team Cup','Brasil',(now() AT TIME ZONE 'America/Sao_Paulo')::date - 20,(now() AT TIME ZONE 'America/Sao_Paulo')::date + 20);
+      (${q(opponentChamp)},'Other Team Cup','Brasil',(now() AT TIME ZONE 'America/Sao_Paulo')::date - 20,(now() AT TIME ZONE 'America/Sao_Paulo')::date + 20),
+      (${q(missingChamp)},'No Membership Cup','Brasil','2026-01-01','2026-12-31');
     INSERT INTO team_player (championship_id,team_id,player_id) VALUES
       ${[
         ...[zeroPlayer, ...rosterPlayers].map((id) => `(${q(currentChamp)},${q(team)},${q(id)})`),
@@ -152,6 +154,7 @@ const addFixtures = async () => {
       (${q(otherOpponentChance)},${q(opponentGroup)},${q(opponent)},'Split Opponent',1,3,1);
     INSERT INTO position_chance (id,group_id,team_id,position,percent,band,current,reach) VALUES
       (${q(currentTeamPosition)},${q(currentGroup)},${q(team)},1,62.5,3,true,''),
+      (${q(currentTeamPosition2)},${q(currentGroup)},${q(team)},2,37.5,2,false,''),
       (${q(otherTeamPosition)},${q(opponentGroup)},${q(team)},1,12,1,true,''),
       (${q(otherOpponentPosition)},${q(opponentGroup)},${q(opponent)},1,88,4,true,'');
     INSERT INTO zone_chance (id,group_id,team_id,zone_id,first,percent,color,band,last,reach) VALUES
@@ -189,6 +192,9 @@ const visit = async (page: Page, path: string) => {
 
 Deno.test("team profile and championship pages keep memberships, players, and season data in scope", async () => {
   await addFixtures();
+  const publicIds = [team, opponent, currentChamp, pastChamp, opponentChamp, campaignGame];
+  const slugs: Record<string, string> = JSON.parse(await psql(`SELECT json_object_agg(record_id,slug) FROM public_address WHERE record_id IN (${publicIds.map(q).join(",")})`));
+  for (const id of publicIds) assert(slugs[id], `fixture ${id} has a public address`);
   const context = await browser.newContext({
     ignoreHTTPSErrors: true,
     locale: "pt-BR",
@@ -245,11 +251,27 @@ Deno.test("team profile and championship pages keep memberships, players, and se
     assertEquals(await screen().locator('#team-comment-body').inputValue(),'Keep this team note after refusal','guest refusal preserves the team draft');
 
     await screen().locator(`.team-current-championships a[data-param-championship="${currentChamp}"]`).click();
-    await page.waitForURL(`**/equipe-campeonato/${team}/${currentChamp}**`);
+    await page.waitForURL(`**/equipe-campeonato/${slugs[team]}/${slugs[currentChamp]}**`);
     await screen().locator(".team-championship-page").waitFor();
     await page.waitForFunction(() =>
       document.querySelector(".shell-screen:not([hidden])")?.querySelectorAll(".team-roster .squad-table tbody tr").length === 40);
     assertEquals(await screen().locator(".team-current-championships").count(), 0);
+    const profileHeading = screen().locator('.team-championship-page h1 a[data-route="equipe"]');
+    assertEquals(await profileHeading.textContent(), 'Split Target');
+    assertEquals(await profileHeading.getAttribute('data-param-id'), team);
+    assertEquals(await screen().locator('.team-championship-links a, .team-championship-page .side a[data-route="equipe"]').count(), 0);
+    assert((await screen().locator('.team-section-links a').first().getAttribute('href'))?.endsWith('#team-odds'));
+    assert(await screen().locator('.team-championship-page .content').evaluate((content:any) => {
+      const odds=content.querySelector('#team-odds');
+      return ['#team-fixtures','#team-table','#team-roster','.team-campaign'].every(selector =>
+        Boolean(odds.compareDocumentPosition(content.querySelector(selector)) & Node.DOCUMENT_POSITION_FOLLOWING));
+    }), 'detailed odds precede the other team information');
+    await screen().locator('.team-campaign .team-chart--combined svg').waitFor();
+    assertEquals(await screen().locator('.team-campaign .team-chart-tabs').count(), 0);
+    assertEquals(await screen().locator('.team-campaign .team-chart__point--points').count(), 1);
+    assertEquals(await screen().locator('.team-campaign .team-chart__point--position').count(), 1);
+    assertEquals(await screen().locator('.team-campaign .team-chart__metric-legend li').allTextContents(), ['Pontos', 'Posição']);
+
     assertEquals(await screen().locator(".team-next .game-row").count(), 1);
     assertEquals(await screen().locator(".team-results .game-row").count(), 1);
     assertEquals(await screen().locator(".team-standings .standings tbody tr").count(), 2);
@@ -264,12 +286,13 @@ Deno.test("team profile and championship pages keep memberships, players, and se
     assertEquals(await screen().locator('.team-next .team-fixture-table .score b:visible').count(), 0, 'upcoming games do not invent scores');
     assertEquals(await screen().locator('.team-results .team-fixture-table thead th').allTextContents(), ['Data', 'Mandante', 'Placar', 'Visitante', 'Resultado']);
     assertEquals(await screen().locator(".team-standings h3").allTextContents(), ["Current Phase · Split Group"], "the table stays in the selected championship");
-    assertEquals(await screen().locator(".team-odds .team-odds-table tbody tr").count(), 1, await screen().locator(".team-odds").innerText());
+    await page.waitForFunction(() => document.querySelector(".shell-screen:not([hidden]) .position-odds__table tbody")?.querySelectorAll("tr").length === 2);
+    assertEquals(await screen().locator(".team-odds .position-odds__table tbody tr").count(), 2, await screen().locator(".team-odds").innerText());
     assert(/62[,.]5/.test(await screen().locator(".team-odds").innerText()));
     for (const section of ["team-table", "team-roster", "team-odds", "team-fixtures"]) {
       await screen().locator(`.team-section-links a[href$="#${section}"]`).click();
       const address = new URL(page.url());
-      assertEquals(address.pathname, `/equipe-campeonato/${team}/${currentChamp}`, "section links retain both IDs");
+      assertEquals(address.pathname, `/equipe-campeonato/${slugs[team]}/${slugs[currentChamp]}`, "section links retain both public addresses");
       assertEquals(address.searchParams.get("lang"), "pt-BR", "section links retain the selected language");
       assertEquals(address.hash, `#${section}`);
       assert(await screen().locator(`#${section}`).isVisible());
@@ -289,6 +312,7 @@ Deno.test("team profile and championship pages keep memberships, players, and se
         const stripBottom = document.querySelector('body > nav')?.getBoundingClientRect().bottom ?? 0;
         return top !== undefined && top >= stripBottom - 2 && top < innerHeight;
       }, null, {timeout:3000});
+      await screen().locator('.team-odds-evolution .team-odds-progress__svg path').first().waitFor();
       assertEquals(await screen().locator('.team-odds-evolution .team-odds-progress__svg path').count(), 2, 'direct odds links retain the recorded history graph');
     };
     await assertOddsArrival();
@@ -313,6 +337,12 @@ Deno.test("team profile and championship pages keep memberships, players, and se
     await screen().locator('.team-odds-evolution .team-odds-progress__svg').waitFor();
     const progress = screen().locator('.team-odds-evolution');
     assertEquals(await progress.locator('svg path').count(), 2);
+    assert(await progress.locator('.team-odds-progress__area--unassigned').first().evaluate((path:any) =>
+      getComputedStyle(path).fill === getComputedStyle(document.querySelector('main#app')!).backgroundColor), 'unassigned positions match the current page background');
+    const currentReference = screen().locator('.position-odds__current');
+    assertEquals(await currentReference.evaluate((line:any) => line.tagName), 'line');
+    assert((await currentReference.evaluate((line:any) => getComputedStyle(line).stroke)) !== 'none');
+
     assert((await progress.locator('svg path').evaluateAll((paths: SVGPathElement[]) => paths.map(path => path.getAttribute('fill')))).includes('#8a2be2'), 'custom source color reaches the chart');
     assertEquals(await progress.locator('.odds-progress-swatch rect').first().getAttribute('fill'), '#8a2be2', 'custom source color reaches the legend');
     assertEquals(await screen().locator('.team-standings tr[data-zone]').first().getAttribute('style'), '--zone: #8a2be2', 'custom source color reaches standing rows');
@@ -326,14 +356,33 @@ Deno.test("team profile and championship pages keep memberships, players, and se
     await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-odds-progress__inspector-date')?.textContent === '01/01/2026');
     await page.keyboard.press('ArrowRight');
     await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-odds-progress__inspector-date')?.textContent === '02/01/2026');
-    await progress.locator('input[type="range"]').fill('0');
+    await progress.locator('.odds-progress-date input[type="range"]').fill('0');
     await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-odds-progress__inspector-date')?.textContent === '01/01/2026');
-    await progress.locator('input[type="range"]').press('ArrowRight');
+    await progress.locator('.odds-progress-date input[type="range"]').press('ArrowRight');
     await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-odds-progress__inspector-date')?.textContent === '02/01/2026');
-    await progress.locator('.odds-progress-data summary').click();
-    assertEquals(await progress.locator('.team-odds-progress__table tbody tr').count(),2);
-    await progress.locator('.odds-progress-data summary').click();
-    for (const width of [960,375]) {
+    const currentOdds=screen().locator('.team-odds-current');
+    assertEquals(await currentOdds.locator('.odds-position-data').getAttribute('open'),null,'exact values start collapsed');
+    assertEquals(await currentOdds.locator('table').count(),1,'one exact position table serves both sources');
+    assertEquals(await currentOdds.locator('.position-odds__band').first().getAttribute('fill'),'#8a2be2');
+    assertEquals(await currentOdds.locator('.position-odds__bar').first().evaluate((bar:Element)=>getComputedStyle(bar).fill),'rgb(255, 248, 220)','canonical cream bar color reaches the graph');
+    await currentOdds.locator('.odds-position-data summary').click();
+    assertEquals(await currentOdds.locator('.position-odds__table tbody tr').count(),2);
+    await currentOdds.locator('.odds-values-select select').selectOption('history');
+    await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .position-odds__table caption')?.textContent?.includes('02/01/2026'));
+    assertEquals(await currentOdds.locator('.position-odds__table tbody tr').count(),2);
+    await progress.locator('.odds-progress-date input').fill('0');
+    await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .position-odds__table caption')?.textContent?.includes('01/01/2026'));
+    assert((await currentOdds.locator('.position-odds__table').innerText()).includes('25%'));
+    assert((await currentOdds.locator('.position-odds__inspector').innerText()).includes('62,5%'),'current values do not follow historical selection');
+    const priorDate=await progress.locator('.team-odds-progress__inspector-date').innerText();
+    await currentOdds.locator('.position-odds-slider input').press('ArrowRight');
+    await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .position-odds__inspector strong')?.textContent?.includes('2'));
+    assertEquals(await progress.locator('.team-odds-progress__inspector-date').innerText(),priorDate);
+    await currentOdds.locator('.odds-values-select select').selectOption('current');
+    await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .position-odds__table caption')?.textContent === 'Probabilidades atuais');
+    assertEquals(await currentOdds.locator('.position-odds__table tbody tr').count(),2);
+    await currentOdds.locator('.odds-position-data summary').click();
+    for (const width of [960,375,320]) {
       await page.setViewportSize({width,height:844});
       await progress.locator('.team-odds-progress__svg').scrollIntoViewIfNeeded();
       const box=await progress.locator('.team-odds-progress__svg').boundingBox();
@@ -342,18 +391,35 @@ Deno.test("team profile and championship pages keep memberships, players, and se
         await page.mouse.move(box.x+box.width*x/640,box.y+box.height/2);
         await page.waitForFunction((expected:string) => document.querySelector('.shell-screen:not([hidden]) .team-odds-progress__inspector-date')?.textContent === expected,date);
       }
+      await currentOdds.locator('.position-odds__svg').scrollIntoViewIfNeeded();
+      const currentBox=await currentOdds.locator('.position-odds__svg').boundingBox();
+      assert(currentBox);
+      const selectedHistory=await progress.locator('.team-odds-progress__inspector-date').innerText();
+      await page.mouse.move(currentBox.x+currentBox.width*195.5/640,currentBox.y+currentBox.height/2);
+      await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .position-odds__inspector strong')?.textContent?.includes('1'));
+      assertEquals(await progress.locator('.team-odds-progress__inspector-date').innerText(),selectedHistory,'current pointer inspection keeps the selected historical date');
+      const tick=await currentOdds.locator('.position-odds__axis-value').first().evaluate((el:Element)=>({left:el.getBoundingClientRect().left,visibility:getComputedStyle(el).visibility,overflow:getComputedStyle(el.closest('svg')!).overflow}));
+      assert(tick.left>=0 && tick.visibility==='visible' && tick.overflow==='visible',`the complete 100% label remains visible at ${width}px: ${JSON.stringify(tick)}`);
+      assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'phone odds stay within the page');
+      if(width===320) {
+        await page.screenshot({path:'/private/tmp/golaberto-team-championship-refined-phone.png'});
+        await page.emulateMedia({colorScheme:'dark'});
+        assertEquals(await currentOdds.locator('.position-odds__bar').first().evaluate((bar:Element)=>getComputedStyle(bar).fill),'rgb(98, 99, 67)','dark bars use the canonical color');
+        await page.screenshot({path:'/private/tmp/golaberto-team-championship-refined-dark.png'});
+        await page.emulateMedia({colorScheme:'light'});
+      }
     }
     await page.setViewportSize({width:1366,height:900});
     await psql(`UPDATE team_odds_history SET recorded_on=current_date+(recorded_on-DATE '2026-01-01') WHERE group_id=${q(currentGroup)}; SELECT refresh_team_odds_charts(${q(currentGroup)}::uuid);`);
-    const inspectedGame = progress.locator('.team-odds-progress__inspector-game a');
+    const inspectedGame = progress.locator('.team-odds-progress__inspector-game a[href]');
     await inspectedGame.waitFor();
     const gameHref=await inspectedGame.getAttribute('href');
-    assert(gameHref?.includes(campaignGame));
+    assert(gameHref && new URL(gameHref, base).pathname.endsWith(slugs[campaignGame]));
     const selectedDate=await progress.locator('.team-odds-progress__inspector-date').innerText();
     await inspectedGame.hover();
     assertEquals(await progress.locator('.team-odds-progress__inspector-date').innerText(),selectedDate);
     await inspectedGame.click();
-    await page.waitForURL((url:URL)=>url.pathname.includes(campaignGame));
+    await page.waitForURL((url:URL)=>url.pathname.endsWith(slugs[campaignGame]));
     await visit(page,`/equipe-campeonato/${team}/${currentChamp}?lang=pt-BR`);
     await screen().locator('#team-roster-q').fill('atletico');
     await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-roster tbody')?.querySelectorAll('tr').length === 1);
@@ -366,45 +432,44 @@ Deno.test("team profile and championship pages keep memberships, players, and se
     await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-roster tbody')?.querySelectorAll('tr').length === 3);
     await screen().locator('.team-campaign select').selectOption(opponent);
     await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-campaign svg')?.querySelectorAll('g').length === 2);
-    await screen().locator('.team-campaign button[value="position"]').click();
-    await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-campaign svg a')?.getAttribute('aria-label')?.endsWith(', 1'));
-    await screen().locator('.team-campaign button[value="points"]').click();
-    await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-campaign svg a')?.getAttribute('aria-label')?.endsWith(', 3'));
-    await screen().locator('.team-campaign button[value="position"]').click();
-    await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-campaign svg a')?.getAttribute('aria-label')?.endsWith(', 1'));
-    const gameLink=await screen().locator('.team-campaign svg a').first().getAttribute('href');
-    assert(gameLink?.endsWith(campaignGame),'campaign points link to their actual match');
+    assertEquals(await screen().locator('.team-campaign .team-chart__point--points').count(), 2);
+    assertEquals(await screen().locator('.team-campaign .team-chart__point--position').count(), 2);
+    const campaignDescription = await screen().locator('.team-campaign svg a').first().getAttribute('aria-label');
+    assert(campaignDescription?.includes('Pontos: 3') && campaignDescription?.includes('Posição: 1'), 'a match point announces both current metrics');
+    const campaignLink=screen().locator('.team-campaign svg a[href]').first();
+    await campaignLink.waitFor();
+    const gameLink=await campaignLink.getAttribute('href');
+    assert(gameLink && new URL(gameLink, base).pathname.endsWith(slugs[campaignGame]),'campaign points link to their actual match using its public address');
 
     await screen().locator('.team-switch select').selectOption(opponent);
-    await screen().locator('.team-switch button').click();
-    await page.waitForURL(`**/equipe-campeonato/${opponent}/${currentChamp}**`);
+    await page.waitForURL(`**/equipe-campeonato/${slugs[opponent]}/${slugs[currentChamp]}**`);
     await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) h1')?.textContent?.includes('Split Opponent'));
     await screen().locator('.team-switch select').selectOption(team);
-    await screen().locator('.team-switch button').click();
-    await page.waitForURL(`**/equipe-campeonato/${team}/${currentChamp}**`);
+    await page.waitForURL(`**/equipe-campeonato/${slugs[team]}/${slugs[currentChamp]}**`);
     await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-roster tbody')?.querySelectorAll('tr').length === 3);
 
-    await screen().locator('.team-championship-links a[data-route="equipe"]').click();
-    await page.waitForURL(`**/equipe/${team}**`);
+    await screen().locator('.team-championship-page h1 a[data-route="equipe"]').click();
+    await page.waitForURL(`**/equipe/${slugs[team]}**`);
     await screen().locator(`.team-current-championships a[data-param-championship="${opponentChamp}"]`).click();
-    await page.waitForURL(`**/equipe-campeonato/${team}/${opponentChamp}**`);
+    await page.waitForURL(`**/equipe-campeonato/${slugs[team]}/${slugs[opponentChamp]}**`);
     await page.waitForFunction(() =>
       document.querySelector(".shell-screen:not([hidden])")?.querySelectorAll(".team-roster .squad-table tbody tr").length === 1);
     assertEquals(await screen().locator(".team-next .game-row").count(), 1);
     assertEquals(await screen().locator(".team-standings h3").allTextContents(), ["Other Phase · Other Team Group"]);
-    assertEquals(await screen().locator(".team-odds .team-odds-table tbody tr").count(), 1);
+    await page.waitForFunction(() => document.querySelector(".shell-screen:not([hidden]) .position-odds__table tbody")?.querySelectorAll("tr").length === 1);
+    assertEquals(await screen().locator(".team-odds .position-odds__table tbody tr").count(), 1);
     assert(/12/.test(await screen().locator(".team-odds").innerText()));
-    await screen().locator('.team-championship-links a[data-route="equipe"]').click();
-    await page.waitForURL(`**/equipe/${team}**`);
+    await screen().locator('.team-championship-page h1 a[data-route="equipe"]').click();
+    await page.waitForURL(`**/equipe/${slugs[team]}**`);
     await screen().locator(`.team-current-championships a[data-param-championship="${currentChamp}"]`).click();
-    await page.waitForURL(`**/equipe-campeonato/${team}/${currentChamp}**`);
+    await page.waitForURL(`**/equipe-campeonato/${slugs[team]}/${slugs[currentChamp]}**`);
     await page.waitForFunction(() =>
       document.querySelector(".shell-screen:not([hidden])")?.querySelectorAll(".team-roster .squad-table tbody tr").length === 3);
     assertEquals(await screen().locator(".team-roster .archive-pager .page-status b").textContent(), "2", "each championship keeps its own page offset");
-    await screen().locator('.team-championship-links a[data-route="equipe"]').click();
-    await page.waitForURL(`**/equipe/${team}**`);
+    await screen().locator('.team-championship-page h1 a[data-route="equipe"]').click();
+    await page.waitForURL(`**/equipe/${slugs[team]}**`);
     await screen().locator(`.team-past-championships a[data-param-championship="${pastChamp}"]`).click();
-    await page.waitForURL(`**/equipe-campeonato/${team}/${pastChamp}**`);
+    await page.waitForURL(`**/equipe-campeonato/${slugs[team]}/${slugs[pastChamp]}**`);
     await page.waitForFunction(() =>
       document.querySelector(".shell-screen:not([hidden])")?.querySelectorAll(".team-roster .squad-table tbody tr").length === 2);
     assertEquals(await screen().locator(".team-next .game-row").count(), 0);
@@ -415,9 +480,18 @@ Deno.test("team profile and championship pages keep memberships, players, and se
     assertEquals(await awayFixture.locator('.score b').allTextContents(), ['0', '2'], 'away fixtures retain actual home-first scores');
     assertEquals(await screen().locator(".team-standings .standings tbody tr").count(), 0);
     assertEquals(await screen().locator(".team-standings h3").count(), 0);
-    assertEquals(await screen().locator(".team-odds .team-odds-table tbody tr").count(), 0);
+    assertEquals(await screen().locator(".team-odds .position-odds__table tbody tr").count(), 0);
     assert((await screen().locator(".team-standings").innerText()).length > 0, "an untracked table shows its honest empty state");
     assert((await screen().locator(".team-odds").innerText()).length > 0, "uncomputed probabilities show their honest empty state");
+
+    await visit(page,`/en/team-championship/${team}/${currentChamp}`);
+    await screen().locator('.team-switch select').waitFor();
+    await screen().locator(`.team-switch option[value="${opponent}"]`).waitFor({state:'attached'});
+    assertEquals(await screen().locator('.team-switch button').count(),0,'selecting a team navigates without a second submit gesture');
+    await screen().locator('.team-switch select').selectOption(opponent);
+    await page.waitForURL(`**/en/team-championship/${slugs[opponent]}/${slugs[currentChamp]}`);
+    await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) h1')?.textContent?.includes('Split Opponent'));
+    assert((await screen().locator('h1').innerText()).includes('Split Opponent'),'English team switching retains the championship');
 
     await page.goto(`${base}/equipe-campeonato/${team}/${missingChamp}?lang=pt-BR`);
     await screen().locator('.screen[data-state="empty"]').waitFor();
@@ -441,11 +515,11 @@ Deno.test("team profile and championship pages keep memberships, players, and se
     await page.waitForFunction(() => document.documentElement.lang === "pt-BR");
     await screen().locator('.team-section-links a[href$="#team-roster"]').click();
     await screen().locator('.masthead .langs a[data-locale="en-GB"]').click();
-    await page.waitForURL(`**/en/team-championship/${team}/${currentChamp}`);
+    await page.waitForURL(`**/en/team-championship/${slugs[team]}/${slugs[currentChamp]}`);
     await page.waitForFunction(() => document.documentElement.lang === "en-GB");
-    assertEquals(new URL(page.url()).pathname, `/en/team-championship/${team}/${currentChamp}`);
+    assertEquals(new URL(page.url()).pathname, `/en/team-championship/${slugs[team]}/${slugs[currentChamp]}`);
     await screen().locator('.team-section-links a[href$="#team-roster"]').click();
-    assertEquals(new URL(page.url()).pathname, `/en/team-championship/${team}/${currentChamp}`);
+    assertEquals(new URL(page.url()).pathname, `/en/team-championship/${slugs[team]}/${slugs[currentChamp]}`);
     assertEquals(new URL(page.url()).hash, "#team-roster", "translated section navigation preserves the championship");
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "the page fits a phone without horizontal overflow");
     await screen().locator(".team-roster .squad-table tbody tr").first().waitFor();
@@ -470,7 +544,7 @@ Deno.test("team profile and championship pages keep memberships, players, and se
     assertEquals(standingMetrics, { clipped: true, whiteSpace: 'nowrap' }, 'long standings names truncate inside their allocated column');
     assertEquals(await standingName.getAttribute('title'), longTeamName);
     await standingName.click();
-    await page.waitForURL(`**/en/team-championship/${opponent}/${currentChamp}`);
+    await page.waitForURL(`**/en/team-championship/${slugs[opponent]}/${slugs[currentChamp]}`);
     const tiedZone = 'ffffffff-ffff-4fff-8fff-fffffffffff1';
     const tiedChance = '00000000-0000-4000-8000-000000000001';
     await psql(`INSERT INTO zone (id,group_id,name,color,first,last,position,positions_json)

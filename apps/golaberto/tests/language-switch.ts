@@ -47,7 +47,7 @@ for (const width of [390, 1366]) {
       await assertPortuguese();
       assertEquals(await page.locator('nav > a[data-route="campeonatos"]:not([data-locale])').getAttribute("aria-current"), "page");
       assertEquals(await page.locator('label[for="catalog-q"] > span').textContent(), "Nome");
-      const championship = page.locator('.shell-screen:not([hidden]) a[data-route="campeonato"]').first();
+      const championship = page.locator('.shell-screen:not([hidden]) a[data-route="campeonato"][href]').first();
       await championship.waitFor();
       const href = await championship.getAttribute("href");
       assert(href);
@@ -55,6 +55,7 @@ for (const width of [390, 1366]) {
       await page.waitForURL(new URL(href, base).href);
       await assertPortuguese();
       const id = new URL(page.url()).pathname.split("/").pop();
+      assert(id && !/^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(id), "championship links use readable public addresses");
       await page.click('.shell-screen:not([hidden]) .langs a[data-locale="en-GB"]');
       await page.waitForURL(`${base}/en/championship/${id}`);
       await page.waitForSelector(ready);
@@ -66,10 +67,12 @@ for (const width of [390, 1366]) {
 
       await page.goto(`${base}/en/team-championship/${ATHLETICO}/${BRASILEIRO_2026}`);
       await page.waitForSelector(ready);
+      const [teamSlug, championshipSlug] = new URL(page.url()).pathname.split("/").slice(-2);
+      assert(teamSlug !== ATHLETICO && championshipSlug !== BRASILEIRO_2026, "both legacy parameters canonicalize");
       await page.click(portuguese);
-      await page.waitForURL(`${base}/equipe-campeonato/${ATHLETICO}/${BRASILEIRO_2026}?lang=pt-BR`);
+      await page.waitForURL(`${base}/equipe-campeonato/${teamSlug}/${championshipSlug}?lang=pt-BR`);
       await assertPortuguese();
-      assertEquals(new URL(page.url()).pathname, `/equipe-campeonato/${ATHLETICO}/${BRASILEIRO_2026}`);
+      assertEquals(new URL(page.url()).pathname, `/equipe-campeonato/${teamSlug}/${championshipSlug}`);
       await page.reload();
       await assertPortuguese();
 

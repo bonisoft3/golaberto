@@ -7,9 +7,9 @@ BEGIN;
 -- tier: container
 DO $$ DECLARE t text; BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_publication WHERE pubname = 'golaberto_cdc') THEN
-    CREATE PUBLICATION golaberto_cdc FOR TABLE app_user,category,championship,phase,stage_group,zone,stadium,team,referee,player,game,goal,player_game,team_group,comment,team_comment,team_player,editor WITH (publish_generated_columns = stored);
+    CREATE PUBLICATION golaberto_cdc FOR TABLE public_address,app_user,category,championship,phase,stage_group,zone,stadium,team,referee,player,game,goal,player_game,team_group,comment,team_comment,team_player,editor WITH (publish_generated_columns = stored);
   END IF;
-  FOREACH t IN ARRAY ARRAY['app_user','category','championship','phase','stage_group','zone','stadium','team','referee','player','game','goal','player_game','team_group','comment','team_comment','team_player','editor'] LOOP
+  FOREACH t IN ARRAY ARRAY['public_address','app_user','category','championship','phase','stage_group','zone','stadium','team','referee','player','game','goal','player_game','team_group','comment','team_comment','team_player','editor'] LOOP
     IF NOT EXISTS (SELECT 1 FROM pg_publication_tables
                    WHERE pubname = 'golaberto_cdc' AND schemaname = 'public' AND tablename = t) THEN
       EXECUTE format('ALTER PUBLICATION golaberto_cdc ADD TABLE %I', t);
@@ -27,9 +27,9 @@ END $$;
 -- tier: container
 DO $$ DECLARE t text; BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_publication WHERE pubname = 'electric_publication_default') THEN
-    CREATE PUBLICATION electric_publication_default FOR TABLE app_user,category,championship,phase,stage_group,zone,stadium,team,referee,player,game,goal,player_game,standing,team_chance,zone_chance,position_chance,game_importance,team_rating,team_directory,team_championship,team_roster,team_player_history,team_group,geography_region,geography_country,player_rating,game_card,team_game,comment,player_stat,phase_round,team_comment,team_campaign_point,team_odds_history,team_rating_chart,team_odds_chart,team_odds_progress,team_roster_total,home_championship,team_player,rating_eval,home_game_card,matches_game_card,editor WITH (publish_generated_columns = stored);
+    CREATE PUBLICATION electric_publication_default FOR TABLE public_address,app_user,category,championship,phase,stage_group,zone,stadium,team,referee,player,game,goal,player_game,standing,team_chance,zone_chance,position_chance,game_importance,team_rating,team_directory,team_championship,team_roster,team_player_history,team_group,geography_region,geography_country,player_rating,game_card,team_game,comment,player_stat,phase_round,team_comment,team_campaign_point,team_odds_history,team_rating_chart,team_odds_chart,team_odds_progress,team_roster_total,home_championship,team_player,rating_eval,home_game_card,matches_game_card,editor WITH (publish_generated_columns = stored);
   END IF;
-  FOREACH t IN ARRAY ARRAY['app_user','category','championship','phase','stage_group','zone','stadium','team','referee','player','game','goal','player_game','standing','team_chance','zone_chance','position_chance','game_importance','team_rating','team_directory','team_championship','team_roster','team_player_history','team_group','geography_region','geography_country','player_rating','game_card','team_game','comment','player_stat','phase_round','team_comment','team_campaign_point','team_odds_history','team_rating_chart','team_odds_chart','team_odds_progress','team_roster_total','home_championship','team_player','rating_eval','home_game_card','matches_game_card','editor'] LOOP
+  FOREACH t IN ARRAY ARRAY['public_address','app_user','category','championship','phase','stage_group','zone','stadium','team','referee','player','game','goal','player_game','standing','team_chance','zone_chance','position_chance','game_importance','team_rating','team_directory','team_championship','team_roster','team_player_history','team_group','geography_region','geography_country','player_rating','game_card','team_game','comment','player_stat','phase_round','team_comment','team_campaign_point','team_odds_history','team_rating_chart','team_odds_chart','team_odds_progress','team_roster_total','home_championship','team_player','rating_eval','home_game_card','matches_game_card','editor'] LOOP
     IF NOT EXISTS (SELECT 1 FROM pg_publication_tables
                    WHERE pubname = 'electric_publication_default' AND schemaname = 'public' AND tablename = t) THEN
       EXECUTE format('ALTER PUBLICATION electric_publication_default ADD TABLE %I', t);
@@ -37,6 +37,7 @@ DO $$ DECLARE t text; BEGIN
   END LOOP;
 END $$;
 
+ALTER TABLE public_address REPLICA IDENTITY FULL;
 ALTER TABLE app_user REPLICA IDENTITY FULL;
 ALTER TABLE category REPLICA IDENTITY FULL;
 ALTER TABLE championship REPLICA IDENTITY FULL;

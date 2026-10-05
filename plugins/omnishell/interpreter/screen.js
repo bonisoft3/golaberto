@@ -1,6 +1,8 @@
 // Screen interpreter: hydrates one emitted screen (HTML + CSS) against the
 // store. The binding vocabulary is the pronto SPEC's; the shell owns every
 // effect and the whole state machine — screens only style states.
+import { bindAddress } from "./route-addresses.js";
+
 import { renderInto } from "./render.js";
 import { mountHatch } from "./hatch.js";
 import {
@@ -1070,7 +1072,10 @@ function bindTexts(scope, ctx, renderers = {}) {
       // the fixture adapter, which evaluates no Jessie. It shows the value as
       // text there, the way it shows a widget's markup unenhanced.
       if (render === undefined) el.textContent = interpolate(el.dataset.text, ctx);
-      else renderInto(render, interpolate(el.dataset.text, ctx), el);
+      else {
+        renderInto(render, interpolate(el.dataset.text, ctx), el);
+        ctx.cfg.addresses?.bindRendered(el);
+      }
       continue;
     }
     el.textContent = interpolate(el.dataset.text, ctx);
@@ -1216,9 +1221,12 @@ function bindElementAttributes(el, ctx) {
     // `:not([href])` treatment is what the reader gets. A param the markup
     // never declared is a different thing and still raises: routeHref reads
     // undefined, and the link lint refused it at generate.
-    const href = routeHref(ctx.cfg, el.dataset.route, args, el.dataset.locale ?? ctx.locale, { explicitLocale: true });
-    if (href === undefined) el.removeAttribute("href");
-    else el.setAttribute("href", href);
+    if (ctx.cfg.addresses) bindAddress(el, ctx.cfg, args, el.dataset.locale ?? ctx.locale, ctx.cfg.addresses).catch(error => console.error(error));
+    else {
+      const href = routeHref(ctx.cfg, el.dataset.route, args, el.dataset.locale ?? ctx.locale, { explicitLocale: true });
+      if (href === undefined) el.removeAttribute("href");
+      else el.setAttribute("href", href);
+    }
   }
 }
 
@@ -1298,7 +1306,7 @@ export async function interpretScreen(mount, appBase, route, store, params = {},
   globalThis.__prontoMessages = opts.messages;
   // What a binding reads off the app rather than off its row: the route table
   // and the locales every link's address is composed from (routeHref).
-  const cfg = { routes: opts.routes, i18n: opts.i18n, schema: opts.schema, prefix: opts.prefix, endowments: opts.endowments };
+  const cfg = { routes: opts.routes, i18n: opts.i18n, schema: opts.schema, prefix: opts.prefix, endowments: opts.endowments, addresses: opts.addresses };
   // Loaded below, before anything binds; the ctx carries the map so an adapter
   // is reached the way a message catalogue is, and every derived ctx keeps it.
   let adapters = null;
@@ -1354,9 +1362,12 @@ export async function interpretScreen(mount, appBase, route, store, params = {},
     for (const el of screen.querySelectorAll("[data-route]:not(form)")) {
       const routeArgs = routeParams(el);
       if (Object.values(routeArgs).some((v) => PLACEHOLDER.test(v))) continue;
-      const href = routeHref(cfg, el.dataset.route, routeArgs, el.dataset.locale ?? currentLocale, { explicitLocale: true });
-      if (href === undefined) el.removeAttribute("href");
-      else el.setAttribute("href", href);
+      if (cfg.addresses) bindAddress(el, cfg, routeArgs, el.dataset.locale ?? currentLocale, cfg.addresses).catch(error => console.error(error));
+      else {
+        const href = routeHref(cfg, el.dataset.route, routeArgs, el.dataset.locale ?? currentLocale, { explicitLocale: true });
+        if (href === undefined) el.removeAttribute("href");
+        else el.setAttribute("href", href);
+      }
       // Which option of a language switcher is the page the reader is already
       // on. It rides the address rather than the mount because it moves when
       // the address does, and this pass is what a switch re-runs. Only an
@@ -1367,6 +1378,7 @@ export async function interpretScreen(mount, appBase, route, store, params = {},
         else el.removeAttribute("aria-current");
       }
     }
+    for (const el of screen.querySelectorAll("[data-text-format]")) cfg.addresses?.bindRendered(el);
   };
   applyLocale(currentLocale);
 
@@ -1613,6 +1625,7 @@ export async function interpretScreen(mount, appBase, route, store, params = {},
     // then must not wipe input the user has typed since — rapid list entry
     // (add-line, capture) would lose every second entry.
     let edits = 0;
+    let navigation = 0;
     const values = async () => {
       const ctx = getCtx();
       const out = {};
@@ -1665,7 +1678,15 @@ export async function interpretScreen(mount, appBase, route, store, params = {},
         }
         // A form whose route has no address yet submits to nowhere, which is
         // not an error: the same row that empties a link empties this.
-        const target = routeHref(cfg, form.dataset.route, formParams(form), currentLocale, { explicitLocale: true });
+        const routeArgs = formParams(form);
+        const submit = ++navigation;
+        const locale = currentLocale;
+        const epoch = screenOpts.navigationEpoch?.();
+        const target = cfg.addresses
+          ? await cfg.addresses.href(form.dataset.route, routeArgs, locale, { explicitLocale: true })
+          : routeHref(cfg, form.dataset.route, routeArgs, currentLocale, { explicitLocale: true });
+        // The select may have changed again while its public address loaded.
+        if (submit !== navigation || locale !== currentLocale || epoch !== screenOpts.navigationEpoch?.() || !form.isConnected || screenOpts.isCurrent?.() === false || JSON.stringify(routeArgs) !== JSON.stringify(formParams(form))) return;
         if (target !== undefined) screenOpts.navigate(target);
         return;
       }
@@ -3615,7 +3636,10 @@ export async function interpretScreen(mount, appBase, route, store, params = {},
     pause: () => {
       for (const r of regions) r.pause();
     },
-    resume: () => Promise.all(regions.map((r) => r.resume())),
+    resume: () => {
+      if (cfg.addresses) applyLocale(currentLocale);
+      return Promise.all(regions.map((r) => r.resume()));
+    },
     stop: () => {
       for (const r of regions) r.stop();
     },

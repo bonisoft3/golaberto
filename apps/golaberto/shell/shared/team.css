@@ -159,10 +159,11 @@
 .team-odds-progress__title { font-size: var(--type-label); font-weight: 700; }
 .team-odds-progress__note { display: flex; flex-wrap: wrap; gap: var(--sp-sm) var(--sp-md); margin: var(--sp-sm) 0; color: var(--secondary); font-size: var(--type-label); }
 .team-odds-progress__svg { display: block; width: 100%; height: auto; overflow: visible; }
-.team-odds-progress__grid { stroke: var(--border); stroke-width: 1; }
+.team-odds-progress__grid { stroke: var(--border); stroke-width: .7; stroke-opacity: .35; }
 .team-odds-progress__axis { stroke: var(--secondary); stroke-width: 1; }
 .team-odds-progress__axis-value { fill: var(--secondary); font-size: 11px; }
-.team-odds-progress__area { stroke: var(--surface); stroke-width: .55; stroke-linejoin: round; }
+.team-odds-progress__area--unassigned { fill: var(--surface); }
+.team-odds-progress__area { stroke: var(--surface); stroke-width: .35; stroke-opacity: .18; stroke-linejoin: round; }
 .team-odds-progress__date-hit { stroke: transparent; pointer-events: stroke; }
 .team-odds-progress__crosshair { stroke: var(--primary); stroke-width: 1; stroke-dasharray: 3 2; pointer-events: none; }
 .team-odds-progress__selected-zone { display: inline-flex; align-items: center; gap: var(--sp-sm); margin-inline-start: var(--sp-md); color: var(--secondary); font-weight: 400; }
@@ -197,3 +198,24 @@
 
 .team-odds-progress__swatch { display: inline-block; vertical-align: middle; }
 .odds-progress-swatch .team-zone-color { display: block; }
+
+/* Combined campaign history: team color and metric stroke carry separate keys. */
+.team-chart--combined .team-chart__line--position { stroke-dasharray: 5 3; }
+.team-chart--combined .team-chart__point--position { fill: var(--surface); stroke: var(--primary); stroke-width: 1.5; }
+.team-chart--combined .team-chart__series--2 .team-chart__point--position { fill: var(--surface); stroke: var(--accent); }
+.team-chart--combined .team-chart__legend { flex-wrap: wrap; }
+.team-chart__axis-label { fill: var(--secondary); font-size: var(--type-label); }
+.team-chart__metric-legend { display: flex; flex-wrap: wrap; gap: var(--sp-lg); margin: var(--sp-sm) 0; padding: 0; list-style: none; font-size: var(--type-label); color: var(--secondary); }
+.team-chart__metric-legend li { display: inline-flex; align-items: center; gap: var(--sp-sm); }
+.team-chart__metric-legend li::before { content: ""; width: 1.5rem; border-top: var(--border-size-2) solid currentColor; }
+.team-chart__metric-legend .team-chart__metric--position::before { border-top-style: dashed; }
+.team-chart--combined .team-chart__line--points { stroke-dasharray: none; }
+.team-chart--combined .team-chart__legend--2 { text-decoration: none; }
+
+.team-chart--combined { container-type: inline-size; }
+@container (max-width: 520px) {
+  .team-chart--combined .team-chart__axis-value { font-size: var(--type-subtitle); }
+}
+@container (max-width: 360px) {
+  .team-chart--combined .team-chart__axis-value { font-size: var(--type-title); }
+}

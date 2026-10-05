@@ -1,5 +1,6 @@
 // Team enrichment integration fixtures run only in an explicitly disposable stack.
-// All rows and projection changes are rolled back at the end of the transaction.
+// The main fixture rolls back all changes. The concurrency fixture commits
+// temporary rows so two sessions can see them, then removes them in finally.
 import { assert, assertEquals } from "jsr:@std/assert@1";
 
 const project = Deno.env.get("COMPOSE_PROJECT_NAME") ?? "";
@@ -9,7 +10,7 @@ if (!/(?:check|test)/i.test(project) || project.toLowerCase() === "golaberto") {
   );
 }
 
-const psql = async (sql: string) => {
+const spawnSql = async (sql: string, keepStdinOpen = false) => {
   const process = new Deno.Command("docker", {
     args: [
       "compose", "-p", project, "exec", "-T", "apps_golaberto-database",
@@ -21,9 +22,19 @@ const psql = async (sql: string) => {
     stderr: "piped",
   }).spawn();
   const writer = process.stdin.getWriter();
+  const done = process.output();
   await writer.write(new TextEncoder().encode(sql));
-  await writer.close();
-  const result = await process.output();
+  if (!keepStdinOpen) await writer.close();
+  return {
+    done,
+    send: async (next: string) => await writer.write(new TextEncoder().encode(next)),
+    close: async () => await writer.close(),
+  };
+};
+
+const psql = async (sql: string) => {
+  const session = await spawnSql(sql);
+  const result = await session.done;
   const stderr = new TextDecoder().decode(result.stderr);
   assert(result.success, stderr);
   return new TextDecoder().decode(result.stdout).trim();
@@ -48,6 +59,7 @@ Deno.test("team enrichment imports, aggregates, samples and refreshes transactio
   const group = uuid();
   const phaseBonus = uuid();
   const groupBonus = uuid();
+  const emptyGroup = uuid();
   const oddsGroup = groupBonus;
   const zone = uuid();
   const gameIds = [uuid(), uuid(), uuid(), uuid(), uuid(), uuid()].sort();
@@ -73,7 +85,8 @@ Deno.test("team enrichment imports, aggregates, samples and refreshes transactio
       VALUES (${q(phase)},${q(champ)},'Head-to-head','pt,head,bias,name',0,0),
         (${q(phaseBonus)},${q(champ)},'Bonus','pt,w,gd,gf,bias,name',1,2);
     INSERT INTO stage_group(id,phase_id,name) VALUES
-      (${q(group)},${q(phase)},'Tie group'),(${q(groupBonus)},${q(phaseBonus)},'Bonus group');
+      (${q(group)},${q(phase)},'Tie group'),(${q(groupBonus)},${q(phaseBonus)},'Bonus group'),
+      (${q(emptyGroup)},${q(phase)},'Empty group');
     INSERT INTO team_group(group_id,team_id,bias) VALUES
       (${q(group)},${q(teamA)},0),(${q(group)},${q(teamB)},0),
       (${q(group)},${q(teamC)},0),(${q(group)},${q(teamD)},0),
@@ -246,12 +259,109 @@ Deno.test("team enrichment imports, aggregates, samples and refreshes transactio
       IF (SELECT points FROM team_campaign_point WHERE group_id='${groupBonus}' AND team_id='${teamE}' AND game_id='${bonusGame}') <> 4
         THEN RAISE EXCEPTION 'threshold bonus points should be included in campaign totals'; END IF;
     END $$;
-    CREATE TEMP TABLE campaign_snapshot AS SELECT * FROM team_campaign_point WHERE group_id='${group}';
-    DO $$ BEGIN PERFORM refresh_team_campaign_group('${group}'); END $$;
+    CREATE TEMP TABLE campaign_writes (operation text, id text);
+    CREATE FUNCTION pg_temp.record_campaign_write() RETURNS trigger LANGUAGE plpgsql AS $$
+    BEGIN
+      INSERT INTO pg_temp.campaign_writes VALUES (TG_OP,coalesce(NEW.id,OLD.id));
+      RETURN NULL;
+    END $$;
+    CREATE TRIGGER campaign_test_journal AFTER INSERT OR UPDATE OR DELETE ON team_campaign_point
+      FOR EACH ROW EXECUTE FUNCTION pg_temp.record_campaign_write();
+    CREATE TEMP TABLE campaign_snapshot AS
+      SELECT *,ctid AS physical_row,xmin::text AS row_version
+      FROM team_campaign_point WHERE group_id='${group}';
     DO $$ BEGIN
-      IF EXISTS (SELECT id,position,points FROM campaign_snapshot EXCEPT SELECT id,position,points FROM team_campaign_point WHERE group_id='${group}')
-        OR EXISTS (SELECT id,position,points FROM team_campaign_point WHERE group_id='${group}' EXCEPT SELECT id,position,points FROM campaign_snapshot)
-        THEN RAISE EXCEPTION 'campaign replay should preserve logical rows'; END IF;
+      IF refresh_team_campaign_group('${group}') <> (SELECT count(*) FROM campaign_snapshot)
+        THEN RAISE EXCEPTION 'campaign replay must return reconstructed count, not changed count'; END IF;
+      IF EXISTS (SELECT * FROM campaign_writes)
+        OR EXISTS (SELECT * FROM campaign_snapshot EXCEPT
+          SELECT *,ctid,xmin::text FROM team_campaign_point WHERE group_id='${group}')
+        OR EXISTS (SELECT *,ctid,xmin::text FROM team_campaign_point WHERE group_id='${group}'
+          EXCEPT SELECT * FROM campaign_snapshot)
+        THEN RAISE EXCEPTION 'campaign replay must preserve physical rows and emit no CDC changes'; END IF;
+      IF refresh_team_campaign_group('${emptyGroup}') <> 0
+        OR refresh_team_campaign_group('${deletedTeam}') <> 0
+        OR EXISTS (SELECT * FROM campaign_writes)
+        THEN RAISE EXCEPTION 'empty or deleted groups must return zero without writes'; END IF;
+    END $$;
+    -- Exercise every mutable field independently, with unchanged siblings in
+    -- each replacement. The journal catches accidental delete/reinsert churn.
+    DO $$ DECLARE payload jsonb; change jsonb; rebuilt integer; BEGIN
+      payload:=compute_team_campaign_rows('${group}');
+      FOR change IN SELECT value FROM jsonb_array_elements(
+        '[{"sequence":100},{"day":"2026-02-01"},{"points":100},{"position":100},{"result":"d"}]'::jsonb
+      ) LOOP
+        SELECT jsonb_agg(CASE WHEN item->>'team_id'='${teamA}' AND item->>'game_id'='${gAB}'
+          THEN item || change ELSE item END) INTO payload FROM jsonb_array_elements(payload) item;
+        rebuilt:=replace_team_campaign_points('${group}',payload);
+        IF rebuilt <> (SELECT count(*) FROM campaign_snapshot)
+          THEN RAISE EXCEPTION 'delta replacement changed the RPC count contract'; END IF;
+      END LOOP;
+      IF (SELECT count(*) FROM campaign_writes) <> 5
+        OR EXISTS (SELECT 1 FROM campaign_writes
+          WHERE operation<>'UPDATE' OR id<>'${group}:${teamA}:${gAB}')
+        OR (SELECT (sequence::integer,day::date,points::integer,position::integer,result::text)
+          FROM team_campaign_point WHERE id='${group}:${teamA}:${gAB}')
+          IS DISTINCT FROM (100,date '2026-02-01',100,100,'d'::text)
+        OR EXISTS (SELECT 1 FROM campaign_snapshot before JOIN team_campaign_point after USING(id)
+          WHERE before.id<>'${group}:${teamA}:${gAB}'
+            AND (before.physical_row,before.row_version,before.txid)
+              IS DISTINCT FROM (after.ctid,after.xmin::text,after.txid))
+        THEN RAISE EXCEPTION 'only changed campaign fields may update their row'; END IF;
+      PERFORM refresh_team_campaign_group('${group}');
+      IF (SELECT count(*) FROM campaign_writes) <> 6
+        THEN RAISE EXCEPTION 'source reconstruction must restore only the changed row'; END IF;
+    END $$;
+    TRUNCATE campaign_writes;
+    TRUNCATE campaign_snapshot;
+    INSERT INTO campaign_snapshot SELECT *,ctid,xmin::text FROM team_campaign_point WHERE group_id='${group}';
+    DO $$ DECLARE payload jsonb; rebuilt integer; BEGIN
+      -- This would first remove all but one row, then fail the result constraint.
+      SELECT jsonb_build_array(item || '{"result":"invalid"}'::jsonb) INTO payload
+        FROM jsonb_array_elements(compute_team_campaign_rows('${group}')) item LIMIT 1;
+      BEGIN
+        PERFORM replace_team_campaign_points('${group}',payload);
+        RAISE EXCEPTION 'invalid campaign rows should have been rejected';
+      EXCEPTION WHEN check_violation THEN NULL;
+      END;
+      BEGIN
+        PERFORM replace_team_campaign_points('${group}',NULL);
+        RAISE EXCEPTION 'null campaign rows should have been rejected';
+      EXCEPTION WHEN raise_exception THEN
+        IF SQLERRM<>'rows must be a JSON array' THEN RAISE; END IF;
+      END;
+      IF EXISTS (SELECT * FROM campaign_writes)
+        OR EXISTS (SELECT * FROM campaign_snapshot EXCEPT
+          SELECT *,ctid,xmin::text FROM team_campaign_point WHERE group_id='${group}')
+        OR EXISTS (SELECT *,ctid,xmin::text FROM team_campaign_point WHERE group_id='${group}'
+          EXCEPT SELECT * FROM campaign_snapshot)
+        THEN RAISE EXCEPTION 'failed delta must roll back deletes and preserve prior physical rows'; END IF;
+      SELECT jsonb_agg(item) INTO payload FROM jsonb_array_elements(compute_team_campaign_rows('${group}')) item
+        WHERE NOT (item->>'team_id'='${teamA}' AND item->>'game_id'='${gAB}');
+      rebuilt:=replace_team_campaign_points('${group}',payload);
+      IF rebuilt <> (SELECT count(*)-1 FROM campaign_snapshot)
+        OR (SELECT count(*) FROM campaign_writes) <> 1
+        OR NOT EXISTS (SELECT 1 FROM campaign_writes
+          WHERE operation='DELETE' AND id='${group}:${teamA}:${gAB}')
+        OR EXISTS (SELECT 1 FROM campaign_snapshot before JOIN team_campaign_point after USING(id)
+          WHERE (before.physical_row,before.row_version,before.txid)
+            IS DISTINCT FROM (after.ctid,after.xmin::text,after.txid))
+        THEN RAISE EXCEPTION 'delta deletion must remove only absent keys'; END IF;
+      PERFORM refresh_team_campaign_group('${group}');
+    END $$;
+    TRUNCATE campaign_writes;
+    DO $$ DECLARE rebuilt integer; BEGIN
+      rebuilt:=replace_team_campaign_points('${group}','[]'::jsonb);
+      IF rebuilt <> 0
+        OR EXISTS (SELECT 1 FROM team_campaign_point WHERE group_id='${group}')
+        OR (SELECT count(*) FROM campaign_writes) <> (SELECT count(*) FROM campaign_snapshot)
+        OR EXISTS (SELECT 1 FROM campaign_writes WHERE operation<>'DELETE')
+        THEN RAISE EXCEPTION 'empty replacement must remove the previous campaign atomically'; END IF;
+      rebuilt:=replace_team_campaign_points('${group}','[]'::jsonb);
+      IF rebuilt <> 0
+        OR (SELECT count(*) FROM campaign_writes) <> (SELECT count(*) FROM campaign_snapshot)
+        THEN RAISE EXCEPTION 'empty replacement replay must emit no changes'; END IF;
+      PERFORM refresh_team_campaign_group('${group}');
     END $$;
     DELETE FROM game WHERE id='${gCD}';
     DO $$ BEGIN PERFORM refresh_team_campaign_group('${group}'); END $$;
@@ -345,4 +455,106 @@ Deno.test("team enrichment imports, aggregates, samples and refreshes transactio
     ROLLBACK;`);
 
   assertEquals(output, "");
+});
+
+Deno.test("campaign refresh waits before computing and locks only its own group", async () => {
+  const teamA = uuid();
+  const teamB = uuid();
+  const championship = uuid();
+  const phase = uuid();
+  const group = uuid();
+  const unrelatedGroup = uuid();
+  const game = uuid();
+  const lockName = `campaign-lock-${group}`;
+  const workerName = `campaign-worker-${group}`;
+  let lockSession: Awaited<ReturnType<typeof spawnSql>> | undefined;
+  let workerSession: Awaited<ReturnType<typeof spawnSql>> | undefined;
+
+  try {
+    await psql(`BEGIN;
+      INSERT INTO team(id,name,country) VALUES
+        ('${teamA}','Campaign Concurrent A','Brasil'),('${teamB}','Campaign Concurrent B','Brasil');
+      INSERT INTO championship(id,name,region_name,begins,ends,point_win,point_draw,point_loss)
+        VALUES ('${championship}','Campaign Concurrency','Brasil','2026-01-01','2026-12-31',3,1,0);
+      INSERT INTO phase(id,championship_id,name,sort)
+        VALUES ('${phase}','${championship}','Concurrent','pt,w,gd,gf,bias,name');
+      INSERT INTO stage_group(id,phase_id,name) VALUES
+        ('${group}','${phase}','Concurrent'),('${unrelatedGroup}','${phase}','Unrelated');
+      INSERT INTO team_group(group_id,team_id,bias) VALUES
+        ('${group}','${teamA}',0),('${group}','${teamB}',0);
+      INSERT INTO game(id,phase_id,round,day,home_id,away_id,played,home_score,away_score)
+        VALUES ('${game}','${phase}',1,'2026-01-01','${teamA}','${teamB}',true,1,0);
+      DO $$ BEGIN PERFORM refresh_team_campaign_group('${group}'); END $$;
+      COMMIT;`);
+
+    lockSession = await spawnSql(`SET application_name='${lockName}';
+      SET statement_timeout='20s'; SET idle_in_transaction_session_timeout='30s';
+      BEGIN;
+      SELECT id FROM stage_group WHERE id='${group}' FOR NO KEY UPDATE;
+      `, true);
+    await psql(`DO $$ DECLARE ready boolean := false; BEGIN
+      FOR attempt IN 1..100 LOOP
+        PERFORM pg_stat_clear_snapshot();
+        SELECT EXISTS (SELECT 1 FROM pg_stat_activity
+          WHERE application_name='${lockName}' AND state='idle in transaction'
+            AND query LIKE 'SELECT id FROM stage_group%') INTO ready;
+        EXIT WHEN ready;
+        PERFORM pg_sleep(0.05);
+      END LOOP;
+      IF NOT ready THEN RAISE EXCEPTION 'campaign lock session did not start'; END IF;
+    END $$;`);
+
+    workerSession = await spawnSql(`SET application_name='${workerName}';
+      SET statement_timeout='20s';
+      SELECT refresh_team_campaign_group('${group}');`);
+    await psql(`DO $$ DECLARE blocked boolean := false; BEGIN
+      FOR attempt IN 1..100 LOOP
+        PERFORM pg_stat_clear_snapshot();
+        SELECT EXISTS (SELECT 1 FROM pg_stat_activity worker JOIN pg_stat_activity locker
+          ON locker.pid=ANY(pg_blocking_pids(worker.pid))
+          WHERE worker.application_name='${workerName}' AND worker.wait_event_type='Lock'
+            AND locker.application_name='${lockName}') INTO blocked;
+        EXIT WHEN blocked;
+        PERFORM pg_sleep(0.05);
+      END LOOP;
+      IF NOT blocked THEN RAISE EXCEPTION 'concurrent refresh did not wait for its group'; END IF;
+    END $$;`);
+
+    assertEquals(await psql(`SET statement_timeout='2s';
+      SELECT refresh_team_campaign_group('${unrelatedGroup}');`), "0");
+    // The waiter has already started. Change and publish the source while its
+    // group is locked; computing before waiting would overwrite this new result.
+    await lockSession.send(`UPDATE game SET home_score=0,away_score=1 WHERE id='${game}';
+      DO $$ BEGIN PERFORM refresh_team_campaign_group('${group}'); END $$;
+      COMMIT;\n`);
+    await lockSession.close();
+    const lockResult = await lockSession.done;
+    assert(lockResult.success, new TextDecoder().decode(lockResult.stderr));
+    lockSession = undefined;
+    const workerResult = await workerSession.done;
+    assert(workerResult.success, new TextDecoder().decode(workerResult.stderr));
+    assertEquals(new TextDecoder().decode(workerResult.stdout).trim(), "2");
+    workerSession = undefined;
+
+    assertEquals(await psql(`DO $$ BEGIN
+      IF (SELECT count(*) FROM team_campaign_point WHERE group_id='${group}') <> 2
+        OR (SELECT (points::integer,result::text) FROM team_campaign_point
+          WHERE group_id='${group}' AND team_id='${teamA}') IS DISTINCT FROM (0,'l'::text)
+        OR (SELECT (points::integer,result::text) FROM team_campaign_point
+          WHERE group_id='${group}' AND team_id='${teamB}') IS DISTINCT FROM (3,'w'::text)
+        THEN RAISE EXCEPTION 'waiting refresh published stale campaign data'; END IF;
+    END $$;`), "");
+  } finally {
+    if (lockSession || workerSession) {
+      await psql(`SELECT pg_terminate_backend(pid) FROM pg_stat_activity
+        WHERE application_name IN ('${lockName}','${workerName}') AND pid<>pg_backend_pid();`);
+      if (lockSession) await lockSession.close().catch(() => undefined);
+      await Promise.all([lockSession?.done, workerSession?.done]);
+    }
+    await psql(`BEGIN;
+      DELETE FROM game WHERE id='${game}';
+      DELETE FROM team WHERE id IN ('${teamA}','${teamB}');
+      DELETE FROM championship WHERE id='${championship}';
+      COMMIT;`);
+  }
 });

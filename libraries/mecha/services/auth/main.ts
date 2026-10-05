@@ -130,11 +130,16 @@ export function issueUserToken(id: string, handle: string, guest = false): Promi
  * the floor, and until its scope derivation exists it has no business on a sync
  * path that is supposed to be scoped.
  */
-async function isFloored(table: string): Promise<boolean> {
+async function tableScope(table: string): Promise<{ floored: boolean; publicOnly: boolean }> {
   // The floor's own precondition (has_scope in rls.sql); to_regclass is NULL
   // for a table that does not exist, and NULL has no scope.
-  const rows = await sql`SELECT public.has_scope(to_regclass(${"public." + table})) AS ok`;
-  return rows[0].ok as boolean;
+  const rows = await sql`SELECT public.has_scope(to_regclass(${"public." + table})) AS floored,
+    EXISTS (SELECT 1 FROM pg_catalog.pg_attribute a
+      JOIN pg_catalog.pg_attrdef d ON d.adrelid=a.attrelid AND d.adnum=a.attnum
+      WHERE a.attrelid=to_regclass(${"public." + table}) AND a.attname='scope_id'
+        AND a.attnotnull AND NOT a.attisdropped AND a.attgenerated='s'
+        AND pg_catalog.pg_get_expr(d.adbin,d.adrelid)=${"'public:'::text"}) AS public_only`;
+  return { floored: rows[0].floored, publicOnly: rows[0].public_only };
 }
 
 async function subjectScopes(uid: string | null): Promise<string[]> {
@@ -210,15 +215,18 @@ async function shapeToken(req: Request): Promise<Response> {
     }
     where = rowWhere(key.column, key.value);
   } else {
-    const [floored, scopes] = await Promise.all([isFloored(body.table), subjectScopes(sub)]);
-    if (!floored) {
+    const [scope, scopes] = await Promise.all([tableScope(body.table), subjectScopes(sub)]);
+    if (!scope.floored) {
       return jsonError(
         409,
         `${body.table} carries no scope_id: it is exempt from the tenancy floor, ` +
           `so no shape over it can be scoped`,
       );
     }
-    where = shapeWhere(scopes);
+    // A constant generated scope cannot contain user rows. Omit irrelevant
+    // user scopes so Electric shares one public log across all subjects.
+    // Mutable/default scopes and every other expression retain full reach.
+    where = shapeWhere(scope.publicOnly ? (scopes.includes("public:") ? ["public:"] : []) : scopes);
   }
   const token = await signJwt({
     typ: "shape",

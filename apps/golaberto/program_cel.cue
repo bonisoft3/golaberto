@@ -14,6 +14,22 @@ package golaberto
 import "strings"
 
 code: state: entities: {
+	PublicAddress: {
+		checks: {
+			kind: "kind IN ('team', 'championship', 'game', 'group', 'player', 'stadium', 'referee')"
+			slug: "slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'"
+		}
+		seed: [...{
+			kind?: ("team" | "championship" | "game" | "group" | "player" | "stadium" | "referee")
+			slug?: =~ "^[a-z0-9]+(-[a-z0-9]+)*$"
+		}]
+		enums: {
+			kind: ["team","championship","game","group","player","stadium","referee"]
+		}
+		bounds: {
+			slug: {regex: "^[a-z0-9]+(-[a-z0-9]+)*$"}
+		}
+	}
 	AppUser: {
 		checks: {
 			handle: "char_length(handle) > 0"
@@ -957,14 +973,20 @@ code: state: entities: {
 			snapshot_index?: >=-1 & <=359
 			snapshot_last?: >=0 & <=359
 			pointer_x?: >=0 & <=1000
+			position_number?: >=-1 & <=10000
+			position_last?: >=0 & <=10000
+			table_mode?: ("current" | "history")
 		}]
 		enums: {
 			state: ["viewing"]
+			table_mode: ["current","history"]
 		}
 		bounds: {
 			snapshot_index: {intMin: -1, intMax: 359}
 			snapshot_last: {intMin: 0, intMax: 359}
 			pointer_x: {intMin: 0, intMax: 1000}
+			position_number: {intMin: -1, intMax: 10000}
+			position_last: {intMin: 0, intMax: 10000}
 		}
 	}
 	TeamChartState: {

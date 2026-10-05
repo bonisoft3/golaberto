@@ -166,13 +166,13 @@ for (const width of [390, 1366]) {
             const links = [...document.querySelectorAll(`.catalog-table a[data-route="${route}"]`)];
             return links.length === Number(count) && links.every((link) => link.textContent?.includes(prefix));
           }, [route, String(expected), prefix]);
-          const results = await page.locator(`.catalog-table a[data-route="${route}"]`).evaluateAll((links) => links.map((link) => new URL((link as HTMLAnchorElement).href).pathname).sort());
+          const results = await page.locator(`.catalog-table a[data-route="${route}"]`).evaluateAll((links) => links.map((link) => link.getAttribute("data-param-id") ?? "").sort());
           if (index === 0) first = results;
           else assertEquals(results, first);
           if (table === "team_directory" && index === 0) {
             await page.click(`#${input}-next`);
             await page.waitForFunction(() => document.querySelectorAll('.catalog-table a[data-route="equipe"]').length === 2);
-            const last = await page.locator('.catalog-table a[data-route="equipe"]').evaluateAll((links) => links.map((link) => new URL((link as HTMLAnchorElement).href).pathname));
+            const last = await page.locator('.catalog-table a[data-route="equipe"]').evaluateAll((links) => links.map((link) => link.getAttribute("data-param-id") ?? ""));
             assertEquals(new Set([...first, ...last]).size, 42);
             await page.locator(`#${input}-next`).waitFor({ state: "hidden" });
           }

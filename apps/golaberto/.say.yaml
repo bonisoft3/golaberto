@@ -76,12 +76,27 @@ say:
       team-enrichment:
         cmds:
           - do: 'let project = (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim); if $project !~ ''(?i)(check|test)'' or ($project | str downcase) == ''golaberto'' { error make {msg: ''team-enrichment requires an explicit disposable check/test compose project''} }; mise exec -- docker compose -p $project stop apps_golaberto-transform; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE }; mise exec -- deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker tests/team-enrichment.ts; let verdict = $env.LAST_EXIT_CODE; mise exec -- docker compose -p $project up -d --no-deps apps_golaberto-transform; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE }; exit $verdict'
+      electric-cache:
+        cmds:
+          - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-env --allow-read --allow-run=docker tests/electric-cache.ts
+      campaign-work:
+        cmds:
+          - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-env --allow-read --allow-run=docker tests/campaign-work.ts
       odds-progress:
         cmds:
           - do: 'let project = (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim); if $project !~ ''(?i)(check|test)'' or ($project | str downcase) == ''golaberto'' { error make {msg: ''odds-progress requires an explicit disposable check/test compose project''} }; mise exec -- docker compose -p $project stop apps_golaberto-transform; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE }; mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env --allow-run=docker tests/odds-progress.ts; let verdict = $env.LAST_EXIT_CODE; mise exec -- docker compose -p $project up -d --no-deps apps_golaberto-transform; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE }; exit $verdict'
       zone-colors:
         cmds:
           - do: 'let project = (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim); if $project !~ ''(?i)(check|test)'' or ($project | str downcase) == ''golaberto'' { error make {msg: ''zone-colors requires a disposable check/test compose project''} }; mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env --allow-run=docker,python3 tests/zone-colors.ts tests/archive-refresh.ts'
+      live-update-browser:
+        cmds:
+          - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env --allow-net --allow-run --allow-sys --allow-write tests/live-update.ts
+      public-addresses:
+        cmds:
+          - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env --allow-run=docker tests/public-addresses.ts
+      slug-routes:
+        cmds:
+          - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/slug-routes.ts
       replay:
         priority: 1
         cmds:
@@ -105,6 +120,9 @@ say:
       rpk:
         cmds:
           - do: mise exec -- redpanda-connect lint --skip-env-var-check docker/golaberto-standings.yaml docker/golaberto-team-directory.yaml docker/golaberto-team-profiles.yaml docker/golaberto-game-cards.yaml docker/golaberto-home-games.yaml docker/golaberto-recent-championships.yaml docker/golaberto-matches-games.yaml docker/golaberto-player-stats.yaml docker/golaberto-rounds.yaml docker/golaberto-team-campaign.yaml docker/golaberto-team-enrichment.yaml
+      campaign-sql:
+        cmds:
+          - do: mise exec -- squawk --exclude prefer-bigint-over-int services/database/sql/033_campaign_delta.sql services/database/sql/034_campaign_queue.sql
       facts:
         priority: 1
         cmds:
@@ -167,6 +185,9 @@ say:
       team-chart-renderer:
         cmds:
           - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/team-chart-renderer.ts
+      position-odds:
+        cmds:
+          - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/position-odds-renderer.ts tests/position-odds-controls.ts
       compute-completion:
         cmds:
           - do: mise exec -- deno test --config ../../libraries/mecha/services/compute/deno.json --lock ../../libraries/mecha/services/compute/deno.lock --frozen --unstable-worker-options --allow-all ../../libraries/mecha/services/compute/main_test.ts
@@ -182,6 +203,12 @@ say:
       zone-colors-renderer:
         cmds:
           - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/zone-color-renderer.ts tests/zone-chances.ts
+      live-update-unit:
+        cmds:
+          - do: mise exec -- deno test --config ../../plugins/omnishell/test/deno.json --no-lock --allow-read --allow-env ../../plugins/omnishell/test/offline-first-sw.test.ts ../../plugins/omnishell/test/served-modules.test.ts
+      route-addresses-unit:
+        cmds:
+          - do: mise exec -- deno test --config ../../plugins/omnishell/test/deno.json --no-lock --allow-read --allow-env ../../plugins/omnishell/test/route-addresses.test.ts ../../plugins/omnishell/test/served-modules.test.ts
       prerender:
         cmds:
           - do: 'use tools.nu [run-mise]; let pronto = "../../plugins/pronto"; let out = (mktemp -d); run-mise exec -- deno run --config ($pronto | path join deno.json) --allow-read $"--allow-write=($out)" ($pronto | path join prerender.ts) . $out https://localhost:8443; rm -rf $out'

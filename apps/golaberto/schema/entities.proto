@@ -397,6 +397,13 @@ message PositionChance {
   optional string reach = 8 [json_name = "reach"];
 }
 
+message PublicAddress {
+  optional string id = 1 [json_name = "id"];
+  optional string kind = 2 [json_name = "kind"];
+  optional string record_id = 3 [json_name = "record_id"];
+  optional string slug = 4 [json_name = "slug"];
+}
+
 message RatingEval {
   optional string id = 1 [json_name = "id"];
   optional double rps = 2 [json_name = "rps"];
@@ -604,6 +611,10 @@ message TeamOddsProgressState {
   optional int32 snapshot_last = 7 [json_name = "snapshot_last"];
   optional int32 pointer_x = 8 [json_name = "pointer_x"];
   optional string series_json = 9 [json_name = "series_json"];
+  optional string current_json = 10 [json_name = "current_json"];
+  optional int32 position_number = 11 [json_name = "position_number"];
+  optional int32 position_last = 12 [json_name = "position_last"];
+  optional string table_mode = 13 [json_name = "table_mode"];
 }
 
 message TeamPlayer {

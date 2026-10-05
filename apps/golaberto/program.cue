@@ -41,6 +41,15 @@ _searchCollationUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_
 
 _teamDirectorySql: string @embed(file="services/database/sql/024_team_directory.sql", type=text)
 _teamDirectoryUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamDirectorySql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_publicAddressesSql: string @embed(file="services/database/sql/032_public_addresses.sql", type=text)
+_publicAddressesUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_publicAddressesSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
+_campaignDeltaSql: string @embed(file="services/database/sql/033_campaign_delta.sql", type=text)
+_campaignDeltaUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_campaignDeltaSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
+_campaignQueueSql: string @embed(file="services/database/sql/034_campaign_queue.sql", type=text)
+_campaignQueueUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_campaignQueueSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
 _zoneColorsSql: string @embed(file="services/database/sql/031_zone_colors.sql", type=text)
 _zoneColorsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_zoneColorsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
@@ -89,6 +98,7 @@ _score: "this >= 0 && this < 100"
 code: pronto.#App & {
 	// Queries own their historical subsets; a detail page never loads an archive.
 	state: entities: {
+		PublicAddress: onDemand: true
 		AppUser: onDemand: true
 		Category: onDemand: true
 		Championship: onDemand: true
@@ -130,6 +140,23 @@ code: pronto.#App & {
 		TeamRosterTotal: onDemand: true
 	}
 	state: entities: {
+		PublicAddress: {
+			id: "0x83db930cb4b0e70f"
+			table: "public_address"
+			durability: "server"
+			writers: "pipeline"
+			access: {scope: "public"}
+			fields: [
+				{ordinal: 1, name: "id", type: "string", pk: true},
+				{ordinal: 2, name: "kind", type: "string", cel: "this in ['team', 'championship', 'game', 'group', 'player', 'stadium', 'referee']"},
+				{ordinal: 3, name: "record_id", type: "uuid"},
+				{ordinal: 4, name: "slug", type: "string", cel: "this.matches('^[a-z0-9]+(-[a-z0-9]+)*$')"},
+			]
+			uniques: [
+				{name: "uq_public_address_record", cols: ["kind", "record_id"]},
+				{name: "uq_public_address_slug", cols: ["kind", "slug"]},
+			]
+		}
 		// The auth plane's person: every reader is one, a guest until a passkey
 		// keeps them (ir decision-guest-reading).
 		AppUser: {
@@ -1157,6 +1184,10 @@ code: pronto.#App & {
 				{ordinal: 7, name: "snapshot_last", type: "int32", cel: "this >= 0 && this <= 359", default: "0"},
 				{ordinal: 8, name: "pointer_x", type: "int32", cel: "this >= 0 && this <= 1000", default: "1000"},
 				{ordinal: 9, name: "series_json", type: "string", default: "'{}'"},
+				{ordinal: 10, name: "current_json", type: "string", default: "'{}'"},
+				{ordinal: 11, name: "position_number", type: "int32", cel: "this >= -1 && this <= 10000", default: "-1"},
+				{ordinal: 12, name: "position_last", type: "int32", cel: "this >= 0 && this <= 10000", default: "0"},
+				{ordinal: 13, name: "table_mode", type: "string", cel: "this in ['current', 'history']", default: "'current'"},
 			]
 		}
 		TeamOddsChart: {
@@ -1275,6 +1306,9 @@ code: pronto.#App & {
 		{name: "029_team_enrichment.sql", src: "services/database/sql/029_team_enrichment.sql"},
 		{name: "030_team_odds_progress.sql", src: "services/database/sql/030_team_odds_progress.sql"},
 		{name: "031_zone_colors.sql", src: "services/database/sql/031_zone_colors.sql"},
+		{name: "032_public_addresses.sql", src: "services/database/sql/032_public_addresses.sql"},
+		{name: "033_campaign_delta.sql", src: "services/database/sql/033_campaign_delta.sql"},
+		{name: "034_campaign_queue.sql", src: "services/database/sql/034_campaign_queue.sql"},
 		// Large archive fixtures are copied at build, never expanded through CUE.
 		{name: "900_seed.sql", src: "services/database/sql/900_seed.sql"},
 	]
@@ -1297,6 +1331,9 @@ code: pronto.#App & {
 	state: migrations: "025_search_letter_equivalences": {operations: [{sql: {up: _extendedSearchCollationUpgrade, onComplete: true}}]}
 	state: migrations: "026_team_geography": {operations: [{sql: {up: _teamGeographyUpgrade, onComplete: true}}]}
 	state: migrations: "027_team_directory_type": {operations: [{sql: {up: _teamTypeUpgrade, onComplete: true}}]}
+	state: migrations: "032_public_addresses": {operations: [{sql: {up: _publicAddressesUpgrade, onComplete: true}}]}
+	state: migrations: "033_campaign_delta": {operations: [{sql: {up: _campaignDeltaUpgrade, onComplete: true}}]}
+	state: migrations: "034_campaign_queue": {operations: [{sql: {up: _campaignQueueUpgrade, onComplete: true}}]}
 	state: migrations: "031_zone_colors": {operations: [{sql: {up: _zoneColorsUpgrade, onComplete: true}}]}
 	state: migrations: "030_team_odds_progress": {operations: [{sql: {up: _teamOddsProgressUpgrade, onComplete: true}}]}
 	state: migrations: "029_team_enrichment": {operations: [{sql: {up: _teamEnrichmentUpgrade, onComplete: true}}]}
@@ -1354,6 +1391,8 @@ code: pronto.#App & {
 	}
 
 	surface: handlers: {
+		"position-odds-fold": {ir:"handler-position-odds-fold",of:"equipe-campeonato",src:"shell/handlers/position-odds-fold.js",note:"bounded current position odds and source zones share the chart inspection state"}
+		"position-odds-control": {ir:"handler-position-odds-control",of:"equipe-campeonato",src:"shell/handlers/position-odds-control.js",note:"current-position inspection and exact-value mode remain separate from recorded date selection"}
 		"odds-progress-snapshot": {ir:"handler-odds-progress-snapshot",of:"equipe-campeonato",src:"shell/handlers/odds-progress-snapshot.js",note:"bounded recorded probability chart selection and source synchronization"}
 		"odds-progress-key": {ir:"handler-odds-progress-key",of:"equipe-campeonato",src:"shell/handlers/odds-progress-key.js",note:"bounded recorded probability chart selection and source synchronization"}
 		"odds-progress-point": {ir:"handler-odds-progress-point",of:"equipe-campeonato",src:"shell/handlers/odds-progress-point.js",note:"bounded recorded probability chart selection and source synchronization"}
@@ -1603,7 +1642,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "empty"], accepts: ["accept-team-championship-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/team-chart.js", "shell/renderers/team-location.js", "shell/renderers/odds-progress.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/team-chart.js", "shell/renderers/team-location.js", "shell/renderers/odds-progress.js", "shell/renderers/position-odds.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/team.css"]
 		}
 		jogador: {
@@ -2289,6 +2328,7 @@ cluster: (pronto.#DefaultCluster & {"code": code, statics: list.Concat([
 cluster: meta: databaseDataDir: "/var/lib/postgresql/18/docker"
 cluster: meta: databaseVolume: "golaberto-archive"
 terminal: (pronto.#DefaultTerminal & {"code": code}).out
+terminal: liveUpdates: true
 terminal: favicon: "/shell/favicon.ico"
 loop:     (pronto.#DefaultLoop & {"code": code, "cluster": cluster, "terminal": terminal}).out
 loop: surface: checks: "seed-data": {
@@ -2432,6 +2472,7 @@ loop: surface: checks: "team-page-split": {
 }
 
 loop: surface: checks: "team-chart-renderer": {verb: "test", cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/team-chart-renderer.ts"], note: "pure chart geometry, accessible links and safe SVG node output"}
+loop: surface: checks: "position-odds": {verb:"test",cmds:["mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/position-odds-renderer.ts tests/position-odds-controls.ts"],note:"source-colored discrete position odds, isolated inspection and one exact-value table"}
 
 code: state: pipelines: "team-campaign": {raw: true, from: "Game", to: "TeamCampaignPoint", group: "golaberto-team-campaign"}
 code: state: pipelines: "team-enrichment": {raw: true, from: "TeamRating", to: "TeamRatingChart", group: "golaberto-team-enrichment"}
@@ -2445,9 +2486,36 @@ loop: surface: checks: "team-enrichment": {
 	note: "rating samples, campaign reconstruction, roster metric totals, post-computation snapshots and comment permissions remain coherent"
 }
 
+loop: surface: checks: "electric-cache": {
+	verb: "integrate"
+	cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-env --allow-read --allow-run=docker tests/electric-cache.ts"]
+	note: "additive retained campaign upgrade, shared public shapes and unchanged scoped/keyed authorization"
+}
+
+loop: surface: checks: "campaign-work": {
+	verb: "integrate"
+	cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-env --allow-read --allow-run=docker tests/campaign-work.ts"]
+	note: "selective source invalidation, coalesced durable work, bounded retry, resumable certification and idle restarts"
+}
+
+loop: surface: checks: "campaign-sql": {
+	verb: "lint"
+	cmds: ["mise exec -- squawk --exclude prefer-bigint-over-int services/database/sql/033_campaign_delta.sql services/database/sql/034_campaign_queue.sql"]
+	note: "additive campaign delta and queue migration safety"
+}
+
 loop: surface: checks: "odds-progress-events": {verb:"test",cmds:["mise exec -- deno test --config ../../plugins/omnishell/test/deno.json --no-lock --allow-read --allow-env ../../plugins/omnishell/test/displacing-gesture.test.ts ../../plugins/omnishell/test/event-leaf.test.ts"],note:"chart guards preserve native controls while accepted graph keys cancel page scrolling"}
 loop: surface: checks: "odds-progress-renderer": {verb:"test",cmds:["mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/odds-progress-renderer.ts tests/odds-progress-controls.ts"],note:"shared-date stacks, exact overlapping zone filters, localization and safe chart output"}
 loop: surface: checks: "odds-progress": {verb:"integrate",cmds:["let project = (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim); if $project !~ '(?i)(check|test)' or ($project | str downcase) == 'golaberto' { error make {msg: 'odds-progress requires an explicit disposable check/test compose project'} }; mise exec -- docker compose -p $project stop apps_golaberto-transform; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE }; mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env --allow-run=docker tests/odds-progress.ts; let verdict = $env.LAST_EXIT_CODE; mise exec -- docker compose -p $project up -d --no-deps apps_golaberto-transform; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE }; exit $verdict"],note:"bounded full position vectors, metadata invalidation and idempotent retained projection"}
 
 loop: surface: checks: "zone-colors-renderer": {verb:"test",cmds:["mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/zone-color-renderer.ts tests/zone-chances.ts"],note:"arbitrary hex paint and refusal of unsafe SVG paint"}
 loop: surface: checks: "zone-colors": {verb:"integrate",cmds:["let project = (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim); if $project !~ '(?i)(check|test)' or ($project | str downcase) == 'golaberto' { error make {msg: 'zone-colors requires a disposable check/test compose project'} }; mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env --allow-run=docker,python3 tests/zone-colors.ts tests/archive-refresh.ts"],note:"arbitrary colors, source order, noncontiguous positions and retained migration replay"}
+
+loop: surface: checks: "live-update-unit": {verb:"test",cmds:["mise exec -- deno test --config ../../plugins/omnishell/test/deno.json --no-lock --allow-read --allow-env ../../plugins/omnishell/test/offline-first-sw.test.ts ../../plugins/omnishell/test/served-modules.test.ts"],note:"fresh online assets, cached offline fallback and terminal module delivery"}
+loop: surface: checks: "live-update-browser": {verb:"integrate",cmds:["mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env --allow-net --allow-run --allow-sys --allow-write tests/live-update.ts"],note:"new nested live sections and handlers arrive automatically while tab and DOM drafts survive"}
+
+loop: surface: checks: "public-addresses": {
+	verb: "integrate"
+	cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env --allow-run=docker tests/public-addresses.ts"]
+	note: "durable readable addresses cover native writes, import upserts, collisions, rename stability, retained backfill replay and public write denial"
+}

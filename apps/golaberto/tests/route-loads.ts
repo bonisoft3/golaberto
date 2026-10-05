@@ -65,7 +65,8 @@ const visit = async (page: Page, path: string, visible: string) => {
     '.shell-screen:not([hidden]) .screen[data-state="populated"]',
     { timeout: 30_000 },
   );
-  await page.waitForSelector(visible, { timeout: 30_000 });
+  await page.locator('.shell-screen:not([hidden])').locator(visible)
+    .filter({visible: true}).first().waitFor({ timeout: 30_000 });
   await page.waitForFunction(
     (onDemand: string[]) => {
       const client = (globalThis as unknown as {
@@ -320,7 +321,7 @@ const editorSession = async () => {
 
 Deno.test({
   name:
-    "all 14 routes render with bounded on-demand collections and catalog paging stays stable",
+    "all declared routes render at readable addresses with bounded reads and stable catalog paging",
   timeout: 8 * 60_000,
   async fn() {
     const prefix = `route-load-${Deno.pid}-${Date.now()}`;
@@ -335,6 +336,12 @@ Deno.test({
       `);
       fixtureCreated = true;
 
+      const fixtureIds = [BRASILEIRO_2026, WIN, ATHLETICO, VIVEROS, PACAEMBU, ABADE, SERIE_A_2026];
+      const slugs: Record<string, string> = JSON.parse(await psql(
+        `SELECT json_object_agg(record_id,slug) FROM public_address WHERE record_id IN (${fixtureIds.map(id => `'${id}'`).join(",")})`,
+      ));
+      for (const id of fixtureIds) assert(slugs[id], `route fixture ${id} has a public address`);
+
       for (const route of routePatterns) {
         const browserContext = await context(
           route.pattern === "/editar/:id" ? editor.session : undefined,
@@ -342,7 +349,12 @@ Deno.test({
         try {
           const page = await browserContext.newPage();
           const reads = observeReads(page);
-          await visit(page, route.path, route.visible);
+          const path = route.path.replace(/[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}/gi, id => slugs[id]);
+          await visit(page, path, route.visible);
+          assertEquals(new URL(page.url()).pathname, path, "a direct public address retains its readable path");
+          const canonical = await page.locator('head link[rel="canonical"]').getAttribute("href");
+          assert(canonical);
+          assertEquals(new URL(canonical).pathname, path);
           assertBounded(route.pattern, await reads.since(0));
           assert(
             await page.locator(route.visible).count() > 0,

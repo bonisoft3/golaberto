@@ -32,7 +32,7 @@ code: surface: screens: {
 	}
 	"equipe-campeonato": {
 		reads: [{entity: "ArchivePage"}, {entity: "Phase"}, {entity: "PositionChance"}, {entity: "Standing"}, {entity: "TeamCampaignPoint"}, {entity: "TeamChampionship"}, {entity: "TeamChance"}, {entity: "TeamChartState"}, {entity: "TeamGame"}, {entity: "TeamGroup"}, {entity: "TeamOddsProgress"}, {entity: "TeamOddsProgressState"}, {entity: "TeamRoster"}, {entity: "TeamRosterTotal"}, {entity: "Zone"}, {entity: "ZoneChance"}]
-		files: {handlers: ["shell/handlers/chart-compare.js", "shell/handlers/chart-metric.js", "shell/handlers/odds-progress-fold.js", "shell/handlers/odds-progress-key.js", "shell/handlers/odds-progress-point.js", "shell/handlers/odds-progress-pointer.js", "shell/handlers/odds-progress-snapshot.js", "shell/handlers/odds-progress-zone.js", "shell/handlers/page-value.js", "shell/handlers/search-key.js", "shell/handlers/team-chart-fold.js", "shell/handlers/team-chart-seed.js"], adapters: []}
+		files: {handlers: ["shell/handlers/chart-compare.js", "shell/handlers/odds-progress-key.js", "shell/handlers/odds-progress-point.js", "shell/handlers/odds-progress-snapshot.js", "shell/handlers/odds-progress-zone.js", "shell/handlers/page-value.js", "shell/handlers/position-odds-control.js", "shell/handlers/position-odds-fold.js", "shell/handlers/search-key.js", "shell/handlers/team-chart-fold.js", "shell/handlers/team-chart-seed.js"], adapters: []}
 	}
 	equipes: {
 		reads: [{entity: "DirectoryFilter"}, {entity: "GeographyCountry"}, {entity: "GeographyRegion"}, {entity: "TeamDirectory"}]

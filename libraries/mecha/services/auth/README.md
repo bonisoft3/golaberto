@@ -13,8 +13,15 @@ the emitter writes the policies that call `auth_uid()`.
   session to borrow.
 - **`auth_uid()`** reads `sub` out of `request.jwt.claims`. It is a replaceable
   object, restated by the database image with the tenancy floor and never
-  migrated with the tables, so a correction reaches every database without a
+migrated with the tables, so a correction reaches every database without a
   migration.
+
+Shape tokens use the subject's scopes. When the database proves that
+`scope_id` is a stored generated constant `'public:'`, the predicate retains
+only the subject's public scope. All readers then share the same Electric log.
+Mutable scopes, public defaults, private scopes and keyed shapes retain their
+existing authorization. The token still binds its subject, table and exact
+predicate; a client cannot widen it.
 
 The alternative was server-side sessions. It was refused because the WebAuthn
 challenge is the only state a ceremony needs, and a short-lived `state` JWT

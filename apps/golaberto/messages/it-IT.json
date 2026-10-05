@@ -569,5 +569,14 @@
   "team_odds_omitted": "Rilevazioni incomplete omesse",
   "team_odds_snapshot": "Rilevazione",
   "team_odds_last_game": "Ultima partita",
-  "team_odds_no_game": "Nessuna partita precedente registrata."
+  "team_odds_no_game": "Nessuna partita precedente registrata.",
+  "team_odds_current": "Probabilità attuali",
+  "team_odds_recorded": "Istantanea storica selezionata",
+  "team_odds_values": "Probabilità esatte",
+  "team_odds_current_position": "Posizione attuale",
+  "team_odds_values_from": "Valori",
+  "chrome_route_missing": "Questa pagina non esiste o è stata rimossa.",
+  "chrome_route_failed": "Impossibile caricare questa pagina. Riprova.",
+  "chrome_route_retry": "Riprova",
+  "chrome_route_home": "Home"
 }

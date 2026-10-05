@@ -150,7 +150,8 @@ const awaitPoints = (page: Page, team: string, want: number) =>
   );
 
 // A page addressed to an id that names nothing, saying so in words.
-const gone = async (route: string, words: string) => {
+const gone = async (route: string) => {
+  const words = "Esta página não existe ou foi removida.";
   const page = await (await context()).newPage();
   await page.goto(`${base}${route}/00000000-0000-4000-8000-000000000000`);
   await page.waitForFunction((words: string) =>
@@ -623,7 +624,7 @@ test("test-championship-no-groups: a phase with no groups says so", async () => 
   assert(phases.every((p) => p.includes("Esta fase ainda não tem grupos cadastrados.")), phases.join(" | "));
 });
 
-test("test-championship-gone: an unknown championship says so", () => gone("/campeonato", "Este campeonato não existe ou foi removido."));
+test("test-championship-gone: an unknown championship says so", () => gone("/campeonato"));
 
 // dd/mm/yyyy hh:mm, as the rows print it, sortable.
 const sortable = (when: string) => when.replace(/^(\d\d)\/(\d\d)\/(\d{4})\s*/, "$3$2$1 ");
@@ -748,7 +749,7 @@ test("test-game-page: a game's page shows its score, facts, goals and line-ups",
   assertEquals(await said(shootout, ".extra"), ["Prorrogação 0–0 Pênaltis 4–3"]);
 });
 
-test("test-game-gone: an address naming no game says so", () => gone("/jogo", "Este jogo não existe ou foi removido."));
+test("test-game-gone: an address naming no game says so", () => gone("/jogo"));
 
 test("test-rounds: the championship page shows the current round and the next", async () => {
   const page = await championship(BRASILEIRO_2026);
@@ -774,8 +775,11 @@ test("test-team-page: a team's profile shows facts, championships and deduplicat
   const currentPlayers = await page.locator(".team-current-players a[data-route='jogador']")
     .evaluateAll((links: HTMLAnchorElement[]) => links.map((link) => link.getAttribute("data-param-id")));
   assertEquals(new Set(currentPlayers).size, currentPlayers.length, "the profile lists each current player once across seasons");
-  await page.locator(`.team-current-championships a[data-param-championship="${BRASILEIRO_2026}"]`).click();
-  await page.waitForURL(`**/equipe-campeonato/${ATHLETICO}/${BRASILEIRO_2026}**`);
+  const participation = page.locator(`.team-current-championships a[data-param-championship="${BRASILEIRO_2026}"][href]`);
+  const participationHref = await participation.getAttribute("href");
+  assert(participationHref && !participationHref.includes(ATHLETICO) && !participationHref.includes(BRASILEIRO_2026));
+  await participation.click();
+  await page.waitForURL(new URL(participationHref, base).href);
   await page.waitForFunction(() => document.querySelectorAll(".team-roster .squad-table tbody tr").length > 11);
   const viveros = await page.$$eval(".team-roster .squad-table tbody tr", (rows: Element[]) =>
     rows.map((r) => {
@@ -832,9 +836,9 @@ test("test-appearance-live: an appearance removed after the fact moves the seaso
   await played("26");
 });
 
-test("test-team-gone: an address naming no team says so", () => gone("/equipe", "Esta equipe não existe ou foi removida."));
+test("test-team-gone: an address naming no team says so", () => gone("/equipe"));
 
-test("test-player-gone: an address naming no player says so", () => gone("/jogador", "Este jogador não existe ou foi removido."));
+test("test-player-gone: an address naming no player says so", () => gone("/jogador"));
 
 test("test-venue-home: a team's ground shows the team and the games played there", async () => {
   // São Paulo-SP's ground, which the 2006 pages call Morumbi and the archive
@@ -881,13 +885,16 @@ test("test-game-venue: a game's page names its stadium and its referee, each lea
   const page = await open(`/jogo/${DERBY_2006}`);
   await page.waitForSelector('.game-facts a[data-route="estadio"]');
   assertEquals(await said(page, ".game-facts dd > a:not(:empty)"), ["Pacaembu", "Cléber Wellington Abade"]);
-  await page.click('.game-facts a[data-route="arbitro"]');
-  await page.waitForURL(`**/arbitro/${ABADE}**`);
+  const referee = page.locator('.game-facts a[data-route="arbitro"][href]');
+  const refereeHref = await referee.getAttribute("href");
+  assert(refereeHref && !refereeHref.includes(ABADE));
+  await referee.click();
+  await page.waitForURL(new URL(refereeHref, base).href);
 });
 
 test("test-venue-gone: an address naming no stadium, or no referee, says so", async () => {
-  await gone("/estadio", "Este estádio não existe ou foi removido.");
-  await gone("/arbitro", "Este árbitro não existe ou foi removido.");
+  await gone("/estadio");
+  await gone("/arbitro");
 });
 
 // An account the archive has made an editor: the grant is given out of band,
@@ -1132,8 +1139,10 @@ test("test-languages: three languages, each at its own address", async () => {
   const en = await open("/en/championships");
   assertEquals(await texts(en, "h1.band"), ["Championships"]);
   const page = await championship(BRASILEIRO_2026);
-  await page.click('.masthead .langs a[data-locale="en-GB"]');
-  await page.waitForURL(`**/en/championship/${BRASILEIRO_2026}`);
+  const slug = new URL(page.url()).pathname.split("/").at(-1);
+  assert(slug && slug !== BRASILEIRO_2026);
+  await page.click('.masthead .langs a[data-locale="en-GB"][href]');
+  await page.waitForURL(`**/en/championship/${slug}`);
 });
 
 test("test-dark: the dark appearance resolves the dark tokens", async () => {

@@ -117,6 +117,15 @@ services:
         path: ../services/database/migrations/031_zone_colors.sql
         target: /docker-entrypoint-initdb.d
       - action: rebuild
+        path: ../services/database/migrations/032_public_addresses.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/033_campaign_delta.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/034_campaign_queue.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
         path: ../services/database/migrations/900_seed.sql
         target: /docker-entrypoint-initdb.d
     environment:

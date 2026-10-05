@@ -168,11 +168,11 @@ for (const width of [390, 1366]) {
         assert((await response).ok(), "combined name and country search should succeed");
         await page.waitForFunction((expected) => {
           const actual = [...document.querySelectorAll<HTMLAnchorElement>('.catalog-table a[data-route="equipe"]')]
-            .map((link) => new URL(link.href).pathname.split("/").at(-1));
+            .map((link) => link.getAttribute("data-param-id"));
           return JSON.stringify(actual) === JSON.stringify(expected);
         }, expectedIds);
         const actualIds = await page.locator('.catalog-table a[data-route="equipe"]').evaluateAll((links) =>
-          links.map((link) => new URL((link as HTMLAnchorElement).href).pathname.split("/").at(-1)));
+          links.map((link) => link.getAttribute("data-param-id")));
         assertEquals(actualIds, expectedIds);
       };
 
@@ -199,10 +199,10 @@ for (const width of [390, 1366]) {
       await waitForRows(4);
       await page.fill("#teams-q", prefix);
       await waitForRows(40);
-      const firstPage = await page.locator('.catalog-table a[data-route="equipe"]').evaluateAll((links) => links.map((link) => new URL((link as HTMLAnchorElement).href).pathname));
+      const firstPage = await page.locator('.catalog-table a[data-route="equipe"]').evaluateAll((links) => links.map((link) => link.getAttribute("data-param-id") ?? ""));
       await page.click("#teams-next");
       await waitForRows(2);
-      const tail = await page.locator('.catalog-table a[data-route="equipe"]').evaluateAll((links) => links.map((link) => new URL((link as HTMLAnchorElement).href).pathname));
+      const tail = await page.locator('.catalog-table a[data-route="equipe"]').evaluateAll((links) => links.map((link) => link.getAttribute("data-param-id") ?? ""));
       assertEquals(new Set([...firstPage, ...tail]).size, 42, "pager should traverse all matches with a one-row next probe");
       await query(`${prefix} atletico`, "", [teamIds[2], teamIds[1], teamIds[0], teamIds[3]]);
       assert(requests.some((url) => url.searchParams.get("search_key") === `like.*${prefix} atletico*` && url.searchParams.get("offset") === "0"), "changing name on page two resets the offset");
@@ -220,7 +220,7 @@ for (const width of [390, 1366]) {
       assert((await countryResponse).ok(), "changing country on page two should issue the combined filtered query");
       await waitForRows(4);
       const countryFilteredIds = await page.locator('.catalog-table a[data-route="equipe"]').evaluateAll((links) =>
-        links.map((link) => new URL((link as HTMLAnchorElement).href).pathname.split("/").at(-1)));
+        links.map((link) => link.getAttribute("data-param-id")));
       assertEquals(countryFilteredIds, [teamIds[2], teamIds[1], teamIds[0], teamIds[3]], "changing country should reset pagination to the first page");
       await page.locator('.catalog-table a[data-route="equipe"]').first().click();
       await page.waitForURL((url) => url.pathname.startsWith("/equipe/"));

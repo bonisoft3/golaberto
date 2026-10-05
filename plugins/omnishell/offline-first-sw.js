@@ -1,4 +1,5 @@
 // Precached immutable shell assets required for cold offline boot.
+const LIVE_UPDATES = false;
 const STATIC_CACHE = "pronto-static-v4";
 const RUNTIME_CACHE = "pronto-runtime-v4";
 
@@ -28,7 +29,10 @@ self.addEventListener("activate", (event) => {
           .filter((k) => k !== STATIC_CACHE && k !== RUNTIME_CACHE)
           .map((k) => caches.delete(k)),
       )
-    ).then(() => self.clients.claim()),
+    ).then(async () => {
+      await self.clients.claim();
+      if (LIVE_UPDATES) for (const client of await self.clients.matchAll({type:"window"})) client.postMessage({type:"PRONTO_ASSETS_UPDATED"});
+    }),
   );
 });
 
@@ -40,6 +44,7 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) return;
   if (BYPASS_PREFIXES.some((p) => url.pathname.startsWith(p))) return;
 
+  if (!LIVE_UPDATES) {
   // Stale-While-Revalidate for shell, screen templates, styles, and interpreter assets.
   // Serves from cache immediately for 0ms offline boot, while revalidating against
   // the server in the background. If a template or stylesheet has updated, the SW
@@ -128,5 +133,39 @@ self.addEventListener("fetch", (event) => {
         return fetchPromise;
       }),
     );
+  }
+    return;
+  }
+
+  // Online boots must not combine a cached manifest with new templates/modules.
+  // Cache is a fallback for an unavailable network, never the online answer.
+  if (url.pathname.startsWith("/shell/") || url.pathname.startsWith("/omnishell/") || req.mode === "navigate") {
+    const shellAsset = req.mode !== "navigate";
+    const cachePromise = caches.open(shellAsset ? STATIC_CACHE : RUNTIME_CACHE);
+    const answer = cachePromise.then(async (cache) => {
+      const cached = await cache.match(req);
+      try {
+        const res = await fetch(req, { cache: "no-cache" });
+        if (!res.ok) {
+          if (res.status >= 500 && cached) return cached;
+          return res;
+        }
+        const cc = res.headers.get("Cache-Control") || "";
+        if (!cc.includes("no-store") && !cc.includes("private")) {
+          const changed = shellAsset && cached && await cached.clone().text() !== await res.clone().text();
+          try { await cache.put(req, res.clone()); } catch { return res; }
+          if (changed) {
+            const clients = await self.clients.matchAll({ type: "window" });
+            for (const client of clients) client.postMessage({ type: "PRONTO_ASSETS_UPDATED" });
+          }
+        }
+        return res;
+      } catch (error) {
+        if (cached) return cached;
+        throw error;
+      }
+    });
+    event.respondWith(answer);
+    event.waitUntil(answer.then(() => {}, () => {}));
   }
 });

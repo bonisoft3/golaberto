@@ -506,7 +506,8 @@ export function checkChrome(
   // a session is what puts the person and the way out in the strip.
   const session = gated || (shell.tables?.length ?? 0) > 0;
   const promote = session && shell.auth?.promote === true;
-  for (const key of [...(gated ? CHROME_KEYS.login : []), ...(session ? CHROME_KEYS.session : []), ...(promote ? CHROME_KEYS.promote : [])]) {
+  const routing = shell.routes?.some((route) => route.routeParams !== undefined);
+  for (const key of [...(gated ? CHROME_KEYS.login : []), ...(session ? CHROME_KEYS.session : []), ...(promote ? CHROME_KEYS.promote : []), ...(routing ? CHROME_KEYS.routing : [])]) {
     for (const tag of tags) {
       if (said(tag, key)) continue;
       report(`messages/${tag}.json`, `chrome key "${key}" is missing: the terminal speaks its own English here`);

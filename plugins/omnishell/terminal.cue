@@ -45,6 +45,7 @@ _swJsAsset:      _ @embed(file="offline-first-sw.js", type=text)
 
 #Terminal: T={
 	app: string
+	liveUpdates: *false | bool
 	// Fills the entry page's meta description. Double quotes would close the
 	// attribute they land in.
 	description: string
@@ -256,7 +257,7 @@ _swJsAsset:      _ @embed(file="offline-first-sw.js", type=text)
 				"{modulepreload}", _preloadHtml, 1), "{favicon}", T.favicon, 1)
 			css:  _shellCssAsset
 			boot: *_bootJsAsset | string
-			sw:   _swJsAsset
+			sw:   strings.Replace(_swJsAsset, "const LIVE_UPDATES = false;", "const LIVE_UPDATES = \(T.liveUpdates);", 1)
 		}
 
 		interpreterRoot: #Path
@@ -339,6 +340,7 @@ _swJsAsset:      _ @embed(file="offline-first-sw.js", type=text)
 		// paint-critical weight.
 		_preloadSkip: {
 			"storybook.js":           true
+			"live-update.js":          true
 			"vendor/ses.umd.min.js":  true
 			"vendor/js-yaml.js":      true
 			"vendor/mecha-client.js": true
@@ -357,7 +359,7 @@ _swJsAsset:      _ @embed(file="offline-first-sw.js", type=text)
 
 		modules: [...#Path]
 		modules: [
-			"shell.js", "chrome.js", "screen.js", "fragment.js", "data-sync.js", "validate.js", "render.js",
+			"shell.js", "chrome.js", "screen.js", "fragment.js", "data-sync.js", "validate.js", "render.js", "live-update.js", "route-addresses.js",
 			"hatch.js", "hatch-worker.js", "storybook.js", "jessie.js", "kinetic.js", "prng.js",
 			"vendor/mecha-client.js", "vendor/js-yaml.js", "vendor/ses.umd.min.js", "vendor/morphlex.js",
 			"vendor/messages.js",

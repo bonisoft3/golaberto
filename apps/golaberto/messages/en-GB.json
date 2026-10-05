@@ -569,5 +569,14 @@
   "team_odds_omitted": "Incomplete snapshots omitted",
   "team_odds_snapshot": "Snapshot",
   "team_odds_last_game": "Last match",
-  "team_odds_no_game": "No earlier match recorded."
+  "team_odds_no_game": "No earlier match recorded.",
+  "team_odds_current": "Current probabilities",
+  "team_odds_recorded": "Selected history snapshot",
+  "team_odds_values": "Exact probabilities",
+  "team_odds_current_position": "Current position",
+  "team_odds_values_from": "Values",
+  "chrome_route_missing": "This page does not exist or has been removed.",
+  "chrome_route_failed": "This page could not be loaded. Try again.",
+  "chrome_route_retry": "Try again",
+  "chrome_route_home": "Home"
 }

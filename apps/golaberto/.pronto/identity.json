@@ -1,4 +1,29 @@
 {
+  "0x83db930cb4b0e70f": {
+    "name": "public_address",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "kind",
+        "type": "string",
+        "retired": false
+      },
+      "3": {
+        "name": "record_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "4": {
+        "name": "slug",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
   "0x8648317c916df7f6": {
     "name": "app_user",
     "fields": {
@@ -215,6 +240,16 @@
       "6": {
         "name": "last",
         "type": "int32",
+        "retired": false
+      },
+      "7": {
+        "name": "position",
+        "type": "int32",
+        "retired": false
+      },
+      "8": {
+        "name": "positions_json",
+        "type": "string",
         "retired": false
       }
     }
@@ -810,6 +845,11 @@
       "10": {
         "name": "reach",
         "type": "string",
+        "retired": false
+      },
+      "11": {
+        "name": "position",
+        "type": "int32",
         "retired": false
       }
     }
@@ -1954,6 +1994,31 @@
       }
     }
   },
+  "0xd7afe4f22e983abd": {
+    "name": "team_odds_progress",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "group_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "team_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "4": {
+        "name": "series_json",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
   "0xcb46033cabbd7525": {
     "name": "team_roster_total",
     "fields": {
@@ -2739,6 +2804,76 @@
       },
       "3": {
         "name": "state",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0x9e315fda51e4b2c7": {
+    "name": "team_odds_progress_state",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "group_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "team_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "4": {
+        "name": "state",
+        "type": "string",
+        "retired": false
+      },
+      "5": {
+        "name": "zone_id",
+        "type": "string",
+        "retired": false
+      },
+      "6": {
+        "name": "snapshot_index",
+        "type": "int32",
+        "retired": false
+      },
+      "7": {
+        "name": "snapshot_last",
+        "type": "int32",
+        "retired": false
+      },
+      "8": {
+        "name": "pointer_x",
+        "type": "int32",
+        "retired": false
+      },
+      "9": {
+        "name": "series_json",
+        "type": "string",
+        "retired": false
+      },
+      "10": {
+        "name": "current_json",
+        "type": "string",
+        "retired": false
+      },
+      "11": {
+        "name": "position_number",
+        "type": "int32",
+        "retired": false
+      },
+      "12": {
+        "name": "position_last",
+        "type": "int32",
+        "retired": false
+      },
+      "13": {
+        "name": "table_mode",
         "type": "string",
         "retired": false
       }

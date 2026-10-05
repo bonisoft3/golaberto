@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"encoding/yaml"
 	"strings"
+	"regexp"
 
 	"bonisoft.org/plugins/pronto/scales"
 	"bonisoft.org/plugins/pronto/terminals:omnishell"
@@ -999,6 +1000,16 @@ import (
 	ir:    *name | string
 	title: string
 	route: string // may contain `:param` segments; params reach filters, hidden values, and `{param.x}` interpolation
+	// Public spellings are read through the store; screens continue receiving
+	// the identity column so their filters and writes share the same key.
+	routeParams?: [Param=string]: {
+		entity: string
+		id: *"id" | string
+		field: string
+		filter: *"" | string
+		_validName: regexp.Match("^[a-zA-Z_][a-zA-Z0-9_]*$", Param) & true
+		_declared: regexp.Match("(^|/):\(Param)(/|$)", S.route) & true
+	}
 	// The message key this route's FIRST segment is drawn from — regras /
 	// reglas / rules. Declaring it makes the route addressable in every
 	// locale; the segments after the first, literal or `:param`, are carried

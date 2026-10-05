@@ -248,11 +248,6 @@
         },
         {
           "action": "sync+restart",
-          "path": "../shell/handlers/chart-metric.js",
-          "target": "/srv/shell/handlers/chart-metric.js"
-        },
-        {
-          "action": "sync+restart",
           "path": "../shell/handlers/count-or-null.js",
           "target": "/srv/shell/handlers/count-or-null.js"
         },
@@ -268,11 +263,6 @@
         },
         {
           "action": "sync+restart",
-          "path": "../shell/handlers/odds-progress-fold.js",
-          "target": "/srv/shell/handlers/odds-progress-fold.js"
-        },
-        {
-          "action": "sync+restart",
           "path": "../shell/handlers/odds-progress-key.js",
           "target": "/srv/shell/handlers/odds-progress-key.js"
         },
@@ -280,11 +270,6 @@
           "action": "sync+restart",
           "path": "../shell/handlers/odds-progress-point.js",
           "target": "/srv/shell/handlers/odds-progress-point.js"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../shell/handlers/odds-progress-pointer.js",
-          "target": "/srv/shell/handlers/odds-progress-pointer.js"
         },
         {
           "action": "sync+restart",
@@ -300,6 +285,16 @@
           "action": "sync+restart",
           "path": "../shell/handlers/page-value.js",
           "target": "/srv/shell/handlers/page-value.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/position-odds-control.js",
+          "target": "/srv/shell/handlers/position-odds-control.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/position-odds-fold.js",
+          "target": "/srv/shell/handlers/position-odds-fold.js"
         },
         {
           "action": "sync+restart",
@@ -340,6 +335,11 @@
           "action": "sync+restart",
           "path": "../shell/renderers/odds-progress.js",
           "target": "/srv/shell/renderers/odds-progress.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/position-odds.js",
+          "target": "/srv/shell/renderers/position-odds.js"
         },
         {
           "action": "sync+restart",
@@ -450,6 +450,16 @@
           "action": "sync+restart",
           "path": "../../../plugins/omnishell/interpreter/render.js",
           "target": "/omnishell/interpreter/render.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../../../plugins/omnishell/interpreter/live-update.js",
+          "target": "/omnishell/interpreter/live-update.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../../../plugins/omnishell/interpreter/route-addresses.js",
+          "target": "/omnishell/interpreter/route-addresses.js"
         },
         {
           "action": "sync+restart",
@@ -992,16 +1002,6 @@
       {
         "from": null,
         "srcs": [
-          "shell/handlers/chart-metric.js"
-        ],
-        "dst": "/srv/shell/handlers/chart-metric.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
           "shell/handlers/count-or-null.js"
         ],
         "dst": "/srv/shell/handlers/count-or-null.js",
@@ -1032,16 +1032,6 @@
       {
         "from": null,
         "srcs": [
-          "shell/handlers/odds-progress-fold.js"
-        ],
-        "dst": "/srv/shell/handlers/odds-progress-fold.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
           "shell/handlers/odds-progress-key.js"
         ],
         "dst": "/srv/shell/handlers/odds-progress-key.js",
@@ -1055,16 +1045,6 @@
           "shell/handlers/odds-progress-point.js"
         ],
         "dst": "/srv/shell/handlers/odds-progress-point.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/handlers/odds-progress-pointer.js"
-        ],
-        "dst": "/srv/shell/handlers/odds-progress-pointer.js",
         "link": true,
         "parents": false,
         "exclude": []
@@ -1095,6 +1075,26 @@
           "shell/handlers/page-value.js"
         ],
         "dst": "/srv/shell/handlers/page-value.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/handlers/position-odds-control.js"
+        ],
+        "dst": "/srv/shell/handlers/position-odds-control.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/handlers/position-odds-fold.js"
+        ],
+        "dst": "/srv/shell/handlers/position-odds-fold.js",
         "link": true,
         "parents": false,
         "exclude": []
@@ -1175,6 +1175,16 @@
           "shell/renderers/odds-progress.js"
         ],
         "dst": "/srv/shell/renderers/odds-progress.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/renderers/position-odds.js"
+        ],
+        "dst": "/srv/shell/renderers/position-odds.js",
         "link": true,
         "parents": false,
         "exclude": []
@@ -1409,6 +1419,30 @@
           "plugins/omnishell/interpreter/render.js"
         ],
         "dst": "/omnishell/interpreter/render.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "root"
+        },
+        "srcs": [
+          "plugins/omnishell/interpreter/live-update.js"
+        ],
+        "dst": "/omnishell/interpreter/live-update.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "root"
+        },
+        "srcs": [
+          "plugins/omnishell/interpreter/route-addresses.js"
+        ],
+        "dst": "/omnishell/interpreter/route-addresses.js",
         "link": true,
         "parents": false,
         "exclude": []
@@ -1701,17 +1735,16 @@
       "shell/handlers/blank-null.js",
       "shell/handlers/both-scored.js",
       "shell/handlers/chart-compare.js",
-      "shell/handlers/chart-metric.js",
       "shell/handlers/count-or-null.js",
       "shell/handlers/country-option.js",
       "shell/handlers/geography-selection.js",
-      "shell/handlers/odds-progress-fold.js",
       "shell/handlers/odds-progress-key.js",
       "shell/handlers/odds-progress-point.js",
-      "shell/handlers/odds-progress-pointer.js",
       "shell/handlers/odds-progress-snapshot.js",
       "shell/handlers/odds-progress-zone.js",
       "shell/handlers/page-value.js",
+      "shell/handlers/position-odds-control.js",
+      "shell/handlers/position-odds-fold.js",
       "shell/handlers/row-id.js",
       "shell/handlers/search-key.js",
       "shell/handlers/team-chart-fold.js",
@@ -1720,6 +1753,7 @@
       "shell/renderers/geography-label.js",
       "shell/renderers/home-date.js",
       "shell/renderers/odds-progress.js",
+      "shell/renderers/position-odds.js",
       "shell/renderers/team-badge.js",
       "shell/renderers/team-chart.js",
       "shell/renderers/team-location.js",
@@ -1869,17 +1903,16 @@
           "shell/handlers/blank-null.js",
           "shell/handlers/both-scored.js",
           "shell/handlers/chart-compare.js",
-          "shell/handlers/chart-metric.js",
           "shell/handlers/count-or-null.js",
           "shell/handlers/country-option.js",
           "shell/handlers/geography-selection.js",
-          "shell/handlers/odds-progress-fold.js",
           "shell/handlers/odds-progress-key.js",
           "shell/handlers/odds-progress-point.js",
-          "shell/handlers/odds-progress-pointer.js",
           "shell/handlers/odds-progress-snapshot.js",
           "shell/handlers/odds-progress-zone.js",
           "shell/handlers/page-value.js",
+          "shell/handlers/position-odds-control.js",
+          "shell/handlers/position-odds-fold.js",
           "shell/handlers/row-id.js",
           "shell/handlers/search-key.js",
           "shell/handlers/team-chart-fold.js",
@@ -1888,6 +1921,7 @@
           "shell/renderers/geography-label.js",
           "shell/renderers/home-date.js",
           "shell/renderers/odds-progress.js",
+          "shell/renderers/position-odds.js",
           "shell/renderers/team-badge.js",
           "shell/renderers/team-chart.js",
           "shell/renderers/team-location.js",

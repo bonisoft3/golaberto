@@ -10,6 +10,9 @@ BEGIN
   NEW.txid := pg_current_xact_id()::text::bigint;
   RETURN NEW;
 END $$;
+DROP TRIGGER IF EXISTS restamp_txid ON public_address;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON public_address
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON app_user;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON app_user
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();

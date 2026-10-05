@@ -28,11 +28,18 @@ const PROMOTE = {
   chrome_passkey_failed: "sign-in did not go through",
 };
 
+const ROUTING = {
+  chrome_route_missing: "This page does not exist or has been removed.",
+  chrome_route_failed: "This page could not be loaded. Try again.",
+  chrome_route_retry: "Try again",
+  chrome_route_home: "Home",
+};
+
 /** Which copy a reader can reach, by the surface that shows it: an app is asked
  * for the group its own declaration puts on screen, never for the rest. */
-export const CHROME_KEYS = { login: Object.keys(LOGIN), session: Object.keys(SESSION), promote: Object.keys(PROMOTE) };
+export const CHROME_KEYS = { login: Object.keys(LOGIN), session: Object.keys(SESSION), promote: Object.keys(PROMOTE), routing: Object.keys(ROUTING) };
 
-export const CHROME = { ...LOGIN, ...SESSION, ...PROMOTE };
+export const CHROME = { ...LOGIN, ...SESSION, ...PROMOTE, ...ROUTING };
 
 /** What the chrome says, in the language the page is in. A key no group holds
  * is the terminal asking for copy it never wrote, which no catalogue can

@@ -9,7 +9,7 @@ pipelines:
         plugin: 'builtin:postgres'
         settings:
           url: '${DATABASE_URL}'
-          tables: 'app_user,category,championship,phase,stage_group,zone,stadium,team,referee,player,game,goal,player_game,team_group,comment,team_comment,team_player,editor'
+          tables: 'public_address,app_user,category,championship,phase,stage_group,zone,stadium,team,referee,player,game,goal,player_game,team_group,comment,team_comment,team_player,editor'
           cdcMode: logrepl
           snapshotMode: never
           logrepl.publicationName: golaberto_cdc

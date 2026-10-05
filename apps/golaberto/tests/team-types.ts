@@ -158,11 +158,11 @@ for (const width of [390, 1366]) {
       const waitForIds = async (expectedIds: string[]) => {
         await page.waitForFunction((expected) => {
           const actual = [...document.querySelectorAll<HTMLAnchorElement>('.catalog-table a[data-route="equipe"]')]
-            .map((link) => new URL(link.href).pathname.split("/").at(-1));
+            .map((link) => link.getAttribute("data-param-id"));
           return JSON.stringify(actual) === JSON.stringify(expected);
         }, expectedIds);
         const actual = await page.locator('.catalog-table a[data-route="equipe"]').evaluateAll((links) =>
-          links.map((link) => new URL((link as HTMLAnchorElement).href).pathname.split("/").at(-1)));
+          links.map((link) => link.getAttribute("data-param-id")));
         assertEquals(actual, expectedIds);
       };
       const waitForResponse = (criteria: Record<string, string>) => page.waitForResponse((response) => {

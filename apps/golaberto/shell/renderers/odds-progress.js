@@ -281,9 +281,9 @@ function graph(chart, selectedZoneId, selectedIndex, labels) {
   const paths = filteredPositions.map((position) => {
     const description = `${labels.positionLabel} ${position.position}`;
     return element("path", {
-      class: "team-odds-progress__area",
+      class: `team-odds-progress__area${position.zoneIds.length ? "" : " team-odds-progress__area--unassigned"}`,
       d: areaPath(chart.snapshots, position, lower),
-      fill: position.color,
+      ...(position.zoneIds.length ? {fill: position.color} : {}),
     }, [titleNode(description)]);
   });
   const children = [titleNode(labels.title), element("desc", {}, [labels.samplingLabel])];

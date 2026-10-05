@@ -205,6 +205,25 @@ from the route table and the page's locale (`routeHref`,
 | `data-locale="<tag>"` | address the link in that locale instead of the page's — a language switcher is the same link in another locale |
 | `data-locale-current` | on a link naming a locale, `aria-current` (the attribute's value, or `page`) when that locale is the page's |
 
+Screens may declare `routeParams.<name>: {entity, id, field, filter}` in CUE
+to give an identity a public spelling. `id` defaults to `id`; `field` names
+the string address column, and `filter` scopes the address namespace. The
+compiler adds that entity to the store and verifies the parameter and fields.
+The app owns uniqueness and stable allocation of these addresses. The terminal
+resolves them before mounting a screen: `{param.x}`, forms and bound links
+continue using identities. A UUID identity is also accepted as a legacy URL;
+the browser replaces it with its public spelling and preserves query and hash.
+Canonical and alternate links use the public spelling. A missing mapping shows
+a localized missing page; a failed lookup offers retry and is never cached as
+a missing mapping.
+
+Bound anchors and navigate forms resolve addresses through bounded store reads
+with batching and a session-local positive cache. While a lookup is pending,
+an anchor has no `href`; stale lookups cannot replace a newer row or locale.
+Safe renderer links to local declared routes receive the same resolution after
+DOM construction. Renderers still cannot emit the terminal's `data-*` binding
+vocabulary or read the store themselves.
+
 ## Behaviour
 
 | Attribute | Meaning |

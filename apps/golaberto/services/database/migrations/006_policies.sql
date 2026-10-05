@@ -4,6 +4,13 @@ SET statement_timeout = '60s';
 
 BEGIN;
 
+CALL rls_protect('public_address');
+ALTER TABLE public_address ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS public_address_app_user_select ON public_address;
+CREATE POLICY public_address_app_user_select ON public_address FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS public_address_service_all ON public_address;
+CREATE POLICY public_address_service_all ON public_address FOR ALL TO service USING (true) WITH CHECK (true);
+
 CALL rls_protect('app_user');
 ALTER TABLE app_user ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS app_user_app_user_select ON app_user;

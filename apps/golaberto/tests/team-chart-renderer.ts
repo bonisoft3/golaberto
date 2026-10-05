@@ -6,6 +6,12 @@ import { evaluateRole } from "../../../plugins/omnishell/interpreter/jessie.js";
 const SEP = "\u001f";
 const input = (chart: unknown, title = "Rating history", locale = "en-GB") =>
   `${JSON.stringify(chart)}${SEP}${title}${SEP}${locale}`;
+const combinedInput = (chart: unknown) =>
+  `${input(chart, "Campanha", "pt-BR")}${SEP}Sem histórico${SEP}combined${SEP}Pontos${SEP}Posição`;
+const walk = (node: any): any[] =>
+  typeof node === "string" ? [] : [node, ...(node.children ?? []).flatMap(walk)];
+const withClass = (node: any, name: string): any[] =>
+  walk(node).filter((item) => item.attrs?.class?.split(" ").includes(name));
 
 Deno.test("team chart handles empty, malformed, and invalid series as titled empty states", async () => {
   const source = await Deno.readTextFile(
@@ -183,6 +189,13 @@ Deno.test("team chart nodes build recursively in the SVG namespace", () => {
     assertEquals(target.children[0].namespaceURI, htmlNS);
     assertEquals(tree.some((node) => node.localName === "script"), false);
     assertStringIncludes(svg.textContent, malicious);
+    buildNodes(render(combinedInput({
+      kind: "line", groupSize: 8,
+      series: [{ label: malicious, points: [{ x: 1, y: 42, position: 2, href: "/jogo/1" }] }],
+    })), target);
+    assertEquals(walk(target.children[0].children[1])
+      .filter((node) => node.namespaceURI !== undefined)
+      .every((node) => node.namespaceURI === svgNS), true);
 
     const refuses = (node: any) => {
       const badTarget: any = { replaceChildren() {} };
@@ -234,4 +247,109 @@ Deno.test("campaign metric changes project the same observations without a sourc
   const svg = render(value)[0].children[1];
   const link = svg.children.find((node: any) => node.tag === "g").children[0];
   assertEquals(link.attrs["aria-label"], "Team: 2026-01-01, 1");
+});
+
+Deno.test("combined campaign uses independent points and inverted integer rank axes for both teams", async () => {
+  const chart = {
+    kind: "line", groupSize: 20,
+    series: [
+      { label: "A", points: [
+        { x: 1, y: 0, position: 20, label: "2026-01-01", href: "/jogo/1" },
+        { x: 2, y: 30, position: 10, label: "2026-02-01", href: "/jogo/2" },
+        { x: 3, y: 60, position: 1, label: "2026-03-01", href: "/jogo/3" },
+      ] },
+      { label: "B", points: [
+        { x: 1, y: 15, position: 2, label: "2026-01-01" },
+        { x: 3, y: 45, position: 15, label: "2026-03-01" },
+      ] },
+    ],
+  };
+  const value = combinedInput(chart);
+  const figure = render(value)[0];
+  assertEquals(withClass(figure, "team-chart__svg").length, 1);
+  assertEquals(withClass(figure, "team-chart__line--points").length, 2);
+  assertEquals(withClass(figure, "team-chart__line--position").length, 2);
+  const teams = withClass(figure, "team-chart__series");
+  assertEquals(teams.map((team) => team.attrs["aria-label"]), ["A", "B"]);
+  assertStringIncludes(teams[1].attrs.class, "team-chart__series--2");
+  const points = withClass(teams[0], "team-chart__point--points");
+  const ranks = withClass(teams[0], "team-chart__point--position");
+  assertEquals(points.map((point) => point.attrs.cx), ranks.map((point) => point.attrs.cx));
+  assertEquals(points.map((point) => point.attrs.cy), [282, 158, 34]);
+  assertEquals(ranks[0].attrs.cy, 282);
+  assertEquals(ranks[2].attrs.cy, 34);
+  assertEquals(ranks[1].attrs.cy, 34 + 9 / 19 * 248);
+  assert(points[1].attrs.cy !== ranks[1].attrs.cy, "each metric uses its own scale");
+  const rankTicks = withClass(figure, "team-chart__axis-value--position");
+  assertEquals(rankTicks.map((tick) => tick.children[0]), ["1", "6", "11", "15", "20"]);
+  assertEquals(rankTicks[0].attrs.y, ranks[2].attrs.cy + 4);
+  assertEquals(rankTicks[4].attrs.y, ranks[0].attrs.cy + 4);
+  assertEquals(withClass(figure, "team-chart__axis-label--points")[0].children, ["Pontos"]);
+  assertEquals(withClass(figure, "team-chart__axis-label--position")[0].children, ["Posição"]);
+  assertEquals(withClass(figure, "team-chart__metric--points")[0].children, ["Pontos"]);
+  assertEquals(withClass(figure, "team-chart__metric--position")[0].children, ["Posição"]);
+  const firstLink = withClass(teams[0], "team-chart__link")[0];
+  assertEquals(firstLink.attrs.href, "/jogo/1");
+  assertEquals(firstLink.attrs.tabindex, 0);
+  assertEquals(firstLink.attrs["aria-label"], "A: 2026-01-01, Pontos: 0, Posição: 20");
+  const source = await Deno.readTextFile(new URL("../shell/renderers/team-chart.js", import.meta.url));
+  const caged = await evaluateRole(source, "renderer");
+  assertEquals(caged(value), [figure]);
+});
+
+Deno.test("combined campaign leaves missing ranks and points as gaps and rejects invalid ranks and unsafe links", () => {
+  const figure = render(combinedInput({
+    kind: "line", groupSize: 4,
+    series: [{ label: "Team", points: [
+      { x: 1, y: 3.5, position: 4, href: "/jogo/1" },
+      { x: 2, y: 6, position: null, href: "//outside.example" },
+      { x: 3, y: null, position: 1, href: "javascript:alert(1)" },
+      { x: 4, y: 9, position: 0, href: "/\\outside.example" },
+      { x: 5, y: 12, position: 5, href: "/bad\nlink" },
+      { x: 6, y: 15, position: 1.5 },
+    ] }],
+  }))[0];
+  assertEquals(withClass(figure, "team-chart__point--points").length, 5);
+  assertEquals(withClass(figure, "team-chart__point--position").length, 2);
+  assertEquals(withClass(figure, "team-chart__line--position").length, 0,
+    "rank observations separated by a missing rank do not imply a continuous line");
+  assertEquals(withClass(figure, "team-chart__line--points").length, 2);
+  assertEquals(withClass(figure, "team-chart__link").length, 2,
+    "only the two metric markers for the first match have safe links");
+  assertEquals(withClass(figure, "team-chart__point--points")[0].attrs.title,
+    "Team: 1, Pontos: 3,5, Posição: 4");
+  assertEquals(withClass(figure, "team-chart__point--points")[1].attrs.title, "Team: 2, Pontos: 6");
+  assertEquals(withClass(figure, "team-chart__point--position")[1].attrs.title, "Team: 3, Posição: 1");
+  assertEquals(withClass(figure, "team-chart__axis-value--position").map((tick) => tick.children[0]), ["1", "2", "3", "4"]);
+});
+
+Deno.test("combined campaign keeps one observation visible without inventing history or ranks", () => {
+  const chart = { kind: "line", groupSize: 1, series: [{ label: "Team", points: [
+    { x: 1, y: 3, position: 1, label: "2026-01-01" },
+  ] }] };
+  const figure = render(combinedInput(chart))[0];
+  assertEquals(withClass(figure, "team-chart__line").length, 0);
+  assertEquals(withClass(figure, "team-chart__axis-value").slice(0, 5).map(tick => tick.children[0]), ["4", "3", "2", "1", "0"], "short campaigns use readable whole-point ticks");
+  assertEquals(withClass(figure, "team-chart__point").length, 2);
+  assertEquals(withClass(figure, "team-chart__point--position")[0].attrs.cy, 34);
+  assertEquals(withClass(figure, "team-chart__axis-value--position").map((tick) => tick.children[0]), ["1"]);
+  assertEquals(withClass(figure, "team-chart__axis-value")
+    .filter((tick) => tick.attrs.y === 310).map((tick) => tick.children[0]), ["2026-01-01", "2026-01-01"]);
+  for (const points of [[], [{ x: 1, y: null, position: 0 }], [{ x: null, y: 3, position: 1 }]]) {
+    const empty = render(combinedInput({ ...chart, series: [{ label: "Team", points }] }));
+    assertEquals((empty[0] as any).attrs.class, "team-chart team-chart--empty");
+    assertEquals(empty[0].children[1].children, ["Sem histórico"]);
+  }
+  const missingRank = render(combinedInput({ ...chart, series: [{ label: "Team", points: [{ x: 1, y: 3 }] }] }))[0];
+  assertEquals(withClass(missingRank, "team-chart__point--position").length, 0);
+  const legacyLabels = render(input(chart) + `${SEP}${SEP}combined`)[0];
+  assertEquals(withClass(legacyLabels, "team-chart__axis-label--points")[0].children, ["Points"]);
+});
+
+Deno.test("legacy position mode tick labels follow the inverted geometry", () => {
+  const figure = render(input({ kind: "line", series: [{ label: "Team", points: [
+    { x: 1, y: 30, position: 1 }, { x: 2, y: 0, position: 5 },
+  ] }] }) + `${SEP}${SEP}position`)[0];
+  assertEquals(withClass(figure, "team-chart__axis-value").slice(0, 5).map((tick) => tick.children[0]), ["1", "2", "3", "4", "5"]);
+  assertEquals(withClass(figure, "team-chart__point").map((point) => point.attrs.cy), [18, 282]);
 });

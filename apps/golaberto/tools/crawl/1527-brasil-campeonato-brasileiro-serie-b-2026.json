@@ -95,22 +95,45 @@
       {
        "name": "Campeão",
        "first": 1,
-       "last": 1
+       "last": 1,
+       "color": "#4fe34f",
+       "positions": [
+        1
+       ]
       },
       {
        "name": "Promoção",
        "first": 1,
-       "last": 2
+       "last": 2,
+       "color": "#90ee90",
+       "positions": [
+        1,
+        2
+       ]
       },
       {
        "name": "Playoffs",
        "first": 3,
-       "last": 6
+       "last": 6,
+       "color": "#add8e6",
+       "positions": [
+        3,
+        4,
+        5,
+        6
+       ]
       },
       {
        "name": "Rebaixamento",
        "first": 17,
-       "last": 20
+       "last": 20,
+       "color": "#ffb6c2",
+       "positions": [
+        17,
+        18,
+        19,
+        20
+       ]
       }
      ]
     }

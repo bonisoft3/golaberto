@@ -95,12 +95,14 @@
       {
        "name": "Promoted",
        "first": 1,
-       "last": 4
+       "last": 4,
+       "color": "#d3d3d3"
       },
       {
        "name": "Relegated",
        "first": 17,
-       "last": 20
+       "last": 20,
+       "color": "#d3d3d3"
       }
      ]
     }

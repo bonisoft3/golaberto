@@ -547,7 +547,7 @@
   "team_progress": "Points and position history",
   "team_progress_note": "Standings reconstructed using current championship rules. Select a point to open the match.",
   "team_odds_history": "Probability history",
-  "team_zone_history_note": "Recorded probabilities by date, grouped using current zone boundaries. Expand or collapse zones to choose charts.",
+  "team_zone_history_note": "Recorded probabilities by date, using the current zone boundaries. Select a zone to inspect its positions.",
   "team_contribution_note": "Recorded contribution: summed offensive and defensive appearance values. Per 90 uses total minutes; missing values stay blank.",
   "col_goals_per90": "G/90",
   "col_goals_per90_long": "Goals per 90 minutes",
@@ -562,5 +562,12 @@
   "chart_game_prefix": "/en/match/",
   "team_open": "View team",
   "team_comment_placeholder": "Share an observation about this team.",
-  "team_comment_empty": "No comments about this team yet."
+  "team_comment_empty": "No comments about this team yet.",
+  "team_odds_all": "All positions",
+  "team_odds_inspect": "Move across the chart, tap a date, or use the arrow keys to inspect probabilities.",
+  "team_odds_sampled": "Snapshots shown",
+  "team_odds_omitted": "Incomplete snapshots omitted",
+  "team_odds_snapshot": "Snapshot",
+  "team_odds_last_game": "Last match",
+  "team_odds_no_game": "No earlier match recorded."
 }

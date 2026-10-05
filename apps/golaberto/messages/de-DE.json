@@ -547,7 +547,7 @@
   "team_progress": "Punkte- und Platzierungsverlauf",
   "team_progress_note": "Tabelle nach den aktuellen Meisterschaftsregeln rekonstruiert. Einen Punkt wählen, um das Spiel zu öffnen.",
   "team_odds_history": "Wahrscheinlichkeitsverlauf",
-  "team_zone_history_note": "Erfasste Wahrscheinlichkeiten nach Datum und aktuellen Zonengrenzen. Zonen zum Auswählen der Diagramme öffnen oder schließen.",
+  "team_zone_history_note": "Aufgezeichnete Wahrscheinlichkeiten nach Datum gemäß den aktuellen Zonengrenzen. Wählen Sie eine Zone für ihre Platzierungen.",
   "team_contribution_note": "Erfasster Beitrag: Summe offensiver und defensiver Einsatzwerte. Pro 90 verwendet Gesamtminuten; fehlende Werte bleiben leer.",
   "col_goals_per90": "T/90",
   "col_goals_per90_long": "Tore pro 90 Minuten",
@@ -562,5 +562,12 @@
   "chart_game_prefix": "/de/spiel/",
   "team_open": "Team ansehen",
   "team_comment_placeholder": "Teile eine Beobachtung zu diesem Team.",
-  "team_comment_empty": "Noch keine Kommentare zu diesem Team."
+  "team_comment_empty": "Noch keine Kommentare zu diesem Team.",
+  "team_odds_all": "Alle Platzierungen",
+  "team_odds_inspect": "Bewegen Sie sich über das Diagramm, tippen Sie auf ein Datum oder verwenden Sie die Pfeiltasten.",
+  "team_odds_sampled": "Angezeigte Aufzeichnungen",
+  "team_odds_omitted": "Unvollständige Aufzeichnungen ausgelassen",
+  "team_odds_snapshot": "Aufzeichnung",
+  "team_odds_last_game": "Letztes Spiel",
+  "team_odds_no_game": "Kein früheres Spiel aufgezeichnet."
 }

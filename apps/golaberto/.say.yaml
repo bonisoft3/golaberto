@@ -53,7 +53,7 @@ say:
       route-loads:
         priority: 1
         cmds:
-          - do: deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/route-loads.ts
+          - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/route-loads.ts
       recent-championships:
         priority: 1
         cmds:
@@ -76,6 +76,12 @@ say:
       team-enrichment:
         cmds:
           - do: 'let project = (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim); if $project !~ ''(?i)(check|test)'' or ($project | str downcase) == ''golaberto'' { error make {msg: ''team-enrichment requires an explicit disposable check/test compose project''} }; mise exec -- docker compose -p $project stop apps_golaberto-transform; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE }; mise exec -- deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker tests/team-enrichment.ts; let verdict = $env.LAST_EXIT_CODE; mise exec -- docker compose -p $project up -d --no-deps apps_golaberto-transform; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE }; exit $verdict'
+      odds-progress:
+        cmds:
+          - do: 'let project = (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim); if $project !~ ''(?i)(check|test)'' or ($project | str downcase) == ''golaberto'' { error make {msg: ''odds-progress requires an explicit disposable check/test compose project''} }; mise exec -- docker compose -p $project stop apps_golaberto-transform; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE }; mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env --allow-run=docker tests/odds-progress.ts; let verdict = $env.LAST_EXIT_CODE; mise exec -- docker compose -p $project up -d --no-deps apps_golaberto-transform; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE }; exit $verdict'
+      zone-colors:
+        cmds:
+          - do: 'let project = (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim); if $project !~ ''(?i)(check|test)'' or ($project | str downcase) == ''golaberto'' { error make {msg: ''zone-colors requires a disposable check/test compose project''} }; mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env --allow-run=docker,python3 tests/zone-colors.ts tests/archive-refresh.ts'
       replay:
         priority: 1
         cmds:
@@ -167,6 +173,15 @@ say:
       team-enrichment-import:
         cmds:
           - do: python3 -m unittest discover -s tools -p team_enrichment_import_test.py
+      odds-progress-events:
+        cmds:
+          - do: mise exec -- deno test --config ../../plugins/omnishell/test/deno.json --no-lock --allow-read --allow-env ../../plugins/omnishell/test/displacing-gesture.test.ts ../../plugins/omnishell/test/event-leaf.test.ts
+      odds-progress-renderer:
+        cmds:
+          - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/odds-progress-renderer.ts tests/odds-progress-controls.ts
+      zone-colors-renderer:
+        cmds:
+          - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/zone-color-renderer.ts tests/zone-chances.ts
       prerender:
         cmds:
           - do: 'use tools.nu [run-mise]; let pronto = "../../plugins/pronto"; let out = (mktemp -d); run-mise exec -- deno run --config ($pronto | path join deno.json) --allow-read $"--allow-write=($out)" ($pronto | path join prerender.ts) . $out https://localhost:8443; rm -rf $out'

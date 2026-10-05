@@ -29,13 +29,13 @@
                   <div class="grid-table zone-odds" role="table">
                     <div class="row head" role="row">
                       <span class="pos" role="columnheader">#</span><span class="name" role="columnheader" data-text="{msg.col_team}"></span><span class="pts" role="columnheader" data-text="{msg.col_points}"></span>
-                      <span class="cells" data-live="zone" data-filter="group_id=eq.{group_id}" data-order="first.asc,last.asc" data-empty=""><template data-item><span class="zone" role="columnheader" data-zone="{color}"><i aria-hidden="true"></i><span data-text="{name}"></span><small data-text="{first}–{last}"></small></span></template></span>
+                      <span class="cells" data-live="zone" data-filter="group_id=eq.{group_id}" data-order="position.asc,id.asc" data-empty=""><template data-item><span class="zone" role="columnheader" data-zone="{color}" style="--zone: {color}"><i aria-hidden="true"></i><span data-text="{name}"></span><small data-text="{positions_json}|{first}|{last}" data-text-format="zone-positions"></small></span></template></span>
                     </div>
                     <div class="rows" data-live="team_chance" data-filter="group_id=eq.{group_id}" data-order="rank.asc" data-empty="">
                       <template data-item>
                         <div class="row" role="row">
                           <span class="pos" role="cell" data-text="{rank}"></span><span class="name" role="rowheader"><a data-route="equipe" data-param-id="{team_id}"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></span><span class="pts" role="cell" data-text="{points}"></span>
-                          <span class="cells" data-live="zone_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}" data-order="first.asc,last.asc" data-empty=""><template data-item><span class="pct" role="cell" data-zone="{color}" data-band="{band}"><span data-text="{percent}" data-text-format="number"></span><span class="reach" data-reach="{reach}" title="{msg[reach]}" aria-hidden="true"></span><span class="visually-hidden" data-text="{msg[reach]}"></span></span></template></span>
+                          <span class="cells" data-live="zone_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}" data-order="position.asc,zone_id.asc" data-empty=""><template data-item><span class="pct" role="cell" data-zone="{color}" style="--zone: {color}" data-band="{band}"><span data-text="{percent}" data-text-format="number"></span><span class="reach" data-reach="{reach}" title="{msg[reach]}" aria-hidden="true"></span><span class="visually-hidden" data-text="{msg[reach]}"></span></span></template></span>
                         </div>
                       </template>
                     </div>

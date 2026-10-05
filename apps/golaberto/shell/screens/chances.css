@@ -44,7 +44,7 @@
 .zone-odds .zone { flex-direction: column; justify-content: flex-end; align-items: center; text-align: center; line-height: var(--type-leading-title); }
 .zone-odds .zone i { width: 10px; height: 10px; background: var(--zone); border: var(--border-size-1) solid var(--table-head-ink); }
 .zone-odds .zone small { font-size: var(--type-label); font-weight: 400; }
-.zone-odds .pct { justify-content: flex-end; padding-inline-end: var(--sp-md); background: color-mix(in srgb, var(--zone) var(--tint), var(--row)); }
+.zone-odds .pct { justify-content: flex-end; padding-inline-end: var(--sp-md); background: color-mix(in srgb, var(--zone) calc(var(--tint) * 0.35), var(--row)); }
 .zone-odds [data-band="0"] { --tint: 0%; color: var(--secondary); }
 .zone-odds [data-band="1"] { --tint: 20%; }
 .zone-odds [data-band="2"] { --tint: 40%; }

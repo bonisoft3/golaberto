@@ -41,6 +41,11 @@ _searchCollationUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_
 
 _teamDirectorySql: string @embed(file="services/database/sql/024_team_directory.sql", type=text)
 _teamDirectoryUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamDirectorySql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_zoneColorsSql: string @embed(file="services/database/sql/031_zone_colors.sql", type=text)
+_zoneColorsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_zoneColorsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
+_teamOddsProgressSql: string @embed(file="services/database/sql/030_team_odds_progress.sql", type=text)
+_teamOddsProgressUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamOddsProgressSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 _teamEnrichmentSql: string @embed(file="services/database/sql/029_team_enrichment.sql", type=text)
 _teamEnrichmentUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamEnrichmentSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
@@ -121,6 +126,7 @@ code: pronto.#App & {
 		TeamOddsHistory: onDemand: true
 		TeamRatingChart: onDemand: true
 		TeamOddsChart: onDemand: true
+		TeamOddsProgress: onDemand: true
 		TeamRosterTotal: onDemand: true
 	}
 	state: entities: {
@@ -230,9 +236,11 @@ code: pronto.#App & {
 				{ordinal: 1, name: "id", type: "uuid", pk: true, default: "gen_random_uuid()"},
 				{ordinal: 2, name: "group_id", type: "uuid", ref: "stage_group"},
 				{ordinal: 3, name: "name", type: "string", cel: "this.size() > 0 && this.size() <= 60"},
-				{ordinal: 4, name: "color", type: "string", cel: "this in ['champion', 'promotion', 'qualify', 'playoff', 'relegation']"},
+				{ordinal: 4, name: "color", type: "string", cel: "this.matches('^#[0-9a-f]{6}$')"},
 				{ordinal: 5, name: "first", type: "int32", cel: "this >= 1"},
 				{ordinal: 6, name: "last", type: "int32", cel: "this >= 1"},
+				{ordinal: 7, name: "position", type: "int32", default: "0", cel: "this >= 0"},
+				{ordinal: 8, name: "positions_json", type: "string", required: false},
 			]
 			invariant: {cel: "this.last >= this.first"}
 			indexes: [{on: "group_id"}]
@@ -564,8 +572,8 @@ code: pronto.#App & {
 				{ordinal: 16, name: "form3", type: "string", cel: "this in ['', 'w', 'd', 'l']"},
 				{ordinal: 17, name: "form4", type: "string", cel: "this in ['', 'w', 'd', 'l']"},
 				{ordinal: 18, name: "form5", type: "string", cel: "this in ['', 'w', 'd', 'l']"},
-				// The narrowest zone the position falls in, or none.
-				{ordinal: 19, name: "zone", type: "string", cel: "this in ['', 'champion', 'promotion', 'qualify', 'playoff', 'relegation']"},
+				// The first source zone containing this position, or none.
+				{ordinal: 19, name: "zone", type: "string", cel: "this == '' || this.matches('^#[0-9a-f]{6}$')"},
 			]
 			indexes: [{on: "group_id"}]
 		}
@@ -605,13 +613,14 @@ code: pronto.#App & {
 				{ordinal: 5, name: "first", type: "int32", cel: "this >= 1"},
 				{ordinal: 6, name: "percent", type: "double", cel: "this >= 0 && this <= 100.5"},
 				// The zone's colour and the cell's heat, as the standings draw them.
-				{ordinal: 7, name: "color", type: "string", cel: "this in ['champion', 'promotion', 'qualify', 'playoff', 'relegation']"},
+				{ordinal: 7, name: "color", type: "string", cel: "this.matches('^#[0-9a-f]{6}$')"},
 				{ordinal: 8, name: "band", type: "int32", cel: "this >= 0 && this <= 4"},
 				// Its last position: zones sharing a first are ordered by it.
 				{ordinal: 9, name: "last", type: "int32", cel: "this >= 1"},
 				// For a cell that shows 0, whether the zone can still be reached
 				// (ir decision-chances); empty for every other cell.
 				{ordinal: 10, name: "reach", type: "string", cel: "this in ['', 'impossible', 'reachable', 'undecided']"},
+				{ordinal: 11, name: "position", type: "int32", default: "0", cel: "this >= 0"},
 			]
 			indexes: [{on: "group_id"}]
 		}
@@ -1119,6 +1128,37 @@ code: pronto.#App & {
 			]
 			indexes: [{on: "team_id"}]
 		}
+		TeamOddsProgress: {
+			id: "0xd7afe4f22e983abd"
+			table: "team_odds_progress"
+			durability: "live"
+			access: {scope: "public"}
+			writers: "pipeline"
+			uniques: [{name:"uq_team_odds_progress_group_team", cols:["group_id","team_id"]}]
+			fields: [
+				{ordinal: 1, name: "id", type: "string", pk: true},
+				{ordinal: 2, name: "group_id", type: "uuid", ref: "stage_group"},
+				{ordinal: 3, name: "team_id", type: "uuid", ref: "team"},
+				{ordinal: 4, name: "series_json", type: "string"},
+			]
+			indexes: [{on:"group_id"},{on:"team_id"}]
+		}
+		TeamOddsProgressState: {
+			id: "0x9e315fda51e4b2c7"
+			table: "team_odds_progress_state"
+			durability: "tab"
+			fields: [
+				{ordinal: 1, name: "id", type: "string", pk: true},
+				{ordinal: 2, name: "group_id", type: "uuid"},
+				{ordinal: 3, name: "team_id", type: "uuid"},
+				{ordinal: 4, name: "state", type: "string", cel: "this in ['viewing']", default: "'viewing'"},
+				{ordinal: 5, name: "zone_id", type: "string", default: "'*'"},
+				{ordinal: 6, name: "snapshot_index", type: "int32", cel: "this >= -1 && this <= 359", default: "-1"},
+				{ordinal: 7, name: "snapshot_last", type: "int32", cel: "this >= 0 && this <= 359", default: "0"},
+				{ordinal: 8, name: "pointer_x", type: "int32", cel: "this >= 0 && this <= 1000", default: "1000"},
+				{ordinal: 9, name: "series_json", type: "string", default: "'{}'"},
+			]
+		}
 		TeamOddsChart: {
 			id: "0xc3d5774bc952a01a"
 			table: "team_odds_chart"
@@ -1233,6 +1273,8 @@ code: pronto.#App & {
 		{name: "027_team_directory_type.sql", src: "services/database/sql/027_team_directory_type.sql"},
 		{name: "028_team_profiles.sql", src: "services/database/sql/028_team_profiles.sql"},
 		{name: "029_team_enrichment.sql", src: "services/database/sql/029_team_enrichment.sql"},
+		{name: "030_team_odds_progress.sql", src: "services/database/sql/030_team_odds_progress.sql"},
+		{name: "031_zone_colors.sql", src: "services/database/sql/031_zone_colors.sql"},
 		// Large archive fixtures are copied at build, never expanded through CUE.
 		{name: "900_seed.sql", src: "services/database/sql/900_seed.sql"},
 	]
@@ -1255,6 +1297,8 @@ code: pronto.#App & {
 	state: migrations: "025_search_letter_equivalences": {operations: [{sql: {up: _extendedSearchCollationUpgrade, onComplete: true}}]}
 	state: migrations: "026_team_geography": {operations: [{sql: {up: _teamGeographyUpgrade, onComplete: true}}]}
 	state: migrations: "027_team_directory_type": {operations: [{sql: {up: _teamTypeUpgrade, onComplete: true}}]}
+	state: migrations: "031_zone_colors": {operations: [{sql: {up: _zoneColorsUpgrade, onComplete: true}}]}
+	state: migrations: "030_team_odds_progress": {operations: [{sql: {up: _teamOddsProgressUpgrade, onComplete: true}}]}
 	state: migrations: "029_team_enrichment": {operations: [{sql: {up: _teamEnrichmentUpgrade, onComplete: true}}]}
 	state: migrations: "028_team_profiles": {operations: [{sql: {up: _teamProfilesUpgrade, onComplete: true}}]}
 	state: pipelines: "team-profiles": {raw: true, from: "Team", to: "TeamChampionship", group: "golaberto-team-profiles"}
@@ -1310,6 +1354,12 @@ code: pronto.#App & {
 	}
 
 	surface: handlers: {
+		"odds-progress-snapshot": {ir:"handler-odds-progress-snapshot",of:"equipe-campeonato",src:"shell/handlers/odds-progress-snapshot.js",note:"bounded recorded probability chart selection and source synchronization"}
+		"odds-progress-key": {ir:"handler-odds-progress-key",of:"equipe-campeonato",src:"shell/handlers/odds-progress-key.js",note:"bounded recorded probability chart selection and source synchronization"}
+		"odds-progress-point": {ir:"handler-odds-progress-point",of:"equipe-campeonato",src:"shell/handlers/odds-progress-point.js",note:"bounded recorded probability chart selection and source synchronization"}
+		"odds-progress-pointer": {ir:"handler-odds-progress-pointer",of:"equipe-campeonato",src:"shell/handlers/odds-progress-pointer.js",note:"bounded recorded probability chart selection and source synchronization"}
+		"odds-progress-zone": {ir:"handler-odds-progress-zone",of:"equipe-campeonato",src:"shell/handlers/odds-progress-zone.js",note:"bounded recorded probability chart selection and source synchronization"}
+		"odds-progress-fold": {ir:"handler-odds-progress-fold",of:"equipe-campeonato",src:"shell/handlers/odds-progress-fold.js",note:"bounded recorded probability chart selection and source synchronization"}
 		"team-chart-seed": {ir: "handler-team-chart-seed", of: "equipe-campeonato", src: "shell/handlers/team-chart-seed.js", note: "initialize one typed tab chart row from its explicit fallback"}
 		"chart-compare": {ir: "handler-chart-compare", of: "equipe-campeonato", src: "shell/handlers/chart-compare.js", note: "typed chart control retains existing state for unrelated gestures"}
 		"chart-metric": {ir: "handler-chart-metric", of: "equipe-campeonato", src: "shell/handlers/chart-metric.js", note: "typed chart control retains existing state for unrelated gestures"}
@@ -1337,7 +1387,7 @@ code: pronto.#App & {
 				quiet: {states: ["populated", "no-games", "populated"], accepts: ["accept-home-games"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/home-date.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/home-date.js", "shell/renderers/geography-label.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		campeonatos: {
@@ -1357,7 +1407,7 @@ code: pronto.#App & {
 				search: {states: ["populated", "filtered", "no-match", "populated"], accepts: ["accept-catalog-search"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		jogos: {
@@ -1373,7 +1423,7 @@ code: pronto.#App & {
 				switch: {states: ["populated", "results", "populated"], accepts: ["accept-games-results"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		jogo: {
@@ -1394,7 +1444,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-game-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		chances: {
@@ -1411,7 +1461,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-chances"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		editar: {
@@ -1429,7 +1479,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-game-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		equipes: {
@@ -1449,7 +1499,7 @@ code: pronto.#App & {
 				search: {states: ["populated", "filtered", "no-match", "populated"], accepts: ["accept-teams"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		estadios: {
@@ -1467,7 +1517,7 @@ code: pronto.#App & {
 				search: {states: ["populated", "filtered", "no-match", "populated"], accepts: ["accept-venues"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		estadio: {
@@ -1484,7 +1534,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-venue-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		arbitros: {
@@ -1502,7 +1552,7 @@ code: pronto.#App & {
 				search: {states: ["populated", "filtered", "no-match", "populated"], accepts: ["accept-venues"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		arbitro: {
@@ -1519,7 +1569,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-venue-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		equipe: {
@@ -1536,7 +1586,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-team-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/team-chart.js", "shell/renderers/team-location.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/team-chart.js", "shell/renderers/team-location.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/team.css"]
 		}
 		"equipe-campeonato": {
@@ -1553,7 +1603,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "empty"], accepts: ["accept-team-championship-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/team-chart.js", "shell/renderers/team-location.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/team-chart.js", "shell/renderers/team-location.js", "shell/renderers/odds-progress.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/team.css"]
 		}
 		jogador: {
@@ -1570,7 +1620,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-team-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		campeonato: {
@@ -1588,7 +1638,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-championship-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 	}
@@ -1941,7 +1991,7 @@ code: pronto.#App & {
 				says:  "a position takes the narrowest zone it falls in"
 				given: {position: 1}
 				when:  "recount"
-				then:  "output[0].zone == \"champion\""
+				then:  "output[0].zone == \"#22bb22\""
 			}
 			"test-standings-page": {
 				of:    "campeonato"
@@ -2337,7 +2387,7 @@ loop: surface: checks: "game-countries": {
 }
 
 loop: surface: checks: "route-queries": {verb: "integrate", priority: 1, cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker tests/route-queries.ts"], note: "catalogs, histories and exact game reads use ordered indexes"}
-loop: surface: checks: "route-loads": {verb: "integrate", priority: 1, cmds: ["deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/route-loads.ts"], note: "every route loads bounded subsets; pagination preserves access to the full archive"}
+loop: surface: checks: "route-loads": {verb: "integrate", priority: 1, cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=localhost tests/route-loads.ts"], note: "every route loads bounded subsets; pagination preserves access to the full archive"}
 
 loop: surface: checks: "home-date-renderer": {
   verb: "test"
@@ -2394,3 +2444,10 @@ loop: surface: checks: "team-enrichment": {
 	cmds: ["let project = (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim); if $project !~ '(?i)(check|test)' or ($project | str downcase) == 'golaberto' { error make {msg: 'team-enrichment requires an explicit disposable check/test compose project'} }; mise exec -- docker compose -p $project stop apps_golaberto-transform; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE }; mise exec -- deno test --config tests/deno.json --no-lock --allow-env --allow-run=docker tests/team-enrichment.ts; let verdict = $env.LAST_EXIT_CODE; mise exec -- docker compose -p $project up -d --no-deps apps_golaberto-transform; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE }; exit $verdict"]
 	note: "rating samples, campaign reconstruction, roster metric totals, post-computation snapshots and comment permissions remain coherent"
 }
+
+loop: surface: checks: "odds-progress-events": {verb:"test",cmds:["mise exec -- deno test --config ../../plugins/omnishell/test/deno.json --no-lock --allow-read --allow-env ../../plugins/omnishell/test/displacing-gesture.test.ts ../../plugins/omnishell/test/event-leaf.test.ts"],note:"chart guards preserve native controls while accepted graph keys cancel page scrolling"}
+loop: surface: checks: "odds-progress-renderer": {verb:"test",cmds:["mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/odds-progress-renderer.ts tests/odds-progress-controls.ts"],note:"shared-date stacks, exact overlapping zone filters, localization and safe chart output"}
+loop: surface: checks: "odds-progress": {verb:"integrate",cmds:["let project = (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim); if $project !~ '(?i)(check|test)' or ($project | str downcase) == 'golaberto' { error make {msg: 'odds-progress requires an explicit disposable check/test compose project'} }; mise exec -- docker compose -p $project stop apps_golaberto-transform; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE }; mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env --allow-run=docker tests/odds-progress.ts; let verdict = $env.LAST_EXIT_CODE; mise exec -- docker compose -p $project up -d --no-deps apps_golaberto-transform; if $env.LAST_EXIT_CODE != 0 { exit $env.LAST_EXIT_CODE }; exit $verdict"],note:"bounded full position vectors, metadata invalidation and idempotent retained projection"}
+
+loop: surface: checks: "zone-colors-renderer": {verb:"test",cmds:["mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/zone-color-renderer.ts tests/zone-chances.ts"],note:"arbitrary hex paint and refusal of unsafe SVG paint"}
+loop: surface: checks: "zone-colors": {verb:"integrate",cmds:["let project = (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim); if $project !~ '(?i)(check|test)' or ($project | str downcase) == 'golaberto' { error make {msg: 'zone-colors requires a disposable check/test compose project'} }; mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env --allow-run=docker,python3 tests/zone-colors.ts tests/archive-refresh.ts"],note:"arbitrary colors, source order, noncontiguous positions and retained migration replay"}

@@ -709,6 +709,16 @@ export async function createShell({ config, mount }) {
       link("alternate", routeHref(cfg, route.screen, params, cfg.i18n.default), "x-default");
     };
 
+    const scrollToFragment = (el) => {
+      if (!location.hash) return false;
+      let id;
+      try { id = decodeURIComponent(location.hash.slice(1)); } catch { return false; }
+      const target = [...el.querySelectorAll('[id]')].find((node) => node.id === id);
+      if (!target) return false;
+      target.scrollIntoView({block: 'start'});
+      return true;
+    };
+
     const show = async (navigationType = "push") => {
       let { route, params, locale, written } = currentRoute();
       // A localized route has one address, so `?lang=` on one is replaced by
@@ -717,7 +727,7 @@ export async function createShell({ config, mount }) {
       // a reload cannot negotiate the reader back into another language.
       if (route.paths !== undefined && new URLSearchParams(location.search).has("lang")) {
         const canonical = routeHref(cfg, route.screen, params, locale, { explicitLocale: true });
-        if (canonical !== undefined) history.replaceState(null, "", canonical);
+        if (canonical !== undefined) history.replaceState(null, "", canonical + location.hash);
         ({ route, params, locale, written } = currentRoute());
       }
       localizeStrip(locale);
@@ -738,10 +748,11 @@ export async function createShell({ config, mount }) {
         evict(route);
         describe(route, params, locale, written, entry.el);
         // Following a link to a screen visited before is a fresh arrival
-        // however warm its DOM is, and an arrival starts at the top; going
-        // back resumes. Only "push" is treated as an arrival.
+        // however warm its DOM is. Back resumes the saved offset; an arrival
+        // uses its fragment once resumed content is ready, or starts at the top.
         window.scrollTo(0, navigationType === "push" ? 0 : entry.scrollY);
         await entry.handle?.resume();
+        if (current === entry && navigationType === "push") scrollToFragment(entry.el);
         return;
       }
       const el = document.createElement("div");
@@ -772,12 +783,9 @@ export async function createShell({ config, mount }) {
         if (current !== fresh) return fresh.handle.pause();
         // After the render: the screen's own h1 is where its name comes from.
         describe(route, params, locale, written, el);
-        // A screen arrived at starts at its own top. This lands there anyway
-        // today, but only because hiding the outgoing screen collapses the page
-        // and the browser clamps — an accident of ordering that any overlap of
-        // the two screens would undo, and a cross-fade needs exactly that
-        // overlap.
-        window.scrollTo(0, 0);
+        // Fragment targets exist only after hydration. Resolve within this
+        // screen, since held screens can carry the same section IDs.
+        if (!scrollToFragment(el)) window.scrollTo(0, 0);
       } catch (err) {
         // A slot whose load threw has no handle, and every later eviction calls
         // one: held onto, it turns the next visit to any screen into a
@@ -848,7 +856,7 @@ export async function createShell({ config, mount }) {
         if (url.origin !== location.origin || addresses(url) === null) return;
         if (url.pathname === location.pathname && url.search === (location.search ?? "")) return;
         e.preventDefault();
-        navigate(url.pathname + url.search);
+        navigate(url.pathname + url.search + url.hash);
       }, true);
       addEventListener("popstate", () => show("traverse"));
     }

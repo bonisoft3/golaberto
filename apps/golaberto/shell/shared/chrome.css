@@ -128,12 +128,8 @@ a.chip { color: var(--chip-ink); }
 .chip .empty { padding: 0; color: var(--chip-ink); }
 a.chip:hover { color: var(--chip-ink); text-decoration: underline; }
 
-/* A zone's colour is its role, resolved in both appearances. */
-[data-zone="champion"] { --zone: var(--zone-champion); }
-[data-zone="qualify"] { --zone: var(--zone-qualify); }
-[data-zone="playoff"] { --zone: var(--zone-playoff); }
-[data-zone="promotion"] { --zone: var(--zone-promotion); }
-[data-zone="relegation"] { --zone: var(--zone-relegation); }
+/* Group-owned hex paint is bound into --zone by the screen. */
+.team-zone-color { display: inline-block; width: 0.75rem; height: 0.75rem; flex: none; vertical-align: middle; }
 
 .field { display: flex; flex-direction: column; gap: var(--sp-sm); font-size: var(--type-label); font-weight: 700; }
 .field input, .field select {

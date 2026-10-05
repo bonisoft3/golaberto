@@ -75,7 +75,7 @@
                           </tr></thead>
                           <tbody data-live="standing" data-filter="group_id=eq.{id}&position=lte.6" data-order="position.asc" data-empty="{msg.no_teams}">
                             <template data-item>
-                              <tr data-zone="{zone}">
+                              <tr data-zone="{zone}" style="--zone: {zone}">
 	                                <td class="pos" data-text="{position}"></td>
 	                                <td class="name"><a data-route="equipe" data-param-id="{team_id}"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></td>
 	                                <td class="num pts" data-text="{points}"></td>
@@ -87,7 +87,7 @@
 	                                <td class="num wide" data-text="{goals_against}"></td>
 	                                <td class="num" data-text="{goal_diff}"></td>
 	                                <td class="form wide"><i data-result="{form1}" title="{msg[form1]}"></i><i data-result="{form2}" title="{msg[form2]}"></i><i data-result="{form3}" title="{msg[form3]}"></i><i data-result="{form4}" title="{msg[form4]}"></i><i data-result="{form5}" title="{msg[form5]}"></i></td>
-                                <td class="odds"><span data-live="zone_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}&color=eq.champion" data-empty=""><template data-item><span class="title-chance" data-band="{band}"><span class="bar" aria-hidden="true"><i></i></span><span data-text="{percent}" data-text-format="number"></span><span class="reach" data-reach="{reach}" title="{msg[reach]}" aria-hidden="true"></span><span class="visually-hidden" data-text="{msg[reach]}"></span></span></template></span></td>
+                                <td class="odds"><span data-live="position_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}&position=eq.1&limit=1" data-empty=""><template data-item><span class="title-chance" data-band="{band}"><span class="bar" aria-hidden="true"><i></i></span><span data-text="{percent}" data-text-format="number"></span><span class="reach" data-reach="{reach}" title="{msg[reach]}" aria-hidden="true"></span><span class="visually-hidden" data-text="{msg[reach]}"></span></span></template></span></td>
                               </tr>
                             </template>
                           </tbody>

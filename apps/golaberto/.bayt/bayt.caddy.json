@@ -268,6 +268,36 @@
         },
         {
           "action": "sync+restart",
+          "path": "../shell/handlers/odds-progress-fold.js",
+          "target": "/srv/shell/handlers/odds-progress-fold.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/odds-progress-key.js",
+          "target": "/srv/shell/handlers/odds-progress-key.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/odds-progress-point.js",
+          "target": "/srv/shell/handlers/odds-progress-point.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/odds-progress-pointer.js",
+          "target": "/srv/shell/handlers/odds-progress-pointer.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/odds-progress-snapshot.js",
+          "target": "/srv/shell/handlers/odds-progress-snapshot.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/odds-progress-zone.js",
+          "target": "/srv/shell/handlers/odds-progress-zone.js"
+        },
+        {
+          "action": "sync+restart",
           "path": "../shell/handlers/page-value.js",
           "target": "/srv/shell/handlers/page-value.js"
         },
@@ -308,6 +338,11 @@
         },
         {
           "action": "sync+restart",
+          "path": "../shell/renderers/odds-progress.js",
+          "target": "/srv/shell/renderers/odds-progress.js"
+        },
+        {
+          "action": "sync+restart",
           "path": "../shell/renderers/team-badge.js",
           "target": "/srv/shell/renderers/team-badge.js"
         },
@@ -320,6 +355,16 @@
           "action": "sync+restart",
           "path": "../shell/renderers/team-location.js",
           "target": "/srv/shell/renderers/team-location.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/zone-color.js",
+          "target": "/srv/shell/renderers/zone-color.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/zone-positions.js",
+          "target": "/srv/shell/renderers/zone-positions.js"
         },
         {
           "action": "sync+restart",
@@ -987,6 +1032,66 @@
       {
         "from": null,
         "srcs": [
+          "shell/handlers/odds-progress-fold.js"
+        ],
+        "dst": "/srv/shell/handlers/odds-progress-fold.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/handlers/odds-progress-key.js"
+        ],
+        "dst": "/srv/shell/handlers/odds-progress-key.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/handlers/odds-progress-point.js"
+        ],
+        "dst": "/srv/shell/handlers/odds-progress-point.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/handlers/odds-progress-pointer.js"
+        ],
+        "dst": "/srv/shell/handlers/odds-progress-pointer.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/handlers/odds-progress-snapshot.js"
+        ],
+        "dst": "/srv/shell/handlers/odds-progress-snapshot.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/handlers/odds-progress-zone.js"
+        ],
+        "dst": "/srv/shell/handlers/odds-progress-zone.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
           "shell/handlers/page-value.js"
         ],
         "dst": "/srv/shell/handlers/page-value.js",
@@ -1067,6 +1172,16 @@
       {
         "from": null,
         "srcs": [
+          "shell/renderers/odds-progress.js"
+        ],
+        "dst": "/srv/shell/renderers/odds-progress.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
           "shell/renderers/team-badge.js"
         ],
         "dst": "/srv/shell/renderers/team-badge.js",
@@ -1090,6 +1205,26 @@
           "shell/renderers/team-location.js"
         ],
         "dst": "/srv/shell/renderers/team-location.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/renderers/zone-color.js"
+        ],
+        "dst": "/srv/shell/renderers/zone-color.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/renderers/zone-positions.js"
+        ],
+        "dst": "/srv/shell/renderers/zone-positions.js",
         "link": true,
         "parents": false,
         "exclude": []
@@ -1570,6 +1705,12 @@
       "shell/handlers/count-or-null.js",
       "shell/handlers/country-option.js",
       "shell/handlers/geography-selection.js",
+      "shell/handlers/odds-progress-fold.js",
+      "shell/handlers/odds-progress-key.js",
+      "shell/handlers/odds-progress-point.js",
+      "shell/handlers/odds-progress-pointer.js",
+      "shell/handlers/odds-progress-snapshot.js",
+      "shell/handlers/odds-progress-zone.js",
       "shell/handlers/page-value.js",
       "shell/handlers/row-id.js",
       "shell/handlers/search-key.js",
@@ -1578,9 +1719,12 @@
       "shell/renderers/country-flag.js",
       "shell/renderers/geography-label.js",
       "shell/renderers/home-date.js",
+      "shell/renderers/odds-progress.js",
       "shell/renderers/team-badge.js",
       "shell/renderers/team-chart.js",
       "shell/renderers/team-location.js",
+      "shell/renderers/zone-color.js",
+      "shell/renderers/zone-positions.js",
       "shell/shared/catalog.css",
       "shell/shared/chrome.css",
       "shell/shared/games.css",
@@ -1729,6 +1873,12 @@
           "shell/handlers/count-or-null.js",
           "shell/handlers/country-option.js",
           "shell/handlers/geography-selection.js",
+          "shell/handlers/odds-progress-fold.js",
+          "shell/handlers/odds-progress-key.js",
+          "shell/handlers/odds-progress-point.js",
+          "shell/handlers/odds-progress-pointer.js",
+          "shell/handlers/odds-progress-snapshot.js",
+          "shell/handlers/odds-progress-zone.js",
           "shell/handlers/page-value.js",
           "shell/handlers/row-id.js",
           "shell/handlers/search-key.js",
@@ -1737,9 +1887,12 @@
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js",
           "shell/renderers/home-date.js",
+          "shell/renderers/odds-progress.js",
           "shell/renderers/team-badge.js",
           "shell/renderers/team-chart.js",
           "shell/renderers/team-location.js",
+          "shell/renderers/zone-color.js",
+          "shell/renderers/zone-positions.js",
           "shell/shared/catalog.css",
           "shell/shared/chrome.css",
           "shell/shared/games.css",

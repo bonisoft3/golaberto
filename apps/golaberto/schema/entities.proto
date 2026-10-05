@@ -587,6 +587,25 @@ message TeamOddsHistory {
   optional string source = 8 [json_name = "source"];
 }
 
+message TeamOddsProgress {
+  optional string id = 1 [json_name = "id"];
+  optional string group_id = 2 [json_name = "group_id"];
+  optional string team_id = 3 [json_name = "team_id"];
+  optional string series_json = 4 [json_name = "series_json"];
+}
+
+message TeamOddsProgressState {
+  optional string id = 1 [json_name = "id"];
+  optional string group_id = 2 [json_name = "group_id"];
+  optional string team_id = 3 [json_name = "team_id"];
+  optional string state = 4 [json_name = "state"];
+  optional string zone_id = 5 [json_name = "zone_id"];
+  optional int32 snapshot_index = 6 [json_name = "snapshot_index"];
+  optional int32 snapshot_last = 7 [json_name = "snapshot_last"];
+  optional int32 pointer_x = 8 [json_name = "pointer_x"];
+  optional string series_json = 9 [json_name = "series_json"];
+}
+
 message TeamPlayer {
   optional string id = 1 [json_name = "id"];
   optional string championship_id = 2 [json_name = "championship_id"];
@@ -676,6 +695,8 @@ message Zone {
   optional string color = 4 [json_name = "color"];
   optional int32 first = 5 [json_name = "first"];
   optional int32 last = 6 [json_name = "last"];
+  optional int32 position = 7 [json_name = "position"];
+  optional string positions_json = 8 [json_name = "positions_json"];
 }
 
 message ZoneChance {
@@ -689,4 +710,5 @@ message ZoneChance {
   optional int32 band = 8 [json_name = "band"];
   optional int32 last = 9 [json_name = "last"];
   optional string reach = 10 [json_name = "reach"];
+  optional int32 position = 11 [json_name = "position"];
 }

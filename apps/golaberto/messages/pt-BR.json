@@ -547,7 +547,7 @@
   "team_progress": "Evolução de pontos e posição",
   "team_progress_note": "Classificação reconstruída com as regras atuais do campeonato. Selecione um ponto para abrir o jogo.",
   "team_odds_history": "Histórico de probabilidades",
-  "team_zone_history_note": "Probabilidades registradas por data, agrupadas pelos limites atuais de cada zona. Abra ou feche as zonas para selecionar os gráficos.",
+  "team_zone_history_note": "Probabilidades registradas por data, conforme os limites atuais das zonas. Selecione uma zona para consultar suas posições.",
   "team_contribution_note": "Contribuição registrada: soma dos valores ofensivos e defensivos das participações. Por 90 usa os minutos totais; valores ausentes permanecem em branco.",
   "col_goals_per90": "G/90",
   "col_goals_per90_long": "Gols por 90 minutos",
@@ -562,5 +562,12 @@
   "chart_game_prefix": "/jogo/",
   "team_open": "Ver equipe",
   "team_comment_placeholder": "Compartilhe uma observação sobre esta equipe.",
-  "team_comment_empty": "Ainda não há comentários sobre esta equipe."
+  "team_comment_empty": "Ainda não há comentários sobre esta equipe.",
+  "team_odds_all": "Todas as posições",
+  "team_odds_inspect": "Passe pelo gráfico, toque em uma data ou use as setas para consultar as probabilidades.",
+  "team_odds_sampled": "Registros exibidos",
+  "team_odds_omitted": "Registros incompletos omitidos",
+  "team_odds_snapshot": "Registro",
+  "team_odds_last_game": "Último jogo",
+  "team_odds_no_game": "Nenhum jogo anterior registrado."
 }

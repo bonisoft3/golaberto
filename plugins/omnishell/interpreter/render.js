@@ -45,7 +45,7 @@ export function safeUrl(raw) {
 }
 
 const GLOBAL_ATTRS = new Set(["class", "title", "lang", "dir"]);
-const SVG_GLOBAL_ATTRS = new Set(["class", "title", "lang", "dir", "role", "aria-label"]);
+const SVG_GLOBAL_ATTRS = new Set(["class", "title", "lang", "dir", "role", "aria-label", "aria-hidden"]);
 
 // Prose elements, and only prose. Absent by decision, not by oversight:
 // script/style (code, and this is the whole point), iframe/object/embed (the
@@ -77,9 +77,9 @@ const SVG_TAGS = {
   line: ["x1", "y1", "x2", "y2", "stroke-width", "stroke-dasharray"],
   polyline: ["points", "stroke-width", "stroke-linejoin", "stroke-linecap"],
   polygon: ["points", "stroke-width"],
-  path: ["d", "stroke-width", "stroke-linejoin", "stroke-linecap"],
+  path: ["d", "stroke-width", "stroke-linejoin", "stroke-linecap", "fill"],
   circle: ["cx", "cy", "r", "stroke-width", "tabindex"],
-  rect: ["x", "y", "width", "height", "rx", "stroke-width"],
+  rect: ["x", "y", "width", "height", "rx", "stroke-width", "fill"],
   text: ["x", "y", "text-anchor", "dominant-baseline"],
   a: ["href", "target", "rel", "aria-label", "tabindex"],
 };
@@ -138,6 +138,13 @@ function toNode(node, depth = 0, inSvg = false) {
     // is written, and setAttribute stringifies: left alone it sets the literal
     // "undefined", which for target is a real browsing-context name.
     if (value === undefined || value === null) continue;
+    // Data-owned chart colors are literal paint, never resource references.
+    if (svg && name === "fill" && !/^#[0-9a-f]{6}$/i.test(String(value))) {
+      throw new Error("renderer fill must be a six-digit hex color");
+    }
+    if (svg && name === "aria-hidden" && !["true", "false"].includes(String(value))) {
+      throw new Error("renderer aria-hidden must be true or false");
+    }
     if (URL_ATTRS.has(name)) {
       const url = safeUrl(value);
       if (url === null) continue;

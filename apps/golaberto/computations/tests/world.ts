@@ -16,7 +16,7 @@ export const TABLES: Record<string, string> = {
   stage_group: "id UUID, phase_id UUID",
   team: "id UUID, name VARCHAR",
   team_group: "id UUID, group_id UUID, team_id UUID, add_sub VARCHAR, bias VARCHAR",
-  zone: "id UUID, group_id UUID, first VARCHAR, last VARCHAR, color VARCHAR",
+  zone: "id UUID, group_id UUID, first VARCHAR, last VARCHAR, color VARCHAR, position INTEGER, positions_json VARCHAR",
   game: "id UUID, phase_id UUID, day VARCHAR, kickoff VARCHAR, home_id UUID, away_id UUID, home_field VARCHAR, " +
     "played VARCHAR, home_score VARCHAR, away_score VARCHAR, home_aet VARCHAR, away_aet VARCHAR",
   team_rating: "id UUID, team_id UUID, measure_date VARCHAR, offense VARCHAR, defense VARCHAR, rating VARCHAR",
@@ -115,7 +115,7 @@ export class World {
       })
     );
     ([[1, 1, "champion"], [1, 2, "qualify"], [5, 6, "relegation"]] as const).forEach(([first, last, color], z) =>
-      this.rows.zone.push({ id: uid(7, n * 10 + z), group_id: group, first: `${first}`, last: `${last}`, color })
+      this.rows.zone.push({ id: uid(7, n * 10 + z), group_id: group, first: `${first}`, last: `${last}`, color: ({champion:"#22bb22",qualify:"#55dd55",relegation:"#ffb6c1"} as Record<string,string>)[color], position:`${z}`, positions_json:JSON.stringify(Array.from({length:last-first+1},(_,i)=>first+i)) })
     );
     const pairs: [number, number][] = [];
     for (let h = 0; h < 6; h++) for (let a = 0; a < 6; a++) if (h !== a) pairs.push([h, a]);

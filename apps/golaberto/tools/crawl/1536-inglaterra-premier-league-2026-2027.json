@@ -95,22 +95,43 @@
       {
        "name": "Champions",
        "first": 1,
-       "last": 1
+       "last": 1,
+       "color": "#4fe34f",
+       "positions": [
+        1
+       ]
       },
       {
        "name": "Champions League",
        "first": 1,
-       "last": 4
+       "last": 4,
+       "color": "#90ee90",
+       "positions": [
+        1,
+        2,
+        3,
+        4
+       ]
       },
       {
        "name": "Europa League",
        "first": 5,
-       "last": 5
+       "last": 5,
+       "color": "#add8e6",
+       "positions": [
+        5
+       ]
       },
       {
        "name": "Relegation",
        "first": 18,
-       "last": 20
+       "last": 20,
+       "color": "#ffb6c2",
+       "positions": [
+        18,
+        19,
+        20
+       ]
       }
      ]
     }

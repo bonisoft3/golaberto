@@ -53,7 +53,7 @@ GAME = re.compile(
 )
 GROUP = re.compile(r"<h3><span>(?:<a href=\"[^\"]*/group/(\d+)\">)?([^<]+)(?:</a>)?</span></h3>(.*?)(?=<h3><span>|<div class=\"nav_side\"|$)", re.S)
 TEAM = re.compile(r'href="/championship/show/[^"]+/team/(\d+)-[^"]+">([^<]+)</a>')
-ZONE = re.compile(r">\s*([^<>\[\]]+?):\s*\[([0-9, ]+)\]")
+ZONE = re.compile(r'<span\s+style=["\']color:\s*([^"\']+)["\']>.*?</span>\s*([^<>\[\]]+?):\s*\[([0-9, ]+)\]', re.S)
 
 
 def games(base, phase_id):
@@ -114,9 +114,9 @@ def phase(base, phase_id, position):
             upstream = found.group(1) if found else None
         teams = [{"upstream": int(t), "name": clean(n)} for t, n in TEAM.findall(block)]
         zones = []
-        for zname, positions in ZONE.findall(block):
+        for color, zname, positions in ZONE.findall(block):
             places = [int(p) for p in positions.split(",") if p.strip()]
-            zones.append({"name": clean(zname), "first": min(places), "last": max(places)})
+            zones.append({"name": clean(zname), "color": color.strip(), "positions": places, "first": min(places), "last": max(places)})
         groups.append({"upstream": int(upstream) if upstream else None, "name": clean(gname), "teams": teams, "zones": zones})
     return {"upstream": int(phase_id), "name": name, "position": position, "groups": groups, "games": games(base, phase_id)}
 

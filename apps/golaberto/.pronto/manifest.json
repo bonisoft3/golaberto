@@ -51,6 +51,8 @@
     "services/database/migrations/027_team_directory_type.sql",
     "services/database/migrations/028_team_profiles.sql",
     "services/database/migrations/029_team_enrichment.sql",
+    "services/database/migrations/030_team_odds_progress.sql",
+    "services/database/migrations/031_zone_colors.sql",
     "services/database/migrations/900_seed.sql",
     "shell/boot.js",
     "shell/design.css",

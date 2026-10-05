@@ -105,24 +105,25 @@ code: state: entities: {
 	Zone: {
 		checks: {
 			name: "char_length(name) > 0 AND char_length(name) <= 60"
-			color: "color IN ('champion', 'promotion', 'qualify', 'playoff', 'relegation')"
+			color: "color ~ '^#[0-9a-f]{6}$'"
 			first: "first >= 1"
 			last: "last >= 1"
+			position: "position >= 0"
 		}
 		invariant: check: "last >= first"
 		seed: [...{
 			name?: strings.MinRunes(1) & strings.MaxRunes(60)
-			color?: ("champion" | "promotion" | "qualify" | "playoff" | "relegation")
+			color?: =~ "^#[0-9a-f]{6}$"
 			first?: >=1
 			last?: >=1
+			position?: >=0
 		}]
-		enums: {
-			color: ["champion","promotion","qualify","playoff","relegation"]
-		}
 		bounds: {
 			name: {sizeMin: 1, sizeMax: 60}
+			color: {regex: "^#[0-9a-f]{6}$"}
 			first: {intMin: 1}
 			last: {intMin: 1}
+			position: {intMin: 0}
 		}
 	}
 	Stadium: {
@@ -304,7 +305,7 @@ code: state: entities: {
 			form3: "form3 IN ('', 'w', 'd', 'l')"
 			form4: "form4 IN ('', 'w', 'd', 'l')"
 			form5: "form5 IN ('', 'w', 'd', 'l')"
-			zone: "zone IN ('', 'champion', 'promotion', 'qualify', 'playoff', 'relegation')"
+			zone: "zone = '' OR zone ~ '^#[0-9a-f]{6}$'"
 		}
 		seed: [...{
 			position?: >=1
@@ -319,7 +320,7 @@ code: state: entities: {
 			form3?: ("" | "w" | "d" | "l")
 			form4?: ("" | "w" | "d" | "l")
 			form5?: ("" | "w" | "d" | "l")
-			zone?: ("" | "champion" | "promotion" | "qualify" | "playoff" | "relegation")
+			zone?: ("" | =~ "^#[0-9a-f]{6}$")
 		}]
 		enums: {
 			form1: ["","w","d","l"]
@@ -327,7 +328,6 @@ code: state: entities: {
 			form3: ["","w","d","l"]
 			form4: ["","w","d","l"]
 			form5: ["","w","d","l"]
-			zone: ["","champion","promotion","qualify","playoff","relegation"]
 		}
 		bounds: {
 			position: {intMin: 1}
@@ -357,28 +357,31 @@ code: state: entities: {
 		checks: {
 			first: "first >= 1"
 			percent: "percent >= 0 AND percent <= 100.5"
-			color: "color IN ('champion', 'promotion', 'qualify', 'playoff', 'relegation')"
+			color: "color ~ '^#[0-9a-f]{6}$'"
 			band: "band >= 0 AND band <= 4"
 			last: "last >= 1"
 			reach: "reach IN ('', 'impossible', 'reachable', 'undecided')"
+			position: "position >= 0"
 		}
 		seed: [...{
 			first?: >=1
 			percent?: >=0 & <=100.5
-			color?: ("champion" | "promotion" | "qualify" | "playoff" | "relegation")
+			color?: =~ "^#[0-9a-f]{6}$"
 			band?: >=0 & <=4
 			last?: >=1
 			reach?: ("" | "impossible" | "reachable" | "undecided")
+			position?: >=0
 		}]
 		enums: {
-			color: ["champion","promotion","qualify","playoff","relegation"]
 			reach: ["","impossible","reachable","undecided"]
 		}
 		bounds: {
 			first: {intMin: 1}
 			percent: {intMin: 0}
+			color: {regex: "^#[0-9a-f]{6}$"}
 			band: {intMin: 0, intMax: 4}
 			last: {intMin: 1}
+			position: {intMin: 0}
 		}
 	}
 	PositionChance: {
@@ -946,6 +949,22 @@ code: state: entities: {
 		}
 		bounds: {
 			body: {sizeMax: 1000}
+		}
+	}
+	TeamOddsProgressState: {
+		seed: [...{
+			state?: ("viewing")
+			snapshot_index?: >=-1 & <=359
+			snapshot_last?: >=0 & <=359
+			pointer_x?: >=0 & <=1000
+		}]
+		enums: {
+			state: ["viewing"]
+		}
+		bounds: {
+			snapshot_index: {intMin: -1, intMax: 359}
+			snapshot_last: {intMin: 0, intMax: 359}
+			pointer_x: {intMin: 0, intMax: 1000}
 		}
 	}
 	TeamChartState: {

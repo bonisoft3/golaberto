@@ -121,6 +121,9 @@ CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_rating_chart
 DROP TRIGGER IF EXISTS restamp_txid ON team_odds_chart;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_odds_chart
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+DROP TRIGGER IF EXISTS restamp_txid ON team_odds_progress;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_odds_progress
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON team_roster_total;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_roster_total
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();

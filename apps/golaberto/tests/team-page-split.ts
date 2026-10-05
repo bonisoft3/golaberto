@@ -91,7 +91,7 @@ const addFixtures = async () => {
     `(${q(`${team}:${otherGame}`)},${q(team)},${q(otherGame)},'home',${q(opponent)},'Split Opponent',${q(opponentChamp)},'Other Team Cup',(now() AT TIME ZONE 'America/Sao_Paulo')::date + 2,NULL,false,NULL,NULL,'')`,
   ].join(",");
   const standingRows = [team, opponent].map((id, index) =>
-    `(${q(`${currentGroup}:${id}`)},${q(currentGroup)},${q(id)},${q(id === team ? "Split Target" : "Split Opponent")},${index + 1},${index === 0 ? 3 : 0},1,1,0,0,2,0,2,'w','','','','','champion')`
+    `(${q(`${currentGroup}:${id}`)},${q(currentGroup)},${q(id)},${q(id === team ? "Split Target" : "Split Opponent")},${index + 1},${index === 0 ? 3 : 0},1,1,0,0,2,0,2,'w','','','','','#8a2be2')`
   ).join(",");
   const otherStandingRows = [team, opponent].map((id, index) =>
     `(${q(`${opponentGroup}:${id}`)},${q(opponentGroup)},${q(id)},${q(id === team ? "Split Target" : "Split Opponent")},${index + 1},${index === 0 ? 3 : 0},1,1,0,0,1,0,1,'w','','','','','champion')`
@@ -132,7 +132,7 @@ const addFixtures = async () => {
       (${q(currentGroup)},${q(currentPhase)},'Split Group'),
       (${q(opponentGroup)},${q(opponentPhase)},'Other Team Group');
     INSERT INTO zone (id,group_id,name,color,first,last) VALUES
-      (${q(currentZone)},${q(currentGroup)},'Title places','champion',1,1),
+      (${q(currentZone)},${q(currentGroup)},'Title places','#8a2be2',1,1),
       (${q(otherZone)},${q(opponentGroup)},'Other title places','champion',1,1);
     INSERT INTO team_group (group_id,team_id) VALUES
       (${q(currentGroup)},${q(team)}),(${q(currentGroup)},${q(opponent)}),
@@ -155,7 +155,7 @@ const addFixtures = async () => {
       (${q(otherTeamPosition)},${q(opponentGroup)},${q(team)},1,12,1,true,''),
       (${q(otherOpponentPosition)},${q(opponentGroup)},${q(opponent)},1,88,4,true,'');
     INSERT INTO zone_chance (id,group_id,team_id,zone_id,first,percent,color,band,last,reach) VALUES
-      (${q(currentTeamZone)},${q(currentGroup)},${q(team)},${q(currentZone)},1,62.5,'champion',3,1,''),
+      (${q(currentTeamZone)},${q(currentGroup)},${q(team)},${q(currentZone)},1,62.5,'#8a2be2',3,1,''),
       (${q(otherTeamZone)},${q(opponentGroup)},${q(team)},${q(otherZone)},1,12,'champion',1,1,'');
     INSERT INTO team_rating (id,team_id,measure_date,offense,defense,rating) VALUES
       (gen_random_uuid(),${q(team)},current_date-10,1.1,1.2,40),
@@ -166,7 +166,9 @@ const addFixtures = async () => {
     SELECT refresh_team_campaign_group(${q(currentGroup)}::uuid);
     INSERT INTO team_odds_history (id,group_id,team_id,recorded_on,captured_at,position,percent,source) VALUES
       (${q(`${currentGroup}:${team}:2026-01-01:1`)},${q(currentGroup)},${q(team)},'2026-01-01',NULL,1,25,'imported'),
-      (${q(`${currentGroup}:${team}:2026-01-02:1`)},${q(currentGroup)},${q(team)},'2026-01-02',NULL,1,62.5,'imported');
+      (${q(`${currentGroup}:${team}:2026-01-02:1`)},${q(currentGroup)},${q(team)},'2026-01-02',NULL,1,62.5,'imported'),
+      (${q(`${currentGroup}:${team}:2026-01-01:2`)},${q(currentGroup)},${q(team)},'2026-01-01',NULL,2,75,'imported'),
+      (${q(`${currentGroup}:${team}:2026-01-02:2`)},${q(currentGroup)},${q(team)},'2026-01-02',NULL,2,37.5,'imported');
     SELECT refresh_team_odds_charts(${q(currentGroup)}::uuid);
     DO $$ BEGIN PERFORM refresh_team_profiles(50); END $$;
     COMMIT;`);
@@ -278,6 +280,22 @@ Deno.test("team profile and championship pages keep memberships, players, and se
         return top !== undefined && top >= stripBottom - 2 && top < innerHeight;
       }, section, { timeout: 3000 });
     }
+    await visit(page, `/en/team-championship/${team}/${currentChamp}#team-odds`);
+    const assertOddsArrival = async () => {
+      assertEquals(new URL(page.url()).hash, '#team-odds');
+      await page.waitForFunction(() => {
+        const heading = document.querySelector('.shell-screen:not([hidden]) #team-odds h2');
+        const top = heading?.getBoundingClientRect().top;
+        const stripBottom = document.querySelector('body > nav')?.getBoundingClientRect().bottom ?? 0;
+        return top !== undefined && top >= stripBottom - 2 && top < innerHeight;
+      }, null, {timeout:3000});
+      assertEquals(await screen().locator('.team-odds-evolution .team-odds-progress__svg path').count(), 2, 'direct odds links retain the recorded history graph');
+    };
+    await assertOddsArrival();
+    await page.reload();
+    await page.waitForSelector(tableReady);
+    await assertOddsArrival();
+    await visit(page, `/equipe-campeonato/${team}/${currentChamp}?lang=pt-BR`);
     const zero = screen().locator('.team-roster .squad-table tbody tr').filter({ hasText: "A Zero Átlético" });
     assertEquals(await zero.locator("td").nth(2).textContent(), "0", "registered players without appearances retain a zero row");
     const idsOnFirstPage = await screen().locator(".team-roster .squad-table a[data-route='jogador']")
@@ -292,7 +310,51 @@ Deno.test("team profile and championship pages keep memberships, players, and se
 
     await screen().locator('.team-campaign svg').waitFor();
     await screen().locator('.team-odds svg').first().waitFor();
-    await screen().locator('.team-odds-evolution svg').waitFor();
+    await screen().locator('.team-odds-evolution .team-odds-progress__svg').waitFor();
+    const progress = screen().locator('.team-odds-evolution');
+    assertEquals(await progress.locator('svg path').count(), 2);
+    assert((await progress.locator('svg path').evaluateAll((paths: SVGPathElement[]) => paths.map(path => path.getAttribute('fill')))).includes('#8a2be2'), 'custom source color reaches the chart');
+    assertEquals(await progress.locator('.odds-progress-swatch rect').first().getAttribute('fill'), '#8a2be2', 'custom source color reaches the legend');
+    assertEquals(await screen().locator('.team-standings tr[data-zone]').first().getAttribute('style'), '--zone: #8a2be2', 'custom source color reaches standing rows');
+    assert((await progress.locator('.team-odds-progress__inspector-date').innerText()).includes('02/01/2026'));
+    await progress.locator('input[type="radio"][value="'+currentZone+'"]').check();
+    await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-odds-evolution .team-odds-progress__svg')?.querySelectorAll('path').length === 1);
+    assert((await progress.locator('.team-odds-progress__values').innerText()).includes('62,5%'));
+    await progress.locator('input[type="radio"][value="*"]').check();
+    await progress.locator('.odds-progress-graph').focus();
+    await page.keyboard.press('Home');
+    await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-odds-progress__inspector-date')?.textContent === '01/01/2026');
+    await page.keyboard.press('ArrowRight');
+    await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-odds-progress__inspector-date')?.textContent === '02/01/2026');
+    await progress.locator('input[type="range"]').fill('0');
+    await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-odds-progress__inspector-date')?.textContent === '01/01/2026');
+    await progress.locator('input[type="range"]').press('ArrowRight');
+    await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-odds-progress__inspector-date')?.textContent === '02/01/2026');
+    await progress.locator('.odds-progress-data summary').click();
+    assertEquals(await progress.locator('.team-odds-progress__table tbody tr').count(),2);
+    await progress.locator('.odds-progress-data summary').click();
+    for (const width of [960,375]) {
+      await page.setViewportSize({width,height:844});
+      await progress.locator('.team-odds-progress__svg').scrollIntoViewIfNeeded();
+      const box=await progress.locator('.team-odds-progress__svg').boundingBox();
+      assert(box);
+      for (const [x,date] of [[52,'01/01/2026'],[626,'02/01/2026']] as const) {
+        await page.mouse.move(box.x+box.width*x/640,box.y+box.height/2);
+        await page.waitForFunction((expected:string) => document.querySelector('.shell-screen:not([hidden]) .team-odds-progress__inspector-date')?.textContent === expected,date);
+      }
+    }
+    await page.setViewportSize({width:1366,height:900});
+    await psql(`UPDATE team_odds_history SET recorded_on=current_date+(recorded_on-DATE '2026-01-01') WHERE group_id=${q(currentGroup)}; SELECT refresh_team_odds_charts(${q(currentGroup)}::uuid);`);
+    const inspectedGame = progress.locator('.team-odds-progress__inspector-game a');
+    await inspectedGame.waitFor();
+    const gameHref=await inspectedGame.getAttribute('href');
+    assert(gameHref?.includes(campaignGame));
+    const selectedDate=await progress.locator('.team-odds-progress__inspector-date').innerText();
+    await inspectedGame.hover();
+    assertEquals(await progress.locator('.team-odds-progress__inspector-date').innerText(),selectedDate);
+    await inspectedGame.click();
+    await page.waitForURL((url:URL)=>url.pathname.includes(campaignGame));
+    await visit(page,`/equipe-campeonato/${team}/${currentChamp}?lang=pt-BR`);
     await screen().locator('#team-roster-q').fill('atletico');
     await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-roster tbody')?.querySelectorAll('tr').length === 1);
     await screen().locator('#team-roster-sort').selectOption('goals');
@@ -409,6 +471,19 @@ Deno.test("team profile and championship pages keep memberships, players, and se
     assertEquals(await standingName.getAttribute('title'), longTeamName);
     await standingName.click();
     await page.waitForURL(`**/en/team-championship/${opponent}/${currentChamp}`);
+    const tiedZone = 'ffffffff-ffff-4fff-8fff-fffffffffff1';
+    const tiedChance = '00000000-0000-4000-8000-000000000001';
+    await psql(`INSERT INTO zone (id,group_id,name,color,first,last,position,positions_json)
+      VALUES (${q(tiedZone)},${q(currentGroup)},'Tied source order','#126abc',2,2,0,'[2]');
+      INSERT INTO zone_chance (id,group_id,team_id,zone_id,first,last,percent,color,band,reach,position)
+      VALUES (${q(tiedChance)},${q(currentGroup)},${q(team)},${q(tiedZone)},2,2,37.5,'#126abc',2,'',0);`);
+    await visit(page, `/chances/${currentGroup}?lang=pt-BR`);
+    await screen().locator('.zone-odds .head .zone').last().waitFor();
+    assertEquals(await screen().locator('.zone-odds .head .zone > span').allTextContents(), ['Title places', 'Tied source order']);
+    const tiedRow = screen().locator('.zone-odds .rows .row').filter({ has: page.locator(`a[data-param-id="${team}"]`) });
+    await page.waitForFunction((id: string) => document.querySelector(`.shell-screen:not([hidden]) .zone-odds .rows a[data-param-id="${id}"]`)?.closest('.row')?.querySelectorAll('.pct').length === 2, team);
+    const tiedValues = await tiedRow.locator('.pct > span[data-text-format]').allTextContents();
+    assertEquals(tiedValues.map((value: string) => Number(value.replace(',', '.'))), [62.5, 37.5], 'tied source positions keep probability columns aligned with zone IDs');
   } finally {
     await context.close();
     await browser.close();

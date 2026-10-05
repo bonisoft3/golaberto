@@ -2669,7 +2669,7 @@ export async function interpretScreen(mount, appBase, route, store, params = {},
             // data-key already admits.
             if (DISPLACING_EVENTS.has(type) || (type === "keydown" && ROVING_KEYS.has(e.key))) {
               const row = region._prontoMachineRow ?? getRows()[0];
-              if (row !== undefined && candidatesFor(row[machine.field], fired).length > 0) {
+              if (row !== undefined && evalCandidates(candidatesFor(row[machine.field], fired), { items: [row] }, fired) !== undefined) {
                 e.preventDefault();
               }
             }

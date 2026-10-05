@@ -102,7 +102,7 @@
     "team_rating_chart": {
       "scope": "public"
     },
-    "team_odds_chart": {
+    "team_odds_progress": {
       "scope": "public"
     },
     "team_roster_total": {
@@ -163,7 +163,8 @@
     "game_edit": "tab",
     "directory_filter": "tab",
     "team_comment_draft": "tab",
-    "team_chart_state": "tab"
+    "team_chart_state": "tab",
+    "team_odds_progress_state": "tab"
   },
   "onDemand": [
     "category",
@@ -194,7 +195,7 @@
     "team_directory",
     "team_game",
     "team_group",
-    "team_odds_chart",
+    "team_odds_progress",
     "team_player_history",
     "team_rating",
     "team_rating_chart",
@@ -344,7 +345,9 @@
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/home-date.js",
-          "shell/renderers/geography-label.js"
+          "shell/renderers/geography-label.js",
+          "shell/renderers/zone-color.js",
+          "shell/renderers/zone-positions.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -387,7 +390,9 @@
         "renderers": [
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
-          "shell/renderers/geography-label.js"
+          "shell/renderers/geography-label.js",
+          "shell/renderers/zone-color.js",
+          "shell/renderers/zone-positions.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -435,7 +440,9 @@
         "renderers": [
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
-          "shell/renderers/geography-label.js"
+          "shell/renderers/geography-label.js",
+          "shell/renderers/zone-color.js",
+          "shell/renderers/zone-positions.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -477,7 +484,9 @@
         "renderers": [
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
-          "shell/renderers/geography-label.js"
+          "shell/renderers/geography-label.js",
+          "shell/renderers/zone-color.js",
+          "shell/renderers/zone-positions.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -520,7 +529,9 @@
         "renderers": [
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
-          "shell/renderers/geography-label.js"
+          "shell/renderers/geography-label.js",
+          "shell/renderers/zone-color.js",
+          "shell/renderers/zone-positions.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -566,7 +577,9 @@
         "renderers": [
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
-          "shell/renderers/geography-label.js"
+          "shell/renderers/geography-label.js",
+          "shell/renderers/zone-color.js",
+          "shell/renderers/zone-positions.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -622,7 +635,9 @@
         "renderers": [
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
-          "shell/renderers/geography-label.js"
+          "shell/renderers/geography-label.js",
+          "shell/renderers/zone-color.js",
+          "shell/renderers/zone-positions.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -675,7 +690,9 @@
         "renderers": [
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
-          "shell/renderers/geography-label.js"
+          "shell/renderers/geography-label.js",
+          "shell/renderers/zone-color.js",
+          "shell/renderers/zone-positions.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -718,7 +735,9 @@
         "renderers": [
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
-          "shell/renderers/geography-label.js"
+          "shell/renderers/geography-label.js",
+          "shell/renderers/zone-color.js",
+          "shell/renderers/zone-positions.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -770,7 +789,9 @@
         "renderers": [
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
-          "shell/renderers/geography-label.js"
+          "shell/renderers/geography-label.js",
+          "shell/renderers/zone-color.js",
+          "shell/renderers/zone-positions.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -813,7 +834,9 @@
         "renderers": [
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
-          "shell/renderers/geography-label.js"
+          "shell/renderers/geography-label.js",
+          "shell/renderers/zone-color.js",
+          "shell/renderers/zone-positions.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -858,7 +881,9 @@
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js",
           "shell/renderers/team-chart.js",
-          "shell/renderers/team-location.js"
+          "shell/renderers/team-location.js",
+          "shell/renderers/zone-color.js",
+          "shell/renderers/zone-positions.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -897,6 +922,12 @@
         "handlers": [
           "shell/handlers/chart-compare.js",
           "shell/handlers/chart-metric.js",
+          "shell/handlers/odds-progress-fold.js",
+          "shell/handlers/odds-progress-key.js",
+          "shell/handlers/odds-progress-point.js",
+          "shell/handlers/odds-progress-pointer.js",
+          "shell/handlers/odds-progress-snapshot.js",
+          "shell/handlers/odds-progress-zone.js",
           "shell/handlers/page-value.js",
           "shell/handlers/search-key.js",
           "shell/handlers/team-chart-fold.js",
@@ -908,7 +939,10 @@
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js",
           "shell/renderers/team-chart.js",
-          "shell/renderers/team-location.js"
+          "shell/renderers/team-location.js",
+          "shell/renderers/odds-progress.js",
+          "shell/renderers/zone-color.js",
+          "shell/renderers/zone-positions.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -951,7 +985,9 @@
         "renderers": [
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
-          "shell/renderers/geography-label.js"
+          "shell/renderers/geography-label.js",
+          "shell/renderers/zone-color.js",
+          "shell/renderers/zone-positions.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -991,7 +1027,9 @@
         "renderers": [
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
-          "shell/renderers/geography-label.js"
+          "shell/renderers/geography-label.js",
+          "shell/renderers/zone-color.js",
+          "shell/renderers/zone-positions.js"
         ],
         "shared": [
           "shell/shared/chrome.css",
@@ -1050,7 +1088,7 @@
     "team_directory",
     "team_game",
     "team_group",
-    "team_odds_chart",
+    "team_odds_progress",
     "team_player_history",
     "team_rating",
     "team_rating_chart",
@@ -1328,13 +1366,9 @@
           "required": true
         },
         {
-          "enum": [
-            "champion",
-            "promotion",
-            "qualify",
-            "playoff",
-            "relegation"
-          ],
+          "bounds": {
+            "regex": "^#[0-9a-f]{6}$"
+          },
           "name": "color",
           "type": "string",
           "required": true
@@ -1354,6 +1388,20 @@
           "name": "last",
           "type": "int32",
           "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0
+          },
+          "default": "0",
+          "name": "position",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "name": "positions_json",
+          "type": "string",
+          "required": false
         }
       ]
     },
@@ -2075,14 +2123,6 @@
           "required": true
         },
         {
-          "enum": [
-            "",
-            "champion",
-            "promotion",
-            "qualify",
-            "playoff",
-            "relegation"
-          ],
           "name": "zone",
           "type": "string",
           "required": true
@@ -2182,13 +2222,9 @@
           "required": true
         },
         {
-          "enum": [
-            "champion",
-            "promotion",
-            "qualify",
-            "playoff",
-            "relegation"
-          ],
+          "bounds": {
+            "regex": "^#[0-9a-f]{6}$"
+          },
           "name": "color",
           "type": "string",
           "required": true
@@ -2219,6 +2255,15 @@
           ],
           "name": "reach",
           "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0
+          },
+          "default": "0",
+          "name": "position",
+          "type": "int32",
           "required": true
         }
       ]
@@ -3578,7 +3623,7 @@
         }
       ]
     },
-    "team_odds_chart": {
+    "team_odds_progress": {
       "durability": "live",
       "fields": [
         {
@@ -3600,15 +3645,18 @@
           "required": true
         },
         {
-          "name": "zone_id",
-          "ref": "zone",
-          "type": "uuid",
-          "required": true
-        },
-        {
           "name": "series_json",
           "type": "string",
           "required": true
+        }
+      ],
+      "uniques": [
+        {
+          "name": "uq_team_odds_progress_group_team",
+          "cols": [
+            "group_id",
+            "team_id"
+          ]
         }
       ]
     },
@@ -4625,6 +4673,78 @@
         }
       ]
     },
+    "team_odds_progress_state": {
+      "durability": "tab",
+      "fields": [
+        {
+          "name": "id",
+          "pk": true,
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "group_id",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "team_id",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "default": "'viewing'",
+          "enum": [
+            "viewing"
+          ],
+          "name": "state",
+          "type": "string",
+          "required": true
+        },
+        {
+          "default": "'*'",
+          "name": "zone_id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": -1,
+            "intMax": 359
+          },
+          "default": "-1",
+          "name": "snapshot_index",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 359
+          },
+          "default": "0",
+          "name": "snapshot_last",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 1000
+          },
+          "default": "1000",
+          "name": "pointer_x",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "default": "'{}'",
+          "name": "series_json",
+          "type": "string",
+          "required": true
+        }
+      ]
+    },
     "team_chart_state": {
       "durability": "tab",
       "fields": [
@@ -5210,6 +5330,8 @@
     "services/database/migrations/027_team_directory_type.sql",
     "services/database/migrations/028_team_profiles.sql",
     "services/database/migrations/029_team_enrichment.sql",
+    "services/database/migrations/030_team_odds_progress.sql",
+    "services/database/migrations/031_zone_colors.sql",
     "services/database/migrations/900_seed.sql"
   ],
   "pipelines": [
@@ -5277,6 +5399,12 @@
       ]
     ],
     "team_group": [
+      [
+        "group_id",
+        "team_id"
+      ]
+    ],
+    "team_odds_progress": [
       [
         "group_id",
         "team_id"

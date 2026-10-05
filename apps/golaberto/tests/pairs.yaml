@@ -436,7 +436,7 @@ pairs:
     given:
       position: 1
     when: recount
-    then: 'output[0].zone == "champion"'
+    then: 'output[0].zone == "#22bb22"'
   - id: test-standings-page
     ir: test-standings-page
     of: campeonato

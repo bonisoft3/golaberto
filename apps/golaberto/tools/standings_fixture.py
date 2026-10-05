@@ -46,8 +46,8 @@ fixture = {
         "championship": {"point_win": 3, "point_draw": 1, "point_loss": 0},
     }],
     "zones": [
-        {"group_id": "group", "color": c, "first": f, "last": l}
-        for c, f, l in [("champion", 1, 1), ("qualify", 1, 4), ("playoff", 5, 5), ("promotion", 6, 11), ("relegation", 17, 20)]
+        {"id":str(i),"group_id": "group", "color": c, "first": f, "last": l,"position":i,"positions_json":json.dumps(list(range(f,l+1)))}
+        for i,(c, f, l) in enumerate([("#22bb22", 1, 1), ("#55dd55", 1, 4), ("#99e699", 5, 5), ("#add8e6", 6, 11), ("#ffb6c1", 17, 20)])
     ],
 }
 expected = [
@@ -103,7 +103,7 @@ with open("pipelines/standings_benthos_test.yaml", "w") as f:
             "name": "positions are painted by their narrowest zone",
             "target_processors": TRANSFORM,
             "input_batch": [{"content": json.dumps(fixture, ensure_ascii=False)}],
-            "output_batches": [[{"bloblang": 'this.map_each(r -> r.zone) == ["champion", "qualify", "qualify", "qualify", "playoff", "promotion", "promotion", "promotion", "promotion", "promotion", "promotion", "", "", "", "", "", "relegation", "relegation", "relegation", "relegation"]'}]],
+            "output_batches": [[{"bloblang": 'this.map_each(r -> r.zone) == ["#22bb22", "#55dd55", "#55dd55", "#55dd55", "#99e699", "#add8e6", "#add8e6", "#add8e6", "#add8e6", "#add8e6", "#add8e6", "", "", "", "", "", "#ffb6c1", "#ffb6c1", "#ffb6c1", "#ffb6c1"]'}]],
         }] + [{
             "name": name,
             "target_processors": TRANSFORM,

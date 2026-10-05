@@ -53,7 +53,7 @@
                           </tr></thead>
                           <tbody data-live="standing" data-filter="group_id=eq.{id}" data-order="position.asc" data-empty="{msg.no_teams}">
                             <template data-item>
-                              <tr data-zone="{zone}">
+                              <tr data-zone="{zone}" style="--zone: {zone}">
 	                                <td class="pos" data-text="{position}"></td>
 	                                <td class="name"><span class="team-name-cell"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><a class="team-name" title="{team_name}" data-route="equipe-campeonato" data-param-id="{team_id}" data-param-championship="{param.id}" data-text="{team_name}"></a></span></td>
 	                                <td class="num pts" data-text="{points}"></td>
@@ -70,9 +70,9 @@
                           </tbody>
                         </table>
                       </div>
-                      <ul class="zones" data-live="zone" data-filter="group_id=eq.{id}" data-order="first.asc,last.asc" data-empty="">
+                      <ul class="zones" data-live="zone" data-filter="group_id=eq.{id}" data-order="position.asc,id.asc" data-empty="">
                         <template data-item>
-                          <li data-zone="{color}"><i aria-hidden="true"></i><span data-text="{name}"></span> <span class="range" data-text="{first}–{last}"></span></li>
+                          <li data-zone="{color}" style="--zone: {color}"><i aria-hidden="true"></i><span data-text="{name}"></span> <span class="range" data-text="{positions_json}|{first}|{last}" data-text-format="zone-positions"></span></li>
                         </template>
                       </ul>
                     </section>

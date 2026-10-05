@@ -161,3 +161,49 @@ describe("the pointer is a share of the affordance, never a viewport pixel", () 
   })
 })
 
+
+
+describe("a guarded gesture preserves native controls", () => {
+  const guarded = JSON.stringify({
+    field: "state", initial: "idle", context: { selected: "" },
+    on: {
+      keydown: { guard: "graph-key", assign: { selected: { type: "event", params: { field: "key" } } } },
+      contextmenu: { guard: "graph-key", assign: { selected: "contextmenu" } },
+    }, states: { idle: {} },
+  })
+  const mountGuarded = () => mountScreen({
+    route: { screen: "guarded", files: { html: "guarded.html", css: "guarded.css", handlers: ["graph-key.js"] } },
+    files: {
+      "guarded.html": `<section class="screen" data-screen="guarded"><div data-live="selection" data-filter="id=eq.the" data-machine='${guarded}'><div id="graph" tabindex="0"></div><input id="slider" type="range"><input id="zone" type="radio"></div></section>`,
+      "guarded.css": "",
+      "graph-key.js": `(_state, event) => event.from === 'graph' && ['Home','End','ArrowLeft','ArrowRight'].includes(event.key)`,
+    }, tables: { selection: [] }, seed: 1,
+  })
+
+  it("leaves slider, radio and rejected context menu events uncancelled", async () => {
+    const m = await mountGuarded()
+    try {
+      await m.settle()
+      for (const target of ["#slider", "#zone"]) {
+        const ev = m.fire(target, "keydown", { key: "ArrowRight", cancelable: true })
+        expect(ev.defaultPrevented).toBe(false)
+        await m.settle()
+      }
+      const ev = m.fire("#graph", "contextmenu", { cancelable: true })
+      expect(ev.defaultPrevented).toBe(false)
+      await m.settle()
+      expect(m.rows("selection")).toEqual([])
+    } finally { await m.stop() }
+  })
+
+  it("cancels and performs the accepted graph keyboard gesture", async () => {
+    const m = await mountGuarded()
+    try {
+      await m.settle()
+      const ev = m.fire("#graph", "keydown", { key: "Home", cancelable: true })
+      expect(ev.defaultPrevented).toBe(true)
+      await m.settle()
+      expect(m.rows("selection")[0].selected).toBe("Home")
+    } finally { await m.stop() }
+  })
+})

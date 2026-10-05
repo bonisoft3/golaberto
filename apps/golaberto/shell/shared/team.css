@@ -153,3 +153,47 @@
 .team-chart__legend--1 { color: var(--primary); }
 .team-chart__legend--2 { color: var(--accent); text-decoration: underline dashed; }
 .squad-table tfoot { font-weight: 700; border-top: var(--border-size-2) solid var(--border); }
+
+/* A team's exact title probabilities by final position. */
+.team-odds-progress { margin: var(--sp-md) 0; color: var(--primary); }
+.team-odds-progress__title { font-size: var(--type-label); font-weight: 700; }
+.team-odds-progress__note { display: flex; flex-wrap: wrap; gap: var(--sp-sm) var(--sp-md); margin: var(--sp-sm) 0; color: var(--secondary); font-size: var(--type-label); }
+.team-odds-progress__svg { display: block; width: 100%; height: auto; overflow: visible; }
+.team-odds-progress__grid { stroke: var(--border); stroke-width: 1; }
+.team-odds-progress__axis { stroke: var(--secondary); stroke-width: 1; }
+.team-odds-progress__axis-value { fill: var(--secondary); font-size: 11px; }
+.team-odds-progress__area { stroke: var(--surface); stroke-width: .55; stroke-linejoin: round; }
+.team-odds-progress__date-hit { stroke: transparent; pointer-events: stroke; }
+.team-odds-progress__crosshair { stroke: var(--primary); stroke-width: 1; stroke-dasharray: 3 2; pointer-events: none; }
+.team-odds-progress__selected-zone { display: inline-flex; align-items: center; gap: var(--sp-sm); margin-inline-start: var(--sp-md); color: var(--secondary); font-weight: 400; }
+.team-odds-progress__swatch { display: inline-block; width: .7rem; height: .7rem; flex: none; border: var(--border-size-1) solid var(--border); }
+.team-odds-progress__inspector { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); align-items: start; gap: var(--sp-sm) var(--sp-md); padding-top: var(--sp-sm); border-top: var(--border-size-1) solid var(--border); font-size: var(--type-label); }
+.team-odds-progress__inspector p { margin: 0; }
+.team-odds-progress__inspector-game { min-width: 0; }
+.team-odds-progress__inspector-game a { color: var(--primary); }
+.team-odds-progress__values { display: flex; flex-wrap: wrap; grid-column: 1 / -1; gap: var(--sp-sm) var(--sp-lg); margin: 0; padding: 0; list-style: none; }
+.team-odds-progress__values li { display: inline-flex; align-items: center; gap: var(--sp-sm); min-width: 0; }
+.team-odds-progress__zone-name { overflow-wrap: anywhere; }
+.team-odds-progress__table { width: 100%; font-variant-numeric: tabular-nums; }
+.team-odds-progress__table th, .team-odds-progress__table td { white-space: nowrap; }
+.team-odds-progress__table thead th { position: sticky; top: 0; background: var(--surface); }
+.team-odds-progress__table th .team-odds-progress__swatch { vertical-align: middle; }
+.team-odds-progress--empty { margin: var(--sp-md) 0; color: var(--secondary); }
+.team-odds-progress--empty .team-odds-progress__title { color: var(--primary); }
+@media (max-width: 520px) {
+  .team-odds-progress__inspector { grid-template-columns: 1fr; }
+}
+.odds-progress-graph { min-width: 0; outline-offset: var(--sp-sm); }
+.odds-progress-controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-sm) var(--sp-lg); margin-block: var(--sp-md); }
+.odds-progress-zones, .odds-progress-zones > div { display: contents; }
+.odds-progress-zone { display: inline-flex; align-items: center; gap: var(--sp-sm); min-height: var(--min-touch); padding: var(--sp-sm); border: var(--border-size-1) solid transparent; font-size: var(--type-label); cursor: pointer; }
+.odds-progress-zone:has(input:checked) { border-color: var(--primary); background: var(--surface-muted); font-weight: 700; }
+.odds-progress-zone:has(input:focus-visible) { outline: var(--border-size-2) solid var(--accent); outline-offset: 2px; }
+.odds-progress-zone input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.odds-progress-swatch { width: .7rem; height: .7rem; border: var(--border-size-1) solid var(--border); flex: none; }
+.odds-progress-date { display: flex; flex: 1 1 14rem; align-items: center; gap: var(--sp-sm); font-size: var(--type-label); }
+.odds-progress-date input { min-width: 0; width: 100%; accent-color: var(--primary); }
+.odds-progress-table { overflow: auto; max-height: 22rem; max-width: 100%; }
+
+.team-odds-progress__swatch { display: inline-block; vertical-align: middle; }
+.odds-progress-swatch .team-zone-color { display: block; }

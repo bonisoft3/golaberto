@@ -66,9 +66,11 @@ CREATE TABLE IF NOT EXISTS zone (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   "group_id" uuid NOT NULL REFERENCES stage_group(id) ON DELETE CASCADE,
   "name" portable_string NOT NULL CHECK (char_length(name) > 0 AND char_length(name) <= 60),
-  "color" portable_string NOT NULL CHECK (color IN ('champion', 'promotion', 'qualify', 'playoff', 'relegation')),
+  "color" portable_string NOT NULL CHECK (color ~ '^#[0-9a-f]{6}$'),
   "first" portable_int32 NOT NULL CHECK (first >= 1),
   "last" portable_int32 NOT NULL CHECK (last >= 1),
+  "position" portable_int32 DEFAULT 0 NOT NULL CHECK (position >= 0),
+  "positions_json" portable_string,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL,
   CHECK (last >= first)
@@ -204,7 +206,7 @@ CREATE TABLE IF NOT EXISTS standing (
   "form3" portable_string NOT NULL CHECK (form3 IN ('', 'w', 'd', 'l')),
   "form4" portable_string NOT NULL CHECK (form4 IN ('', 'w', 'd', 'l')),
   "form5" portable_string NOT NULL CHECK (form5 IN ('', 'w', 'd', 'l')),
-  "zone" portable_string NOT NULL CHECK (zone IN ('', 'champion', 'promotion', 'qualify', 'playoff', 'relegation')),
+  "zone" portable_string NOT NULL CHECK (zone = '' OR zone ~ '^#[0-9a-f]{6}$'),
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -228,10 +230,11 @@ CREATE TABLE IF NOT EXISTS zone_chance (
   "zone_id" uuid NOT NULL REFERENCES zone(id) ON DELETE CASCADE,
   "first" portable_int32 NOT NULL CHECK (first >= 1),
   "percent" portable_double NOT NULL CHECK (percent >= 0 AND percent <= 100.5),
-  "color" portable_string NOT NULL CHECK (color IN ('champion', 'promotion', 'qualify', 'playoff', 'relegation')),
+  "color" portable_string NOT NULL CHECK (color ~ '^#[0-9a-f]{6}$'),
   "band" portable_int32 NOT NULL CHECK (band >= 0 AND band <= 4),
   "last" portable_int32 NOT NULL CHECK (last >= 1),
   "reach" portable_string NOT NULL CHECK (reach IN ('', 'impossible', 'reachable', 'undecided')),
+  "position" portable_int32 DEFAULT 0 NOT NULL CHECK (position >= 0),
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -548,6 +551,15 @@ CREATE TABLE IF NOT EXISTS team_odds_chart (
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS team_odds_progress (
+  "id" portable_string PRIMARY KEY,
+  "group_id" uuid NOT NULL REFERENCES stage_group(id) ON DELETE CASCADE,
+  "team_id" uuid NOT NULL REFERENCES team(id) ON DELETE CASCADE,
+  "series_json" portable_string NOT NULL,
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS team_roster_total (
   "id" portable_string PRIMARY KEY,
   "team_id" uuid NOT NULL REFERENCES team(id) ON DELETE CASCADE,
@@ -724,6 +736,8 @@ CREATE INDEX IF NOT EXISTS idx_team_odds_history_team_id ON team_odds_history US
 CREATE INDEX IF NOT EXISTS idx_team_rating_chart_team_id ON team_rating_chart USING btree (team_id);
 CREATE INDEX IF NOT EXISTS idx_team_odds_chart_group_id ON team_odds_chart USING btree (group_id);
 CREATE INDEX IF NOT EXISTS idx_team_odds_chart_team_id ON team_odds_chart USING btree (team_id);
+CREATE INDEX IF NOT EXISTS idx_team_odds_progress_group_id ON team_odds_progress USING btree (group_id);
+CREATE INDEX IF NOT EXISTS idx_team_odds_progress_team_id ON team_odds_progress USING btree (team_id);
 CREATE INDEX IF NOT EXISTS idx_team_roster_total_team_id ON team_roster_total USING btree (team_id);
 CREATE INDEX IF NOT EXISTS idx_team_player_player_id ON team_player USING btree (player_id);
 CREATE INDEX IF NOT EXISTS idx_team_player_team_id ON team_player USING btree (team_id);
@@ -732,6 +746,7 @@ CREATE INDEX IF NOT EXISTS idx_matches_game_card_championship_id ON matches_game
 
 CREATE UNIQUE INDEX IF NOT EXISTS uq_player_game ON player_game (game_id, player_id);
 CREATE UNIQUE INDEX IF NOT EXISTS uq_team_group ON team_group (group_id, team_id);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_team_odds_progress_group_team ON team_odds_progress (group_id, team_id);
 CREATE UNIQUE INDEX IF NOT EXISTS uq_team_player ON team_player (championship_id, team_id, player_id);
 
 COMMIT;

@@ -263,6 +263,13 @@ CREATE POLICY team_odds_chart_app_user_select ON team_odds_chart FOR SELECT TO a
 DROP POLICY IF EXISTS team_odds_chart_service_all ON team_odds_chart;
 CREATE POLICY team_odds_chart_service_all ON team_odds_chart FOR ALL TO service USING (true) WITH CHECK (true);
 
+CALL rls_protect('team_odds_progress');
+ALTER TABLE team_odds_progress ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS team_odds_progress_app_user_select ON team_odds_progress;
+CREATE POLICY team_odds_progress_app_user_select ON team_odds_progress FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS team_odds_progress_service_all ON team_odds_progress;
+CREATE POLICY team_odds_progress_service_all ON team_odds_progress FOR ALL TO service USING (true) WITH CHECK (true);
+
 CALL rls_protect('team_roster_total');
 ALTER TABLE team_roster_total ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS team_roster_total_app_user_select ON team_roster_total;

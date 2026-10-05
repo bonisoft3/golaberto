@@ -1,0 +1,43 @@
+import {assertEquals} from 'jsr:@std/assert@1';
+import {evaluateRole} from '../../../plugins/omnishell/interpreter/jessie.js';
+const handler = async (name:string) => evaluateRole(await Deno.readTextFile(new URL(`../shell/handlers/odds-progress-${name}.js`,import.meta.url)), 'handler');
+Deno.test('chart inspection maps responsive plot coordinates and ignores surrounding controls',async()=>{
+  const guard=await handler('pointer');const point=await handler('point');
+  const state={items:[{snapshot_last:9,snapshot_index:9}]};
+  assertEquals(guard(state,{from:'odds-graph-group-team',pointerX:1000}),false);
+  assertEquals(guard(state,{from:'odds-graph-group-team',pointerX:81}),true);
+  assertEquals(point(state,{pointerX:81}),0);
+  assertEquals(point(state,{pointerX:530}),5);
+  assertEquals(guard(state,{from:'team-roster',pointerX:81}),false);
+  assertEquals(guard(state,{from:'odds-graph-group-team'}),false);
+  const key=await handler('key');
+  assertEquals(key(state,{from:'odds-graph-group-team',key:'ArrowLeft'},{guard:true}),true);
+  assertEquals(key(state,{from:'odds-graph-group-team',key:'ArrowLeft'}),8);
+  assertEquals(key(state,{from:'odds-graph-group-team',key:'Home'}),0);
+  assertEquals(key(state,{from:'team-roster',key:'ArrowLeft'},{guard:true}),false);
+});
+Deno.test('chart controls retain other selections, validate range and accept known zone IDs',async()=>{
+  const zone=await handler('zone');const slider=await handler('snapshot');
+  const row={id:'group:team',zone_id:'same-name-id-1',snapshot_index:3,snapshot_last:9,series_json:JSON.stringify({zones:[{id:'same-name-id-1'},{id:'same-name-id-2'}]})};
+  const state={items:[row]};
+  assertEquals(zone(state,{value:'same-name-id-1'}),'same-name-id-1');
+  assertEquals(zone(state,{value:'same-name-id-2'}),'same-name-id-2');
+  assertEquals(zone(state,{value:'unknown'}),row.zone_id);
+  assertEquals(slider(state,{value:'20'},{guard:true}),false);
+  assertEquals(slider(state,{value:'20'}),3);
+  assertEquals(slider(state,{}, {guard:true}),false);
+  assertEquals(slider(state,{value:'4'},{guard:true}),true);
+  assertEquals(slider(state,{value:'4'}),4);
+});
+Deno.test('source refresh initializes latest snapshot and preserves a reader selection',async()=>{
+  const fold=await handler('fold');
+  const source={id:'group:team',group_id:'group',team_id:'team',series_json:JSON.stringify({zones:[{id:"zone"}],snapshots:[{},{}]})};
+  const initial=fold({items:[source],rows:{view:[]}});
+  assertEquals(initial.updates[0].row.snapshot_index,1);
+  const view={...initial.updates[0].row,id:source.id,zone_id:'zone',snapshot_index:0};
+  assertEquals(fold({items:[source],rows:{view:[view]}}),{updates:[]});
+  const updated={...source,series_json:JSON.stringify({zones:[{id:"zone"}],snapshots:[{},{},{}]})};
+  assertEquals(fold({items:[updated],rows:{view:[view]}}).updates[0].row,{series_json:updated.series_json,zone_id:"zone",snapshot_last:2,snapshot_index:0});
+  const removed={...source,series_json:JSON.stringify({zones:[],snapshots:[{},{}]})};
+  assertEquals(fold({items:[removed],rows:{view:[view]}}).updates[0].row.zone_id,'*');
+});

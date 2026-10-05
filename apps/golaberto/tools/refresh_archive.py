@@ -11,9 +11,9 @@ import datetime as dt
 import json
 from pathlib import Path
 import re
-import unicodedata
 import uuid
 from zoneinfo import ZoneInfo
+from zone_values import color as zone_color, positions as zone_positions
 
 
 def uid(kind, number):
@@ -30,19 +30,6 @@ def literal(value):
     if isinstance(value, int):
         return str(value)
     return "'" + str(value).replace("'", "''") + "'"
-
-
-def zone_color(name):
-    words = "".join(c for c in unicodedata.normalize("NFKD", name.casefold()) if not unicodedata.combining(c))
-    for color, fragments in [
-        ("relegation", ["releg", "rebaix", "descenso"]),
-        ("champion", ["champion", "campe", "winner"]),
-        ("playoff", ["play", "repesc", "segunda fase"]),
-        ("promotion", ["promo", "acesso", "europa", "sudamericana", "conference"]),
-    ]:
-        if any(fragment in words for fragment in fragments):
-            return color
-    return "qualify"
 
 
 def upsert(table, columns, rows, update, conflict="id"):
@@ -94,7 +81,8 @@ def prepare(snapshots):
                     memberships.append((member_id, group_id, team_id))
                 for index, zone in enumerate(group["zones"]):
                     name = zone["name"]
-                    zones.append((uid(5, group["upstream"] * 10000 + index * 100), group_id, name[:60], zone_color(name), zone["first"], zone["last"]))
+                    places = zone_positions(zone)
+                    zones.append((uid(5, group["upstream"] * 10000 + index * 100), group_id, name[:60], zone_color(zone["color"]), min(places), max(places), index, json.dumps(places)))
             for game in phase["games"]:
                 game_id = uid(9, game["upstream"])
                 if game_id in seen_games:
@@ -113,7 +101,7 @@ def prepare(snapshots):
             upsert("phase", ["id", "championship_id", "name", "position"], phases, ["name"]),
             upsert("stage_group", ["id", "phase_id", "name", "position"], groups, ["name"]),
             upsert("team_group", ["id", "group_id", "team_id"], memberships, [], "group_id,team_id"),
-            upsert("zone", ["id", "group_id", "name", "color", "first", "last"], zones, []),
+            upsert("zone", ["id", "group_id", "name", "color", "first", "last", "position", "positions_json"], zones, []),
             upsert("game", ["id", "phase_id", "round", "day", "kickoff", "home_id", "away_id", "played", "home_score", "away_score"], games,
                    ["phase_id", "round", "day", "kickoff", "home_id", "away_id", "played", "home_score", "away_score"]),
         ])

@@ -595,7 +595,7 @@ test("test-standings-page: the championship page shows the recounted table", asy
   await page.waitForFunction(() => document.querySelectorAll(".standings tbody tr").length === 20);
   const first = await page.$eval(".standings tbody tr", (tr: Element) =>
     [".pos", ".name", ".pts"].map((c) => tr.querySelector(c)?.textContent?.trim()).concat(tr.getAttribute("data-zone") ?? ""));
-  assertEquals(first, ["1", "Flamengo-RJ", "60", "champion"]);
+  assertEquals(first, ["1", "Flamengo-RJ", "60", "#22bb22"]);
 });
 
 test("test-standings-live: a result recorded after the fact moves the table", async () => {

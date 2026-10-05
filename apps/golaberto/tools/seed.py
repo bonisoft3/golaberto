@@ -4,6 +4,7 @@
 #   python3 tools/seed.py services/database/sql/900_seed.sql
 import collections, datetime, json, re, sys
 from seed_sql import write
+from zone_values import color as zone_color, positions as zone_positions
 out = sys.argv[1]
 def uid(kind, n): return f"{kind:02x}000000-0000-4000-8000-{n:012d}"
 # The archive's game pages and lists print the day and hour in UTC, whatever
@@ -94,7 +95,7 @@ for pi,(ci,pn,pos,gs) in enumerate(phases_src):
         gid = uid(KIND["group"], len(groups)+1)
         groups.append(dict(id=gid, phase_id=pid, name=gname))
         for t in members: tgs.append(dict(id=uid(KIND["team_group"], len(tgs)+1), group_id=gid, team_id=T[t]))
-zones = [dict(id=uid(KIND["zone"], i+1), group_id=groups[0]["id"], name=n, color=c, first=f, last=l) for i,(n,c,f,l) in enumerate(
+zones = [dict(id=uid(KIND["zone"], i+1), group_id=groups[0]["id"], name=n, color={"champion":"#22bb22","qualify":"#55dd55","playoff":"#99e699","promotion":"#add8e6","relegation":"#ffb6c1"}[c], first=f, last=l, position=i, positions_json=json.dumps(list(range(f,l+1)))) for i,(n,c,f,l) in enumerate(
  [("Campeão","champion",1,1),("Libertadores - Fase de Grupos","qualify",1,4),("Libertadores - Segunda Fase","playoff",5,5),("Copa Sudamericana","promotion",6,11),("Rebaixamento","relegation",17,20)])]
 
 # The 2026 Série A's games, from the crawl: a played game's score, an unplayed
@@ -161,22 +162,7 @@ for (team, name), pid in player_of.items():
 
 # Whole championships crawled from the archive (tools/crawl_championship.py):
 # their phases, groups, zones and games replace the seed's empty shells.
-def zone_role(name):
-    n = name.lower()
-    if "rebaix" in n or "relegat" in n or "descenso" in n:
-        return "relegation"
-    if n in ("campeão", "champions", "campeón") or n.startswith("campeão"):
-        return "champion"
-    if "play" in n or "segunda fase" in n or "repescagem" in n:
-        return "playoff"
-    if "europa" in n or "sudamericana" in n or "conference" in n or "acesso" in n or "promo" in n:
-        return "promotion"
-    return "qualify"
-
-
 extra_games = []
-# A running count per kind: the lists shrink when a shell is replaced, so a
-# key minted from a list's length could repeat one already minted.
 minted = {"phase": 100, "group": 100, "zone": 100}
 
 
@@ -225,8 +211,9 @@ for index, path, country, paged in [(9, "tools/crawl/1536-inglaterra-premier-lea
             groups.append(dict(id=gid, phase_id=pid, name=cg["name"]))
             for ct in cg["teams"]:
                 tgs.append(dict(id=uid(8, len(tgs) + 1), group_id=gid, team_id=team_of(ct["name"], country)))
-            for cz in cg["zones"]:
-                zones.append(dict(id=mint("zone"), group_id=gid, name=cz["name"], color=zone_role(cz["name"]), first=cz["first"], last=cz["last"]))
+            for zi, cz in enumerate(cg["zones"]):
+                places=zone_positions(cz)
+                zones.append(dict(id=mint("zone"), group_id=gid, name=cz["name"], color=zone_color(cz.get("color", "#d3d3d3")), first=min(places), last=max(places), position=zi, positions_json=json.dumps(places)))
         for cgame in cp["games"]:
             # A qualifying round's clubs belong to no group.
             team_of(cgame["home"], country)

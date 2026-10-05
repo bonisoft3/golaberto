@@ -88,7 +88,7 @@
 /* A club is a link, in the row's own ink: the zone colours are chosen against it. */
 .standings .name a { color: inherit; }
 .standings td.pts { font-weight: 700; }
-.standings tbody tr[data-zone]:not([data-zone=""]) td { background: var(--zone); }
+.standings tbody tr[data-zone]:not([data-zone=""]) td { background: color-mix(in srgb, var(--zone) 28%, var(--surface)); }
 .standings .form { white-space: nowrap; }
 .standings .form i { display: inline-block; width: 8px; height: 8px; margin-inline-end: 2px; border-radius: var(--r-full); border: var(--border-size-1) solid var(--form-rim); }
 .standings .form i[data-result="w"] { background: var(--form-win); }

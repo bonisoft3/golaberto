@@ -5,6 +5,15 @@ services:
   apps_golaberto-transform:
     environment:
       PLAYER_STATS_BOOTSTRAP: "false"
+      # Keep bulk projection rebuilds from exhausting the local VM.
+      # Go treats this as a soft GC target, not a hard process limit.
+      GOMEMLIMIT: "1GiB"
+  apps_golaberto-electric:
+    environment:
+      # Evict old local subscriptions rather than retaining every guest scope.
+      # Evicted clients automatically create fresh subscriptions.
+      ELECTRIC_MAX_SHAPES: "64"
+      ELECTRIC_SHAPE_SUSPEND_CONSUMER: "true"
 volumes:
   golaberto-archive:
     external: true

@@ -91,8 +91,8 @@ export const queries = {
   zones: `
     WITH ${RANKED}
     SELECT z.group_id::VARCHAR AS group_id, z.id::VARCHAR AS id, z.first::INTEGER AS first,
-           z.last::INTEGER AS last, z.color
-    FROM zone z JOIN ranked USING (group_id) ORDER BY 1, 3, 4, 2`,
+           z.last::INTEGER AS last, z.color, z.position::INTEGER AS position, z.positions_json
+    FROM zone z JOIN ranked USING (group_id) ORDER BY 1, z.position, 2`,
 };
 
 const NS = "6f1c5d2e-9a3b-4c7d-8e1f-2a4b6c8d0e1f";
@@ -200,6 +200,8 @@ const byGroup = (rows) => {
 
 const range = (first, last) => Array.from({ length: last - first + 1 }, (_, i) => first + i);
 
+const zonePositions = (zone) => zone.positions_json == null ? range(zone.first, zone.last) : JSON.parse(zone.positions_json);
+
 // The /odds request of a live group, and the request's team and game
 // numbers' ids: odds-rust keys both by integers.
 const request = (index, group, members, games, zones) => {
@@ -207,7 +209,7 @@ const request = (index, group, members, games, zones) => {
   const number = Object.fromEntries(teams.map((t, i) => [t, i + 1]));
   return {
     id: index + 1,
-    zones: zones.map((z) => ({ position: range(z.first, z.last) })),
+    zones: zones.map((z) => ({ position: zonePositions(z) })),
     phase: {
       sort: group.sort,
       bonus_points: group.bonus_points,
@@ -306,7 +308,7 @@ export const finish = (inputs, outputs) => {
         });
       });
       for (const z of zones) {
-        const p = rounded(pct[t].slice(z.first - 1, z.last).reduce((s, x) => s + x, 0), 2);
+        const p = rounded(zonePositions(z).reduce((s, r) => s + (pct[t][r - 1] ?? 0), 0), 2);
         zoneChance.push({
           id: uuid5(NS, `${group.id}:${m.team_id}:${z.id}`),
           group_id: group.id,
@@ -315,9 +317,10 @@ export const finish = (inputs, outputs) => {
           first: z.first,
           last: z.last,
           color: z.color,
+          position: z.position ?? 0,
           percent: p,
           band: band(p),
-          reach: reach(p, pct[t], statuses[t], range(z.first, z.last)),
+          reach: reach(p, pct[t], statuses[t], zonePositions(z)),
         });
       }
     });

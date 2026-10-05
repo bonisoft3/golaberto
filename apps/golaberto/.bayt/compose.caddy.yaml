@@ -148,6 +148,24 @@ services:
         path: ../shell/handlers/geography-selection.js
         target: /srv/shell/handlers/geography-selection.js
       - action: sync+restart
+        path: ../shell/handlers/odds-progress-fold.js
+        target: /srv/shell/handlers/odds-progress-fold.js
+      - action: sync+restart
+        path: ../shell/handlers/odds-progress-key.js
+        target: /srv/shell/handlers/odds-progress-key.js
+      - action: sync+restart
+        path: ../shell/handlers/odds-progress-point.js
+        target: /srv/shell/handlers/odds-progress-point.js
+      - action: sync+restart
+        path: ../shell/handlers/odds-progress-pointer.js
+        target: /srv/shell/handlers/odds-progress-pointer.js
+      - action: sync+restart
+        path: ../shell/handlers/odds-progress-snapshot.js
+        target: /srv/shell/handlers/odds-progress-snapshot.js
+      - action: sync+restart
+        path: ../shell/handlers/odds-progress-zone.js
+        target: /srv/shell/handlers/odds-progress-zone.js
+      - action: sync+restart
         path: ../shell/handlers/page-value.js
         target: /srv/shell/handlers/page-value.js
       - action: sync+restart
@@ -172,6 +190,9 @@ services:
         path: ../shell/renderers/home-date.js
         target: /srv/shell/renderers/home-date.js
       - action: sync+restart
+        path: ../shell/renderers/odds-progress.js
+        target: /srv/shell/renderers/odds-progress.js
+      - action: sync+restart
         path: ../shell/renderers/team-badge.js
         target: /srv/shell/renderers/team-badge.js
       - action: sync+restart
@@ -180,6 +201,12 @@ services:
       - action: sync+restart
         path: ../shell/renderers/team-location.js
         target: /srv/shell/renderers/team-location.js
+      - action: sync+restart
+        path: ../shell/renderers/zone-color.js
+        target: /srv/shell/renderers/zone-color.js
+      - action: sync+restart
+        path: ../shell/renderers/zone-positions.js
+        target: /srv/shell/renderers/zone-positions.js
       - action: sync+restart
         path: ../shell/shared/catalog.css
         target: /srv/shell/shared/catalog.css

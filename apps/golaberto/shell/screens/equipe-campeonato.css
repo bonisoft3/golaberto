@@ -10,6 +10,8 @@
 .position-odds__axis-value { fill: var(--secondary); font-size: 11px; }
 .position-odds__bar { fill: var(--chart-bar); stroke: var(--secondary); stroke-width: 1; }
 .position-odds__bar--selected { stroke: var(--primary); stroke-width: 2; }
+.team-odds-progress__area { fill-opacity: .65; stroke: var(--secondary); stroke-width: .4; stroke-opacity: .38; stroke-linejoin: round; }
+.team-odds-progress__area--unassigned { fill: var(--chart-bar); fill-opacity: .85; stroke: var(--secondary); stroke-width: .5; stroke-opacity: .55; }
 .position-odds__current { stroke: var(--primary); stroke-width: 1; stroke-dasharray: 3 2; pointer-events: none; }
 .position-odds__current-label { margin: 0; font-size: var(--type-label); color: var(--secondary); }
 .position-odds-controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-sm) var(--sp-lg); margin-bottom: var(--sp-md); }
@@ -32,6 +34,14 @@
 .position-odds__table th, .position-odds__table td { padding: var(--sp-sm) var(--sp-md); border-bottom: var(--border-size-1) solid var(--border); text-align: end; }
 .position-odds__table th:first-child { text-align: start; }
 .position-odds__table thead th { position: sticky; top: 0; background: var(--surface); }
+.position-odds__compact-percent { display: inline-flex; white-space: nowrap; text-decoration: none; font-variant-numeric: tabular-nums; }
+.position-odds__compact-percent > span, .position-odds__prefix { display: inline-flex; align-items: center; line-height: 1; }
+.position-odds__decimal { width: .5ch; text-align: center; }
+/* The count is centered over all three dots, including the decimal separator. */
+.position-odds__repeat { display: inline-block; position: relative; width: 1ch; height: 1em; line-height: 1; }
+.position-odds__repeat sup { position: absolute; top: 0; left: 25%; font-size: 1em; font-weight: 400; line-height: 1; transform: translateX(-50%) scale(.75); transform-origin: center top; }
+.position-odds__repeat sup.position-odds__count--two-digits { top: .08em; transform: translateX(-50%) scale(.6); }
+.position-odds__repeat > span { position: absolute; bottom: 0; left: 0; font-size: 1em; line-height: 1; }
 @container (max-width: 520px) {
   .position-odds__axis-value { font-size: 17px; }
   .position-odds__tick--dense { visibility: hidden; }

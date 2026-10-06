@@ -46,6 +46,7 @@ Deno.test("current histogram has centered equal bins, honest zero/tiny heights a
   assertEquals(byClass(nodes, "position-odds__tick").map(text), ["1", "2", "3", "4"]);
   assertEquals(nodes.filter(node => node.tag === "figcaption").length, 1);
   assertStringIncludes(text(bars[0]), "Still reachable");
+  assertEquals(bars[1].attrs.title, "Position 2 · 1.230e-4% · Later · Current position");
   const changedHistory = history();
   changedHistory.snapshots[0].percentages["1"] = 99;
   assertEquals(render(input(chart(), { history: changedHistory, snapshot: 0, tableMode: "history" })), render(input()));
@@ -80,7 +81,8 @@ Deno.test("selection is bounded and independent from the source current-position
   assertEquals(byClass(selected, "position-odds__current-label").map(text), ["Current position: 2"]);
   const inspector = render(input(chart(), { mode: "inspector", locale: "pt-BR" }))[0];
   assertStringIncludes(text(inspector), "Position 2");
-  assertStringIncludes(text(inspector), "1,23e-4%");
+  assertStringIncludes(text(inspector), "0,3..1%");
+  assertEquals(inspector.children[1].children[0].children[0].attrs.title, "1,230e-4%");
   const noCurrent = chart();
   noCurrent.positions[1].current = false;
   assertStringIncludes(text(render(input(noCurrent, { mode: "inspector" }))[0]), "Position 4");
@@ -97,14 +99,94 @@ Deno.test("one semantic table shows only the current distribution or selected hi
   assertEquals(text(table.children[0]), "Historical snapshot · Date: 2/2/2026");
   assertEquals(table.children[1].children[0].children.map((node: any) => node.attrs.scope), ["col", "col"]);
   assertEquals(table.children[2].children.length, 4);
-  assertEquals(table.children[2].children.map((node: any) => node.children.map(text)), [["1", "10%"], ["2", "20%"], ["3", "30%"], ["4", "40%"]]);
+  assertEquals(table.children[2].children.map((node: any) => node.children.map(text)), [["1", "10.00%"], ["2", "20.00%"], ["3", "30.00%"], ["4", "40.00%"]]);
   const latest = render(input(chart(), { mode: "table", tableMode: "history", locale: "pt-BR" }))[0];
   assertEquals(text(latest.children[0]), "Historical snapshot · Date: 03/02/2026");
-  assertEquals(text(latest.children[2].children[0].children[1]), "40%");
+  assertEquals(text(latest.children[2].children[0].children[1]), "40,00%");
   const current = render(input(chart(), { mode: "table", locale: "pt-BR" }))[0];
   assertEquals(text(current.children[0]), "Current odds");
-  assertStringIncludes(text(current), "1,23e-4%");
-  assertStringIncludes(text(current), "32,5%");
+  assertStringIncludes(text(current), "0,3..1%");
+  assertStringIncludes(text(current), "32,50%");
+  assertStringIncludes(text(current), "0,0% · Still reachable");
+  const roundedUp = chart();
+  roundedUp.positions[3].percent = 99.999;
+  const nearHundred = render(input(roundedUp, { mode: "table", locale: "en-US" }))[0];
+  const high = nearHundred.children[2].children[3].children[1].children[0];
+  assertEquals(high.attrs.title, "99.[02]9%");
+  assertEquals(high.children[0].attrs.title, "99.999%");
+  assertEquals(text(high.children[0].children[1].children[0]), "2");
+  const tinyPositive = nearHundred.children[2].children[1].children[1].children[0];
+  assertEquals(tinyPositive.attrs.title, "0.[03]1%");
+  assertEquals(tinyPositive.children[0].attrs.title, "1.230e-4%");
+});
+
+Deno.test("decimal percentages round without binary multiplication and compact both extremes accessibly", () => {
+  const value = chart();
+  value.positions = [
+    { position: 1, percent: 0, current: false, reach: "impossible" },
+    { position: 2, percent: 0.0000004, current: false, reach: "" },
+    { position: 3, percent: 42.35453, current: false, reach: "" },
+    { position: 4, percent: 99.9999, current: false, reach: "" },
+  ];
+  const table = render(input(value, { mode: "table", locale: "en-US" }))[0];
+  const cells = table.children[2].children.map((row: any) => row.children[1]);
+  assertEquals(text(cells[0]), "0.0% · Impossible");
+  assertEquals(text(cells[1].children[0]), "0.6..4%");
+  assertEquals(cells[1].children[0].attrs.title, "0.[06]4%");
+  assertEquals(cells[1].children[0].children[0].attrs.title, "4.000e-7%");
+  assertEquals(text(cells[2]), "42.35%");
+  assertEquals(text(cells[3].children[0]), "99.3..9%");
+  assertEquals(cells[3].children[0].attrs.title, "99.[03]9%");
+  assertEquals(cells[3].children[0].children[0].attrs.title, "99.9999%");
+
+  const boundaries = chart();
+  boundaries.positions = [
+    { position: 1, percent: 100, current: false, reach: "" },
+    { position: 2, percent: 0.005, current: false, reach: "" },
+    { position: 3, percent: 99.9955, current: false, reach: "" },
+    { position: 4, percent: Number.MIN_VALUE, current: false, reach: "" },
+  ];
+  const edgeCells = render(input(boundaries, { mode: "table", locale: "en-US" }))[0].children[2].children.map((row: any) => row.children[1]);
+  assertEquals(text(edgeCells[0]), "100.0%");
+  assertEquals(text(edgeCells[1]), "0.01%");
+  assertEquals(edgeCells[2].children[0].attrs.title, "99.[02]6%");
+  assertEquals(edgeCells[2].children[0].children[0].attrs.title, "99.9955%");
+  assertEquals(text(edgeCells[3]), "5e-324%");
+  assertEquals(edgeCells[3].children[0].attrs.title, "4.941e-324%");
+  assertEquals(edgeCells[3].children[0].attrs.class, undefined);
+});
+
+Deno.test("the chances-screen cell formatter uses the same accessible compact odds output", () => {
+  const tiny: any = render(["0.0000004", "en-US", "compact-percent"].join("\u001f"))[0];
+  assertEquals(text(tiny), "0.6..4%");
+  assertEquals(tiny.attrs.title, "0.[06]4%");
+  assertEquals(tiny.children[0].attrs.title, "4.000e-7%");
+  const upper: any = render(["99.9999", "en-US", "compact-percent"].join("\u001f"))[0];
+  assertEquals(text(upper), "99.3..9%");
+  assertEquals(upper.attrs.title, "99.[03]9%");
+  assertEquals(upper.children[0].attrs.title, "99.9999%");
+  const twoDigits: any = render(["1e-14", "pt-BR", "compact-percent"].join("\u001f"))[0];
+  assertEquals(text(twoDigits), "0,13..1%");
+  assertEquals(twoDigits.attrs.title, "0,[13]1%");
+  assertEquals(twoDigits.children[0].attrs.title, "1,000e-14%");
+  assertEquals(twoDigits.children[0].children[1].children[0].attrs.class, "position-odds__count--two-digits");
+  const hover: any = render(["0.0000004", "pt-BR", "hover-title"].join("\u001f"))[0];
+  assertEquals(hover.attrs.class, "heat-cell__hover-value");
+  assertEquals(hover.attrs.title, "4,000e-7%");
+  assertEquals((render(["99.99999993", "en-US", "hover-title"].join("\u001f"))[0] as any).attrs.title, "99.99999993%");
+  assertEquals((render(["99.99999945951811", "en-US", "hover-title"].join("\u001f"))[0] as any).attrs.title, "99.9999994595%");
+  assertEquals((render(["99.999999876949", "en-US", "hover-title"].join("\u001f"))[0] as any).attrs.title, "99.9999998769%");
+  assertEquals((render(["99.9949", "en-US", "hover-title"].join("\u001f"))[0] as any).attrs.title, "99.9949%");
+  assertEquals((render(["99.999", "pt-BR", "hover-title"].join("\u001f"))[0] as any).attrs.title, "99,999%");
+  assertEquals((render(["100", "en-US", "hover-title"].join("\u001f"))[0] as any).attrs.title, "100.0%");
+  assertEquals((render(["99.99", "en-US", "hover-title"].join("\u001f"))[0] as any).attrs.title, "99.99%");
+  assertEquals((render(["42.35453", "en-US", "hover-title"].join("\u001f"))[0] as any).attrs.title, "42.35%");
+  assertEquals((render(["0.01", "en-US", "hover-title"].join("\u001f"))[0] as any).attrs.title, "0.01000%");
+  assertEquals((render(["0.0099999", "en-US", "hover-title"].join("\u001f"))[0] as any).attrs.title, "1.000e-2%");
+  assertEquals((render(["0", "en-US", "hover-title", "Impossible"].join("\u001f"))[0] as any).attrs.title, "0.00% · Impossible");
+  assertEquals((render(["0", "en-US", "hover-title", "Still possible, too rare to show"].join("\u001f"))[0] as any).attrs.title, "0.00% · Still possible, too rare to show");
+  assertEquals((render(["0", "en-US", "hover-title", "Not yet known whether it can still happen"].join("\u001f"))[0] as any).attrs.title, "0.00% · Not yet known whether it can still happen");
+  assertEquals(text(render(["42.35453", "en-US", "compact-percent"].join("\u001f"))[0]), "42.35%");
 });
 
 Deno.test("invalid distributions and unavailable history have explicit states with no mislabeled fallback", () => {

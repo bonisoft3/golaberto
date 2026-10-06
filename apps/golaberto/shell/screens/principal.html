@@ -73,11 +73,11 @@
 	                            <th scope="col" class="form wide" data-text="{msg.col_form}"></th>
                             <th scope="col" class="odds"><abbr title="{msg.col_title_chance_long}" data-text="{msg.col_title_chance}"></abbr></th>
                           </tr></thead>
-                          <tbody data-live="standing" data-filter="group_id=eq.{id}&position=lte.6" data-order="position.asc" data-empty="{msg.no_teams}">
+                          <tbody data-live="standing" data-select="*,team:team_id(country)" data-filter="group_id=eq.{id}&position=lte.6" data-order="position.asc" data-empty="{msg.no_teams}">
                             <template data-item>
                               <tr data-zone="{zone}" style="--zone: {zone}">
 	                                <td class="pos" data-text="{position}"></td>
-	                                <td class="name"><a data-route="equipe" data-param-id="{team_id}"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></td>
+	                                <td class="name"><a data-route="equipe" data-param-id="{team_id}"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{show_country}|{team.country}" data-text-format="country-flag"></span><span data-text="{team_name}"></span></a></td>
 	                                <td class="num pts" data-text="{points}"></td>
 	                                <td class="num" data-text="{played}"></td>
 	                                <td class="num wide" data-text="{wins}"></td>

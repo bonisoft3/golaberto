@@ -50,10 +50,21 @@
 .zone-odds [data-band="2"] { --tint: 40%; }
 .zone-odds [data-band="3"] { --tint: 70%; }
 .zone-odds [data-band="4"] { --tint: 100%; font-weight: 700; }
+.position-odds__compact-percent { display: inline-flex; white-space: nowrap; text-decoration: none; font-variant-numeric: tabular-nums; }
+.position-odds__compact-percent > span, .position-odds__prefix { display: inline-flex; align-items: center; line-height: 1; }
+.position-odds__decimal { width: .5ch; text-align: center; }
+/* The count is centered over all three dots, including the decimal separator. */
+.position-odds__repeat { display: inline-block; position: relative; width: 1ch; height: 1em; line-height: 1; }
+.position-odds__repeat sup { position: absolute; top: 0; left: 25%; font-size: 1em; font-weight: 400; line-height: 1; transform: translateX(-50%) scale(.75); transform-origin: center top; }
+.position-odds__repeat sup.position-odds__count--two-digits { top: .08em; transform: translateX(-50%) scale(.6); }
+.position-odds__repeat > span { position: absolute; bottom: 0; left: 0; font-size: 1em; line-height: 1; }
 
 .heat .row { grid-template-columns: 2.5rem minmax(10rem, max-content); grid-auto-columns: minmax(1.25rem, 1fr); }
 .heat .at { justify-content: center; padding-inline: 0; }
-.heat .heat-cell { background: var(--heat); padding: 0; min-height: var(--sp-xl); border: var(--border-size-1) solid var(--row); }
+.heat .heat-cell { position: relative; background: var(--heat); padding: 0; min-height: var(--sp-xl); border: var(--border-size-1) solid var(--row); }
+.heat-cell__hover { position: absolute; inset: 0; display: block; }
+.heat-cell__hover-value { display: block; width: 100%; height: 100%; }
+.heat .reach { position: relative; z-index: 1; }
 .heat [data-band="0"], .heat-legend [data-band="0"] { --heat: var(--heat-0); }
 .heat [data-band="1"], .heat-legend [data-band="1"] { --heat: var(--heat-1); }
 .heat [data-band="2"], .heat-legend [data-band="2"] { --heat: var(--heat-2); }

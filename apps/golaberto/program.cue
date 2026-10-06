@@ -1500,7 +1500,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-chances"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
+			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/position-odds.js", "shell/renderers/zone-color.js", "shell/renderers/zone-positions.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		editar: {

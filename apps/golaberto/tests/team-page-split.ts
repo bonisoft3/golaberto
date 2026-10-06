@@ -337,8 +337,19 @@ Deno.test("team profile and championship pages keep memberships, players, and se
     await screen().locator('.team-odds-evolution .team-odds-progress__svg').waitFor();
     const progress = screen().locator('.team-odds-evolution');
     assertEquals(await progress.locator('svg path').count(), 2);
-    assert(await progress.locator('.team-odds-progress__area--unassigned').first().evaluate((path:any) =>
-      getComputedStyle(path).fill === getComputedStyle(document.querySelector('main#app')!).backgroundColor), 'unassigned positions match the current page background');
+    assert(await progress.locator('.team-odds-progress__area--unassigned').first().evaluate((path:any) => {
+      const neutralBar = document.querySelector('.position-odds__bar');
+      const style = getComputedStyle(path);
+      return neutralBar !== null && style.fill === getComputedStyle(neutralBar).fill &&
+        style.stroke !== 'none' && style.strokeWidth === '0.5px' &&
+        style.fillOpacity === '0.85';
+    }), 'unassigned positions use the neutral odds-bar fill with a fine visible outline');
+    assert(await progress.locator('.team-odds-progress__area:not(.team-odds-progress__area--unassigned)').first()
+      .evaluate((path:any) => {
+        const style = getComputedStyle(path);
+        return style.fillOpacity === '0.65' && style.stroke !== 'none' &&
+          style.strokeWidth === '0.4px' && style.strokeOpacity === '0.38';
+      }), 'zone areas keep saturated fills and visible position boundaries');
     const currentReference = screen().locator('.position-odds__current');
     assertEquals(await currentReference.evaluate((line:any) => line.tagName), 'line');
     assert((await currentReference.evaluate((line:any) => getComputedStyle(line).stroke)) !== 'none');
@@ -557,7 +568,7 @@ Deno.test("team profile and championship pages keep memberships, players, and se
     const tiedRow = screen().locator('.zone-odds .rows .row').filter({ has: page.locator(`a[data-param-id="${team}"]`) });
     await page.waitForFunction((id: string) => document.querySelector(`.shell-screen:not([hidden]) .zone-odds .rows a[data-param-id="${id}"]`)?.closest('.row')?.querySelectorAll('.pct').length === 2, team);
     const tiedValues = await tiedRow.locator('.pct > span[data-text-format]').allTextContents();
-    assertEquals(tiedValues.map((value: string) => Number(value.replace(',', '.'))), [62.5, 37.5], 'tied source positions keep probability columns aligned with zone IDs');
+    assertEquals(tiedValues, ['62,50%', '37,50%'], 'tied source positions keep formatted probability columns aligned with zone IDs');
   } finally {
     await context.close();
     await browser.close();

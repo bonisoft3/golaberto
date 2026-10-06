@@ -553,6 +553,7 @@
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js",
+          "shell/renderers/position-odds.js",
           "shell/renderers/zone-color.js",
           "shell/renderers/zone-positions.js"
         ],

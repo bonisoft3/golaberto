@@ -162,8 +162,8 @@
 .team-odds-progress__grid { stroke: var(--border); stroke-width: .7; stroke-opacity: .35; }
 .team-odds-progress__axis { stroke: var(--secondary); stroke-width: 1; }
 .team-odds-progress__axis-value { fill: var(--secondary); font-size: 11px; }
-.team-odds-progress__area--unassigned { fill: var(--surface); }
-.team-odds-progress__area { stroke: var(--surface); stroke-width: .35; stroke-opacity: .18; stroke-linejoin: round; }
+.team-odds-progress__area { fill-opacity: .65; stroke: var(--secondary); stroke-width: .4; stroke-opacity: .38; stroke-linejoin: round; }
+.team-odds-progress__area--unassigned { fill: var(--chart-bar); fill-opacity: .85; stroke: var(--secondary); stroke-width: .5; stroke-opacity: .55; }
 .team-odds-progress__date-hit { stroke: transparent; pointer-events: stroke; }
 .team-odds-progress__crosshair { stroke: var(--primary); stroke-width: 1; stroke-dasharray: 3 2; pointer-events: none; }
 .team-odds-progress__selected-zone { display: inline-flex; align-items: center; gap: var(--sp-sm); margin-inline-start: var(--sp-md); color: var(--secondary); font-weight: 400; }

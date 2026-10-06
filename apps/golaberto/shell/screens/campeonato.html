@@ -22,14 +22,14 @@
             <span class="chip" data-live="category" data-filter="id=eq.{category_id}" data-empty="{msg.professional}"><template data-item><span data-text="{name}"></span></template></span>
             <span class="points"><span data-text="{msg.win}"></span> <b data-text="{point_win}"></b> · <span data-text="{msg.draw}"></span> <b data-text="{point_draw}"></b> · <span data-text="{msg.loss}"></span> <b data-text="{point_loss}"></b></span>
           </p>
-          <nav class="phase-chips" aria-label="{msg.phases_label}" data-live="phase" data-filter="championship_id=eq.{id}" data-order="position.asc" data-empty="{msg.no_phases}">
+      <nav class="phase-chips" aria-label="{msg.phases_label}" data-live="phase" data-filter="championship_id=eq.{id}" data-order="position.asc" data-empty="{msg.no_phases}">
             <template data-item><a class="chip" href="#fase-{id}" data-text="{name}"></a></template>
           </nav>
-          <div class="phases" data-live="phase" data-filter="championship_id=eq.{id}" data-order="position.asc" data-empty="">
+      <div class="phases" data-live="phase" data-filter="championship_id=eq.{id}" data-order="position.asc" data-empty="">
             <template data-item>
               <section class="phase" id="fase-{id}">
                 <h2 data-text="{name}"></h2>
-                <div class="groups" data-live="stage_group" data-filter="phase_id=eq.{id}" data-order="position.asc,name.asc" data-empty="{msg.no_groups}">
+                <div class="groups" data-live="stage_group" data-select="*,phase:phase_id(championship:championship_id(show_country))" data-filter="phase_id=eq.{id}" data-order="position.asc,name.asc" data-empty="{msg.no_groups}">
                   <template data-item>
                     <section class="group">
                       <div class="group-head">
@@ -51,11 +51,11 @@
 	                            <th scope="col" class="num"><abbr title="{msg.col_diff_long}" data-text="{msg.col_diff}"></abbr></th>
 	                            <th scope="col" class="form wide" data-text="{msg.col_form}"></th>
                           </tr></thead>
-                          <tbody data-live="standing" data-filter="group_id=eq.{id}" data-order="position.asc" data-empty="{msg.no_teams}">
+                          <tbody data-live="standing" data-select="*,team:team_id(country),group:group_id(phase:phase_id(championship:championship_id(show_country)))" data-filter="group_id=eq.{id}" data-order="position.asc" data-empty="{msg.no_teams}">
                             <template data-item>
                               <tr data-zone="{zone}" style="--zone: {zone}">
 	                                <td class="pos" data-text="{position}"></td>
-	                                <td class="name"><span class="team-name-cell"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><a class="team-name" title="{team_name}" data-route="equipe-campeonato" data-param-id="{team_id}" data-param-championship="{param.id}" data-text="{team_name}"></a></span></td>
+	                                <td class="name"><span class="team-name-cell"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{group.phase.championship.show_country}|{team.country}" data-text-format="country-flag"></span><a class="team-name" title="{team_name}" data-route="equipe-campeonato" data-param-id="{team_id}" data-param-championship="{param.id}" data-text="{team_name}"></a></span></td>
 	                                <td class="num pts" data-text="{points}"></td>
 	                                <td class="num" data-text="{played}"></td>
 	                                <td class="num wide" data-text="{wins}"></td>

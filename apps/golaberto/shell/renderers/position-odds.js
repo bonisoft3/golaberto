@@ -31,12 +31,197 @@ function positionsFrom(value) {
   return [...value].sort((a, b) => a.position - b.position);
 }
 
-function percentText(value, locale) {
-  // Keep small nonzero probabilities distinguishable from mathematical zero.
-  const text = value > 0 && value < 0.01
-    ? value.toExponential(2).replace(/\.?(0+)e/, "e")
-    : String(Math.round(value * 100) / 100);
-  return `${/^(pt|es|it|de|fr)([-_]|$)/i.test(locale) ? text.replace(".", ",") : text}%`;
+function decimal(value) {
+  const match = String(value).match(/^(\d+)(?:\.(\d*))?(?:e([+-]?\d+))?$/i);
+  if (!match) return null;
+  let coefficient = BigInt(`${match[1]}${match[2] ?? ""}`);
+  let scale = (match[2]?.length ?? 0) - Number(match[3] ?? 0);
+  if (scale < 0) {
+    coefficient *= 10n ** BigInt(-scale);
+    scale = 0;
+  }
+  while (scale > 0 && coefficient % 10n === 0n) {
+    coefficient /= 10n;
+    scale -= 1;
+  }
+  return { coefficient, scale };
+}
+
+function roundPlaces(value, places, tie = "up") {
+  const coefficient = value.scale <= places
+    ? value.coefficient * 10n ** BigInt(places - value.scale)
+    : value.coefficient / 10n ** BigInt(value.scale - places);
+  if (value.scale <= places) return { coefficient, scale: places };
+  const divisor = 10n ** BigInt(value.scale - places);
+  const remainder = value.coefficient % divisor;
+  const roundUp = tie === "up" ? remainder * 2n >= divisor : remainder * 2n > divisor;
+  return { coefficient: coefficient + (roundUp ? 1n : 0n), scale: places };
+}
+
+function decimalText(value) {
+  const digits = value.coefficient.toString().padStart(value.scale + 1, "0");
+  if (!value.scale) return digits;
+  const split = digits.length - value.scale;
+  return `${digits.slice(0, split)}.${digits.slice(split)}`;
+}
+
+function decimalOrder(value) {
+  return value.coefficient.toString().length - value.scale - 1;
+}
+
+function roundSignificantDigit(value, tie) {
+  const order = decimalOrder(value);
+  return roundPlaces(value, Math.max(0, -order), tie);
+}
+
+function roundSignificant(value, digits, tie = "up") {
+  return roundPlaces(value, Math.max(0, digits - 1 - decimalOrder(value)), tie);
+}
+
+function localeDecimal(locale) {
+  return /^(pt|es|it|de|fr)([-_]|$)/i.test(locale) ? "," : ".";
+}
+
+function localizeDecimal(value, locale) {
+  return decimalText(value).replace(".", localeDecimal(locale));
+}
+
+function exactPercentText(value, locale) {
+  const parts = decimal(value);
+  return parts ? `${localizeDecimal(parts, locale)}%` : `${value}%`;
+}
+
+function nearHundredText(value, locale) {
+  const parts = decimal(value);
+  if (!parts) return `${value}%`;
+  const hundred = decimal(100);
+  const scale = Math.max(parts.scale, hundred.scale);
+  const gap = {
+    coefficient: hundred.coefficient * 10n ** BigInt(scale - hundred.scale)
+      - parts.coefficient * 10n ** BigInt(scale - parts.scale),
+    scale,
+  };
+  const roundedGap = roundSignificant(gap, 4);
+  const rounded = {
+    coefficient: hundred.coefficient * 10n ** BigInt(roundedGap.scale) - roundedGap.coefficient,
+    scale: roundedGap.scale,
+  };
+  while (rounded.scale > 0 && rounded.coefficient % 10n === 0n) {
+    rounded.coefficient /= 10n;
+    rounded.scale -= 1;
+  }
+  return `${localizeDecimal(rounded, locale)}%`;
+}
+
+function hoverPercentText(value, locale, reach = "") {
+  if (value === 0) return `0${localeDecimal(locale)}00%${reach ? ` · ${reach}` : ""}`;
+  if (value === 100) return `100${localeDecimal(locale)}0%`;
+  if (value > 99.99) return nearHundredText(value, locale);
+  const parts = decimal(value);
+  if (!parts) return `${value}%`;
+  if (value < 0.01) return `${Number(value).toExponential(3).replace(".", localeDecimal(locale))}%`;
+  return `${localizeDecimal(roundPlaces(parts, 3 - decimalOrder(parts)), locale)}%`;
+}
+
+function scientificText(value, locale) {
+  const digits = value.coefficient.toString();
+  const significant = digits.replace(/0+$/, "");
+  const mantissa = significant.length > 1
+    ? `${significant[0]}.${significant.slice(1)}`
+    : significant;
+  return `${mantissa.replace(".", localeDecimal(locale))}e${decimalOrder(value)}`;
+}
+
+function fractionParts(value) {
+  const fraction = decimalText(value).split(".")[1] ?? "";
+  const zeros = fraction.match(/^0*/)?.[0].length ?? 0;
+  return { zeros, digit: fraction[zeros] };
+}
+
+function oddsDisplay(value, locale) {
+  const parts = decimal(value);
+  if (!parts) return { text: `${value}%`, label: `${value}%` };
+  if (parts.coefficient === 0n) {
+    const text = `0${localeDecimal(locale)}0%`;
+    return { text, label: text };
+  }
+  if (decimalText(parts) === "100") {
+    const text = `100${localeDecimal(locale)}0%`;
+    return { text, label: text };
+  }
+  // The source contract tolerates small estimator overshoots above 100. Keep
+  // those rows renderable while preserving their value; the compact complement
+  // form is defined only for probabilities below 100.
+  if (value > 100) {
+    const rounded = roundPlaces(parts, 2);
+    const text = `${localizeDecimal(rounded, locale)}%`;
+    return { text, label: exactPercentText(value, locale) };
+  }
+
+  const normal = roundPlaces(parts, 2);
+  if (normal.coefficient === 0n) {
+    const rounded = roundSignificantDigit(parts, "up");
+    const { zeros, digit } = fractionParts(rounded);
+    if (zeros > 99) {
+      const scientific = scientificText(parts, locale);
+      return { text: `${scientific}%`, label: `${scientific}%` };
+    }
+    const repeated = String(zeros).padStart(2, "0");
+    return {
+      kind: "near-zero",
+      count: String(zeros),
+      text: `0${localeDecimal(locale)}${digit}%`,
+      label: `0${localeDecimal(locale)}[${repeated}]${digit}%`,
+      digit,
+    };
+  }
+  const normalText = localizeDecimal(normal, locale);
+  if (normal.coefficient < 10000n) return { text: `${normalText}%`, label: `${normalText}%` };
+
+  const hundred = decimal(100);
+  const scale = Math.max(parts.scale, hundred.scale);
+  const gap = {
+    coefficient: hundred.coefficient * 10n ** BigInt(scale - hundred.scale)
+      - parts.coefficient * 10n ** BigInt(scale - parts.scale),
+    scale,
+  };
+  while (gap.scale > 0 && gap.coefficient % 10n === 0n) {
+    gap.coefficient /= 10n;
+    gap.scale -= 1;
+  }
+  const roundedGap = roundSignificantDigit(gap, "down");
+  const { zeros, digit } = fractionParts(roundedGap);
+  if (zeros > 99) return {
+    text: `100${localeDecimal(locale)}0% − ${scientificText(gap, locale)}%`,
+    label: `100% minus ${scientificText(gap, locale)}%`,
+  };
+  const repeated = String(zeros).padStart(2, "0");
+  const complement = String(10 - Number(digit));
+  return {
+    kind: "near-hundred",
+    count: String(zeros),
+    text: `99${localeDecimal(locale)}${complement}%`,
+    label: `99${localeDecimal(locale)}[${repeated}]${complement}%`,
+    digit: complement,
+  };
+}
+
+function percentNodes(value, locale, title = hoverPercentText(value, locale)) {
+  const display = oddsDisplay(value, locale);
+  if (!display.kind) return [element("span", { title }, [display.text])];
+  return [element("abbr", { class: "position-odds__compact-percent", title: display.label }, [
+    element("span", { title }, [
+      element("span", { class: "position-odds__prefix" }, [
+        element("span", {}, [display.kind === "near-zero" ? "0" : "99"]),
+        element("span", { class: "position-odds__decimal" }, [localeDecimal(locale)]),
+      ]),
+      element("span", { class: "position-odds__repeat" }, [
+        element("sup", { class: display.count.length === 2 ? "position-odds__count--two-digits" : "" }, [display.count]),
+        element("span", {}, [".."]),
+      ]),
+      element("span", {}, [display.digit, "%"]),
+    ]),
+  ])];
 }
 
 function dateText(day, locale) {
@@ -84,7 +269,7 @@ function reachText(item, labels) {
 }
 
 function description(item, zone, labels) {
-  return [ `${labels.position} ${item.position}`, percentText(item.percent, labels.locale), zone?.name,
+  return [ `${labels.position} ${item.position}`, hoverPercentText(item.percent, labels.locale), zone?.name,
     item.current === true ? labels.currentPosition : "", reachText(item, labels),
   ].filter(Boolean).join(" · ");
 }
@@ -105,12 +290,25 @@ function table(positions, caption, labels) {
     ])]),
     element("tbody", {}, positions.map(item => element("tr", {}, [
       element("th", { scope: "row" }, [String(item.position)]),
-      element("td", {}, [percentText(item.percent, labels.locale), ...(reachText(item, labels) ? [" · ", reachText(item, labels)] : [])]),
+      element("td", {}, [...percentNodes(item.percent, labels.locale, hoverPercentText(item.percent, labels.locale, reachText(item, labels))), ...(reachText(item, labels) ? [" · ", reachText(item, labels)] : [])]),
     ]))),
   ])];
 }
 
 export default function render(value) {
+  const fields = String(value ?? "").split(SEP);
+  if (fields[2] === "compact-percent") {
+    const percent = Number(fields[0]);
+    const locale = fields[1] || "en-GB";
+    return validProbability(percent) ? percentNodes(percent, locale) : [element("span", {}, ["Unavailable"])];
+  }
+  if (fields[2] === "hover-title") {
+    const percent = Number(fields[0]);
+    const locale = fields[1] || "en-GB";
+    return validProbability(percent)
+      ? [element("span", { class: "heat-cell__hover-value", title: hoverPercentText(percent, locale, fields[3] ?? "") })]
+      : [];
+  }
   const [raw, historyRaw, title = "", locale = "en-GB", missing = "", positionNumber = "", snapshotIndex = "",
     tableMode = "current", mode = "graph", position = "Position", probability = "Probability", currentPosition = "Current position",
     date = "Date", currentOdds = "Current odds", historicalSnapshot = "Historical snapshot", impossible = "Impossible",
@@ -141,7 +339,7 @@ export default function render(value) {
   const selected = selectedPosition(positions, positionNumber);
   if (mode === "inspector") return [element("div", { class: "position-odds__inspector" }, [
     element("strong", {}, [`${position} ${selected.position}`]),
-    element("span", {}, [percentText(selected.percent, locale)]),
+    element("span", {}, percentNodes(selected.percent, locale, hoverPercentText(selected.percent, locale, reachText(selected, labels)))),
     ...(zoneFor(selected) ? [element("span", { class: "position-odds__zone-name" }, [zoneFor(selected).name])] : []),
     ...(selected.current === true ? [element("span", {}, [currentPosition])] : []),
     ...(reachText(selected, labels) ? [element("span", {}, [reachText(selected, labels)])] : []),

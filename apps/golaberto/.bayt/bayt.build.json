@@ -230,7 +230,7 @@
         "defaultGlobs": null,
         "defaultExclude": null
       },
-      "do": "deno run --allow-read --allow-write=. --allow-run --allow-env ../../plugins/pronto/write.ts .",
+      "do": "mise exec -- deno run --allow-read --allow-write=. --allow-run --allow-env ../../plugins/pronto/write.ts .",
       "name": "builtin",
       "shell": "exec",
       "stop": false

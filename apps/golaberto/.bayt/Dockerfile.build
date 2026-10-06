@@ -2,7 +2,7 @@
 FROM apps_golaberto-setup AS build
 WORKDIR /monorepo/apps/golaberto
 COPY --parents *.cue bayt.json DESIGN.md ir.html acceptance.md shell/** pipelines/** services/** ./
-RUN ["mise", "x", "--", "deno", "run", "--allow-read", "--allow-write=.", "--allow-run", "--allow-env", "../../plugins/pronto/write.ts", "."]
+RUN ["mise", "x", "--", "mise", "exec", "--", "deno", "run", "--allow-read", "--allow-write=.", "--allow-run", "--allow-env", "../../plugins/pronto/write.ts", "."]
 COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/Taskfile.build.yaml .bayt/bayt.build.json ./.bayt/
 
 FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS build_ctxs

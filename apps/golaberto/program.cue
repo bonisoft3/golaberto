@@ -2348,8 +2348,8 @@ loop: surface: checks: "constraints": {
 // golaberto.com.br shows (tools/standings_fixture.py writes the fixture).
 loop: surface: checks: "standings": {
 	verb: "test"
-	cmds: ["mise exec -- redpanda-connect test pipelines/standings.yaml pipelines/rounds.yaml pipelines/game-cards.yaml pipelines/player-stats.yaml pipelines/team-campaign.yaml"]
-	note: "the derived streams over crawled data: the 2026 Serie A's table and its 885 players' seasons as golaberto.com.br shows them, a phase's current and next rounds, and a game's card and team lines"
+	cmds: ["mise exec -- redpanda-connect test pipelines/standings.yaml pipelines/rounds.yaml pipelines/game-cards.yaml pipelines/player-stats.yaml"]
+	note: "the derived streams over crawled data: the 2026 Serie A's table and its 885 players' seasons as golaberto.com.br shows them, a phase's current and next rounds, and a game's card and team lines; the team-campaign timer has no processor stage to target"
 }
 
 loop: surface: checks: "home-games": {

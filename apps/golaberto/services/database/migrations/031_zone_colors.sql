@@ -68,10 +68,16 @@ WITH ranked AS (
 UPDATE zone z SET position=coalesce(z.position,r.ordinal),positions_json=z.positions_json,color=z.color
 FROM ranked r WHERE r.id=z.id AND (z.position IS NULL OR z.positions_json IS NULL OR z.color<>canonical_zone_color(z.color));
 ALTER TABLE zone ALTER COLUMN position SET DEFAULT 0;
-ALTER TABLE zone ALTER COLUMN position SET NOT NULL;
 ALTER TABLE zone DROP CONSTRAINT IF EXISTS zone_position_check;
-ALTER TABLE zone ADD CONSTRAINT zone_position_check CHECK(position>=0);
-ALTER TABLE zone ADD CONSTRAINT zone_color_hex_check CHECK(color ~ '^#[0-9a-f]{6}$');
+ALTER TABLE zone DROP CONSTRAINT IF EXISTS zone_position_not_null_check;
+ALTER TABLE zone ADD CONSTRAINT zone_position_not_null_check CHECK(position IS NOT NULL) NOT VALID;
+ALTER TABLE zone ADD CONSTRAINT zone_position_check CHECK(position>=0) NOT VALID;
+ALTER TABLE zone ADD CONSTRAINT zone_color_hex_check CHECK(color ~ '^#[0-9a-f]{6}$') NOT VALID;
+COMMIT;
+BEGIN;
+ALTER TABLE zone VALIDATE CONSTRAINT zone_position_not_null_check;
+ALTER TABLE zone VALIDATE CONSTRAINT zone_position_check;
+ALTER TABLE zone VALIDATE CONSTRAINT zone_color_hex_check;
 
 CREATE OR REPLACE FUNCTION normalize_zone_projection_color() RETURNS trigger
 LANGUAGE plpgsql SECURITY DEFINER SET search_path=public,pg_temp AS $$
@@ -97,11 +103,18 @@ UPDATE standing s SET zone=coalesce((SELECT z.color FROM zone z WHERE z.group_id
   WHERE s.zone IS DISTINCT FROM coalesce((SELECT z.color FROM zone z WHERE z.group_id=s.group_id
     AND z.positions_json::jsonb @> jsonb_build_array(s.position) ORDER BY z.position,z.id LIMIT 1),'');
 ALTER TABLE zone_chance ALTER COLUMN position SET DEFAULT 0;
-ALTER TABLE zone_chance ALTER COLUMN position SET NOT NULL;
 ALTER TABLE zone_chance DROP CONSTRAINT IF EXISTS zone_chance_position_check;
-ALTER TABLE zone_chance ADD CONSTRAINT zone_chance_position_check CHECK(position>=0);
-ALTER TABLE zone_chance ADD CONSTRAINT zone_chance_color_hex_check CHECK(color ~ '^#[0-9a-f]{6}$');
-ALTER TABLE standing ADD CONSTRAINT standing_zone_hex_check CHECK(zone='' OR zone ~ '^#[0-9a-f]{6}$');
+ALTER TABLE zone_chance DROP CONSTRAINT IF EXISTS zone_chance_position_not_null_check;
+ALTER TABLE zone_chance ADD CONSTRAINT zone_chance_position_not_null_check CHECK(position IS NOT NULL) NOT VALID;
+ALTER TABLE zone_chance ADD CONSTRAINT zone_chance_position_check CHECK(position>=0) NOT VALID;
+ALTER TABLE zone_chance ADD CONSTRAINT zone_chance_color_hex_check CHECK(color ~ '^#[0-9a-f]{6}$') NOT VALID;
+ALTER TABLE standing ADD CONSTRAINT standing_zone_hex_check CHECK(zone='' OR zone ~ '^#[0-9a-f]{6}$') NOT VALID;
+COMMIT;
+BEGIN;
+ALTER TABLE zone_chance VALIDATE CONSTRAINT zone_chance_position_not_null_check;
+ALTER TABLE zone_chance VALIDATE CONSTRAINT zone_chance_position_check;
+ALTER TABLE zone_chance VALIDATE CONSTRAINT zone_chance_color_hex_check;
+ALTER TABLE standing VALIDATE CONSTRAINT standing_zone_hex_check;
 
 -- Repaint existing materialized rows without recomputing probabilities or
 -- standings scores. The ordinary source pipelines still own numeric results.

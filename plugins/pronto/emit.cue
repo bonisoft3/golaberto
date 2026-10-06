@@ -1496,8 +1496,8 @@ _cdcBeforeField: "__before"
 				}
 			}
 			_distribution: distribution.#Project & {runtime: "\(sources.pronto)", omnishell: "\(sources.omnishell)", mecha: "\(sources.mecha)"}
-			buildCmd: [if sources.pronto != "" {"deno run --allow-read --allow-write=. --allow-run --allow-env \(sources.pronto)/write.ts ."}, "sayt build"][0]
-			testCmd: "cue vet -c ./..."
+			buildCmd: [if sources.pronto != "" {"mise exec -- deno run --allow-read --allow-write=. --allow-run --allow-env \(sources.pronto)/write.ts ."}, "sayt build"][0]
+			testCmd: "mise exec -- cue vet -c ./..."
 			pipelineFiles: [for _, p in D.code.state.pipelines {"docker/\(D.code.meta.name)-\(p.name).yaml"}]
 			// Both runtimes declare checks about their own surfaces; the loop
 			// routes each to the verb it names. A name collision across the two

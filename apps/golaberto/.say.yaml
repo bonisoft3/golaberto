@@ -175,7 +175,7 @@ say:
           - do: python3 -m unittest discover -s tools -p seed_sql_test.py
       standings:
         cmds:
-          - do: mise exec -- redpanda-connect test pipelines/standings.yaml pipelines/rounds.yaml pipelines/game-cards.yaml pipelines/player-stats.yaml pipelines/team-campaign.yaml
+          - do: mise exec -- redpanda-connect test pipelines/standings.yaml pipelines/rounds.yaml pipelines/game-cards.yaml pipelines/player-stats.yaml
       image-renderers:
         cmds:
           - do: mise exec -- deno test --config tests/deno.json --no-lock tests/image-renderers.ts

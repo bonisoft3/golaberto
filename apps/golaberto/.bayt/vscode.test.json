@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "command": "mise x -- cue vet -c ./...",
+      "command": "mise x -- mise exec -- cue vet -c ./...",
       "group": {
         "kind": "test",
         "isDefault": true

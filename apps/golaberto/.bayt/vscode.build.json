@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "command": "mise x -- deno run --allow-read --allow-write=. --allow-run --allow-env ../../plugins/pronto/write.ts .",
+      "command": "mise x -- mise exec -- deno run --allow-read --allow-write=. --allow-run --allow-env ../../plugins/pronto/write.ts .",
       "group": {
         "kind": "build",
         "isDefault": true

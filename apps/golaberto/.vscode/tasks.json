@@ -4,7 +4,7 @@
     {
       "label": "build",
       "type": "shell",
-      "command": "deno run --allow-read --allow-write=. --allow-run --allow-env ../../plugins/pronto/write.ts .",
+      "command": "mise exec -- deno run --allow-read --allow-write=. --allow-run --allow-env ../../plugins/pronto/write.ts .",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -13,7 +13,7 @@
     {
       "label": "test",
       "type": "shell",
-      "command": "cue vet -c ./...",
+      "command": "mise exec -- cue vet -c ./...",
       "group": {
         "kind": "test",
         "isDefault": true

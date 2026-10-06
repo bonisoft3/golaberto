@@ -85,7 +85,7 @@
         "defaultGlobs": null,
         "defaultExclude": null
       },
-      "do": "cue vet -c ./...",
+      "do": "mise exec -- cue vet -c ./...",
       "name": "builtin",
       "shell": "exec",
       "stop": false

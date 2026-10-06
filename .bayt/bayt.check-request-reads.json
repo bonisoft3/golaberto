@@ -11,18 +11,12 @@
       "args": {}
     },
     "command": [
-      "deno",
-      "run",
-      "--node-modules-dir=auto",
-      "--allow-read",
-      "--allow-write",
-      "--allow-net",
-      "--allow-env",
-      "--allow-run",
-      "--allow-sys",
-      "--unsafely-ignore-certificate-errors=caddy",
-      "/omnishell/check-visual.ts",
-      "."
+      "mise",
+      "x",
+      "--",
+      "sh",
+      "-c",
+      "deno test --config tests/deno.json --no-lock --allow-env --allow-net --allow-read --allow-sys tests/campaign-read.ts tests/readable-addresses.ts"
     ],
     "depends_on": {
       "golaberto-launch": {
@@ -30,44 +24,53 @@
       }
     },
     "environment": {
-      "APP_URL": "https://caddy:8443"
+      "APP_URL": "https://caddy:8443",
+      "DATABASE_URL": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
+      "ORIGIN": "${ORIGIN:-https://localhost:8443}",
+      "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}"
     },
     "ports": [],
     "volumes": []
   },
   "dockerfile": {
-    "preamble": [
-      "COPY --from=denoland/deno:bin-2.5.5@sha256:a8dd9a073b2b4d1beb77a8174830c5af54e32517808dcc28249ed6c04fdac979 /deno /usr/local/bin/deno",
-      "ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright",
-      "ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1",
-      "ENV DENO_DIR=/deno-cache",
-      "COPY --from=plugins_omnishell-runtime-image / /omnishell",
-      "RUN deno install --node-modules-dir=auto --entrypoint /omnishell/check-visual.ts"
-    ],
+    "preamble": [],
     "preambleCopyContexts": [],
     "from": {
-      "name": "mcr.microsoft.com/playwright:v1.61.1-noble@sha256:5b8f294aff9041b7191c34a4bab3ac270157a28774d4b0660e9743297b697e48"
+      "ref": ":setup",
+      "name": "golaberto-setup"
     },
     "add": [],
     "mounts": [],
     "secrets": {},
     "extra_hosts": [],
     "epilogue": [],
-    "copy": [],
+    "copy": [
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "/"
+        ],
+        "dst": "/omnishell",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      }
+    ],
     "healthcheck": null,
     "expose": [],
     "entrypoint": null,
     "incremental": false,
     "cmd": null
   },
-  "name": "integrate",
+  "name": "check-request-reads",
   "project": "golaberto",
   "dir": ".",
   "activate": "mise x --",
   "srcs": {
     "globs": [
-      "shell/shell.yaml",
-      "shell/screens/**"
+      "tests/**"
     ],
     "exclude": []
   },
@@ -81,7 +84,7 @@
   "env": {},
   "synthetics": {
     "bayt": {
-      "name": "integrate_bayt",
+      "name": "check-request-reads_bayt",
       "project": "golaberto",
       "dir": ".",
       "activate": "",
@@ -91,13 +94,13 @@
       },
       "outs": {
         "globs": [
-          ".bayt/compose.integrate.yaml",
-          ".bayt/Dockerfile.integrate",
-          ".bayt/bayt.integrate.json",
+          ".bayt/compose.check-request-reads.yaml",
+          ".bayt/Dockerfile.check-request-reads",
+          ".bayt/bayt.check-request-reads.json",
           ".bayt/Taskfile.yml",
           ".bayt/Taskfile.bayt.yml",
-          ".bayt/Taskfile.integrate.yaml",
-          ".bayt/compose.integrate.closure.yaml",
+          ".bayt/Taskfile.check-request-reads.yaml",
+          ".bayt/compose.check-request-reads.closure.yaml",
           ".bayt/compose.*.yaml",
           ".bayt/Dockerfile.*",
           ".bayt/bayt.*.json",
@@ -119,7 +122,8 @@
         "similar": false
       },
       "upClosure": [
-        "./.bayt/compose.integrate.yaml",
+        "./.bayt/compose.check-request-reads.yaml",
+        "./.bayt/compose.setup.yaml",
         "./.bayt/compose.launch.yaml",
         "./.bayt/compose.caddy.yaml",
         "./.bayt/compose.database.yaml",
@@ -136,7 +140,7 @@
       ]
     },
     "outs": {
-      "name": "integrate_outs",
+      "name": "check-request-reads_outs",
       "project": "golaberto",
       "dir": ".",
       "activate": "",
@@ -160,7 +164,8 @@
         "similar": false
       },
       "upClosure": [
-        "./.bayt/compose.integrate.yaml",
+        "./.bayt/compose.check-request-reads.yaml",
+        "./.bayt/compose.setup.yaml",
         "./.bayt/compose.launch.yaml",
         "./.bayt/compose.caddy.yaml",
         "./.bayt/compose.database.yaml",
@@ -177,7 +182,7 @@
       ]
     },
     "srcs": {
-      "name": "integrate_srcs",
+      "name": "check-request-reads_srcs",
       "project": "golaberto",
       "dir": ".",
       "activate": "",
@@ -187,8 +192,7 @@
       },
       "outs": {
         "globs": [
-          "shell/shell.yaml",
-          "shell/screens/**"
+          "tests/**"
         ],
         "exclude": []
       },
@@ -196,6 +200,7 @@
       "visibility": "internal",
       "deps": [],
       "transitiveDeps": [
+        "setup_srcs",
         "launch_outs_srcs"
       ],
       "transitiveCrossDeps": [],
@@ -206,7 +211,8 @@
         "similar": false
       },
       "upClosure": [
-        "./.bayt/compose.integrate.yaml",
+        "./.bayt/compose.check-request-reads.yaml",
+        "./.bayt/compose.setup.yaml",
         "./.bayt/compose.launch.yaml",
         "./.bayt/compose.caddy.yaml",
         "./.bayt/compose.database.yaml",
@@ -231,17 +237,21 @@
   "visibility": "internal",
   "emitsSrcs": true,
   "deps": [
+    "setup",
     "launch_outs"
   ],
   "sameProjectDeps": [
+    "setup",
     "launch_outs"
   ],
   "transitiveDeps": [
+    "setup",
     "launch_outs"
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
-    "./.bayt/compose.integrate.yaml",
+    "./.bayt/compose.check-request-reads.yaml",
+    "./.bayt/compose.setup.yaml",
     "./.bayt/compose.launch.yaml",
     "./.bayt/compose.caddy.yaml",
     "./.bayt/compose.database.yaml",
@@ -257,6 +267,15 @@
     "./.bayt/compose.render.yaml"
   ],
   "chainedDeps": [
+    {
+      "name": "setup",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
     {
       "name": "launch_outs",
       "project": "golaberto",

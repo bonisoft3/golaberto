@@ -105,7 +105,7 @@ Deno.test("team directory refresh chooses latest stored ratings and changes only
   assertEquals(JSON.parse(output), [true, false, false, true, false]);
 });
 
-const { chromium } = await import("npm:playwright@1.59.1");
+const { chromium } = await import("npm:playwright@1.61.1");
 const { SignJWT } = await import("npm:jose@6.0.11");
 const base = await baseUrl(".");
 const tag = crypto.randomUUID().replaceAll("-", "").slice(0, 8);
@@ -168,11 +168,11 @@ for (const width of [390, 1366]) {
         assert((await response).ok(), "combined name and country search should succeed");
         await page.waitForFunction((expected) => {
           const actual = [...document.querySelectorAll<HTMLAnchorElement>('.catalog-table a[data-route="equipe"]')]
-            .map((link) => new URL(link.href).pathname.split("/").at(-1));
+            .map((link) => link.closest("[data-id]")?.getAttribute("data-id"));
           return JSON.stringify(actual) === JSON.stringify(expected);
         }, expectedIds);
         const actualIds = await page.locator('.catalog-table a[data-route="equipe"]').evaluateAll((links) =>
-          links.map((link) => new URL((link as HTMLAnchorElement).href).pathname.split("/").at(-1)));
+          links.map((link) => link.closest("[data-id]")?.getAttribute("data-id")));
         assertEquals(actualIds, expectedIds);
       };
 
@@ -220,7 +220,7 @@ for (const width of [390, 1366]) {
       assert((await countryResponse).ok(), "changing country on page two should issue the combined filtered query");
       await waitForRows(4);
       const countryFilteredIds = await page.locator('.catalog-table a[data-route="equipe"]').evaluateAll((links) =>
-        links.map((link) => new URL((link as HTMLAnchorElement).href).pathname.split("/").at(-1)));
+        links.map((link) => link.closest("[data-id]")?.getAttribute("data-id")));
       assertEquals(countryFilteredIds, [teamIds[2], teamIds[1], teamIds[0], teamIds[3]], "changing country should reset pagination to the first page");
       await page.locator('.catalog-table a[data-route="equipe"]').first().click();
       await page.waitForURL((url) => url.pathname.startsWith("/equipe/"));

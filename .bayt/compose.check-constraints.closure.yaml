@@ -42,6 +42,8 @@ include:
   required: false
 - path: .././.bayt/compose.check-acceptance.yaml
   required: false
+- path: .././.bayt/compose.check-request-reads.yaml
+  required: false
 - path: ../mecha/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml
   required: false
 - path: ../omnishell/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml

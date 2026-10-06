@@ -20,6 +20,8 @@ include:
   required: false
 - path: ./compose.check-acceptance.yaml
   required: false
+- path: ./compose.check-request-reads.yaml
+  required: false
 - path: ./compose.database.yaml
   required: false
 - path: ./compose.crud.yaml

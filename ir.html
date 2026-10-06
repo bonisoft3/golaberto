@@ -147,6 +147,7 @@ graph TD
 <tr data-ordinal="14"><td>featured</td><td>bool</td><td></td><td>default false; the championship table below the home feeds (<a href="#decision-home">decision-home</a>)</td></tr>
 <tr data-ordinal="15"><td>search_name</td><td>string</td><td></td><td>generated: the full championship label; original search collation retained for schema-version readers</td></tr>
 <tr data-ordinal="16"><td>search_key</td><td>string</td><td></td><td>generated: the full championship label; fold ı to i and Þ/þ to th; ICU search collation ignores case and accents and matches æ with ae</td></tr>
+<tr data-ordinal="17"><td>slug</td><td>string</td><td><code class="cel">this.matches(&#x27;^[a-z0-9]+(-[a-z0-9]+)*$&#x27;)</code></td><td>unique; default: &#x27;&#x27;; database assigns readable address</td></tr>
 </table>
 <p data-extract="invariant">Row invariant: <code class="cel">this.ends &gt;= this.begins</code> — a season does not end before it begins.</p>
 </section>
@@ -188,6 +189,7 @@ graph TD
 <tr data-ordinal="2"><td>phase_id</td><td>uuid</td><td></td><td>references phase</td></tr>
 <tr data-ordinal="3"><td>name</td><td>string</td><td><code class="cel">this.size() &gt; 0 &amp;&amp; this.size() &lt;= 40</code></td><td></td></tr>
 <tr data-ordinal="4"><td>position</td><td>int32</td><td><code class="cel">this &gt;= 0</code></td><td>default 0</td></tr>
+<tr data-ordinal="5"><td>slug</td><td>string</td><td><code class="cel">this.matches(&#x27;^[a-z0-9]+(-[a-z0-9]+)*$&#x27;)</code></td><td>unique; default: &#x27;&#x27;; database assigns readable address</td></tr>
 </table>
 </section>
 
@@ -290,6 +292,7 @@ graph TD
 <tr data-ordinal="5"><td>country</td><td>string</td><td><code class="cel">this.size() &lt;= 60</code></td><td>optional</td></tr>
 <tr data-ordinal="6"><td>search_name</td><td>string</td><td></td><td>generated: name; original search collation retained for schema-version readers</td></tr>
 <tr data-ordinal="7"><td>search_key</td><td>string</td><td></td><td>generated: name; fold ı to i and Þ/þ to th; ICU search collation ignores case and accents and matches æ with ae</td></tr>
+<tr data-ordinal="8"><td>slug</td><td>string</td><td><code class="cel">this.matches(&#x27;^[a-z0-9]+(-[a-z0-9]+)*$&#x27;)</code></td><td>unique; default: &#x27;&#x27;; database assigns readable address</td></tr>
 </table>
 </section>
 
@@ -311,6 +314,7 @@ graph TD
 <tr data-ordinal="11"><td>search_key</td><td>string</td><td></td><td>generated: name; fold ı to i and Þ/þ to th; ICU search collation ignores case and accents and matches æ with ae</td></tr>
 <tr data-ordinal="12"><td>latitude</td><td>double</td><td><code class="cel">this &gt;= -90 &amp;&amp; this &lt;= 90</code></td><td>optional</td></tr>
 <tr data-ordinal="13"><td>longitude</td><td>double</td><td><code class="cel">this &gt;= -180 &amp;&amp; this &lt;= 180</code></td><td>optional</td></tr>
+<tr data-ordinal="14"><td>slug</td><td>string</td><td><code class="cel">this.matches(&#x27;^[a-z0-9]+(-[a-z0-9]+)*$&#x27;)</code></td><td>unique; default: &#x27;&#x27;; database assigns readable address</td></tr>
 </table>
 </section>
 
@@ -324,6 +328,7 @@ graph TD
 <tr data-ordinal="3"><td>location</td><td>string</td><td><code class="cel">this.size() &lt;= 80</code></td><td>optional</td></tr>
 <tr data-ordinal="4"><td>search_name</td><td>string</td><td></td><td>generated: name; original search collation retained for schema-version readers</td></tr>
 <tr data-ordinal="5"><td>search_key</td><td>string</td><td></td><td>generated: name; fold ı to i and Þ/þ to th; ICU search collation ignores case and accents and matches æ with ae</td></tr>
+<tr data-ordinal="6"><td>slug</td><td>string</td><td><code class="cel">this.matches(&#x27;^[a-z0-9]+(-[a-z0-9]+)*$&#x27;)</code></td><td>unique; default: &#x27;&#x27;; database assigns readable address</td></tr>
 </table>
 </section>
 
@@ -339,6 +344,7 @@ graph TD
 <tr data-ordinal="5"><td>country</td><td>string</td><td><code class="cel">this.size() &lt;= 60</code></td><td>optional</td></tr>
 <tr data-ordinal="6"><td>height</td><td>int32</td><td><code class="cel">this &gt;= 100 &amp;&amp; this &lt;= 230</code></td><td>optional; centimetres</td></tr>
 <tr data-ordinal="7"><td>position</td><td>string</td><td><code class="cel">this in [&#x27;g&#x27;, &#x27;dr&#x27;, &#x27;dc&#x27;, &#x27;dl&#x27;, &#x27;dm&#x27;, &#x27;cm&#x27;, &#x27;am&#x27;, &#x27;fw&#x27;]</code></td><td>optional; g goalkeeper, dr/dc/dl right, centre, left back, dm defensive, cm central, am attacking midfielder, fw forward</td></tr>
+<tr data-ordinal="8"><td>slug</td><td>string</td><td><code class="cel">this.matches(&#x27;^[a-z0-9]+(-[a-z0-9]+)*$&#x27;)</code></td><td>unique; default: &#x27;&#x27;; database assigns readable address</td></tr>
 </table>
 </section>
 
@@ -380,6 +386,7 @@ graph TD
 <tr data-ordinal="18"><td>attendance</td><td>int32</td><td><code class="cel">this &gt;= 0 &amp;&amp; this &lt;= 250000</code></td><td>optional</td></tr>
 <tr data-ordinal="19"><td>day_display</td><td>string</td><td></td><td>generated: dd/mm/yyyy, the order all three locales write a date in</td></tr>
 <tr data-ordinal="20"><td>kickoff_local</td><td>string</td><td></td><td>generated: HH:MM on Brasília's wall clock, or empty (<a href="#decision-brasilia-time">decision-brasilia-time</a>)</td></tr>
+<tr data-ordinal="21"><td>slug</td><td>string</td><td><code class="cel">this.matches(&#x27;^[a-z0-9]+(-[a-z0-9]+)*$&#x27;)</code></td><td>unique; default: &#x27;&#x27;; database assigns readable address</td></tr>
 </table>
 <p data-extract="invariant">Row invariant: <code class="cel">this.home_id != this.away_id &amp;&amp; this.played == (has(this.home_score) &amp;&amp; has(this.away_score)) &amp;&amp; has(this.home_score) == has(this.away_score) &amp;&amp; has(this.home_aet) == has(this.away_aet) &amp;&amp; has(this.home_pen) == has(this.away_pen) &amp;&amp; (has(this.home_aet) == false || this.played) &amp;&amp; (has(this.home_pen) == false || this.played)</code> — a team never plays itself; a played game has both scores and an unplayed one neither; extra-time and penalty scores come in pairs and only on a played game.</p>
 </section>
@@ -899,7 +906,7 @@ graph TD
 <tr data-ordinal="2"><td>body</td><td>string</td><td><code class="cel">this.size() &lt;= 1000</code></td><td>default: &#x27;&#x27;</td></tr>
 <tr data-ordinal="3"><td>state</td><td>string</td><td><code class="cel">this in [&#x27;writing&#x27;, &#x27;sending&#x27;, &#x27;refused&#x27;]</code></td><td>default: &#x27;writing&#x27;</td></tr>
 </table></section>
-<section id="TeamCampaignPoint" data-kind="entity" data-durability="live" data-type-id="0x9baa066851e521e0"><h3>TeamCampaignPoint — live</h3><table data-extract="fields"><tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
+<section id="TeamCampaignPoint" data-kind="entity" data-durability="server" data-type-id="0x9baa066851e521e0"><h3>TeamCampaignPoint — server</h3><table data-extract="fields"><tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
 <tr data-ordinal="1"><td>id</td><td>string</td><td></td><td>pk: true</td></tr>
 <tr data-ordinal="2"><td>group_id</td><td>uuid</td><td></td><td>ref: stage_group</td></tr>
 <tr data-ordinal="3"><td>team_id</td><td>uuid</td><td></td><td>ref: team</td></tr>
@@ -980,6 +987,7 @@ graph TD
 <tr data-ordinal="11"><td>side</td><td>string</td><td><code class="cel">this in [&#x27;*&#x27;, &#x27;home&#x27;, &#x27;away&#x27;]</code></td><td>default: &#x27;*&#x27;</td></tr>
 <tr data-ordinal="12"><td>phase</td><td>string</td><td></td><td>default: &#x27;*&#x27;</td></tr>
 <tr data-ordinal="13"><td>category</td><td>string</td><td></td><td>default: &#x27;*&#x27;</td></tr>
+<tr data-ordinal="14"><td>championship_id</td><td>uuid</td><td></td><td>optional; resolved championship for paginated reads</td></tr>
 </table>
 </section>
 
@@ -1367,7 +1375,7 @@ graph TD
 }
 </script>
 </section>
-<section id="chances" data-kind="screen" data-route="/chances/:id">
+<section id="chances" data-kind="screen" data-route="/chances/:slug">
 <h3>chances — a group's chances</h3>
 <p data-extract="reads">Reads: <a href="#StageGroup">StageGroup</a> by <code>id=eq.{param.id}</code> with its <a href="#Phase">Phase</a>'s name; nested, its <a href="#Championship">Championship</a> for the band, the group's <a href="#Zone">Zone</a>s for the columns, and <a href="#TeamChance">TeamChance</a>, <a href="#ZoneChance">ZoneChance</a> and <a href="#PositionChance">PositionChance</a> by <code>group_id</code> (and <code>team_id</code> per row), all written by the <a href="#decision-chances">chances</a> computation.</p>
 <p data-extract="mutations">Mutations: none. The chances move when the computation writes them, and the page follows on its own.</p>
@@ -1469,7 +1477,7 @@ graph TD
 </script>
 </section>
 
-<section id="editar" data-kind="screen" data-route="/editar/:id">
+<section id="editar" data-kind="screen" data-route="/editar/:slug">
 <h3>editar — an editor corrects a game</h3>
 <p data-extract="reads">Reads: <a href="#GameCard">GameCard</a> by <code>id=eq.{param.id}</code>, the game as it stands; nested, the editor's <a href="#GameEdit">GameEdit</a> draft by <code>id=eq.{id}</code>, seeded from that game, and the <a href="#Game">Game</a> row itself, held so the save has the row it updates; <a href="#Stadium">Stadium</a> and <a href="#Referee">Referee</a> for the choices: the selected id plus at most forty name matches from the draft’s stadium_q or referee_q; <a href="#Goal">Goal</a> by <code>game_id=eq.{id}&amp;side=eq.home|away</code>; <a href="#PlayerGame">PlayerGame</a> by <code>game_id=eq.{id}</code>, the line-ups a scorer is chosen from.</p>
 <p data-extract="mutations">Mutations: one machine, no form. Typing assigns the draft; Salvar is an <code>update</code> of the <a href="#Game">Game</a>; Adicionar gol <code>create</code>s a <a href="#Goal">Goal</a> for its side; a goal's Remover <code>delete</code>s it. Every write is the cluster's to refuse (<a href="#decision-editing">decision-editing</a>), and a refused one keeps the draft. Handlers: <a href="#handler-both-scored">both-scored</a>, <a href="#handler-blank-null">blank-null</a>, <a href="#handler-count-or-null">count-or-null</a>, <a href="#handler-row-id">row-id</a>.</p>
@@ -1610,7 +1618,7 @@ graph TD
 </script>
 </section>
 
-<section id="jogo" data-kind="screen" data-route="/jogo/:id">
+<section id="jogo" data-kind="screen" data-route="/jogo/:slug">
 <h3>jogo — one game</h3>
 <p data-extract="reads">Reads: <a href="#GameCard">GameCard</a> by <code>id=eq.{param.id}</code>, the game with its teams', stadium's, referee's, phase's and championship's names; nested, <a href="#Goal">Goal</a> by <code>game_id=eq.{id}</code> (<code>aet.asc,minute.asc</code>) with the scorer's name, and <a href="#PlayerGame">PlayerGame</a> twice, by <code>game_id=eq.{id}&amp;side=eq.home</code> and <code>…side=eq.away</code> (<code>bench.asc,on_minute.asc</code>), with each player's name and position. Every team's and player's name links to their page, and the stadium and the referee to theirs. Last, the game's <a href="#Comment">Comment</a>s by <code>game_id=eq.{id}</code> (<code>created_at.desc</code>) with each author's handle, and the reader's <a href="#CommentDraft">CommentDraft</a> by <code>id=eq.{id}</code>, the composer machine's row. Long lists use <a href="#ArchivePage">ArchivePage</a> by list and owner, forty rows per page with a one-row next-page probe. The <a href="#handler-page-value">page-value</a> machine updates page state.</p>
 <p data-extract="mutations">Mutations: an editor — a reader holding an <a href="#Editor">Editor</a> grant, the one row of it they sync — is offered the way to <a href="#editar">editar</a>. The composer creates a <a href="#Comment">Comment</a> through its machine — no form: typing assigns the draft, posting is a <code>create</code> effect, an acknowledged post clears the draft, and a refused one keeps it and says why (<a href="#decision-comments">decision-comments</a>).</p>
@@ -1925,8 +1933,8 @@ graph TD
 }
 </script>
 </section>
-<section id="decision-team-page-split" data-kind="decision"><h3>Whole-team profile and championship participation</h3><p>The reader approved compact headings and tables for two distinct page types, with small section links on the championship page. Stitch explored the arrangement in project 3684321283098058780, screen 8e9552fe015b4245b909b3999a1b9a16; the approved inline comparison is supporting evidence. Preserve the established chrome, tokens and responsive table conventions. The main profile contains facts, latest rating, current/upcoming and past championships, and current and past players. Every participation links to <code>/equipe-campeonato/:id/:championship</code>; fixtures, full relevant group standings, roster and detailed stored zone/position probabilities stay within that pair. Both IDs survive language switches. Current players means recorded in a non-ended championship, including upcoming registrations; it does not assert transfer dates. Registered players with zero appearances remain in a roster. Unsupported club-period or final-phase columns are omitted. Empty participation, tables, roster and probabilities have truthful messages.</p></section>
-<section id="equipe" data-kind="screen" data-route="/equipe/:id">
+<section id="decision-team-page-split" data-kind="decision"><h3>Whole-team profile and championship participation</h3><p>The reader approved compact headings and tables for two distinct page types, with small section links on the championship page. Stitch explored the arrangement in project 3684321283098058780, screen 8e9552fe015b4245b909b3999a1b9a16; the approved inline comparison is supporting evidence. Preserve the established chrome, tokens and responsive table conventions. The main profile contains facts, latest rating, current/upcoming and past championships, and current and past players. Every participation links to <code>/equipe-campeonato/:slug/:championship</code>; fixtures, full relevant group standings, roster and detailed stored zone/position probabilities stay within that pair. Both IDs survive language switches. Current players means recorded in a non-ended championship, including upcoming registrations; it does not assert transfer dates. Registered players with zero appearances remain in a roster. Unsupported club-period or final-phase columns are omitted. Empty participation, tables, roster and probabilities have truthful messages.</p></section>
+<section id="equipe" data-kind="screen" data-route="/equipe/:slug">
 <h3>equipe — Whole-team facts, current/upcoming and past championships, and deduplicated current and past players.</h3>
 <p data-extract="reads">Reads: <a href="#Team">Team</a> by route ID, its <a href="#Stadium">Stadium</a> link and recorded coordinates for an OpenStreetMap link; latest <a href="#TeamRating">TeamRating</a> plus one <a href="#TeamRatingChart">TeamRatingChart</a> for the selected 1m/3m/6m/1y/5y/all period. The chart uses at most 600 real observations; exact rating rows remain paged. <a href="#TeamChampionship">TeamChampionship</a> separates current/upcoming from past participation and links both IDs to the championship page. <a href="#TeamPlayerHistory">TeamPlayerHistory</a> separates current/past players and searches normalized names. <a href="#TeamGame">TeamGame</a> shows upcoming/results across competitions with category and venue filters. <a href="#TeamComment">TeamComment</a> includes author handles and <a href="#TeamCommentDraft">TeamCommentDraft</a> holds the composer. Each long list uses <a href="#ArchivePage">ArchivePage</a>, forty rows and a one-row next-page probe with stable ordering. Filter changes reset the page.</p>
 <p data-extract="mutations">Mutations: signed-in team discussion through TeamCommentDraft; chart and search filters stay in tab state.</p>
@@ -1976,9 +1984,9 @@ graph TD
 }
 </script>
 </section>
-<section id="equipe-campeonato" data-kind="screen" data-route="/equipe-campeonato/:id/:championship">
+<section id="equipe-campeonato" data-kind="screen" data-route="/equipe-campeonato/:slug/:championship">
 <h3>equipe-campeonato — One team in one championship: fixtures, full relevant group tables, registered roster and detailed stored probabilities.</h3>
-<p data-extract="reads">Reads: <a href="#TeamChampionship">TeamChampionship</a> by both route IDs validates participation, with embedded <a href="#Team">Team</a> facts. A bounded selector navigates among teams in the same championship. <a href="#TeamGame">TeamGame</a> fixtures/results use both IDs plus phase and home/away filters. Category is fixed by the championship and has no selector or repeated label on this page. <a href="#TeamRoster">TeamRoster</a> searches normalized player names and uses a closed sort selection; <a href="#TeamRosterTotal">TeamRosterTotal</a> gives full-roster counters and recorded contribution/per-90 metrics independently of the displayed page or search. Relevant <a href="#TeamGroup">TeamGroup</a> groups embed phase/championship; <a href="#Standing">Standing</a> displays their full table with the team highlighted. <a href="#TeamCampaignPoint">TeamCampaignPoint</a> provides up to 800 observations for a two-team points/position chart, with paged exact rows and game links; <a href="#TeamChartState">TeamChartState</a> holds tab-only chart selections and payload. <a href="#TeamChance">TeamChance</a>, <a href="#ZoneChance">ZoneChance</a> and <a href="#PositionChance">PositionChance</a> show current stored probabilities, a finish-position bar chart and reach marks. <a href="#TeamOddsChart">TeamOddsChart</a> gives bounded recorded zone histories, omitting incomplete vectors and using current zone boundaries. Group-free cups and missing data have explicit empty states. All long exact lists use <a href="#ArchivePage">ArchivePage</a>, forty rows and a stable one-row next-page probe. Both route IDs survive locale switches; filters reset pagination.</p>
+<p data-extract="reads">Reads: <a href="#TeamChampionship">TeamChampionship</a> by both readable route addresses validates participation, with embedded <a href="#Team">Team</a> facts. A bounded selector navigates among teams in the same championship. <a href="#TeamGame">TeamGame</a> fixtures/results use both IDs plus phase and home/away filters. Category is fixed by the championship and has no selector or repeated label on this page. <a href="#TeamRoster">TeamRoster</a> searches normalized player names and uses a closed sort selection; <a href="#TeamRosterTotal">TeamRosterTotal</a> gives full-roster counters and recorded contribution/per-90 metrics independently of the displayed page or search. Relevant <a href="#TeamGroup">TeamGroup</a> groups embed phase/championship; <a href="#Standing">Standing</a> displays their full table with the team highlighted. <a href="#TeamCampaignPoint">TeamCampaignPoint</a> computes the requested group on read, then provides up to 800 observations for a two-team points/position chart, with paged exact rows and game links; <a href="#TeamChartState">TeamChartState</a> holds tab-only chart selections and payload. <a href="#TeamChance">TeamChance</a>, <a href="#ZoneChance">ZoneChance</a> and <a href="#PositionChance">PositionChance</a> show current stored probabilities, a finish-position bar chart and reach marks. <a href="#TeamOddsChart">TeamOddsChart</a> gives bounded recorded zone histories, omitting incomplete vectors and using current zone boundaries. Group-free cups and missing data have explicit empty states. All long exact lists use <a href="#ArchivePage">ArchivePage</a>, forty rows and a stable one-row next-page probe. Both readable addresses survive locale switches; filters reset pagination.</p>
 <p data-extract="mutations">Mutations: none.</p>
 <div class="storyboard frames">
 <figure id="equipe-campeonato-loading" data-kind="state" data-of="equipe-campeonato" data-state="loading">
@@ -2028,7 +2036,7 @@ graph TD
 }
 </script>
 </section>
-<section id="jogador" data-kind="screen" data-route="/jogador/:id">
+<section id="jogador" data-kind="screen" data-route="/jogador/:slug">
 <h3>jogador — one player</h3>
 <p data-extract="reads">Reads: <a href="#Player">Player</a> by <code>id=eq.{param.id}</code>; nested, <a href="#PlayerStat">PlayerStat</a> by <code>player_id=eq.{id}</code>, its championship's and team's names written on the line, and <a href="#PlayerGame">PlayerGame</a> by <code>player_id=eq.{id}</code> (<code>day.desc</code>, forty), each with its game's <a href="#GameCard">GameCard</a> by <code>id=eq.{game_id}</code>. Long lists use <a href="#ArchivePage">ArchivePage</a> by list and owner, forty rows per page with a one-row next-page probe. The <a href="#handler-page-value">page-value</a> machine updates page state.</p>
 <p data-extract="mutations">Mutations: none.</p>
@@ -2246,7 +2254,7 @@ graph TD
 }
 </script>
 </section>
-<section id="estadio" data-kind="screen" data-route="/estadio/:id">
+<section id="estadio" data-kind="screen" data-route="/estadio/:slug">
 <h3>estadio — one stadium</h3>
 <p data-extract="reads">Reads: <a href="#Stadium">Stadium</a> by <code>id=eq.{param.id}</code>; nested, <a href="#Team">Team</a> by <code>stadium_id=eq.{id}</code> (<code>name.asc</code>) — the teams that play there — and <a href="#GameCard">GameCard</a> by <code>stadium_id=eq.{id}</code> (<code>day.desc</code>), every game played there remains reachable through its pages. Long lists use <a href="#ArchivePage">ArchivePage</a> by list and owner, forty rows per page with a one-row next-page probe. The <a href="#handler-page-value">page-value</a> machine updates page state.</p>
 <p data-extract="mutations">Mutations: none.</p>
@@ -2460,7 +2468,7 @@ graph TD
 }
 </script>
 </section>
-<section id="arbitro" data-kind="screen" data-route="/arbitro/:id">
+<section id="arbitro" data-kind="screen" data-route="/arbitro/:slug">
 <h3>arbitro — one referee</h3>
 <p data-extract="reads">Reads: <a href="#Referee">Referee</a> by <code>id=eq.{param.id}</code>; nested, <a href="#GameCard">GameCard</a> by <code>referee_id=eq.{id}</code> (<code>day.desc</code>), every game they refereed. Long lists use <a href="#ArchivePage">ArchivePage</a> by list and owner, forty rows per page with a one-row next-page probe. The <a href="#handler-page-value">page-value</a> machine updates page state.</p>
 <p data-extract="mutations">Mutations: none.</p>
@@ -2554,7 +2562,7 @@ graph TD
 }
 </script>
 </section>
-<section id="campeonato" data-kind="screen" data-route="/campeonato/:id">
+<section id="campeonato" data-kind="screen" data-route="/campeonato/:slug">
 <h3>campeonato — one championship</h3>
 <p data-extract="reads">Reads: <a href="#Championship">Championship</a> by <code>id=eq.{param.id}</code>; nested, <a href="#Category">Category</a> by <code>id=eq.{category_id}</code>, <a href="#Phase">Phase</a> by <code>championship_id=eq.{id}</code> (<code>position.asc</code>, twice: the chips and the sections), <a href="#Group">Group</a> by <code>phase_id=eq.{id}</code>, <a href="#Standing">Standing</a> by <code>group_id=eq.{id}</code> (<code>position.asc</code>) — the table — and <a href="#Zone">Zone</a> by <code>group_id=eq.{id}</code> (<code>first.asc</code>) for its legend; per phase, <a href="#PhaseRound">PhaseRound</a> by <code>phase_id=eq.{id}</code> and, inside it, <a href="#GameCard">GameCard</a> by <code>phase_id=eq.{phase_id}&amp;round=eq.{current}</code> and, when the phase has a next round, <code>…round=eq.{next}</code> — the current round's games and the next's. Every team in a table links to its page.</p>
 <p data-extract="mutations">Mutations: none.</p>
@@ -2808,7 +2816,7 @@ The 1971 Brasileiro states its own points: <code class="cel">output.points == [2
 The 2026 Libertadores has two phases and no groups yet: <code class="cel">output.phases.size() == 2 &amp;&amp; output.empty.all(e, e == "Esta fase ainda não tem grupos cadastrados.")</code>.
 </p>
 <p id="test-championship-gone" data-kind="test" data-of="campeonato" data-accepts="accept-championship-gone">
-An address naming no championship says so rather than showing a blank page: opening <code class="cel">input.id == "00000000-0000-4000-8000-000000000000"</code> shows <code class="cel">output.empty == "Este campeonato não existe ou foi removido."</code>.
+An address naming no championship says so rather than showing a blank page: opening <code class="cel">input.slug == "missing-address"</code> shows <code class="cel">output.empty == "Este campeonato não existe ou foi removido."</code>.
 </p>
 <p id="test-languages" data-kind="test" data-of="campeonatos" data-accepts="accept-languages">
 With an English browser at 390px and 1366px, choosing Portuguese from every other supported language opens <code>/?lang=pt-BR</code>. Reloads, catalogue menu navigation and a championship round trip retain Portuguese, its current-language marker and the championship ID. The read-only <code>tests/language-switch.ts</code> regression runs at integrate.
@@ -3083,7 +3091,7 @@ No vendored unit, no container, no external endpoint; the one Wasm module is ups
 </section>
 
 <section id="handler-team-chart-fold" data-kind="handler" data-of="equipe-campeonato"><h3>team-chart-fold</h3><p>bounded source rows become a pure chart payload, with comparison and accessible source tables</p></section>
-<p id="team-enrichment-oracle"><strong>Team functionality oracle.</strong> The user requested inspiration from golaberto.com.br, keeping our approved visual design. Stitch project 3684321283098058780, screen b29b07ab96df4f8798169552a25af2a4 refines compact analytical sections: rating ranges and exact history; location; all-competition games with categories; searchable current/past players and discussion. Championship scope adds team switching, phase/home-away filters, searchable sortable roster with aggregate totals and recorded contributions, finish-position bars, zone odds history and points/position comparison with linked games and accessible tables. Missing source data is explicit. Charts downsample only real observations, preserving extrema; rankings are reconstructed under current rules. Zone history uses the currently declared zone boundaries.</p><section id="handler-chart-metric" data-kind="handler" data-of="equipe-campeonato"><h3>chart-metric</h3><p>Typed chart control retains existing state for unrelated gestures.</p></section><section id="handler-chart-compare" data-kind="handler" data-of="equipe-campeonato"><h3>chart-compare</h3><p>Typed chart control retains existing state for unrelated gestures.</p></section><section id="handler-team-chart-seed" data-kind="handler" data-of="equipe-campeonato"><h3>team-chart-seed</h3><p>Initialize one typed tab chart row from its explicit fallback.</p></section><section id="team-campaign" data-kind="pipeline" data-from="Game" data-to="TeamCampaignPoint"><h3>team-campaign</h3><p>One atomic reconstruction per group using championship points and current tiebreak rules; source events and boot rebuild the affected groups, including both previous and current scopes when a match or membership moves.</p></section>
+<p id="team-enrichment-oracle"><strong>Team functionality oracle.</strong> The user requested inspiration from golaberto.com.br, keeping our approved visual design. Stitch project 3684321283098058780, screen b29b07ab96df4f8798169552a25af2a4 refines compact analytical sections: rating ranges and exact history; location; all-competition games with categories; searchable current/past players and discussion. Championship scope adds team switching, phase/home-away filters, searchable sortable roster with aggregate totals and recorded contributions, finish-position bars, zone odds history and points/position comparison with linked games and accessible tables. Missing source data is explicit. Charts downsample only real observations, preserving extrema; rankings are reconstructed under current rules. Zone history uses the currently declared zone boundaries.</p><section id="handler-chart-metric" data-kind="handler" data-of="equipe-campeonato"><h3>chart-metric</h3><p>Typed chart control retains existing state for unrelated gestures.</p></section><section id="handler-chart-compare" data-kind="handler" data-of="equipe-campeonato"><h3>chart-compare</h3><p>Typed chart control retains existing state for unrelated gestures.</p></section><section id="handler-team-chart-seed" data-kind="handler" data-of="equipe-campeonato"><h3>team-chart-seed</h3><p>Initialize one typed tab chart row from its explicit fallback.</p></section>
 <section id="team-enrichment" data-kind="pipeline" data-from="TeamRating" data-to="TeamRatingChart"><h3>team-enrichment</h3><p>Service-only bounded dirty queues refresh rating and zone-history charts and full roster totals. Rating-only appearance updates coalesce durably by player and championship, provide the sole writer of recorded player metrics and per-90 rates; counter recounts omit these fields and enqueue reconciliation after inserts or denominator changes, and avoid repeating full-career CDC recounts; other appearance changes keep the existing event path. Real extrema and endpoints are preserved; unchanged projections are not written.</p></section>
 </body>
 </html>

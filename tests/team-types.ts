@@ -86,7 +86,7 @@ Deno.test("team directory refresh projects source type and uses the typed order 
   assert(!output.includes("Sort"), "exact type query should not add a sort");
 });
 
-const { chromium } = await import("npm:playwright@1.59.1");
+const { chromium } = await import("npm:playwright@1.61.1");
 const { SignJWT } = await import("npm:jose@6.0.11");
 const base = await baseUrl(".");
 const tag = crypto.randomUUID().replaceAll("-", "").slice(0, 8);
@@ -158,11 +158,11 @@ for (const width of [390, 1366]) {
       const waitForIds = async (expectedIds: string[]) => {
         await page.waitForFunction((expected) => {
           const actual = [...document.querySelectorAll<HTMLAnchorElement>('.catalog-table a[data-route="equipe"]')]
-            .map((link) => new URL(link.href).pathname.split("/").at(-1));
+            .map((link) => link.closest("[data-id]")?.getAttribute("data-id"));
           return JSON.stringify(actual) === JSON.stringify(expected);
         }, expectedIds);
         const actual = await page.locator('.catalog-table a[data-route="equipe"]').evaluateAll((links) =>
-          links.map((link) => new URL((link as HTMLAnchorElement).href).pathname.split("/").at(-1)));
+          links.map((link) => link.closest("[data-id]")?.getAttribute("data-id")));
         assertEquals(actual, expectedIds);
       };
       const waitForResponse = (criteria: Record<string, string>) => page.waitForResponse((response) => {

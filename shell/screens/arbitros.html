@@ -28,10 +28,10 @@
             <th scope="col" data-text="{msg.col_referee}"></th>
             <th scope="col" class="narrow" data-text="{msg.col_from}"></th>
           </tr></thead>
-          <tbody data-live="referee" data-filter="search_key=like.*{q_key}*&offset={offset}&limit=40" data-order="name.asc" data-empty="{msg.referees_empty}">
+          <tbody data-live="referee" data-select="*" data-filter="search_key=like.*{q_key}*&offset={offset}&limit=40" data-order="name.asc" data-empty="{msg.referees_empty}">
             <template data-item>
               <tr>
-                <td><a data-route="arbitro" data-param-id="{id}" data-text="{name}"></a></td>
+                <td><a data-route="arbitro" data-param-slug="{slug}" data-text="{name}"></a></td>
                 <td class="narrow" data-text="{location}"></td>
               </tr>
             </template>

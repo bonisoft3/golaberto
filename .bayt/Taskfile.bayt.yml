@@ -32,4 +32,8 @@ includes:
     taskfile: ./Taskfile.check-acceptance.yaml
     dir: ../
     optional: true
+  check-request-reads:
+    taskfile: ./Taskfile.check-request-reads.yaml
+    dir: ../
+    optional: true
 version: "3"

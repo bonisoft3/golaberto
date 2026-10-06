@@ -78,7 +78,7 @@ Deno.test("fixed geography catalog, joins, and read-only access", async () => {
   assertEquals(JSON.parse(output), [true, true, false, false, false, false]);
 });
 
-const { chromium } = await import("npm:playwright@1.59.1");
+const { chromium } = await import("npm:playwright@1.61.1");
 const { SignJWT } = await import("npm:jose@6.0.11");
 const base = await baseUrl(".");
 const tag = crypto.randomUUID().replaceAll("-", "").slice(0, 8);
@@ -253,7 +253,7 @@ for (const width of [390, 1366]) {
         await countryText.fill(germanLabel);
         await waitForTeams(1);
         const germanyId = await page.locator('.catalog-table a[data-route="equipe"]').evaluate((link) =>
-          new URL((link as HTMLAnchorElement).href).pathname.split("/").at(-1));
+          link.closest("[data-id]")?.getAttribute("data-id"));
         assertEquals(germanyId, teamIds[0], `${locale} country search returns the Germany fixture`);
         await countryOptions.locator(`button[value="${geometry.germany}"]`).click();
         await countryPop.waitFor({ state: "hidden" });

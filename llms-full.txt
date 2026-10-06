@@ -60,6 +60,7 @@ Fields:
   - `featured` (bool)
   - `search_name` (string)
   - `search_key` (string)
+  - `slug` (string)
 
 ### Entity: HomeChampionship
 Fields:
@@ -85,6 +86,7 @@ Fields:
   - `phase_id` (uuid)
   - `name` (string)
   - `position` (int32)
+  - `slug` (string)
 
 ### Entity: Zone
 Fields:
@@ -104,6 +106,7 @@ Fields:
   - `country` (string)
   - `search_name` (string)
   - `search_key` (string)
+  - `slug` (string)
 
 ### Entity: Team
 Fields:
@@ -120,6 +123,7 @@ Fields:
   - `search_key` (string)
   - `latitude` (double)
   - `longitude` (double)
+  - `slug` (string)
 
 ### Entity: TeamChampionship
 Fields:
@@ -147,6 +151,7 @@ Fields:
   - `location` (string)
   - `search_name` (string)
   - `search_key` (string)
+  - `slug` (string)
 
 ### Entity: GeographyRegion
 Fields:
@@ -193,6 +198,7 @@ Fields:
   - `country` (string)
   - `height` (int32)
   - `position` (string)
+  - `slug` (string)
 
 ### Entity: TeamPlayer
 Fields:
@@ -260,6 +266,7 @@ Fields:
   - `attendance` (int32)
   - `day_display` (string)
   - `kickoff_local` (string)
+  - `slug` (string)
 
 ### Entity: Goal
 Fields:

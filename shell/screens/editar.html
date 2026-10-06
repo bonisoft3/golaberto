@@ -3,18 +3,18 @@
 <header class="masthead">
   <a class="wordmark" data-route="principal" aria-label="{msg.brand}"><b data-text="{msg.brand_gol}"></b><span data-text="{msg.brand_aberto}"></span></a>
   <nav class="langs" aria-label="{msg.lang_label}">
-    <a data-route="editar" data-param-id="{param.id}" data-locale="pt-BR" data-locale-current="page" lang="pt-BR"><span class="long" data-text="{msg.lang_pt}"></span><span class="short" data-text="{msg.lang_pt_short}"></span></a>
-    <a data-route="editar" data-param-id="{param.id}" data-locale="es-AR" data-locale-current="page" lang="es-AR"><span class="long" data-text="{msg.lang_es}"></span><span class="short" data-text="{msg.lang_es_short}"></span></a>
-    <a data-route="editar" data-param-id="{param.id}" data-locale="en-GB" data-locale-current="page" lang="en-GB"><span class="long" data-text="{msg.lang_en}"></span><span class="short" data-text="{msg.lang_en_short}"></span></a>
-    <a data-route="editar" data-param-id="{param.id}" data-locale="it-IT" data-locale-current="page" lang="it-IT"><span class="long" data-text="{msg.lang_it}"></span><span class="short" data-text="{msg.lang_it_short}"></span></a>
-    <a data-route="editar" data-param-id="{param.id}" data-locale="de-DE" data-locale-current="page" lang="de-DE"><span class="long" data-text="{msg.lang_de}"></span><span class="short" data-text="{msg.lang_de_short}"></span></a>
-    <a data-route="editar" data-param-id="{param.id}" data-locale="fr-FR" data-locale-current="page" lang="fr-FR"><span class="long" data-text="{msg.lang_fr}"></span><span class="short" data-text="{msg.lang_fr_short}"></span></a>
+    <a data-route="editar" data-param-slug="{param.slug}" data-locale="pt-BR" data-locale-current="page" lang="pt-BR"><span class="long" data-text="{msg.lang_pt}"></span><span class="short" data-text="{msg.lang_pt_short}"></span></a>
+    <a data-route="editar" data-param-slug="{param.slug}" data-locale="es-AR" data-locale-current="page" lang="es-AR"><span class="long" data-text="{msg.lang_es}"></span><span class="short" data-text="{msg.lang_es_short}"></span></a>
+    <a data-route="editar" data-param-slug="{param.slug}" data-locale="en-GB" data-locale-current="page" lang="en-GB"><span class="long" data-text="{msg.lang_en}"></span><span class="short" data-text="{msg.lang_en_short}"></span></a>
+    <a data-route="editar" data-param-slug="{param.slug}" data-locale="it-IT" data-locale-current="page" lang="it-IT"><span class="long" data-text="{msg.lang_it}"></span><span class="short" data-text="{msg.lang_it_short}"></span></a>
+    <a data-route="editar" data-param-slug="{param.slug}" data-locale="de-DE" data-locale-current="page" lang="de-DE"><span class="long" data-text="{msg.lang_de}"></span><span class="short" data-text="{msg.lang_de_short}"></span></a>
+    <a data-route="editar" data-param-slug="{param.slug}" data-locale="fr-FR" data-locale-current="page" lang="fr-FR"><span class="long" data-text="{msg.lang_fr}"></span><span class="short" data-text="{msg.lang_fr_short}"></span></a>
   </nav>
 </header>
-<div data-live="game_card" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="id=eq.{param.id}" data-exit-motion="none" data-empty="{msg.game_gone}">
+<div data-live="game_card" data-select="*,game:id!inner(slug),stadium(slug),referee(slug),championship(show_country,slug),home:home_id(country,slug),away:away_id(country,slug)" data-filter="game.slug=eq.{param.slug}" data-exit-motion="none" data-empty="{msg.game_gone}">
   <template data-item>
     <article class="game">
-      <h1 class="band"><a data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span></a></h1>
+      <h1 class="band"><a data-route="campeonato" data-param-slug="{championship.slug}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span></a></h1>
       <div class="page">
         <div class="content">
           <div data-live="game_edit" data-filter="id=eq.{id}" data-machine='{"field":"state","initial":"editing","on":{"refused":{"target":"refused"}},"states":{"editing":{"on":{"click@goal-add-away":{"effect":{"level":"replicated","op":"create","entity":"goal","values":{"game_id":"{id}","side":"away","minute":"{goal_minute}","player_id":"{goal_player_id}"}}},"click@goal-add-home":{"effect":{"level":"replicated","op":"create","entity":"goal","values":{"game_id":"{id}","side":"home","minute":"{goal_minute}","player_id":"{goal_player_id}"}}},"input@edit-home":{"assign":{"home_score":"count-or-null","played":{"type":"both-scored","params":{"other":"away_score"}}}},"input@edit-away":{"assign":{"away_score":"count-or-null","played":{"type":"both-scored","params":{"other":"home_score"}}}},"input@edit-attendance":{"assign":{"attendance":"count-or-null"}},"change@edit-stadium":{"assign":{"stadium_id":"blank-null"}},"input@edit-stadium-q":{"assign":{"stadium_q":{"type":"event","params":{"field":"value"}},"stadium_q_key":{"type":"search-key"}}},"change@edit-referee":{"assign":{"referee_id":"blank-null"}},"input@edit-referee-q":{"assign":{"referee_q":{"type":"event","params":{"field":"value"}},"referee_q_key":{"type":"search-key"}}},"input@goal-minute":{"assign":{"goal_minute":"count-or-null"}},"change@goal-player":{"assign":{"goal_player_id":"blank-null"}},"click@edit-save":{"target":"saving","effect":{"level":"replicated","op":"update","entity":"game","values":{"id":"{id}","played":"{played}","home_score":"{home_score}","away_score":"{away_score}","attendance":"{attendance}","stadium_id":"{stadium_id}","referee_id":"{referee_id}"}}},"click":{"guard":"row-id","effect":{"level":"replicated","op":"delete","entity":"goal","values":{"id":{"type":"event","params":{"field":"value"}}}}},"sync_ack":{"assign":{"goal_minute":null,"goal_player_id":null}}}},"saving":{"on":{"sync_ack":{"target":"editing"}}},"refused":{"on":{"click@goal-add-away":{"effect":{"level":"replicated","op":"create","entity":"goal","values":{"game_id":"{id}","side":"away","minute":"{goal_minute}","player_id":"{goal_player_id}"}}},"click@goal-add-home":{"effect":{"level":"replicated","op":"create","entity":"goal","values":{"game_id":"{id}","side":"home","minute":"{goal_minute}","player_id":"{goal_player_id}"}}},"input@edit-home":{"assign":{"home_score":"count-or-null","played":{"type":"both-scored","params":{"other":"away_score"}}}},"input@edit-away":{"assign":{"away_score":"count-or-null","played":{"type":"both-scored","params":{"other":"home_score"}}}},"input@edit-attendance":{"assign":{"attendance":"count-or-null"}},"change@edit-stadium":{"assign":{"stadium_id":"blank-null"}},"input@edit-stadium-q":{"assign":{"stadium_q":{"type":"event","params":{"field":"value"}},"stadium_q_key":{"type":"search-key"}}},"change@edit-referee":{"assign":{"referee_id":"blank-null"}},"input@edit-referee-q":{"assign":{"referee_q":{"type":"event","params":{"field":"value"}},"referee_q_key":{"type":"search-key"}}},"input@goal-minute":{"assign":{"goal_minute":"count-or-null"}},"change@goal-player":{"assign":{"goal_player_id":"blank-null"}},"click@edit-save":{"target":"saving","effect":{"level":"replicated","op":"update","entity":"game","values":{"id":"{id}","played":"{played}","home_score":"{home_score}","away_score":"{away_score}","attendance":"{attendance}","stadium_id":"{stadium_id}","referee_id":"{referee_id}"}}},"click":{"guard":"row-id","effect":{"level":"replicated","op":"delete","entity":"goal","values":{"id":{"type":"event","params":{"field":"value"}}}}},"sync_ack":{"target":"editing","assign":{"goal_minute":null,"goal_player_id":null}}}}}}'
@@ -53,13 +53,13 @@
               <div class="goal-new">
                 <label class="field" for="goal-minute"><span data-text="{msg.edit_goal_minute}"></span><input id="goal-minute" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3" data-value="{goal_minute}"></label>
                 <label class="field wide" for="goal-player"><span data-text="{msg.edit_goal_player}"></span>
-                  <select id="goal-player" data-value="{goal_player_id}"><option value="" data-text="{msg.edit_goal_choose}"></option><optgroup data-live="player_game" data-select="*,player(name)" data-filter="game_id=eq.{id}" data-order="side.desc,bench.asc,on_minute.asc" data-empty=""><template data-item><option value="{player_id}" data-text="{player.name}"></option></template></optgroup></select>
+                  <select id="goal-player" data-value="{goal_player_id}"><option value="" data-text="{msg.edit_goal_choose}"></option><optgroup data-live="player_game" data-select="*,player(name,slug)" data-filter="game_id=eq.{id}" data-order="side.desc,bench.asc,on_minute.asc" data-empty=""><template data-item><option value="{player_id}" data-text="{player.name}"></option></template></optgroup></select>
                 </label>
               </div>
               <div class="goal-sides">
                 <section class="goal-side">
   <header><h3 data-text="{home_name}"></h3></header>
-  <ol class="goal-rows" data-live="goal" data-select="*,player(name)" data-filter="game_id=eq.{id}&side=eq.home" data-order="aet.asc,minute.asc" data-empty="{msg.game_no_goals}">
+  <ol class="goal-rows" data-live="goal" data-select="*,player(name,slug)" data-filter="game_id=eq.{id}&side=eq.home" data-order="aet.asc,minute.asc" data-empty="{msg.game_no_goals}">
     <template data-item>
       <li><span class="minute" data-text="{minute}"></span><span class="who" data-text="{player.name}"></span><button type="button" class="text-btn remove" value="{id}" data-text="{msg.edit_goal_remove}"></button></li>
     </template>
@@ -68,7 +68,7 @@
 </section>
                 <section class="goal-side">
   <header><h3 data-text="{away_name}"></h3></header>
-  <ol class="goal-rows" data-live="goal" data-select="*,player(name)" data-filter="game_id=eq.{id}&side=eq.away" data-order="aet.asc,minute.asc" data-empty="{msg.game_no_goals}">
+  <ol class="goal-rows" data-live="goal" data-select="*,player(name,slug)" data-filter="game_id=eq.{id}&side=eq.away" data-order="aet.asc,minute.asc" data-empty="{msg.game_no_goals}">
     <template data-item>
       <li><span class="minute" data-text="{minute}"></span><span class="who" data-text="{player.name}"></span><button type="button" class="text-btn remove" value="{id}" data-text="{msg.edit_goal_remove}"></button></li>
     </template>
@@ -81,7 +81,7 @@
               <p class="refusal" role="alert" data-text="{msg.edit_refused}"></p>
               <div class="buttons">
                 <button id="edit-save" type="button" class="btn save"><span class="idle" data-text="{msg.edit_save}"></span><span class="busy" data-text="{msg.edit_saving}"></span></button>
-                <a class="btn-quiet cancel" data-route="jogo" data-param-id="{param.id}" data-text="{msg.edit_back}"></a>
+                <a class="btn-quiet cancel" data-route="jogo" data-param-slug="{param.slug}" data-text="{msg.edit_back}"></a>
               </div>
             </div>
            </div>

@@ -386,7 +386,7 @@ pairs:
       - accept-championship-gone
     says: an address naming no championship says so
     given:
-      id: 00000000-0000-4000-8000-000000000000
+      slug: missing-address
     when: view
     then: output.empty == "Este campeonato não existe ou foi removido."
   - id: test-languages
@@ -619,7 +619,7 @@ pairs:
       - accept-team-gone
     says: an address naming no team says so
     given:
-      id: 00000000-0000-4000-8000-000000000000
+      slug: missing-address
     when: view
     then: output.empty == "Esta equipe não existe ou foi removida."
   - id: test-player-gone
@@ -629,7 +629,7 @@ pairs:
       - accept-team-gone
     says: an address naming no player says so
     given:
-      id: 00000000-0000-4000-8000-000000000000
+      slug: missing-address
     when: view
     then: output.empty == "Este jogador não existe ou foi removido."
   - id: test-comment
@@ -816,7 +816,7 @@ pairs:
       - accept-venue-gone
     says: 'an address naming no stadium, or no referee, says so'
     given:
-      id: 00000000-0000-4000-8000-000000000000
+      slug: missing-address
     when: view
     then: output.empty == "Este estádio não existe ou foi removido."
   - id: test-position

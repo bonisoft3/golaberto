@@ -6,6 +6,7 @@
 import { assert, assertEquals } from "jsr:@std/assert@1";
 import { baseUrl } from "omnishell/base-url.ts";
 import { query } from "./db.ts";
+import { address, fixturePath } from "./addresses.ts";
 
 const { chromium } = await import("npm:playwright@1.61.1");
 const { SignJWT } = await import("npm:jose@6.0.11");
@@ -71,7 +72,7 @@ const visit = async (page: Page, path: string, ready = '.shell-screen:not([hidde
   page.on("requestfinished", onFinished);
   page.on("requestfailed", onFinished);
   try {
-    await page.goto(`${base}${path}`);
+    await page.goto(`${base}${await fixturePath(path)}`);
     await page.waitForSelector(ready, { timeout: 30_000 }).catch(async (error: Error) => {
       const diagnostics = {
         url: page.url(), viewport: page.viewportSize(), ready, console: logged,
@@ -185,7 +186,7 @@ const awaitPoints = (page: Page, team: string, want: number) =>
 // A page addressed to an id that names nothing, saying so in words.
 const gone = async (route: string, words: string) => {
   const page = await (await context()).newPage();
-  await page.goto(`${base}${route}/00000000-0000-4000-8000-000000000000`);
+  await page.goto(`${base}${route}/missing-address`);
   await page.waitForFunction((words: string) =>
     (document.querySelector(".shell-screen:not([hidden]):not([data-served]) .screen")?.textContent ?? "").includes(words), words);
 };
@@ -210,7 +211,7 @@ test("test-home-featured: the front page keeps the featured season and its top s
 test("test-home-levels: every eligible championship appears in strength order within its region", async () => {
   await query("SELECT refresh_recent_championships()");
   const expected = JSON.parse(await query(`SELECT coalesce(json_agg(rows ORDER BY region), '[]') FROM (
-    SELECT region, json_agg(json_build_object('id',id,'name',full_name) ORDER BY strength DESC, full_name, id) AS items
+    SELECT region, json_agg(json_build_object('id',id,'slug',(SELECT slug FROM championship WHERE championship.id=home_championship.id),'name',full_name) ORDER BY strength DESC, full_name, id) AS items
     FROM home_championship GROUP BY region
   ) rows`));
   const page = await open("/");
@@ -223,11 +224,11 @@ test("test-home-levels: every eligible championship appears in strength order wi
     await page.waitForFunction(({ list, count }: { list: string; count: number }) =>
       document.querySelectorAll(`${list} li:not(.empty)`).length === count, { list, count: rows.length });
     assertEquals(await texts(page, `${list} li:not(.empty)`), rows.map((row: { name: string }) => row.name));
-    const ids = await page.locator(`${list} a`).evaluateAll((links: Element[]) => links.map((link) => link.getAttribute("data-param-id")));
-    assertEquals(ids, rows.map((row: { id: string }) => row.id));
+    const ids = await page.locator(`${list} a`).evaluateAll((links: Element[]) => links.map((link) => link.getAttribute("data-param-slug")));
+    assertEquals(ids, rows.map((row: { slug: string }) => row.slug));
   }
   const liveId = crypto.randomUUID();
-  const link = `.champ-list a[data-param-id="${liveId}"]`;
+  let link: string;
   const nationalLinks = '.champ-list[data-filter="region=eq.national"] a';
   try {
     await query(`
@@ -241,18 +242,20 @@ test("test-home-levels: every eligible championship appears in strength order wi
         ('${liveId}','${liveId}',(now() AT TIME ZONE 'America/Sao_Paulo')::date,1,1,0);
       SELECT refresh_recent_championships();
     `);
+    const liveSlug = await address("championship", liveId);
+    link = `.champ-list a[data-param-slug="${liveSlug}"]`;
     await page.waitForFunction(({ selector, id }: { selector: string; id: string }) =>
-      [...document.querySelectorAll(selector)].at(-1)?.getAttribute("data-param-id") === id,
-      { selector: nationalLinks, id: liveId });
+      [...document.querySelectorAll(selector)].at(-1)?.getAttribute("data-param-slug") === id,
+      { selector: nationalLinks, id: liveSlug });
     await query(`UPDATE team_rating SET rating=100 WHERE id='${liveId}'; SELECT refresh_recent_championships()`);
     await page.waitForFunction(({ selector, id }: { selector: string; id: string }) =>
-      document.querySelector(selector)?.getAttribute("data-param-id") === id,
-      { selector: nationalLinks, id: liveId });
+      document.querySelector(selector)?.getAttribute("data-param-slug") === id,
+      { selector: nationalLinks, id: liveSlug });
     await query(`UPDATE championship SET name='Renamed live tournament',region='continental' WHERE id='${liveId}'; SELECT refresh_recent_championships()`);
     await page.waitForFunction((id: string) => {
-      const link = document.querySelector(`.champ-list[data-filter="region=eq.continental"] a[data-param-id="${id}"]`);
-      return link?.textContent?.includes("Renamed live tournament") && !document.querySelector(`.champ-list[data-filter="region=eq.national"] a[data-param-id="${id}"]`);
-    }, liveId);
+      const link = document.querySelector(`.champ-list[data-filter="region=eq.continental"] a[data-param-slug="${id}"]`);
+      return link?.textContent?.includes("Renamed live tournament") && !document.querySelector(`.champ-list[data-filter="region=eq.national"] a[data-param-slug="${id}"]`);
+    }, liveSlug);
     await query(`UPDATE championship SET begins=(now() AT TIME ZONE 'America/Sao_Paulo')::date-60,
       ends=(now() AT TIME ZONE 'America/Sao_Paulo')::date-30 WHERE id='${liveId}'; SELECT refresh_recent_championships()`);
     await page.waitForFunction((selector: string) => !document.querySelector(selector), link);
@@ -370,7 +373,7 @@ test("test-games-results: the results tab lists played games and is remembered",
   const score = await page.$eval(".games.results .score", (el: Element) => [...el.querySelectorAll("b")].map((b) => b.textContent));
   assert(score.every((s: string) => /^\d+$/.test(s)), score.join("x"));
   await page.click(".masthead .wordmark");
-  await page.waitForURL(`${base}/`);
+  await page.waitForURL(await fixturePath(`${base}/`));
   await page.goBack();
   await page.waitForSelector('.shell-screen:not([hidden]):not([data-served]) .games-view[data-view="results"]');
 });
@@ -433,10 +436,10 @@ test("test-team-page: a team's profile shows facts, championships and deduplicat
   assertEquals((await said(page, ".team .game-facts dd")).slice(0, 4), ["Club Athletico Paranaense", "Curitiba", "Brasil", "26/03/1924"]);
   await page.waitForFunction(() => document.querySelectorAll(".team-current-players a[data-route='jogador']").length > 11);
   const currentPlayers = await page.locator(".team-current-players a[data-route='jogador']")
-    .evaluateAll((links: HTMLAnchorElement[]) => links.map((link) => link.getAttribute("data-param-id")));
+    .evaluateAll((links: HTMLAnchorElement[]) => links.map((link) => link.getAttribute("data-param-slug")));
   assertEquals(new Set(currentPlayers).size, currentPlayers.length, "the profile lists each current player once across seasons");
-  await page.locator(`.team-current-championships a[data-param-championship="${BRASILEIRO_2026}"]`).click();
-  await page.waitForURL(`**/equipe-campeonato/${ATHLETICO}/${BRASILEIRO_2026}**`);
+  await page.locator(`.team-current-championships a[data-param-championship="${await address("championship", BRASILEIRO_2026)}"]`).click();
+  await page.waitForURL(await fixturePath(`**/equipe-campeonato/${ATHLETICO}/${BRASILEIRO_2026}**`));
   await page.waitForFunction(() => document.querySelectorAll(".team-roster .squad-table tbody tr").length > 11);
   const viveros = await page.$$eval(".team-roster .squad-table tbody tr", (rows: Element[]) =>
     rows.map((r) => {
@@ -542,7 +545,7 @@ test("test-game-venue: a game's page names its stadium and its referee, each lea
   await page.waitForSelector('.game-facts a[data-route="estadio"]');
   assertEquals(await said(page, ".game-facts dd > a:not(:empty)"), ["Pacaembu", "Cléber Wellington Abade"]);
   await page.click('.game-facts a[data-route="arbitro"]');
-  await page.waitForURL(`**/arbitro/${ABADE}`);
+  await page.waitForURL(await fixturePath(`**/arbitro/${ABADE}`));
 });
 
 test("test-venue-gone: an address naming no stadium, or no referee, says so", async () => {
@@ -825,7 +828,7 @@ test("test-languages: three languages, each at its own address", async () => {
   assertEquals(await texts(en, "h1.band"), ["Championships"]);
   const page = await championship(BRASILEIRO_2026);
   await page.click('.masthead .langs a[data-locale="en-GB"]');
-  await page.waitForURL(`**/en/championship/${BRASILEIRO_2026}`);
+  await page.waitForURL(await fixturePath(`**/en/championship/${BRASILEIRO_2026}`));
 });
 
 test("test-dark: the dark appearance resolves the dark tokens", async () => {
@@ -848,7 +851,7 @@ test("test-screen-range: no page scrolls sideways", async () => {
 // route, rendered on request with its rows, so a reader who has not booted the
 // app yet, and a crawler that never will, is answered with the page.
 const served = async (path: string, language = "pt-BR") => {
-  const res = await fetch(`${base}${path}`, { headers: { "Accept-Language": language }, redirect: "manual" });
+  const res = await fetch(`${base}${await fixturePath(path)}`, { headers: { "Accept-Language": language }, redirect: "manual" });
   return { status: res.status, cache: res.headers.get("cache-control"), html: await res.text() };
 };
 const h1Of = (html: string) => /<h1[^>]*>([^<]*)<\/h1>/.exec(html)?.[1].trim();
@@ -859,7 +862,7 @@ if (origin === undefined) throw new Error("ORIGIN is unset: the check runs besid
 // which fetch will not send: the listener a deployment's balancer reaches.
 const underHost = async (host: string, path: string) => {
   const conn = await Deno.connect({ hostname: new URL(base).hostname, port: 8080 });
-  await conn.write(new TextEncoder().encode(`GET ${path} HTTP/1.1\r\nHost: ${host}\r\nAccept-Language: pt-BR\r\nConnection: close\r\n\r\n`));
+  await conn.write(new TextEncoder().encode(`GET ${await fixturePath(path)} HTTP/1.1\r\nHost: ${host}\r\nAccept-Language: pt-BR\r\nConnection: close\r\n\r\n`));
   const raw = new TextDecoder().decode(await new Response(conn.readable).arrayBuffer());
   const [head, body] = [raw.slice(0, raw.indexOf("\r\n\r\n")), raw.slice(raw.indexOf("\r\n\r\n") + 4)];
   const status = Number(head.split(" ")[1]);
@@ -886,7 +889,7 @@ test("door: every public route is answered with its document, rows and all, in i
     assert((page.html.match(/<tr[^>]* data-id="/g) ?? []).length > 3, `${path} carries no rows`);
     assert(/<option[^>]*value=""[^>]*selected|<option[^>]*selected[^>]*value=""/.test(page.html), `${path} chose no region`);
     // Absolute against the deployment's origin, as the sitemap's addresses are.
-    assert(page.html.includes(`<link href="${origin}${path}" rel="canonical">`), `${path} names no absolute canonical`);
+    assert(page.html.includes(`<link href="${origin}${await fixturePath(path)}" rel="canonical">`), `${path} names no absolute canonical`);
     assert(page.html.includes(`<link hreflang="x-default" href="${origin}/campeonatos" rel="alternate">`), `${path} names no x-default`);
   }
   for (const path of ["/", "/en", "/en/", "/equipes", "/estadios", "/arbitros"]) {
@@ -901,6 +904,36 @@ test("door: every public route is answered with its document, rows and all, in i
   assertEquals(english.status, 200);
   assert(english.html.includes('<html lang="en-GB"'), english.html.slice(0, 200));
   assertEquals((await served("/nowhere")).status, 404);
+});
+
+test("door: readable detail addresses render their records and missing addresses return 404", async () => {
+  for (const [fixture, words] of [
+    [`/equipe/${ATHLETICO}`, "Athletico-PR"],
+    [`/campeonato/${BRASILEIRO_2026}`, "Campeonato Brasileiro"],
+    [`/jogo/${WIN}`, "Bahia-BA"],
+    [`/jogador/${VIVEROS}`, "Viveros"],
+    [`/estadio/${PACAEMBU}`, "Pacaembu"],
+    [`/arbitro/${ABADE}`, "Abade"],
+    [`/chances/${SERIE_A_2026}`, "Flamengo-RJ"],
+    [`/equipe-campeonato/${ATHLETICO}/${BRASILEIRO_2026}`, "Athletico-PR"],
+  ]) {
+    const path = await fixturePath(fixture);
+    const page = await served(path);
+    assertEquals([page.status, page.cache], [200, "public, no-cache"], path);
+    assert(page.html.includes('<div data-served="" class="shell-screen">'), `${path} has no served document`);
+    assert(page.html.includes(words), `${path} did not render its record`);
+    assert(page.html.includes(`<link href="${origin}${path}" rel="canonical">`), `${path} lost its readable canonical`);
+    assert(!/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.test(path), path);
+  }
+  for (const path of [
+    "/equipe/missing-address", "/campeonato/missing-address", "/jogo/missing-address",
+    "/jogador/missing-address", "/estadio/missing-address", "/arbitro/missing-address",
+    "/chances/missing-address", "/equipe-campeonato/missing-address/missing-address",
+    `/equipe-campeonato/${await address("team", ATHLETICO)}/missing-address`,
+    `/equipe-campeonato/missing-address/${await address("championship", BRASILEIRO_2026)}`,
+  ]) {
+    assertEquals((await served(path)).status, 404, path);
+  }
 });
 
 test("door: team statistics and derived charts arrive before JavaScript and survive hydration", async () => {
@@ -949,9 +982,9 @@ test("door: every absolute address is the deployment's, whatever Host it is aske
     for (const path of ["/campeonatos", "/en/championships", `/jogo/${WIN}`]) {
       const page = await underHost(host, path);
       assertEquals(page.status, 200, path);
-      assert(page.body.includes(`<link href="${origin}${path}" rel="canonical">`), `${path} under ${host} names no canonical at ${origin}`);
+      assert(page.body.includes(`<link href="${origin}${await fixturePath(path)}" rel="canonical">`), `${path} under ${host} names no canonical at ${origin}`);
       const ogUrl = /<meta (?:content="([^"]*)" property="og:url"|property="og:url" content="([^"]*)")>/.exec(page.body);
-      assertEquals(ogUrl?.[1] ?? ogUrl?.[2], `${origin}${path}`, `${path} under ${host}: og:url`);
+      assertEquals(ogUrl?.[1] ?? ogUrl?.[2], `${origin}${await fixturePath(path)}`, `${path} under ${host}: og:url`);
       const alternates = [...page.body.matchAll(/hreflang="([^"]*)" href="([^"]*)"/g)];
       assert(alternates.some(([, lang]) => lang === "x-default"), `${path} names no x-default`);
       for (const [, lang, href] of alternates) assert(href.startsWith(`${origin}/`), `${path} under ${host}: ${lang} at ${href}`);
@@ -967,11 +1000,11 @@ test("door: every file revalidates on its hash, without its body", async () => {
   // file's, so the revalidation the worker makes behind every page it paints
   // carried the whole unchanged file.
   for (const path of ["/robots.txt", "/sitemap.xml", "/llms.txt", "/manifest.webmanifest", "/shell/screens/campeonatos.css", "/omnishell/interpreter/shell.js"]) {
-    const first = await fetch(`${base}${path}`);
+    const first = await fetch(`${base}${await fixturePath(path)}`);
     await first.text();
     const etag = first.headers.get("etag") ?? "";
     assert(/^"[0-9a-f]{64}(-gzip|-zstd)?"$/.test(etag), `${path} carries the validator ${JSON.stringify(etag)}`);
-    const again = await fetch(`${base}${path}`, { headers: { "If-None-Match": etag } });
+    const again = await fetch(`${base}${await fixturePath(path)}`, { headers: { "If-None-Match": etag } });
     assertEquals([again.status, await again.text()], [304, ""], path);
   }
 });
@@ -983,11 +1016,11 @@ test("door: a game's page is answered with its rows, for no one in particular", 
   assert(/data-text="\{home_score\}">2</.test(page.html) && /data-text="\{away_score\}">1</.test(page.html), "no score");
   assert((page.html.match(/<tr[^>]* data-id=/g) ?? []).length >= 22, "no line-ups");
   assert(page.html.includes(`property="og:title"`), "no og:title");
-  assert(page.html.includes(`<link href="${origin}/jogo/${WIN}" rel="canonical">`), "no absolute canonical");
+  assert(page.html.includes(`<link href="${origin}${await fixturePath(`/jogo/${WIN}`)}" rel="canonical">`), "no absolute canonical");
   // Rendered as a guest, who edits nothing.
   assert(!page.html.includes("edit-link\" href"), "an editor's link reached a public document");
   assertEquals((await served(`/en/match/${WIN}`)).status, 200);
-  assertEquals((await served("/jogo/00000000-0000-4000-8000-000000000000")).status, 404);
+  assertEquals((await served("/jogo/missing-address")).status, 404);
 });
 
 test("door: a game's document follows its result", async () => {

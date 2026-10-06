@@ -75,11 +75,6 @@
         },
         {
           "action": "sync+restart",
-          "path": "../docker/golaberto-team-campaign.yaml",
-          "target": "/pipelines/golaberto-team-campaign.yaml"
-        },
-        {
-          "action": "sync+restart",
           "path": "../docker/golaberto-team-enrichment.yaml",
           "target": "/pipelines/golaberto-team-enrichment.yaml"
         }
@@ -191,16 +186,6 @@
       {
         "from": null,
         "srcs": [
-          "docker/golaberto-team-campaign.yaml"
-        ],
-        "dst": "/pipelines/golaberto-team-campaign.yaml",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
           "docker/golaberto-team-enrichment.yaml"
         ],
         "dst": "/pipelines/golaberto-team-enrichment.yaml",
@@ -225,7 +210,6 @@
       "/pipelines/golaberto-matches-games.yaml",
       "/pipelines/golaberto-player-stats.yaml",
       "/pipelines/golaberto-rounds.yaml",
-      "/pipelines/golaberto-team-campaign.yaml",
       "/pipelines/golaberto-team-enrichment.yaml"
     ]
   },
@@ -244,7 +228,6 @@
       "docker/golaberto-matches-games.yaml",
       "docker/golaberto-player-stats.yaml",
       "docker/golaberto-rounds.yaml",
-      "docker/golaberto-team-campaign.yaml",
       "docker/golaberto-team-enrichment.yaml"
     ],
     "exclude": []
@@ -348,7 +331,6 @@
           "docker/golaberto-matches-games.yaml",
           "docker/golaberto-player-stats.yaml",
           "docker/golaberto-rounds.yaml",
-          "docker/golaberto-team-campaign.yaml",
           "docker/golaberto-team-enrichment.yaml"
         ],
         "exclude": []

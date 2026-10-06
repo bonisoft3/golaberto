@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS championship (
   "featured" boolean DEFAULT false NOT NULL,
   "search_name" text GENERATED ALWAYS AS (region_name || ' - ' || name || ' ' || extract(year from begins)::int::text || CASE WHEN extract(year from begins) = extract(year from ends) THEN '' ELSE '/' || extract(year from ends)::int::text END) STORED,
   "search_key" text GENERATED ALWAYS AS (replace(replace(replace(region_name || ' - ' || name || ' ' || extract(year from begins)::int::text || CASE WHEN extract(year from begins) = extract(year from ends) THEN '' ELSE '/' || extract(year from ends)::int::text END, 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED,
+  "slug" text DEFAULT '' NOT NULL UNIQUE CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL,
   CHECK (ends >= begins)
@@ -68,6 +69,7 @@ CREATE TABLE IF NOT EXISTS stage_group (
   "phase_id" uuid NOT NULL REFERENCES phase(id) ON DELETE CASCADE,
   "name" text NOT NULL CHECK (char_length(name) > 0 AND char_length(name) <= 40),
   "position" integer DEFAULT 0 NOT NULL CHECK (position >= 0),
+  "slug" text DEFAULT '' NOT NULL UNIQUE CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -92,6 +94,7 @@ CREATE TABLE IF NOT EXISTS stadium (
   "country" text CHECK (char_length(country) <= 60),
   "search_name" text GENERATED ALWAYS AS (name) STORED,
   "search_key" text GENERATED ALWAYS AS (replace(replace(replace(name, 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED,
+  "slug" text DEFAULT '' NOT NULL UNIQUE CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -110,6 +113,7 @@ CREATE TABLE IF NOT EXISTS team (
   "search_key" text GENERATED ALWAYS AS (replace(replace(replace(name, 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED,
   "latitude" double precision CONSTRAINT "team_latitude_type" CHECK ("latitude" IS NULL OR public.portable_double_valid("latitude") IS TRUE) CHECK (latitude >= -90 AND latitude <= 90),
   "longitude" double precision CONSTRAINT "team_longitude_type" CHECK ("longitude" IS NULL OR public.portable_double_valid("longitude") IS TRUE) CHECK (longitude >= -180 AND longitude <= 180),
+  "slug" text DEFAULT '' NOT NULL UNIQUE CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -143,6 +147,7 @@ CREATE TABLE IF NOT EXISTS referee (
   "location" text CHECK (char_length(location) <= 80),
   "search_name" text GENERATED ALWAYS AS (name) STORED,
   "search_key" text GENERATED ALWAYS AS (replace(replace(replace(name, 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')) STORED,
+  "slug" text DEFAULT '' NOT NULL UNIQUE CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -197,6 +202,7 @@ CREATE TABLE IF NOT EXISTS player (
   "country" text CHECK (char_length(country) <= 60),
   "height" integer CHECK (height >= 100 AND height <= 230),
   "position" text CHECK (position IN ('g', 'dr', 'dc', 'dl', 'dm', 'cm', 'am', 'fw')),
+  "slug" text DEFAULT '' NOT NULL UNIQUE CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -272,6 +278,7 @@ CREATE TABLE IF NOT EXISTS game (
   "attendance" integer CHECK (attendance >= 0 AND attendance <= 250000),
   "day_display" text GENERATED ALWAYS AS (lpad(extract(day from day)::int::text, 2, '0') || '/' || lpad(extract(month from day)::int::text, 2, '0') || '/' || extract(year from day)::int::text) STORED,
   "kickoff_local" text GENERATED ALWAYS AS (CASE WHEN kickoff IS NULL THEN '' ELSE lpad(extract(hour from (kickoff AT TIME ZONE 'America/Sao_Paulo'))::int::text, 2, '0') || ':' || lpad(extract(minute from (kickoff AT TIME ZONE 'America/Sao_Paulo'))::int::text, 2, '0') END) STORED,
+  "slug" text DEFAULT '' NOT NULL UNIQUE CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL,
   CHECK (home_id <> away_id AND played = (home_score IS NOT NULL AND away_score IS NOT NULL) AND (home_score IS NOT NULL) = (away_score IS NOT NULL) AND (home_aet IS NOT NULL) = (away_aet IS NOT NULL) AND (home_pen IS NOT NULL) = (away_pen IS NOT NULL) AND ((home_aet IS NOT NULL) = false OR played) AND ((home_pen IS NOT NULL) = false OR played))
@@ -721,8 +728,6 @@ CREATE INDEX IF NOT EXISTS idx_comment_game_id ON comment USING btree (game_id);
 CREATE INDEX IF NOT EXISTS idx_player_stat_player_id ON player_stat USING btree (player_id);
 CREATE INDEX IF NOT EXISTS idx_player_stat_team_id ON player_stat USING btree (team_id);
 CREATE INDEX IF NOT EXISTS idx_team_comment_team_id ON team_comment USING btree (team_id);
-CREATE INDEX IF NOT EXISTS idx_team_campaign_point_group_id ON team_campaign_point USING btree (group_id);
-CREATE INDEX IF NOT EXISTS idx_team_campaign_point_team_id ON team_campaign_point USING btree (team_id);
 CREATE INDEX IF NOT EXISTS idx_team_odds_history_group_id ON team_odds_history USING btree (group_id);
 CREATE INDEX IF NOT EXISTS idx_team_odds_history_team_id ON team_odds_history USING btree (team_id);
 CREATE INDEX IF NOT EXISTS idx_team_rating_chart_team_id ON team_rating_chart USING btree (team_id);

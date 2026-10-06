@@ -68,6 +68,13 @@ services:
     profiles:
     - check-acceptance
     scale: 1
+  check-request-reads:
+    extends:
+      file: ./compose.check-request-reads.yaml
+      service: golaberto-check-request-reads
+    profiles:
+    - check-request-reads
+    scale: 1
   database:
     extends:
       file: ./compose.database.yaml

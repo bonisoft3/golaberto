@@ -3,15 +3,15 @@
 <header class="masthead">
   <a class="wordmark" data-route="principal" aria-label="{msg.brand}"><b data-text="{msg.brand_gol}"></b><span data-text="{msg.brand_aberto}"></span></a>
   <nav class="langs" aria-label="{msg.lang_label}">
-    <a data-route="estadio" data-param-id="{param.id}" data-locale="pt-BR" data-locale-current="page" lang="pt-BR"><span class="long" data-text="{msg.lang_pt}"></span><span class="short" data-text="{msg.lang_pt_short}"></span></a>
-    <a data-route="estadio" data-param-id="{param.id}" data-locale="es-AR" data-locale-current="page" lang="es-AR"><span class="long" data-text="{msg.lang_es}"></span><span class="short" data-text="{msg.lang_es_short}"></span></a>
-    <a data-route="estadio" data-param-id="{param.id}" data-locale="en-GB" data-locale-current="page" lang="en-GB"><span class="long" data-text="{msg.lang_en}"></span><span class="short" data-text="{msg.lang_en_short}"></span></a>
-    <a data-route="estadio" data-param-id="{param.id}" data-locale="it-IT" data-locale-current="page" lang="it-IT"><span class="long" data-text="{msg.lang_it}"></span><span class="short" data-text="{msg.lang_it_short}"></span></a>
-    <a data-route="estadio" data-param-id="{param.id}" data-locale="de-DE" data-locale-current="page" lang="de-DE"><span class="long" data-text="{msg.lang_de}"></span><span class="short" data-text="{msg.lang_de_short}"></span></a>
-    <a data-route="estadio" data-param-id="{param.id}" data-locale="fr-FR" data-locale-current="page" lang="fr-FR"><span class="long" data-text="{msg.lang_fr}"></span><span class="short" data-text="{msg.lang_fr_short}"></span></a>
+    <a data-route="estadio" data-param-slug="{param.slug}" data-locale="pt-BR" data-locale-current="page" lang="pt-BR"><span class="long" data-text="{msg.lang_pt}"></span><span class="short" data-text="{msg.lang_pt_short}"></span></a>
+    <a data-route="estadio" data-param-slug="{param.slug}" data-locale="es-AR" data-locale-current="page" lang="es-AR"><span class="long" data-text="{msg.lang_es}"></span><span class="short" data-text="{msg.lang_es_short}"></span></a>
+    <a data-route="estadio" data-param-slug="{param.slug}" data-locale="en-GB" data-locale-current="page" lang="en-GB"><span class="long" data-text="{msg.lang_en}"></span><span class="short" data-text="{msg.lang_en_short}"></span></a>
+    <a data-route="estadio" data-param-slug="{param.slug}" data-locale="it-IT" data-locale-current="page" lang="it-IT"><span class="long" data-text="{msg.lang_it}"></span><span class="short" data-text="{msg.lang_it_short}"></span></a>
+    <a data-route="estadio" data-param-slug="{param.slug}" data-locale="de-DE" data-locale-current="page" lang="de-DE"><span class="long" data-text="{msg.lang_de}"></span><span class="short" data-text="{msg.lang_de_short}"></span></a>
+    <a data-route="estadio" data-param-slug="{param.slug}" data-locale="fr-FR" data-locale-current="page" lang="fr-FR"><span class="long" data-text="{msg.lang_fr}"></span><span class="short" data-text="{msg.lang_fr_short}"></span></a>
   </nav>
 </header>
-<div data-live="stadium" data-filter="id=eq.{param.id}" data-exit-motion="none" data-empty="{msg.stadium_gone}">
+<div data-live="stadium" data-filter="slug=eq.{param.slug}" data-exit-motion="none" data-empty="{msg.stadium_gone}">
   <template data-item>
     <article class="venue">
       <h1 class="band" data-text="{name}"></h1>
@@ -25,7 +25,7 @@
           <section class="home-teams">
             <h2 data-text="{msg.stadium_teams}"></h2>
             <ul class="chips" data-live="team" data-filter="stadium_id=eq.{id}" data-order="name.asc" data-empty="{msg.stadium_no_teams}">
-              <template data-item><li><a class="chip" data-route="equipe" data-param-id="{id}"><span class="archive-icon" data-text="{id}|{name}" data-text-format="team-badge"></span><span data-text="{name}"></span></a></li></template>
+              <template data-item><li><a class="chip" data-route="equipe" data-param-slug="{slug}"><span class="archive-icon" data-text="{id}|{name}" data-text-format="team-badge"></span><span data-text="{name}"></span></a></li></template>
             </ul>
           </section>
           <section class="venue-games">
@@ -33,9 +33,9 @@
 <div class="paged-read" data-live="archive_page" data-filter="id=eq.stadium-history-{id}" data-machine='{"field":"state","initial":"browsing","context":{"owner_id":"{id}","offset":0,"next_offset":40,"page":1},"states":{"browsing":{"on":{"click@stadium-history-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@stadium-history-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}' data-empty-row='{"id":"stadium-history-{id}","owner_id":"{id}","offset":0,"next_offset":40,"page":1,"state":"browsing"}'>
   <div class="page-window">
 
-<ol class="games" data-live="game_card" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="stadium_id=eq.{owner_id}&offset={offset}&limit=40" data-order="day.desc,kickoff.desc" data-empty="{msg.stadium_no_games}">
+<ol class="games" data-live="game_card" data-select="*,game:id(slug),championship(show_country,slug),home:home_id(country,slug),away:away_id(country,slug)" data-filter="stadium_id=eq.{owner_id}&offset={offset}&limit=40" data-order="day.desc,kickoff.desc" data-empty="{msg.stadium_no_games}">
   <template data-item>
-    <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{id}" data-played="{played}">
+    <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-slug="{game.slug}" data-played="{played}">
       <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
       <span class="where" data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span>
       <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></span>

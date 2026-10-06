@@ -48,9 +48,6 @@ services:
         path: ../docker/golaberto-rounds.yaml
         target: /pipelines/golaberto-rounds.yaml
       - action: sync+restart
-        path: ../docker/golaberto-team-campaign.yaml
-        target: /pipelines/golaberto-team-campaign.yaml
-      - action: sync+restart
         path: ../docker/golaberto-team-enrichment.yaml
         target: /pipelines/golaberto-team-enrichment.yaml
     environment:

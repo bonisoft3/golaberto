@@ -44,6 +44,7 @@ code: state: entities: {
 			point_win: "point_win >= 0 AND point_win <= 9"
 			point_draw: "point_draw >= 0 AND point_draw <= 9"
 			point_loss: "point_loss >= 0 AND point_loss <= 9"
+			slug: "slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'"
 		}
 		invariant: check: "ends >= begins"
 		seed: [...{
@@ -53,6 +54,7 @@ code: state: entities: {
 			point_win?: >=0 & <=9
 			point_draw?: >=0 & <=9
 			point_loss?: >=0 & <=9
+			slug?: =~ "^[a-z0-9]+(-[a-z0-9]+)*$"
 		}]
 		enums: {
 			region: ["world","continental","national"]
@@ -63,6 +65,7 @@ code: state: entities: {
 			point_win: {intMin: 0, intMax: 9}
 			point_draw: {intMin: 0, intMax: 9}
 			point_loss: {intMin: 0, intMax: 9}
+			slug: {regex: "^[a-z0-9]+(-[a-z0-9]+)*$"}
 		}
 	}
 	Phase: {
@@ -92,14 +95,17 @@ code: state: entities: {
 		checks: {
 			name: "char_length(name) > 0 AND char_length(name) <= 40"
 			position: "position >= 0"
+			slug: "slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'"
 		}
 		seed: [...{
 			name?: strings.MinRunes(1) & strings.MaxRunes(40)
 			position?: >=0
+			slug?: =~ "^[a-z0-9]+(-[a-z0-9]+)*$"
 		}]
 		bounds: {
 			name: {sizeMin: 1, sizeMax: 40}
 			position: {intMin: 0}
+			slug: {regex: "^[a-z0-9]+(-[a-z0-9]+)*$"}
 		}
 	}
 	Zone: {
@@ -131,18 +137,21 @@ code: state: entities: {
 			full_name: "char_length(full_name) <= 160"
 			city: "char_length(city) <= 80"
 			country: "char_length(country) <= 60"
+			slug: "slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'"
 		}
 		seed: [...{
 			name?: strings.MinRunes(1) & strings.MaxRunes(80)
 			full_name?: strings.MaxRunes(160)
 			city?: strings.MaxRunes(80)
 			country?: strings.MaxRunes(60)
+			slug?: =~ "^[a-z0-9]+(-[a-z0-9]+)*$"
 		}]
 		bounds: {
 			name: {sizeMin: 1, sizeMax: 80}
 			full_name: {sizeMax: 160}
 			city: {sizeMax: 80}
 			country: {sizeMax: 60}
+			slug: {regex: "^[a-z0-9]+(-[a-z0-9]+)*$"}
 		}
 	}
 	Team: {
@@ -154,6 +163,7 @@ code: state: entities: {
 			team_type: "team_type IN ('club', 'national')"
 			latitude: "latitude >= -90 AND latitude <= 90"
 			longitude: "longitude >= -180 AND longitude <= 180"
+			slug: "slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'"
 		}
 		seed: [...{
 			name?: strings.MinRunes(1) & strings.MaxRunes(60)
@@ -163,6 +173,7 @@ code: state: entities: {
 			team_type?: ("club" | "national")
 			latitude?: >=-90 & <=90
 			longitude?: >=-180 & <=180
+			slug?: =~ "^[a-z0-9]+(-[a-z0-9]+)*$"
 		}]
 		enums: {
 			team_type: ["club","national"]
@@ -174,6 +185,7 @@ code: state: entities: {
 			country: {sizeMin: 1, sizeMax: 60}
 			latitude: {intMin: -90, intMax: 90}
 			longitude: {intMin: -180, intMax: 180}
+			slug: {regex: "^[a-z0-9]+(-[a-z0-9]+)*$"}
 		}
 	}
 	TeamChampionship: {
@@ -208,14 +220,17 @@ code: state: entities: {
 		checks: {
 			name: "char_length(name) > 0 AND char_length(name) <= 80"
 			location: "char_length(location) <= 80"
+			slug: "slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'"
 		}
 		seed: [...{
 			name?: strings.MinRunes(1) & strings.MaxRunes(80)
 			location?: strings.MaxRunes(80)
+			slug?: =~ "^[a-z0-9]+(-[a-z0-9]+)*$"
 		}]
 		bounds: {
 			name: {sizeMin: 1, sizeMax: 80}
 			location: {sizeMax: 80}
+			slug: {regex: "^[a-z0-9]+(-[a-z0-9]+)*$"}
 		}
 	}
 	TeamDirectory: {
@@ -236,6 +251,7 @@ code: state: entities: {
 			country: "char_length(country) <= 60"
 			height: "height >= 100 AND height <= 230"
 			position: "position IN ('g', 'dr', 'dc', 'dl', 'dm', 'cm', 'am', 'fw')"
+			slug: "slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'"
 		}
 		seed: [...{
 			name?: strings.MinRunes(1) & strings.MaxRunes(60)
@@ -243,6 +259,7 @@ code: state: entities: {
 			country?: strings.MaxRunes(60)
 			height?: >=100 & <=230
 			position?: ("g" | "dr" | "dc" | "dl" | "dm" | "cm" | "am" | "fw")
+			slug?: =~ "^[a-z0-9]+(-[a-z0-9]+)*$"
 		}]
 		enums: {
 			position: ["g","dr","dc","dl","dm","cm","am","fw"]
@@ -252,6 +269,7 @@ code: state: entities: {
 			full_name: {sizeMax: 160}
 			country: {sizeMax: 60}
 			height: {intMin: 100, intMax: 230}
+			slug: {regex: "^[a-z0-9]+(-[a-z0-9]+)*$"}
 		}
 	}
 	TeamRoster: {
@@ -319,6 +337,7 @@ code: state: entities: {
 			home_pen: "home_pen >= 0 AND home_pen < 100"
 			away_pen: "away_pen >= 0 AND away_pen < 100"
 			attendance: "attendance >= 0 AND attendance <= 250000"
+			slug: "slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'"
 		}
 		invariant: check: "home_id <> away_id AND played = (home_score IS NOT NULL AND away_score IS NOT NULL) AND (home_score IS NOT NULL) = (away_score IS NOT NULL) AND (home_aet IS NOT NULL) = (away_aet IS NOT NULL) AND (home_pen IS NOT NULL) = (away_pen IS NOT NULL) AND ((home_aet IS NOT NULL) = false OR played) AND ((home_pen IS NOT NULL) = false OR played)"
 		seed: [...{
@@ -331,6 +350,7 @@ code: state: entities: {
 			home_pen?: >=0 & <100
 			away_pen?: >=0 & <100
 			attendance?: >=0 & <=250000
+			slug?: =~ "^[a-z0-9]+(-[a-z0-9]+)*$"
 		}]
 		enums: {
 			home_field: ["left","neutral","right"]
@@ -344,6 +364,7 @@ code: state: entities: {
 			home_pen: {intMin: 0, intMax: 99}
 			away_pen: {intMin: 0, intMax: 99}
 			attendance: {intMin: 0, intMax: 250000}
+			slug: {regex: "^[a-z0-9]+(-[a-z0-9]+)*$"}
 		}
 	}
 	Goal: {

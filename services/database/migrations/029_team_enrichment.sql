@@ -181,6 +181,10 @@ DO $$ BEGIN
 END $$;
 -- tier: any
 
+-- Fresh initdb already runs 030 before the retained-volume runner replays 029.
+-- Do not recreate or alter the campaign cache after it has become a read view.
+DO $campaign_cache$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_class WHERE oid=to_regclass('public.team_campaign_point') AND relkind='v') THEN
 CREATE TABLE IF NOT EXISTS team_campaign_point (
   id text PRIMARY KEY,
   group_id uuid NOT NULL REFERENCES stage_group(id) ON DELETE CASCADE,
@@ -223,6 +227,9 @@ DO $$ BEGIN
   END IF;
 END $$;
 -- tier: any
+
+  END IF;
+END $campaign_cache$;
 
 CREATE TABLE IF NOT EXISTS team_odds_history (
   id text PRIMARY KEY,
@@ -267,6 +274,8 @@ END $$;
 
 -- Exactly one group is replaced per call. The delete and upsert share the
 -- transaction, so readers never see a partially refreshed campaign.
+DO $campaign_replace$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_class WHERE oid=to_regclass('public.team_campaign_point') AND relkind='v') THEN
 CREATE OR REPLACE FUNCTION replace_team_campaign_points(target_group uuid, rows jsonb)
 RETURNS integer LANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp AS $$
 DECLARE changed integer;
@@ -287,6 +296,9 @@ BEGIN
 END $$;
 REVOKE ALL ON FUNCTION replace_team_campaign_points(uuid, jsonb) FROM PUBLIC, anon, app_user;
 GRANT EXECUTE ON FUNCTION replace_team_campaign_points(uuid, jsonb) TO service;
+
+  END IF;
+END $campaign_replace$;
 
 -- Campaign history uses the same phase ladder and points rules as standings:
 -- all games sharing a round settle together; rows without round metadata fall
@@ -398,13 +410,20 @@ LANGUAGE sql STABLE SET search_path = public,pg_temp AS $$
   FROM played_sequence p JOIN ranked r ON r.batch_no=p.batch_no AND r.team_id=p.team_id
 $$;
 
+REVOKE ALL ON FUNCTION compute_team_campaign_rows(uuid) FROM PUBLIC,anon,app_user;
+
+DO $campaign_refresh$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_class WHERE oid=to_regclass('public.team_campaign_point') AND relkind='v') THEN
 CREATE OR REPLACE FUNCTION refresh_team_campaign_group(target_group uuid) RETURNS integer
 LANGUAGE plpgsql SECURITY DEFINER SET search_path = public,pg_temp AS $$
 BEGIN
   RETURN replace_team_campaign_points(target_group,compute_team_campaign_rows(target_group));
 END $$;
-REVOKE ALL ON FUNCTION compute_team_campaign_rows(uuid),refresh_team_campaign_group(uuid) FROM PUBLIC,anon,app_user;
+REVOKE ALL ON FUNCTION refresh_team_campaign_group(uuid) FROM PUBLIC,anon,app_user;
 GRANT EXECUTE ON FUNCTION refresh_team_campaign_group(uuid) TO service;
+
+  END IF;
+END $campaign_refresh$;
 
 CREATE TABLE IF NOT EXISTS team_roster_total (
   id text PRIMARY KEY,

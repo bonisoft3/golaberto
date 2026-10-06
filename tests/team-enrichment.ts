@@ -236,8 +236,6 @@ Deno.test("team enrichment imports, aggregates, samples and refreshes transactio
     END $$;
 
     -- All game rows in the same round receive the final round table position.
-    DO $$ BEGIN PERFORM refresh_team_campaign_group('${group}'); END $$;
-    DO $$ BEGIN PERFORM refresh_team_campaign_group('${groupBonus}'); END $$;
     DO $$ BEGIN
       IF (SELECT position FROM team_campaign_point WHERE group_id='${group}' AND team_id='${teamA}' AND game_id='${gAB}') <> 1
         OR (SELECT points FROM team_campaign_point WHERE group_id='${group}' AND team_id='${teamA}' AND game_id='${gAB}') <> 6
@@ -247,30 +245,31 @@ Deno.test("team enrichment imports, aggregates, samples and refreshes transactio
         THEN RAISE EXCEPTION 'threshold bonus points should be included in campaign totals'; END IF;
     END $$;
     CREATE TEMP TABLE campaign_snapshot AS SELECT * FROM team_campaign_point WHERE group_id='${group}';
-    DO $$ BEGIN PERFORM refresh_team_campaign_group('${group}'); END $$;
     DO $$ BEGIN
       IF EXISTS (SELECT id,position,points FROM campaign_snapshot EXCEPT SELECT id,position,points FROM team_campaign_point WHERE group_id='${group}')
         OR EXISTS (SELECT id,position,points FROM team_campaign_point WHERE group_id='${group}' EXCEPT SELECT id,position,points FROM campaign_snapshot)
-        THEN RAISE EXCEPTION 'campaign replay should preserve logical rows'; END IF;
+        THEN RAISE EXCEPTION 'repeated campaign reads should preserve logical rows'; END IF;
     END $$;
+    UPDATE game SET home_score=0,away_score=1 WHERE id='${gAB}';
+    DO $$ BEGIN
+      IF (SELECT points FROM team_campaign_point WHERE group_id='${group}' AND team_id='${teamA}' AND game_id='${gAB}') IS DISTINCT FROM 3
+        OR (SELECT points FROM team_campaign_point WHERE group_id='${group}' AND team_id='${teamB}' AND game_id='${gAB}') IS DISTINCT FROM 9
+        THEN RAISE EXCEPTION 'campaign reads must immediately reflect score edits'; END IF;
+    END $$;
+    UPDATE game SET home_score=1,away_score=0 WHERE id='${gAB}';
     DELETE FROM game WHERE id='${gCD}';
-    DO $$ BEGIN PERFORM refresh_team_campaign_group('${group}'); END $$;
     DO $$ BEGIN
       IF EXISTS (SELECT 1 FROM team_campaign_point WHERE group_id='${group}' AND game_id='${gCD}')
-        THEN RAISE EXCEPTION 'campaign replacement must remove rows for deleted games'; END IF;
+        THEN RAISE EXCEPTION 'campaign reads must immediately remove rows for deleted games'; END IF;
     END $$;
     UPDATE game SET phase_id='${phaseBonus}' WHERE id='${gAB}';
     DO $$ BEGIN
-      PERFORM refresh_team_campaign_group('${group}');
-      PERFORM refresh_team_campaign_group('${groupBonus}');
       IF EXISTS (SELECT 1 FROM team_campaign_point WHERE group_id='${group}' AND game_id='${gAB}')
         THEN RAISE EXCEPTION 'moved matches must leave their previous campaign'; END IF;
     END $$;
     UPDATE game SET phase_id='${phase}' WHERE id='${gAB}';
     UPDATE team_group SET group_id='${groupBonus}' WHERE group_id='${group}' AND team_id='${teamB}';
     DO $$ BEGIN
-      PERFORM refresh_team_campaign_group('${group}');
-      PERFORM refresh_team_campaign_group('${groupBonus}');
       IF EXISTS (SELECT 1 FROM team_campaign_point WHERE group_id='${group}' AND team_id='${teamB}')
         THEN RAISE EXCEPTION 'moved membership must leave its previous campaign'; END IF;
     END $$;

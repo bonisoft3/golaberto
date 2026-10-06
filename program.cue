@@ -47,6 +47,12 @@ _teamEnrichmentUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_t
 _teamProfilesSql: string @embed(file="services/database/sql/028_team_profiles.sql", type=text)
 _teamProfilesUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamProfilesSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
+_campaignReadSql: string @embed(file="services/database/sql/030_campaign_read.sql", type=text)
+_campaignReadUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_campaignReadSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
+_readableAddressesSql: string @embed(file="services/database/sql/031_readable_addresses.sql", type=text)
+_readableAddressesUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_readableAddressesSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
 // SQLite tab queries and PostgreSQL stored keys share the same two mappings.
 #SearchKey: {col: string, out: "replace(replace(replace(\(col), 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')"}
 
@@ -132,6 +138,7 @@ code: pronto.#App & {
 				{ordinal: 14, name: "featured", type: "bool", default: "false"},
 				{ordinal: 15, name: "search_name", type: "string", generated: "region_name || ' - ' || name || ' ' || \(_season)"},
 				{ordinal: 16, name: "search_key", type: "string", generated: (#SearchKey & {col: "region_name || ' - ' || name || ' ' || \(_season)"}).out},
+				{ordinal: 17, name: "slug", type: "string", unique: true, default: "''", cel: "this.matches('^[a-z0-9]+(-[a-z0-9]+)*$')"},
 			]
 			invariant: {cel: "this.ends >= this.begins"}
 			indexes: [{on: "begins"}]
@@ -177,6 +184,7 @@ code: pronto.#App & {
 				{ordinal: 2, name: "phase_id", type: "uuid", ref: "phase"},
 				{ordinal: 3, name: "name", type: "string", cel: "this.size() > 0 && this.size() <= 40"},
 				{ordinal: 4, name: "position", type: "int32", default: "0", cel: "this >= 0"},
+				{ordinal: 5, name: "slug", type: "string", unique: true, default: "''", cel: "this.matches('^[a-z0-9]+(-[a-z0-9]+)*$')"},
 			]
 			indexes: [{on: "phase_id"}]
 		}
@@ -209,6 +217,7 @@ code: pronto.#App & {
 				{ordinal: 5, name: "country", type: "string", required: false, cel: "this.size() <= 60"},
 				{ordinal: 6, name: "search_name", type: "string", generated: "name"},
 				{ordinal: 7, name: "search_key", type: "string", generated: (#SearchKey & {col: "name"}).out},
+				{ordinal: 8, name: "slug", type: "string", unique: true, default: "''", cel: "this.matches('^[a-z0-9]+(-[a-z0-9]+)*$')"},
 			]
 		}
 		Team: {
@@ -230,6 +239,7 @@ code: pronto.#App & {
 				{ordinal: 11, name: "search_key", type: "string", generated: (#SearchKey & {col: "name"}).out},
 				{ordinal: 12, name: "latitude", type: "double", required: false, cel: "this >= -90 && this <= 90"},
 				{ordinal: 13, name: "longitude", type: "double", required: false, cel: "this >= -180 && this <= 180"},
+				{ordinal: 14, name: "slug", type: "string", unique: true, default: "''", cel: "this.matches('^[a-z0-9]+(-[a-z0-9]+)*$')"},
 			]
 			indexes: [{on: "name"}]
 		}
@@ -277,6 +287,7 @@ code: pronto.#App & {
 				{ordinal: 3, name: "location", type: "string", required: false, cel: "this.size() <= 80"},
 				{ordinal: 4, name: "search_name", type: "string", generated: "name"},
 				{ordinal: 5, name: "search_key", type: "string", generated: (#SearchKey & {col: "name"}).out},
+				{ordinal: 6, name: "slug", type: "string", unique: true, default: "''", cel: "this.matches('^[a-z0-9]+(-[a-z0-9]+)*$')"},
 			]
 		}
 		GeographyRegion: {
@@ -346,6 +357,7 @@ code: pronto.#App & {
 				{ordinal: 5, name: "country", type: "string", required: false, cel: "this.size() <= 60"},
 				{ordinal: 6, name: "height", type: "int32", required: false, cel: "this >= 100 && this <= 230"},
 				{ordinal: 7, name: "position", type: "string", required: false, cel: "this in ['g', 'dr', 'dc', 'dl', 'dm', 'cm', 'am', 'fw']"},
+				{ordinal: 8, name: "slug", type: "string", unique: true, default: "''", cel: "this.matches('^[a-z0-9]+(-[a-z0-9]+)*$')"},
 			]
 			indexes: [{on: "name"}]
 		}
@@ -443,6 +455,7 @@ code: pronto.#App & {
 				{ordinal: 18, name: "attendance", type: "int32", required: false, cel: "this >= 0 && this <= 250000"},
 				{ordinal: 19, name: "day_display", type: "string", generated: _dmy},
 				{ordinal: 20, name: "kickoff_local", type: "string", generated: _hm},
+				{ordinal: 21, name: "slug", type: "string", unique: true, default: "''", cel: "this.matches('^[a-z0-9]+(-[a-z0-9]+)*$')"},
 			]
 			invariant: {cel: "this.home_id != this.away_id && this.played == (has(this.home_score) && has(this.away_score)) && has(this.home_score) == has(this.away_score) && has(this.home_aet) == has(this.away_aet) && has(this.home_pen) == has(this.away_pen) && (has(this.home_aet) == false || this.played) && (has(this.home_pen) == false || this.played)"}
 			indexes: [{on: "phase_id"}, {on: "home_id"}, {on: "away_id"}, {on: "day"}, {on: "referee_id"}, {on: "stadium_id"}]
@@ -1030,7 +1043,7 @@ code: pronto.#App & {
 		TeamCampaignPoint: {
 			id: "0x9baa066851e521e0"
 			table: "team_campaign_point"
-			durability: "live"
+			durability: "server"
 			access: {scope: "public"}
 			writers: "pipeline"
 			fields: [
@@ -1044,7 +1057,6 @@ code: pronto.#App & {
 				{ordinal: 8, name: "position", type: "int32", cel: "this >= 1"},
 				{ordinal: 9, name: "result", type: "string", cel: "this in ['w', 'd', 'l']"},
 			]
-			indexes: [{on: "group_id"},{on: "team_id"}]
 		}
 		TeamOddsHistory: {
 			id: "0xbef4d34708f58150"
@@ -1154,6 +1166,7 @@ code: pronto.#App & {
 				{ordinal: 11, name: "side", type: "string", default: "'*'", cel: "this in ['*', 'home', 'away']"},
 				{ordinal: 12, name: "phase", type: "string", default: "'*'"},
 				{ordinal: 13, name: "category", type: "string", default: "'*'"},
+				{ordinal: 14, name: "championship_id", type: "uuid", required: false},
 			]
 		}
 	}
@@ -1192,6 +1205,8 @@ code: pronto.#App & {
 		{name: "027_team_directory_type.sql", src: "services/database/sql/027_team_directory_type.sql"},
 		{name: "028_team_profiles.sql", src: "services/database/sql/028_team_profiles.sql"},
 		{name: "029_team_enrichment.sql", src: "services/database/sql/029_team_enrichment.sql"},
+		{name: "030_campaign_read.sql", src: "services/database/sql/030_campaign_read.sql"},
+		{name: "031_readable_addresses.sql", src: "services/database/sql/031_readable_addresses.sql"},
 		// Large archive fixtures are copied at build, never expanded through CUE.
 		{name: "900_seed.sql", src: "services/database/sql/900_seed.sql"},
 	]
@@ -1217,6 +1232,8 @@ code: pronto.#App & {
 	state: migrations: "029_team_enrichment": {operations: [{sql: {up: _teamEnrichmentUpgrade, onComplete: true}}]}
 	state: migrations: "028_team_profiles": {operations: [{sql: {up: _teamProfilesUpgrade, onComplete: true}}]}
 	state: pipelines: "team-profiles": {raw: true, from: "Team", to: "TeamChampionship", group: "golaberto-team-profiles"}
+	state: migrations: "030_campaign_read": {operations: [{sql: {up: _campaignReadUpgrade, onComplete: true}}]}
+	state: migrations: "031_readable_addresses": {operations: [{sql: {up: _readableAddressesUpgrade, onComplete: true}}]}
 	// The numeric stage (ir decision-chances).
 	// The chances read each game's power from team_rating, so they rerun
 	// whenever the ratings change.
@@ -1338,7 +1355,7 @@ code: pronto.#App & {
 		}
 		jogo: {
 			title:  "Jogo"
-			route:  "/jogo/:id"
+			route:  "/jogo/:slug"
 			ssr:    "ssr"
 			slug:   "route_game"
 			strip:  false
@@ -1359,8 +1376,9 @@ code: pronto.#App & {
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		chances: {
+			ssr: "ssr"
 			title:  "Chances"
-			route:  "/chances/:id"
+			route:  "/chances/:slug"
 			slug:   "route_chances"
 			strip:  false
 			keep:   3
@@ -1377,7 +1395,7 @@ code: pronto.#App & {
 		}
 		editar: {
 			title:  "Editar jogo"
-			route:  "/editar/:id"
+			route:  "/editar/:slug"
 			slug:   "route_edit"
 			strip:  false
 			keep:   0
@@ -1432,8 +1450,9 @@ code: pronto.#App & {
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		estadio: {
+			ssr: "ssr"
 			title:  "Estádio"
-			route:  "/estadio/:id"
+			route:  "/estadio/:slug"
 			slug:   "route_stadium"
 			strip:  false
 			keep:   3
@@ -1467,8 +1486,9 @@ code: pronto.#App & {
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		arbitro: {
+			ssr: "ssr"
 			title:  "Árbitro"
-			route:  "/arbitro/:id"
+			route:  "/arbitro/:slug"
 			slug:   "route_referee"
 			strip:  false
 			keep:   3
@@ -1485,7 +1505,7 @@ code: pronto.#App & {
 		}
 		equipe: {
 			title:  "Equipe"
-			route:  "/equipe/:id"
+			route:  "/equipe/:slug"
 			ssr: "ssr"
 			slug:   "route_team"
 			strip:  false
@@ -1503,7 +1523,7 @@ code: pronto.#App & {
 		}
 		"equipe-campeonato": {
 			title: "Equipe no campeonato"
-			route: "/equipe-campeonato/:id/:championship"
+			route: "/equipe-campeonato/:slug/:championship"
 			ssr: "ssr"
 			slug: "route_team_championship"
 			strip: false
@@ -1521,7 +1541,7 @@ code: pronto.#App & {
 		}
 		jogador: {
 			title:  "Jogador"
-			route:  "/jogador/:id"
+			route:  "/jogador/:slug"
 			ssr:    "ssr"
 			slug:   "route_player"
 			strip:  false
@@ -1539,7 +1559,7 @@ code: pronto.#App & {
 		}
 		campeonato: {
 			title:  "Campeonato"
-			route:  "/campeonato/:id"
+			route:  "/campeonato/:slug"
 			ssr:    "ssr"
 			slug:   "route_championship"
 			strip:  false
@@ -1876,7 +1896,7 @@ code: pronto.#App & {
 			"test-championship-gone": {
 				of:    "campeonato"
 				says:  "an address naming no championship says so"
-				given: {id: "00000000-0000-4000-8000-000000000000"}
+				given: {slug: "missing-address"}
 				when:  "view"
 				then:  "output.empty == \"Este campeonato não existe ou foi removido.\""
 			}
@@ -2044,14 +2064,14 @@ code: pronto.#App & {
 			"test-team-gone": {
 				of:    "equipe"
 				says:  "an address naming no team says so"
-				given: {id: "00000000-0000-4000-8000-000000000000"}
+				given: {slug: "missing-address"}
 				when:  "view"
 				then:  "output.empty == \"Esta equipe não existe ou foi removida.\""
 			}
 			"test-player-gone": {
 				of:    "jogador"
 				says:  "an address naming no player says so"
-				given: {id: "00000000-0000-4000-8000-000000000000"}
+				given: {slug: "missing-address"}
 				when:  "view"
 				then:  "output.empty == \"Este jogador não existe ou foi removido.\""
 			}
@@ -2184,7 +2204,7 @@ code: pronto.#App & {
 			"test-venue-gone": {
 				of:    "estadio"
 				says:  "an address naming no stadium, or no referee, says so"
-				given: {id: "00000000-0000-4000-8000-000000000000"}
+				given: {slug: "missing-address"}
 				when:  "view"
 				then:  "output.empty == \"Este estádio não existe ou foi removido.\""
 			}
@@ -2243,7 +2263,7 @@ loop: surface: checks: "seed-data": {
 
 loop: surface: checks: "standings": {
 	verb: "test"
-	cmds: ["mise exec -- redpanda-connect test pipelines/standings.yaml pipelines/rounds.yaml pipelines/game-cards.yaml pipelines/player-stats.yaml pipelines/team-campaign.yaml"]
+	cmds: ["mise exec -- redpanda-connect test pipelines/standings.yaml pipelines/rounds.yaml pipelines/game-cards.yaml pipelines/player-stats.yaml"]
 	note: "the derived streams over crawled data: the 2026 Serie A's table and its 885 players' seasons as golaberto.com.br shows them, a phase's current and next rounds, and a game's card and team lines"
 }
 
@@ -2255,9 +2275,15 @@ loop: surface: checks: "image-renderers": {
 
 loop: surface: checks: "team-chart-renderer": {verb: "test", cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/team-chart-renderer.ts"], note: "pure chart geometry, accessible links and safe SVG node output"}
 
-code: state: pipelines: "team-campaign": {raw: true, from: "Game", to: "TeamCampaignPoint", group: "golaberto-team-campaign"}
 code: state: pipelines: "team-enrichment": {raw: true, from: "TeamRating", to: "TeamRatingChart", group: "golaberto-team-enrichment"}
 
 loop: surface: checks: "team-enrichment-import": {verb: "test", cmds: ["python3 -m unittest discover -s tools -p team_enrichment_import_test.py"], note: "legacy snapshot parsing, stable identity and validation are deterministic"}
+
+build: checks: "request-reads": {
+    priority: 1
+    database: true
+    cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-net --allow-read --allow-sys tests/campaign-read.ts tests/readable-addresses.ts"]
+    note: "request-time historical rankings and readable address uniqueness"
+}
 
 out: pronto.#emit & {"code": code, "cluster": cluster, "terminal": terminal, "loop": loop, "build": build}

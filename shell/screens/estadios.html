@@ -29,10 +29,10 @@
             <th scope="col" class="narrow" data-text="{msg.col_city}"></th>
             <th scope="col" class="narrow drop" data-text="{msg.col_country}"></th>
           </tr></thead>
-          <tbody data-live="stadium" data-filter="search_key=like.*{q_key}*&offset={offset}&limit=40" data-order="name.asc" data-empty="{msg.stadiums_empty}">
+          <tbody data-live="stadium" data-select="*" data-filter="search_key=like.*{q_key}*&offset={offset}&limit=40" data-order="name.asc" data-empty="{msg.stadiums_empty}">
             <template data-item>
               <tr>
-                <td><a data-route="estadio" data-param-id="{id}" data-text="{name}"></a></td>
+                <td><a data-route="estadio" data-param-slug="{slug}" data-text="{name}"></a></td>
                 <td class="narrow" data-text="{city}"></td>
                 <td class="narrow drop"><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{country}|{msg.geography_names}" data-text-format="geography-label"></span></td>
               </tr>

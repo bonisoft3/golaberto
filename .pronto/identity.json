@@ -116,6 +116,41 @@
         "name": "search_key",
         "type": "string",
         "retired": false
+      },
+      "17": {
+        "name": "slug",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0x9f7e16021a981047": {
+    "name": "home_championship",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "uuid",
+        "retired": false
+      },
+      "2": {
+        "name": "region",
+        "type": "string",
+        "retired": false
+      },
+      "3": {
+        "name": "region_name",
+        "type": "string",
+        "retired": false
+      },
+      "4": {
+        "name": "full_name",
+        "type": "string",
+        "retired": false
+      },
+      "5": {
+        "name": "strength",
+        "type": "double",
+        "retired": false
       }
     }
   },
@@ -180,6 +215,11 @@
       "4": {
         "name": "position",
         "type": "int32",
+        "retired": false
+      },
+      "5": {
+        "name": "slug",
+        "type": "string",
         "retired": false
       }
     }
@@ -256,6 +296,11 @@
         "name": "search_key",
         "type": "string",
         "retired": false
+      },
+      "8": {
+        "name": "slug",
+        "type": "string",
+        "retired": false
       }
     }
   },
@@ -326,6 +371,86 @@
         "name": "longitude",
         "type": "double",
         "retired": false
+      },
+      "14": {
+        "name": "slug",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0xfaf8931af57f6e66": {
+    "name": "team_championship",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "team_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "championship_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "4": {
+        "name": "championship_name",
+        "type": "string",
+        "retired": false
+      },
+      "5": {
+        "name": "begins",
+        "type": "date",
+        "retired": false
+      },
+      "6": {
+        "name": "ends",
+        "type": "date",
+        "retired": false
+      },
+      "7": {
+        "name": "status",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0xa881d0753d2d99d0": {
+    "name": "team_group",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "uuid",
+        "retired": false
+      },
+      "2": {
+        "name": "group_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "team_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "4": {
+        "name": "add_sub",
+        "type": "int32",
+        "retired": false
+      },
+      "5": {
+        "name": "bias",
+        "type": "int32",
+        "retired": false
+      },
+      "6": {
+        "name": "comment",
+        "type": "string",
+        "retired": false
       }
     }
   },
@@ -354,6 +479,161 @@
       },
       "5": {
         "name": "search_key",
+        "type": "string",
+        "retired": false
+      },
+      "6": {
+        "name": "slug",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0xbd185e5ceb027f7d": {
+    "name": "geography_region",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "name",
+        "type": "string",
+        "retired": false
+      },
+      "3": {
+        "name": "message_key",
+        "type": "string",
+        "retired": false
+      },
+      "4": {
+        "name": "search_key",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0xb37475df2e5b43d6": {
+    "name": "geography_country",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "name",
+        "type": "string",
+        "retired": false
+      },
+      "3": {
+        "name": "region_id",
+        "type": "string",
+        "retired": false
+      },
+      "4": {
+        "name": "message_key",
+        "type": "string",
+        "retired": false
+      },
+      "5": {
+        "name": "aliases",
+        "type": "string",
+        "retired": false
+      },
+      "6": {
+        "name": "search_key",
+        "type": "string",
+        "retired": false
+      },
+      "7": {
+        "name": "region_search_key",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0x93d75c8ddada8190": {
+    "name": "team_directory",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "uuid",
+        "retired": false
+      },
+      "2": {
+        "name": "name",
+        "type": "string",
+        "retired": false
+      },
+      "3": {
+        "name": "city",
+        "type": "string",
+        "retired": false
+      },
+      "4": {
+        "name": "country",
+        "type": "string",
+        "retired": false
+      },
+      "5": {
+        "name": "rating",
+        "type": "double",
+        "retired": false
+      },
+      "6": {
+        "name": "measure_date",
+        "type": "date",
+        "retired": false
+      },
+      "7": {
+        "name": "search_name",
+        "type": "string",
+        "retired": false
+      },
+      "8": {
+        "name": "search_country",
+        "type": "string",
+        "retired": false
+      },
+      "9": {
+        "name": "rating_display",
+        "type": "string",
+        "retired": false
+      },
+      "10": {
+        "name": "search_key",
+        "type": "string",
+        "retired": false
+      },
+      "11": {
+        "name": "country_key",
+        "type": "string",
+        "retired": false
+      },
+      "12": {
+        "name": "country_id",
+        "type": "string",
+        "retired": false
+      },
+      "13": {
+        "name": "region_id",
+        "type": "string",
+        "retired": false
+      },
+      "14": {
+        "name": "country_search_key",
+        "type": "string",
+        "retired": false
+      },
+      "15": {
+        "name": "region_search_key",
+        "type": "string",
+        "retired": false
+      },
+      "16": {
+        "name": "team_type",
         "type": "string",
         "retired": false
       }
@@ -394,6 +674,201 @@
       },
       "7": {
         "name": "position",
+        "type": "string",
+        "retired": false
+      },
+      "8": {
+        "name": "slug",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0xdbcdb9bb5c808317": {
+    "name": "team_player",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "uuid",
+        "retired": false
+      },
+      "2": {
+        "name": "championship_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "team_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "4": {
+        "name": "player_id",
+        "type": "uuid",
+        "retired": false
+      }
+    }
+  },
+  "0xbf8641dc49e18232": {
+    "name": "team_roster",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "team_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "championship_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "4": {
+        "name": "player_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "5": {
+        "name": "player_name",
+        "type": "string",
+        "retired": false
+      },
+      "6": {
+        "name": "position",
+        "type": "string",
+        "retired": false
+      },
+      "7": {
+        "name": "played",
+        "type": "int32",
+        "retired": false
+      },
+      "8": {
+        "name": "started",
+        "type": "int32",
+        "retired": false
+      },
+      "9": {
+        "name": "came_on",
+        "type": "int32",
+        "retired": false
+      },
+      "10": {
+        "name": "bench",
+        "type": "int32",
+        "retired": false
+      },
+      "11": {
+        "name": "minutes",
+        "type": "int32",
+        "retired": false
+      },
+      "12": {
+        "name": "goals",
+        "type": "int32",
+        "retired": false
+      },
+      "13": {
+        "name": "penalties",
+        "type": "int32",
+        "retired": false
+      },
+      "14": {
+        "name": "own_goals",
+        "type": "int32",
+        "retired": false
+      },
+      "15": {
+        "name": "yellow",
+        "type": "int32",
+        "retired": false
+      },
+      "16": {
+        "name": "red",
+        "type": "int32",
+        "retired": false
+      },
+      "17": {
+        "name": "championship_name",
+        "type": "string",
+        "retired": false
+      },
+      "18": {
+        "name": "off_rating",
+        "type": "double",
+        "retired": false
+      },
+      "19": {
+        "name": "def_rating",
+        "type": "double",
+        "retired": false
+      },
+      "20": {
+        "name": "contribution",
+        "type": "double",
+        "retired": false
+      },
+      "21": {
+        "name": "contribution_per90",
+        "type": "double",
+        "retired": false
+      },
+      "22": {
+        "name": "goals_per90",
+        "type": "double",
+        "retired": false
+      },
+      "23": {
+        "name": "search_key",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0x8fdba800739aa0f7": {
+    "name": "team_player_history",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "team_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "player_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "4": {
+        "name": "player_name",
+        "type": "string",
+        "retired": false
+      },
+      "5": {
+        "name": "position",
+        "type": "string",
+        "retired": false
+      },
+      "6": {
+        "name": "country",
+        "type": "string",
+        "retired": false
+      },
+      "7": {
+        "name": "is_current",
+        "type": "bool",
+        "retired": false
+      },
+      "8": {
+        "name": "search_key",
         "type": "string",
         "retired": false
       }
@@ -499,6 +974,11 @@
       },
       "20": {
         "name": "kickoff_local",
+        "type": "string",
+        "retired": false
+      },
+      "21": {
+        "name": "slug",
         "type": "string",
         "retired": false
       }
@@ -914,396 +1394,6 @@
       }
     }
   },
-  "0x93d75c8ddada8190": {
-    "name": "team_directory",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "uuid",
-        "retired": false
-      },
-      "2": {
-        "name": "name",
-        "type": "string",
-        "retired": false
-      },
-      "3": {
-        "name": "city",
-        "type": "string",
-        "retired": false
-      },
-      "4": {
-        "name": "country",
-        "type": "string",
-        "retired": false
-      },
-      "5": {
-        "name": "rating",
-        "type": "double",
-        "retired": false
-      },
-      "6": {
-        "name": "measure_date",
-        "type": "date",
-        "retired": false
-      },
-      "7": {
-        "name": "search_name",
-        "type": "string",
-        "retired": false
-      },
-      "8": {
-        "name": "search_country",
-        "type": "string",
-        "retired": false
-      },
-      "9": {
-        "name": "rating_display",
-        "type": "string",
-        "retired": false
-      },
-      "10": {
-        "name": "search_key",
-        "type": "string",
-        "retired": false
-      },
-      "11": {
-        "name": "country_key",
-        "type": "string",
-        "retired": false
-      },
-      "12": {
-        "name": "country_id",
-        "type": "string",
-        "retired": false
-      },
-      "13": {
-        "name": "region_id",
-        "type": "string",
-        "retired": false
-      },
-      "14": {
-        "name": "country_search_key",
-        "type": "string",
-        "retired": false
-      },
-      "15": {
-        "name": "region_search_key",
-        "type": "string",
-        "retired": false
-      },
-      "16": {
-        "name": "team_type",
-        "type": "string",
-        "retired": false
-      }
-    }
-  },
-  "0xfaf8931af57f6e66": {
-    "name": "team_championship",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "string",
-        "retired": false
-      },
-      "2": {
-        "name": "team_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "3": {
-        "name": "championship_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "4": {
-        "name": "championship_name",
-        "type": "string",
-        "retired": false
-      },
-      "5": {
-        "name": "begins",
-        "type": "date",
-        "retired": false
-      },
-      "6": {
-        "name": "ends",
-        "type": "date",
-        "retired": false
-      },
-      "7": {
-        "name": "status",
-        "type": "string",
-        "retired": false
-      }
-    }
-  },
-  "0xbf8641dc49e18232": {
-    "name": "team_roster",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "string",
-        "retired": false
-      },
-      "2": {
-        "name": "team_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "3": {
-        "name": "championship_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "4": {
-        "name": "player_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "5": {
-        "name": "player_name",
-        "type": "string",
-        "retired": false
-      },
-      "6": {
-        "name": "position",
-        "type": "string",
-        "retired": false
-      },
-      "7": {
-        "name": "played",
-        "type": "int32",
-        "retired": false
-      },
-      "8": {
-        "name": "started",
-        "type": "int32",
-        "retired": false
-      },
-      "9": {
-        "name": "came_on",
-        "type": "int32",
-        "retired": false
-      },
-      "10": {
-        "name": "bench",
-        "type": "int32",
-        "retired": false
-      },
-      "11": {
-        "name": "minutes",
-        "type": "int32",
-        "retired": false
-      },
-      "12": {
-        "name": "goals",
-        "type": "int32",
-        "retired": false
-      },
-      "13": {
-        "name": "penalties",
-        "type": "int32",
-        "retired": false
-      },
-      "14": {
-        "name": "own_goals",
-        "type": "int32",
-        "retired": false
-      },
-      "15": {
-        "name": "yellow",
-        "type": "int32",
-        "retired": false
-      },
-      "16": {
-        "name": "red",
-        "type": "int32",
-        "retired": false
-      },
-      "17": {
-        "name": "championship_name",
-        "type": "string",
-        "retired": false
-      },
-      "18": {
-        "name": "off_rating",
-        "type": "double",
-        "retired": false
-      },
-      "19": {
-        "name": "def_rating",
-        "type": "double",
-        "retired": false
-      },
-      "20": {
-        "name": "contribution",
-        "type": "double",
-        "retired": false
-      },
-      "21": {
-        "name": "contribution_per90",
-        "type": "double",
-        "retired": false
-      },
-      "22": {
-        "name": "goals_per90",
-        "type": "double",
-        "retired": false
-      },
-      "23": {
-        "name": "search_key",
-        "type": "string",
-        "retired": false
-      }
-    }
-  },
-  "0x8fdba800739aa0f7": {
-    "name": "team_player_history",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "string",
-        "retired": false
-      },
-      "2": {
-        "name": "team_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "3": {
-        "name": "player_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "4": {
-        "name": "player_name",
-        "type": "string",
-        "retired": false
-      },
-      "5": {
-        "name": "position",
-        "type": "string",
-        "retired": false
-      },
-      "6": {
-        "name": "country",
-        "type": "string",
-        "retired": false
-      },
-      "7": {
-        "name": "is_current",
-        "type": "bool",
-        "retired": false
-      },
-      "8": {
-        "name": "search_key",
-        "type": "string",
-        "retired": false
-      }
-    }
-  },
-  "0xa881d0753d2d99d0": {
-    "name": "team_group",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "uuid",
-        "retired": false
-      },
-      "2": {
-        "name": "group_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "3": {
-        "name": "team_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "4": {
-        "name": "add_sub",
-        "type": "int32",
-        "retired": false
-      },
-      "5": {
-        "name": "bias",
-        "type": "int32",
-        "retired": false
-      },
-      "6": {
-        "name": "comment",
-        "type": "string",
-        "retired": false
-      }
-    }
-  },
-  "0xbd185e5ceb027f7d": {
-    "name": "geography_region",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "string",
-        "retired": false
-      },
-      "2": {
-        "name": "name",
-        "type": "string",
-        "retired": false
-      },
-      "3": {
-        "name": "message_key",
-        "type": "string",
-        "retired": false
-      },
-      "4": {
-        "name": "search_key",
-        "type": "string",
-        "retired": false
-      }
-    }
-  },
-  "0xb37475df2e5b43d6": {
-    "name": "geography_country",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "string",
-        "retired": false
-      },
-      "2": {
-        "name": "name",
-        "type": "string",
-        "retired": false
-      },
-      "3": {
-        "name": "region_id",
-        "type": "string",
-        "retired": false
-      },
-      "4": {
-        "name": "message_key",
-        "type": "string",
-        "retired": false
-      },
-      "5": {
-        "name": "aliases",
-        "type": "string",
-        "retired": false
-      },
-      "6": {
-        "name": "search_key",
-        "type": "string",
-        "retired": false
-      },
-      "7": {
-        "name": "region_search_key",
-        "type": "string",
-        "retired": false
-      }
-    }
-  },
   "0xd7098e87ab67f7eb": {
     "name": "player_rating",
     "fields": {
@@ -1314,6 +1404,21 @@
       },
       "2": {
         "name": "rating",
+        "type": "double",
+        "retired": false
+      }
+    }
+  },
+  "0xf8a29784e425c143": {
+    "name": "rating_eval",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "uuid",
+        "retired": false
+      },
+      "2": {
+        "name": "rps",
         "type": "double",
         "retired": false
       }
@@ -1486,641 +1591,6 @@
         "name": "away_country",
         "type": "string",
         "retired": true
-      }
-    }
-  },
-  "0x91f9338be221f43d": {
-    "name": "team_game",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "string",
-        "retired": false
-      },
-      "2": {
-        "name": "team_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "3": {
-        "name": "game_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "4": {
-        "name": "side",
-        "type": "string",
-        "retired": false
-      },
-      "5": {
-        "name": "opponent_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "6": {
-        "name": "opponent_name",
-        "type": "string",
-        "retired": false
-      },
-      "7": {
-        "name": "championship_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "8": {
-        "name": "championship_name",
-        "type": "string",
-        "retired": false
-      },
-      "9": {
-        "name": "day",
-        "type": "date",
-        "retired": false
-      },
-      "10": {
-        "name": "kickoff",
-        "type": "timestamp",
-        "retired": false
-      },
-      "11": {
-        "name": "played",
-        "type": "bool",
-        "retired": false
-      },
-      "12": {
-        "name": "goals_for",
-        "type": "int32",
-        "retired": false
-      },
-      "13": {
-        "name": "goals_against",
-        "type": "int32",
-        "retired": false
-      },
-      "14": {
-        "name": "result",
-        "type": "string",
-        "retired": false
-      },
-      "15": {
-        "name": "day_display",
-        "type": "string",
-        "retired": false
-      },
-      "16": {
-        "name": "kickoff_local",
-        "type": "string",
-        "retired": false
-      },
-      "17": {
-        "name": "show_country",
-        "type": "bool",
-        "retired": true
-      },
-      "18": {
-        "name": "opponent_country",
-        "type": "string",
-        "retired": true
-      },
-      "19": {
-        "name": "category_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "20": {
-        "name": "phase_key",
-        "type": "string",
-        "retired": false
-      },
-      "21": {
-        "name": "category_key",
-        "type": "string",
-        "retired": false
-      }
-    }
-  },
-  "0x9d5b62b134186fd8": {
-    "name": "comment",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "uuid",
-        "retired": false
-      },
-      "2": {
-        "name": "game_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "3": {
-        "name": "app_user_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "4": {
-        "name": "body",
-        "type": "string",
-        "retired": false
-      },
-      "5": {
-        "name": "created_at",
-        "type": "timestamp",
-        "retired": false
-      }
-    }
-  },
-  "0xb51a5cb741600107": {
-    "name": "player_stat",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "string",
-        "retired": false
-      },
-      "2": {
-        "name": "championship_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "3": {
-        "name": "team_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "4": {
-        "name": "player_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "5": {
-        "name": "player_name",
-        "type": "string",
-        "retired": false
-      },
-      "6": {
-        "name": "position",
-        "type": "string",
-        "retired": false
-      },
-      "7": {
-        "name": "played",
-        "type": "int32",
-        "retired": false
-      },
-      "8": {
-        "name": "started",
-        "type": "int32",
-        "retired": false
-      },
-      "9": {
-        "name": "came_on",
-        "type": "int32",
-        "retired": false
-      },
-      "10": {
-        "name": "bench",
-        "type": "int32",
-        "retired": false
-      },
-      "11": {
-        "name": "minutes",
-        "type": "int32",
-        "retired": false
-      },
-      "12": {
-        "name": "goals",
-        "type": "int32",
-        "retired": false
-      },
-      "13": {
-        "name": "penalties",
-        "type": "int32",
-        "retired": false
-      },
-      "14": {
-        "name": "own_goals",
-        "type": "int32",
-        "retired": false
-      },
-      "15": {
-        "name": "yellow",
-        "type": "int32",
-        "retired": false
-      },
-      "16": {
-        "name": "red",
-        "type": "int32",
-        "retired": false
-      },
-      "17": {
-        "name": "championship_name",
-        "type": "string",
-        "retired": false
-      },
-      "18": {
-        "name": "team_name",
-        "type": "string",
-        "retired": false
-      },
-      "19": {
-        "name": "off_rating",
-        "type": "double",
-        "retired": false
-      },
-      "20": {
-        "name": "def_rating",
-        "type": "double",
-        "retired": false
-      },
-      "21": {
-        "name": "contribution",
-        "type": "double",
-        "retired": false
-      },
-      "22": {
-        "name": "contribution_per90",
-        "type": "double",
-        "retired": false
-      },
-      "23": {
-        "name": "goals_per90",
-        "type": "double",
-        "retired": false
-      }
-    }
-  },
-  "0xe326676ae2b1bd9a": {
-    "name": "phase_round",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "string",
-        "retired": false
-      },
-      "2": {
-        "name": "phase_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "3": {
-        "name": "current",
-        "type": "int32",
-        "retired": false
-      },
-      "4": {
-        "name": "next",
-        "type": "int32",
-        "retired": false
-      }
-    }
-  },
-  "0xec225aa743df8214": {
-    "name": "team_comment",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "uuid",
-        "retired": false
-      },
-      "2": {
-        "name": "team_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "3": {
-        "name": "app_user_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "4": {
-        "name": "body",
-        "type": "string",
-        "retired": false
-      },
-      "5": {
-        "name": "created_at",
-        "type": "timestamp",
-        "retired": false
-      }
-    }
-  },
-  "0x9baa066851e521e0": {
-    "name": "team_campaign_point",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "string",
-        "retired": false
-      },
-      "2": {
-        "name": "group_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "3": {
-        "name": "team_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "4": {
-        "name": "game_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "5": {
-        "name": "sequence",
-        "type": "int32",
-        "retired": false
-      },
-      "6": {
-        "name": "day",
-        "type": "date",
-        "retired": false
-      },
-      "7": {
-        "name": "points",
-        "type": "int32",
-        "retired": false
-      },
-      "8": {
-        "name": "position",
-        "type": "int32",
-        "retired": false
-      },
-      "9": {
-        "name": "result",
-        "type": "string",
-        "retired": false
-      }
-    }
-  },
-  "0xbef4d34708f58150": {
-    "name": "team_odds_history",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "string",
-        "retired": false
-      },
-      "2": {
-        "name": "group_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "3": {
-        "name": "team_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "4": {
-        "name": "recorded_on",
-        "type": "date",
-        "retired": false
-      },
-      "5": {
-        "name": "captured_at",
-        "type": "timestamp",
-        "retired": false
-      },
-      "6": {
-        "name": "position",
-        "type": "int32",
-        "retired": false
-      },
-      "7": {
-        "name": "percent",
-        "type": "double",
-        "retired": false
-      },
-      "8": {
-        "name": "source",
-        "type": "string",
-        "retired": false
-      }
-    }
-  },
-  "0xee726246d2463572": {
-    "name": "team_rating_chart",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "string",
-        "retired": false
-      },
-      "2": {
-        "name": "team_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "3": {
-        "name": "period",
-        "type": "string",
-        "retired": false
-      },
-      "4": {
-        "name": "series_json",
-        "type": "string",
-        "retired": false
-      }
-    }
-  },
-  "0xc3d5774bc952a01a": {
-    "name": "team_odds_chart",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "string",
-        "retired": false
-      },
-      "2": {
-        "name": "group_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "3": {
-        "name": "team_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "4": {
-        "name": "zone_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "5": {
-        "name": "series_json",
-        "type": "string",
-        "retired": false
-      }
-    }
-  },
-  "0xcb46033cabbd7525": {
-    "name": "team_roster_total",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "string",
-        "retired": false
-      },
-      "2": {
-        "name": "team_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "3": {
-        "name": "championship_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "4": {
-        "name": "championship_name",
-        "type": "string",
-        "retired": false
-      },
-      "5": {
-        "name": "played",
-        "type": "int32",
-        "retired": false
-      },
-      "6": {
-        "name": "started",
-        "type": "int32",
-        "retired": false
-      },
-      "7": {
-        "name": "came_on",
-        "type": "int32",
-        "retired": false
-      },
-      "8": {
-        "name": "bench",
-        "type": "int32",
-        "retired": false
-      },
-      "9": {
-        "name": "minutes",
-        "type": "int32",
-        "retired": false
-      },
-      "10": {
-        "name": "goals",
-        "type": "int32",
-        "retired": false
-      },
-      "11": {
-        "name": "penalties",
-        "type": "int32",
-        "retired": false
-      },
-      "12": {
-        "name": "own_goals",
-        "type": "int32",
-        "retired": false
-      },
-      "13": {
-        "name": "yellow",
-        "type": "int32",
-        "retired": false
-      },
-      "14": {
-        "name": "red",
-        "type": "int32",
-        "retired": false
-      },
-      "15": {
-        "name": "off_rating",
-        "type": "double",
-        "retired": false
-      },
-      "16": {
-        "name": "def_rating",
-        "type": "double",
-        "retired": false
-      },
-      "17": {
-        "name": "contribution",
-        "type": "double",
-        "retired": false
-      },
-      "18": {
-        "name": "contribution_per90",
-        "type": "double",
-        "retired": false
-      },
-      "19": {
-        "name": "goals_per90",
-        "type": "double",
-        "retired": false
-      }
-    }
-  },
-  "0x9f7e16021a981047": {
-    "name": "home_championship",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "uuid",
-        "retired": false
-      },
-      "2": {
-        "name": "region",
-        "type": "string",
-        "retired": false
-      },
-      "3": {
-        "name": "region_name",
-        "type": "string",
-        "retired": false
-      },
-      "4": {
-        "name": "full_name",
-        "type": "string",
-        "retired": false
-      },
-      "5": {
-        "name": "strength",
-        "type": "double",
-        "retired": false
-      }
-    }
-  },
-  "0xdbcdb9bb5c808317": {
-    "name": "team_player",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "uuid",
-        "retired": false
-      },
-      "2": {
-        "name": "championship_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "3": {
-        "name": "team_id",
-        "type": "uuid",
-        "retired": false
-      },
-      "4": {
-        "name": "player_id",
-        "type": "uuid",
-        "retired": false
-      }
-    }
-  },
-  "0xf8a29784e425c143": {
-    "name": "rating_eval",
-    "fields": {
-      "1": {
-        "name": "id",
-        "type": "uuid",
-        "retired": false
-      },
-      "2": {
-        "name": "rps",
-        "type": "double",
-        "retired": false
       }
     }
   },
@@ -2469,6 +1939,146 @@
       }
     }
   },
+  "0x91f9338be221f43d": {
+    "name": "team_game",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "team_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "game_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "4": {
+        "name": "side",
+        "type": "string",
+        "retired": false
+      },
+      "5": {
+        "name": "opponent_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "6": {
+        "name": "opponent_name",
+        "type": "string",
+        "retired": false
+      },
+      "7": {
+        "name": "championship_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "8": {
+        "name": "championship_name",
+        "type": "string",
+        "retired": false
+      },
+      "9": {
+        "name": "day",
+        "type": "date",
+        "retired": false
+      },
+      "10": {
+        "name": "kickoff",
+        "type": "timestamp",
+        "retired": false
+      },
+      "11": {
+        "name": "played",
+        "type": "bool",
+        "retired": false
+      },
+      "12": {
+        "name": "goals_for",
+        "type": "int32",
+        "retired": false
+      },
+      "13": {
+        "name": "goals_against",
+        "type": "int32",
+        "retired": false
+      },
+      "14": {
+        "name": "result",
+        "type": "string",
+        "retired": false
+      },
+      "15": {
+        "name": "day_display",
+        "type": "string",
+        "retired": false
+      },
+      "16": {
+        "name": "kickoff_local",
+        "type": "string",
+        "retired": false
+      },
+      "17": {
+        "name": "show_country",
+        "type": "bool",
+        "retired": true
+      },
+      "18": {
+        "name": "opponent_country",
+        "type": "string",
+        "retired": true
+      },
+      "19": {
+        "name": "category_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "20": {
+        "name": "phase_key",
+        "type": "string",
+        "retired": false
+      },
+      "21": {
+        "name": "category_key",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0x9d5b62b134186fd8": {
+    "name": "comment",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "uuid",
+        "retired": false
+      },
+      "2": {
+        "name": "game_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "app_user_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "4": {
+        "name": "body",
+        "type": "string",
+        "retired": false
+      },
+      "5": {
+        "name": "created_at",
+        "type": "timestamp",
+        "retired": false
+      }
+    }
+  },
   "0xa0ef4bf8391c0c4e": {
     "name": "comment_draft",
     "fields": {
@@ -2585,6 +2195,151 @@
       "16": {
         "name": "referee_q_key",
         "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0xb51a5cb741600107": {
+    "name": "player_stat",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "championship_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "team_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "4": {
+        "name": "player_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "5": {
+        "name": "player_name",
+        "type": "string",
+        "retired": false
+      },
+      "6": {
+        "name": "position",
+        "type": "string",
+        "retired": false
+      },
+      "7": {
+        "name": "played",
+        "type": "int32",
+        "retired": false
+      },
+      "8": {
+        "name": "started",
+        "type": "int32",
+        "retired": false
+      },
+      "9": {
+        "name": "came_on",
+        "type": "int32",
+        "retired": false
+      },
+      "10": {
+        "name": "bench",
+        "type": "int32",
+        "retired": false
+      },
+      "11": {
+        "name": "minutes",
+        "type": "int32",
+        "retired": false
+      },
+      "12": {
+        "name": "goals",
+        "type": "int32",
+        "retired": false
+      },
+      "13": {
+        "name": "penalties",
+        "type": "int32",
+        "retired": false
+      },
+      "14": {
+        "name": "own_goals",
+        "type": "int32",
+        "retired": false
+      },
+      "15": {
+        "name": "yellow",
+        "type": "int32",
+        "retired": false
+      },
+      "16": {
+        "name": "red",
+        "type": "int32",
+        "retired": false
+      },
+      "17": {
+        "name": "championship_name",
+        "type": "string",
+        "retired": false
+      },
+      "18": {
+        "name": "team_name",
+        "type": "string",
+        "retired": false
+      },
+      "19": {
+        "name": "off_rating",
+        "type": "double",
+        "retired": false
+      },
+      "20": {
+        "name": "def_rating",
+        "type": "double",
+        "retired": false
+      },
+      "21": {
+        "name": "contribution",
+        "type": "double",
+        "retired": false
+      },
+      "22": {
+        "name": "contribution_per90",
+        "type": "double",
+        "retired": false
+      },
+      "23": {
+        "name": "goals_per90",
+        "type": "double",
+        "retired": false
+      }
+    }
+  },
+  "0xe326676ae2b1bd9a": {
+    "name": "phase_round",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "phase_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "current",
+        "type": "int32",
+        "retired": false
+      },
+      "4": {
+        "name": "next",
+        "type": "int32",
         "retired": false
       }
     }
@@ -2724,6 +2479,36 @@
       }
     }
   },
+  "0xec225aa743df8214": {
+    "name": "team_comment",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "uuid",
+        "retired": false
+      },
+      "2": {
+        "name": "team_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "app_user_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "4": {
+        "name": "body",
+        "type": "string",
+        "retired": false
+      },
+      "5": {
+        "name": "created_at",
+        "type": "timestamp",
+        "retired": false
+      }
+    }
+  },
   "0xca07330d6663ef60": {
     "name": "team_comment_draft",
     "fields": {
@@ -2740,6 +2525,256 @@
       "3": {
         "name": "state",
         "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0x9baa066851e521e0": {
+    "name": "team_campaign_point",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "group_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "team_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "4": {
+        "name": "game_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "5": {
+        "name": "sequence",
+        "type": "int32",
+        "retired": false
+      },
+      "6": {
+        "name": "day",
+        "type": "date",
+        "retired": false
+      },
+      "7": {
+        "name": "points",
+        "type": "int32",
+        "retired": false
+      },
+      "8": {
+        "name": "position",
+        "type": "int32",
+        "retired": false
+      },
+      "9": {
+        "name": "result",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0xbef4d34708f58150": {
+    "name": "team_odds_history",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "group_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "team_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "4": {
+        "name": "recorded_on",
+        "type": "date",
+        "retired": false
+      },
+      "5": {
+        "name": "captured_at",
+        "type": "timestamp",
+        "retired": false
+      },
+      "6": {
+        "name": "position",
+        "type": "int32",
+        "retired": false
+      },
+      "7": {
+        "name": "percent",
+        "type": "double",
+        "retired": false
+      },
+      "8": {
+        "name": "source",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0xee726246d2463572": {
+    "name": "team_rating_chart",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "team_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "period",
+        "type": "string",
+        "retired": false
+      },
+      "4": {
+        "name": "series_json",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0xc3d5774bc952a01a": {
+    "name": "team_odds_chart",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "group_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "team_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "4": {
+        "name": "zone_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "5": {
+        "name": "series_json",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0xcb46033cabbd7525": {
+    "name": "team_roster_total",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "team_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "championship_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "4": {
+        "name": "championship_name",
+        "type": "string",
+        "retired": false
+      },
+      "5": {
+        "name": "played",
+        "type": "int32",
+        "retired": false
+      },
+      "6": {
+        "name": "started",
+        "type": "int32",
+        "retired": false
+      },
+      "7": {
+        "name": "came_on",
+        "type": "int32",
+        "retired": false
+      },
+      "8": {
+        "name": "bench",
+        "type": "int32",
+        "retired": false
+      },
+      "9": {
+        "name": "minutes",
+        "type": "int32",
+        "retired": false
+      },
+      "10": {
+        "name": "goals",
+        "type": "int32",
+        "retired": false
+      },
+      "11": {
+        "name": "penalties",
+        "type": "int32",
+        "retired": false
+      },
+      "12": {
+        "name": "own_goals",
+        "type": "int32",
+        "retired": false
+      },
+      "13": {
+        "name": "yellow",
+        "type": "int32",
+        "retired": false
+      },
+      "14": {
+        "name": "red",
+        "type": "int32",
+        "retired": false
+      },
+      "15": {
+        "name": "off_rating",
+        "type": "double",
+        "retired": false
+      },
+      "16": {
+        "name": "def_rating",
+        "type": "double",
+        "retired": false
+      },
+      "17": {
+        "name": "contribution",
+        "type": "double",
+        "retired": false
+      },
+      "18": {
+        "name": "contribution_per90",
+        "type": "double",
+        "retired": false
+      },
+      "19": {
+        "name": "goals_per90",
+        "type": "double",
         "retired": false
       }
     }
@@ -2850,6 +2885,11 @@
       "13": {
         "name": "category",
         "type": "string",
+        "retired": false
+      },
+      "14": {
+        "name": "championship_id",
+        "type": "uuid",
         "retired": false
       }
     }

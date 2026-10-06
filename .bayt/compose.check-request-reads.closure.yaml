@@ -51,6 +51,6 @@ include:
 services:
   bayt:
     extends:
-      file: ./compose.launch.yaml
-      service: golaberto-launch
+      file: ./compose.check-request-reads.yaml
+      service: golaberto-check-request-reads
     scale: 1

@@ -1,8 +1,9 @@
 /// <reference lib="dom" />
 import { assert, assertEquals } from "jsr:@std/assert@1";
+import { address } from "./addresses.ts";
 import { baseUrl } from "../../../plugins/omnishell/base-url.ts";
-import type { Page } from "npm:playwright@1.59.1";
-const { chromium } = await import("npm:playwright@1.59.1");
+import type { Page } from "npm:playwright@1.61.1";
+const { chromium } = await import("npm:playwright@1.61.1");
 const project = Deno.env.get("COMPOSE_PROJECT_NAME") || "golaberto";
 if (project === "golaberto" || !/check|test|prs/.test(project)) throw new Error("Game country mutations require a disposable check/test project");
 const base = await baseUrl(".");
@@ -85,6 +86,7 @@ Deno.test("live country joins update open screens without rewriting games; badge
     JOIN team a ON a.id=g.away_id JOIN team h ON h.id=g.home_id
     ORDER BY g.home_upcoming_rank DESC, g.id LIMIT 1) f`));
   const { id, championship_id: championship, away_id: away } = fixture;
+  const slug = await address("game", id, sql);
   const browser = await chromium.launch({ args: ["--ignore-certificate-errors"] });
   try {
     await sql(`UPDATE championship SET show_country=false WHERE id='${championship}'`);
@@ -96,9 +98,9 @@ Deno.test("live country joins update open screens without rewriting games; badge
       const errors: string[] = [];
       page.on("pageerror", error => errors.push(error.message));
       await page.goto(base);
-      const row = page.locator(`.home-games .game-row[href$='${id}']`);
+      const row = page.locator(`.home-games .game-row[href$='${slug}']`);
       await row.waitFor({ state: "visible" });
-      await page.locator(`.home-games .game-row[href$='${id}'][data-show-country='false']`).waitFor({ state: "visible" });
+      await page.locator(`.home-games .game-row[href$='${slug}'][data-show-country='false']`).waitFor({ state: "visible" });
       await row.locator(".team-flag img").first().waitFor({ state: "detached" });
       assertEquals(await row.locator(".team-flag img").count(), 0);
       await alignment(page);
@@ -128,7 +130,7 @@ Deno.test("live country joins update open screens without rewriting games; badge
       }
       await page.waitForFunction(() => { const node = document.querySelector(".shell-screen"); return node && getComputedStyle(node).opacity === "1"; });
       await page.screenshot({ path: `/private/tmp/golaberto-country-flags-${width}.png`, fullPage: true });
-      await page.goto(new URL(`/jogo/${id}`, base).href);
+      await page.goto(new URL(`/jogo/${slug}`, base).href);
       await page.locator(".scoreboard .team-flag img").first().waitFor({ state: "visible" });
       assertEquals(await page.locator(".scoreboard .team-flag img").count(), 2);
       const detailBefore = await gameVersions();

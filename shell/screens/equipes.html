@@ -54,10 +54,10 @@
             <th scope="col" class="narrow drop" data-text="{msg.col_city}"></th>
             <th scope="col" class="narrow" data-text="{msg.col_country}"></th>
           </tr></thead>
-          <tbody data-live="team_directory" data-filter="search_key=like.*{q_key}*&country_search_key=like.*{country_key}*&region_id=like.{region_selection}&country_id=like.{country_selection}&team_type=eq.{team_type}&offset={offset}&limit=40" data-order="rating.desc.nullslast,name.asc,id.asc" data-empty="{msg.teams_empty}">
+          <tbody data-live="team_directory" data-select="*,team:id(slug)" data-filter="search_key=like.*{q_key}*&country_search_key=like.*{country_key}*&region_id=like.{region_selection}&country_id=like.{country_selection}&team_type=eq.{team_type}&offset={offset}&limit=40" data-order="rating.desc.nullslast,name.asc,id.asc" data-empty="{msg.teams_empty}">
             <template data-item>
               <tr>
-                <td><a data-route="equipe" data-param-id="{id}"><span class="archive-icon" data-text="{id}|{name}" data-text-format="team-badge"></span><span data-text="{name}"></span></a></td>
+                <td><a data-route="equipe" data-param-slug="{team.slug}"><span class="archive-icon" data-text="{id}|{name}" data-text-format="team-badge"></span><span data-text="{name}"></span></a></td>
                 <td class="narrow" data-text="{rating_display}"></td>
                 <td class="narrow drop" data-text="{city}"></td>
                 <td class="narrow"><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{country}|{msg.geography_names}" data-text-format="geography-label"></span></td>

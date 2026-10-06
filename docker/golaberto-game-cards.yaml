@@ -23,18 +23,42 @@ input:
           count: 1
           interval: ""
           mapping: 'root = {"boot": true}'
+        # Reuse championship events so no boot response contains the archive.
+        processors:
+          - try:
+              - branch:
+                  processors:
+                    - http:
+                        url: ${CRUD_URL}/championship?select=id&order=id
+                        verb: GET
+                        retries: 30
+                        retry_period: 2s
+                        headers:
+                          Authorization: Bearer ${SERVICE_JWT}
+                  result_map: root.championships = this
+              - mapping: |
+                  root = this.championships.map_each(c -> {"data": {"__table": "championship", "id": c.id}.format_json().string()})
+              - unarchive:
+                  format: json_array
+          - split:
+              size: 1
 pipeline:
   threads: 1
   processors:
     - mapping: |
         let row = if this.exists("data") && this.data.type() == "string" && this.data.length() > 0 { this.data.parse_json() } else { {} }
         let table = $row.__table.or("")
+        # Old bus records and startup events still refresh their names.
+        let before = if $row.__before.or("") != "" { $row.__before.parse_json().or({}) } else { {} }
         # The games and, in the same read, every name a card prints.
         let games = "game?select=*,home:home_id(name),away:away_id(name),stadium:stadium_id(name),referee:referee_id(name),phase!inner(name,championship_id,championship(full_name))"
         root = match {
-          this.boot.or(false) => {"scope": $games},
+          this.boot.or(false) => throw("Championship bootstrap failed"),
           # Only a game's own change can take a team off it.
           $table == "game" => {"scope": $games + "&id=eq." + $row.id, "own": true},
+          # Flag/country edits are joined at read time; only names fan out.
+          $table == "team" && $before.exists("name") && $before.name == $row.name => deleted(),
+          $table == "championship" && $before.exists("name") && [$before.name, $before.region_name, $before.begins, $before.ends] == [$row.name, $row.region_name, $row.begins, $row.ends] => deleted(),
           $table == "team" => {"scope": $games + "&or=(home_id.eq." + $row.id + ",away_id.eq." + $row.id + ")"},
           $table == "phase" => {"scope": $games + "&phase_id=eq." + $row.id},
           $table == "championship" => {"scope": $games + "&phase.championship_id=eq." + $row.id},

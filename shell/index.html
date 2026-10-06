@@ -10,14 +10,37 @@
      unaffected. -->
 <base href="/shell/">
 <title>Loading…</title>
-<link rel="icon" href="data:,">
+<link rel="icon" type="image/x-icon" href="./favicon.ico">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#e3efca">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#23260f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="golaberto">
+<meta property="og:type" content="website">
+<meta property="og:title" content="golaberto">
+<meta property="og:description" content="O banco de dados aberto do futebol — campeonatos, tabelas, jogos, gols e elencos, mantido pelos seus leitores.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="golaberto">
+<meta name="twitter:description" content="O banco de dados aberto do futebol — campeonatos, tabelas, jogos, gols e elencos, mantido pelos seus leitores.">
 <link rel="stylesheet" href="./shell.css">
 <link rel="stylesheet" href="./design.css">
+<link rel="stylesheet" href="../shell/shared/chrome.css">
+<link rel="preload" href="./shell.json" as="fetch" crossorigin>
 <link rel="modulepreload" href="/omnishell/interpreter/shell.js">
 <link rel="modulepreload" href="/omnishell/interpreter/chrome.js">
 <link rel="modulepreload" href="/omnishell/interpreter/screen.js">
 <link rel="modulepreload" href="/omnishell/interpreter/fragment.js">
+<link rel="modulepreload" href="/omnishell/interpreter/data-sync.js">
+<link rel="modulepreload" href="/omnishell/interpreter/validate.js">
 <link rel="modulepreload" href="/omnishell/interpreter/render.js">
+<link rel="modulepreload" href="/omnishell/interpreter/release-plan.js">
+<link rel="modulepreload" href="/omnishell/interpreter/release-assets.js">
+<link rel="modulepreload" href="/omnishell/interpreter/preloads.js">
+<link rel="modulepreload" href="/omnishell/interpreter/hatch.js">
+<link rel="modulepreload" href="/omnishell/interpreter/hatch-worker.js">
+<link rel="modulepreload" href="/omnishell/interpreter/jessie.js">
+<link rel="modulepreload" href="/omnishell/interpreter/vendor/mecha-client.js">
 <link rel="modulepreload" href="/omnishell/interpreter/vendor/messages.js">
 <script type="speculationrules">
 {

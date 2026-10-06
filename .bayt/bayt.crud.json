@@ -18,6 +18,9 @@
     "depends_on": {
       "golaberto-database": {
         "condition": "service_healthy"
+      },
+      "golaberto-migrate": {
+        "condition": "service_completed_successfully"
       }
     },
     "networks": {
@@ -133,7 +136,8 @@
       },
       "upClosure": [
         "./.bayt/compose.crud.yaml",
-        "./.bayt/compose.database.yaml"
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml"
       ]
     },
     "outs": {
@@ -162,29 +166,43 @@
       },
       "upClosure": [
         "./.bayt/compose.crud.yaml",
-        "./.bayt/compose.database.yaml"
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml"
       ]
     }
   },
   "visibility": "internal",
   "emitsSrcs": false,
   "deps": [
-    "database_outs"
+    "database_outs",
+    "migrate_outs"
   ],
   "sameProjectDeps": [
-    "database_outs"
+    "database_outs",
+    "migrate_outs"
   ],
   "transitiveDeps": [
-    "database_outs"
+    "database_outs",
+    "migrate_outs"
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
     "./.bayt/compose.crud.yaml",
-    "./.bayt/compose.database.yaml"
+    "./.bayt/compose.database.yaml",
+    "./.bayt/compose.migrate.yaml"
   ],
   "chainedDeps": [
     {
       "name": "database_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "migrate_outs",
       "project": "golaberto",
       "dir": ".",
       "outs": {

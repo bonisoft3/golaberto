@@ -5,7 +5,7 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "libraries_mecha-auth-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.4.0@sha256:9daff300f4ddd0b4e026cd25ba10df29edaee6bb3edf34312768a8dca8a12249}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}"
+        "libraries_mecha-auth-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.6.0@sha256:1e09e8901e07c66e4da78a2cd06422ed6ad00940263922238a32c98c9ab6e802}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}"
       },
       "secrets": [],
       "args": {}
@@ -21,6 +21,9 @@
     "depends_on": {
       "golaberto-database": {
         "condition": "service_healthy"
+      },
+      "golaberto-migrate": {
+        "condition": "service_completed_successfully"
       }
     },
     "networks": {
@@ -99,7 +102,8 @@
       },
       "upClosure": [
         "./.bayt/compose.auth.yaml",
-        "./.bayt/compose.database.yaml"
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml"
       ]
     },
     "outs": {
@@ -128,29 +132,43 @@
       },
       "upClosure": [
         "./.bayt/compose.auth.yaml",
-        "./.bayt/compose.database.yaml"
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml"
       ]
     }
   },
   "visibility": "internal",
   "emitsSrcs": false,
   "deps": [
-    "database_outs"
+    "database_outs",
+    "migrate_outs"
   ],
   "sameProjectDeps": [
-    "database_outs"
+    "database_outs",
+    "migrate_outs"
   ],
   "transitiveDeps": [
-    "database_outs"
+    "database_outs",
+    "migrate_outs"
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
     "./.bayt/compose.auth.yaml",
-    "./.bayt/compose.database.yaml"
+    "./.bayt/compose.database.yaml",
+    "./.bayt/compose.migrate.yaml"
   ],
   "chainedDeps": [
     {
       "name": "database_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "migrate_outs",
       "project": "golaberto",
       "dir": ".",
       "outs": {

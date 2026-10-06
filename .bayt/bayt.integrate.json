@@ -5,7 +5,7 @@
     "manual": true,
     "build": {
       "additional_contexts": {
-        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.5.0@sha256:63d6d0cd5aefe274828e096301423de0adf9d1411ff151bfc1201e6c2ec178d1}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.0@sha256:48e849e78e0277826465e596b60fafb304bc76f8fc39b752227e1b2af6067296}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
       },
       "secrets": [],
       "args": {}
@@ -124,13 +124,15 @@
         "./.bayt/compose.caddy.yaml",
         "./.bayt/compose.database.yaml",
         "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.mesh-events.yaml",
         "./.bayt/compose.conduit.yaml",
         "./.bayt/compose.transform.yaml",
         "./.bayt/compose.compute.yaml",
-        "./.bayt/compose.auth.yaml"
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.render.yaml"
       ]
     },
     "outs": {
@@ -163,13 +165,15 @@
         "./.bayt/compose.caddy.yaml",
         "./.bayt/compose.database.yaml",
         "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.mesh-events.yaml",
         "./.bayt/compose.conduit.yaml",
         "./.bayt/compose.transform.yaml",
         "./.bayt/compose.compute.yaml",
-        "./.bayt/compose.auth.yaml"
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.render.yaml"
       ]
     },
     "srcs": {
@@ -207,13 +211,15 @@
         "./.bayt/compose.caddy.yaml",
         "./.bayt/compose.database.yaml",
         "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.mesh-events.yaml",
         "./.bayt/compose.conduit.yaml",
         "./.bayt/compose.transform.yaml",
         "./.bayt/compose.compute.yaml",
-        "./.bayt/compose.auth.yaml"
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.render.yaml"
       ]
     }
   },
@@ -240,13 +246,15 @@
     "./.bayt/compose.caddy.yaml",
     "./.bayt/compose.database.yaml",
     "./.bayt/compose.crud.yaml",
+    "./.bayt/compose.migrate.yaml",
     "./.bayt/compose.electric.yaml",
     "./.bayt/compose.redis.yaml",
     "./.bayt/compose.mesh-events.yaml",
     "./.bayt/compose.conduit.yaml",
     "./.bayt/compose.transform.yaml",
     "./.bayt/compose.compute.yaml",
-    "./.bayt/compose.auth.yaml"
+    "./.bayt/compose.auth.yaml",
+    "./.bayt/compose.render.yaml"
   ],
   "chainedDeps": [
     {

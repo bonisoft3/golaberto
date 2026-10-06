@@ -1,9 +1,9 @@
-# Writes seed.json: the archive a fresh cluster starts from, as golaberto.com.br
-# records it (championships, phases, clubs, stadiums, zones). Data rather than
-# CUE, so the program's every evaluation does not re-judge it (state.seed).
+# Writes the SQL fixture a fresh cluster starts from, as golaberto.com.br
+# records it (championships, phases, clubs, stadiums, zones).
 #
-#   python3 tools/seed.py seed.json
+#   python3 tools/seed.py services/database/sql/900_seed.sql
 import collections, datetime, json, re, sys
+from seed_sql import write
 out = sys.argv[1]
 def uid(kind, n): return f"{kind:02x}000000-0000-4000-8000-{n:012d}"
 # The archive's game pages and lists print the day and hour in UTC, whatever
@@ -97,8 +97,6 @@ for pi,(ci,pn,pos,gs) in enumerate(phases_src):
 zones = [dict(id=uid(KIND["zone"], i+1), group_id=groups[0]["id"], name=n, color=c, first=f, last=l) for i,(n,c,f,l) in enumerate(
  [("Campeão","champion",1,1),("Libertadores - Fase de Grupos","qualify",1,4),("Libertadores - Segunda Fase","playoff",5,5),("Copa Sudamericana","promotion",6,11),("Rebaixamento","relegation",17,20)])]
 
-# A row per line, so a regenerated archive reviews as the rows it changed.
-def rows(rs): return "[\n" + ",\n".join("\t" + json.dumps(r, ensure_ascii=False) for r in rs) + "\n]"
 # The 2026 Série A's games, from the crawl: a played game's score, an unplayed
 # one's day and hour.
 crawled = json.load(open("tools/crawl/brasileiro2026.json"))
@@ -326,5 +324,4 @@ for (team, name, *season), pid in player_of.items():
 
 body = {"Category": [dict(id=v, name=k) for k,v in cat.items()], "Stadium": stadium_rows,
         "Team": teams, "Referee": referees, "Championship": championships, "Phase": phases, "Group": groups, "Zone": zones, "TeamGroup": tgs, "Game": games + extra_games, "Player": players, "TeamPlayer": squad, "PlayerGame": appearances, "Goal": goals_rows}
-with open(out, "w") as f:
-    f.write("{\n" + ",\n".join(f"{json.dumps(ent)}: {rows(rs)}" for ent, rs in body.items()) + "\n}\n")
+write(body, out)

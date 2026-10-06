@@ -5,8 +5,9 @@ services:
       additional_contexts:
         golaberto-database: service:golaberto-database
         golaberto-mesh-events: service:golaberto-mesh-events
+        golaberto-migrate: service:golaberto-migrate
         libraries_mecha-conduit-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-conduit:0.4.0@sha256:5b37a9074a35a9e8a3f95aa70b8c09f226927a7d9053cfa4ffc91ee07a5c302b}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-conduit:0.6.0@sha256:5b37a9074a35a9e8a3f95aa70b8c09f226927a7d9053cfa4ffc91ee07a5c302b}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image}
       context: ..
       dockerfile: .bayt/Dockerfile.conduit
       target: conduit
@@ -19,6 +20,8 @@ services:
         restart: true
       golaberto-mesh-events:
         condition: service_started
+      golaberto-migrate:
+        condition: service_completed_successfully
     develop:
       watch:
       - action: sync+restart
@@ -50,6 +53,7 @@ services:
       additional_contexts:
         golaberto-database_bayt: service:golaberto-database_bayt
         golaberto-mesh-events_bayt: service:golaberto-mesh-events_bayt
+        golaberto-migrate_bayt: service:golaberto-migrate_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.conduit
       target: conduit_bayt

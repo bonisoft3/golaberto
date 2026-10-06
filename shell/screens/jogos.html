@@ -20,25 +20,25 @@
           <button type="button" id="games-tab-upcoming" role="tab" aria-selected="{up}" data-text="{msg.games_upcoming}"></button>
           <button type="button" id="games-tab-results" role="tab" aria-selected="{res}" data-text="{msg.games_results}"></button>
         </div>
-<ol class="games upcoming" data-live="game_card" data-filter="played=is.false&kickoff=not.is.null&limit=40" data-order="kickoff.asc" data-empty="{msg.games_none_upcoming}">
+<ol class="games upcoming" data-live="matches_game_card" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="played=is.false&kickoff=not.is.null&limit=40" data-order="kickoff.asc,id.asc" data-empty="{msg.games_none_upcoming}">
   <template data-item>
-    <li><a class="game-row" data-route="jogo" data-param-id="{id}" data-played="{played}">
+    <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{id}" data-played="{played}">
       <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
-      <span class="where" data-text="{championship_name}"></span>
-      <span class="home" data-text="{home_name}"></span>
+      <span class="where" data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span>
+      <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></span>
       <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-      <span class="away" data-text="{away_name}"></span>
+      <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>
     </a></li>
   </template>
 </ol>
-<ol class="games results" data-live="game_card" data-filter="played=is.true&limit=40" data-order="day.desc,kickoff.desc" data-empty="{msg.games_none_results}">
+<ol class="games results" data-live="matches_game_card" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="played=is.true&limit=40" data-order="day.desc,kickoff.desc,id.asc" data-empty="{msg.games_none_results}">
   <template data-item>
-    <li><a class="game-row" data-route="jogo" data-param-id="{id}" data-played="{played}">
+    <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{id}" data-played="{played}">
       <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
-      <span class="where" data-text="{championship_name}"></span>
-      <span class="home" data-text="{home_name}"></span>
+      <span class="where" data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span>
+      <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></span>
       <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-      <span class="away" data-text="{away_name}"></span>
+      <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>
     </a></li>
   </template>
 </ol>

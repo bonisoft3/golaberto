@@ -1,6 +1,22 @@
 # The card and the two team lines one game yields: the regression rationale
 # for each case is its name.
 tests:
+  - name: startup emits string championship events accepted by the CDC router
+    target_processors: /input/broker/inputs/1/processors
+    mocks:
+      /input/broker/inputs/1/processors/0/try/0/branch/processors/0:
+        mapping: 'root = [{"id": "c1"}, {"id": "c2"}]'
+    input_batch:
+      - content: '{"boot": true}'
+    output_batches:
+      - - bloblang: 'this.data.type() == "string" && this.data.parse_json() == {"__table": "championship", "id": "c1"}'
+      - - bloblang: 'this.data.type() == "string" && this.data.parse_json() == {"__table": "championship", "id": "c2"}'
+  - name: a startup championship bounds its game read
+    target_processors: /pipeline/processors/0
+    input_batch:
+      - content: '{"data": "{\"__table\": \"championship\", \"id\": \"c\"}"}'
+    output_batches:
+      - - bloblang: 'this.scope.has_suffix("&phase.championship_id=eq.c") && !this.exists("own")'
   - name: a played game's card carries its names, and each team's line its own result
     target_processors: /pipeline/processors/1/try/3
     input_batch:
@@ -31,3 +47,32 @@ tests:
       - content: '{"data": "{\"__table\": \"team\", \"id\": \"t\"}"}'
     output_batches:
       - - bloblang: 'this.scope.has_suffix("&or=(home_id.eq.t,away_id.eq.t)") && !this.exists("own")'
+
+  - name: flags and countries stay outside the card and opponent-line writer
+    target_processors: /pipeline/processors/1/try/3
+    input_batch:
+      - content: "{\"id\": \"g\", \"phase_id\": \"p\", \"round\": 1, \"day\": \"2026-10-02\", \"kickoff\": null, \"played\": false, \"home_id\": \"h\", \"away_id\": \"a\", \"home_score\": null, \"away_score\": null, \"home_aet\": null, \"away_aet\": null, \"home_pen\": null, \"away_pen\": null, \"attendance\": null, \"home\": {\"name\": \"H\", \"country\": \"Brazil\"}, \"away\": {\"name\": \"A\", \"country\": \"Argentina\"}, \"stadium\": null, \"referee\": null, \"phase\": {\"name\": \"P\", \"championship_id\": \"c\", \"championship\": {\"full_name\": \"C\", \"show_country\": true}}}"
+    output_batches:
+      - - bloblang: "!this.index(0).rows.index(0).exists(\"show_country\") && !this.index(0).rows.index(0).exists(\"home_country\") && !this.index(0).rows.index(0).exists(\"away_country\") && this.index(1).rows.all(r -> !r.exists(\"show_country\") && !r.exists(\"opponent_country\"))"
+  - name: a flag-only championship update skips the game read
+    target_processors: /pipeline/processors/0
+    input_batch:
+      - content: "{\"data\": \"{\\\"__table\\\": \\\"championship\\\", \\\"id\\\": \\\"c\\\", \\\"name\\\": \\\"C\\\", \\\"region_name\\\": \\\"Brazil\\\", \\\"begins\\\": \\\"2026-01-01\\\", \\\"ends\\\": \\\"2026-12-31\\\", \\\"show_country\\\": true, \\\"__before\\\": \\\"{\\\\\\\"name\\\\\\\": \\\\\\\"C\\\\\\\", \\\\\\\"region_name\\\\\\\": \\\\\\\"Brazil\\\\\\\", \\\\\\\"begins\\\\\\\": \\\\\\\"2026-01-01\\\\\\\", \\\\\\\"ends\\\\\\\": \\\\\\\"2026-12-31\\\\\\\", \\\\\\\"show_country\\\\\\\": false}\\\"}\"}"
+    output_batches: []
+  - name: a simultaneous rename and flag edit still refreshes championship names
+    target_processors: /pipeline/processors/0
+    input_batch:
+      - content: "{\"data\": \"{\\\"__table\\\": \\\"championship\\\", \\\"id\\\": \\\"c\\\", \\\"name\\\": \\\"Renamed\\\", \\\"region_name\\\": \\\"Brazil\\\", \\\"begins\\\": \\\"2026-01-01\\\", \\\"ends\\\": \\\"2026-12-31\\\", \\\"show_country\\\": true, \\\"__before\\\": \\\"{\\\\\\\"name\\\\\\\": \\\\\\\"C\\\\\\\", \\\\\\\"region_name\\\\\\\": \\\\\\\"Brazil\\\\\\\", \\\\\\\"begins\\\\\\\": \\\\\\\"2026-01-01\\\\\\\", \\\\\\\"ends\\\\\\\": \\\\\\\"2026-12-31\\\\\\\", \\\\\\\"show_country\\\\\\\": false}\\\"}\"}"
+    output_batches:
+      - - bloblang: "this.scope.contains(\"eq.c\")"
+  - name: a country-only team update skips the game read
+    target_processors: /pipeline/processors/0
+    input_batch:
+      - content: "{\"data\": \"{\\\"__table\\\": \\\"team\\\", \\\"id\\\": \\\"c\\\", \\\"name\\\": \\\"A\\\", \\\"country\\\": \\\"Argentina\\\", \\\"__before\\\": \\\"{\\\\\\\"name\\\\\\\": \\\\\\\"A\\\\\\\", \\\\\\\"country\\\\\\\": \\\\\\\"Brazil\\\\\\\"}\\\"}\"}"
+    output_batches: []
+  - name: a simultaneous rename and country edit still refreshes team names
+    target_processors: /pipeline/processors/0
+    input_batch:
+      - content: "{\"data\": \"{\\\"__table\\\": \\\"team\\\", \\\"id\\\": \\\"c\\\", \\\"name\\\": \\\"Renamed\\\", \\\"country\\\": \\\"Argentina\\\", \\\"__before\\\": \\\"{\\\\\\\"name\\\\\\\": \\\\\\\"A\\\\\\\", \\\\\\\"country\\\\\\\": \\\\\\\"Brazil\\\\\\\"}\\\"}\"}"
+    output_batches:
+      - - bloblang: "this.scope.contains(\"eq.c\")"

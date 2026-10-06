@@ -25,7 +25,7 @@
   "name": "browser",
   "project": "golaberto",
   "dir": ".",
-  "activate": "mise x --",
+  "activate": "",
   "srcs": {
     "globs": [],
     "exclude": []
@@ -37,7 +37,9 @@
   "state": {
     "globs": []
   },
-  "env": {},
+  "env": {
+    "MISE_ALWAYS_KEEP_DOWNLOAD": "1"
+  },
   "synthetics": {
     "bayt": {
       "name": "browser_bayt",
@@ -118,7 +120,43 @@
     "./.bayt/compose.browser.yaml"
   ],
   "chainedDeps": [],
-  "cmds": [],
+  "cmds": [
+    {
+      "srcs": {
+        "globs": [
+          "[m]ise.toml",
+          "[.]mise.toml",
+          "[m]ise.lock",
+          "[.]tool-versions"
+        ],
+        "exclude": [],
+        "defaultGlobs": null,
+        "defaultExclude": null
+      },
+      "do": "mise install",
+      "dockerfile": {
+        "do": "d=/root/.local/share/mise/downloads; s=/mise-tarball-store; mkdir -p \"$d\" \"$s\"; cp -r \"$s\"/. \"$d\"/ 2>/dev/null || true; mise install || exit; cd \"$d\" && for f in */*/*; do [ -f \"$f\" ] || continue; o=\"$s/$f\"; [ -e \"$o\" ] && continue; mkdir -p \"$(dirname \"$o\")\"; t=\"$(mktemp \"$(dirname \"$o\")/.pXXXXXX\")\" && cp \"$f\" \"$t\" && mv -f \"$t\" \"$o\"; done; :",
+        "mounts": [
+          {
+            "type": "cache",
+            "target": "/root/.local/share/mise/downloads",
+            "scope": "project",
+            "required": false
+          },
+          {
+            "type": "cache",
+            "target": "/mise-tarball-store",
+            "scope": "global",
+            "required": false
+          }
+        ],
+        "shell": "sh"
+      },
+      "name": "builtin",
+      "shell": "exec",
+      "stop": false
+    }
+  ],
   "cache": {
     "full": false,
     "similar": false

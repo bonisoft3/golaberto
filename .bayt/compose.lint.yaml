@@ -1,0 +1,36 @@
+# generated from bayt.cue — do not edit
+services:
+  golaberto-lint:
+    build:
+      additional_contexts:
+        golaberto-setup: service:golaberto-setup
+      context: ..
+      dockerfile: .bayt/Dockerfile.lint
+      target: lint
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-lint:${BAYT_IMAGE_TAG:-latest}
+    scale: 0
+  golaberto-lint_bayt:
+    build:
+      additional_contexts:
+        golaberto-setup_bayt: service:golaberto-setup_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.lint
+      target: lint_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-lint_bayt:latest
+    scale: 0
+  golaberto-lint_srcs:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.lint
+      target: lint_srcs
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-lint_srcs:latest
+    scale: 0

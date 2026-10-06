@@ -7,9 +7,9 @@ BEGIN;
 -- tier: container
 DO $$ DECLARE t text; BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_publication WHERE pubname = 'golaberto_cdc') THEN
-    CREATE PUBLICATION golaberto_cdc FOR TABLE app_user,category,championship,phase,stage_group,zone,stadium,team,team_group,referee,player,team_player,game,goal,player_game,comment,editor WITH (publish_generated_columns = stored);
+    CREATE PUBLICATION golaberto_cdc FOR TABLE app_user,category,championship,phase,stage_group,zone,stadium,team,team_group,referee,player,team_player,game,goal,player_game,comment,editor,team_comment WITH (publish_generated_columns = stored);
   END IF;
-  FOREACH t IN ARRAY ARRAY['app_user','category','championship','phase','stage_group','zone','stadium','team','team_group','referee','player','team_player','game','goal','player_game','comment','editor'] LOOP
+  FOREACH t IN ARRAY ARRAY['app_user','category','championship','phase','stage_group','zone','stadium','team','team_group','referee','player','team_player','game','goal','player_game','comment','editor','team_comment'] LOOP
     IF NOT EXISTS (SELECT 1 FROM pg_publication_tables
                    WHERE pubname = 'golaberto_cdc' AND schemaname = 'public' AND tablename = t) THEN
       EXECUTE format('ALTER PUBLICATION golaberto_cdc ADD TABLE %I', t);
@@ -27,9 +27,9 @@ END $$;
 -- tier: container
 DO $$ DECLARE t text; BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_publication WHERE pubname = 'electric_publication_default') THEN
-    CREATE PUBLICATION electric_publication_default FOR TABLE app_user,category,championship,phase,stage_group,zone,stadium,team,team_group,referee,player,team_player,game,goal,player_game,standing,team_chance,zone_chance,position_chance,game_importance,team_rating,player_rating,rating_eval,game_card,team_game,comment,editor,player_stat,phase_round WITH (publish_generated_columns = stored);
+    CREATE PUBLICATION electric_publication_default FOR TABLE app_user,category,championship,home_championship,phase,stage_group,zone,stadium,team,team_championship,team_group,referee,geography_region,geography_country,team_directory,player,team_player,team_roster,team_player_history,game,goal,player_game,standing,team_chance,zone_chance,position_chance,game_importance,team_rating,player_rating,rating_eval,game_card,home_game_card,matches_game_card,team_game,comment,editor,player_stat,phase_round,team_comment,team_campaign_point,team_odds_history,team_rating_chart,team_odds_chart,team_roster_total WITH (publish_generated_columns = stored);
   END IF;
-  FOREACH t IN ARRAY ARRAY['app_user','category','championship','phase','stage_group','zone','stadium','team','team_group','referee','player','team_player','game','goal','player_game','standing','team_chance','zone_chance','position_chance','game_importance','team_rating','player_rating','rating_eval','game_card','team_game','comment','editor','player_stat','phase_round'] LOOP
+  FOREACH t IN ARRAY ARRAY['app_user','category','championship','home_championship','phase','stage_group','zone','stadium','team','team_championship','team_group','referee','geography_region','geography_country','team_directory','player','team_player','team_roster','team_player_history','game','goal','player_game','standing','team_chance','zone_chance','position_chance','game_importance','team_rating','player_rating','rating_eval','game_card','home_game_card','matches_game_card','team_game','comment','editor','player_stat','phase_round','team_comment','team_campaign_point','team_odds_history','team_rating_chart','team_odds_chart','team_roster_total'] LOOP
     IF NOT EXISTS (SELECT 1 FROM pg_publication_tables
                    WHERE pubname = 'electric_publication_default' AND schemaname = 'public' AND tablename = t) THEN
       EXECUTE format('ALTER PUBLICATION electric_publication_default ADD TABLE %I', t);
@@ -40,15 +40,22 @@ END $$;
 ALTER TABLE app_user REPLICA IDENTITY FULL;
 ALTER TABLE category REPLICA IDENTITY FULL;
 ALTER TABLE championship REPLICA IDENTITY FULL;
+ALTER TABLE home_championship REPLICA IDENTITY FULL;
 ALTER TABLE phase REPLICA IDENTITY FULL;
 ALTER TABLE stage_group REPLICA IDENTITY FULL;
 ALTER TABLE zone REPLICA IDENTITY FULL;
 ALTER TABLE stadium REPLICA IDENTITY FULL;
 ALTER TABLE team REPLICA IDENTITY FULL;
+ALTER TABLE team_championship REPLICA IDENTITY FULL;
 ALTER TABLE team_group REPLICA IDENTITY FULL;
 ALTER TABLE referee REPLICA IDENTITY FULL;
+ALTER TABLE geography_region REPLICA IDENTITY FULL;
+ALTER TABLE geography_country REPLICA IDENTITY FULL;
+ALTER TABLE team_directory REPLICA IDENTITY FULL;
 ALTER TABLE player REPLICA IDENTITY FULL;
 ALTER TABLE team_player REPLICA IDENTITY FULL;
+ALTER TABLE team_roster REPLICA IDENTITY FULL;
+ALTER TABLE team_player_history REPLICA IDENTITY FULL;
 ALTER TABLE game REPLICA IDENTITY FULL;
 ALTER TABLE goal REPLICA IDENTITY FULL;
 ALTER TABLE player_game REPLICA IDENTITY FULL;
@@ -61,11 +68,19 @@ ALTER TABLE team_rating REPLICA IDENTITY FULL;
 ALTER TABLE player_rating REPLICA IDENTITY FULL;
 ALTER TABLE rating_eval REPLICA IDENTITY FULL;
 ALTER TABLE game_card REPLICA IDENTITY FULL;
+ALTER TABLE home_game_card REPLICA IDENTITY FULL;
+ALTER TABLE matches_game_card REPLICA IDENTITY FULL;
 ALTER TABLE team_game REPLICA IDENTITY FULL;
 ALTER TABLE comment REPLICA IDENTITY FULL;
 ALTER TABLE editor REPLICA IDENTITY FULL;
 ALTER TABLE player_stat REPLICA IDENTITY FULL;
 ALTER TABLE phase_round REPLICA IDENTITY FULL;
+ALTER TABLE team_comment REPLICA IDENTITY FULL;
+ALTER TABLE team_campaign_point REPLICA IDENTITY FULL;
+ALTER TABLE team_odds_history REPLICA IDENTITY FULL;
+ALTER TABLE team_rating_chart REPLICA IDENTITY FULL;
+ALTER TABLE team_odds_chart REPLICA IDENTITY FULL;
+ALTER TABLE team_roster_total REPLICA IDENTITY FULL;
 -- tier: any
 GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO anon;
 

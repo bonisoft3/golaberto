@@ -4,18 +4,9 @@ tasks:
     deps:
     - "::bayt:setup"
     - "::bayt:launch"
-    env:
-      MISE_ALWAYS_KEEP_DOWNLOAD: "1"
     run: once
     status:
     - >-
       mise x -- bayt fingerprint --manifest
       '{{.TASKFILE_DIR}}/bayt.check-constraints.json' --stamp-file .task/bayt/check-constraints.hash
-    vars:
-      BAYTW: >-
-        mise x -- bayt cache run --manifest
-        '{{.TASKFILE_DIR}}/bayt.check-constraints.json' --
-    cmds:
-    - "{{.BAYTW}} mise install"
-    - defer: "{{if not .EXIT_CODE}}mise x -- bayt fingerprint --manifest '{{.TASKFILE_DIR}}/bayt.check-constraints.json' --stamp-file .task/bayt/check-constraints.hash --update-stamp{{end}}"
 version: "3"

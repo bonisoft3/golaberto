@@ -1,21 +1,30 @@
 {
   "_generated_from": "bayt.cue (do not edit)",
+  "dockerfile": {
+    "preamble": [],
+    "preambleCopyContexts": [],
+    "from": {
+      "ref": ":build",
+      "name": "golaberto-build"
+    },
+    "add": [],
+    "mounts": [],
+    "secrets": {},
+    "extra_hosts": [],
+    "epilogue": [],
+    "copy": [],
+    "healthcheck": null,
+    "expose": [],
+    "entrypoint": null,
+    "incremental": false,
+    "cmd": null
+  },
   "name": "test",
   "project": "golaberto",
   "dir": ".",
   "activate": "mise x --",
   "srcs": {
-    "globs": [
-      "*.cue",
-      "bayt.json",
-      "DESIGN.md",
-      "cue.mod/**",
-      "pronto/**",
-      ".say.yaml",
-      "[p]ipelines/*.blobl",
-      "[m]essages/*.json",
-      "[s]hell/boot.js"
-    ],
+    "globs": [],
     "exclude": []
   },
   "outs": {
@@ -26,13 +35,134 @@
     "globs": []
   },
   "env": {},
+  "synthetics": {
+    "bayt": {
+      "name": "test_bayt",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.test.yaml",
+          ".bayt/Dockerfile.test",
+          ".bayt/bayt.test.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/Taskfile.test.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.test.yaml",
+        "./.bayt/compose.build.yaml",
+        "./.bayt/compose.setup.yaml"
+      ]
+    },
+    "outs": {
+      "name": "test_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.test.yaml",
+        "./.bayt/compose.build.yaml",
+        "./.bayt/compose.setup.yaml"
+      ]
+    },
+    "srcs": {
+      "name": "test_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          "**"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [
+        "build_srcs",
+        "setup_srcs"
+      ],
+      "transitiveCrossDeps": [
+        {
+          "project": "golaberto",
+          "name": "build_srcs",
+          "dir": ".",
+          "outs": {
+            "globs": [
+              "**"
+            ],
+            "exclude": [
+              ".bayt/**",
+              "**/node_modules/**",
+              ".task/**",
+              "tests/**"
+            ]
+          }
+        }
+      ],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.test.yaml",
+        "./.bayt/compose.build.yaml",
+        "./.bayt/compose.setup.yaml"
+      ]
+    }
+  },
   "taskfile": {
     "run": "once",
     "incremental": true,
     "preconditions": []
   },
   "visibility": "internal",
-  "emitsSrcs": false,
+  "emitsSrcs": true,
   "deps": [
     "build"
   ],
@@ -45,6 +175,7 @@
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
+    "./.bayt/compose.test.yaml",
     "./.bayt/compose.build.yaml",
     "./.bayt/compose.setup.yaml"
   ],
@@ -71,17 +202,7 @@
   "cmds": [
     {
       "srcs": {
-        "globs": [
-          "*.cue",
-          "bayt.json",
-          "DESIGN.md",
-          "cue.mod/**",
-          "pronto/**",
-          ".say.yaml",
-          "[p]ipelines/*.blobl",
-          "[m]essages/*.json",
-          "[s]hell/boot.js"
-        ],
+        "globs": [],
         "exclude": [],
         "defaultGlobs": null,
         "defaultExclude": null

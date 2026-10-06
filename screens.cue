@@ -44,9 +44,9 @@ _locales: [
 	out:    """
 		<section class="recent">
 		  <h2 data-text="{msg.\(R.region)}"></h2>
-		  <ul class="champ-list" data-live="championship" data-filter="region=eq.\(R.region)&limit=6" data-order="begins.desc" data-empty="{msg.home_empty}">
+		  <ul class="champ-list" data-live="home_championship" data-filter="region=eq.\(R.region)" data-order="strength.desc,full_name.asc,id.asc" data-empty="{msg.home_empty}">
 		    <template data-item>
-		      <li><a data-route="campeonato" data-param-id="{id}" data-text="{full_name}"></a></li>
+		      <li><a data-route="campeonato" data-param-id="{id}"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}|{msg.geography_names}" data-text-format="geography-label"></span></a></li>
 		    </template>
 		  </ul>
 		</section>
@@ -75,21 +75,83 @@ _standingsHead: strings.Join(list.Concat([[for c in _standings {
 	][0]
 }], ["\t                            <th scope=\"col\" class=\"form wide\" data-text=\"{msg.col_form}\"></th>"]]), "\n")
 
-_standingsCells: strings.Join(list.Concat([[for c in _standings {
-	[
-		if c.link != _|_ {"\t                                <td class=\"\(c.cls)\"><a data-route=\"equipe\" data-param-id=\"{\(c.link)}\" data-text=\"{\(c.bind)}\"></a></td>"},
-		"\t                                <td class=\"\(c.cls)\" data-text=\"{\(c.bind)}\"></td>",
-	][0]
-}], ["\t                                <td class=\"form wide\">" + strings.Join([for i in [1, 2, 3, 4, 5] {"<i data-result=\"{form\(i)}\" title=\"{msg[form\(i)]}\"></i>"}], "") + "</td>"]]), "\n")
+#StandingsCells: S={
+	championship_param: string
+	out: strings.Join(list.Concat([[for c in _standings {
+		[
+			if c.link != _|_ && S.championship_param != "" {"\t                                <td class=\"\(c.cls)\"><span class=\"team-name-cell\"><span class=\"archive-icon\" data-text=\"{\(c.link)}|{\(c.bind)}\" data-text-format=\"team-badge\"></span><a class=\"team-name\" title=\"{\(c.bind)}\" data-route=\"equipe-campeonato\" data-param-id=\"{\(c.link)}\" data-param-championship=\"\(S.championship_param)\" data-text=\"{\(c.bind)}\"></a></span></td>"},
+			if c.link != _|_ {"\t                                <td class=\"\(c.cls)\"><a data-route=\"equipe\" data-param-id=\"{\(c.link)}\"><span class=\"archive-icon\" data-text=\"{\(c.link)}|{\(c.bind)}\" data-text-format=\"team-badge\"></span><span data-text=\"{\(c.bind)}\"></span></a></td>"},
+			"\t                                <td class=\"\(c.cls)\" data-text=\"{\(c.bind)}\"></td>",
+		][0]
+	}], ["\t                                <td class=\"form wide\">" + strings.Join([for i in [1, 2, 3, 4, 5] {"<i data-result=\"{form\(i)}\" title=\"{msg[form\(i)]}\"></i>"}], "") + "</td>"]]), "\n")
+}
 
-// The catalogue's search: two arrows over the tab's search row.
+_standingsCells: (#StandingsCells & {championship_param: ""}).out
+_championshipStandingsCells: (#StandingsCells & {championship_param: "{param.championship}"}).out
+
+
+// Forty rows per page; a one-row probe shows Next only when another page exists.
+#PageActions: P={
+	key: string
+	out: {
+		("click@\(P.key)-previous"): assign: {
+			offset: {type: "page-value", params: {step: -40, field: "offset"}}
+			next_offset: {type: "page-value", params: {step: -40, field: "next_offset"}}
+			page: {type: "page-value", params: {step: -40, field: "page"}}
+		}
+		("click@\(P.key)-next"): assign: {
+			offset: {type: "page-value", params: {step: 40, field: "offset"}}
+			next_offset: {type: "page-value", params: {step: 40, field: "next_offset"}}
+			page: {type: "page-value", params: {step: 40, field: "page"}}
+		}
+	}
+}
+#PageArrows: P={
+	key: string
+	table: string
+	filter: string
+	order: string
+	out: """
+	<nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
+	  <button id="\(P.key)-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
+	  <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
+	  <span data-live="\(P.table)" data-filter="\(P.filter)&amp;offset={next_offset}&amp;limit=1" data-order='\(P.order)' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+	  <button id="\(P.key)-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
+	</nav>
+	"""
+}
+#PagedRead: P={
+	key: string
+	table: string
+	filter: string
+	order: string
+	owner: *"{id}" | string
+	scope: *"" | string
+	content: string
+	controls: *"" | string
+	context: *{} | {[string]: _}
+	events: *{} | {[string]: _}
+	_empty: json.Marshal({id: "\(P.key)-\(P.owner)\(P.scope)", owner_id:P.owner, offset:0,next_offset:40,page:1,state:"browsing"} & P.context)
+	_machine: json.Marshal({field: "state", initial: "browsing", context: {owner_id: P.owner, offset: 0, next_offset: 40, page: 1} & P.context, states: browsing: on: (#PageActions & {key: P.key}).out & P.events})
+	out: """
+	<div class="paged-read" data-live="archive_page" data-filter="id=eq.\(P.key)-\(P.owner)\(P.scope)" data-machine='\(P._machine)' data-empty-row='\(P._empty)'>
+	  <div class="page-window">
+	\(P.controls)
+	\(P.content)
+	\((#PageArrows & {key: P.key, table: P.table, filter: P.filter, order: P.order}).out)
+	  </div>
+	</div>
+	"""
+}
+
+// The catalogue search and page belong to the tab.
 _catalogMachine: json.Marshal({
 	field:   "state"
 	initial: "browsing"
-	context: {q: "", region: ""}
-	states: browsing: on: {
-		"input@catalog-q": assign: q: {type: "event", params: field: "value"}
-		"change@catalog-region": assign: region: {type: "event", params: field: "value"}
+	context: {q: "", q_key: "", region: "", offset: 0, next_offset: 40, page: 1}
+	states: browsing: on: (#PageActions & {key: "catalog"}).out & {
+		"input@catalog-q": assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}
+		"change@catalog-region": assign: {region: {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}
 	}
 })
 
@@ -98,24 +160,53 @@ _catalogMachine: json.Marshal({
 // beside it (ir decision-local-reads); a list inside one championship leaves
 // the championship out.
 #GameList: G={
+	table: *"game_card" | string
 	filter: string
 	order:  string
 	empty:  string
 	cls:    *"games" | string
 	where:  *true | bool
-	_where: [if G.where {"\n      <span class=\"where\" data-text=\"{championship_name}\"></span>"}, ""][0]
+	homeFeed: *"" | "upcoming" | "recent"
+	_where: [if G.where {"\n      <span class=\"where\" data-text=\"{championship_name}|{msg.geography_names}\" data-text-format=\"geography-label\"></span>"}, ""][0]
+	_project: [if G.homeFeed != "" {#" data-project='{"day_first":{"first":"day"},"previous":"prev"}'"#}, ""][0]
+	_exitMotion: [if G.homeFeed != "" {#" data-exit-motion="none""#}, ""][0]
+	_dayClass: [if G.homeFeed != "" {"day visually-hidden"}, "day"][0]
+	_dayHeading: [if G.homeFeed != "" {"""
+	      <h3 class="home-day" data-live="\(G.table)" data-filter="id=eq.{day_first}&amp;id=eq.{id}" data-empty="" data-exit-motion="none"><template data-item><span class="home-day-label" data-text="{day}|{msg.home_weekdays}" data-text-format="home-date"></span></template></h3>
+	"""}, ""][0]
+	_phaseHeading: [if G.homeFeed != "" {"""
+	      <h4 class="home-phase"><span hidden data-live="home_game_card" data-filter="id=eq.{previous}" data-empty="" data-exit-motion="none" data-project='{"same_day":{"eq":["day","{day}"]},"same_phase":{"eq":["phase_id","{phase_id}"]},"is_first":{"eq":["id","{id}"]}}'><template data-item><span class="home-phase-context" data-same-day="{same_day}" data-same-phase="{same_phase}" data-first="{is_first}"></span></template></span><a class="home-phase-label" data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span> <small data-text="{phase_name}"></small></a></h4>
+	"""}, ""][0]
+	_itemAttributes: [if G.homeFeed != "" {#" class="home-championship" data-championship="{championship_id}" data-phase="{phase_id}""#}, ""][0]
+	_highlightAttribute: [if G.homeFeed != "" {#" data-highlighted="{home_highlighted}""#}, ""][0]
 	out:    """
-		<ol class="\(G.cls)" data-live="game_card" data-filter="\(G.filter)" data-order="\(G.order)" data-empty="\(G.empty)">
+		<ol class="\(G.cls)" data-live="\(G.table)" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="\(G.filter)" data-order="\(G.order)" data-empty="\(G.empty)"\(G._project)\(G._exitMotion)>
 		  <template data-item>
-		    <li><a class="game-row" data-route="jogo" data-param-id="{id}" data-played="{played}">
-		      <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>\(G._where)
-		      <span class="home" data-text="{home_name}"></span>
+		    <li\(G._itemAttributes)>\(G._dayHeading)\(G._phaseHeading)<a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{id}" data-played="{played}"\(G._highlightAttribute)>
+		      <span class="when"><span class="\(G._dayClass)" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>\(G._where)
+		      <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></span>
 		      <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-		      <span class="away" data-text="{away_name}"></span>
+		      <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>
 		    </a></li>
 		  </template>
 		</ol>
 		"""
+}
+
+// Preserve global rank order; date and phase headings precede their first row.
+#HomeGameFeed: H={
+	feed: "upcoming" | "recent"
+	played: string
+	empty: string
+	out: (#GameList & {
+		table: "home_game_card"
+		filter: "played=is.\(H.played)&home_\(H.feed)_rank=gt.0&limit=20"
+		order: "home_\(H.feed)_rank.asc"
+		empty: H.empty
+		cls: "games home-championships"
+		where: false
+		homeFeed: H.feed
+	}).out
 }
 
 // The games page's two lists, switched by a machine over the tab's view row.
@@ -140,8 +231,8 @@ _jogosMarkup: """
 	          <button type="button" id="games-tab-upcoming" role="tab" aria-selected="{up}" data-text="{msg.games_upcoming}"></button>
 	          <button type="button" id="games-tab-results" role="tab" aria-selected="{res}" data-text="{msg.games_results}"></button>
 	        </div>
-	\((#GameList & {filter: "played=is.false&kickoff=not.is.null&limit=40", order: "kickoff.asc", empty: "{msg.games_none_upcoming}", cls: "games upcoming"}).out)
-	\((#GameList & {filter: "played=is.true&limit=40", order: "day.desc,kickoff.desc", empty: "{msg.games_none_results}", cls: "games results"}).out)
+	\((#GameList & {table: "matches_game_card", filter: "played=is.false&kickoff=not.is.null&limit=40", order: "kickoff.asc,id.asc", empty: "{msg.games_none_upcoming}", cls: "games upcoming"}).out)
+	\((#GameList & {table: "matches_game_card", filter: "played=is.true&limit=40", order: "day.desc,kickoff.desc,id.asc", empty: "{msg.games_none_results}", cls: "games results"}).out)
 	      </div>
 	    </template>
 	  </div>
@@ -177,7 +268,9 @@ _editKeys: {
 	"input@edit-away": {assign: {away_score: "count-or-null", played: {type: "both-scored", params: other: "home_score"}}}
 	"input@edit-attendance": {assign: attendance: "count-or-null"}
 	"change@edit-stadium":   {assign: stadium_id: "blank-null"}
+	"input@edit-stadium-q": {assign: {stadium_q: {type: "event", params: field: "value"}, stadium_q_key: {type: "search-key"}}}
 	"change@edit-referee":   {assign: referee_id: "blank-null"}
+	"input@edit-referee-q": {assign: {referee_q: {type: "event", params: field: "value"}, referee_q_key: {type: "search-key"}}}
 	"input@goal-minute":     {assign: goal_minute: "count-or-null"}
 	"change@goal-player":    {assign: goal_player_id: "blank-null"}
 	"click@edit-save": {target: "saving", effect: {level: "replicated", op: "update", entity: "game", values: {
@@ -223,14 +316,14 @@ _editMachine: json.Marshal({
 _editarMarkup: """
 	<section class="screen" data-screen="editar">
 	\((#Masthead & {route: "editar", params: " data-param-id=\"{param.id}\""}).out)
-	<div data-live="game_card" data-filter="id=eq.{param.id}" data-exit-motion="none" data-empty="{msg.game_gone}">
+	<div data-live="game_card" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="id=eq.{param.id}" data-exit-motion="none" data-empty="{msg.game_gone}">
 	  <template data-item>
 	    <article class="game">
-	      <h1 class="band"><a data-route="campeonato" data-param-id="{championship_id}" data-text="{championship_name}"></a></h1>
+	      <h1 class="band"><a data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span></a></h1>
 	      <div class="page">
 	        <div class="content">
 	          <div data-live="game_edit" data-filter="id=eq.{id}" data-machine='\(_editMachine)'
-	               data-empty-row='{"id":"{id}","state":"editing","played":"{played}","home_score":"{home_score}","away_score":"{away_score}","attendance":"{attendance}","stadium_id":"{stadium_id}","referee_id":"{referee_id}","goal_minute":null,"goal_player_id":null,"home_name":"{home_name}","away_name":"{away_name}"}'>
+	               data-empty-row='{"id":"{id}","state":"editing","played":"{played}","home_score":"{home_score}","away_score":"{away_score}","attendance":"{attendance}","stadium_id":"{stadium_id}","referee_id":"{referee_id}","goal_minute":null,"goal_player_id":null,"home_name":"{home_name}","away_name":"{away_name}","stadium_q":"","referee_q":"","stadium_q_key":"","referee_q_key":""}'>
 	           <div class="edit" data-state="{state}">
 	            <!-- The game itself, held so the save has the row it updates. -->
 	            <span data-live="game" data-filter="id=eq.{id}" data-empty="" hidden></span>
@@ -247,10 +340,12 @@ _editarMarkup: """
 	              <legend data-text="{msg.edit_facts}"></legend>
 	              <div class="fields">
 	                <label class="field wide" for="edit-stadium"><span data-text="{msg.game_stadium}"></span>
-	                  <select id="edit-stadium" data-value="{stadium_id}"><option value="" data-text="{msg.edit_unknown}"></option><optgroup data-live="stadium" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select>
+	                  <input id="edit-stadium-q" type="search" value="{stadium_q}" placeholder="{msg.choice_search}" aria-label="{msg.game_stadium}" maxlength="80" autocomplete="off">
+	                  <select id="edit-stadium" data-value="{stadium_id}"><option value="" data-text="{msg.edit_unknown}"></option><optgroup data-live="stadium" data-filter="id=eq.{stadium_id}" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup><optgroup data-live="stadium" data-filter="search_key=like.*{stadium_q_key}*&limit=40" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select>
 	                </label>
 	                <label class="field wide" for="edit-referee"><span data-text="{msg.game_referee}"></span>
-	                  <select id="edit-referee" data-value="{referee_id}"><option value="" data-text="{msg.edit_unknown}"></option><optgroup data-live="referee" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select>
+	                  <input id="edit-referee-q" type="search" value="{referee_q}" placeholder="{msg.choice_search}" aria-label="{msg.game_referee}" maxlength="80" autocomplete="off">
+	                  <select id="edit-referee" data-value="{referee_id}"><option value="" data-text="{msg.edit_unknown}"></option><optgroup data-live="referee" data-filter="id=eq.{referee_id}" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup><optgroup data-live="referee" data-filter="search_key=like.*{referee_q_key}*&limit=40" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select>
 	                </label>
 	                <label class="field" for="edit-attendance"><span data-text="{msg.game_attendance}"></span>
 	                  <input id="edit-attendance" type="text" inputmode="numeric" pattern="[0-9]*" placeholder="{msg.edit_unrecorded}" data-value="{attendance}">
@@ -306,7 +401,7 @@ _chancesMarkup: """
 	<div data-live="stage_group" data-select="*,phase(name,championship_id)" data-filter="id=eq.{param.id}" data-exit-motion="none" data-empty="{msg.chances_gone}">
 	  <template data-item>
 	    <article class="chances-page">
-	      <h1 class="band" data-live="championship" data-filter="id=eq.{phase.championship_id}" data-empty=""><template data-item><a data-route="campeonato" data-param-id="{id}" data-text="{full_name}"></a></template></h1>
+	      <h1 class="band" data-live="championship" data-filter="id=eq.{phase.championship_id}" data-empty=""><template data-item><a data-route="campeonato" data-param-id="{id}"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}|{msg.geography_names}" data-text-format="geography-label"></span></a></template></h1>
 	      <div class="page">
 	        <div class="content">
 	          <div class="chances-head">
@@ -326,7 +421,7 @@ _chancesMarkup: """
 	                    <div class="rows" data-live="team_chance" data-filter="group_id=eq.{group_id}" data-order="rank.asc" data-empty="">
 	                      <template data-item>
 	                        <div class="row" role="row">
-	                          <span class="pos" role="cell" data-text="{rank}"></span><span class="name" role="rowheader"><a data-route="equipe" data-param-id="{team_id}" data-text="{team_name}"></a></span><span class="pts" role="cell" data-text="{points}"></span>
+	                          <span class="pos" role="cell" data-text="{rank}"></span><span class="name" role="rowheader"><a data-route="equipe" data-param-id="{team_id}"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></span><span class="pts" role="cell" data-text="{points}"></span>
 	                          <span class="cells" data-live="zone_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}" data-order="first.asc,last.asc" data-empty=""><template data-item><span class="pct" role="cell" data-zone="{color}" data-band="{band}"><span data-text="{percent}" data-text-format="number"></span>\(_reachMark)</span></template></span>
 	                        </div>
 	                      </template>
@@ -343,7 +438,7 @@ _chancesMarkup: """
 	                    <div class="rows" data-live="team_chance" data-filter="group_id=eq.{group_id}" data-order="rank.asc" data-empty="">
 	                      <template data-item>
 	                        <div class="row" role="row">
-	                          <span class="pos" role="cell" data-text="{rank}"></span><span class="name" role="rowheader"><a data-route="equipe" data-param-id="{team_id}" data-text="{team_name}"></a></span>
+	                          <span class="pos" role="cell" data-text="{rank}"></span><span class="name" role="rowheader"><a data-route="equipe" data-param-id="{team_id}"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></span>
 	                          <span class="cells" data-live="position_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}" data-order="position.asc" data-empty=""><template data-item><span class="heat-cell" role="cell" data-band="{band}" data-current="{current}" title="{percent}%"><span class="visually-hidden" data-text="{percent}" data-text-format="number"></span>\(_reachMark)</span></template></span>
 	                        </div>
 	                      </template>
@@ -377,20 +472,20 @@ _chancesMarkup: """
 _jogoMarkup: """
 	<section class="screen" data-screen="jogo">
 	\((#Masthead & {route: "jogo", params: " data-param-id=\"{param.id}\""}).out)
-	<div data-live="game_card" data-filter="id=eq.{param.id}" data-exit-motion="none" data-empty="{msg.game_gone}">
+	<div data-live="game_card" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="id=eq.{param.id}" data-exit-motion="none" data-empty="{msg.game_gone}">
 	  <template data-item>
 	    <article class="game" data-played="{played}">
-	      <h1 class="band"><a data-route="campeonato" data-param-id="{championship_id}" data-text="{championship_name}"></a></h1>
+	      <h1 class="band"><a data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span></a></h1>
 	      <div class="page">
 	        <div class="content">
 	          <div class="game-head">
 	            <p class="phase-name" data-text="{phase_name}"></p>
 	            <div class="edit-gate" data-live="editor" data-empty=""><template data-item><a class="btn-quiet edit-link" data-route="editar" data-param-id="{param.id}" data-text="{msg.edit_link}"></a></template></div>
 	          </div>
-	          <div class="scoreboard">
-	            <a class="home" data-route="equipe" data-param-id="{home_id}" data-text="{home_name}"></a>
+	          <div class="scoreboard" data-show-country="{championship.show_country}">
+	            <a class="home" data-route="equipe" data-param-id="{home_id}"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></a>
 	            <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-	            <a class="away" data-route="equipe" data-param-id="{away_id}" data-text="{away_name}"></a>
+	            <a class="away" data-route="equipe" data-param-id="{away_id}"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></a>
 	          </div>
 	          <p class="extra"><span class="aet"><span data-text="{msg.game_aet}"></span> <b data-text="{home_aet}"></b>–<b data-text="{away_aet}"></b></span> <span class="pen"><span data-text="{msg.game_pen}"></span> <b data-text="{home_pen}"></b>–<b data-text="{away_pen}"></b></span></p>
 	          <dl class="game-facts">
@@ -435,13 +530,17 @@ _jogoMarkup: """
 	      <p class="refusal" role="alert" data-text="{msg.comment_refused}"></p>
 	      <button id="comment-post" type="button" class="btn post"><span class="idle" data-text="{msg.comment_post}"></span><span class="busy" data-text="{msg.comment_posting}"></span></button>
 	    </div>
-	    <ol class="comment-list" data-live="comment" data-select="*,app_user(handle)" data-filter="game_id=eq.{param.id}" data-order="created_at.desc" data-empty="{msg.comments_none}">
+	\((#PagedRead & {key: "game-comments", owner: "{param.id}", table: "comment", filter: "game_id=eq.{owner_id}", order: "created_at.desc", content: _game_commentsMarkup}).out)
+	  </section>
+	</section>
+	"""
+
+_game_commentsMarkup: """
+	    <ol class="comment-list" data-live="comment" data-select="*,app_user(handle)" data-filter="game_id=eq.{owner_id}&amp;offset={offset}&amp;limit=40" data-order="created_at.desc" data-empty="{msg.comments_none}">
 	      <template data-item>
 	        <li><p class="byline"><b data-text="{app_user.handle}"></b> <time data-text="{created_at}" data-text-format="datetime"></time></p><p class="body" data-text="{body}"></p></li>
 	      </template>
 	    </ol>
-	  </section>
-	</section>
 	"""
 
 _lineup: L={
@@ -465,35 +564,27 @@ _principalMarkup: """
 	<h1 class="band" data-text="{msg.home_title}"></h1>
 	<div class="page">
 	  <div class="content">
-	    <p class="lead" data-text="{msg.home_lead}"></p>
+	    <div class="home-games">
+	      <section class="home-upcoming" aria-labelledby="home-upcoming-heading">
+	        <h2 id="home-upcoming-heading" class="home-games-title" data-text="{msg.games_upcoming}"></h2>
+	\((#HomeGameFeed & {feed: "upcoming", played: "false", empty: "{msg.home_no_upcoming}"}).out)
+	      </section>
+	      <section class="home-results" aria-labelledby="home-results-heading">
+	        <h2 id="home-results-heading" class="home-games-title" data-text="{msg.games_results}"></h2>
+	\((#HomeGameFeed & {feed: "recent", played: "true", empty: "{msg.home_no_results}"}).out)
+	      </section>
+	      <p class="more"><a data-route="jogos" data-text="{msg.home_all_games}"></a></p>
+	    </div>
 	    <section class="feature" data-live="championship" data-filter="featured=is.true&limit=1" data-order="begins.desc" data-empty="">
 	      <template data-item>
 	        <div class="feature-body">
 	          <div class="feature-head">
-	            <h2 data-text="{full_name}"></h2>
+	            <h2><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}|{msg.geography_names}" data-text-format="geography-label"></span></h2>
 	            <a data-route="campeonato" data-param-id="{id}" data-text="{msg.home_table_link}"></a>
 	          </div>
 	          <div class="feature-phase" data-live="phase" data-filter="championship_id=eq.{id}&limit=1" data-order="position.asc" data-empty="">
 	            <template data-item>
 	              <div class="feature-grid">
-	                <div class="rounds" data-live="phase_round" data-filter="phase_id=eq.{id}" data-empty="">
-	                  <template data-item>
-	                    <div class="round-pair">
-	                      <section class="round">
-	                        <h3><span data-text="{msg.round}"></span> <span data-text="{current}"></span> <small data-text="{msg.home_results}"></small></h3>
-	\((#GameList & {filter: "phase_id=eq.{phase_id}&round=eq.{current}", order: "day.asc,kickoff.asc", empty: "{msg.round_empty}", where: false}).out)
-	                      </section>
-	                      <div class="round-next" data-live="phase_round" data-filter="id=eq.{id}&next=not.is.null" data-empty="">
-	                        <template data-item>
-	                          <section class="round">
-	                            <h3><span data-text="{msg.round}"></span> <span data-text="{next}"></span> <small data-text="{msg.home_upcoming}"></small></h3>
-	\((#GameList & {filter: "phase_id=eq.{phase_id}&round=eq.{next}", order: "day.asc,kickoff.asc", empty: "{msg.round_empty}", where: false}).out)
-	                          </section>
-	                        </template>
-	                      </div>
-	                    </div>
-	                  </template>
-	                </div>
 	                <div class="top" data-live="stage_group" data-filter="phase_id=eq.{id}&limit=1" data-order="position.asc,name.asc" data-empty="">
 	                  <template data-item>
 	                    <section class="top-six">
@@ -526,7 +617,7 @@ _principalMarkup: """
 	    </section>
 	    <h2 class="recent-title" data-text="{msg.home_recent}"></h2>
 	    <div class="regions">
-	\(strings.Join([for r in ["world", "continental", "national"] {(#Recent & {region: r}).out}], "\n"))
+	\(strings.Join([for r in ["national", "continental", "world"] {(#Recent & {region: r}).out}], "\n"))
 	    </div>
 	    <p class="more"><a data-route="campeonatos" data-text="{msg.home_all}"></a></p>
 	  </div>
@@ -562,16 +653,17 @@ _campeonatosMarkup: """
 	            <th scope="col" class="narrow" data-text="{msg.col_region}"></th>
 	            <th scope="col" class="narrow" data-text="{msg.col_category}"></th>
 	          </tr></thead>
-	          <tbody data-live="championship" data-filter="full_name=ilike.*{q}*&region=like.*{region}*" data-order="region_name.asc,name.asc,begins.desc" data-empty="{msg.catalog_empty}">
+	          <tbody data-live="championship" data-filter="search_key=like.*{q_key}*&region=like.*{region}*&offset={offset}&limit=40" data-order="region_name.asc,name.asc,begins.desc" data-empty="{msg.catalog_empty}">
 	            <template data-item>
 	              <tr>
-	                <td><a data-route="campeonato" data-param-id="{id}" data-text="{full_name}"></a></td>
+	                <td><a data-route="campeonato" data-param-id="{id}"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}|{msg.geography_names}" data-text-format="geography-label"></span></a></td>
 	                <td class="narrow" data-text="{msg[region]}"></td>
 	                <td class="narrow"><span data-live="category" data-filter="id=eq.{category_id}" data-empty="{msg.professional}"><template data-item><span data-text="{name}"></span></template></span></td>
 	              </tr>
 	            </template>
 	          </tbody>
 	        </table>
+	\((#PageArrows & {key: "catalog", table: "championship", filter: "search_key=like.*{q_key}*&region=like.*{region}*", order: "region_name.asc,name.asc,begins.desc"}).out)
 	      </div>
 	    </template>
 	  </div>
@@ -586,7 +678,7 @@ _campeonatoMarkup: """
 	<div data-live="championship" data-filter="id=eq.{param.id}" data-exit-motion="none" data-empty="{msg.championship_gone}">
 	  <template data-item>
 	    <article class="championship">
-	      <h1 class="band" data-text="{full_name}"></h1>
+	      <h1 class="band"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}|{msg.geography_names}" data-text-format="geography-label"></span></h1>
 	      <div class="page">
 	        <div class="content">
 	          <p class="facts">
@@ -616,7 +708,7 @@ _campeonatoMarkup: """
 	                          <tbody data-live="standing" data-filter="group_id=eq.{id}" data-order="position.asc" data-empty="{msg.no_teams}">
 	                            <template data-item>
 	                              <tr data-zone="{zone}">
-	\(_standingsCells)
+	\((#StandingsCells & {championship_param: "{param.id}"}).out)
 	                              </tr>
 	                            </template>
 	                          </tbody>
@@ -671,21 +763,65 @@ _campeonatoMarkup: """
 	row:     string
 	table:   string
 	route:   string
+	order: *"name.asc" | string
+	withCountry: *false | bool
+	withTeamType: *false | bool
 	// A column marked `drop` is the one a phone does without.
 	columns: [...{key: string, bind: string, drop: *false | bool}]
 	_input:  "\(D.row)-q"
 	_machine: json.Marshal({
 		field:   "state"
 		initial: "browsing"
-		context: {q: ""}
-		states: browsing: on: "input@\(D._input)": assign: q: {type: "event", params: field: "value"}
+		context: {q: "", q_key: "", country: "", country_key: "", region_selection: "*", country_selection: "*", team_type: "club", offset: 0, next_offset: 40, page: 1}
+		states: browsing: on: (#PageActions & {key: D.row}).out & {"input@\(D._input)": assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}}
+		if D.withTeamType {states: browsing: on: {
+			"change@teams-type": assign: {team_type: {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}
+		}}
+		if D.withCountry {states: browsing: on: {
+			"input@teams-country": assign: {country: {type: "event", params: field: "value"}, country_key: {type: "search-key"}, country_selection: "*", offset: 0, next_offset: 40, page: 1}
+			"change@teams-region": assign: {region_selection: {type: "geography-selection"}, country_selection: "*", country: "", country_key: "", offset: 0, next_offset: 40, page: 1}
+			"click@teams-country-all": assign: {country_selection: "*", country: "", country_key: "", offset: 0, next_offset: 40, page: 1}
+		}}
 	})
+	_filter: "search_key=like.*{q_key}*\([if D.withCountry {"&country_search_key=like.*{country_key}*&region_id=like.{region_selection}&country_id=like.{country_selection}"}, ""][0])\([if D.withTeamType {"&team_type=eq.{team_type}"}, ""][0])"
+	_type: [if D.withTeamType {"""
+	            <label class="field" for="teams-type"><span data-text="{msg.teams_type}"></span>
+	              <select id="teams-type" data-value="{team_type}"><option value="club" data-text="{msg.teams_clubs}"></option><option value="national" data-text="{msg.teams_national}"></option></select>
+	            </label>
+	"""}, ""][0]
+	_country: [if D.withCountry {"""
+			          <div class="geography-group">
+			            <div class="field country-picker"><span id="teams-country-label" data-text="{msg.geography_country}"></span>
+			              <button id="teams-country-open" type="button" class="country-open" command="toggle-popover" commandfor="teams-country-pop" aria-labelledby="teams-country-label teams-country-readout" aria-haspopup="dialog" aria-controls="teams-country-pop" data-country-selection="{country_selection}" data-country-query="{country}">
+			                <span id="teams-country-readout" class="country-readout">
+			                  <span class="country-all" data-text="{msg.geography_all_countries}"></span>
+			                  <span class="country-query" data-text="{country}"></span>
+			                  <span class="country-selected" data-live="geography_country" data-filter="id=eq.{country_selection}&limit=1" data-empty="" data-exit-motion="none"><template data-item><span data-text="{msg[message_key]}"></span></template></span>
+			                </span>
+			              </button>
+			            </div>
+			            <label class="field" for="teams-region"><span data-text="{msg.geography_region}"></span>
+			              <select id="teams-region" data-value="{region_selection}"><option value="*" data-text="{msg.geography_world}"></option><optgroup data-live="geography_region" data-filter="limit=6" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{msg[message_key]}"></option></template></optgroup></select>
+			            </label>
+			            <div id="teams-country-pop" class="country-pop" popover role="dialog" aria-label="{msg.geography_country}">
+			              <label class="field" for="teams-country"><span data-text="{msg.geography_search_country}"></span>
+			                <input id="teams-country" type="text" role="searchbox" data-value="{country}" placeholder="{msg.geography_search_country}" maxlength="60" autocomplete="off" autofocus>
+			              </label>
+			              <button id="teams-country-all" type="button" class="country-option country-all-option" command="hide-popover" commandfor="teams-country-pop" data-text="{msg.geography_all_countries}"></button>
+			              <div id="teams-country-options" class="country-options" data-live="geography_country" data-filter="region_id=like.{region_selection}&search_key=like.*{country_key}*&limit=250" data-order="name.asc" data-project='{"selected":{"eq":["id","{country_selection}"]}}' data-empty="{msg.geography_country_empty}">
+			                <template data-item><button type="button" class="country-option" id="teams-country-option-{id}" value="{id}" aria-pressed="{selected}" data-on-click="country-option" command="hide-popover" commandfor="teams-country-pop" data-text="{msg[message_key]}"></button></template>
+			              </div>
+			            </div>
+			          </div>
+		"""}, ""][0]
 	_head: strings.Join([for i, c in D.columns {
 		"            <th scope=\"col\"\([if i > 0 {" class=\"narrow\([if c.drop {" drop"}, ""][0])\""}, ""][0]) data-text=\"{msg.col_\(c.key)}\"></th>"
 	}], "\n")
 	_cells: strings.Join([for i, c in D.columns {
 		[
+			if i == 0 && D.route == "equipe" {"                <td><a data-route=\"\(D.route)\" data-param-id=\"{id}\"><span class=\"archive-icon\" data-text=\"{id}|{name}\" data-text-format=\"team-badge\"></span><span data-text=\"{\(c.bind)}\"></span></a></td>"},
 			if i == 0 {"                <td><a data-route=\"\(D.route)\" data-param-id=\"{id}\" data-text=\"{\(c.bind)}\"></a></td>"},
+			if c.bind == "country" {"                <td class=\"narrow\([if c.drop {" drop"}, ""][0])\"><span class=\"archive-icon\" data-text=\"{country}\" data-text-format=\"country-flag\"></span><span data-text=\"{country}|{msg.geography_names}\" data-text-format=\"geography-label\"></span></td>"},
 			"                <td class=\"narrow\([if c.drop {" drop"}, ""][0])\" data-text=\"{\(c.bind)}\"></td>",
 		][0]
 	}], "\n")
@@ -701,12 +837,14 @@ _campeonatoMarkup: """
 		          <label class="field grow" for="\(D._input)"><span data-text="{msg.search_label}"></span>
 		            <input id="\(D._input)" type="search" value="{q}" placeholder="{msg.\(D.row)_placeholder}" maxlength="80" autocomplete="off">
 		          </label>
+		\(D._country)
+		\(D._type)
 		        </div>
 		        <table class="grid catalog-table">
 		          <thead><tr>
 		\(D._head)
 		          </tr></thead>
-		          <tbody data-live="\(D.table)" data-filter="name=ilike.*{q}*" data-order="name.asc" data-empty="{msg.\(D.row)_empty}">
+		          <tbody data-live="\(D.table)" data-filter="\(D._filter)&offset={offset}&limit=40" data-order="\(D.order)" data-empty="{msg.\(D.row)_empty}">
 		            <template data-item>
 		              <tr>
 		\(D._cells)
@@ -714,6 +852,7 @@ _campeonatoMarkup: """
 		            </template>
 		          </tbody>
 		        </table>
+		\((#PageArrows & {key: D.row, table: D.table, filter: D._filter, order: D.order}).out)
 		      </div>
 		    </template>
 		  </div>
@@ -723,7 +862,7 @@ _campeonatoMarkup: """
 		"""
 }
 
-_equipesMarkup: (#Directory & {screen: "equipes", row: "teams", table: "team", route: "equipe", columns: [{key: "team", bind: "name"}, {key: "city", bind: "city"}, {key: "country", bind: "country", drop: true}]}).out
+_equipesMarkup: (#Directory & {screen: "equipes", row: "teams", table: "team_directory", route: "equipe", order: "rating.desc.nullslast,name.asc,id.asc", withCountry: true, withTeamType: true, columns: [{key: "team", bind: "name"}, {key: "rating", bind: "rating_display"}, {key: "city", bind: "city", drop: true}, {key: "country", bind: "country"}]}).out
 _estadiosMarkup: (#Directory & {screen: "estadios", row: "stadiums", table: "stadium", route: "estadio", columns: [{key: "stadium", bind: "name"}, {key: "city", bind: "city"}, {key: "country", bind: "country", drop: true}]}).out
 _arbitrosMarkup: (#Directory & {screen: "arbitros", row: "referees", table: "referee", route: "arbitro", columns: [{key: "referee", bind: "name"}, {key: "from", bind: "location"}]}).out
 
@@ -737,12 +876,12 @@ _arbitrosMarkup: (#Directory & {screen: "arbitros", row: "referees", table: "ref
 	played: bool
 	_outcome: [if T.played {"<i class=\"outcome\" title=\"{msg[result]}\"></i><span class=\"visually-hidden\" data-text=\"{msg[result]}\"></span>"}, ""][0]
 	out:    """
-		<ol class="games team-games" data-live="team_game" data-filter="\(T.filter)" data-order="\(T.order)" data-empty="\(T.empty)">
+		<ol class="games team-games" data-live="team_game" data-select="*,championship(show_country),opponent:opponent_id(country)" data-filter="\(T.filter)" data-order="\(T.order)" data-empty="\(T.empty)">
 		  <template data-item>
-		    <li><a class="game-row" data-route="jogo" data-param-id="{game_id}" data-played="{played}" data-result="{result}">
+		    <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{game_id}" data-played="{played}" data-result="{result}">
 		      <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
-		      <span class="where" data-text="{championship_name}"></span>
-		      <span class="home"><span class="venue" data-text="{msg[side]}"></span> <span data-text="{opponent_name}"></span></span>
+		      <span class="where" data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span>
+		      <span class="home"><span class="team-name"><span class="venue" data-text="{msg[side]}"></span> <span data-text="{opponent_name}"></span></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{opponent.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{opponent_id}|{opponent_name}" data-text-format="team-badge"></span></span></span>
 		      <span class="score"><b data-text="{goals_for}"></b><i>x</i><b data-text="{goals_against}"></b></span>
 		      <span class="away">\(T._outcome)</span>
 		    </a></li>
@@ -751,28 +890,189 @@ _arbitrosMarkup: (#Directory & {screen: "arbitros", row: "referees", table: "ref
 		"""
 }
 
-_squadColumns: [
+// A championship-scoped archive lists each fixture once in the match's own
+// home/away order, regardless of which side the selected team played.
+#TeamChampionshipGames: T={
+	filter: string
+	order:  string
+	empty:  string
+	played: bool
+	_outcome: [if T.played {"<i class=\"outcome\" title=\"{msg[result]}\" aria-hidden=\"true\"></i><span class=\"visually-hidden\" data-text=\"{msg[result]}\"></span>"}, ""][0]
+	_score: [if T.played {"<b data-text=\"{game.home_score}\"></b><i aria-hidden=\"true\">x</i><b data-text=\"{game.away_score}\"></b>"}, "<span class=\"fixture-score-placeholder\" aria-hidden=\"true\">–</span>"][0]
+	_scoreLabel: [if T.played {" aria-label=\"{msg.team_home} {game.home.name} {game.home_score} x {game.away_score} {msg.team_away} {game.away.name}\""}, " aria-label=\"{msg.team_home} {game.home.name} x {msg.team_away} {game.away.name}\""][0]
+	out: """
+		<div class="table-wrap">
+		  <table class="grid team-fixture-table">
+		    <thead><tr><th scope="col" class="fixture-date-head" data-text="{msg.team_date}"></th><th scope="col" class="fixture-home-head" data-text="{msg.team_home}"></th><th scope="col" class="fixture-score-head"><span class="visually-hidden" data-text="{msg.team_score}"></span></th><th scope="col" class="fixture-away-head" data-text="{msg.team_away}"></th><th scope="col" class="fixture-result-head"><span class="visually-hidden" data-text="{msg.team_result}"></span></th></tr></thead>
+		    <tbody data-live="team_game" data-select="*,championship(show_country),game:game_id(home_id,away_id,home_score,away_score,home:home_id(name,country),away:away_id(name,country))" data-filter="\(T.filter)" data-order="\(T.order)" data-empty="\(T.empty)">
+		      <template data-item>
+		        <tr class="game-row fixture-row" data-game-id="{game_id}" data-show-country="{championship.show_country}" data-played="\(T.played)" data-side="{side}" data-result="{result}">
+		          <td class="fixture-date"><a data-route="jogo" data-param-id="{game_id}"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></a></td>
+		          <td class="home"><span class="fixture-team"><a class="team-name" title="{game.home.name}" data-route="equipe-campeonato" data-param-id="{game.home_id}" data-param-championship="{param.championship}" data-text="{game.home.name}"></a><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{game.home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{game.home_id}|{game.home.name}" data-text-format="team-badge"></span></span></span></td>
+		          <td class="score"><a data-route="jogo" data-param-id="{game_id}"\(T._scoreLabel)>\(T._score)</a></td>
+		          <td class="away"><span class="fixture-team"><span class="team-icons"><span class="archive-icon team-badge" data-text="{game.away_id}|{game.away.name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{game.away.country}" data-text-format="country-flag"></span></span><a class="team-name" title="{game.away.name}" data-route="equipe-campeonato" data-param-id="{game.away_id}" data-param-championship="{param.championship}" data-text="{game.away.name}"></a></span></td>
+		          <td class="fixture-result">\(T._outcome)</td>
+		        </tr>
+		      </template>
+		    </tbody>
+		  </table>
+		</div>
+		"""
+}
+
+#TeamProfileChampionships: P={
+	key: string
+	filter: string
+	order: string
+	empty: string
+	_content: """
+	<ul class="team-championship-list" data-live="team_championship" data-filter="\(P.filter)&offset={offset}&limit=40" data-order='\(P.order)' data-empty="\(P.empty)">
+	  <template data-item><li><a data-route="equipe-campeonato" data-param-id="{team_id}" data-param-championship="{championship_id}"><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span><span class="chip" data-text="{msg[status]}"></span></a></li></template>
+	</ul>
+	"""
+	out: (#PagedRead & {key: P.key, owner: "{id}", table: "team_championship", filter: P.filter, order: P.order, content: P._content}).out
+}
+
+#TeamProfilePlayers: P={
+	key: string
+	filter: string
+	order: string
+	empty: string
+	_content: """
+	<ul class="team-player-list" data-live="team_player_history" data-filter="\(P.filter)&search_key=like.*{q_key}*&offset={offset}&limit=40" data-order='\(P.order)' data-empty="\(P.empty)">
+	  <template data-item><li><a data-route="jogador" data-param-id="{player_id}"><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{player_name}"></span> <small data-text="{position}"></small></a></li></template>
+	</ul>
+	"""
+	out: (#PagedRead & {key: P.key, owner: "{id}", table: "team_player_history", filter: P.filter + "&search_key=like.*{q_key}*", order: P.order, content: P._content, context: {q: "", q_key: ""}, events: {("input@\(P.key)-q"): assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}}, controls: "<label class=\"team-filter\"><span data-text=\"{msg.team_player_search}\"></span><input id=\"\(P.key)-q\" type=\"search\" value=\"{q}\" maxlength=\"80\"></label>"}).out
+}
+
+_teamRosterColumns: [
 	{key: "player", bind: "player_name", cls: "name", link: "player_id"},
 	{key: "pos", bind: "position", cls: "num"},
 	{key: "played", bind: "played", cls: "num"},
 	{key: "started", bind: "started", cls: "num wide"},
 	{key: "came_on", bind: "came_on", cls: "num wide"},
+	{key: "bench", bind: "bench", cls: "num wide"},
 	{key: "minutes", bind: "minutes", cls: "num wide"},
 	{key: "goals", bind: "goals", cls: "num"},
+	{key: "goals_per90", bind: "goals_per90", cls: "num wide"},
+	{key: "contribution", bind: "contribution", cls: "num wide"},
+	{key: "contribution_per90", bind: "contribution_per90", cls: "num wide"},
+	{key: "off_rating", bind: "off_rating", cls: "num wide"},
+	{key: "def_rating", bind: "def_rating", cls: "num wide"},
+	{key: "penalties", bind: "penalties", cls: "num wide"},
+	{key: "own_goals", bind: "own_goals", cls: "num wide"},
 	{key: "yellow", bind: "yellow", cls: "num wide"},
 	{key: "red", bind: "red", cls: "num wide"},
 ]
 
-_squadHead: strings.Join([for c in _squadColumns {
+#TeamRosterPage: R={
+	filter: string
+	order: string
+	empty: string
+	out: """
+	<div class="table-wrap"><table class="grid squad-table"><thead><tr>\(_teamRosterHead)</tr></thead>
+	<tbody data-live="team_roster" data-filter="\(R.filter)" data-order='\(R.order)' data-empty="\(R.empty)"><template data-item><tr>\(_teamRosterCells)</tr></template></tbody><tfoot data-live="team_roster_total" data-filter="team_id=eq.{param.id}&championship_id=eq.{param.championship}&limit=1" data-empty=""><template data-item><tr>\(_teamRosterTotalCells)</tr></template></tfoot></table></div>
+	"""
+}
+
+_teamRosterHead: strings.Join([for c in _teamRosterColumns {
 	"<th scope=\"col\" class=\"\(c.cls)\"><abbr title=\"{msg.col_\(c.key)_long}\" data-text=\"{msg.col_\(c.key)}\"></abbr></th>"
 }], "")
 
-_squadCells: strings.Join([for c in _squadColumns {
+_teamRosterCells: strings.Join([for c in _teamRosterColumns {
 	[
 		if c.link != _|_ {"<td class=\"\(c.cls)\"><a data-route=\"jogador\" data-param-id=\"{\(c.link)}\" data-text=\"{\(c.bind)}\"></a></td>"},
-		"<td class=\"\(c.cls)\" data-text=\"{\(c.bind)}\"></td>",
+		"<td class=\"\(c.cls)\" data-text=\"{\(c.bind)}\"\([if c.bind != "position" {" data-text-format=\"number\""}, ""][0])></td>",
 	][0]
 }], "")
+
+
+
+_teamRosterTotalCells: strings.Join([for c in _teamRosterColumns {[
+ if c.link != _|_ {"<th scope=\"row\" class=\"\(c.cls)\" data-text=\"{msg.team_total}\"></th>"},
+ if c.bind == "position" {"<td class=\"\(c.cls)\"></td>"},
+ "<td class=\"\(c.cls)\" data-text=\"{\(c.bind)}\" data-text-format=\"number\"></td>",
+ ][0]}], "")
+
+#TeamGameArchive: G={
+ key: string
+ played: bool
+ scoped: *false | bool
+ _scope: [if G.scoped {"&championship_id=eq.{param.championship}"}, ""][0]
+ _filter: "team_id=eq.{owner_id}&played=is.\(G.played)&side=like.{side}&phase_key=like.{phase}" + G._scope + [if !G.scoped {"&category_key=like.{category}"}, ""][0]
+ _order: [if G.played {"day.desc,kickoff.desc,id.asc"}, "day.asc,kickoff.asc,id.asc"][0]
+ _controls: """
+ <div class="team-filters">
+ \([if !G.scoped {"""
+ <label><span data-text="{msg.team_category}"></span><select id="\(G.key)-category" data-value="{category}"><option value="*" data-text="{msg.all}"></option><option value="professional" data-text="{msg.team_professional}"></option><optgroup data-live="category" data-filter="id=not.is.null&limit=40" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select></label>
+ """}, ""][0])
+ <label><span data-text="{msg.team_venue}"></span><select id="\(G.key)-side" data-value="{side}"><option value="*" data-text="{msg.all}"></option><option value="home" data-text="{msg.home}"></option><option value="away" data-text="{msg.away}"></option></select></label>
+ \([if G.scoped {"""
+ <label><span data-text="{msg.team_phase}"></span><select id="\(G.key)-phase" data-value="{phase}"><option value="*" data-text="{msg.all}"></option><optgroup data-live="phase" data-filter="championship_id=eq.{param.championship}&limit=100" data-order="position.asc,id.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select></label>
+ """}, ""][0])
+ </div>
+ """
+	 out: (#PagedRead & {key:G.key, owner:"{param.id}", scope:[if G.scoped {"-championship-{param.championship}"}, ""][0], table:"team_game", filter:G._filter, order:G._order, context:{category:"*",side:"*",phase:"*"}, events: {for f in [if !G.scoped {"category"},"side","phase"] {("change@\(G.key)-\(f)"):assign:{(f):{type:"event",params:field:"value"},offset:0,next_offset:40,page:1}}}, controls:G._controls, content:[if G.scoped {(#TeamChampionshipGames & {filter:G._filter+"&offset={offset}&limit=40",order:G._order,empty:[if G.played {"{msg.games_none_results}"},"{msg.games_none_upcoming}"][0],played:G.played}).out}, (#TeamGames & {filter:G._filter+"&offset={offset}&limit=40",order:G._order,empty:[if G.played {"{msg.games_none_results}"},"{msg.games_none_upcoming}"][0],played:G.played}).out][0]}).out
+}
+
+_teamCommentMachine: json.Marshal({field:"state",initial:"writing",context:{body:""},on:refused:target:"refused",states:{writing:on:{"input@team-comment-body":_type,"click@team-comment-post":{target:"sending",effect:{level:"replicated",op:"create",entity:"team_comment",values:{team_id:"{id}",body:"{body}"}}}},sending:on:sync_ack:{target:"writing",assign:body:""},refused:on:{"input@team-comment-body":_type & {target:"writing"},"click@team-comment-post":{target:"sending",effect:{level:"replicated",op:"create",entity:"team_comment",values:{team_id:"{id}",body:"{body}"}}}}}})
+_teamComments: """
+ <section class="comments"><h2 data-text="{msg.comments_title}"></h2>
+ <div class="composer" data-live="team_comment_draft" data-filter="id=eq.{param.id}" data-machine='\(_teamCommentMachine)' data-state="{state}"><label class="field" for="team-comment-body"><span data-text="{msg.comment_label}"></span><textarea id="team-comment-body" data-value="{body}" maxlength="1000" rows="3" placeholder="{msg.team_comment_placeholder}"></textarea></label><p class="refusal" role="alert" data-text="{msg.comment_refused}"></p><button id="team-comment-post" type="button" class="btn post"><span class="idle" data-text="{msg.comment_post}"></span><span class="busy" data-text="{msg.comment_posting}"></span></button></div>
+ \((#PagedRead & {key:"team-comments",owner:"{param.id}",table:"team_comment",filter:"team_id=eq.{owner_id}",order:"created_at.desc,id.asc",content:"""
+ <ol class="comment-list" data-live="team_comment" data-select="*,app_user(handle)" data-filter="team_id=eq.{owner_id}&offset={offset}&limit=40" data-order="created_at.desc,id.asc" data-empty="{msg.team_comment_empty}"><template data-item><li><p class="byline"><b data-text="{app_user.handle}"></b> <time data-text="{created_at}" data-text-format="datetime"></time></p><p class="body" data-text="{body}"></p></li></template></ol>
+ """}).out)
+ </section>
+ """
+_teamRatingHistory: """
+ <section class="team-rating-history"><h2 data-text="{msg.team_rating_history}"></h2>
+ \((#PagedRead & {key:"team-rating-history",owner:"{param.id}",table:"team_rating",filter:"team_id=eq.{owner_id}",order:"measure_date.desc,id.asc",context:{period:"1y"},events:{"change@team-rating-period":assign:period:{type:"event",params:field:"value"}},controls:"""
+ <label class="team-filter"><span data-text="{msg.team_period}"></span><select id="team-rating-period" data-value="{period}"><option value="1m" data-text="{msg.period_1m}"></option><option value="3m" data-text="{msg.period_3m}"></option><option value="6m" data-text="{msg.period_6m}"></option><option value="1y" data-text="{msg.period_1y}"></option><option value="5y" data-text="{msg.period_5y}"></option><option value="all" data-text="{msg.all}"></option></select></label>
+ """,content:"""
+ <div data-live="team_rating_chart" data-filter="team_id=eq.{owner_id}&period=eq.{period}&limit=1" data-empty="{msg.team_history_none}"><template data-item><div data-text="{series_json}\u001f{msg.team_rating_history}\u001f{msg.chart_locale}\u001f{msg.team_history_none}" data-text-format="team-chart"></div></template></div>
+ <p class="team-chart-note" data-text="{msg.team_chart_sample}"></p>
+ <details><summary data-text="{msg.team_history_table}"></summary><table class="grid"><thead><tr><th data-text="{msg.team_date}"></th><th data-text="{msg.team_rating}"></th><th data-text="{msg.col_off_rating}"></th><th data-text="{msg.col_def_rating}"></th></tr></thead><tbody data-live="team_rating" data-filter="team_id=eq.{owner_id}&offset={offset}&limit=40" data-order="measure_date.desc,id.asc" data-empty="{msg.team_history_none}"><template data-item><tr><th scope="row" data-text="{measure_date}"></th><td data-text="{rating}" data-text-format="number"></td><td data-text="{offense}" data-text-format="number"></td><td data-text="{defense}" data-text-format="number"></td></tr></template></tbody></table></details>
+ """}).out)
+ </section>
+ """
+
+_teamRosterOrder: #"{"by":"{sort}","of":{"name":"player_name.asc,player_id.asc","played":"played.desc.nullslast,player_name.asc,player_id.asc","minutes":"minutes.desc.nullslast,player_name.asc,player_id.asc","goals":"goals.desc.nullslast,player_name.asc,player_id.asc","goals_per90":"goals_per90.desc.nullslast,player_name.asc,player_id.asc","contribution":"contribution.desc.nullslast,player_name.asc,player_id.asc","contribution_per90":"contribution_per90.desc.nullslast,player_name.asc,player_id.asc"}}"#
+
+_teamRosterArchive: """
+ \((#PagedRead & {key:"team-roster",owner:"{param.id}",scope:"-championship-{param.championship}",table:"team_roster",filter:"team_id=eq.{owner_id}&championship_id=eq.{param.championship}&search_key=like.*{q_key}*",order: _teamRosterOrder,context:{q:"",q_key:"",sort:"name"},events:{"input@team-roster-q":assign:{q:{type:"event",params:field:"value"},q_key:{type:"search-key"},offset:0,next_offset:40,page:1},"change@team-roster-sort":assign:{sort:{type:"event",params:field:"value"},offset:0,next_offset:40,page:1}},controls:"""
+ <div class="team-filters"><label><span data-text="{msg.team_player_search}"></span><input id="team-roster-q" type="search" value="{q}" maxlength="80"></label><label><span data-text="{msg.team_sort}"></span><select id="team-roster-sort" data-value="{sort}"><option value="name" data-text="{msg.col_player}"></option><option value="played" data-text="{msg.col_played_long}"></option><option value="minutes" data-text="{msg.col_minutes_long}"></option><option value="goals" data-text="{msg.col_goals_long}"></option><option value="goals_per90" data-text="{msg.col_goals_per90_long}"></option><option value="contribution" data-text="{msg.col_contribution_long}"></option><option value="contribution_per90" data-text="{msg.col_contribution_per90_long}"></option></select></label></div>
+ """,content:(#TeamRosterPage & {filter:"team_id=eq.{owner_id}&championship_id=eq.{param.championship}&search_key=like.*{q_key}*&offset={offset}&limit=40",order: _teamRosterOrder,empty:"{msg.team_no_roster}"}).out}).out)
+ <p class="team-chart-note" data-text="{msg.team_contribution_note}"></p>
+
+ """
+
+_teamCampaign: """
+ <section class="team-campaign"><h2 data-text="{msg.team_progress}"></h2><p class="team-chart-note" data-text="{msg.team_progress_note}"></p>
+ <div data-live="team_group" data-select="*,group:stage_group!inner(name,phase!inner(name,championship_id))" data-filter="team_id=eq.{param.id}&group.phase.championship_id=eq.{param.championship}" data-order="group_id.asc" data-empty="{msg.team_no_table}"><template data-item><section class="team-group-card"><h3><span data-text="{group.phase.name}"></span> · <span data-text="{group.name}"></span></h3>
+ <div data-live="team_chart_state" data-filter="id=eq.{group_id}:{param.id}" data-machine='{"field":"metric","initial":"points","context":{"group_id":"{group_id}","team_id":"{param.id}","compare_id":"{param.id}","series_json":"{}","game_prefix":"{msg.chart_game_prefix}"},"on":{"change":{"assign":{"compare_id":{"type":"chart-compare"}}},"click":{"assign":{"metric":{"type":"chart-metric"}}}},"states":{"points":{},"position":{}}}' data-empty-row='{"id":"{group_id}:{param.id}","group_id":"{group_id}","team_id":"{param.id}","compare_id":"{param.id}","metric":"points","series_json":"{}","game_prefix":"{msg.chart_game_prefix}"}' data-on-mutation="team-chart-seed" data-read-stored="team_chart_state?id=eq.{id}">
+ <div class="team-filters"><label><span data-text="{msg.team_compare}"></span><select data-value="{compare_id}"><optgroup data-live="standing" data-filter="group_id=eq.{group_id}&limit=250" data-order="team_name.asc,team_id.asc" data-empty=""><template data-item><option value="{team_id}" data-text="{team_name}"></option></template></optgroup></select></label><div class="team-chart-tabs"><button value="points" type="button" class="btn-quiet" data-text="{msg.col_points_long}"></button><button value="position" type="button" class="btn-quiet" data-text="{msg.col_position_long}"></button></div></div>
+ <div data-text="{series_json}\u001f{msg.team_progress}\u001f{msg.chart_locale}\u001f{msg.team_history_none}\u001f{metric}" data-text-format="team-chart"></div>
+ <div class="team-chart-source" data-live="team_campaign_point" data-select="*,team(name)" data-filter="group_id=eq.{group_id}&team_id=in.({team_id},{compare_id})&limit=800" data-order="sequence.asc,team_id.asc" data-on-mutation="team-chart-fold" data-read-view="team_chart_state?id=eq.{id}"><template data-item><span hidden></span></template></div>
+ \((#PagedRead & {key:"team-campaign-history",owner:"{team_id}",scope:"-{group_id}",context:{phase:"{group_id}"},table:"team_campaign_point",filter:"group_id=eq.{phase}&team_id=eq.{owner_id}",order:"sequence.asc",content:"""
+<details><summary data-text="{msg.team_history_table}"></summary><table class="grid"><thead><tr><th data-text="{msg.team_date}"></th><th data-text="{msg.col_points}"></th><th data-text="{msg.col_position}"></th><th data-text="{msg.team_fixtures}"></th></tr></thead><tbody data-live="team_campaign_point" data-filter="group_id=eq.{phase}&team_id=eq.{owner_id}&offset={offset}&limit=40" data-order="sequence.asc" data-empty="{msg.team_history_none}"><template data-item><tr><th scope="row" data-text="{day}"></th><td data-text="{points}"></td><td data-text="{position}"></td><td><a data-route="jogo" data-param-id="{game_id}" data-text="{sequence}"></a></td></tr></template></tbody></table></details>
+"""}).out)
+ </div></section></template></div></section>
+ """
+
+
+_teamPositionChart: """
+ <div data-live="team_chart_state" data-filter="id=eq.odds:{group_id}:{team_id}" data-empty-row='{"id":"odds:{group_id}:{team_id}","group_id":"{group_id}","team_id":"{team_id}","compare_id":"{team_id}","metric":"percent","series_json":"{}","game_prefix":"{msg.chart_game_prefix}"}' data-on-mutation="team-chart-seed" data-read-stored="team_chart_state?id=eq.{id}">
+ <div data-text="{series_json}\u001f{msg.team_position_odds}\u001f{msg.chart_locale}\u001f{msg.team_history_none}" data-text-format="team-chart"></div>
+ <div class="team-chart-source" data-live="position_chance" data-select="*,team(name)" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}&limit=250" data-order="position.asc" data-on-mutation="team-chart-fold" data-read-view="team_chart_state?id=eq.{id}"><template data-item><span hidden></span></template></div>
+ </div>
+ """
+
+_teamOddsEvolution: """
+ <section class="team-odds-evolution"><h2 data-text="{msg.team_odds_history}"></h2><p class="team-chart-note" data-text="{msg.team_zone_history_note}"></p>
+ <div data-live="team_odds_chart" data-select="*,zone(name)" data-filter="team_id=eq.{param.id}&group_id=eq.{group_id}&limit=50" data-order="zone_id.asc" data-empty="{msg.team_history_none}"><template data-item><details class="team-zone-history" open><summary data-text="{zone.name}"></summary><div data-text="{series_json}\u001f{zone.name}\u001f{msg.chart_locale}\u001f{msg.team_history_none}" data-text-format="team-chart"></div></details></template></div>
+ </section>
+ """
 
 _equipeMarkup: """
 	<section class="screen" data-screen="equipe">
@@ -780,39 +1080,90 @@ _equipeMarkup: """
 	<div data-live="team" data-filter="id=eq.{param.id}" data-exit-motion="none" data-empty="{msg.team_gone}">
 	  <template data-item>
 	    <article class="team">
-	      <h1 class="band" data-text="{name}"></h1>
+	      <h1 class="band"><span class="archive-icon" data-text="{id}|{name}" data-text-format="team-badge"></span><span data-text="{name}"></span></h1>
 	      <div class="page">
 	        <div class="content">
 	          <dl class="game-facts">
 	            <dt data-text="{msg.team_full_name}"></dt><dd data-text="{full_name}"></dd>
 	            <dt data-text="{msg.team_city}"></dt><dd data-text="{city}"></dd>
-	            <dt data-text="{msg.team_country}"></dt><dd data-text="{country}"></dd>
+	            <dt data-text="{msg.team_country}"></dt><dd><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{country}|{msg.geography_names}" data-text-format="geography-label"></span></dd>
 	            <dt data-text="{msg.team_founded}"></dt><dd data-text="{foundation_display}"></dd>
-	            <dt data-text="{msg.team_rating}"></dt><dd class="rating" data-live="team_rating" data-filter="team_id=eq.{id}&limit=1" data-order="measure_date.desc" data-empty=""><template data-item><abbr title="{msg.team_rating_long}" data-text="{rating}" data-text-format="number"></abbr></template></dd>
-	            <dt data-text="{msg.game_stadium}"></dt><dd data-live="stadium" data-filter="id=eq.{stadium_id}" data-empty=""><template data-item><span data-text="{name}"></span></template></dd>
+	            <dt data-text="{msg.team_rating}"></dt><dd class="rating" data-live="team_rating" data-filter="team_id=eq.{id}&limit=1" data-order="measure_date.desc,id.asc" data-empty=""><template data-item><abbr title="{msg.team_rating_long}" data-text="{rating}" data-text-format="number"></abbr></template></dd>
+	            <dt data-text="{msg.game_stadium}"></dt><dd data-live="stadium" data-filter="id=eq.{stadium_id}" data-empty=""><template data-item><a data-route="estadio" data-param-id="{id}" data-text="{name}"></a></template></dd>
 	          </dl>
-	          <section class="team-next">
-	            <h2 data-text="{msg.team_next}"></h2>
-	\((#TeamGames & {filter: "team_id=eq.{id}&played=is.false&limit=5", order: "day.asc,kickoff.asc", empty: "{msg.games_none_upcoming}", played: false}).out)
+	          <div data-text="{latitude}|{longitude}|{msg.team_location}|{msg.team_location_none}" data-text-format="team-location"></div>
+	          \(_teamRatingHistory)
+	          <section><h2 data-text="{msg.games_upcoming}"></h2>\((#TeamGameArchive & {key:"team-upcoming",played:false}).out)</section>
+	          <section><h2 data-text="{msg.games_results}"></h2>\((#TeamGameArchive & {key:"team-results",played:true}).out)</section>
+	          <section class="team-current-championships">
+	            <h2 data-text="{msg.team_current_championships}"></h2>
+	            \((#TeamProfileChampionships & {key: "team-current-championships", filter: "team_id=eq.{owner_id}&status=neq.past", order: "status.asc,begins.desc,championship_id.asc", empty: "{msg.team_no_current_championships}"}).out)
 	          </section>
-	          <section class="team-results">
-	            <h2 data-text="{msg.team_results}"></h2>
-	\((#TeamGames & {filter: "team_id=eq.{id}&played=is.true&limit=10", order: "day.desc,kickoff.desc", empty: "{msg.games_none_results}", played: true}).out)
+	          <section class="team-past-championships">
+	            <h2 data-text="{msg.team_past_championships}"></h2>
+	            \((#TeamProfileChampionships & {key: "team-past-championships", filter: "team_id=eq.{owner_id}&status=eq.past", order: "begins.desc,championship_id.asc", empty: "{msg.team_no_past_championships}"}).out)
 	          </section>
-	          <section class="squads">
-	            <h2 data-text="{msg.team_squads}"></h2>
-	            <table class="grid squad-table">
-	              <thead><tr><th scope="col" class="champ" data-text="{msg.col_championship}"></th>\(_squadHead)</tr></thead>
-	              <tbody data-live="player_stat" data-filter="team_id=eq.{id}" data-order="championship_name.asc,played.desc,minutes.desc,player_name.asc" data-empty="{msg.team_no_squads}">
-	                <template data-item><tr><td class="champ"><a data-route="campeonato" data-param-id="{championship_id}" data-text="{championship_name}"></a></td>\(_squadCells)</tr></template>
-	              </tbody>
-	            </table>
+	          <section class="team-current-players">
+	            <h2 data-text="{msg.team_current_players}"></h2>
+	            \((#TeamProfilePlayers & {key: "team-current-players", filter: "team_id=eq.{owner_id}&is_current=is.true", order: "player_name.asc,player_id.asc", empty: "{msg.team_no_current_players}"}).out)
 	          </section>
+	          <section class="team-past-players">
+	            <h2 data-text="{msg.team_past_players}"></h2>
+	            \((#TeamProfilePlayers & {key: "team-past-players", filter: "team_id=eq.{owner_id}&is_current=is.false", order: "player_name.asc,player_id.asc", empty: "{msg.team_no_past_players}"}).out)
+	          </section>
+
+	          \(_teamComments)
 	        </div>
 	        <aside class="side">
 	          <p><a data-route="equipes" data-text="{msg.back_teams}"></a></p>
 	          <p data-text="{msg.about}"></p>
 	        </aside>
+	      </div>
+	    </article>
+	  </template>
+	</div>
+	</section>
+	"""
+
+_equipe_campeonatoMarkup: """
+	<section class="screen" data-screen="equipe-campeonato">
+	\((#Masthead & {route: "equipe-campeonato", params: " data-param-id=\"{param.id}\" data-param-championship=\"{param.championship}\""}).out)
+	<div class="team-membership" data-live="team_championship" data-select="*,team:team(id,name)" data-filter="team_id=eq.{param.id}&championship_id=eq.{param.championship}" data-exit-motion="none" data-empty="{msg.team_championship_gone}">
+	  <template data-item>
+	    <article class="team-championship team-championship-page">
+	      <h1 class="band"><span class="archive-icon" data-text="{team.id}|{team.name}" data-text-format="team-badge"></span><span data-text="{team.name}"></span><small data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></small></h1>
+	      <div class="page">
+	        <div class="content">
+	          <div class="team-championship-links"><a class="btn-quiet" data-route="equipe" data-param-id="{team_id}"><span data-text="{msg.back_team_profile}"></span></a><span class="chip" data-text="{msg[status]}"></span></div>
+	          <form class="team-switch" data-action="navigate" data-route="equipe-campeonato" data-param-id="{param.id}" data-param-championship="{param.championship}"><input type="hidden" name="championship" value="{param.championship}"><label><span data-text="{msg.team_switch}"></span><select name="id" data-value="{param.id}"><optgroup data-live="team_championship" data-select="*,team(name)" data-filter="championship_id=eq.{param.championship}&limit=250" data-order="team_id.asc" data-empty=""><template data-item><option value="{team_id}" data-text="{team.name}"></option></template></optgroup></select></label><button type="submit" class="btn-quiet" data-text="{msg.team_open}"></button></form>
+	          <nav class="team-section-links" aria-label="{msg.team_section_links}"><a href="#team-fixtures" data-text="{msg.team_fixtures}"></a><a href="#team-table" data-text="{msg.team_table}"></a><a href="#team-roster" data-text="{msg.team_roster}"></a><a href="#team-odds" data-text="{msg.team_odds}"></a></nav>
+	          <section id="team-fixtures" class="team-next">
+	            <h2 data-text="{msg.games_upcoming}"></h2>
+	\((#TeamGameArchive & {key:"team-championship-upcoming",played:false,scoped:true}).out)
+	          </section>
+	          <section class="team-results">
+	            <h2 data-text="{msg.games_results}"></h2>
+	\((#TeamGameArchive & {key:"team-championship-results",played:true,scoped:true}).out)
+	          </section>
+	          <section id="team-table" class="team-standings">
+	            <h2 data-text="{msg.team_table}"></h2>
+	            <div class="team-group" data-live="team_group" data-select="*,group:stage_group!inner(name,phase!inner(name,championship_id))" data-filter="team_id=eq.{param.id}&group.phase.championship_id=eq.{param.championship}" data-order="group_id.asc" data-empty="{msg.team_no_table}">
+	              <template data-item><section class="team-group-card"><h3><span data-text="{group.phase.name}"></span> · <span data-text="{group.name}"></span></h3><div class="table-wrap"><table class="grid standings"><thead><tr>\(_standingsHead)</tr></thead><tbody data-live="standing" data-project='{"current":{"eq":["team_id","{param.id}"]}}' data-filter="group_id=eq.{group_id}" data-order="position.asc,id.asc" data-empty="{msg.no_teams}"><template data-item><tr data-zone="{zone}" data-current="{current}">\(_championshipStandingsCells)</tr></template></tbody></table></div><div class="team-full-group"><a data-route="chances" data-param-id="{group_id}" data-text="{msg.chances_link}"></a></div></section></template>
+	            </div>
+	          </section>
+	          <section id="team-roster" class="team-roster">
+	            <h2 data-text="{msg.team_roster}"></h2>
+	\(_teamRosterArchive)
+	          </section>
+	          \(_teamCampaign)
+	          <section id="team-odds" class="team-odds">
+	            <h2 data-text="{msg.team_odds}"></h2>
+	            <div class="team-group-odds" data-live="team_group" data-select="*,group:stage_group!inner(name,phase!inner(name,championship_id))" data-filter="team_id=eq.{param.id}&group.phase.championship_id=eq.{param.championship}" data-order="group_id.asc" data-empty="{msg.team_no_odds}">
+	              <template data-item><section class="team-group-card"><h3><span data-text="{group.phase.name}"></span> · <span data-text="{group.name}"></span></h3><div data-live="team_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{param.id}&limit=1" data-order="rank.asc,id.asc" data-empty="{msg.team_no_odds}"><template data-item><div class="team-chance-detail"><p class="team-odds-summary"><span data-text="{msg.col_position}"></span> <b data-text="{rank}"></b><span data-text="{msg.col_points}"></span> <b data-text="{points}"></b><span data-text="{msg.col_played}"></span> <b data-text="{played}"></b></p><div class="team-zone-odds" data-live="zone_chance" data-select="*,zone:zone_id(name)" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}" data-order="first.asc,last.asc" data-empty=""><template data-item><p><span data-text="{zone.name}"></span> <span class="title-chance" data-band="{band}"><span class="bar" aria-hidden="true"><i></i></span><span data-text="{percent}" data-text-format="number"></span>%<span class="reach" data-reach="{reach}" title="{msg[reach]}" aria-hidden="true"></span><span class="visually-hidden" data-text="{msg[reach]}"></span></span></p></template></div><h4 data-text="{msg.team_position_odds}"></h4>\(_teamPositionChart)<div class="table-wrap"><table class="grid team-odds-table"><thead><tr><th scope="col" data-text="{msg.col_position}"></th><th scope="col" data-text="{msg.col_probability}"></th></tr></thead><tbody data-live="position_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}" data-order="position.asc" data-empty="{msg.team_no_odds}"><template data-item><tr data-current="{current}" data-band="{band}"><th scope="row" data-text="{position}"></th><td><span class="title-chance" data-band="{band}"><span class="bar" aria-hidden="true"><i></i></span><span data-text="{percent}" data-text-format="number"></span>%<span class="reach" data-reach="{reach}" title="{msg[reach]}" aria-hidden="true"></span><span class="visually-hidden" data-text="{msg[reach]}"></span></span></td></tr></template></tbody></table></div><p><a data-route="chances" data-param-id="{group_id}" data-text="{msg.chances_link}"></a></p></div></template></div>\(_teamOddsEvolution)</section></template>
+	            </div>
+	          </section>
+	        </div>
+	        <aside class="side"><p><a data-route="equipe" data-param-id="{team_id}" data-text="{msg.back_team_profile}"></a></p><p data-text="{msg.about}"></p></aside>
 	      </div>
 	    </article>
 	  </template>
@@ -843,38 +1194,15 @@ _jogadorMarkup: """
 	          <dl class="game-facts">
 	            <dt data-text="{msg.player_position}"></dt><dd data-text="{position}"></dd>
 	            <dt data-text="{msg.player_rating}"></dt><dd class="rating" data-live="player_rating" data-filter="id=eq.{id}" data-empty=""><template data-item><abbr title="{msg.player_rating_long}" data-text="{rating}" data-text-format="number"></abbr></template></dd>
-	            <dt data-text="{msg.team_country}"></dt><dd data-text="{country}"></dd>
+	            <dt data-text="{msg.team_country}"></dt><dd><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{country}|{msg.geography_names}" data-text-format="geography-label"></span></dd>
 	          </dl>
 	          <section class="seasons">
 	            <h2 data-text="{msg.player_seasons}"></h2>
-	            <table class="grid season-table">
-	              <thead><tr><th scope="col" data-text="{msg.col_championship}"></th><th scope="col" data-text="{msg.col_team}"></th>\(strings.Join([for c in _seasonColumns {"<th scope=\"col\" class=\"num\"><abbr title=\"{msg.col_\(c.key)_long}\" data-text=\"{msg.col_\(c.key)}\"></abbr></th>"}], ""))</tr></thead>
-	              <tbody data-live="player_stat" data-filter="player_id=eq.{id}" data-order="championship_name.asc,team_name.asc" data-empty="{msg.player_no_seasons}">
-	                <template data-item>
-	                  <tr><td><a data-route="campeonato" data-param-id="{championship_id}" data-text="{championship_name}"></a></td><td><a data-route="equipe" data-param-id="{team_id}" data-text="{team_name}"></a></td>\(strings.Join([for c in _seasonColumns {"<td class=\"num\" data-text=\"{\(c.bind)}\"></td>"}], ""))</tr>
-	                </template>
-	              </tbody>
-	            </table>
+	\((#PagedRead & {key: "player-seasons", table: "player_stat", filter: "player_id=eq.{owner_id}", order: "championship_name.asc,team_name.asc", content: _player_seasonsMarkup}).out)
 	          </section>
 	          <section class="appearances">
 	            <h2 data-text="{msg.player_games}"></h2>
-	            <ol class="games player-games" data-live="player_game" data-filter="player_id=eq.{id}&limit=40" data-order="day.desc" data-empty="{msg.player_no_games}">
-	              <template data-item>
-	                <li data-bench="{bench}" data-yellow="{yellow}" data-red="{red}">
-	                  <span data-live="game_card" data-filter="id=eq.{game_id}" data-empty=""><template data-item>
-	                    <a class="game-row" data-route="jogo" data-param-id="{id}" data-played="{played}">
-	                      <span class="when"><span class="day" data-text="{day_display}"></span></span>
-	                      <span class="where" data-text="{championship_name}"></span>
-	                      <span class="home" data-text="{home_name}"></span>
-	                      <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-	                      <span class="away" data-text="{away_name}"></span>
-	                    </a>
-	                  </template></span>
-	                  <span class="minutes"><span data-text="{on_minute}"></span>–<span data-text="{off_minute}"></span></span>
-	                  <span class="cards"><i class="yellow" title="{msg.card_yellow}"></i><i class="red" title="{msg.card_red}"></i></span>
-	                </li>
-	              </template>
-	            </ol>
+	\((#PagedRead & {key: "player-appearances", table: "player_game", filter: "player_id=eq.{owner_id}", order: "day.desc", content: _player_appearancesMarkup}).out)
 	          </section>
 	        </div>
 	        <aside class="side">
@@ -900,17 +1228,17 @@ _estadioMarkup: """
 	          <dl class="game-facts">
 	            <dt data-text="{msg.team_full_name}"></dt><dd data-text="{full_name}"></dd>
 	            <dt data-text="{msg.col_city}"></dt><dd data-text="{city}"></dd>
-	            <dt data-text="{msg.col_country}"></dt><dd data-text="{country}"></dd>
+	            <dt data-text="{msg.col_country}"></dt><dd><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{country}|{msg.geography_names}" data-text-format="geography-label"></span></dd>
 	          </dl>
 	          <section class="home-teams">
 	            <h2 data-text="{msg.stadium_teams}"></h2>
 	            <ul class="chips" data-live="team" data-filter="stadium_id=eq.{id}" data-order="name.asc" data-empty="{msg.stadium_no_teams}">
-	              <template data-item><li><a class="chip" data-route="equipe" data-param-id="{id}" data-text="{name}"></a></li></template>
+	              <template data-item><li><a class="chip" data-route="equipe" data-param-id="{id}"><span class="archive-icon" data-text="{id}|{name}" data-text-format="team-badge"></span><span data-text="{name}"></span></a></li></template>
 	            </ul>
 	          </section>
 	          <section class="venue-games">
 	            <h2 data-text="{msg.stadium_games}"></h2>
-	\((#GameList & {filter: "stadium_id=eq.{id}", order: "day.desc,kickoff.desc", empty: "{msg.stadium_no_games}"}).out)
+	\((#PagedRead & {key: "stadium-history", table: "game_card", filter: "stadium_id=eq.{owner_id}", order: "day.desc,kickoff.desc", content: (#GameList & {filter: "stadium_id=eq.{owner_id}&offset={offset}&limit=40", order: "day.desc,kickoff.desc", empty: "{msg.stadium_no_games}"}).out}).out)
 	          </section>
 	        </div>
 	        <aside class="side">
@@ -938,7 +1266,7 @@ _arbitroMarkup: """
 	          </dl>
 	          <section class="venue-games">
 	            <h2 data-text="{msg.referee_games}"></h2>
-	\((#GameList & {filter: "referee_id=eq.{id}", order: "day.desc,kickoff.desc", empty: "{msg.referee_no_games}"}).out)
+	\((#PagedRead & {key: "referee-history", table: "game_card", filter: "referee_id=eq.{owner_id}", order: "day.desc,kickoff.desc", content: (#GameList & {filter: "referee_id=eq.{owner_id}&offset={offset}&limit=40", order: "day.desc,kickoff.desc", empty: "{msg.referee_no_games}"}).out}).out)
 	          </section>
 	        </div>
 	        <aside class="side">
@@ -950,4 +1278,35 @@ _arbitroMarkup: """
 	  </template>
 	</div>
 	</section>
+	"""
+
+_player_seasonsMarkup: """
+	            <table class="grid season-table">
+	              <thead><tr><th scope="col" data-text="{msg.col_championship}"></th><th scope="col" data-text="{msg.col_team}"></th>\(strings.Join([for c in _seasonColumns {"<th scope=\"col\" class=\"num\"><abbr title=\"{msg.col_\(c.key)_long}\" data-text=\"{msg.col_\(c.key)}\"></abbr></th>"}], ""))</tr></thead>
+	              <tbody data-live="player_stat" data-filter="player_id=eq.{owner_id}&offset={offset}&limit=40" data-order="championship_name.asc,team_name.asc" data-empty="{msg.player_no_seasons}">
+	                <template data-item>
+	                  <tr><td><a data-route="equipe-campeonato" data-param-id="{team_id}" data-param-championship="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span></a></td><td><a data-route="equipe" data-param-id="{team_id}"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></td>\(strings.Join([for c in _seasonColumns {"<td class=\"num\" data-text=\"{\(c.bind)}\"></td>"}], ""))</tr>
+	                </template>
+	              </tbody>
+	            </table>
+	"""
+
+_player_appearancesMarkup: """
+	            <ol class="games player-games" data-live="player_game" data-filter="player_id=eq.{owner_id}&offset={offset}&limit=40" data-order="day.desc" data-empty="{msg.player_no_games}">
+	              <template data-item>
+	                <li data-bench="{bench}" data-yellow="{yellow}" data-red="{red}">
+	                  <span data-live="game_card" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="id=eq.{game_id}" data-empty=""><template data-item>
+	                    <a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{id}" data-played="{played}">
+	                      <span class="when"><span class="day" data-text="{day_display}"></span></span>
+	                      <span class="where" data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span>
+	                      <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></span>
+	                      <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
+	                      <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>
+	                    </a>
+	                  </template></span>
+	                  <span class="minutes"><span data-text="{on_minute}"></span>–<span data-text="{off_minute}"></span></span>
+	                  <span class="cards"><i class="yellow" title="{msg.card_yellow}"></i><i class="red" title="{msg.card_red}"></i></span>
+	                </li>
+	              </template>
+	            </ol>
 	"""

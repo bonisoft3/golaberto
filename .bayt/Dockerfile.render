@@ -1,0 +1,34 @@
+# generated from bayt.cue — do not edit
+FROM denoland/deno:debian-2.9.7@sha256:fa335acdf6b72106eda2cb6a8cb5f4187e7630e357467489db4b2e7352d5e432 AS render
+WORKDIR /render
+COPY --chmod=755 --from=tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa /bin/httpcheck /usr/local/bin/httpcheck
+COPY --from=plugins_omnishell-runtime-image /interpreter /render/plugins/omnishell/interpreter
+COPY --from=plugins_omnishell-runtime-image /server /render/plugins/omnishell/server
+COPY shell/index.html /render/entry.html
+COPY --parents shell/index.html shell/shell.css shell/boot.js shell/shell.yaml shell/shell.json shell/design.css shell/screens/principal.html shell/screens/principal.css shell/screens/campeonatos.html shell/screens/campeonatos.css shell/screens/jogos.html shell/screens/jogos.css shell/screens/jogo.html shell/screens/jogo.css shell/screens/chances.html shell/screens/chances.css shell/screens/editar.html shell/screens/editar.css shell/screens/equipes.html shell/screens/equipes.css shell/screens/estadios.html shell/screens/estadios.css shell/screens/estadio.html shell/screens/estadio.css shell/screens/arbitros.html shell/screens/arbitros.css shell/screens/arbitro.html shell/screens/arbitro.css shell/screens/equipe.html shell/screens/equipe.css shell/screens/equipe-campeonato.html shell/screens/equipe-campeonato.css shell/screens/jogador.html shell/screens/jogador.css shell/screens/campeonato.html shell/screens/campeonato.css shell/handlers/blank-null.js shell/handlers/both-scored.js shell/handlers/chart-compare.js shell/handlers/chart-metric.js shell/handlers/count-or-null.js shell/handlers/country-option.js shell/handlers/geography-selection.js shell/handlers/page-value.js shell/handlers/row-id.js shell/handlers/search-key.js shell/handlers/team-chart-fold.js shell/handlers/team-chart-seed.js shell/renderers/country-flag.js shell/renderers/geography-label.js shell/renderers/home-date.js shell/renderers/team-badge.js shell/renderers/team-chart.js shell/renderers/team-location.js shell/shared/catalog.css shell/shared/chrome.css shell/shared/games.css shell/shared/team.css messages/pt-BR.json messages/es-AR.json messages/en-GB.json messages/it-IT.json messages/de-DE.json messages/fr-FR.json branding/favicon.svg branding/favicon.ico shell/favicon.ico shell/manifest.webmanifest ./
+COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.render.json ./.bayt/
+CMD ["deno", "run", "--frozen", "--cached-only", "--config", "plugins/omnishell/server/deno.json", "--allow-net", "--allow-env", "--allow-read=/render", "plugins/omnishell/server/render.ts"]
+RUN deno cache --frozen --config plugins/omnishell/server/deno.json plugins/omnishell/server/render.ts
+HEALTHCHECK --interval=1s --timeout=5s --retries=30 --start-period=120s CMD ["httpcheck","http://127.0.0.1:8090/health"]
+
+FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS render_ctxs
+WORKDIR /monorepo/.
+COPY --parents shell/index.html shell/shell.css shell/boot.js shell/shell.yaml shell/shell.json shell/design.css shell/screens/principal.html shell/screens/principal.css shell/screens/campeonatos.html shell/screens/campeonatos.css shell/screens/jogos.html shell/screens/jogos.css shell/screens/jogo.html shell/screens/jogo.css shell/screens/chances.html shell/screens/chances.css shell/screens/editar.html shell/screens/editar.css shell/screens/equipes.html shell/screens/equipes.css shell/screens/estadios.html shell/screens/estadios.css shell/screens/estadio.html shell/screens/estadio.css shell/screens/arbitros.html shell/screens/arbitros.css shell/screens/arbitro.html shell/screens/arbitro.css shell/screens/equipe.html shell/screens/equipe.css shell/screens/equipe-campeonato.html shell/screens/equipe-campeonato.css shell/screens/jogador.html shell/screens/jogador.css shell/screens/campeonato.html shell/screens/campeonato.css shell/handlers/blank-null.js shell/handlers/both-scored.js shell/handlers/chart-compare.js shell/handlers/chart-metric.js shell/handlers/count-or-null.js shell/handlers/country-option.js shell/handlers/geography-selection.js shell/handlers/page-value.js shell/handlers/row-id.js shell/handlers/search-key.js shell/handlers/team-chart-fold.js shell/handlers/team-chart-seed.js shell/renderers/country-flag.js shell/renderers/geography-label.js shell/renderers/home-date.js shell/renderers/team-badge.js shell/renderers/team-chart.js shell/renderers/team-location.js shell/shared/catalog.css shell/shared/chrome.css shell/shared/games.css shell/shared/team.css messages/pt-BR.json messages/es-AR.json messages/en-GB.json messages/it-IT.json messages/de-DE.json messages/fr-FR.json branding/favicon.svg branding/favicon.ico shell/favicon.ico shell/manifest.webmanifest ./
+ARG SOURCE_DATE_EPOCH
+ARG BAYT_CLAMP=1
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/. -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && touch -hd @${SOURCE_DATE_EPOCH:-0} /monorepo; fi
+FROM scratch AS render_srcs
+COPY --from=render_ctxs /monorepo /monorepo
+
+FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS render_bayt_ctxs
+WORKDIR /monorepo/.
+COPY --parents .bayt/compose.render.yaml .bayt/Dockerfile.render .bayt/bayt.render.json .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml ./
+COPY --from=golaberto-caddy_bayt /monorepo /monorepo
+COPY --from=golaberto-crud_bayt /monorepo /monorepo
+COPY --from=golaberto-electric_bayt /monorepo /monorepo
+COPY --from=golaberto-auth_bayt /monorepo /monorepo
+ARG SOURCE_DATE_EPOCH
+ARG BAYT_CLAMP=1
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/. -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && touch -hd @${SOURCE_DATE_EPOCH:-0} /monorepo; fi
+FROM scratch AS render_bayt
+COPY --from=render_bayt_ctxs /monorepo /monorepo

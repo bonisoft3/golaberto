@@ -1,6 +1,8 @@
 # generated from bayt.cue — do not edit
 tasks:
   default:
+    deps:
+    - "::bayt:setup"
     run: always
     status:
     - >-

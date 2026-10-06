@@ -25,24 +25,14 @@
   "activate": "mise x --",
   "srcs": {
     "globs": [
-      "*.cue",
-      "bayt.json",
-      "DESIGN.md",
-      "cue.mod/**",
-      "pronto/**",
-      ".say.yaml",
-      "[p]ipelines/*.blobl",
-      "[m]essages/*.json",
-      "[s]hell/boot.js",
-      "ir.html",
-      "acceptance.md",
-      "shell/**",
-      "pipelines/**",
-      "services/**",
-      "saytw",
-      "seed.json"
+      "**"
     ],
-    "exclude": []
+    "exclude": [
+      ".bayt/**",
+      "**/node_modules/**",
+      ".task/**",
+      "tests/**"
+    ]
   },
   "outs": {
     "globs": [],
@@ -129,24 +119,14 @@
       },
       "outs": {
         "globs": [
-          "*.cue",
-          "bayt.json",
-          "DESIGN.md",
-          "cue.mod/**",
-          "pronto/**",
-          ".say.yaml",
-          "[p]ipelines/*.blobl",
-          "[m]essages/*.json",
-          "[s]hell/boot.js",
-          "ir.html",
-          "acceptance.md",
-          "shell/**",
-          "pipelines/**",
-          "services/**",
-          "saytw",
-          "seed.json"
+          "**"
         ],
-        "exclude": []
+        "exclude": [
+          ".bayt/**",
+          "**/node_modules/**",
+          ".task/**",
+          "tests/**"
+        ]
       },
       "env": {},
       "visibility": "internal",
@@ -203,24 +183,14 @@
     {
       "srcs": {
         "globs": [
-          "*.cue",
-          "bayt.json",
-          "DESIGN.md",
-          "cue.mod/**",
-          "pronto/**",
-          ".say.yaml",
-          "[p]ipelines/*.blobl",
-          "[m]essages/*.json",
-          "[s]hell/boot.js",
-          "ir.html",
-          "acceptance.md",
-          "shell/**",
-          "pipelines/**",
-          "services/**",
-          "saytw",
-          "seed.json"
+          "**"
         ],
-        "exclude": [],
+        "exclude": [
+          ".bayt/**",
+          "**/node_modules/**",
+          ".task/**",
+          "tests/**"
+        ],
         "defaultGlobs": null,
         "defaultExclude": null
       },

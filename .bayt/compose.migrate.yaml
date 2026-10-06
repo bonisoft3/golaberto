@@ -1,0 +1,38 @@
+# generated from bayt.cue — do not edit
+services:
+  golaberto-migrate:
+    build:
+      additional_contexts:
+        golaberto-database: service:golaberto-database
+        libraries_mecha-database-image: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.6.0@sha256:2f8b1b3d3551eab1c922aed149c27346f3904e885b6515ab7534bd1e8da1ff44}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}
+      context: ..
+      dockerfile: .bayt/Dockerfile.migrate
+      target: migrate
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    depends_on:
+      golaberto-database:
+        condition: service_healthy
+        restart: true
+    environment:
+      DATABASE_URL: >-
+        postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}?sslmode=disable
+    image: bayt-golaberto-migrate:${BAYT_IMAGE_TAG:-latest}
+    networks:
+      default:
+        aliases:
+        - migrate
+  golaberto-migrate_bayt:
+    build:
+      additional_contexts:
+        golaberto-database_bayt: service:golaberto-database_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.migrate
+      target: migrate_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-migrate_bayt:latest
+    scale: 0

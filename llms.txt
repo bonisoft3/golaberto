@@ -1,0 +1,59 @@
+# golaberto
+
+> O banco de dados aberto do futebol — campeonatos, tabelas, jogos, gols e elencos, mantido pelos seus leitores.
+
+## Overview
+Publicly accessible web application.
+
+## Screens
+- [Principal](/): principal screen
+- [Campeonatos](/campeonatos): campeonatos screen
+- [Jogos](/jogos): jogos screen
+- [Equipes](/equipes): equipes screen
+- [Estádios](/estadios): estadios screen
+- [Árbitros](/arbitros): arbitros screen
+
+## Data Models
+- `AppUser`: domain entity
+- `Category`: domain entity
+- `Championship`: domain entity
+- `HomeChampionship`: domain entity
+- `Phase`: domain entity
+- `Group`: domain entity
+- `Zone`: domain entity
+- `Stadium`: domain entity
+- `Team`: domain entity
+- `TeamChampionship`: domain entity
+- `TeamGroup`: domain entity
+- `Referee`: domain entity
+- `GeographyRegion`: domain entity
+- `GeographyCountry`: domain entity
+- `TeamDirectory`: domain entity
+- `Player`: domain entity
+- `TeamPlayer`: domain entity
+- `TeamRoster`: domain entity
+- `TeamPlayerHistory`: domain entity
+- `Game`: domain entity
+- `Goal`: domain entity
+- `PlayerGame`: domain entity
+- `Standing`: domain entity
+- `TeamChance`: domain entity
+- `ZoneChance`: domain entity
+- `PositionChance`: domain entity
+- `GameImportance`: domain entity
+- `TeamRating`: domain entity
+- `PlayerRating`: domain entity
+- `RatingEval`: domain entity
+- `GameCard`: domain entity
+- `HomeGameCard`: domain entity
+- `MatchesGameCard`: domain entity
+- `TeamGame`: domain entity
+- `Comment`: domain entity
+- `PlayerStat`: domain entity
+- `PhaseRound`: domain entity
+- `TeamComment`: domain entity
+- `TeamCampaignPoint`: domain entity
+- `TeamOddsHistory`: domain entity
+- `TeamRatingChart`: domain entity
+- `TeamOddsChart`: domain entity
+- `TeamRosterTotal`: domain entity

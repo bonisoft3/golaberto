@@ -11,20 +11,20 @@
     <a data-route="jogo" data-param-id="{param.id}" data-locale="fr-FR" data-locale-current="page" lang="fr-FR"><span class="long" data-text="{msg.lang_fr}"></span><span class="short" data-text="{msg.lang_fr_short}"></span></a>
   </nav>
 </header>
-<div data-live="game_card" data-filter="id=eq.{param.id}" data-exit-motion="none" data-empty="{msg.game_gone}">
+<div data-live="game_card" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="id=eq.{param.id}" data-exit-motion="none" data-empty="{msg.game_gone}">
   <template data-item>
     <article class="game" data-played="{played}">
-      <h1 class="band"><a data-route="campeonato" data-param-id="{championship_id}" data-text="{championship_name}"></a></h1>
+      <h1 class="band"><a data-route="campeonato" data-param-id="{championship_id}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span></a></h1>
       <div class="page">
         <div class="content">
           <div class="game-head">
             <p class="phase-name" data-text="{phase_name}"></p>
             <div class="edit-gate" data-live="editor" data-empty=""><template data-item><a class="btn-quiet edit-link" data-route="editar" data-param-id="{param.id}" data-text="{msg.edit_link}"></a></template></div>
           </div>
-          <div class="scoreboard">
-            <a class="home" data-route="equipe" data-param-id="{home_id}" data-text="{home_name}"></a>
+          <div class="scoreboard" data-show-country="{championship.show_country}">
+            <a class="home" data-route="equipe" data-param-id="{home_id}"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></a>
             <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-            <a class="away" data-route="equipe" data-param-id="{away_id}" data-text="{away_name}"></a>
+            <a class="away" data-route="equipe" data-param-id="{away_id}"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></a>
           </div>
           <p class="extra"><span class="aet"><span data-text="{msg.game_aet}"></span> <b data-text="{home_aet}"></b>–<b data-text="{away_aet}"></b></span> <span class="pen"><span data-text="{msg.game_pen}"></span> <b data-text="{home_pen}"></b>–<b data-text="{away_pen}"></b></span></p>
           <dl class="game-facts">
@@ -85,10 +85,21 @@
       <p class="refusal" role="alert" data-text="{msg.comment_refused}"></p>
       <button id="comment-post" type="button" class="btn post"><span class="idle" data-text="{msg.comment_post}"></span><span class="busy" data-text="{msg.comment_posting}"></span></button>
     </div>
-    <ol class="comment-list" data-live="comment" data-select="*,app_user(handle)" data-filter="game_id=eq.{param.id}" data-order="created_at.desc" data-empty="{msg.comments_none}">
+<div class="paged-read" data-live="archive_page" data-filter="id=eq.game-comments-{param.id}" data-machine='{"field":"state","initial":"browsing","context":{"owner_id":"{param.id}","offset":0,"next_offset":40,"page":1},"states":{"browsing":{"on":{"click@game-comments-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@game-comments-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}' data-empty-row='{"id":"game-comments-{param.id}","owner_id":"{param.id}","offset":0,"next_offset":40,"page":1,"state":"browsing"}'>
+  <div class="page-window">
+
+    <ol class="comment-list" data-live="comment" data-select="*,app_user(handle)" data-filter="game_id=eq.{owner_id}&amp;offset={offset}&amp;limit=40" data-order="created_at.desc" data-empty="{msg.comments_none}">
       <template data-item>
         <li><p class="byline"><b data-text="{app_user.handle}"></b> <time data-text="{created_at}" data-text-format="datetime"></time></p><p class="body" data-text="{body}"></p></li>
       </template>
     </ol>
+<nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
+  <button id="game-comments-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
+  <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
+  <span data-live="comment" data-filter="game_id=eq.{owner_id}&amp;offset={next_offset}&amp;limit=1" data-order='created_at.desc' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <button id="game-comments-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
+</nav>
+  </div>
+</div>
   </section>
 </section>

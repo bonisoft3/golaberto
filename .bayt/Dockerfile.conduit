@@ -22,6 +22,7 @@ WORKDIR /monorepo/.
 COPY --parents .bayt/compose.conduit.yaml .bayt/Dockerfile.conduit .bayt/bayt.conduit.json .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml ./
 COPY --from=golaberto-database_bayt /monorepo /monorepo
 COPY --from=golaberto-mesh-events_bayt /monorepo /monorepo
+COPY --from=golaberto-migrate_bayt /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
 RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/. -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && touch -hd @${SOURCE_DATE_EPOCH:-0} /monorepo; fi

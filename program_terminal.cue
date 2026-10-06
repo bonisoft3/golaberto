@@ -7,5 +7,7 @@ terminal: surface: {
   interpreterRoot: "interpreter"
   componentsRoot: "components"
   markupReader: "read-markup.ts"
+  documentRenderer: "render-documents.ts"
+  documentConfig: "server/deno.json"
   machineSchema: "machine.cue"
 }

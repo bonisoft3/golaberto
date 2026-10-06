@@ -1,0 +1,63 @@
+# Rebuild historical round/date campaign points one group per RPC. The SQL
+# comparator follows standings.yaml's points, goal, head-to-head, bias, and
+# name keys. Group replacement and stale-row deletion are one transaction.
+input:
+  broker:
+    inputs:
+      - redis_streams:
+          url: ${REDIS_URL}
+          streams:
+            - cdc-events
+          body_key: data
+          consumer_group: golaberto-team-campaign
+      - generate:
+          count: 1
+          interval: ""
+          mapping: 'root = {"boot": true}'
+pipeline:
+  threads: 1
+  processors:
+    - mapping: |
+        let row = if this.exists("data") && this.data.type() == "string" && this.data.length() > 0 { this.data.parse_json() } else { {} }
+        let table = $row.__table.or("")
+        let before = $row.__before.or("{}").parse_json()
+        let phases = [$row.phase_id.or(null), $before.phase_id.or(null)].filter(v -> v != null).unique()
+        let groups = [$row.group_id.or(null), $before.group_id.or(null)].filter(v -> v != null).unique()
+        let scope = match {
+          this.boot.or(false) => "stage_group?select=id",
+          $table == "game" => "stage_group?select=id&phase_id=in.(" + $phases.join(",") + ")",
+          $table == "phase" => "stage_group?select=id&phase_id=eq." + $row.id,
+          $table == "stage_group" => "stage_group?select=id&id=eq." + $row.id,
+          $table == "team_group" => "stage_group?select=id&id=in.(" + $groups.join(",") + ")",
+          $table == "zone" => "stage_group?select=id&id=in.(" + $groups.join(",") + ")",
+          $table == "championship" => "stage_group?select=id,phase!inner(championship_id)&phase.championship_id=eq." + $row.id,
+          $table == "team" && $before.exists("name") && $before.name == $row.name => null,
+          $table == "team" => "stage_group?select=id,team_group!inner(team_id)&team_group.team_id=eq." + $row.id,
+          _ => null,
+        }
+        root = if $scope == null { deleted() } else { {"scope": $scope} }
+    - try:
+        - branch:
+            processors:
+              - http:
+                  url: ${CRUD_URL}/${! this.scope }
+                  verb: GET
+                  retries: 30
+                  retry_period: 2s
+                  headers:
+                    Authorization: Bearer ${SERVICE_JWT}
+            result_map: root.groups = this
+        - mapping: |
+            root = if this.groups.length() == 0 { deleted() } else { this.groups.map_each(g -> {"target_group": g.id}) }
+        - unarchive:
+            format: json_array
+output:
+  reject_errored:
+    http_client:
+      url: ${CRUD_URL}/rpc/refresh_team_campaign_group
+      verb: POST
+      max_in_flight: 1
+      headers:
+        Content-Type: application/json
+        Authorization: Bearer ${SERVICE_JWT}
+      successful_on: [200, 204]

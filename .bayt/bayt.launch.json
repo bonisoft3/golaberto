@@ -36,6 +36,9 @@
       },
       "golaberto-auth": {
         "condition": "service_started"
+      },
+      "golaberto-render": {
+        "condition": "service_healthy"
       }
     },
     "networks": {
@@ -176,13 +179,15 @@
         "./.bayt/compose.caddy.yaml",
         "./.bayt/compose.database.yaml",
         "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.mesh-events.yaml",
         "./.bayt/compose.conduit.yaml",
         "./.bayt/compose.transform.yaml",
         "./.bayt/compose.compute.yaml",
-        "./.bayt/compose.auth.yaml"
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.render.yaml"
       ]
     },
     "outs": {
@@ -214,13 +219,15 @@
         "./.bayt/compose.caddy.yaml",
         "./.bayt/compose.database.yaml",
         "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.mesh-events.yaml",
         "./.bayt/compose.conduit.yaml",
         "./.bayt/compose.transform.yaml",
         "./.bayt/compose.compute.yaml",
-        "./.bayt/compose.auth.yaml"
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.render.yaml"
       ]
     }
   },
@@ -236,7 +243,8 @@
     "conduit_outs",
     "transform_outs",
     "compute_outs",
-    "auth_outs"
+    "auth_outs",
+    "render_outs"
   ],
   "sameProjectDeps": [
     "caddy_outs",
@@ -248,7 +256,8 @@
     "conduit_outs",
     "transform_outs",
     "compute_outs",
-    "auth_outs"
+    "auth_outs",
+    "render_outs"
   ],
   "transitiveDeps": [
     "caddy_outs",
@@ -260,7 +269,8 @@
     "conduit_outs",
     "transform_outs",
     "compute_outs",
-    "auth_outs"
+    "auth_outs",
+    "render_outs"
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
@@ -268,13 +278,15 @@
     "./.bayt/compose.caddy.yaml",
     "./.bayt/compose.database.yaml",
     "./.bayt/compose.crud.yaml",
+    "./.bayt/compose.migrate.yaml",
     "./.bayt/compose.electric.yaml",
     "./.bayt/compose.redis.yaml",
     "./.bayt/compose.mesh-events.yaml",
     "./.bayt/compose.conduit.yaml",
     "./.bayt/compose.transform.yaml",
     "./.bayt/compose.compute.yaml",
-    "./.bayt/compose.auth.yaml"
+    "./.bayt/compose.auth.yaml",
+    "./.bayt/compose.render.yaml"
   ],
   "chainedDeps": [
     {
@@ -360,6 +372,15 @@
     },
     {
       "name": "auth_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "render_outs",
       "project": "golaberto",
       "dir": ".",
       "outs": {

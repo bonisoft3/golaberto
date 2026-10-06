@@ -1,7 +1,21 @@
 @import url("shared/chrome.css");
 @import url("shared/games.css");
-/* The home page, as its canvas draws it: the featured season's round and
-   table first, then the recent championships, one column per level of play. */
+/* The reference site's game feeds lead; the featured table and catalogue follow. */
+.home-games { display: flex; flex-direction: column; gap: var(--sp-lg); margin-block-end: var(--sp-lg); }
+.home-games-title { margin: 0; padding: var(--sp-sm) var(--sp-md); background: var(--table-head); color: var(--table-head-ink); }
+.home-championships { margin: 0; }
+.home-phase { margin: 0; padding: var(--sp-sm) var(--sp-md); font-size: var(--type-caption); border-bottom: var(--border-size-1) solid var(--border); }
+.home-phase a { color: var(--accent); }
+.home-day { margin: 0; padding: var(--sp-sm) var(--sp-md); font-size: var(--type-label); color: var(--secondary); background: var(--surface); border-bottom: var(--border-size-1) solid var(--border); }
+.home-day:not(:has(.home-day-label)), .home-phase:not(:has(.home-phase-context)), .home-phase:has(.home-phase-context[data-same-day="true"][data-same-phase="true"][data-first="false"]) { display: none; }
+.home-phase small { margin-inline-start: var(--sp-sm); font-size: var(--type-label); color: var(--secondary); }
+.home-championship .game-row { grid-template-columns: 3.5em minmax(0, 1fr) 4.5em minmax(0, 1fr); grid-template-areas: "when home score away"; }
+.home-championship .home, .home-championship .away { overflow-wrap: anywhere; }
+.home-championship .team-name { font-weight: 400; color: var(--secondary); }
+.home-championship [data-highlighted="true"] .team-name { font-weight: 600; color: var(--primary); }
+.home-championship .score { font-weight: 400; color: var(--secondary); }
+.home-championship [data-highlighted="true"] .score { font-weight: 700; color: var(--accent); }
+.home-championship .score b, .home-championship .score i { font-weight: inherit; color: inherit; }
 .feature-body { display: flex; flex-direction: column; gap: var(--sp-md); }
 .feature-head {
   display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--sp-sm) var(--sp-md);
@@ -36,6 +50,7 @@
 .more { margin: 0; font-weight: 700; }
 
 @media (max-width: 720px) {
+  .home-championship .game-row { grid-template-columns: 3.5em minmax(0, 1fr) 4em minmax(0, 1fr); }
   .regions { grid-template-columns: minmax(0, 1fr); }
   .round .game-row { padding-block: var(--sp-md); }
 }

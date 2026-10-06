@@ -4,7 +4,7 @@ services:
     build:
       additional_contexts:
         libraries_mecha-database-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.4.0@sha256:e838451bfba0b0c65a91e94e22e6f0d759a095ecff4f3f485386efd7547ba4c8}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.6.0@sha256:2f8b1b3d3551eab1c922aed149c27346f3904e885b6515ab7534bd1e8da1ff44}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}
       context: ..
       dockerfile: .bayt/Dockerfile.database
       target: database
@@ -45,6 +45,57 @@ services:
         target: /docker-entrypoint-initdb.d
       - action: rebuild
         path: ../services/database/migrations/012_editor_writes.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/013_home_games.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/014_home_championships.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/015_home_performance.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/016_matches_performance.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/017_game_countries.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/018_route_performance.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/019_normalized_game_flags.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/020_home_reference_order.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/021_home_highlights.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/022_recent_championships.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/023_search_collation.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/024_team_directory.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/025_search_letter_equivalences.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/026_team_geography.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/027_team_directory_type.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/028_team_profiles.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/029_team_enrichment.sql
         target: /docker-entrypoint-initdb.d
       - action: rebuild
         path: ../services/database/migrations/900_seed.sql

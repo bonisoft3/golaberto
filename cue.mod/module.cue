@@ -16,23 +16,23 @@ source: {
 
 deps: {
 	"github.com/bonisoft3/bayt@v0": {
-		v:       "v0.58.2"
+		v:       "v0.58.4"
 		default: true
 	}
 	"github.com/bonisoft3/mecha@v0": {
-		v:       "v0.4.0"
+		v:       "v0.6.0"
 		default: true
 	}
 	"github.com/bonisoft3/omnishell@v0": {
-		v:       "v0.5.0"
+		v:       "v0.7.0"
 		default: true
 	}
 	"github.com/bonisoft3/pronto@v0": {
-		v:       "v0.6.1"
+		v:       "v0.8.1"
 		default: true
 	}
 	"github.com/bonisoft3/sayt@v0": {
-		v:       "v0.42.0"
+		v:       "v0.42.1"
 		default: true
 	}
 }

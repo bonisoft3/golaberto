@@ -6,7 +6,11 @@ include:
   required: false
 - path: ./compose.setup.yaml
   required: false
+- path: ./compose.lint.yaml
+  required: false
 - path: ./compose.build.yaml
+  required: false
+- path: ./compose.test.yaml
   required: false
 - path: ./compose.launch.yaml
   required: false
@@ -33,4 +37,8 @@ include:
 - path: ./compose.transform.yaml
   required: false
 - path: ./compose.compute.yaml
+  required: false
+- path: ./compose.render.yaml
+  required: false
+- path: ./compose.migrate.yaml
   required: false

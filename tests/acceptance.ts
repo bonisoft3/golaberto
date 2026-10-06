@@ -55,18 +55,79 @@ const context = async (opts: { width?: number; dark?: boolean; session?: unknown
   return c;
 };
 
-const visit = async (page: Page, path: string, ready = '.shell-screen:not([hidden]) .screen[data-state="populated"]') => {
-  // What the page logged is the only account of a screen that never got ready.
+const visit = async (page: Page, path: string, ready = '.shell-screen:not([hidden]):not([data-served]) .screen[data-state="populated"]') => {
   const logged: string[] = [];
-  page.on("console", (m: { type(): string; text(): string }) => {
+  type Request = { url(): string; method(): string; resourceType(): string };
+  const pending = new Map<Request, number>();
+  const onConsole = (m: { type(): string; text(): string }) => {
     if (m.type() === "error" || m.type() === "warning") logged.push(`${m.type()}: ${m.text()}`);
-  });
-  page.on("pageerror", (e: Error) => logged.push(`pageerror: ${e.message}`));
-  await page.goto(`${base}${path}`);
-  await page.waitForSelector(ready, { timeout: 30_000 }).catch((e: Error) => {
-    throw new Error(`${path} never got ready: ${e.message}${logged.length ? ` (console: ${logged.join(" | ")})` : ""}`);
-  });
-  return page;
+  };
+  const onError = (e: Error) => logged.push(`pageerror: ${e.message}`);
+  const onRequest = (request: Request) => pending.set(request, Date.now());
+  const onFinished = (request: Request) => pending.delete(request);
+  page.on("console", onConsole);
+  page.on("pageerror", onError);
+  page.on("request", onRequest);
+  page.on("requestfinished", onFinished);
+  page.on("requestfailed", onFinished);
+  try {
+    await page.goto(`${base}${path}`);
+    await page.waitForSelector(ready, { timeout: 30_000 }).catch(async (error: Error) => {
+      const diagnostics = {
+        url: page.url(), viewport: page.viewportSize(), ready, console: logged,
+        requests: [...pending].map(([request, started]) => ({
+          url: request.url(), method: request.method(), type: request.resourceType(), pendingMs: Date.now() - started,
+        })),
+      };
+      let state;
+      try {
+        state = await page.evaluate(() => {
+          type Collection = { status: string; size: number; subscriberCount: number; isLoadingSubset: boolean; isReady(): boolean };
+          const debug = globalThis as typeof globalThis & {
+            __mechaClient?: { collections: Record<string, Collection> };
+            __prontoViews?: Map<string, {
+              view: Collection; refs: number; attempts: number; retrying?: unknown;
+              attached: Set<unknown>; waiters: Set<unknown>;
+              failure?: { table: string; refused: boolean; error: Error };
+            }>;
+          };
+          const collectionState = (collection: Collection) => ({
+            status: collection.status, size: collection.size, ready: collection.isReady(),
+            loadingSubset: collection.isLoadingSubset, subscribers: collection.subscriberCount,
+          });
+          const attributes = (element: Element, names: string[]) => Object.fromEntries(names.map(name => [name, element.getAttribute(name)]));
+          return {
+            shells: [...document.querySelectorAll(".shell-screen")].map(shell => ({
+              ...attributes(shell, ["hidden", "data-served"]),
+              screens: [...shell.querySelectorAll(".screen")].map(screen => ({
+                ...attributes(screen, ["data-screen", "data-state"]),
+                regions: [...screen.querySelectorAll("[data-live]")].map(region => ({
+                  ...attributes(region, ["data-live", "data-filter", "data-select", "data-state", "data-loading", "aria-busy", "hidden"]),
+                  children: region.childElementCount,
+                })),
+              })),
+            })),
+            views: [...(debug.__prontoViews ?? [])].map(([key, entry]) => ({
+              key, ...collectionState(entry.view), refs: entry.refs, attempts: entry.attempts,
+              retrying: entry.retrying !== undefined, attached: entry.attached.size, waiters: entry.waiters.size,
+              failure: entry.failure && { table: entry.failure.table, refused: entry.failure.refused, message: entry.failure.error.message },
+            })),
+            collections: Object.fromEntries(Object.entries(debug.__mechaClient?.collections ?? {}).map(([table, collection]) => [table, collectionState(collection)])),
+          };
+        });
+      } catch (diagnosticError) {
+        throw new AggregateError([error, diagnosticError], `${path} never got ready; browser diagnostics also failed: ${JSON.stringify(diagnostics)}`, { cause: error });
+      }
+      throw new Error(`${path} never got ready: ${error.message}\n${JSON.stringify({ ...diagnostics, state }, null, 2)}`, { cause: error });
+    });
+    return page;
+  } finally {
+    page.off("console", onConsole);
+    page.off("pageerror", onError);
+    page.off("request", onRequest);
+    page.off("requestfinished", onFinished);
+    page.off("requestfailed", onFinished);
+  }
 };
 
 const open = async (path: string, opts: { width?: number; dark?: boolean; session?: unknown } = {}) =>
@@ -126,7 +187,7 @@ const gone = async (route: string, words: string) => {
   const page = await (await context()).newPage();
   await page.goto(`${base}${route}/00000000-0000-4000-8000-000000000000`);
   await page.waitForFunction((words: string) =>
-    (document.querySelector(".shell-screen:not([hidden]) .screen")?.textContent ?? "").includes(words), words);
+    (document.querySelector(".shell-screen:not([hidden]):not([data-served]) .screen")?.textContent ?? "").includes(words), words);
 };
 
 const championship = async (id: string) => {
@@ -135,26 +196,69 @@ const championship = async (id: string) => {
   return page;
 };
 
-test("test-home-featured: the front page leads with the featured season, its top six and its round", async () => {
+test("test-home-featured: the front page keeps the featured season and its top six below the game feeds", async () => {
   const page = await open("/");
   await page.waitForSelector(".feature .standings tbody tr", { timeout: 30_000 });
   const top = await said(page, ".feature .standings tbody .name");
   assertEquals(top.length, 6);
   assertEquals(top[0], "Flamengo-RJ");
-  assert((await said(page, ".feature .round .games li")).length > 0, "the current round lists its games");
+  assert(await page.locator(".home-games + .feature").count(), "game feeds precede the featured table");
   // The title chance arrives once the chances computation has run over the lake.
   await page.waitForSelector(".feature .standings tbody tr:first-child .title-chance", { timeout: STREAM_MS });
 });
 
-test("test-home-levels: each level's most recent championships first", async () => {
+test("test-home-levels: every eligible championship appears in strength order within its region", async () => {
+  await query("SELECT refresh_recent_championships()");
+  const expected = JSON.parse(await query(`SELECT coalesce(json_agg(rows ORDER BY region), '[]') FROM (
+    SELECT region, json_agg(json_build_object('id',id,'name',full_name) ORDER BY strength DESC, full_name, id) AS items
+    FROM home_championship GROUP BY region
+  ) rows`));
   const page = await open("/");
-  const [world, continental, national] = await Promise.all(
-    [0, 1, 2].map((i) => texts(page, `.recent:nth-of-type(${i + 1}) .champ-list li`)),
-  );
-  assertEquals(world[0], "Mundial - Copa do Mundo FIFA 2026");
-  assertEquals(continental[0], "Europa - Champions League 2026/2027");
-  assertEquals(national[0], "Alemanha - Bundesliga 2026/2027");
-  assertEquals(national.length, 6);
+  const regionOrder = ["national", "continental", "world"];
+  assertEquals(await page.locator(".regions .champ-list").evaluateAll((lists: Element[]) =>
+    lists.map((list) => list.getAttribute("data-filter"))), regionOrder.map((region) => `region=eq.${region}`));
+  for (const region of regionOrder) {
+    const rows = expected.find((row: { region: string }) => row.region === region)?.items ?? [];
+    const list = `.champ-list[data-filter="region=eq.${region}"]`;
+    await page.waitForFunction(({ list, count }: { list: string; count: number }) =>
+      document.querySelectorAll(`${list} li:not(.empty)`).length === count, { list, count: rows.length });
+    assertEquals(await texts(page, `${list} li:not(.empty)`), rows.map((row: { name: string }) => row.name));
+    const ids = await page.locator(`${list} a`).evaluateAll((links: Element[]) => links.map((link) => link.getAttribute("data-param-id")));
+    assertEquals(ids, rows.map((row: { id: string }) => row.id));
+  }
+  const liveId = crypto.randomUUID();
+  const link = `.champ-list a[data-param-id="${liveId}"]`;
+  const nationalLinks = '.champ-list[data-filter="region=eq.national"] a';
+  try {
+    await query(`
+      INSERT INTO championship (id,name,region_name,begins,ends) VALUES
+        ('${liveId}','Live tournament','ZZZ',(now() AT TIME ZONE 'America/Sao_Paulo')::date-1,(now() AT TIME ZONE 'America/Sao_Paulo')::date+1);
+      INSERT INTO phase (id,championship_id,name) VALUES ('${liveId}','${liveId}','Principal');
+      INSERT INTO stage_group (id,phase_id,name) VALUES ('${liveId}','${liveId}','Grupo');
+      INSERT INTO team (id,name,country) VALUES ('${liveId}','Live tournament team','Brasil');
+      INSERT INTO team_group (group_id,team_id) VALUES ('${liveId}','${liveId}');
+      INSERT INTO team_rating (id,team_id,measure_date,offense,defense,rating) VALUES
+        ('${liveId}','${liveId}',(now() AT TIME ZONE 'America/Sao_Paulo')::date,1,1,0);
+      SELECT refresh_recent_championships();
+    `);
+    await page.waitForFunction(({ selector, id }: { selector: string; id: string }) =>
+      [...document.querySelectorAll(selector)].at(-1)?.getAttribute("data-param-id") === id,
+      { selector: nationalLinks, id: liveId });
+    await query(`UPDATE team_rating SET rating=100 WHERE id='${liveId}'; SELECT refresh_recent_championships()`);
+    await page.waitForFunction(({ selector, id }: { selector: string; id: string }) =>
+      document.querySelector(selector)?.getAttribute("data-param-id") === id,
+      { selector: nationalLinks, id: liveId });
+    await query(`UPDATE championship SET name='Renamed live tournament',region='continental' WHERE id='${liveId}'; SELECT refresh_recent_championships()`);
+    await page.waitForFunction((id: string) => {
+      const link = document.querySelector(`.champ-list[data-filter="region=eq.continental"] a[data-param-id="${id}"]`);
+      return link?.textContent?.includes("Renamed live tournament") && !document.querySelector(`.champ-list[data-filter="region=eq.national"] a[data-param-id="${id}"]`);
+    }, liveId);
+    await query(`UPDATE championship SET begins=(now() AT TIME ZONE 'America/Sao_Paulo')::date-60,
+      ends=(now() AT TIME ZONE 'America/Sao_Paulo')::date-30 WHERE id='${liveId}'; SELECT refresh_recent_championships()`);
+    await page.waitForFunction((selector: string) => !document.querySelector(selector), link);
+  } finally {
+    await query(`DELETE FROM championship WHERE id='${liveId}'; DELETE FROM team WHERE id='${liveId}'; SELECT refresh_recent_championships()`);
+  }
 });
 
 test("test-catalog-category: every championship with its category", async () => {
@@ -268,11 +372,14 @@ test("test-games-results: the results tab lists played games and is remembered",
   await page.click(".masthead .wordmark");
   await page.waitForURL(`${base}/`);
   await page.goBack();
-  await page.waitForSelector('.shell-screen:not([hidden]) .games-view[data-view="results"]');
+  await page.waitForSelector('.shell-screen:not([hidden]):not([data-served]) .games-view[data-view="results"]');
 });
 
 test("test-game-page: a game's page shows its score, facts, goals and line-ups", async () => {
-  const page = await open(`/jogo/${WIN}`);
+  const page = await (await context()).newPage();
+  const requests: URL[] = [];
+  page.on("request", (request: { url(): string }) => requests.push(new URL(request.url())));
+  await visit(page, `/jogo/${WIN}`);
   await page.waitForSelector(".goals li");
   assertEquals(await texts(page, ".game h1.band"), ["Brasil - Campeonato Brasileiro 2026"]);
   assertEquals((await texts(page, ".scoreboard > *")).map((t) => t.replace(/\s+/g, "")), ["Athletico-PR", "2x1", "Bahia-BA"]);
@@ -283,6 +390,13 @@ test("test-game-page: a game's page shows its score, facts, goals and line-ups",
     ["home", "away"].every((s) => document.querySelectorAll(`.lineup[data-side="${s}"] tbody tr`).length >= 11));
   assert((await page.$$('.lineup tr[data-yellow="true"]')).length > 0);
   assertEquals(await texts(page, ".lineup caption"), ["Athletico-PR", "Bahia-BA"]);
+  // A match's lineup must not load the archive just to notice deletions.
+  const lineups = requests.filter(url => url.pathname === "/crud/player_game");
+  assert(lineups.length > 0);
+  assert(lineups.every(url => url.searchParams.get("game_id") === `eq.${WIN}`));
+  assert(!requests.some(url => url.pathname.endsWith("/shape") && url.searchParams.get("table") === "player_game"));
+  assert(requests.filter(url => url.pathname.endsWith("/shape") && url.searchParams.get("table") === "game_card")
+    .every(url => url.searchParams.get("log") === "changes_only"));
   // A game with neither says nothing of either.
   assertEquals(await said(page, ".extra"), [""]);
 
@@ -305,25 +419,31 @@ test("test-rounds: the championship page shows the current round and the next", 
 
 test("test-teams: part of a name narrows the teams", async () => {
   const page = await open("/equipes");
-  await page.waitForFunction(() => document.querySelectorAll(".catalog-table tbody tr").length > 40);
+  await page.waitForFunction(() => document.querySelectorAll(".catalog-table tbody tr").length === 40);
   await page.fill("#teams-q", "athletico");
   await page.waitForFunction(() => document.querySelectorAll(".catalog-table tbody tr").length === 1);
-  assertEquals(await said(page, ".catalog-table tbody tr"), ["Athletico-PR Curitiba Brasil"]);
+  assertEquals(await said(page, ".catalog-table tbody tr td:not(:nth-child(2))"), ["Athletico-PR", "Curitiba", "Brasil"]);
+  assert((await said(page, ".catalog-table tbody tr td:nth-child(2)"))[0].length > 0, "the filtered row retains its rating");
 });
 
-test("test-team-page: a team's page shows its facts, its games and its squad's seasons", async () => {
+test("test-team-page: a team's profile shows facts, championships and deduplicated players", async () => {
   const page = await open(`/equipe/${ATHLETICO}`);
-  await page.waitForSelector(".squad-table tbody tr");
+  await page.waitForSelector(".team-current-championships a[data-route='equipe-campeonato']");
   assertEquals(await said(page, ".team h1.band"), ["Athletico-PR"]);
   assertEquals((await said(page, ".team .game-facts dd")).slice(0, 4), ["Club Athletico Paranaense", "Curitiba", "Brasil", "26/03/1924"]);
-  await page.waitForFunction(() => document.querySelectorAll(".team-results .game-row").length === 10);
-  // The latest result from Athletico's own side: at home, 2–1, a win.
-  const latest = await page.$eval(".team-results .game-row", (a: Element) => [a.querySelector(".home")?.textContent?.replace(/\s+/g, " ").trim(), a.getAttribute("data-result")]);
-  assertEquals(latest, ["Casa Bahia-BA", "w"]);
-  await page.waitForFunction(() => document.querySelectorAll(".squad-table tbody tr").length > 11);
-  const viveros = await page.$$eval(".squad-table tbody tr", (rows: Element[]) =>
-    rows.map((r) => [...r.querySelectorAll("td")].map((td) => td.textContent?.trim()).slice(1)).find((cells) => cells[0] === "K. Viveros"));
-  assertEquals(viveros, ["K. Viveros", "fw", "26", "26", "0", "2286", "18", "6", "0"]);
+  await page.waitForFunction(() => document.querySelectorAll(".team-current-players a[data-route='jogador']").length > 11);
+  const currentPlayers = await page.locator(".team-current-players a[data-route='jogador']")
+    .evaluateAll((links: HTMLAnchorElement[]) => links.map((link) => link.getAttribute("data-param-id")));
+  assertEquals(new Set(currentPlayers).size, currentPlayers.length, "the profile lists each current player once across seasons");
+  await page.locator(`.team-current-championships a[data-param-championship="${BRASILEIRO_2026}"]`).click();
+  await page.waitForURL(`**/equipe-campeonato/${ATHLETICO}/${BRASILEIRO_2026}**`);
+  await page.waitForFunction(() => document.querySelectorAll(".team-roster .squad-table tbody tr").length > 11);
+  const viveros = await page.$$eval(".team-roster .squad-table tbody tr", (rows: Element[]) =>
+    rows.map((r) => {
+      const cells = [...r.querySelectorAll("td")].map((td) => td.textContent?.trim());
+      return [0, 1, 2, 3, 4, 6, 7, 15, 16].map((column) => cells[column]);
+    }).find((cells) => cells[0] === "K. Viveros"));
+  assertEquals(viveros, ["K. Viveros", "fw", "26", "26", "0", "2.286", "18", "6", "0"]);
 });
 
 test("test-player-page: a player's page shows their season and their games", async () => {
@@ -381,8 +501,8 @@ test("test-venue-home: a team's ground shows the team and the games played there
   // São Paulo-SP's ground, which the 2006 pages call Morumbi and the archive
   // now calls Morumbis: one stadium.
   const team = await open("/equipe/07000000-0000-4000-8000-000000000011");
-  await team.waitForSelector('.game-facts dd span');
-  const ground = await said(team, ".game-facts dd span");
+  await team.waitForSelector('.game-facts dd[data-live="stadium"]');
+  const ground = await said(team, '.game-facts dd[data-live="stadium"]');
   assertEquals(ground, ["Morumbis"]);
   const stadiums = await open("/estadios");
   await stadiums.fill("#stadiums-q", "morumbi");
@@ -561,9 +681,31 @@ test("test-chances: the 2026 Série A's chances lead with Flamengo, near golaber
   // on the same 7-year archive, but from a zero prior and with their own
   // draws, so near is the claim and not equal.
   assert(title >= 60 && title <= 90, `Flamengo's title chance ${title} is far from golaberto's 73.4`);
-  const positions: string[] = await page.$$eval(".heat .rows .row:first-child .heat-cell [data-text-format]", (els: Element[]) => els.map((e) => e.textContent ?? ""));
-  const sum = positions.map(percent).reduce((a: number, b: number) => a + b, 0);
-  assert(sum >= 99 && sum <= 101, `the leader's positions sum to ${sum}`);
+  const positions: string[][] = await page.$$eval(".heat .rows .row", (rows: Element[]) =>
+    rows.map(row => [...row.querySelectorAll(".heat-cell [data-text-format]")].map(e => e.textContent ?? "")));
+  assertEquals(positions.length, 20);
+  for (const cells of positions) {
+    assertEquals(cells.length, 20);
+    const sum = cells.map(percent).reduce((a, b) => a + b, 0);
+    assert(sum >= 99 && sum <= 101, `a team's positions sum to ${sum}`);
+  }
+  for (const [table, selector, order] of [
+    ["zone_chance", ".zone-odds", "c.first, c.last"],
+    ["position_chance", ".heat", "c.position"],
+  ]) {
+    for (const deadline = Date.now() + STREAM_MS;;) {
+      const expected = JSON.parse(await query(`SELECT json_agg(json_build_array(t.team_name, c.percent) ORDER BY t.rank, ${order})
+        FROM ${table} c JOIN team_chance t USING (group_id, team_id) WHERE c.group_id = '${SERIE_A_2026}'`));
+      const shown: string[][] = await page.$$eval(`${selector} .rows .row`, (rows: Element[]) =>
+        rows.flatMap(row => [...row.querySelectorAll(".cells [data-text-format]")].map(cell => [
+          row.querySelector(".name")?.textContent?.trim() ?? "", cell.textContent ?? "",
+        ])));
+      const actual = shown.map(([name, value]) => [name, percent(value)]);
+      if (JSON.stringify(actual) === JSON.stringify(expected)) break;
+      if (Date.now() >= deadline) assertEquals(actual, expected, `${table}: every displayed probability matches its source`);
+      await page.waitForTimeout(100);
+    }
+  }
 });
 
 test("test-chances-reach: in the 2026 Série A every chance that shows 0 says whether it can still happen, marked * when it can and unmarked when the points rule it out", async () => {
@@ -589,6 +731,17 @@ test("test-chances-reach: in the 2026 Série A every chance that shows 0 says wh
   assertEquals([marks.impossible, marks.reachable], ["", '"*"']);
 });
 
+// Undo restores a rating input too. A ratings pass during the defeat leaves
+// changed powers until the next ratings pass, then the downstream chances pass.
+const computationSpecs: { every: number; to: string[] }[] = JSON.parse(
+  JSON.parse(await Deno.readTextFile(`${Deno.args[0] ?? "."}/bayt.json`)).targets.compute.compose.environment.COMPUTATIONS,
+);
+const CHANCES_SETTLE_MS = STREAM_MS + 1000 * ["team_rating", "zone_chance"].reduce((seconds, table) => {
+  const spec = computationSpecs.find(c => c.to.includes(table));
+  if (spec === undefined) throw new Error(`no computation produces ${table}`);
+  return seconds + spec.every;
+}, 0);
+
 test("test-chances-live: a result recorded for a game still to play moves the chances on a page left open, and undoing it brings them back", async () => {
   // Flamengo's next home game, lost heavily: the leader's title chance must fall.
   const game = await query(`SELECT g.id FROM game g JOIN team t ON t.id = g.home_id JOIN stage_group sg ON sg.phase_id = g.phase_id WHERE sg.id = '${SERIE_A_2026}' AND t.name = 'Flamengo-RJ' AND NOT g.played ORDER BY g.day LIMIT 1`);
@@ -603,9 +756,8 @@ test("test-chances-live: a result recorded for a game still to play moves the ch
   } finally {
     await query(`UPDATE game SET played = false, home_score = NULL, away_score = NULL WHERE id = '${game}'`);
   }
-  // The same lake gives the same draw.
   await page.waitForFunction((before: string) =>
-    document.querySelector(".zone-odds .rows .row:first-child .pct")?.textContent === before, before, { timeout: STREAM_MS });
+    document.querySelector(".zone-odds .rows .row:first-child .pct")?.textContent === before, before, { timeout: CHANCES_SETTLE_MS });
 });
 
 test("test-team-rating: a team's page shows its latest rating, a number from 0 to 100", async () => {
@@ -692,4 +844,220 @@ test("test-screen-range: no page scrolls sideways", async () => {
     }
   }
 });
+// What the door answers before any script runs: a document for every public
+// route, rendered on request with its rows, so a reader who has not booted the
+// app yet, and a crawler that never will, is answered with the page.
+const served = async (path: string, language = "pt-BR") => {
+  const res = await fetch(`${base}${path}`, { headers: { "Accept-Language": language }, redirect: "manual" });
+  return { status: res.status, cache: res.headers.get("cache-control"), html: await res.text() };
+};
+const h1Of = (html: string) => /<h1[^>]*>([^<]*)<\/h1>/.exec(html)?.[1].trim();
+// The deployment's origin, which every absolute address is spelled against.
+const origin = Deno.env.get("ORIGIN");
+if (origin === undefined) throw new Error("ORIGIN is unset: the check runs beside the stack, which sets it");
+// What the door's plain listener answers under a Host of the asker's choosing,
+// which fetch will not send: the listener a deployment's balancer reaches.
+const underHost = async (host: string, path: string) => {
+  const conn = await Deno.connect({ hostname: new URL(base).hostname, port: 8080 });
+  await conn.write(new TextEncoder().encode(`GET ${path} HTTP/1.1\r\nHost: ${host}\r\nAccept-Language: pt-BR\r\nConnection: close\r\n\r\n`));
+  const raw = new TextDecoder().decode(await new Response(conn.readable).arrayBuffer());
+  const [head, body] = [raw.slice(0, raw.indexOf("\r\n\r\n")), raw.slice(raw.indexOf("\r\n\r\n") + 4)];
+  const status = Number(head.split(" ")[1]);
+  if (!/^transfer-encoding:\s*chunked/im.test(head)) return { status, body };
+  let text = "";
+  for (let at = 0; ;) {
+    const end = body.indexOf("\r\n", at);
+    const size = parseInt(body.slice(at, end), 16);
+    if (size === 0) return { status, body: text };
+    text += body.slice(end + 2, end + 2 + size);
+    at = end + 2 + size + 2;
+  }
+};
+
+test("door: every public route is answered with its document, rows and all, in its language", async () => {
+  // Prerendered, a page's empty lists filled once the shell took it over and
+  // pushed down everything after them: a layout shift of 0.74 on the home
+  // page, and of 0.12 on the catalogue.
+  for (const [path, h1] of [["/campeonatos", "Campeonatos"], ["/es/campeonatos", "Campeonatos"], ["/en/championships", "Championships"]]) {
+    const page = await served(path);
+    assertEquals([page.status, page.cache, h1Of(page.html)], [200, "public, no-cache", h1], path);
+    // Under the search's seed, which is every tab's first: the whole
+    // catalogue, its region chosen as none.
+    assert((page.html.match(/<tr[^>]* data-id="/g) ?? []).length > 3, `${path} carries no rows`);
+    assert(/<option[^>]*value=""[^>]*selected|<option[^>]*selected[^>]*value=""/.test(page.html), `${path} chose no region`);
+    // Absolute against the deployment's origin, as the sitemap's addresses are.
+    assert(page.html.includes(`<link href="${origin}${path}" rel="canonical">`), `${path} names no absolute canonical`);
+    assert(page.html.includes(`<link hreflang="x-default" href="${origin}/campeonatos" rel="alternate">`), `${path} names no x-default`);
+  }
+  for (const path of ["/", "/en", "/en/", "/equipes", "/estadios", "/arbitros"]) {
+    const page = await served(path);
+    assertEquals([page.status, page.cache], [200, "public, no-cache"], path);
+    assert(page.html.includes('<div data-served="" class="shell-screen">'), `${path} is not a document`);
+    assert(/<(li|tr)[^>]* data-id="/.test(page.html), `${path} carries no rows`);
+  }
+  // A reader whose language is not the address's is answered with their own
+  // document at once: a redirect is a round trip ahead of every byte.
+  const english = await served("/", "en-US,en;q=0.9");
+  assertEquals(english.status, 200);
+  assert(english.html.includes('<html lang="en-GB"'), english.html.slice(0, 200));
+  assertEquals((await served("/nowhere")).status, 404);
+});
+
+test("door: team statistics and derived charts arrive before JavaScript and survive hydration", async () => {
+  const team = "07000000-0000-4000-8000-000000000001";
+  const path = `/en/team-championship/${team}/${BRASILEIRO_2026}`;
+  const profile = await served(`/en/team/${team}`);
+  assertEquals([profile.status, profile.cache], [200, "public, no-cache"]);
+  assert(profile.html.includes('data-served=""'), "the team profile is not server rendered");
+  assert(profile.html.includes("Flamengo-RJ"), "the team profile has no team");
+  const initial = await served(path);
+  assertEquals([initial.status, initial.cache], [200, "public, no-cache"]);
+  const page = await (await context()).newPage();
+  const statistics = (html: string | null) => {
+    const doc = html === null ? document : new DOMParser().parseFromString(html, "text/html");
+    const text = (selector: string) => [...doc.querySelectorAll(selector)].map((e) => e.textContent?.trim());
+    return {
+      positions: text('.team-odds-table tbody tr [data-text="{percent}"]'),
+      zones: text('.team-zone-odds [data-text="{percent}"]'),
+      positionCharts: doc.querySelectorAll('.team-chance-detail [data-text-format="team-chart"] svg').length,
+      campaignCharts: doc.querySelectorAll('.team-campaign [data-text-format="team-chart"] svg').length,
+    };
+  };
+  const before = await page.evaluate(statistics, initial.html);
+  assertEquals(before.positions.length, 20);
+  assertEquals(before.zones.length, 5);
+  assertEquals(before.positionCharts, 1, "the server serialized before the position-chart fold finished");
+  assertEquals(before.campaignCharts, 1);
+  await visit(page, path);
+  await page.waitForSelector('.team-chance-detail [data-text-format="team-chart"] svg');
+  assertEquals(await page.evaluate(statistics, null), before, "hydration changed the served statistics");
+});
+
+test("door: every absolute address is the deployment's, whatever Host it is asked under", async () => {
+  // The origin was the request's scheme and Host, and the door answers any
+  // Host: a client chose the canonical, alternates, og:url, robots.txt and
+  // sitemap of answers marked public, rendered and prerendered alike.
+  for (const host of ["evil.example", "evil.example:8443"]) {
+    const robots = await underHost(host, "/robots.txt");
+    assertEquals(robots.status, 200);
+    assert(robots.body.includes(`Sitemap: ${origin}/sitemap.xml`), robots.body);
+    const sitemap = await underHost(host, "/sitemap.xml");
+    assertEquals(sitemap.status, 200);
+    assert(sitemap.body.includes(`<loc>${origin}/campeonatos</loc>`), sitemap.body.slice(0, 400));
+    assert(sitemap.body.includes(`hreflang="x-default" href="${origin}/campeonatos"`), sitemap.body.slice(0, 400));
+    for (const page of [robots, sitemap]) assert(!page.body.includes("evil.example"), page.body.slice(0, 400));
+    for (const path of ["/campeonatos", "/en/championships", `/jogo/${WIN}`]) {
+      const page = await underHost(host, path);
+      assertEquals(page.status, 200, path);
+      assert(page.body.includes(`<link href="${origin}${path}" rel="canonical">`), `${path} under ${host} names no canonical at ${origin}`);
+      const ogUrl = /<meta (?:content="([^"]*)" property="og:url"|property="og:url" content="([^"]*)")>/.exec(page.body);
+      assertEquals(ogUrl?.[1] ?? ogUrl?.[2], `${origin}${path}`, `${path} under ${host}: og:url`);
+      const alternates = [...page.body.matchAll(/hreflang="([^"]*)" href="([^"]*)"/g)];
+      assert(alternates.some(([, lang]) => lang === "x-default"), `${path} names no x-default`);
+      for (const [, lang, href] of alternates) assert(href.startsWith(`${origin}/`), `${path} under ${host}: ${lang} at ${href}`);
+      assert(!page.body.includes("evil.example"), `${path} under ${host} spells the Host`);
+    }
+  }
+});
+
+test("door: every file revalidates on its hash, without its body", async () => {
+  // Caddy's own validator, its mtime and size, was empty in an image built at
+  // mtime 0 and only the size at any other clamped mtime, so llms.txt's and the
+  // manifest's differed by length alone; and its templates deleted a crawler
+  // file's, so the revalidation the worker makes behind every page it paints
+  // carried the whole unchanged file.
+  for (const path of ["/robots.txt", "/sitemap.xml", "/llms.txt", "/manifest.webmanifest", "/shell/screens/campeonatos.css", "/omnishell/interpreter/shell.js"]) {
+    const first = await fetch(`${base}${path}`);
+    await first.text();
+    const etag = first.headers.get("etag") ?? "";
+    assert(/^"[0-9a-f]{64}(-gzip|-zstd)?"$/.test(etag), `${path} carries the validator ${JSON.stringify(etag)}`);
+    const again = await fetch(`${base}${path}`, { headers: { "If-None-Match": etag } });
+    assertEquals([again.status, await again.text()], [304, ""], path);
+  }
+});
+
+test("door: a game's page is answered with its rows, for no one in particular", async () => {
+  const page = await served(`/jogo/${WIN}`);
+  assertEquals([page.status, page.cache], [200, "public, no-cache"]);
+  for (const words of ["Athletico-PR", "Bahia-BA", "Brasil - Campeonato Brasileiro 2026"]) assert(page.html.includes(words), words);
+  assert(/data-text="\{home_score\}">2</.test(page.html) && /data-text="\{away_score\}">1</.test(page.html), "no score");
+  assert((page.html.match(/<tr[^>]* data-id=/g) ?? []).length >= 22, "no line-ups");
+  assert(page.html.includes(`property="og:title"`), "no og:title");
+  assert(page.html.includes(`<link href="${origin}/jogo/${WIN}" rel="canonical">`), "no absolute canonical");
+  // Rendered as a guest, who edits nothing.
+  assert(!page.html.includes("edit-link\" href"), "an editor's link reached a public document");
+  assertEquals((await served(`/en/match/${WIN}`)).status, 200);
+  assertEquals((await served("/jogo/00000000-0000-4000-8000-000000000000")).status, 404);
+});
+
+test("door: a game's document follows its result", async () => {
+  const score = async () => /data-text="\{home_score\}">([^<]*)</.exec((await served(`/jogo/${DRAW}`)).html)?.[1];
+  assertEquals(await score(), "0");
+  await query(`UPDATE game SET home_score = 5 WHERE id = '${DRAW}'`);
+  try {
+    let seen: string | undefined;
+    for (const until = Date.now() + STREAM_MS; Date.now() < until && seen !== "5"; await new Promise((r) => setTimeout(r, 500))) {
+      seen = await score();
+    }
+    assertEquals(seen, "5");
+  } finally {
+    await query(`UPDATE game SET home_score = 0 WHERE id = '${DRAW}'`);
+  }
+});
+
+test("door: the app takes over the document it was served, keeping its nodes and the reader's focus", async () => {
+  const page = await (await context()).newPage();
+  // The reader, between the paint and the shell: on the served heading, and
+  // focused on a link of the served screen.
+  await page.addInitScript(() =>
+    addEventListener("DOMContentLoaded", () => {
+      const w = window as unknown as { servedHeading: Element | null };
+      w.servedHeading = document.querySelector("[data-served] h1");
+      document.querySelector<HTMLElement>("[data-served] .wordmark")?.focus();
+    })
+  );
+  await visit(page, `/jogo/${WIN}`);
+  assert(await page.evaluate(() => (window as unknown as { servedHeading: Element | null }).servedHeading === document.querySelector("#app h1")), "the served heading was drawn again");
+  assert(await page.evaluate(() => document.activeElement?.classList.contains("wordmark")), "the reader's focus was lost");
+  assertEquals(await page.$$eval("#app > .shell-screen", (els: Element[]) => els.length), 1);
+  assertEquals(await page.$$eval("body > nav", (els: Element[]) => els.length), 1);
+});
+
+test("door: the reader's place in the served strip survives the app taking over", async () => {
+  // The strip was drawn again over the served one, so a keyboard reader who
+  // had tabbed into it while the modules loaded was dropped to the body.
+  const page = await (await context()).newPage();
+  await page.addInitScript(() =>
+    addEventListener("DOMContentLoaded", () => {
+      const w = window as unknown as { servedLink: HTMLElement | null };
+      w.servedLink = document.querySelector<HTMLElement>("body > nav a:nth-of-type(2)");
+      w.servedLink?.focus();
+    })
+  );
+  await visit(page, "/jogos");
+  assert(await page.evaluate(() => {
+    const link = (window as unknown as { servedLink: HTMLElement | null }).servedLink;
+    return link !== null && link.isConnected && document.activeElement === link;
+  }), "the reader's link in the strip was drawn again");
+});
+
+test("door: a page the worker kept stays the page in a tab opened offline", async () => {
+  // A new tab holds no session, and the guest mint offline threw into the
+  // boot's banner, which replaced the document the worker had painted.
+  const c = await context();
+  const page = await c.newPage();
+  await visit(page, "/jogos");
+  await page.evaluate(() => navigator.serviceWorker.ready);
+  await page.waitForFunction(() => navigator.serviceWorker.controller !== null, null, { timeout: 30_000 });
+  await visit(page, "/jogos");
+  await c.setOffline(true);
+  const offline = await c.newPage();
+  await offline.goto(`${base}/jogos`);
+  await offline.waitForSelector("#app .shell-screen .screen", { timeout: 30_000 });
+  await offline.waitForTimeout(3_000);
+  assertEquals(await offline.$$eval("#app pre", (els: Element[]) => els.map((e) => e.textContent)), []);
+  assert((await offline.$$eval("#app .games li[data-id]", (els: Element[]) => els.length)) > 0, "the kept rows are gone");
+  await c.setOffline(false);
+});
+
 globalThis.addEventListener("unload", () => browser.close());

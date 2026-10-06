@@ -1,2 +1,56 @@
 @import url("shared/chrome.css");
 @import url("shared/catalog.css");
+
+/* Geography stays compact while the searchable country list opens in a native
+   popover beside its trigger. */
+.geography-group { display: contents; }
+.filters > .field.grow { flex: 1 1 16rem; min-width: 0; }
+.geography-group .field { flex: 1 1 8rem; min-width: 0; }
+.geography-group select { width: 100%; min-width: 0; }
+.geography-group > .country-picker { flex: 1 1 12rem; }
+.country-open {
+  anchor-name: --teams-country-trigger;
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-md);
+  width: 100%; min-width: 0; min-height: var(--control-h); box-sizing: border-box;
+  padding: 0 var(--control-pad-x); overflow: hidden; cursor: pointer;
+  font: inherit; font-size: var(--type-body); font-weight: 400; text-align: start;
+  color: var(--primary); background: var(--surface);
+  border: var(--border-size-1) solid var(--border); border-radius: var(--r-sm);
+}
+.country-open:focus-visible { outline: var(--border-size-2) solid var(--accent); outline-offset: var(--border-size-2); }
+.country-readout { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.country-readout .country-all, .country-readout .country-query, .country-readout .country-selected { display: none; }
+.country-open[data-country-selection="*"][data-country-query=""] .country-all,
+.country-open[data-country-query]:not([data-country-query=""]) .country-query,
+.country-open[data-country-selection]:not([data-country-selection="*"]) .country-selected { display: inline; }
+.country-open::after { content: "⌄"; flex: none; font-size: var(--type-label); }
+.country-pop {
+  position: fixed; position-anchor: --teams-country-trigger;
+  inset: auto; inset-block-start: anchor(bottom); inset-inline-start: anchor(left);
+  inline-size: min(24rem, calc(100vw - var(--sp-xl)));
+  max-block-size: min(28rem, calc(100dvh - var(--sp-xl))); overflow: auto;
+  box-sizing: border-box; margin: var(--sp-sm) 0; padding: var(--sp-md);
+  color: var(--primary); background: var(--surface);
+  border: var(--border-size-1) solid var(--border); border-radius: var(--r-sm);
+  box-shadow: var(--shadow-3);
+  position-try-fallbacks: flip-block, flip-inline;
+}
+.country-pop .field { margin-block-end: var(--sp-sm); }
+.country-pop input {
+  width: 100%; min-width: 0; min-height: var(--min-touch); box-sizing: border-box;
+  padding: 0 var(--control-pad-x); font: inherit; font-size: var(--type-body); font-weight: 400;
+  color: var(--primary); background: var(--surface);
+  border: var(--border-size-1) solid var(--border); border-radius: var(--r-sm);
+}
+.country-option {
+  display: flex; align-items: center; width: 100%; min-height: var(--min-touch);
+  box-sizing: border-box; padding: var(--sp-sm) var(--sp-md); cursor: pointer;
+  font: inherit; font-size: var(--type-body); text-align: start;
+  color: var(--primary); background: var(--surface); border: 0;
+}
+.country-option:hover, .country-option:focus-visible { background: var(--surface-muted); outline: 0; }
+.country-option[aria-pressed="true"] { font-weight: 700; background: var(--surface-muted); }
+.country-option[aria-pressed="true"]::after { content: "✓"; margin-inline-start: auto; padding-inline-start: var(--sp-md); }
+.country-all-option { margin-block-end: var(--sp-sm); border-block-end: var(--border-size-1) solid var(--border); font-weight: 700; }
+.country-options { display: grid; grid-template-columns: minmax(0, 1fr); }
+.country-options > .empty { padding: var(--sp-md); }

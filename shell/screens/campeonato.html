@@ -14,7 +14,7 @@
 <div data-live="championship" data-filter="id=eq.{param.id}" data-exit-motion="none" data-empty="{msg.championship_gone}">
   <template data-item>
     <article class="championship">
-      <h1 class="band" data-text="{full_name}"></h1>
+      <h1 class="band"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}|{msg.geography_names}" data-text-format="geography-label"></span></h1>
       <div class="page">
         <div class="content">
           <p class="facts">
@@ -55,7 +55,7 @@
                             <template data-item>
                               <tr data-zone="{zone}">
 	                                <td class="pos" data-text="{position}"></td>
-	                                <td class="name"><a data-route="equipe" data-param-id="{team_id}" data-text="{team_name}"></a></td>
+	                                <td class="name"><span class="team-name-cell"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><a class="team-name" title="{team_name}" data-route="equipe-campeonato" data-param-id="{team_id}" data-param-championship="{param.id}" data-text="{team_name}"></a></span></td>
 	                                <td class="num pts" data-text="{points}"></td>
 	                                <td class="num" data-text="{played}"></td>
 	                                <td class="num wide" data-text="{wins}"></td>
@@ -83,13 +83,13 @@
                     <div class="round-pair">
                       <section class="round">
                         <h3><span data-text="{msg.round}"></span> <span data-text="{current}"></span></h3>
-<ol class="games" data-live="game_card" data-filter="phase_id=eq.{phase_id}&round=eq.{current}" data-order="day.asc,kickoff.asc" data-empty="{msg.round_empty}">
+<ol class="games" data-live="game_card" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="phase_id=eq.{phase_id}&round=eq.{current}" data-order="day.asc,kickoff.asc" data-empty="{msg.round_empty}">
   <template data-item>
-    <li><a class="game-row" data-route="jogo" data-param-id="{id}" data-played="{played}">
+    <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{id}" data-played="{played}">
       <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
-      <span class="home" data-text="{home_name}"></span>
+      <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></span>
       <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-      <span class="away" data-text="{away_name}"></span>
+      <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>
     </a></li>
   </template>
 </ol>
@@ -98,13 +98,13 @@
                         <template data-item>
                           <section class="round">
                             <h3><span data-text="{msg.round}"></span> <span data-text="{next}"></span></h3>
-<ol class="games" data-live="game_card" data-filter="phase_id=eq.{phase_id}&round=eq.{next}" data-order="day.asc,kickoff.asc" data-empty="{msg.round_empty}">
+<ol class="games" data-live="game_card" data-select="*,championship(show_country),home:home_id(country),away:away_id(country)" data-filter="phase_id=eq.{phase_id}&round=eq.{next}" data-order="day.asc,kickoff.asc" data-empty="{msg.round_empty}">
   <template data-item>
-    <li><a class="game-row" data-route="jogo" data-param-id="{id}" data-played="{played}">
+    <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-id="{id}" data-played="{played}">
       <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
-      <span class="home" data-text="{home_name}"></span>
+      <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></span>
       <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-      <span class="away" data-text="{away_name}"></span>
+      <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>
     </a></li>
   </template>
 </ol>

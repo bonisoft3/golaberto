@@ -1,0 +1,155 @@
+/* A team's games from its own side: the venue before the opponent, its goals
+   first, and the result as a form dot. */
+.team-games .venue { color: var(--secondary); font-size: var(--type-label); text-transform: uppercase; letter-spacing: .04em; }
+.team-games .away { display: flex; align-items: center; }
+.team-games .outcome { width: 10px; height: 10px; border-radius: 50%; border: var(--border-size-1) solid var(--form-rim); }
+.team-games [data-result="w"] .outcome { background: var(--form-win); }
+.team-games [data-result="d"] .outcome { background: var(--form-draw); }
+.team-games [data-result="l"] .outcome { background: var(--form-loss); }
+
+/* Championship-scoped fixtures keep the match's home/away order in a compact
+   table and reveal long names on demand. */
+.team-fixture-table { table-layout: fixed; }
+.team-fixture-table .fixture-home-head { text-align: end; }
+.team-fixture-table th:nth-child(1), .team-fixture-table td:nth-child(1) { width: 6.5rem; }
+.team-fixture-table th:nth-child(3), .team-fixture-table td:nth-child(3) { width: 4rem; text-align: center; }
+.team-fixture-table th:nth-child(5), .team-fixture-table td:nth-child(5) { width: 2rem; text-align: center; }
+.team-fixture-table tbody .game-row { display: table-row; }
+.team-fixture-table tbody .fixture-row > td:is(.home, .away, .score) { display: table-cell; }
+.team-fixture-table td.home, .team-fixture-table td.away { min-width: 0; }
+.team-fixture-table .fixture-team { display: flex; align-items: center; gap: var(--sp-sm); min-width: 0; max-width: 100%; }
+.team-fixture-table td.home .fixture-team { justify-content: flex-end; }
+.team-fixture-table td.away .fixture-team { justify-content: flex-start; }
+.standings .name .team-name-cell { display: flex; align-items: center; gap: var(--sp-sm); min-width: 0; }
+.standings .name .team-name-cell > .archive-icon { flex: none; }
+.team-fixture-table .team-name,
+.standings .name .team-name-cell .team-name {
+  display: block; flex: 1 1 auto; min-width: 0; max-width: 100%; min-height: var(--min-touch);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; overflow-wrap: normal;
+  color: var(--primary); text-decoration: none;
+}
+.team-fixture-table .home .team-name { text-align: end; }
+.team-fixture-table .team-name:hover,
+.standings .name .team-name-cell .team-name:hover { text-decoration: underline; }
+.team-fixture-table .fixture-date a { display: inline-flex; align-items: center; gap: var(--sp-sm); color: var(--primary); text-decoration: none; white-space: nowrap; }
+.team-fixture-table .team-icons { flex: none; }
+.team-fixture-table .team-icons .archive-icon { width: 15px; height: 15px; margin: 0; }
+.team-fixture-table [data-show-country="false"] .team-flag { display: none; }
+.team-fixture-table [data-side="home"] .home .team-name,
+.team-fixture-table [data-side="away"] .away .team-name { font-weight: 700; }
+.team-fixture-table .score a { display: inline-flex; min-width: var(--min-touch); justify-content: center; gap: var(--sp-sm); color: var(--primary); text-decoration: none; font-variant-numeric: tabular-nums; }
+.team-fixture-table .score i { font-style: normal; color: var(--secondary); }
+.team-fixture-table .fixture-score-placeholder { color: var(--secondary); }
+.team-fixture-table .outcome { display: inline-block; width: 10px; height: 10px; border-radius: 50%; border: var(--border-size-1) solid var(--form-rim); vertical-align: middle; }
+.team-fixture-table [data-result="w"] .outcome { background: var(--form-win); }
+.team-fixture-table [data-result="d"] .outcome { background: var(--form-draw); }
+.team-fixture-table [data-result="l"] .outcome { background: var(--form-loss); }
+.team-group .standings { table-layout: fixed; }
+.team-group .standings .pos { width: 2em; }
+.team-group .standings .num { width: 3em; }
+.team-group .standings .form { width: 5em; }
+.team-group .standings .name { width: auto; }
+@media (max-width: 520px) {
+  .team-fixture-table { display: block; }
+  .team-fixture-table thead { display: block; }
+  .team-fixture-table thead tr {
+    display: grid; grid-template-columns: minmax(0, 1fr) 3.5rem minmax(0, 1fr) 1.5rem;
+    gap: 0 var(--sp-sm); padding: var(--sp-sm) var(--sp-sm);
+  }
+  .team-fixture-table thead th { min-width: 0; padding: var(--sp-sm); }
+  .team-fixture-table .fixture-date-head,
+  .team-fixture-table .fixture-score-head,
+  .team-fixture-table .fixture-result-head {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  }
+  .team-fixture-table .fixture-home-head { grid-column: 1; text-align: end; }
+  .team-fixture-table .fixture-away-head { grid-column: 3; text-align: start; }
+  .team-fixture-table tbody { display: block; }
+  .team-fixture-table tbody tr.fixture-row {
+    display: grid; grid-template-columns: minmax(0, 1fr) 3.5rem minmax(0, 1fr) 1.5rem;
+    grid-template-areas: "date date date result" "home score away result";
+    align-items: center; gap: 0 var(--sp-sm); padding: var(--sp-sm) var(--sp-sm);
+  }
+  .team-fixture-table tbody tr.fixture-row > td { min-width: 0; padding: var(--sp-sm); }
+  .team-fixture-table tbody .fixture-row > td:is(.home, .away, .score) { display: block; }
+  .team-fixture-table .fixture-date { grid-area: date; }
+  .team-fixture-table td.home { grid-area: home; }
+  .team-fixture-table td.score { grid-area: score; }
+  .team-fixture-table td.away { grid-area: away; }
+  .team-fixture-table .fixture-result { grid-area: result; grid-row: 1 / 3; }
+  .team-fixture-table th:nth-child(1), .team-fixture-table td:nth-child(1),
+  .team-fixture-table th:nth-child(3), .team-fixture-table td:nth-child(3),
+  .team-fixture-table th:nth-child(5), .team-fixture-table td:nth-child(5) { width: auto; }
+  .team-fixture-table .team-icons { gap: 0; }
+  .team-fixture-table .team-icons .team-flag { display: none; }
+}
+
+/* Team profiles and championship slices share the archive's table language. */
+.team-championship-list, .team-player-list { list-style: none; margin: 0; padding: 0; border-top: var(--border-size-1) solid var(--border); }
+.team-championship-list li, .team-player-list li { min-width: 0; border-bottom: var(--border-size-1) solid var(--border); }
+.team-championship-list a, .team-player-list a { display: flex; align-items: center; gap: var(--sp-sm); min-height: var(--control-h); padding: var(--sp-sm) var(--sp-md); text-decoration: none; }
+.team-championship-list a:hover, .team-player-list a:hover { background: var(--surface-muted); }
+.team-championship-list a > span:first-child, .team-player-list a > span:nth-child(2) { min-width: 0; flex: 1; overflow-wrap: anywhere; }
+.team-championship-list .archive-icon, .team-player-list .archive-icon { flex: none; }
+.team-championship-list .chip { flex: none; }
+.team-player-list small { color: var(--secondary); text-transform: uppercase; }
+.team-group-card { display: flex; flex-direction: column; gap: var(--sp-sm); padding-block: var(--sp-md); border-top: var(--border-size-1) solid var(--border); }
+.team-group-card h3 { margin: 0; }
+.team-group-card .team-full-group { display: flex; justify-content: flex-end; }
+.team-group-card .team-full-group a, .team-group-card > p > a { font-size: var(--type-label); font-weight: 700; }
+.team-odds-summary { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sp-sm); margin: 0; color: var(--secondary); font-size: var(--type-label); }
+.team-odds-summary b { color: var(--primary); margin-inline-end: var(--sp-md); }
+.team-odds-table th, .team-odds-table td { text-align: center; font-variant-numeric: tabular-nums; }
+.team-odds-table tbody tr[data-current="true"] { font-weight: 700; }
+.team-odds-table tbody tr[data-current="true"] th { box-shadow: inset var(--border-size-2) 0 var(--accent); }
+.team-zone-odds { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: var(--sp-sm); }
+.team-zone-odds p { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-sm); margin: 0; padding: var(--sp-sm) var(--sp-md); background: var(--surface); font-size: var(--type-label); }
+.team-zone-odds .title-chance { white-space: nowrap; }
+.team-championship-links { display: flex; align-items: center; gap: var(--sp-md); margin-block-end: var(--sp-md); }
+.team-championship-page .band { display: flex; align-items: center; gap: var(--sp-md); }
+.team-championship-page .band small { margin-inline-start: auto; font-size: var(--type-label); text-align: end; }
+.team-group .standings tr[data-current="true"] .name a { font-weight: 700; }
+.squad-table { font-variant-numeric: tabular-nums; }
+.squad-table .name a { font-weight: 700; }
+@media (max-width: 720px) {
+  .squad-table .wide { display: none; }
+  .team-championship-page .band { align-items: flex-start; flex-wrap: wrap; }
+  .team-championship-page .band small { width: 100%; margin-inline-start: 0; text-align: start; }
+}
+.team-section-links { display: flex; flex-wrap: wrap; gap: var(--sp-sm) var(--sp-lg); padding-block: var(--sp-md); margin-block-end: var(--sp-sm); border-block: var(--border-size-1) solid var(--border); font-size: var(--type-label); }
+.team-section-links a { min-height: var(--min-touch); display: inline-flex; align-items: center; font-weight: 700; }
+.team-championship section[id] { scroll-margin-top: calc(var(--min-touch) + var(--sp-md)); }
+.team-championship .title-chance { display: inline-flex; align-items: center; gap: var(--sp-sm); font-variant-numeric: tabular-nums; }
+.team-championship .title-chance .bar { width: 40px; height: 8px; box-sizing: border-box; border: var(--border-size-1) solid var(--primary); }
+.team-championship .title-chance .bar i { display: block; height: 100%; width: var(--fill); background: var(--primary); }
+.team-championship .title-chance[data-band="0"] { --fill: 0%; }
+.team-championship .title-chance[data-band="1"] { --fill: 25%; }
+.team-championship .title-chance[data-band="2"] { --fill: 50%; }
+.team-championship .title-chance[data-band="3"] { --fill: 75%; }
+.team-championship .title-chance[data-band="4"] { --fill: 100%; }
+.team-filters { display: flex; flex-wrap: wrap; gap: var(--sp-md); margin-block: var(--sp-md); align-items: end; }
+.team-filters label, .team-filter, .team-switch label { display: flex; flex-direction: column; gap: var(--sp-sm); min-width: 0; font-size: var(--type-label); }
+.team-filters input, .team-filters select, .team-filter input, .team-filter select, .team-switch select { min-height: var(--control-h); max-width: 100%; border: var(--border-size-1) solid var(--border); background: var(--surface); color: var(--primary); padding: var(--sp-sm); font: inherit; }
+.team-filter { margin-block: var(--sp-md); width: min(100%, 24rem); }
+.team-chart { margin: var(--sp-md) 0; color: var(--primary); }
+.team-chart__title { font-size: var(--type-label); font-weight: 700; }
+.team-chart__svg { display: block; width: 100%; max-height: 320px; overflow: visible; }
+.team-chart__grid { stroke: var(--border); stroke-width: 1; }
+.team-chart__axis { stroke: var(--secondary); stroke-width: 1; }
+.team-chart__axis-value { fill: var(--secondary); font-size: var(--type-label); }
+.team-chart__line { fill: none; stroke: var(--primary); stroke-width: 2; }
+.team-chart__point, .team-chart__bar { fill: var(--primary); }
+.team-chart__series--2 .team-chart__line { stroke: var(--accent); stroke-dasharray: 5 3; }
+.team-chart__series--2 .team-chart__point, .team-chart__series--2 .team-chart__bar { fill: var(--accent); }
+.team-chart__link:focus .team-chart__point, .team-chart__link:hover .team-chart__point { stroke: var(--secondary); stroke-width: 3; }
+.team-chart-note { color: var(--secondary); font-size: var(--type-label); }
+.team-chart-source { display: none; }
+.team-chart-tabs { display: flex; gap: var(--sp-sm); }
+.team-location { margin-block: var(--sp-md); }
+.team-zone-history summary, .team details summary, .team-championship details summary { cursor: pointer; min-height: var(--min-touch); display: flex; align-items: center; }
+.team-switch { margin-block: var(--sp-md); max-width: 24rem; }
+@media(max-width:720px) { .team-filters label { flex: 1 1 9rem; } .team-chart__svg { min-height: 180px; } }
+.team-chart__legend { display: flex; gap: var(--sp-lg); padding: 0; list-style: none; font-size: var(--type-label); }
+.team-chart__legend--1 { color: var(--primary); }
+.team-chart__legend--2 { color: var(--accent); text-decoration: underline dashed; }
+.squad-table tfoot { font-weight: 700; border-top: var(--border-size-2) solid var(--border); }

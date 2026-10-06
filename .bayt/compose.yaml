@@ -22,12 +22,24 @@ services:
       service: golaberto-setup
     profiles:
     - setup
+  lint:
+    extends:
+      file: ./compose.lint.yaml
+      service: golaberto-lint
+    profiles:
+    - lint
   build:
     extends:
       file: ./compose.build.yaml
       service: golaberto-build
     profiles:
     - build
+  test:
+    extends:
+      file: ./compose.test.yaml
+      service: golaberto-test
+    profiles:
+    - test
   launch:
     extends:
       file: ./compose.launch.yaml
@@ -118,4 +130,18 @@ services:
       service: golaberto-compute
     profiles:
     - compute
+    scale: 1
+  render:
+    extends:
+      file: ./compose.render.yaml
+      service: golaberto-render
+    profiles:
+    - render
+    scale: 1
+  migrate:
+    extends:
+      file: ./compose.migrate.yaml
+      service: golaberto-migrate
+    profiles:
+    - migrate
     scale: 1

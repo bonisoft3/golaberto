@@ -6,13 +6,19 @@ include:
   required: false
 - path: .././.bayt/compose.setup.yaml
   required: false
+- path: .././.bayt/compose.lint.yaml
+  required: false
 - path: .././.bayt/compose.build.yaml
+  required: false
+- path: .././.bayt/compose.test.yaml
   required: false
 - path: .././.bayt/compose.launch.yaml
   required: false
 - path: .././.bayt/compose.database.yaml
   required: false
 - path: .././.bayt/compose.crud.yaml
+  required: false
+- path: .././.bayt/compose.migrate.yaml
   required: false
 - path: .././.bayt/compose.electric.yaml
   required: false
@@ -27,6 +33,8 @@ include:
 - path: .././.bayt/compose.compute.yaml
   required: false
 - path: .././.bayt/compose.auth.yaml
+  required: false
+- path: .././.bayt/compose.render.yaml
   required: false
 - path: .././.bayt/compose.integrate.yaml
   required: false

@@ -288,20 +288,31 @@ pairs:
     of: principal
     accepts:
       - accept-home-featured
-    says: 'the front page leads with the featured 2026 Brasileirão: its top six, Flamengo first, and the current round'
+    says: 'the front page retains the featured 2026 Brasileirão: its top six, Flamengo first, below the game feeds'
     given:
       featured: Campeonato Brasileiro 2026
     when: open
-    then: 'output.top[0].team == "Flamengo-RJ" && output.top.size() == 6 && output.results.size() > 0'
+    then: 'output.top[0].team == "Flamengo-RJ" && output.top.size() == 6'
+  - id: test-home-games
+    ir: test-home-games
+    of: principal
+    accepts:
+      - accept-home-games
+    says: 'upcoming fixtures and recent results lead the home page in server rank order under shared dates with localized weekdays and phase headings, emphasize the selected important games and open their details'
+    given:
+      upcoming: true
+      recent: true
+    when: arrive
+    then: output.upcoming.size() > 0 && output.recent.size() > 0
   - id: test-home-levels
     ir: test-home-levels
     of: principal
     accepts:
       - accept-home-levels
-    says: the front page lists each level's most recent championships first
+    says: 'the front page lists national, continental, then world championships, with all eligible tournaments ordered by descending geometric team strength within each region'
     given: {}
     when: view
-    then: 'output.world[0] == "Mundial - Copa do Mundo FIFA 2026" && output.national.size() == 6'
+    then: output.matches_projection == true
   - id: test-catalog-category
     ir: test-catalog-category
     of: campeonatos
@@ -570,10 +581,28 @@ pairs:
     of: equipe
     accepts:
       - accept-team-page
-    says: 'a team''s page shows its facts, its games and its squad''s seasons'
+    says: 'a team''s profile shows its facts, current and past championships, and deduplicated current and past players'
     given: {}
     when: view
-    then: output.squad.size() > 11
+    then: output.championships.size() > 0 && output.players.size() > 11
+  - id: test-team-championship-page
+    ir: test-team-championship-page
+    of: equipe-campeonato
+    accepts:
+      - accept-team-championship-page
+    says: 'one team in one championship shows only its fixtures, its group tables, roster and detailed probabilities'
+    given: {}
+    when: view
+    then: output.roster.size() > 11 && output.other_championship_rows == 0
+  - id: test-team-championship-gone
+    ir: test-team-championship-gone
+    of: equipe-campeonato
+    accepts:
+      - accept-team-championship-gone
+    says: a team and championship with no connection say so
+    given: {}
+    when: view
+    then: output.empty == "Esta equipe não está registrada neste campeonato."
   - id: test-player-page
     ir: test-player-page
     of: jogador

@@ -13,6 +13,7 @@ services:
         golaberto-transform: service:golaberto-transform
         golaberto-compute: service:golaberto-compute
         golaberto-auth: service:golaberto-auth
+        golaberto-render: service:golaberto-render
       context: ..
       dockerfile: .bayt/Dockerfile.launch
       target: launch
@@ -47,6 +48,9 @@ services:
         condition: service_started
       golaberto-auth:
         condition: service_started
+      golaberto-render:
+        condition: service_healthy
+        restart: true
     healthcheck:
       test:
       - CMD
@@ -73,6 +77,7 @@ services:
         golaberto-transform_bayt: service:golaberto-transform_bayt
         golaberto-compute_bayt: service:golaberto-compute_bayt
         golaberto-auth_bayt: service:golaberto-auth_bayt
+        golaberto-render_bayt: service:golaberto-render_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.launch
       target: launch_bayt

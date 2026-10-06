@@ -6,7 +6,7 @@
     "build": {
       "additional_contexts": {
         "root": "..",
-        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.5.0@sha256:63d6d0cd5aefe274828e096301423de0adf9d1411ff151bfc1201e6c2ec178d1}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.0@sha256:48e849e78e0277826465e596b60fafb304bc76f8fc39b752227e1b2af6067296}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
       },
       "secrets": [],
       "args": {}
@@ -14,10 +14,11 @@
     "command": [
       "sh",
       "-c",
-      "if [ -f /certs/localhost.pem ]; then export CADDY_TLS='/certs/localhost.pem /certs/localhost-key.pem'; fi; exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile"
+      "case \"$${ORIGIN#http://}\" in \"$$ORIGIN\") h=$${ORIGIN#https://};; *) h=$${ORIGIN#http://};; esac; case \"$$h\" in \"$$ORIGIN\"|\"\"|*[!A-Za-z0-9.:-]*) echo \"ORIGIN '$$ORIGIN' is no origin: set it to the scheme and host readers reach the door at, as https://app.example\" >&2; exit 1;; esac; set -e -o pipefail; roots=$$(caddy adapt --config /etc/caddy/Caddyfile --adapter caddyfile | tr , '\\n' | sed -n 's/^.*\"root\":\"\\([^\"]*\\)\".*$$/\\1/p' | sort -u); if [ -n \"$$roots\" ]; then find $$roots -type f ! -name '*.etag' -exec sh -c 'set -e; for f do h=$$(sha256sum < \"$$f\"); printf \\\"%s\\\" \"$${h%% *}\" > \"$$f.etag\"; done' sh {} +; fi; if [ -f /certs/localhost.pem ]; then export CADDY_TLS='/certs/localhost.pem /certs/localhost-key.pem'; fi; exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile"
     ],
     "environment": {
-      "ELECTRIC_SECRET": "${ELECTRIC_SECRET:-dev-electric-secret}"
+      "ELECTRIC_SECRET": "${ELECTRIC_SECRET:-dev-electric-secret}",
+      "ORIGIN": "${ORIGIN:-https://localhost:8443}"
     },
     "ports": [
       "${CADDY_TLS_HOST_PORT:-0}:8443"
@@ -212,6 +213,16 @@
         },
         {
           "action": "sync+restart",
+          "path": "../shell/screens/equipe-campeonato.html",
+          "target": "/srv/shell/screens/equipe-campeonato.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/equipe-campeonato.css",
+          "target": "/srv/shell/screens/equipe-campeonato.css"
+        },
+        {
+          "action": "sync+restart",
           "path": "../shell/screens/jogador.html",
           "target": "/srv/shell/screens/jogador.html"
         },
@@ -242,13 +253,83 @@
         },
         {
           "action": "sync+restart",
+          "path": "../shell/handlers/chart-compare.js",
+          "target": "/srv/shell/handlers/chart-compare.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/chart-metric.js",
+          "target": "/srv/shell/handlers/chart-metric.js"
+        },
+        {
+          "action": "sync+restart",
           "path": "../shell/handlers/count-or-null.js",
           "target": "/srv/shell/handlers/count-or-null.js"
         },
         {
           "action": "sync+restart",
+          "path": "../shell/handlers/country-option.js",
+          "target": "/srv/shell/handlers/country-option.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/geography-selection.js",
+          "target": "/srv/shell/handlers/geography-selection.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/page-value.js",
+          "target": "/srv/shell/handlers/page-value.js"
+        },
+        {
+          "action": "sync+restart",
           "path": "../shell/handlers/row-id.js",
           "target": "/srv/shell/handlers/row-id.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/search-key.js",
+          "target": "/srv/shell/handlers/search-key.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/team-chart-fold.js",
+          "target": "/srv/shell/handlers/team-chart-fold.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/team-chart-seed.js",
+          "target": "/srv/shell/handlers/team-chart-seed.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/country-flag.js",
+          "target": "/srv/shell/renderers/country-flag.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/geography-label.js",
+          "target": "/srv/shell/renderers/geography-label.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/home-date.js",
+          "target": "/srv/shell/renderers/home-date.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/team-badge.js",
+          "target": "/srv/shell/renderers/team-badge.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/team-chart.js",
+          "target": "/srv/shell/renderers/team-chart.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/team-location.js",
+          "target": "/srv/shell/renderers/team-location.js"
         },
         {
           "action": "sync+restart",
@@ -264,6 +345,11 @@
           "action": "sync+restart",
           "path": "../shell/shared/games.css",
           "target": "/srv/shell/shared/games.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/shared/team.css",
+          "target": "/srv/shell/shared/team.css"
         },
         {
           "action": "sync+restart",
@@ -297,6 +383,16 @@
         },
         {
           "action": "sync+restart",
+          "path": "../branding/favicon.svg",
+          "target": "/srv/shell/favicon.svg"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../branding/favicon.ico",
+          "target": "/srv/shell/favicon.ico"
+        },
+        {
+          "action": "sync+restart",
           "path": "../brief.html",
           "target": "/srv/docs/brief.html"
         },
@@ -324,6 +420,31 @@
           "action": "sync+restart",
           "path": "../sitemap.xml",
           "target": "/srv/sitemap.xml"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/favicon.ico",
+          "target": "/srv/shell/favicon.ico"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/manifest.webmanifest",
+          "target": "/srv/shell/manifest.webmanifest"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/manifest.webmanifest",
+          "target": "/srv/manifest.webmanifest"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../llms.txt",
+          "target": "/srv/llms.txt"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../llms-full.txt",
+          "target": "/srv/llms-full.txt"
         }
       ]
     }
@@ -441,9 +562,45 @@
           "name": "plugins_omnishell-runtime-image"
         },
         "srcs": [
+          "interpreter/preloads.js"
+        ],
+        "dst": "/omnishell/interpreter/preloads.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
           "interpreter/prng.js"
         ],
         "dst": "/omnishell/interpreter/prng.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/release-assets.js"
+        ],
+        "dst": "/omnishell/interpreter/release-assets.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "interpreter/release-plan.js"
+        ],
+        "dst": "/omnishell/interpreter/release-plan.js",
         "link": true,
         "parents": false,
         "exclude": []
@@ -914,6 +1071,26 @@
       {
         "from": null,
         "srcs": [
+          "shell/screens/equipe-campeonato.html"
+        ],
+        "dst": "/srv/shell/screens/equipe-campeonato.html",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/screens/equipe-campeonato.css"
+        ],
+        "dst": "/srv/shell/screens/equipe-campeonato.css",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
           "shell/screens/jogador.html"
         ],
         "dst": "/srv/shell/screens/jogador.html",
@@ -974,6 +1151,26 @@
       {
         "from": null,
         "srcs": [
+          "shell/handlers/chart-compare.js"
+        ],
+        "dst": "/srv/shell/handlers/chart-compare.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/handlers/chart-metric.js"
+        ],
+        "dst": "/srv/shell/handlers/chart-metric.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
           "shell/handlers/count-or-null.js"
         ],
         "dst": "/srv/shell/handlers/count-or-null.js",
@@ -984,9 +1181,129 @@
       {
         "from": null,
         "srcs": [
+          "shell/handlers/country-option.js"
+        ],
+        "dst": "/srv/shell/handlers/country-option.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/handlers/geography-selection.js"
+        ],
+        "dst": "/srv/shell/handlers/geography-selection.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/handlers/page-value.js"
+        ],
+        "dst": "/srv/shell/handlers/page-value.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
           "shell/handlers/row-id.js"
         ],
         "dst": "/srv/shell/handlers/row-id.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/handlers/search-key.js"
+        ],
+        "dst": "/srv/shell/handlers/search-key.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/handlers/team-chart-fold.js"
+        ],
+        "dst": "/srv/shell/handlers/team-chart-fold.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/handlers/team-chart-seed.js"
+        ],
+        "dst": "/srv/shell/handlers/team-chart-seed.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/renderers/country-flag.js"
+        ],
+        "dst": "/srv/shell/renderers/country-flag.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/renderers/geography-label.js"
+        ],
+        "dst": "/srv/shell/renderers/geography-label.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/renderers/home-date.js"
+        ],
+        "dst": "/srv/shell/renderers/home-date.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/renderers/team-badge.js"
+        ],
+        "dst": "/srv/shell/renderers/team-badge.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/renderers/team-chart.js"
+        ],
+        "dst": "/srv/shell/renderers/team-chart.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/renderers/team-location.js"
+        ],
+        "dst": "/srv/shell/renderers/team-location.js",
         "link": true,
         "parents": false,
         "exclude": []
@@ -1017,6 +1334,16 @@
           "shell/shared/games.css"
         ],
         "dst": "/srv/shell/shared/games.css",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/shared/team.css"
+        ],
+        "dst": "/srv/shell/shared/team.css",
         "link": true,
         "parents": false,
         "exclude": []
@@ -1084,6 +1411,26 @@
       {
         "from": null,
         "srcs": [
+          "branding/favicon.svg"
+        ],
+        "dst": "/srv/shell/favicon.svg",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "branding/favicon.ico"
+        ],
+        "dst": "/srv/shell/favicon.ico",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
           "brief.html"
         ],
         "dst": "/srv/docs/brief.html",
@@ -1137,6 +1484,56 @@
           "sitemap.xml"
         ],
         "dst": "/srv/sitemap.xml",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/favicon.ico"
+        ],
+        "dst": "/srv/shell/favicon.ico",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/manifest.webmanifest"
+        ],
+        "dst": "/srv/shell/manifest.webmanifest",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "shell/manifest.webmanifest"
+        ],
+        "dst": "/srv/manifest.webmanifest",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "llms.txt"
+        ],
+        "dst": "/srv/llms.txt",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "llms-full.txt"
+        ],
+        "dst": "/srv/llms-full.txt",
         "link": true,
         "parents": false,
         "exclude": []
@@ -1196,29 +1593,53 @@
       "shell/screens/arbitro.css",
       "shell/screens/equipe.html",
       "shell/screens/equipe.css",
+      "shell/screens/equipe-campeonato.html",
+      "shell/screens/equipe-campeonato.css",
       "shell/screens/jogador.html",
       "shell/screens/jogador.css",
       "shell/screens/campeonato.html",
       "shell/screens/campeonato.css",
       "shell/handlers/blank-null.js",
       "shell/handlers/both-scored.js",
+      "shell/handlers/chart-compare.js",
+      "shell/handlers/chart-metric.js",
       "shell/handlers/count-or-null.js",
+      "shell/handlers/country-option.js",
+      "shell/handlers/geography-selection.js",
+      "shell/handlers/page-value.js",
       "shell/handlers/row-id.js",
+      "shell/handlers/search-key.js",
+      "shell/handlers/team-chart-fold.js",
+      "shell/handlers/team-chart-seed.js",
+      "shell/renderers/country-flag.js",
+      "shell/renderers/geography-label.js",
+      "shell/renderers/home-date.js",
+      "shell/renderers/team-badge.js",
+      "shell/renderers/team-chart.js",
+      "shell/renderers/team-location.js",
       "shell/shared/catalog.css",
       "shell/shared/chrome.css",
       "shell/shared/games.css",
+      "shell/shared/team.css",
       "messages/pt-BR.json",
       "messages/es-AR.json",
       "messages/en-GB.json",
       "messages/it-IT.json",
       "messages/de-DE.json",
       "messages/fr-FR.json",
+      "branding/favicon.svg",
+      "branding/favicon.ico",
       "brief.html",
       "ir.html",
       "acceptance.md",
       "DESIGN.md",
       "robots.txt",
-      "sitemap.xml"
+      "sitemap.xml",
+      "shell/favicon.ico",
+      "shell/manifest.webmanifest",
+      "shell/manifest.webmanifest",
+      "llms.txt",
+      "llms-full.txt"
     ],
     "exclude": []
   },
@@ -1336,29 +1757,52 @@
           "shell/screens/arbitro.css",
           "shell/screens/equipe.html",
           "shell/screens/equipe.css",
+          "shell/screens/equipe-campeonato.html",
+          "shell/screens/equipe-campeonato.css",
           "shell/screens/jogador.html",
           "shell/screens/jogador.css",
           "shell/screens/campeonato.html",
           "shell/screens/campeonato.css",
           "shell/handlers/blank-null.js",
           "shell/handlers/both-scored.js",
+          "shell/handlers/chart-compare.js",
+          "shell/handlers/chart-metric.js",
           "shell/handlers/count-or-null.js",
+          "shell/handlers/country-option.js",
+          "shell/handlers/geography-selection.js",
+          "shell/handlers/page-value.js",
           "shell/handlers/row-id.js",
+          "shell/handlers/search-key.js",
+          "shell/handlers/team-chart-fold.js",
+          "shell/handlers/team-chart-seed.js",
+          "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js",
+          "shell/renderers/home-date.js",
+          "shell/renderers/team-badge.js",
+          "shell/renderers/team-chart.js",
+          "shell/renderers/team-location.js",
           "shell/shared/catalog.css",
           "shell/shared/chrome.css",
           "shell/shared/games.css",
+          "shell/shared/team.css",
           "messages/pt-BR.json",
           "messages/es-AR.json",
           "messages/en-GB.json",
           "messages/it-IT.json",
           "messages/de-DE.json",
           "messages/fr-FR.json",
+          "branding/favicon.svg",
+          "branding/favicon.ico",
           "brief.html",
           "ir.html",
           "acceptance.md",
           "DESIGN.md",
           "robots.txt",
-          "sitemap.xml"
+          "sitemap.xml",
+          "shell/favicon.ico",
+          "shell/manifest.webmanifest",
+          "llms.txt",
+          "llms-full.txt"
         ],
         "exclude": []
       },

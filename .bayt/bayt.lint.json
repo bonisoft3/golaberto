@@ -1,25 +1,38 @@
 {
   "_generated_from": "bayt.cue (do not edit)",
+  "dockerfile": {
+    "preamble": [],
+    "preambleCopyContexts": [],
+    "from": {
+      "ref": ":setup",
+      "name": "golaberto-setup"
+    },
+    "add": [],
+    "mounts": [],
+    "secrets": {},
+    "extra_hosts": [],
+    "epilogue": [],
+    "copy": [],
+    "healthcheck": null,
+    "expose": [],
+    "entrypoint": null,
+    "incremental": false,
+    "cmd": null
+  },
   "name": "lint",
   "project": "golaberto",
   "dir": ".",
   "activate": "mise x --",
   "srcs": {
     "globs": [
-      "*.cue",
-      "bayt.json",
-      "DESIGN.md",
-      "cue.mod/**",
-      "pronto/**",
-      ".say.yaml",
-      "[p]ipelines/*.blobl",
-      "[m]essages/*.json",
-      "[s]hell/boot.js",
-      "brief.html",
-      "ir.html",
-      "acceptance.md"
+      "**"
     ],
-    "exclude": []
+    "exclude": [
+      ".bayt/**",
+      "**/node_modules/**",
+      ".task/**",
+      "tests/**"
+    ]
   },
   "outs": {
     "globs": [],
@@ -29,37 +42,155 @@
     "globs": []
   },
   "env": {},
+  "synthetics": {
+    "bayt": {
+      "name": "lint_bayt",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.lint.yaml",
+          ".bayt/Dockerfile.lint",
+          ".bayt/bayt.lint.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/Taskfile.lint.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.lint.yaml",
+        "./.bayt/compose.setup.yaml"
+      ]
+    },
+    "outs": {
+      "name": "lint_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.lint.yaml",
+        "./.bayt/compose.setup.yaml"
+      ]
+    },
+    "srcs": {
+      "name": "lint_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          "**"
+        ],
+        "exclude": [
+          ".bayt/**",
+          "**/node_modules/**",
+          ".task/**",
+          "tests/**"
+        ]
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [
+        "setup_srcs"
+      ],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.lint.yaml",
+        "./.bayt/compose.setup.yaml"
+      ]
+    }
+  },
   "taskfile": {
     "run": "always",
     "incremental": true,
     "preconditions": []
   },
   "visibility": "internal",
-  "emitsSrcs": false,
-  "deps": [],
-  "sameProjectDeps": [],
-  "transitiveDeps": [],
+  "emitsSrcs": true,
+  "deps": [
+    "setup"
+  ],
+  "sameProjectDeps": [
+    "setup"
+  ],
+  "transitiveDeps": [
+    "setup"
+  ],
   "transitiveCrossDeps": [],
-  "upClosure": [],
-  "chainedDeps": [],
+  "upClosure": [
+    "./.bayt/compose.lint.yaml",
+    "./.bayt/compose.setup.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "setup",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
   "cmds": [
     {
       "srcs": {
         "globs": [
-          "*.cue",
-          "bayt.json",
-          "DESIGN.md",
-          "cue.mod/**",
-          "pronto/**",
-          ".say.yaml",
-          "[p]ipelines/*.blobl",
-          "[m]essages/*.json",
-          "[s]hell/boot.js",
-          "brief.html",
-          "ir.html",
-          "acceptance.md"
+          "**"
         ],
-        "exclude": [],
+        "exclude": [
+          ".bayt/**",
+          "**/node_modules/**",
+          ".task/**",
+          "tests/**"
+        ],
         "defaultGlobs": null,
         "defaultExclude": null
       },

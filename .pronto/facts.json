@@ -179,7 +179,7 @@
     {"path":"shell/shared/team.css","token":"--fill"}
   ],
   "artifact": [
-    {"path":"program.cue","sha256":"47a796a2fd3e865a14dc85cf6eddd0715f7acfe9db3c7eb94bd61643629e9e49","derived":false},
+    {"path":"program.cue","sha256":"67ca8c5bb8b8ca5a0798888ff63a2d629eeaad3782b4323b0d7f0dc5e7d96698","derived":false},
     {"path":"DESIGN.md","sha256":"45ea15402db6b739a0f38831554c303ad1295fab9c46f919f05d5cdb124b8d67","derived":false},
     {"path":"ir.html","sha256":"a753d9c1278f3a7dff4fc97b5e248c005e2ba898f8f2216c55a2f90f8d40be97","derived":false},
     {"path":"acceptance.md","sha256":"8ed4c6f90e195f8013def4227f7330d4c20709b055c679f69fec74cfc0782816","derived":false},

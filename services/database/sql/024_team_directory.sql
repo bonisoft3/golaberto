@@ -41,8 +41,8 @@ GRANT SELECT ON team_directory TO electric;
 DROP TRIGGER IF EXISTS restamp_txid ON team_directory;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_directory
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
-ALTER TABLE team_directory REPLICA IDENTITY FULL;
 -- tier: container
+ALTER TABLE team_directory REPLICA IDENTITY FULL;
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_publication_tables
                  WHERE pubname = 'electric_publication_default'

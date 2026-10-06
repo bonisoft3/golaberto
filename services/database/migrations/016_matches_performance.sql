@@ -37,9 +37,9 @@ GRANT SELECT ON matches_game_card TO electric;
 DROP TRIGGER IF EXISTS restamp_txid ON matches_game_card;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON matches_game_card
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+-- tier: container
 ALTER TABLE matches_game_card REPLICA IDENTITY FULL;
 -- This live projection belongs to Electric, never to the CDC publication.
--- tier: container
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_publication_tables
                  WHERE pubname = 'electric_publication_default'

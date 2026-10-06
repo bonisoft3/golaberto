@@ -39,7 +39,7 @@ services:
       DATABASE_URL: >-
         postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}
       LAKE_DIR: /lake
-      COMPUTATIONS: "[{\"name\":\"golaberto-ratings\",\"file\":\"/app/computations/golaberto-ratings.js\",\"every\":300,\"to\":[\"team_rating\",\"player_rating\",\"rating_eval\"],\"wasm\":[\"/app/computations/golaberto-odds.wasm\"]},{\"name\":\"golaberto-chances\",\"file\":\"/app/computations/golaberto-chances.js\",\"every\":30,\"to\":[\"team_chance\",\"zone_chance\",\"position_chance\",\"game_importance\"],\"wasm\":[\"/app/computations/golaberto-odds.wasm\"]}]"
+      COMPUTATIONS: "[{\"name\":\"golaberto-ratings\",\"file\":\"/app/computations/golaberto-ratings.js\",\"every\":300,\"to\":[\"team_rating\",\"player_rating\",\"rating_eval\"],\"wasm\":[\"/app/computations/golaberto-odds.wasm\"]},{\"name\":\"golaberto-chances\",\"file\":\"/app/computations/golaberto-chances.js\",\"every\":30,\"onComplete\":\"capture_team_odds_history\",\"to\":[\"team_chance\",\"zone_chance\",\"position_chance\",\"game_importance\"],\"wasm\":[\"/app/computations/golaberto-odds.wasm\"]}]"
       SERVICE_JWT: >-
         ${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
     image: bayt-golaberto-compute:${BAYT_IMAGE_TAG:-latest}

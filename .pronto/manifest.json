@@ -1,5 +1,7 @@
 {
   "written": [
+    ".github/workflows/cd.yml",
+    ".goreleaser.yaml",
     ".say.yaml",
     ".vscode/tasks.json",
     "bayt.cue",

@@ -1227,6 +1227,7 @@ code: pronto.#App & {
 	}
 	state: computations: chances: {
 		to: ["TeamChance", "ZoneChance", "PositionChance", "GameImportance"]
+		onComplete: "capture_team_odds_history"
 		wasm: ["computations/golaberto-odds.wasm"]
 		every: 30
 	}
@@ -1586,7 +1587,7 @@ code: pronto.#App & {
 			catalogues: _catalogues
 		}
 		ir: sha256: "8ad36f4a9976021d022e007389dad63b2db3e708efe0bc28935774a96635e763"
-		targets: []
+		targets: ["pages"]
 		decisions: {
 			"decision-team-page-split": {}
 			"decision-favicon": {}

@@ -40,12 +40,12 @@ DO $$ DECLARE target text; col text; BEGIN
     EXECUTE format('GRANT SELECT,INSERT,UPDATE,DELETE ON %I TO service',target);
     EXECUTE format('DROP TRIGGER IF EXISTS restamp_txid ON %I',target);
     EXECUTE format('CREATE TRIGGER restamp_txid BEFORE UPDATE ON %I FOR EACH ROW EXECUTE FUNCTION restamp_txid()',target);
-    EXECUTE format('ALTER TABLE %I REPLICA IDENTITY FULL',target);
   END LOOP;
 END $$;
 -- tier: container
 DO $$ DECLARE target text; BEGIN
   FOREACH target IN ARRAY ARRAY['geography_region','geography_country'] LOOP
+    EXECUTE format('ALTER TABLE %I REPLICA IDENTITY FULL',target);
     IF NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname='electric_publication_default'
                    AND schemaname='public' AND tablename=target) THEN
       EXECUTE format('ALTER PUBLICATION electric_publication_default ADD TABLE %I',target);

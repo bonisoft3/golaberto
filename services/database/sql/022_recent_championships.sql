@@ -23,8 +23,8 @@ GRANT SELECT ON home_championship TO electric;
 DROP TRIGGER IF EXISTS restamp_txid ON home_championship;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON home_championship
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
-ALTER TABLE home_championship REPLICA IDENTITY FULL;
 -- tier: container
+ALTER TABLE home_championship REPLICA IDENTITY FULL;
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_publication_tables
                  WHERE pubname = 'electric_publication_default'
@@ -32,6 +32,7 @@ DO $$ BEGIN
     ALTER PUBLICATION electric_publication_default ADD TABLE home_championship;
   END IF;
 END $$;
+-- tier: any
 
 CREATE OR REPLACE FUNCTION recent_championships(at_time timestamptz)
 RETURNS TABLE (id uuid, region text, region_name text, full_name text, strength double precision)

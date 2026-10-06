@@ -68,8 +68,8 @@ GRANT SELECT ON team_championship TO electric;
 DROP TRIGGER IF EXISTS restamp_txid ON team_championship;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_championship
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
-ALTER TABLE team_championship REPLICA IDENTITY FULL;
 -- tier: container
+ALTER TABLE team_championship REPLICA IDENTITY FULL;
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_publication_tables
                  WHERE pubname = 'electric_publication_default'
@@ -122,8 +122,8 @@ GRANT SELECT ON team_roster TO electric;
 DROP TRIGGER IF EXISTS restamp_txid ON team_roster;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_roster
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
-ALTER TABLE team_roster REPLICA IDENTITY FULL;
 -- tier: container
+ALTER TABLE team_roster REPLICA IDENTITY FULL;
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_publication_tables
                  WHERE pubname = 'electric_publication_default'
@@ -158,8 +158,8 @@ GRANT SELECT ON team_player_history TO electric;
 DROP TRIGGER IF EXISTS restamp_txid ON team_player_history;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_player_history
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
-ALTER TABLE team_player_history REPLICA IDENTITY FULL;
 -- tier: container
+ALTER TABLE team_player_history REPLICA IDENTITY FULL;
 DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_publication_tables
                  WHERE pubname = 'electric_publication_default'

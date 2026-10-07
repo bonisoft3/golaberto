@@ -7,9 +7,6 @@
 # replayed event posts the same rows, so at-least-once delivery is harmless; a
 # pass that fails is rejected and delivered again. A deleted game takes its
 # card and its lines with it: they reference it.
-#
-# The sinks are live, off the CDC publication, so they cannot re-feed this
-# stream.
 input:
   broker:
     inputs:

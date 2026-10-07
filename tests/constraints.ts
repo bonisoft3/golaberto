@@ -183,3 +183,21 @@ Deno.test("test-sort-unknown: a key outside the vocabulary is refused", async ()
 Deno.test("test-side: a goal counts for home or away and nothing else", async () => {
   await refused(goal(", side", ", 'visitor'"), "goal_side_check");
 });
+
+Deno.test("archive round identifiers retain knockout codes", async () => {
+  assertEquals(await kept(`${fixtures}\n${game(', round', ', 636')} RETURNING round;`), '636');
+  await refused(`${fixtures}\n${game(', round', ', 0')};`, 'game_round_check');
+});
+
+Deno.test("archive zones preserve labels and RGB while refusing CSS injection", async () => {
+  const group = `${fixtures}\nINSERT INTO stage_group (id,phase_id,name) VALUES ('${GROUP}','${PHASE}','Archive');`;
+  assertEquals(await kept(`${group}\nINSERT INTO zone (group_id,name,color,first,last)
+    VALUES ('${GROUP}',repeat('n',108),'#90EE90',1,4) RETURNING char_length(name)||':'||color;`), '108:#90EE90');
+  await refused(`${group}\nINSERT INTO zone (group_id,name,color,first,last)
+    VALUES ('${GROUP}','Injection','#90ee90; background:url(https://example.org)',1,4);`, 'zone_color_check');
+});
+
+Deno.test("archive membership notes survive without truncation", async () => {
+  assertEquals(await kept(`${fixtures}\nINSERT INTO stage_group (id,phase_id,name) VALUES ('${GROUP}','${PHASE}','Archive');
+    INSERT INTO team_group(group_id,team_id,comment) VALUES ('${GROUP}','${HOME}',repeat('x',580)) RETURNING char_length(comment);`), '580');
+});

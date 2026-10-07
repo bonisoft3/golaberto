@@ -1,0 +1,157 @@
+{
+  "games": {
+    "98271": {
+      "before": {
+        "date": "2010-09-18 13:00:00.000000",
+        "away_id": 118,
+        "home_id": 118,
+        "phase_id": 1916,
+        "away_score": 3,
+        "home_score": 0
+      },
+      "after": {
+        "home_id": 352
+      },
+      "reason": "Betim 0-3 Ipatinga; original club results matrix distinguishes the two clubs. https://www.galodigital.com.br/enciclopedia/Campeonato_Mineiro_Juvenil_2010"
+    },
+    "99027": {
+      "before": {
+        "date": "2010-08-07 18:00:00.000000",
+        "away_id": 118,
+        "home_id": 118,
+        "phase_id": 1916,
+        "away_score": 0,
+        "home_score": 2
+      },
+      "after": {
+        "away_id": 352
+      },
+      "reason": "Ipatinga 2-0 Betim; original club results matrix distinguishes the two clubs. https://www.galodigital.com.br/enciclopedia/Campeonato_Mineiro_Juvenil_2010"
+    },
+    "363710": {
+      "before": {
+        "date": "2025-11-15 13:00:00.000000",
+        "away_id": 2921,
+        "home_id": 2921,
+        "phase_id": 4412,
+        "away_score": 4,
+        "home_score": 3,
+        "sofascore_id": "15048662"
+      },
+      "after": {
+        "away_id": 4000000001
+      },
+      "reason": "Sofascore event15048662 is Burundi3-4BurundiB; original fuzzy team matching collapsed the distinct sides. https://www.sofascore.com/nl/football/match/burundi-burundi/aVbszrkj"
+    },
+    "97858": {
+      "before": {
+        "date": "2013-11-25 00:00:00.000000",
+        "round": null,
+        "played": 0,
+        "away_id": 305,
+        "home_id": 305,
+        "phase_id": 2003,
+        "away_score": 0,
+        "home_score": 0
+      },
+      "after": null,
+      "reason": "Non-match placeholder: unplayed self-match dated2013 in1991/92 competition; all30 pairings already exist and no appearances/goals/comments reference it. Retained in private archive; never count it as a real match. Schedule https://www.rsssfbrasil.com/tablesfq/pb1991int.htm"
+    }
+  },
+  "teams": {
+    "4000000001": {
+      "before": null,
+      "after": {
+        "name": "Burundi B",
+        "country": "Burundi",
+        "team_type": 1,
+        "created_at": "2026-10-06 11:15:01",
+        "updated_at": "2026-10-06 11:15:01"
+      },
+      "reason": "Distinct national B side in Sofascore event15048662, with no existing team row. https://www.sofascore.com/nl/football/match/burundi-burundi/aVbszrkj"
+    }
+  },
+  "team_groups": {
+    "4000000001": {
+      "before": null,
+      "after": {
+        "group_id": 16021,
+        "team_id": 4000000001,
+        "add_sub": 0,
+        "bias": 0,
+        "created_at": "2026-10-06 11:15:01",
+        "updated_at": "2026-10-06 11:15:01"
+      },
+      "reason": "The restored BurundiB side participates in the same friendlies group as its event15048662 opponent."
+    }
+  },
+  "player_games": {
+    "13851592": {
+      "before": {
+        "on": 0,
+        "off": -5,
+        "red": 1,
+        "game_id": 357211,
+        "team_id": 2550,
+        "player_id": 74290
+      },
+      "after": {
+        "off": 23
+      },
+      "reason": "AlejandroFrances substituted by HugoRincon at23 before bench red; source Rincon on=23 corroborates. https://footballnation.eu/match/la-liga/2025/738846/"
+    },
+    "13858408": {
+      "before": {
+        "on": 0,
+        "off": -5,
+        "red": 1,
+        "game_id": 354787,
+        "team_id": 2064,
+        "player_id": 74546
+      },
+      "after": {
+        "off": 60
+      },
+      "reason": "FabioMatheus substituted by WillianFarias at60 before bench red; source Farias on=60 corroborates. https://www.footballdatabase.eu/en/match/overview/3192902-paysandu-novorizontino"
+    },
+    "13798426": {
+      "before": {
+        "on": 0,
+        "off": -5,
+        "red": 1,
+        "game_id": 358399,
+        "team_id": 2268,
+        "player_id": 75106
+      },
+      "after": {
+        "off": 0
+      },
+      "reason": "HelderTavares unused substitute sentoff onbench; source lists11other starters and allfive substitutions. https://www.abola.pt/futebol/jogo/tondela-estrela-da-amadora-8047167/liveblog"
+    },
+    "13884177": {
+      "before": {
+        "on": 0,
+        "off": -5,
+        "red": 1,
+        "game_id": 354395,
+        "team_id": 67,
+        "player_id": 72804
+      },
+      "after": {
+        "off": 0
+      },
+      "reason": "Carlinhos unused substitute sentoff after match; source lists11other starters and allfive substitutions. https://vasco.com.br/vasco/com-gol-de-gb-no-apagar-das-luzes-vasco-vence-o-vitoria-em-sao-januario/"
+    }
+  },
+  "groups": {
+    "11372": {
+      "before": {
+        "zones": "---\n- name: ''\n  color: lightgreen\n  position:\n  - 1\n"
+      },
+      "after": {
+        "zones": "- color: lightgreen\n  name: '1'\n  position:\n  - 1\n"
+      },
+      "reason": "Empty zone label replaced by its exact position label; no sporting role inferred. Original source YAML remains in private archive."
+    }
+  }
+}

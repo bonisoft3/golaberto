@@ -4,10 +4,11 @@ services:
     build:
       additional_contexts:
         golaberto-crud: service:golaberto-crud
+        golaberto-conduit: service:golaberto-conduit
         golaberto-database: service:golaberto-database
         golaberto-migrate: service:golaberto-migrate
         libraries_mecha-compute-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.6.3@sha256:2d73bd4000cc0cf2be29c1ba168ab78964a9e7e63f274efe6f9b939630e61ef4}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.7.0@sha256:0f04b8cb653afd61d3db4e177e5787f72797c6effc52c8869484198d4b72b88b}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}
       context: ..
       dockerfile: .bayt/Dockerfile.compute
       target: compute
@@ -16,6 +17,9 @@ services:
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
     depends_on:
       golaberto-crud:
+        condition: service_healthy
+        restart: true
+      golaberto-conduit:
         condition: service_healthy
         restart: true
       golaberto-database:
@@ -39,7 +43,8 @@ services:
       DATABASE_URL: >-
         postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}
       LAKE_DIR: /lake
-      COMPUTATIONS: "[{\"name\":\"golaberto-ratings\",\"file\":\"/app/computations/golaberto-ratings.js\",\"every\":300,\"to\":[\"team_rating\",\"player_rating\",\"rating_eval\"],\"wasm\":[\"/app/computations/golaberto-odds.wasm\"]},{\"name\":\"golaberto-chances\",\"file\":\"/app/computations/golaberto-chances.js\",\"every\":30,\"onComplete\":\"capture_team_odds_history\",\"to\":[\"team_chance\",\"zone_chance\",\"position_chance\",\"game_importance\"],\"wasm\":[\"/app/computations/golaberto-odds.wasm\"]}]"
+      CDC_SLOT: golaberto_conduit_slot
+      COMPUTATIONS: "[{\"name\":\"golaberto-ratings\",\"file\":\"/app/computations/golaberto-ratings.js\",\"to\":[\"team_rating\",\"player_rating\",\"rating_eval\"],\"wasm\":[\"/app/computations/golaberto-odds.wasm\"]},{\"name\":\"golaberto-chances\",\"file\":\"/app/computations/golaberto-chances.js\",\"onComplete\":\"capture_team_odds_history\",\"to\":[\"team_chance\",\"zone_chance\",\"position_chance\",\"game_importance\"],\"wasm\":[\"/app/computations/golaberto-odds.wasm\"]}]"
       SERVICE_JWT: >-
         ${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
     image: bayt-golaberto-compute:${BAYT_IMAGE_TAG:-latest}
@@ -52,6 +57,7 @@ services:
     build:
       additional_contexts:
         golaberto-crud_bayt: service:golaberto-crud_bayt
+        golaberto-conduit_bayt: service:golaberto-conduit_bayt
         golaberto-database_bayt: service:golaberto-database_bayt
         golaberto-migrate_bayt: service:golaberto-migrate_bayt
       context: ..

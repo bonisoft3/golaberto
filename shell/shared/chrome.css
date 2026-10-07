@@ -60,38 +60,51 @@ body > nav .shell-signin { font: inherit; font-weight: 700; color: var(--strip-i
 
 main#app { max-width: var(--measure-page); margin-inline: auto; background: var(--surface); }
 
+/* Screen navigation instant swap: eliminate opacity dip and flash */
+.shell-screen { transition: none !important; }
+.shell-screen[data-entering] { opacity: 1 !important; }
+
 .screen { color: var(--primary); min-height: 70vh; }
 /* Prose links; a component that styles its own links wins without a fight. */
 :where(.screen) a { color: var(--accent); }
 :where(.screen) a:hover { color: var(--attention); }
 
 /* The masthead: the wordmark and the language switcher, in the band the body
-   reserves above the strip. */
-.masthead {
+   reserves above the strip. The backdrop sits directly on body to keep the top
+   row fixed and prevent flashing across page transitions; the screen's masthead
+   rides the active screen for tests and interactions. */
+.masthead, .masthead-backdrop {
   position: absolute; inset-block-start: 0; inset-inline: 0;
   max-width: var(--measure-page); height: var(--measure-masthead); margin-inline: auto;
   box-sizing: border-box; padding: var(--sp-md) var(--sp-lg);
   background: var(--masthead);
   display: flex; align-items: center; justify-content: space-between; gap: var(--sp-md);
 }
-.masthead .wordmark {
+.masthead-backdrop {
+  z-index: 1;
+  pointer-events: none;
+}
+.shell-screen .masthead {
+  z-index: 2;
+}
+:is(.masthead, .masthead-backdrop) .wordmark {
   display: inline-flex; align-items: baseline; gap: var(--sp-sm);
   text-decoration: none; font-family: "Arial Black", Arial, sans-serif; line-height: 1;
 }
-.masthead .wordmark b {
+:is(.masthead, .masthead-backdrop) .wordmark b {
   font-size: var(--type-display); font-weight: 900; letter-spacing: .02em;
   color: var(--wordmark);
   -webkit-text-stroke: 2px var(--wordmark-edge); paint-order: stroke fill;
   text-shadow: 3px 3px 0 var(--wordmark-edge);
 }
-.masthead .wordmark span {
+:is(.masthead, .masthead-backdrop) .wordmark span {
   font-size: var(--type-title); font-weight: 900; color: var(--wordmark-accent);
   -webkit-text-stroke: 1px var(--wordmark-edge); paint-order: stroke fill;
 }
-.masthead .langs { display: flex; flex-wrap: nowrap; gap: var(--sp-md); font-size: var(--type-label); font-weight: 700; }
-.masthead .langs .short { display: none; }
-.masthead .langs a { color: var(--masthead-ink); text-decoration: none; padding: var(--sp-sm) 0; min-height: var(--min-touch); display: inline-flex; align-items: center; }
-.masthead .langs a[aria-current] { text-decoration: underline; text-underline-offset: 3px; }
+:is(.masthead, .masthead-backdrop) .langs { display: flex; flex-wrap: nowrap; gap: var(--sp-md); font-size: var(--type-label); font-weight: 700; }
+:is(.masthead, .masthead-backdrop) .langs .short { display: none; }
+:is(.masthead, .masthead-backdrop) .langs a { color: var(--masthead-ink); text-decoration: none; padding: var(--sp-sm) 0; min-height: var(--min-touch); display: inline-flex; align-items: center; }
+:is(.masthead, .masthead-backdrop) .langs a[aria-current] { text-decoration: underline; text-underline-offset: 3px; }
 
 /* The title band every page opens with. */
 .band {
@@ -152,20 +165,20 @@ a.chip:hover { color: var(--chip-ink); text-decoration: underline; }
   .page { grid-template-columns: minmax(0, 1fr); }
   .btn, .btn-quiet, .text-btn { min-height: var(--control-h-lg); }
   .content { padding: var(--sp-lg) var(--sp-md); }
-  .masthead { padding: var(--sp-sm) var(--sp-md); }
-  .masthead .wordmark b { font-size: var(--type-title); }
-  .masthead .wordmark span { font-size: var(--type-subtitle); }
+  :is(.masthead, .masthead-backdrop) { padding: var(--sp-sm) var(--sp-md); }
+  :is(.masthead, .masthead-backdrop) .wordmark b { font-size: var(--type-title); }
+  :is(.masthead, .masthead-backdrop) .wordmark span { font-size: var(--type-subtitle); }
   .band { font-size: var(--type-subtitle); padding: var(--sp-sm) var(--sp-md); }
   body > nav { justify-content: flex-start; flex-wrap: wrap; row-gap: var(--sp-sm); }
   body > nav .shell-me { margin-inline-start: auto; }
-  .masthead .langs { gap: var(--sp-sm); }
+  :is(.masthead, .masthead-backdrop) .langs { gap: var(--sp-sm); }
   /* Six names do not fit beside the wordmark: each language by its code. */
-  .masthead .langs .long { display: none; }
-  .masthead .langs .short { display: inline; letter-spacing: .04em; }
-  .masthead .langs a { justify-content: center; min-width: var(--control-h); min-height: var(--control-h); padding: 0; }
+  :is(.masthead, .masthead-backdrop) .langs .long { display: none; }
+  :is(.masthead, .masthead-backdrop) .langs .short { display: inline; letter-spacing: .04em; }
+  :is(.masthead, .masthead-backdrop) .langs a { justify-content: center; min-width: var(--control-h); min-height: var(--control-h); padding: 0; }
 }
 @media (max-width: 420px) {
-  .masthead .wordmark span { display: none; }
+  :is(.masthead, .masthead-backdrop) .wordmark span { display: none; }
 }
 
 /* Archive images keep their original compact size and never replace a name. */
@@ -180,3 +193,5 @@ a.chip:hover { color: var(--chip-ink); text-decoration: underline; }
 .archive-pager:not(:has([data-next-page])) .page-next { display: none; }
 
 .archive-pager[data-page-offset="0"] .page-previous { display: none; }
+
+[data-zone^="#"] { --zone: light-dark(var(--zone-source), color-mix(in srgb, var(--zone-source) 40%, var(--surface))); }

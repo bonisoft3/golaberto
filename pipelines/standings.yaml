@@ -8,8 +8,6 @@
 # is the newest read. Recounts run one at a time. One recount of every group
 # runs at start, because rows seeded before change capture began were never
 # heard.
-#
-# The sink is live, off the CDC publication, so it cannot re-feed this stream.
 input:
   broker:
     inputs:

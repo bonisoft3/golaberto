@@ -7,8 +7,6 @@
 # and deletes the lines of teams they no longer did. A replayed event posts the
 # same rows, so at-least-once delivery is harmless; a pass that fails is
 # rejected and delivered again.
-#
-# The sink is live, off the CDC publication, so it cannot re-feed this stream.
 input:
   broker:
     inputs:

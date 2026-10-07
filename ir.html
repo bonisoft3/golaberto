@@ -195,13 +195,13 @@ graph TD
 
 <section id="Zone" data-kind="entity" data-durability="server" data-type-id="0xdc19a20e3738e3ce">
 <h3>Zone — server, public</h3>
-<p>A painted stretch of a group's table. Upstream serializes a group's zones as a YAML array inside the group row; here each zone is a row, so an editor adds one with a form and a table reads them as a live region (<a href="#decision-zones">decision-zones</a>). <code>color</code> is a role the design block resolves, never a hex an editor types.</p>
+<p>A painted stretch of a group's table. Upstream serializes a group's zones as a YAML array inside the group row; here each zone is a row, so an editor adds one with a form and a table reads them as a live region (<a href="#decision-zones">decision-zones</a>). <code>color</code> retains an archive RGB color or a design role. Only six-digit hex colors and the existing roles are accepted; CSS declarations and URLs are refused.</p>
 <table data-extract="fields">
 <tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
 <tr data-ordinal="1"><td>id</td><td>uuid</td><td></td><td>pk</td></tr>
 <tr data-ordinal="2"><td>group_id</td><td>uuid</td><td></td><td>references stage_group</td></tr>
-<tr data-ordinal="3"><td>name</td><td>string</td><td><code class="cel">this.size() &gt; 0 &amp;&amp; this.size() &lt;= 60</code></td><td></td></tr>
-<tr data-ordinal="4"><td>color</td><td>string</td><td><code class="cel">this in [&#x27;champion&#x27;, &#x27;promotion&#x27;, &#x27;qualify&#x27;, &#x27;playoff&#x27;, &#x27;relegation&#x27;]</code></td><td></td></tr>
+<tr data-ordinal="3"><td>name</td><td>string</td><td><code class="cel">this.size() &gt; 0 &amp;&amp; this.size() &lt;= 120</code></td><td></td></tr>
+<tr data-ordinal="4"><td>color</td><td>string</td><td><code class="cel">this in [&#x27;champion&#x27;, &#x27;promotion&#x27;, &#x27;qualify&#x27;, &#x27;playoff&#x27;, &#x27;relegation&#x27;] || this.matches(&#x27;^#[0-9a-fA-F]{6}$&#x27;)</code></td><td></td></tr>
 <tr data-ordinal="5"><td>first</td><td>int32</td><td><code class="cel">this &gt;= 1</code></td><td></td></tr>
 <tr data-ordinal="6"><td>last</td><td>int32</td><td><code class="cel">this &gt;= 1</code></td><td></td></tr>
 </table>
@@ -275,7 +275,7 @@ graph TD
 <tr data-ordinal="3"><td>team_id</td><td>uuid</td><td></td><td>references team</td></tr>
 <tr data-ordinal="4"><td>add_sub</td><td>int32</td><td><code class="cel">this &gt;= -99 &amp;&amp; this &lt;= 99</code></td><td>default 0</td></tr>
 <tr data-ordinal="5"><td>bias</td><td>int32</td><td><code class="cel">this &gt;= -99 &amp;&amp; this &lt;= 99</code></td><td>default 0</td></tr>
-<tr data-ordinal="6"><td>comment</td><td>string</td><td><code class="cel">this.size() &lt;= 500</code></td><td>optional</td></tr>
+<tr data-ordinal="6"><td>comment</td><td>string</td><td><code class="cel">this.size() &lt;= 1000</code></td><td>optional</td></tr>
 </table>
 <p>Unique <code>uq_team_group</code> over (group_id, team_id): a team is in a group once.</p>
 </section>
@@ -368,7 +368,7 @@ graph TD
 <tr><th>field</th><th>type</th><th>constraint</th><th>notes</th></tr>
 <tr data-ordinal="1"><td>id</td><td>uuid</td><td></td><td>pk</td></tr>
 <tr data-ordinal="2"><td>phase_id</td><td>uuid</td><td></td><td>references phase</td></tr>
-<tr data-ordinal="3"><td>round</td><td>int32</td><td><code class="cel">this &gt;= 1 &amp;&amp; this &lt;= 99</code></td><td>optional</td></tr>
+<tr data-ordinal="3"><td>round</td><td>int32</td><td><code class="cel">this &gt;= 1</code></td><td>optional</td></tr>
 <tr data-ordinal="4"><td>day</td><td>date</td><td></td><td>the day, where it was played</td></tr>
 <tr data-ordinal="5"><td>kickoff</td><td>timestamp</td><td></td><td>optional; the instant, when the hour is known</td></tr>
 <tr data-ordinal="6"><td>home_id</td><td>uuid</td><td></td><td>references team</td></tr>
@@ -454,7 +454,7 @@ graph TD
 <tr data-ordinal="16"><td>form3</td><td>string</td><td><code class="cel">this in [&#x27;&#x27;, &#x27;w&#x27;, &#x27;d&#x27;, &#x27;l&#x27;]</code></td><td></td></tr>
 <tr data-ordinal="17"><td>form4</td><td>string</td><td><code class="cel">this in [&#x27;&#x27;, &#x27;w&#x27;, &#x27;d&#x27;, &#x27;l&#x27;]</code></td><td></td></tr>
 <tr data-ordinal="18"><td>form5</td><td>string</td><td><code class="cel">this in [&#x27;&#x27;, &#x27;w&#x27;, &#x27;d&#x27;, &#x27;l&#x27;]</code></td><td>the latest result</td></tr>
-<tr data-ordinal="19"><td>zone</td><td>string</td><td><code class="cel">this in [&#x27;&#x27;, &#x27;champion&#x27;, &#x27;promotion&#x27;, &#x27;qualify&#x27;, &#x27;playoff&#x27;, &#x27;relegation&#x27;]</code></td><td>the narrowest zone the position falls in</td></tr>
+<tr data-ordinal="19"><td>zone</td><td>string</td><td><code class="cel">this in [&#x27;&#x27;, &#x27;champion&#x27;, &#x27;promotion&#x27;, &#x27;qualify&#x27;, &#x27;playoff&#x27;, &#x27;relegation&#x27;] || this.matches(&#x27;^#[0-9a-fA-F]{6}$&#x27;)</code></td><td>the narrowest zone the position falls in</td></tr>
 </table>
 </section>
 
@@ -478,7 +478,7 @@ graph TD
 <tr data-ordinal="1"><td>id</td><td>uuid</td><td></td><td>pk; references game</td></tr>
 <tr data-ordinal="2"><td>phase_id</td><td>uuid</td><td></td><td>references phase</td></tr>
 <tr data-ordinal="3"><td>championship_id</td><td>uuid</td><td></td><td>references championship</td></tr>
-<tr data-ordinal="4"><td>round</td><td>int32</td><td><code class="cel">this &gt;= 1 &amp;&amp; this &lt;= 99</code></td><td>optional</td></tr>
+<tr data-ordinal="4"><td>round</td><td>int32</td><td><code class="cel">this &gt;= 1</code></td><td>optional</td></tr>
 <tr data-ordinal="5"><td>day</td><td>date</td><td></td><td></td></tr>
 <tr data-ordinal="6"><td>kickoff</td><td>timestamp</td><td></td><td>optional</td></tr>
 <tr data-ordinal="7"><td>played</td><td>bool</td><td></td><td></td></tr>
@@ -516,7 +516,7 @@ graph TD
 <tr data-ordinal="1"><td>id</td><td>uuid</td><td></td><td>pk; references game</td></tr>
 <tr data-ordinal="2"><td>phase_id</td><td>uuid</td><td></td><td>references phase</td></tr>
 <tr data-ordinal="3"><td>championship_id</td><td>uuid</td><td></td><td>references championship</td></tr>
-<tr data-ordinal="4"><td>round</td><td>int32</td><td><code class="cel">this &gt;= 1 &amp;&amp; this &lt;= 99</code></td><td>optional</td></tr>
+<tr data-ordinal="4"><td>round</td><td>int32</td><td><code class="cel">this &gt;= 1</code></td><td>optional</td></tr>
 <tr data-ordinal="5"><td>day</td><td>date</td><td></td><td></td></tr>
 <tr data-ordinal="6"><td>kickoff</td><td>timestamp</td><td></td><td>optional</td></tr>
 <tr data-ordinal="7"><td>played</td><td>bool</td><td></td><td></td></tr>
@@ -554,7 +554,7 @@ graph TD
 <tr data-ordinal="1"><td>id</td><td>uuid</td><td></td><td>pk; references game</td></tr>
 <tr data-ordinal="2"><td>phase_id</td><td>uuid</td><td></td><td>references phase</td></tr>
 <tr data-ordinal="3"><td>championship_id</td><td>uuid</td><td></td><td>references championship</td></tr>
-<tr data-ordinal="4"><td>round</td><td>int32</td><td><code class="cel">this &gt;= 1 &amp;&amp; this &lt;= 99</code></td><td>optional</td></tr>
+<tr data-ordinal="4"><td>round</td><td>int32</td><td><code class="cel">this &gt;= 1</code></td><td>optional</td></tr>
 <tr data-ordinal="5"><td>day</td><td>date</td><td></td><td></td></tr>
 <tr data-ordinal="6"><td>kickoff</td><td>timestamp</td><td></td><td>optional</td></tr>
 <tr data-ordinal="7"><td>played</td><td>bool</td><td></td><td></td></tr>
@@ -765,7 +765,7 @@ graph TD
 <tr data-ordinal="4"><td>zone_id</td><td>uuid</td><td></td><td>→ <a href="#Zone">Zone</a></td></tr>
 <tr data-ordinal="5"><td>first</td><td>int32</td><td><code class="cel">this &gt;= 1</code></td><td>the zone's first position, which orders the columns</td></tr>
 <tr data-ordinal="6"><td>percent</td><td>double</td><td><code class="cel">this &gt;= 0 &amp;&amp; this &lt;= 100.5</code></td><td></td></tr>
-<tr data-ordinal="7"><td>color</td><td>string</td><td><code class="cel">this in [&#x27;champion&#x27;, &#x27;promotion&#x27;, &#x27;qualify&#x27;, &#x27;playoff&#x27;, &#x27;relegation&#x27;]</code></td><td>the zone's colour</td></tr>
+<tr data-ordinal="7"><td>color</td><td>string</td><td><code class="cel">this in [&#x27;champion&#x27;, &#x27;promotion&#x27;, &#x27;qualify&#x27;, &#x27;playoff&#x27;, &#x27;relegation&#x27;] || this.matches(&#x27;^#[0-9a-fA-F]{6}$&#x27;)</code></td><td>the zone's colour</td></tr>
 <tr data-ordinal="8"><td>band</td><td>int32</td><td><code class="cel">this &gt;= 0 &amp;&amp; this &lt;= 4</code></td><td>the cell's heat</td></tr>
 <tr data-ordinal="9"><td>last</td><td>int32</td><td><code class="cel">this &gt;= 1</code></td><td>the zone's last position; zones sharing a first are ordered by it</td></tr>
 <tr data-ordinal="10"><td>reach</td><td>string</td><td><code class="cel">this in [&#x27;&#x27;, &#x27;impossible&#x27;, &#x27;reachable&#x27;, &#x27;undecided&#x27;]</code></td><td>for a cell that shows 0, whether the zone can still be reached; empty otherwise</td></tr>
@@ -2957,7 +2957,7 @@ Upstream stores <code>point_win</code>, <code>point_draw</code> and <code>point_
 <p id="decision-generated-names" data-kind="decision"><strong>A championship's season and full name are generated columns.</strong>
 Every page names championships as upstream's <code>full_name</code> does — region, name, season. Generated at the store, the spelling is one expression and no screen assembles it. The category suffix upstream appends is not in it, because a generated column cannot read another table; the pages show the category beside the name instead.</p>
 <p id="decision-zones" data-kind="decision"><strong>A table's zones are rows, not a serialized list on the group.</strong>
-Upstream keeps them as YAML inside <code>groups.zones</code>. A row per zone is what a form can write and a live region can read, and its colour becomes a closed role (<code>champion</code>, <code>promotion</code>, <code>qualify</code>, <code>playoff</code>, <code>relegation</code>) that the design resolves in both appearances instead of a hex an editor typed.</p>
+Upstream keeps them as YAML inside <code>groups.zones</code>. Rows preserve their contiguous position ranges and RGB colors. Existing design roles remain valid. The color contract admits only those roles and six-digit hex colors, so importing a color cannot introduce arbitrary CSS. Literal colors retain their hue in the dark appearance with reduced intensity.</p>
 <p id="decision-bounded-route-reads" data-kind="decision"><strong>Each page fetches its own filtered subset.</strong>
 Public archive collections opt into on-demand delivery. A query waits for its own subset, and embedded references load only matching keys. Electric 1.8 cannot compare the portable scalar domains: those predicates and capped scalar orders use bounded PostgREST reads with changes-only notifications instead. UUID subsets still load exact related keys. Changes-only watches do not download historical snapshots; writes acquire the exact rows and validation edges they need. Catalogs, directories, squads, seasons, appearances, venue and referee histories and comments show forty rows per page. Previous and Next keep the full archive accessible; a one-row probe hides Next when the list ends. Search and region changes reset to page one. Page state belongs to the tab. Selected stadium and referee choices load by exact id; their searchable lists are capped at forty. Existing bounded home and matches feeds remain bounded. Ordered SQL indexes match these reads, with the latest team-rating index reused.</p>
 <p>Stitch project <code>3684321283098058780</code>, screen <code>96ba2b88581c4126b2122176d47721b5</code>, refined the compact Previous / Page / Next footer within the accepted design. It wraps on a phone and retains DESIGN.md tokens and the existing columns. Illustrative totals, page jumps, extra columns and widgets are excluded.</p>
@@ -3017,7 +3017,7 @@ Upstream lets a logged-in user comment; here a reader is a guest from the first 
 <p id="decision-editing" data-kind="decision"><strong>Editors correct games through a machine; the cluster decides who is one.</strong>
 Upstream gives an editor role the run of the archive. Here the role is an <a href="#Editor">Editor</a> grant row, given out of band; the game's update and the goal's insert and delete admit a signed-in account holding one, and nothing else — the policies, not the screen, are the rule. The grant syncs to its holder alone, so the game page offers the editor exactly where a write would land. The editor is a machine over a tab draft seeded from the game it is nested in: no form, a save is one <code>update</code>, a goal is added or removed as the row it is, and a refusal keeps the draft. A goal changes the goal lines, the table and the players' seasons through the streams that already recount them (<a href="#decision-standings-derived">decision-standings-derived</a>, <a href="#decision-player-stats">decision-player-stats</a>). Whether the game was played is not the editor's to tick: the game is played exactly when both sides have a score, so a typed score decides it. A draft outlives leaving the page within the tab, as the comment draft does, and a save writes every column it holds, so the last editor to save wins. Left for later: extra time and penalties, the date and kickoff, a goal's penalty and own-goal marks, and whether a side's goals add up to its score.</p>
 <p id="decision-chances" data-kind="decision"><strong>Chances are upstream's odds estimator, odds-rust itself compiled to Wasm.</strong>
-Upstream computes each group's odds in odds-rust: a 20 000-season importance scout, a 100 000-season matched pool with exact point PMFs, and a rare-position search (proofs, conditioned and importance sampling, joint caps, tilts, witnesses, rescues, reconcile) that certifies probabilities down to 1e-14. Here that crate is compiled to a WASI module, <code>computations/golaberto-odds.wasm</code>, built by <code>tools/odds-wasm</code>. The chances computation is one JavaScript module run by mecha's compute service over a DuckLake published from the tables it reads: it builds each live group's request as Rails' Group#odds does and asks the module once per group, one group at a time, each with a seed hashed from the computation's name and the group's id. Each game's expected goals come from the latest <a href="#TeamRating">TeamRating</a> before it, by Rails' formula. Results land in four live sinks out of the publication, so a write never feeds the change it answers.
+Upstream computes each group's odds in odds-rust: a 20 000-season importance scout, a 100 000-season matched pool with exact point PMFs, and a rare-position search (proofs, conditioned and importance sampling, joint caps, tilts, witnesses, rescues, reconcile) that certifies probabilities down to 1e-14. Here that crate is compiled to a WASI module, <code>computations/golaberto-odds.wasm</code>, built by <code>tools/odds-wasm</code>. The chances computation is one JavaScript module run by mecha's compute service over a DuckLake published from the tables it reads: it builds each live group's request as Rails' Group#odds does and asks the module once per group, one group at a time, each with a seed hashed from the computation's name and the group's id. Each game's expected goals come from the latest <a href="#TeamRating">TeamRating</a> before it, by Rails' formula. Results land in four live sinks. CDC invalidates computations by their declared reads, including derived inputs such as ratings and standings; probability outputs are not inputs to this computation.
 Upstream funds a last rare-position tail with a share of the wall time its earlier stages took, so with it a response hangs on the machine's speed; the module runs with it off (upstream's <code>RUST_ODDS_RARE_TAIL=0</code>), and its response is the native one under that setting byte for byte, the seed's alone. What the tail adds is estimates under 1e-11 percent where the earlier stages found none, far under the cent the cells show; the cost is that such a cell the tail would have proved reachable by a witness season stays undecided.
 A cell that shows 0 says whether it can still happen, as upstream's odds_reachability does: odds-rust labels each final position impossible (proved by points or ranks), reachable (an estimate above zero or a witness season) or undecided, and a zone is impossible when each of its positions is, reachable when any is. The computation writes that as <code>reach</code> on the PositionChance and ZoneChance rows that round to 0 — a finished group's other positions are impossible — and the chances page and the front page's title column mark a reachable 0 with * and an undecided one with ?, an impossible one unmarked, each saying its status in words. Upstream's other use of the status, a zone shown as exactly 100 only when every position outside it is proved impossible, has no counterpart: cells here are rounded to the cent, and a 100 is a rounding like any other.</p>
 <p id="decision-ratings" data-kind="decision"><strong>Ratings are upstream's, refit by a computation.</strong>

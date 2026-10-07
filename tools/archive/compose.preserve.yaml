@@ -1,0 +1,19 @@
+services:
+  golaberto-database:
+    image: golaberto-archive-database:${BAYT_IMAGE_TAG:?set a dedicated archive image tag}
+    ports: !reset []
+    build:
+      dockerfile: tools/archive/Dockerfile.database
+      target: database
+      args:
+        ARCHIVE_DATABASE_BASE: bayt-golaberto-database:${BAYT_IMAGE_TAG:?set a dedicated archive image tag}
+    volumes:
+      - archive-postgres:/var/lib/postgresql
+  golaberto-compute:
+    environment:
+      COMPUTATIONS: >-
+        [{"name":"golaberto-chances","file":"/app/computations/golaberto-chances.js",
+        "to":["team_chance","zone_chance","position_chance","game_importance"],
+        "wasm":["/app/computations/golaberto-odds.wasm"]}]
+volumes:
+  archive-postgres: {}

@@ -416,13 +416,13 @@ _chancesMarkup: """
 	                  <div class="grid-table zone-odds" role="table">
 	                    <div class="row head" role="row">
 	                      <span class="pos" role="columnheader">#</span><span class="name" role="columnheader" data-text="{msg.col_team}"></span><span class="pts" role="columnheader" data-text="{msg.col_points}"></span>
-	                      <span class="cells" data-live="zone" data-filter="group_id=eq.{group_id}" data-order="first.asc,last.asc" data-empty=""><template data-item><span class="zone" role="columnheader" data-zone="{color}"><i aria-hidden="true"></i><span data-text="{name}"></span><small data-text="{first}–{last}"></small></span></template></span>
+	                      <span class="cells" data-live="zone" data-filter="group_id=eq.{group_id}" data-order="first.asc,last.asc" data-empty=""><template data-item><span class="zone" role="columnheader" data-zone="{color}" style="--zone-source: {color}"><i aria-hidden="true"></i><span data-text="{name}"></span><small data-text="{first}–{last}"></small></span></template></span>
 	                    </div>
 	                    <div class="rows" data-live="team_chance" data-select="*,team(slug),group:group_id(slug)" data-filter="group_id=eq.{group_id}" data-order="rank.asc" data-empty="">
 	                      <template data-item>
 	                        <div class="row" role="row">
 	                          <span class="pos" role="cell" data-text="{rank}"></span><span class="name" role="rowheader"><a data-route="equipe" data-param-slug="{team.slug}"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></span><span class="pts" role="cell" data-text="{points}"></span>
-	                          <span class="cells" data-live="zone_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}" data-order="first.asc,last.asc" data-empty=""><template data-item><span class="pct" role="cell" data-zone="{color}" data-band="{band}"><span data-text="{percent}" data-text-format="number"></span>\(_reachMark)</span></template></span>
+	                          <span class="cells" data-live="zone_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}" data-order="first.asc,last.asc" data-empty=""><template data-item><span class="pct" role="cell" data-zone="{color}" style="--zone-source: {color}" data-band="{band}"><span data-text="{percent}" data-text-format="number"></span>\(_reachMark)</span></template></span>
 	                        </div>
 	                      </template>
 	                    </div>
@@ -597,9 +597,9 @@ _principalMarkup: """
 	                          </tr></thead>
 	                          <tbody data-live="standing" data-select="*,team(slug)" data-filter="group_id=eq.{id}&position=lte.6" data-order="position.asc" data-empty="{msg.no_teams}">
 	                            <template data-item>
-	                              <tr data-zone="{zone}">
+	                              <tr data-zone="{zone}" style="--zone-source: {zone}">
 	\(_standingsCells)
-	                                <td class="odds"><span data-live="zone_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}&color=eq.champion" data-empty=""><template data-item><span class="title-chance" data-band="{band}"><span class="bar" aria-hidden="true"><i></i></span><span data-text="{percent}" data-text-format="number"></span>\(_reachMark)</span></template></span></td>
+	                                <td class="odds"><span data-live="position_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}&position=eq.1" data-empty=""><template data-item><span class="title-chance" data-band="{band}"><span class="bar" aria-hidden="true"><i></i></span><span data-text="{percent}" data-text-format="number"></span>\(_reachMark)</span></template></span></td>
 	                              </tr>
 	                            </template>
 	                          </tbody>
@@ -707,7 +707,7 @@ _campeonatoMarkup: """
 	                          </tr></thead>
 	                          <tbody data-live="standing" data-select="*,team(slug)" data-filter="group_id=eq.{id}" data-order="position.asc" data-empty="{msg.no_teams}">
 	                            <template data-item>
-	                              <tr data-zone="{zone}">
+	                              <tr data-zone="{zone}" style="--zone-source: {zone}">
 	\((#StandingsCells & {championship_param: "{param.slug}"}).out)
 	                              </tr>
 	                            </template>
@@ -716,7 +716,7 @@ _campeonatoMarkup: """
 	                      </div>
 	                      <ul class="zones" data-live="zone" data-filter="group_id=eq.{id}" data-order="first.asc,last.asc" data-empty="">
 	                        <template data-item>
-	                          <li data-zone="{color}"><i aria-hidden="true"></i><span data-text="{name}"></span> <span class="range" data-text="{first}–{last}"></span></li>
+	                          <li data-zone="{color}" style="--zone-source: {color}"><i aria-hidden="true"></i><span data-text="{name}"></span> <span class="range" data-text="{first}–{last}"></span></li>
 	                        </template>
 	                      </ul>
 	                    </section>
@@ -1031,7 +1031,7 @@ _teamRatingHistory: """
  \((#PagedRead & {key:"team-rating-history",owner:"{id}",table:"team_rating",filter:"team_id=eq.{owner_id}",order:"measure_date.desc,id.asc",context:{period:"1y"},events:{"change@team-rating-period":assign:period:{type:"event",params:field:"value"}},controls:"""
  <label class="team-filter"><span data-text="{msg.team_period}"></span><select id="team-rating-period" data-value="{period}"><option value="1m" data-text="{msg.period_1m}"></option><option value="3m" data-text="{msg.period_3m}"></option><option value="6m" data-text="{msg.period_6m}"></option><option value="1y" data-text="{msg.period_1y}"></option><option value="5y" data-text="{msg.period_5y}"></option><option value="all" data-text="{msg.all}"></option></select></label>
  """,content:"""
- <div data-live="team_rating_chart" data-filter="team_id=eq.{owner_id}&period=eq.{period}&limit=1" data-empty="{msg.team_history_none}"><template data-item><div data-text="{series_json}\u001f{msg.team_rating_history}\u001f{msg.chart_locale}\u001f{msg.team_history_none}" data-text-format="team-chart"></div></template></div>
+ <div data-live="team_rating_chart" data-filter="team_id=eq.{owner_id}&period=eq.{period}" data-empty="{msg.team_history_none}"><template data-item><div data-text="{series_json}\u001f{msg.team_rating_history}\u001f{msg.chart_locale}\u001f{msg.team_history_none}" data-text-format="team-chart"></div></template></div>
  <p class="team-chart-note" data-text="{msg.team_chart_sample}"></p>
  <details><summary data-text="{msg.team_history_table}"></summary><table class="grid"><thead><tr><th data-text="{msg.team_date}"></th><th data-text="{msg.team_rating}"></th><th data-text="{msg.col_off_rating}"></th><th data-text="{msg.col_def_rating}"></th></tr></thead><tbody data-live="team_rating" data-filter="team_id=eq.{owner_id}&offset={offset}&limit=40" data-order="measure_date.desc,id.asc" data-empty="{msg.team_history_none}"><template data-item><tr><th scope="row" data-text="{measure_date}"></th><td data-text="{rating}" data-text-format="number"></td><td data-text="{offense}" data-text-format="number"></td><td data-text="{defense}" data-text-format="number"></td></tr></template></tbody></table></details>
  """}).out)
@@ -1149,7 +1149,7 @@ _equipe_campeonatoMarkup: """
 	          <section id="team-table" class="team-standings">
 	            <h2 data-text="{msg.team_table}"></h2>
 	            <div class="team-group" data-live="team_group" data-select="*,group:stage_group!inner(name,slug,phase!inner(name,championship_id))" data-filter="team_id=eq.{team_id}&group.phase.championship_id=eq.{championship_id}" data-order="group_id.asc" data-empty="{msg.team_no_table}">
-	              <template data-item><section class="team-group-card"><h3><span data-text="{group.phase.name}"></span> · <span data-text="{group.name}"></span></h3><div class="table-wrap"><table class="grid standings"><thead><tr>\(_standingsHead)</tr></thead><tbody data-live="standing" data-select="*,team(slug)" data-project='{"current":{"eq":["team_id","{team_id}"]}}' data-filter="group_id=eq.{group_id}" data-order="position.asc,id.asc" data-empty="{msg.no_teams}"><template data-item><tr data-zone="{zone}" data-current="{current}">\(_championshipStandingsCells)</tr></template></tbody></table></div><div class="team-full-group"><a data-route="chances" data-param-slug="{group.slug}" data-text="{msg.chances_link}"></a></div></section></template>
+	              <template data-item><section class="team-group-card"><h3><span data-text="{group.phase.name}"></span> · <span data-text="{group.name}"></span></h3><div class="table-wrap"><table class="grid standings"><thead><tr>\(_standingsHead)</tr></thead><tbody data-live="standing" data-select="*,team(slug)" data-project='{"current":{"eq":["team_id","{team_id}"]}}' data-filter="group_id=eq.{group_id}" data-order="position.asc,id.asc" data-empty="{msg.no_teams}"><template data-item><tr data-zone="{zone}" style="--zone-source: {zone}" data-current="{current}">\(_championshipStandingsCells)</tr></template></tbody></table></div><div class="team-full-group"><a data-route="chances" data-param-slug="{group.slug}" data-text="{msg.chances_link}"></a></div></section></template>
 	            </div>
 	          </section>
 	          <section id="team-roster" class="team-roster">

@@ -13,7 +13,40 @@ COPY docker/golaberto-rounds.yaml /pipelines/golaberto-rounds.yaml
 COPY docker/golaberto-team-enrichment.yaml /pipelines/golaberto-team-enrichment.yaml
 COPY --parents docker/golaberto-standings.yaml docker/golaberto-team-directory.yaml docker/golaberto-team-profiles.yaml docker/golaberto-game-cards.yaml docker/golaberto-home-games.yaml docker/golaberto-recent-championships.yaml docker/golaberto-matches-games.yaml docker/golaberto-player-stats.yaml docker/golaberto-rounds.yaml docker/golaberto-team-enrichment.yaml ./
 COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.transform.json ./.bayt/
-CMD ["streams", "--no-api", "/pipelines/golaberto-standings.yaml", "/pipelines/golaberto-team-directory.yaml", "/pipelines/golaberto-team-profiles.yaml", "/pipelines/golaberto-game-cards.yaml", "/pipelines/golaberto-home-games.yaml", "/pipelines/golaberto-recent-championships.yaml", "/pipelines/golaberto-matches-games.yaml", "/pipelines/golaberto-player-stats.yaml", "/pipelines/golaberto-rounds.yaml", "/pipelines/golaberto-team-enrichment.yaml"]
+CMD ["streams", "--no-api", "/pipelines/golaberto-standings.yaml", "/pipelines/golaberto-team-directory.yaml", "/pipelines/golaberto-team-profiles.yaml", "/pipelines/golaberto-game-cards.yaml", "/pipelines/golaberto-home-games.yaml", "/pipelines/golaberto-recent-championships.yaml", "/pipelines/golaberto-matches-games.yaml", "/pipelines/golaberto-player-stats.yaml", "/pipelines/golaberto-rounds.yaml", "/pipelines/golaberto-team-enrichment.yaml", "/compute-events.yaml"]
+COPY <<'COMPUTE' /compute-events.yaml
+input:
+  redis_streams:
+    url: ${REDIS_URL}
+    streams: [cdc-events]
+    body_key: data
+    consumer_group: ${COMPUTE_GROUP}
+    client_id: compute
+    start_from_oldest: true
+    auto_replay_nacks: true
+pipeline:
+  threads: 1
+  processors:
+    - mapping: |
+        let table = this.data.parse_json().__table
+        root.tables = [if $table.type() == "string" && $table != "" { $table } else { throw("CDC event has no table") }]
+output:
+  switch:
+    cases:
+      - check: errored()
+        output:
+          reject: ${! error() }
+      - output:
+          http_client:
+            url: http://compute:9997/invalidate
+            verb: POST
+            timeout: 30m
+            max_in_flight: 1
+            headers:
+              Content-Type: application/json
+              Authorization: Bearer ${SERVICE_JWT:}
+
+COMPUTE
 
 FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS transform_ctxs
 WORKDIR /monorepo/.
@@ -29,6 +62,7 @@ WORKDIR /monorepo/.
 COPY --parents .bayt/compose.transform.yaml .bayt/Dockerfile.transform .bayt/bayt.transform.json .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml ./
 COPY --from=golaberto-redis_bayt /monorepo /monorepo
 COPY --from=golaberto-crud_bayt /monorepo /monorepo
+COPY --from=golaberto-compute_bayt /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
 RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/. -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && touch -hd @${SOURCE_DATE_EPOCH:-0} /monorepo; fi

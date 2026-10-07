@@ -110,23 +110,20 @@ code: state: entities: {
 	}
 	Zone: {
 		checks: {
-			name: "char_length(name) > 0 AND char_length(name) <= 60"
-			color: "color IN ('champion', 'promotion', 'qualify', 'playoff', 'relegation')"
+			name: "char_length(name) > 0 AND char_length(name) <= 120"
+			color: "color IN ('champion', 'promotion', 'qualify', 'playoff', 'relegation') OR color ~ '^#[0-9a-fA-F]{6}$'"
 			first: "first >= 1"
 			last: "last >= 1"
 		}
 		invariant: check: "last >= first"
 		seed: [...{
-			name?: strings.MinRunes(1) & strings.MaxRunes(60)
-			color?: ("champion" | "promotion" | "qualify" | "playoff" | "relegation")
+			name?: strings.MinRunes(1) & strings.MaxRunes(120)
+			color?: (("champion" | "promotion" | "qualify" | "playoff" | "relegation") | =~ "^#[0-9a-fA-F]{6}$")
 			first?: >=1
 			last?: >=1
 		}]
-		enums: {
-			color: ["champion","promotion","qualify","playoff","relegation"]
-		}
 		bounds: {
-			name: {sizeMin: 1, sizeMax: 60}
+			name: {sizeMin: 1, sizeMax: 120}
 			first: {intMin: 1}
 			last: {intMin: 1}
 		}
@@ -203,17 +200,17 @@ code: state: entities: {
 		checks: {
 			add_sub: "add_sub >= -99 AND add_sub <= 99"
 			bias: "bias >= -99 AND bias <= 99"
-			comment: "char_length(comment) <= 500"
+			comment: "char_length(comment) <= 1000"
 		}
 		seed: [...{
 			add_sub?: >=-99 & <=99
 			bias?: >=-99 & <=99
-			comment?: strings.MaxRunes(500)
+			comment?: strings.MaxRunes(1000)
 		}]
 		bounds: {
 			add_sub: {intMin: -99, intMax: 99}
 			bias: {intMin: -99, intMax: 99}
-			comment: {sizeMax: 500}
+			comment: {sizeMax: 1000}
 		}
 	}
 	Referee: {
@@ -328,7 +325,7 @@ code: state: entities: {
 	}
 	Game: {
 		checks: {
-			round: "round >= 1 AND round <= 99"
+			round: "round >= 1"
 			home_field: "home_field IN ('left', 'neutral', 'right')"
 			home_score: "home_score >= 0 AND home_score < 100"
 			away_score: "away_score >= 0 AND away_score < 100"
@@ -341,7 +338,7 @@ code: state: entities: {
 		}
 		invariant: check: "home_id <> away_id AND played = (home_score IS NOT NULL AND away_score IS NOT NULL) AND (home_score IS NOT NULL) = (away_score IS NOT NULL) AND (home_aet IS NOT NULL) = (away_aet IS NOT NULL) AND (home_pen IS NOT NULL) = (away_pen IS NOT NULL) AND ((home_aet IS NOT NULL) = false OR played) AND ((home_pen IS NOT NULL) = false OR played)"
 		seed: [...{
-			round?: >=1 & <=99
+			round?: >=1
 			home_field?: ("left" | "neutral" | "right")
 			home_score?: >=0 & <100
 			away_score?: >=0 & <100
@@ -356,7 +353,7 @@ code: state: entities: {
 			home_field: ["left","neutral","right"]
 		}
 		bounds: {
-			round: {intMin: 1, intMax: 99}
+			round: {intMin: 1}
 			home_score: {intMin: 0, intMax: 99}
 			away_score: {intMin: 0, intMax: 99}
 			home_aet: {intMin: 0, intMax: 99}
@@ -418,7 +415,7 @@ code: state: entities: {
 			form3: "form3 IN ('', 'w', 'd', 'l')"
 			form4: "form4 IN ('', 'w', 'd', 'l')"
 			form5: "form5 IN ('', 'w', 'd', 'l')"
-			zone: "zone IN ('', 'champion', 'promotion', 'qualify', 'playoff', 'relegation')"
+			zone: "zone IN ('', 'champion', 'promotion', 'qualify', 'playoff', 'relegation') OR zone ~ '^#[0-9a-fA-F]{6}$'"
 		}
 		seed: [...{
 			position?: >=1
@@ -433,7 +430,7 @@ code: state: entities: {
 			form3?: ("" | "w" | "d" | "l")
 			form4?: ("" | "w" | "d" | "l")
 			form5?: ("" | "w" | "d" | "l")
-			zone?: ("" | "champion" | "promotion" | "qualify" | "playoff" | "relegation")
+			zone?: (("" | "champion" | "promotion" | "qualify" | "playoff" | "relegation") | =~ "^#[0-9a-fA-F]{6}$")
 		}]
 		enums: {
 			form1: ["","w","d","l"]
@@ -441,7 +438,6 @@ code: state: entities: {
 			form3: ["","w","d","l"]
 			form4: ["","w","d","l"]
 			form5: ["","w","d","l"]
-			zone: ["","champion","promotion","qualify","playoff","relegation"]
 		}
 		bounds: {
 			position: {intMin: 1}
@@ -471,7 +467,7 @@ code: state: entities: {
 		checks: {
 			first: "first >= 1"
 			percent: "percent >= 0 AND percent <= 100.5"
-			color: "color IN ('champion', 'promotion', 'qualify', 'playoff', 'relegation')"
+			color: "color IN ('champion', 'promotion', 'qualify', 'playoff', 'relegation') OR color ~ '^#[0-9a-fA-F]{6}$'"
 			band: "band >= 0 AND band <= 4"
 			last: "last >= 1"
 			reach: "reach IN ('', 'impossible', 'reachable', 'undecided')"
@@ -479,13 +475,12 @@ code: state: entities: {
 		seed: [...{
 			first?: >=1
 			percent?: >=0 & <=100.5
-			color?: ("champion" | "promotion" | "qualify" | "playoff" | "relegation")
+			color?: (("champion" | "promotion" | "qualify" | "playoff" | "relegation") | =~ "^#[0-9a-fA-F]{6}$")
 			band?: >=0 & <=4
 			last?: >=1
 			reach?: ("" | "impossible" | "reachable" | "undecided")
 		}]
 		enums: {
-			color: ["champion","promotion","qualify","playoff","relegation"]
 			reach: ["","impossible","reachable","undecided"]
 		}
 		bounds: {
@@ -555,7 +550,7 @@ code: state: entities: {
 	}
 	GameCard: {
 		checks: {
-			round: "round >= 1 AND round <= 99"
+			round: "round >= 1"
 			home_score: "home_score >= 0 AND home_score < 100"
 			away_score: "away_score >= 0 AND away_score < 100"
 			home_aet: "home_aet >= 0 AND home_aet < 100"
@@ -567,7 +562,7 @@ code: state: entities: {
 			home_recent_rank: "home_recent_rank >= 0 AND home_recent_rank <= 20"
 		}
 		seed: [...{
-			round?: >=1 & <=99
+			round?: >=1
 			home_score?: >=0 & <100
 			away_score?: >=0 & <100
 			home_aet?: >=0 & <100
@@ -579,7 +574,7 @@ code: state: entities: {
 			home_recent_rank?: >=0 & <=20
 		}]
 		bounds: {
-			round: {intMin: 1, intMax: 99}
+			round: {intMin: 1}
 			home_score: {intMin: 0, intMax: 99}
 			away_score: {intMin: 0, intMax: 99}
 			home_aet: {intMin: 0, intMax: 99}
@@ -593,7 +588,7 @@ code: state: entities: {
 	}
 	HomeGameCard: {
 		checks: {
-			round: "round >= 1 AND round <= 99"
+			round: "round >= 1"
 			home_score: "home_score >= 0 AND home_score < 100"
 			away_score: "away_score >= 0 AND away_score < 100"
 			home_aet: "home_aet >= 0 AND home_aet < 100"
@@ -605,7 +600,7 @@ code: state: entities: {
 			home_recent_rank: "home_recent_rank >= 0 AND home_recent_rank <= 20"
 		}
 		seed: [...{
-			round?: >=1 & <=99
+			round?: >=1
 			home_score?: >=0 & <100
 			away_score?: >=0 & <100
 			home_aet?: >=0 & <100
@@ -617,7 +612,7 @@ code: state: entities: {
 			home_recent_rank?: >=0 & <=20
 		}]
 		bounds: {
-			round: {intMin: 1, intMax: 99}
+			round: {intMin: 1}
 			home_score: {intMin: 0, intMax: 99}
 			away_score: {intMin: 0, intMax: 99}
 			home_aet: {intMin: 0, intMax: 99}
@@ -631,7 +626,7 @@ code: state: entities: {
 	}
 	MatchesGameCard: {
 		checks: {
-			round: "round >= 1 AND round <= 99"
+			round: "round >= 1"
 			home_score: "home_score >= 0 AND home_score < 100"
 			away_score: "away_score >= 0 AND away_score < 100"
 			home_aet: "home_aet >= 0 AND home_aet < 100"
@@ -643,7 +638,7 @@ code: state: entities: {
 			home_recent_rank: "home_recent_rank >= 0 AND home_recent_rank <= 20"
 		}
 		seed: [...{
-			round?: >=1 & <=99
+			round?: >=1
 			home_score?: >=0 & <100
 			away_score?: >=0 & <100
 			home_aet?: >=0 & <100
@@ -655,7 +650,7 @@ code: state: entities: {
 			home_recent_rank?: >=0 & <=20
 		}]
 		bounds: {
-			round: {intMin: 1, intMax: 99}
+			round: {intMin: 1}
 			home_score: {intMin: 0, intMax: 99}
 			away_score: {intMin: 0, intMax: 99}
 			home_aet: {intMin: 0, intMax: 99}

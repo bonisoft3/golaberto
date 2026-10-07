@@ -5,3 +5,5 @@
 /.certs/
 # mise writes what this checkout resolved mise.local.toml to.
 /mise.local.lock
+
+__pycache__/

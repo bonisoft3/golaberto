@@ -7,8 +7,6 @@
 # from before is deleted. A replayed event posts the same row, so at-least-once
 # delivery is harmless; a recount that fails is rejected and delivered again.
 # Recounts run one at a time, and one of every phase runs at start.
-#
-# The sink is live, off the CDC publication, so it cannot re-feed this stream.
 input:
   broker:
     inputs:

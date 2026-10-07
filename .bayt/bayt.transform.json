@@ -4,6 +4,7 @@
     "up": false,
     "manual": false,
     "environment": {
+      "COMPUTE_GROUP": "golaberto-compute",
       "CRUD_URL": "http://crud:3000",
       "REDIS_URL": "redis://redis:6379",
       "SERVICE_JWT": "${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}"
@@ -16,6 +17,9 @@
       },
       "golaberto-crud": {
         "condition": "service_healthy"
+      },
+      "golaberto-compute": {
+        "condition": "service_started"
       }
     },
     "networks": {
@@ -91,7 +95,9 @@
     "mounts": [],
     "secrets": {},
     "extra_hosts": [],
-    "epilogue": [],
+    "epilogue": [
+      "COPY <<'COMPUTE' /compute-events.yaml\ninput:\n  redis_streams:\n    url: ${REDIS_URL}\n    streams: [cdc-events]\n    body_key: data\n    consumer_group: ${COMPUTE_GROUP}\n    client_id: compute\n    start_from_oldest: true\n    auto_replay_nacks: true\npipeline:\n  threads: 1\n  processors:\n    - mapping: |\n        let table = this.data.parse_json().__table\n        root.tables = [if $table.type() == \"string\" && $table != \"\" { $table } else { throw(\"CDC event has no table\") }]\noutput:\n  switch:\n    cases:\n      - check: errored()\n        output:\n          reject: ${! error() }\n      - output:\n          http_client:\n            url: http://compute:9997/invalidate\n            verb: POST\n            timeout: 30m\n            max_in_flight: 1\n            headers:\n              Content-Type: application/json\n              Authorization: Bearer ${SERVICE_JWT:}\n\nCOMPUTE"
+    ],
     "copy": [
       {
         "from": null,
@@ -210,7 +216,8 @@
       "/pipelines/golaberto-matches-games.yaml",
       "/pipelines/golaberto-player-stats.yaml",
       "/pipelines/golaberto-rounds.yaml",
-      "/pipelines/golaberto-team-enrichment.yaml"
+      "/pipelines/golaberto-team-enrichment.yaml",
+      "/compute-events.yaml"
     ]
   },
   "name": "transform",
@@ -276,7 +283,11 @@
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
-        "./.bayt/compose.migrate.yaml"
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.conduit.yaml",
+        "./.bayt/compose.mesh-events.yaml",
+        "./.bayt/compose.caddy.yaml"
       ]
     },
     "outs": {
@@ -308,7 +319,11 @@
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
-        "./.bayt/compose.migrate.yaml"
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.conduit.yaml",
+        "./.bayt/compose.mesh-events.yaml",
+        "./.bayt/compose.caddy.yaml"
       ]
     },
     "srcs": {
@@ -340,7 +355,8 @@
       "deps": [],
       "transitiveDeps": [
         "redis_outs_srcs",
-        "crud_outs_srcs"
+        "crud_outs_srcs",
+        "compute_outs_srcs"
       ],
       "transitiveCrossDeps": [],
       "chainedDeps": [],
@@ -354,7 +370,11 @@
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
-        "./.bayt/compose.migrate.yaml"
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.conduit.yaml",
+        "./.bayt/compose.mesh-events.yaml",
+        "./.bayt/compose.caddy.yaml"
       ]
     }
   },
@@ -362,15 +382,18 @@
   "emitsSrcs": true,
   "deps": [
     "redis_outs",
-    "crud_outs"
+    "crud_outs",
+    "compute_outs"
   ],
   "sameProjectDeps": [
     "redis_outs",
-    "crud_outs"
+    "crud_outs",
+    "compute_outs"
   ],
   "transitiveDeps": [
     "redis_outs",
-    "crud_outs"
+    "crud_outs",
+    "compute_outs"
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
@@ -378,7 +401,11 @@
     "./.bayt/compose.redis.yaml",
     "./.bayt/compose.crud.yaml",
     "./.bayt/compose.database.yaml",
-    "./.bayt/compose.migrate.yaml"
+    "./.bayt/compose.migrate.yaml",
+    "./.bayt/compose.compute.yaml",
+    "./.bayt/compose.conduit.yaml",
+    "./.bayt/compose.mesh-events.yaml",
+    "./.bayt/compose.caddy.yaml"
   ],
   "chainedDeps": [
     {
@@ -392,6 +419,15 @@
     },
     {
       "name": "crud_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "compute_outs",
       "project": "golaberto",
       "dir": ".",
       "outs": {

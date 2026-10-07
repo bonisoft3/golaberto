@@ -77,8 +77,8 @@ CREATE TABLE IF NOT EXISTS stage_group (
 CREATE TABLE IF NOT EXISTS zone (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   "group_id" uuid NOT NULL REFERENCES stage_group(id) ON DELETE CASCADE,
-  "name" text NOT NULL CHECK (char_length(name) > 0 AND char_length(name) <= 60),
-  "color" text NOT NULL CHECK (color IN ('champion', 'promotion', 'qualify', 'playoff', 'relegation')),
+  "name" text NOT NULL CHECK (char_length(name) > 0 AND char_length(name) <= 120),
+  "color" text NOT NULL CHECK (color IN ('champion', 'promotion', 'qualify', 'playoff', 'relegation') OR color ~ '^#[0-9a-fA-F]{6}$'),
   "first" integer NOT NULL CHECK (first >= 1),
   "last" integer NOT NULL CHECK (last >= 1),
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
@@ -136,7 +136,7 @@ CREATE TABLE IF NOT EXISTS team_group (
   "team_id" uuid NOT NULL REFERENCES team(id) ON DELETE CASCADE,
   "add_sub" integer DEFAULT 0 NOT NULL CHECK (add_sub >= -99 AND add_sub <= 99),
   "bias" integer DEFAULT 0 NOT NULL CHECK (bias >= -99 AND bias <= 99),
-  "comment" text CHECK (char_length(comment) <= 500),
+  "comment" text CHECK (char_length(comment) <= 1000),
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -260,7 +260,7 @@ CREATE TABLE IF NOT EXISTS team_player_history (
 CREATE TABLE IF NOT EXISTS game (
   "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   "phase_id" uuid NOT NULL REFERENCES phase(id) ON DELETE CASCADE,
-  "round" integer CHECK (round >= 1 AND round <= 99),
+  "round" integer CHECK (round >= 1),
   "day" date NOT NULL CONSTRAINT "game_day_type" CHECK ("day" IS NULL OR public.portable_date_valid("day") IS TRUE),
   "kickoff" portable_timestamp,
   "home_id" uuid NOT NULL REFERENCES team(id) ON DELETE CASCADE,
@@ -336,7 +336,7 @@ CREATE TABLE IF NOT EXISTS standing (
   "form3" text NOT NULL CHECK (form3 IN ('', 'w', 'd', 'l')),
   "form4" text NOT NULL CHECK (form4 IN ('', 'w', 'd', 'l')),
   "form5" text NOT NULL CHECK (form5 IN ('', 'w', 'd', 'l')),
-  "zone" text NOT NULL CHECK (zone IN ('', 'champion', 'promotion', 'qualify', 'playoff', 'relegation')),
+  "zone" text NOT NULL CHECK (zone IN ('', 'champion', 'promotion', 'qualify', 'playoff', 'relegation') OR zone ~ '^#[0-9a-fA-F]{6}$'),
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -360,7 +360,7 @@ CREATE TABLE IF NOT EXISTS zone_chance (
   "zone_id" uuid NOT NULL REFERENCES zone(id) ON DELETE CASCADE,
   "first" integer NOT NULL CHECK (first >= 1),
   "percent" double precision NOT NULL CONSTRAINT "zone_chance_percent_type" CHECK ("percent" IS NULL OR public.portable_double_valid("percent") IS TRUE) CHECK (percent >= 0 AND percent <= 100.5),
-  "color" text NOT NULL CHECK (color IN ('champion', 'promotion', 'qualify', 'playoff', 'relegation')),
+  "color" text NOT NULL CHECK (color IN ('champion', 'promotion', 'qualify', 'playoff', 'relegation') OR color ~ '^#[0-9a-fA-F]{6}$'),
   "band" integer NOT NULL CHECK (band >= 0 AND band <= 4),
   "last" integer NOT NULL CHECK (last >= 1),
   "reach" text NOT NULL CHECK (reach IN ('', 'impossible', 'reachable', 'undecided')),
@@ -418,7 +418,7 @@ CREATE TABLE IF NOT EXISTS game_card (
   "id" uuid PRIMARY KEY REFERENCES game(id) ON DELETE CASCADE,
   "phase_id" uuid NOT NULL REFERENCES phase(id) ON DELETE CASCADE,
   "championship_id" uuid NOT NULL REFERENCES championship(id) ON DELETE CASCADE,
-  "round" integer CHECK (round >= 1 AND round <= 99),
+  "round" integer CHECK (round >= 1),
   "day" date NOT NULL CONSTRAINT "game_card_day_type" CHECK ("day" IS NULL OR public.portable_date_valid("day") IS TRUE),
   "kickoff" portable_timestamp,
   "played" boolean NOT NULL,
@@ -456,7 +456,7 @@ CREATE TABLE IF NOT EXISTS home_game_card (
   "id" uuid PRIMARY KEY REFERENCES game(id) ON DELETE CASCADE,
   "phase_id" uuid NOT NULL REFERENCES phase(id) ON DELETE CASCADE,
   "championship_id" uuid NOT NULL REFERENCES championship(id) ON DELETE CASCADE,
-  "round" integer CHECK (round >= 1 AND round <= 99),
+  "round" integer CHECK (round >= 1),
   "day" date NOT NULL CONSTRAINT "home_game_card_day_type" CHECK ("day" IS NULL OR public.portable_date_valid("day") IS TRUE),
   "kickoff" portable_timestamp,
   "played" boolean NOT NULL,
@@ -495,7 +495,7 @@ CREATE TABLE IF NOT EXISTS matches_game_card (
   "id" uuid PRIMARY KEY REFERENCES game(id) ON DELETE CASCADE,
   "phase_id" uuid NOT NULL REFERENCES phase(id) ON DELETE CASCADE,
   "championship_id" uuid NOT NULL REFERENCES championship(id) ON DELETE CASCADE,
-  "round" integer CHECK (round >= 1 AND round <= 99),
+  "round" integer CHECK (round >= 1),
   "day" date NOT NULL CONSTRAINT "matches_game_card_day_type" CHECK ("day" IS NULL OR public.portable_date_valid("day") IS TRUE),
   "kickoff" portable_timestamp,
   "played" boolean NOT NULL,

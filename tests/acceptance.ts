@@ -197,15 +197,115 @@ const championship = async (id: string) => {
   return page;
 };
 
+// Keep the probability round trip ahead of other mutating fixtures: their
+// cleanup commits before downstream calculations necessarily finish.
+const SERIE_A_2026 = "04000000-0000-4000-8000-000000000001";
+// A chance as the page prints it, in the reader's own numerals.
+const percent = (text: string) => Number(text.replace(/\./g, "").replace(",", "."));
+// The first zone of the first line: the leader's title chance.
+const titleOf = (page: Page) => page.$eval(".zone-odds .rows .row:first-child .pct", (e: Element) => e.textContent ?? "");
+
+test("test-chances: the 2026 Série A's chances lead with Flamengo, near golaberto's own figure, and each team's positions sum to whole seasons", async () => {
+  const page = await open(`/chances/${SERIE_A_2026}`);
+  await page.waitForSelector(".zone-odds .rows .row .pct", { timeout: STREAM_MS });
+  assertEquals((await said(page, ".zone-odds .rows .row:first-child .name"))[0], "Flamengo-RJ");
+  const title = percent(await titleOf(page));
+  // golaberto.com.br published 73.4% for this table; the ratings are refit
+  // on the same 7-year archive, but from a zero prior and with their own
+  // draws, so near is the claim and not equal.
+  assert(title >= 60 && title <= 90, `Flamengo's title chance ${title} is far from golaberto's 73.4`);
+  const positions: string[][] = await page.$$eval(".heat .rows .row", (rows: Element[]) =>
+    rows.map(row => [...row.querySelectorAll(".heat-cell [data-text-format]")].map(e => e.textContent ?? "")));
+  assertEquals(positions.length, 20);
+  for (const cells of positions) {
+    assertEquals(cells.length, 20);
+    const sum = cells.map(percent).reduce((a, b) => a + b, 0);
+    assert(sum >= 99 && sum <= 101, `a team's positions sum to ${sum}`);
+  }
+  for (const [table, selector, order] of [
+    ["zone_chance", ".zone-odds", "c.first, c.last"],
+    ["position_chance", ".heat", "c.position"],
+  ]) {
+    for (const deadline = Date.now() + STREAM_MS;;) {
+      const expected = JSON.parse(await query(`SELECT json_agg(json_build_array(t.team_name, c.percent) ORDER BY t.rank, ${order})
+        FROM ${table} c JOIN team_chance t USING (group_id, team_id) WHERE c.group_id = '${SERIE_A_2026}'`));
+      const shown: string[][] = await page.$$eval(`${selector} .rows .row`, (rows: Element[]) =>
+        rows.flatMap(row => [...row.querySelectorAll(".cells [data-text-format]")].map(cell => [
+          row.querySelector(".name")?.textContent?.trim() ?? "", cell.textContent ?? "",
+        ])));
+      const actual = shown.map(([name, value]) => [name, percent(value)]);
+      if (JSON.stringify(actual) === JSON.stringify(expected)) break;
+      if (Date.now() >= deadline) assertEquals(actual, expected, `${table}: every displayed probability matches its source`);
+      await page.waitForTimeout(100);
+    }
+  }
+});
+
+test("test-chances-reach: in the 2026 Série A every chance that shows 0 says whether it can still happen, marked * when it can and unmarked when the points rule it out", async () => {
+  const page = await open(`/chances/${SERIE_A_2026}`);
+  await page.waitForFunction(() => document.querySelectorAll(".heat .rows .heat-cell").length === 400, null, { timeout: STREAM_MS });
+  // Each position cell: what it shows, its reach, the reach said, and the mark drawn.
+  const cells: string[][] = await page.$$eval(".heat .rows .heat-cell", (els: Element[]) =>
+    els.map((e) => {
+      const mark = e.querySelector(".reach")!;
+      return [
+        e.querySelector("[data-text-format]")?.textContent ?? "",
+        mark.getAttribute("data-reach") ?? "",
+        mark.nextElementSibling?.textContent ?? "",
+        getComputedStyle(mark).display === "none" ? "" : getComputedStyle(mark, "::after").content,
+      ];
+    }));
+  for (const [shown, reach, words] of cells) {
+    assertEquals(reach === "", percent(shown) !== 0, `a cell showing ${shown} has reach "${reach}"`);
+    assertEquals(words === "", reach === "", `a cell of reach "${reach}" says "${words}"`);
+  }
+  const marks = Object.fromEntries(cells.map(([, reach, , mark]) => [reach, mark]));
+  // Ten rounds left: some positions are out of points' reach and some are too rare to show.
+  assertEquals([marks.impossible, marks.reachable], ["", '"*"']);
+});
+
+// Undo restores a rating input too. A ratings pass during the defeat leaves
+// changed powers until the next ratings pass, then the downstream chances pass.
+const CHANCES_SETTLE_MS = 2 * STREAM_MS;
+
+test("test-chances-live: a result recorded for a game still to play moves the chances on a page left open, and undoing it brings them back", async () => {
+  // Flamengo's next home game, lost heavily: the leader's title chance must fall.
+  const game = await query(`SELECT g.id FROM game g JOIN team t ON t.id = g.home_id JOIN stage_group sg ON sg.phase_id = g.phase_id WHERE sg.id = '${SERIE_A_2026}' AND t.name = 'Flamengo-RJ' AND NOT g.played ORDER BY g.day LIMIT 1`);
+  const page = await open(`/chances/${SERIE_A_2026}`);
+  await page.waitForSelector(".zone-odds .rows .row .pct", { timeout: STREAM_MS });
+  const before = await titleOf(page);
+  try {
+    await query(`UPDATE game SET played = true, home_score = 0, away_score = 5 WHERE id = '${game}'`);
+    await page.waitForFunction((before: string) =>
+      document.querySelector(".zone-odds .rows .row:first-child .pct")?.textContent !== before, before, { timeout: STREAM_MS });
+    assert(percent(await titleOf(page)) < percent(before), "a heavy home defeat lowered the leader's title chance");
+  } finally {
+    await query(`UPDATE game SET played = false, home_score = NULL, away_score = NULL WHERE id = '${game}'`);
+  }
+  await page.waitForFunction((before: string) =>
+    document.querySelector(".zone-odds .rows .row:first-child .pct")?.textContent === before, before, { timeout: CHANCES_SETTLE_MS });
+});
+
 test("test-home-featured: the front page keeps the featured season and its top six below the game feeds", async () => {
-  const page = await open("/");
-  await page.waitForSelector(".feature .standings tbody tr", { timeout: 30_000 });
-  const top = await said(page, ".feature .standings tbody .name");
-  assertEquals(top.length, 6);
-  assertEquals(top[0], "Flamengo-RJ");
-  assert(await page.locator(".home-games + .feature").count(), "game feeds precede the featured table");
-  // The title chance arrives once the chances computation has run over the lake.
-  await page.waitForSelector(".feature .standings tbody tr:first-child .title-chance", { timeout: STREAM_MS });
+  const colors: { id: string; color: string }[] = JSON.parse(await query(`
+    SELECT coalesce(json_agg(json_build_object('id', z.id, 'color', z.color)), '[]')
+    FROM zone z JOIN stage_group g ON g.id=z.group_id
+    JOIN phase p ON p.id=g.phase_id JOIN championship c ON c.id=p.championship_id
+    WHERE c.featured`));
+  try {
+    for (const zone of colors) await query(`UPDATE zone SET color='#90EE90' WHERE id='${zone.id}'`);
+    const page = await open("/");
+    await page.waitForSelector(".feature .standings tbody tr", { timeout: 30_000 });
+    const top = await said(page, ".feature .standings tbody .name");
+    assertEquals(top.length, 6);
+    assertEquals(top[0], "Flamengo-RJ");
+    assert(await page.locator(".home-games + .feature").count(), "game feeds precede the featured table");
+    // The title chance arrives once the chances computation has run over the lake.
+    await page.waitForSelector(".feature .standings tbody tr:first-child .title-chance", { timeout: STREAM_MS });
+    assertEquals(await page.locator('.feature .standings tbody tr:first-child .odds > [data-live]').getAttribute('data-live'), 'position_chance');
+  } finally {
+    for (const zone of colors) await query(`UPDATE zone SET color='${zone.color}' WHERE id='${zone.id}'`);
+  }
 });
 
 test("test-home-levels: every eligible championship appears in strength order within its region", async () => {
@@ -430,7 +530,17 @@ test("test-teams: part of a name narrows the teams", async () => {
 });
 
 test("test-team-page: a team's profile shows facts, championships and deduplicated players", async () => {
-  const page = await open(`/equipe/${ATHLETICO}`);
+  const page = await (await context()).newPage();
+  const chartRequest = page.waitForRequest((request: { url(): string }) => {
+    const url = new URL(request.url());
+    return url.searchParams.get("table") === "team_rating_chart" && url.searchParams.has("subset__where");
+  });
+  await visit(page, `/equipe/${ATHLETICO}`);
+  const chart = new URL((await chartRequest).url());
+  const predicate = chart.searchParams.get("subset__where")!;
+  assert(predicate.includes('"team_id" =') && predicate.includes('"period" ='),
+    "one chart must not download the archive's complete chart collection");
+  assert(Object.values(JSON.parse(chart.searchParams.get("subset__params")!)).includes(ATHLETICO));
   await page.waitForSelector(".team-current-championships a[data-route='equipe-campeonato']");
   assertEquals(await said(page, ".team h1.band"), ["Athletico-PR"]);
   assertEquals((await said(page, ".team .game-facts dd")).slice(0, 4), ["Club Athletico Paranaense", "Curitiba", "Brasil", "26/03/1924"]);
@@ -667,100 +777,6 @@ test("test-edit-refused: a non-editor's save and a goal with no scorer are refus
     await forget(plain);
     await forget(ed);
   }
-});
-
-const SERIE_A_2026 = "04000000-0000-4000-8000-000000000001";
-// A chance as the page prints it, in the reader's own numerals.
-const percent = (text: string) => Number(text.replace(/\./g, "").replace(",", "."));
-// The first zone of the first line: the leader's title chance.
-const titleOf = (page: Page) => page.$eval(".zone-odds .rows .row:first-child .pct", (e: Element) => e.textContent ?? "");
-
-test("test-chances: the 2026 Série A's chances lead with Flamengo, near golaberto's own figure, and each team's positions sum to whole seasons", async () => {
-  const page = await open(`/chances/${SERIE_A_2026}`);
-  await page.waitForSelector(".zone-odds .rows .row .pct", { timeout: STREAM_MS });
-  assertEquals((await said(page, ".zone-odds .rows .row:first-child .name"))[0], "Flamengo-RJ");
-  const title = percent(await titleOf(page));
-  // golaberto.com.br published 73.4% for this table; the ratings are refit
-  // on the same 7-year archive, but from a zero prior and with their own
-  // draws, so near is the claim and not equal.
-  assert(title >= 60 && title <= 90, `Flamengo's title chance ${title} is far from golaberto's 73.4`);
-  const positions: string[][] = await page.$$eval(".heat .rows .row", (rows: Element[]) =>
-    rows.map(row => [...row.querySelectorAll(".heat-cell [data-text-format]")].map(e => e.textContent ?? "")));
-  assertEquals(positions.length, 20);
-  for (const cells of positions) {
-    assertEquals(cells.length, 20);
-    const sum = cells.map(percent).reduce((a, b) => a + b, 0);
-    assert(sum >= 99 && sum <= 101, `a team's positions sum to ${sum}`);
-  }
-  for (const [table, selector, order] of [
-    ["zone_chance", ".zone-odds", "c.first, c.last"],
-    ["position_chance", ".heat", "c.position"],
-  ]) {
-    for (const deadline = Date.now() + STREAM_MS;;) {
-      const expected = JSON.parse(await query(`SELECT json_agg(json_build_array(t.team_name, c.percent) ORDER BY t.rank, ${order})
-        FROM ${table} c JOIN team_chance t USING (group_id, team_id) WHERE c.group_id = '${SERIE_A_2026}'`));
-      const shown: string[][] = await page.$$eval(`${selector} .rows .row`, (rows: Element[]) =>
-        rows.flatMap(row => [...row.querySelectorAll(".cells [data-text-format]")].map(cell => [
-          row.querySelector(".name")?.textContent?.trim() ?? "", cell.textContent ?? "",
-        ])));
-      const actual = shown.map(([name, value]) => [name, percent(value)]);
-      if (JSON.stringify(actual) === JSON.stringify(expected)) break;
-      if (Date.now() >= deadline) assertEquals(actual, expected, `${table}: every displayed probability matches its source`);
-      await page.waitForTimeout(100);
-    }
-  }
-});
-
-test("test-chances-reach: in the 2026 Série A every chance that shows 0 says whether it can still happen, marked * when it can and unmarked when the points rule it out", async () => {
-  const page = await open(`/chances/${SERIE_A_2026}`);
-  await page.waitForFunction(() => document.querySelectorAll(".heat .rows .heat-cell").length === 400, null, { timeout: STREAM_MS });
-  // Each position cell: what it shows, its reach, the reach said, and the mark drawn.
-  const cells: string[][] = await page.$$eval(".heat .rows .heat-cell", (els: Element[]) =>
-    els.map((e) => {
-      const mark = e.querySelector(".reach")!;
-      return [
-        e.querySelector("[data-text-format]")?.textContent ?? "",
-        mark.getAttribute("data-reach") ?? "",
-        mark.nextElementSibling?.textContent ?? "",
-        getComputedStyle(mark).display === "none" ? "" : getComputedStyle(mark, "::after").content,
-      ];
-    }));
-  for (const [shown, reach, words] of cells) {
-    assertEquals(reach === "", percent(shown) !== 0, `a cell showing ${shown} has reach "${reach}"`);
-    assertEquals(words === "", reach === "", `a cell of reach "${reach}" says "${words}"`);
-  }
-  const marks = Object.fromEntries(cells.map(([, reach, , mark]) => [reach, mark]));
-  // Ten rounds left: some positions are out of points' reach and some are too rare to show.
-  assertEquals([marks.impossible, marks.reachable], ["", '"*"']);
-});
-
-// Undo restores a rating input too. A ratings pass during the defeat leaves
-// changed powers until the next ratings pass, then the downstream chances pass.
-const computationSpecs: { every: number; to: string[] }[] = JSON.parse(
-  JSON.parse(await Deno.readTextFile(`${Deno.args[0] ?? "."}/bayt.json`)).targets.compute.compose.environment.COMPUTATIONS,
-);
-const CHANCES_SETTLE_MS = STREAM_MS + 1000 * ["team_rating", "zone_chance"].reduce((seconds, table) => {
-  const spec = computationSpecs.find(c => c.to.includes(table));
-  if (spec === undefined) throw new Error(`no computation produces ${table}`);
-  return seconds + spec.every;
-}, 0);
-
-test("test-chances-live: a result recorded for a game still to play moves the chances on a page left open, and undoing it brings them back", async () => {
-  // Flamengo's next home game, lost heavily: the leader's title chance must fall.
-  const game = await query(`SELECT g.id FROM game g JOIN team t ON t.id = g.home_id JOIN stage_group sg ON sg.phase_id = g.phase_id WHERE sg.id = '${SERIE_A_2026}' AND t.name = 'Flamengo-RJ' AND NOT g.played ORDER BY g.day LIMIT 1`);
-  const page = await open(`/chances/${SERIE_A_2026}`);
-  await page.waitForSelector(".zone-odds .rows .row .pct", { timeout: STREAM_MS });
-  const before = await titleOf(page);
-  try {
-    await query(`UPDATE game SET played = true, home_score = 0, away_score = 5 WHERE id = '${game}'`);
-    await page.waitForFunction((before: string) =>
-      document.querySelector(".zone-odds .rows .row:first-child .pct")?.textContent !== before, before, { timeout: STREAM_MS });
-    assert(percent(await titleOf(page)) < percent(before), "a heavy home defeat lowered the leader's title chance");
-  } finally {
-    await query(`UPDATE game SET played = false, home_score = NULL, away_score = NULL WHERE id = '${game}'`);
-  }
-  await page.waitForFunction((before: string) =>
-    document.querySelector(".zone-odds .rows .row:first-child .pct")?.textContent === before, before, { timeout: CHANCES_SETTLE_MS });
 });
 
 test("test-team-rating: a team's page shows its latest rating, a number from 0 to 100", async () => {

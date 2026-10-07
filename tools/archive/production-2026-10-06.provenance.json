@@ -1,0 +1,16 @@
+{
+  "archive_filename": "production-2026-10-06.sql.gz",
+  "archive_sha256": "88c5bd6258794ce862e188ae2d089c8d1e613f2239efa39fbe2902eb06276ba2",
+  "source_database": "GolAberto_production",
+  "source_project": "https://github.com/galo2099/golaberto",
+  "mysql_image": "mysql@sha256:4af1f8815716546f5b12410f7621f37f93db8dd11a184706ef59111930b8c2ff",
+  "counts": "production-2026-10-06.counts.json",
+  "corrections": "production-2026-10-06.corrections.json",
+  "reviewed_normalizations": {
+    "duplicate_roster_memberships": 20,
+    "extra_time_partial_score_pairs": 3,
+    "penalty_partial_score_pairs": 2
+  },
+  "known_unresolved_duration_anomalies": 183,
+  "retention": "Raw domain records remain in private legacy staging. Corrections are exact-before guarded overlays; archived non-match and detached goals remain in staging. User credentials, sessions and identity URLs are not exported. Original ratings and odds require the preservation Compose overlay."
+}

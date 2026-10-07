@@ -304,6 +304,25 @@ Deno.test("team enrichment imports, aggregates, samples and refreshes transactio
         THEN RAISE EXCEPTION 'complete vectors and zero percentages should be captured'; END IF;
     END $$;
 
+    -- A replay must not emit writes merely because the capture clock moved.
+    CREATE TEMP TABLE captured_odds ON COMMIT DROP AS
+      SELECT * FROM team_odds_history WHERE group_id='${oddsGroup}';
+    DROP TABLE _computed_odds_groups;
+    DO $$ BEGIN PERFORM capture_team_odds_history(); END $$;
+    DO $$ BEGIN
+      IF EXISTS (SELECT * FROM captured_odds EXCEPT SELECT * FROM team_odds_history WHERE group_id='${oddsGroup}')
+        OR EXISTS (SELECT * FROM team_odds_history WHERE group_id='${oddsGroup}' EXCEPT SELECT * FROM captured_odds)
+        THEN RAISE EXCEPTION 'replayed capture changed identical odds or their timestamps'; END IF;
+    END $$;
+    UPDATE position_chance SET percent=CASE position WHEN 1 THEN 30 ELSE 70 END
+      WHERE group_id='${oddsGroup}' AND team_id='${teamA}';
+    DROP TABLE _computed_odds_groups;
+    DO $$ BEGIN PERFORM capture_team_odds_history(); END $$;
+    DO $$ BEGIN
+      IF NOT EXISTS (SELECT 1 FROM team_odds_history WHERE group_id='${oddsGroup}' AND team_id='${teamA}' AND position=1 AND percent=30)
+        THEN RAISE EXCEPTION 'changed odds were not captured after a replay'; END IF;
+    END $$;
+
     INSERT INTO app_user(id,handle) VALUES (${q(user)},'team-enrichment-${user}'),
       (${q(otherUser)},'team-other-${otherUser}');
     INSERT INTO team_comment(team_id,app_user_id,body) VALUES ('${teamA}','${otherUser}','Other author comment');

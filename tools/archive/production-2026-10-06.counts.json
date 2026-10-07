@@ -1,0 +1,19 @@
+{
+  "categories": 8,
+  "championships": 1514,
+  "phases": 4368,
+  "groups": 15566,
+  "stadia": 1108,
+  "teams": 3425,
+  "team_groups": 58439,
+  "referees": 398,
+  "players": 90867,
+  "team_players": 305445,
+  "games": 318971,
+  "goals": 949303,
+  "player_games": 3290664,
+  "historical_ratings": 8195365,
+  "team_group_odds_histories": 73582,
+  "team_geocodes": 3425,
+  "comments": 504
+}

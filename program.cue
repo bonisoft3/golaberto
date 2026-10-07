@@ -12,6 +12,7 @@ import (
 )
 
 _designMd: _ @embed(file="DESIGN.md", type=text)
+_oddsCaptureSql: string @embed(file="services/database/sql/034_idempotent_odds_capture.sql", type=text)
 _catalogues: _ @embed(glob="messages/*.json")
 _homeGamesSql: string @embed(file="services/database/sql/013_home_games.sql", type=text)
 _homeGamesUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeGamesSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
@@ -49,6 +50,10 @@ _teamProfilesUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_tea
 
 _campaignReadSql: string @embed(file="services/database/sql/030_campaign_read.sql", type=text)
 _campaignReadUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_campaignReadSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
+_archiveCompatibilitySql: string @embed(file="services/database/sql/032_archive_compatibility.sql", type=text)
+_archiveCompatibilityUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_archiveCompatibilitySql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+
 
 _readableAddressesSql: string @embed(file="services/database/sql/031_readable_addresses.sql", type=text)
 _readableAddressesUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_readableAddressesSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
@@ -196,8 +201,8 @@ code: pronto.#App & {
 			fields: [
 				{ordinal: 1, name: "id", type: "uuid", pk: true, default: "gen_random_uuid()"},
 				{ordinal: 2, name: "group_id", type: "uuid", ref: "stage_group"},
-				{ordinal: 3, name: "name", type: "string", cel: "this.size() > 0 && this.size() <= 60"},
-				{ordinal: 4, name: "color", type: "string", cel: "this in ['champion', 'promotion', 'qualify', 'playoff', 'relegation']"},
+				{ordinal: 3, name: "name", type: "string", cel: "this.size() > 0 && this.size() <= 120"},
+				{ordinal: 4, name: "color", type: "string", cel: "this in ['champion', 'promotion', 'qualify', 'playoff', 'relegation'] || this.matches('^#[0-9a-fA-F]{6}$')"},
 				{ordinal: 5, name: "first", type: "int32", cel: "this >= 1"},
 				{ordinal: 6, name: "last", type: "int32", cel: "this >= 1"},
 			]
@@ -272,7 +277,7 @@ code: pronto.#App & {
 				{ordinal: 3, name: "team_id", type: "uuid", ref: "team"},
 				{ordinal: 4, name: "add_sub", type: "int32", default: "0", cel: "this >= -99 && this <= 99"},
 				{ordinal: 5, name: "bias", type: "int32", default: "0", cel: "this >= -99 && this <= 99"},
-				{ordinal: 6, name: "comment", type: "string", required: false, cel: "this.size() <= 500"},
+				{ordinal: 6, name: "comment", type: "string", required: false, cel: "this.size() <= 1000"},
 			]
 			indexes: [{on: "team_id"}]
 		}
@@ -434,7 +439,7 @@ code: pronto.#App & {
 			fields: [
 				{ordinal: 1, name: "id", type: "uuid", pk: true, default: "gen_random_uuid()"},
 				{ordinal: 2, name: "phase_id", type: "uuid", ref: "phase"},
-				{ordinal: 3, name: "round", type: "int32", required: false, cel: "this >= 1 && this <= 99"},
+				{ordinal: 3, name: "round", type: "int32", required: false, cel: "this >= 1"},
 				// The calendar day of the match where it was played; the kickoff instant
 				// only when the hour is known, which archive games mostly are not.
 				{ordinal: 4, name: "day", type: "date"},
@@ -537,7 +542,7 @@ code: pronto.#App & {
 				{ordinal: 17, name: "form4", type: "string", cel: "this in ['', 'w', 'd', 'l']"},
 				{ordinal: 18, name: "form5", type: "string", cel: "this in ['', 'w', 'd', 'l']"},
 				// The narrowest zone the position falls in, or none.
-				{ordinal: 19, name: "zone", type: "string", cel: "this in ['', 'champion', 'promotion', 'qualify', 'playoff', 'relegation']"},
+				{ordinal: 19, name: "zone", type: "string", cel: "this in ['', 'champion', 'promotion', 'qualify', 'playoff', 'relegation'] || this.matches('^#[0-9a-fA-F]{6}$')"},
 			]
 			indexes: [{on: "group_id"}]
 		}
@@ -577,7 +582,7 @@ code: pronto.#App & {
 				{ordinal: 5, name: "first", type: "int32", cel: "this >= 1"},
 				{ordinal: 6, name: "percent", type: "double", cel: "this >= 0 && this <= 100.5"},
 				// The zone's colour and the cell's heat, as the standings draw them.
-				{ordinal: 7, name: "color", type: "string", cel: "this in ['champion', 'promotion', 'qualify', 'playoff', 'relegation']"},
+				{ordinal: 7, name: "color", type: "string", cel: "this in ['champion', 'promotion', 'qualify', 'playoff', 'relegation'] || this.matches('^#[0-9a-fA-F]{6}$')"},
 				{ordinal: 8, name: "band", type: "int32", cel: "this >= 0 && this <= 4"},
 				// Its last position: zones sharing a first are ordered by it.
 				{ordinal: 9, name: "last", type: "int32", cel: "this >= 1"},
@@ -681,7 +686,7 @@ code: pronto.#App & {
 				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "game"},
 				{ordinal: 2, name: "phase_id", type: "uuid", ref: "phase"},
 				{ordinal: 3, name: "championship_id", type: "uuid", ref: "championship"},
-				{ordinal: 4, name: "round", type: "int32", required: false, cel: "this >= 1 && this <= 99"},
+				{ordinal: 4, name: "round", type: "int32", required: false, cel: "this >= 1"},
 				{ordinal: 5, name: "day", type: "date"},
 				{ordinal: 6, name: "kickoff", type: "timestamp", required: false},
 				{ordinal: 7, name: "played", type: "bool"},
@@ -725,7 +730,7 @@ code: pronto.#App & {
 				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "game"},
 				{ordinal: 2, name: "phase_id", type: "uuid", ref: "phase"},
 				{ordinal: 3, name: "championship_id", type: "uuid", ref: "championship"},
-				{ordinal: 4, name: "round", type: "int32", required: false, cel: "this >= 1 && this <= 99"},
+				{ordinal: 4, name: "round", type: "int32", required: false, cel: "this >= 1"},
 				{ordinal: 5, name: "day", type: "date"},
 				{ordinal: 6, name: "kickoff", type: "timestamp", required: false},
 				{ordinal: 7, name: "played", type: "bool"},
@@ -770,7 +775,7 @@ code: pronto.#App & {
 				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "game"},
 				{ordinal: 2, name: "phase_id", type: "uuid", ref: "phase"},
 				{ordinal: 3, name: "championship_id", type: "uuid", ref: "championship"},
-				{ordinal: 4, name: "round", type: "int32", required: false, cel: "this >= 1 && this <= 99"},
+				{ordinal: 4, name: "round", type: "int32", required: false, cel: "this >= 1"},
 				{ordinal: 5, name: "day", type: "date"},
 				{ordinal: 6, name: "kickoff", type: "timestamp", required: false},
 				{ordinal: 7, name: "played", type: "bool"},
@@ -1207,6 +1212,8 @@ code: pronto.#App & {
 		{name: "029_team_enrichment.sql", src: "services/database/sql/029_team_enrichment.sql"},
 		{name: "030_campaign_read.sql", src: "services/database/sql/030_campaign_read.sql"},
 		{name: "031_readable_addresses.sql", src: "services/database/sql/031_readable_addresses.sql"},
+		{name: "032_archive_compatibility.sql", src: "services/database/sql/032_archive_compatibility.sql"},
+		{name: "034_idempotent_odds_capture.sql", src: "services/database/sql/034_idempotent_odds_capture.sql"},
 		// Large archive fixtures are copied at build, never expanded through CUE.
 		{name: "900_seed.sql", src: "services/database/sql/900_seed.sql"},
 	]
@@ -1233,6 +1240,9 @@ code: pronto.#App & {
 	state: migrations: "028_team_profiles": {operations: [{sql: {up: _teamProfilesUpgrade, onComplete: true}}]}
 	state: pipelines: "team-profiles": {raw: true, from: "Team", to: "TeamChampionship", group: "golaberto-team-profiles"}
 	state: migrations: "030_campaign_read": {operations: [{sql: {up: _campaignReadUpgrade, onComplete: true}}]}
+	state: migrations: "032_archive_compatibility": {operations: [{sql: {up: _archiveCompatibilityUpgrade, onComplete: true}}]}
+	state: migrations: "033_cdc_outputs": {operations: [{sql: {up: _cdcOutputsSql, onComplete: true}}]}
+	state: migrations: "034_idempotent_odds_capture": {operations: [{sql: {up: _oddsCaptureSql, onComplete: true}}]}
 	state: migrations: "031_readable_addresses": {operations: [{sql: {up: _readableAddressesUpgrade, onComplete: true}}]}
 	// The numeric stage (ir decision-chances).
 	// The chances read each game's power from team_rating, so they rerun
@@ -1240,13 +1250,11 @@ code: pronto.#App & {
 	state: computations: ratings: {
 		to: ["TeamRating", "PlayerRating", "RatingEval"]
 		wasm: ["computations/golaberto-odds.wasm"]
-		every: 300
 	}
 	state: computations: chances: {
 		to: ["TeamChance", "ZoneChance", "PositionChance", "GameImportance"]
 		onComplete: "capture_team_odds_history"
 		wasm: ["computations/golaberto-odds.wasm"]
-		every: 30
 	}
 	state: pipelines: "game-cards": {
 		raw:   true
@@ -2232,7 +2240,8 @@ cluster: (pronto.#DefaultCluster & {
 	])
 	local: loop.surface.sources.pronto != ""
 }).out
-terminal: (pronto.#DefaultTerminal & {"code": code}).out
+_appBoot: string @embed(file="boot.js", type=text)
+terminal: (pronto.#DefaultTerminal & {"code": code, boot: _appBoot}).out
 loop:     (pronto.#DefaultLoop & {"code": code, "cluster": cluster, "terminal": terminal}).out
 
 build:    (pronto.#DefaultBuild & {"code": code, "loop": loop, "cluster": cluster, "terminal": terminal}).out

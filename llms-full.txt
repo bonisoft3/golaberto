@@ -8,7 +8,7 @@ Publicly accessible web application.
 ## Screens Specification
 ### Screen: Principal
 - Route: `/`
-- Reads: HomeGameCard, Championship, Phase, Group, Standing, ZoneChance, TeamChance, HomeChampionship
+- Reads: HomeGameCard, Championship, Phase, Group, Standing, PositionChance, TeamChance, HomeChampionship
 
 ### Screen: Campeonatos
 - Route: `/campeonatos`

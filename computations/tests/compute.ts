@@ -21,7 +21,7 @@ export type Out = Record<string, Sink[]>;
 export async function compute(name: keyof typeof SINKS, lake: Reader, as: string = name): Promise<Out> {
   const runner = new Runner({ "golaberto-odds": odds });
   try {
-    const spec = { name: as, file: new URL(`${name}.js`, here).pathname, every: 1, to: SINKS[name], wasm: [WASM] };
+    const spec = { name: as, file: new URL(`${name}.js`, here).pathname, to: SINKS[name], wasm: [WASM] };
     return await (await Computation.load(spec, runner)).run(lake) as Out;
   } finally {
     runner.close();

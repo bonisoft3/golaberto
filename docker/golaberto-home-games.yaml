@@ -1,4 +1,3 @@
-# Clock-owned ranks and bounded homepage cards stay outside the CDC publication.
 # Repeating the refresh changes only ranks that moved, in one transaction.
 input:
   generate:

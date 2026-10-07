@@ -1360,20 +1360,13 @@
         {
           "bounds": {
             "sizeMin": 1,
-            "sizeMax": 60
+            "sizeMax": 120
           },
           "name": "name",
           "type": "string",
           "required": true
         },
         {
-          "enum": [
-            "champion",
-            "promotion",
-            "qualify",
-            "playoff",
-            "relegation"
-          ],
           "name": "color",
           "type": "string",
           "required": true
@@ -1663,7 +1656,7 @@
         },
         {
           "bounds": {
-            "sizeMax": 500
+            "sizeMax": 1000
           },
           "name": "comment",
           "type": "string",
@@ -2210,8 +2203,7 @@
         },
         {
           "bounds": {
-            "intMin": 1,
-            "intMax": 99
+            "intMin": 1
           },
           "name": "round",
           "type": "int32",
@@ -2660,14 +2652,6 @@
           "required": true
         },
         {
-          "enum": [
-            "",
-            "champion",
-            "promotion",
-            "qualify",
-            "playoff",
-            "relegation"
-          ],
           "name": "zone",
           "type": "string",
           "required": true
@@ -2767,13 +2751,6 @@
           "required": true
         },
         {
-          "enum": [
-            "champion",
-            "promotion",
-            "qualify",
-            "playoff",
-            "relegation"
-          ],
           "name": "color",
           "type": "string",
           "required": true
@@ -2982,8 +2959,7 @@
         },
         {
           "bounds": {
-            "intMin": 1,
-            "intMax": 99
+            "intMin": 1
           },
           "name": "round",
           "type": "int32",
@@ -3189,8 +3165,7 @@
         },
         {
           "bounds": {
-            "intMin": 1,
-            "intMax": 99
+            "intMin": 1
           },
           "name": "round",
           "type": "int32",
@@ -3402,8 +3377,7 @@
         },
         {
           "bounds": {
-            "intMin": 1,
-            "intMax": 99
+            "intMin": 1
           },
           "name": "round",
           "type": "int32",
@@ -5354,6 +5328,8 @@
     "services/database/migrations/029_team_enrichment.sql",
     "services/database/migrations/030_campaign_read.sql",
     "services/database/migrations/031_readable_addresses.sql",
+    "services/database/migrations/032_archive_compatibility.sql",
+    "services/database/migrations/034_idempotent_odds_capture.sql",
     "services/database/migrations/900_seed.sql"
   ],
   "pipelines": [

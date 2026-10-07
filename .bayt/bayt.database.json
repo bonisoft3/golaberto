@@ -5,7 +5,7 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.6.3@sha256:54f5bc93c38c2c742988d8a112863bfc6841ba364cfefc4f5bf5ae000c55347f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+        "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.7.0@sha256:cdbcdb0172fcf89f96ea15ce99ae66245d2885d00f7ad5e6c39f1277fe185512}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
       },
       "secrets": [],
       "args": {}
@@ -201,6 +201,16 @@
         },
         {
           "action": "rebuild",
+          "path": "../services/database/migrations/032_archive_compatibility.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
+          "path": "../services/database/migrations/034_idempotent_odds_capture.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
           "path": "../services/database/migrations/900_seed.sql",
           "target": "/docker-entrypoint-initdb.d"
         }
@@ -252,6 +262,8 @@
           "services/database/migrations/029_team_enrichment.sql",
           "services/database/migrations/030_campaign_read.sql",
           "services/database/migrations/031_readable_addresses.sql",
+          "services/database/migrations/032_archive_compatibility.sql",
+          "services/database/migrations/034_idempotent_odds_capture.sql",
           "services/database/migrations/900_seed.sql"
         ],
         "dst": "/docker-entrypoint-initdb.d/",
@@ -319,6 +331,8 @@
       "services/database/migrations/029_team_enrichment.sql",
       "services/database/migrations/030_campaign_read.sql",
       "services/database/migrations/031_readable_addresses.sql",
+      "services/database/migrations/032_archive_compatibility.sql",
+      "services/database/migrations/034_idempotent_odds_capture.sql",
       "services/database/migrations/900_seed.sql"
     ],
     "exclude": []
@@ -435,6 +449,8 @@
           "services/database/migrations/029_team_enrichment.sql",
           "services/database/migrations/030_campaign_read.sql",
           "services/database/migrations/031_readable_addresses.sql",
+          "services/database/migrations/032_archive_compatibility.sql",
+          "services/database/migrations/034_idempotent_odds_capture.sql",
           "services/database/migrations/900_seed.sql"
         ],
         "exclude": []

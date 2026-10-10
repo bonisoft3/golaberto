@@ -937,7 +937,7 @@
         "build": {
           "additional_contexts": {
             "root": "..",
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.4@sha256:ee911caa20b37f4b7c6ad3e8d7e8ffeef15bc1523cbe772137d34de443b489df}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.8.0@sha256:f51c51cb45151e671fde4268ba499dd6353d9d6362798d771951daa73d127ea0}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -2541,7 +2541,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.4@sha256:ee911caa20b37f4b7c6ad3e8d7e8ffeef15bc1523cbe772137d34de443b489df}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.8.0@sha256:f51c51cb45151e671fde4268ba499dd6353d9d6362798d771951daa73d127ea0}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -2646,7 +2646,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.4@sha256:ee911caa20b37f4b7c6ad3e8d7e8ffeef15bc1523cbe772137d34de443b489df}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.8.0@sha256:f51c51cb45151e671fde4268ba499dd6353d9d6362798d771951daa73d127ea0}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -2749,7 +2749,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.4@sha256:ee911caa20b37f4b7c6ad3e8d7e8ffeef15bc1523cbe772137d34de443b489df}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.8.0@sha256:f51c51cb45151e671fde4268ba499dd6353d9d6362798d771951daa73d127ea0}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -2852,7 +2852,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.4@sha256:ee911caa20b37f4b7c6ad3e8d7e8ffeef15bc1523cbe772137d34de443b489df}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.8.0@sha256:f51c51cb45151e671fde4268ba499dd6353d9d6362798d771951daa73d127ea0}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -2955,7 +2955,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.4@sha256:ee911caa20b37f4b7c6ad3e8d7e8ffeef15bc1523cbe772137d34de443b489df}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.8.0@sha256:f51c51cb45151e671fde4268ba499dd6353d9d6362798d771951daa73d127ea0}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -3057,7 +3057,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.4@sha256:ee911caa20b37f4b7c6ad3e8d7e8ffeef15bc1523cbe772137d34de443b489df}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.8.0@sha256:f51c51cb45151e671fde4268ba499dd6353d9d6362798d771951daa73d127ea0}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -3159,7 +3159,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.4@sha256:ee911caa20b37f4b7c6ad3e8d7e8ffeef15bc1523cbe772137d34de443b489df}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.8.0@sha256:f51c51cb45151e671fde4268ba499dd6353d9d6362798d771951daa73d127ea0}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -3261,7 +3261,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.4@sha256:ee911caa20b37f4b7c6ad3e8d7e8ffeef15bc1523cbe772137d34de443b489df}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.8.0@sha256:f51c51cb45151e671fde4268ba499dd6353d9d6362798d771951daa73d127ea0}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -3364,7 +3364,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.4@sha256:ee911caa20b37f4b7c6ad3e8d7e8ffeef15bc1523cbe772137d34de443b489df}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.8.0@sha256:f51c51cb45151e671fde4268ba499dd6353d9d6362798d771951daa73d127ea0}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -3467,7 +3467,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.4@sha256:ee911caa20b37f4b7c6ad3e8d7e8ffeef15bc1523cbe772137d34de443b489df}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.8.0@sha256:f51c51cb45151e671fde4268ba499dd6353d9d6362798d771951daa73d127ea0}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -3575,7 +3575,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.4@sha256:ee911caa20b37f4b7c6ad3e8d7e8ffeef15bc1523cbe772137d34de443b489df}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.8.0@sha256:f51c51cb45151e671fde4268ba499dd6353d9d6362798d771951daa73d127ea0}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -3679,7 +3679,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.4@sha256:ee911caa20b37f4b7c6ad3e8d7e8ffeef15bc1523cbe772137d34de443b489df}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.8.0@sha256:f51c51cb45151e671fde4268ba499dd6353d9d6362798d771951daa73d127ea0}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -3877,7 +3877,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.7.0@sha256:cdbcdb0172fcf89f96ea15ce99ae66245d2885d00f7ad5e6c39f1277fe185512}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.8.0@sha256:ccb59fdc18217eb679456c62b0f5aa05d79138bcc8c431087984a6ff1e2b552b}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
           },
           "secrets": [],
           "args": {}
@@ -4335,7 +4335,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-auth-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.7.0@sha256:affa6323a601ca877b93ffe913091e59d8e12b5cdebce90195877c6447b39e3d}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}"
+            "libraries_mecha-auth-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.8.0@sha256:3fad007c2863cfae4ff19ecda019714c640c4171563fa5ba3b0bd029d31d3108}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}"
           },
           "secrets": [],
           "args": {}
@@ -4636,7 +4636,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-mesh-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.7.0@sha256:b8d8c6dab3a33fedf09a0ef8f3d79b71de6408f70e1c2e04194a5f47d391da8f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}"
+            "libraries_mecha-mesh-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.8.0@sha256:b8d8c6dab3a33fedf09a0ef8f3d79b71de6408f70e1c2e04194a5f47d391da8f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}"
           },
           "secrets": [],
           "args": {}
@@ -4784,7 +4784,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-conduit-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-conduit:0.7.0@sha256:5b37a9074a35a9e8a3f95aa70b8c09f226927a7d9053cfa4ffc91ee07a5c302b}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image}"
+            "libraries_mecha-conduit-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-conduit:0.8.0@sha256:5b37a9074a35a9e8a3f95aa70b8c09f226927a7d9053cfa4ffc91ee07a5c302b}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image}"
           },
           "secrets": [],
           "args": {}
@@ -5349,7 +5349,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-compute-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.7.0@sha256:0f04b8cb653afd61d3db4e177e5787f72797c6effc52c8869484198d4b72b88b}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}"
+            "libraries_mecha-compute-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.8.0@sha256:79588fbc372089c4f2386f4da2f880309b9c1927d81d4d5d989327458a30aeae}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}"
           },
           "secrets": [],
           "args": {}
@@ -5721,7 +5721,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.4@sha256:ee911caa20b37f4b7c6ad3e8d7e8ffeef15bc1523cbe772137d34de443b489df}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.8.0@sha256:f51c51cb45151e671fde4268ba499dd6353d9d6362798d771951daa73d127ea0}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -5880,7 +5880,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.7.0@sha256:cdbcdb0172fcf89f96ea15ce99ae66245d2885d00f7ad5e6c39f1277fe185512}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.8.0@sha256:ccb59fdc18217eb679456c62b0f5aa05d79138bcc8c431087984a6ff1e2b552b}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
           },
           "secrets": [],
           "args": {}

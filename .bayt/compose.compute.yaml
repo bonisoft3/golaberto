@@ -8,7 +8,7 @@ services:
         golaberto-database: service:golaberto-database
         golaberto-migrate: service:golaberto-migrate
         libraries_mecha-compute-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.7.0@sha256:0f04b8cb653afd61d3db4e177e5787f72797c6effc52c8869484198d4b72b88b}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.8.0@sha256:79588fbc372089c4f2386f4da2f880309b9c1927d81d4d5d989327458a30aeae}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}
       context: ..
       dockerfile: .bayt/Dockerfile.compute
       target: compute

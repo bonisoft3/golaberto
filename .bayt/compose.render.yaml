@@ -8,7 +8,7 @@ services:
         golaberto-electric: service:golaberto-electric
         golaberto-auth: service:golaberto-auth
         plugins_omnishell-runtime-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.4@sha256:ee911caa20b37f4b7c6ad3e8d7e8ffeef15bc1523cbe772137d34de443b489df}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.8.0@sha256:f51c51cb45151e671fde4268ba499dd6353d9d6362798d771951daa73d127ea0}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}
       context: ..
       dockerfile: .bayt/Dockerfile.render
       target: render

@@ -7,7 +7,7 @@ import subprocess
 import unittest
 from unittest.mock import patch
 
-from archive_workflow import check_new_project,project_name,verify_archive,wait_for_source
+from archive_workflow import check_new_project,ledger_names,project_name,verify_archive,wait_for_source
 
 
 class ArchiveWorkflowTest(unittest.TestCase):
@@ -20,6 +20,20 @@ class ArchiveWorkflowTest(unittest.TestCase):
                                             text=True,capture_output=True,check=True).stdout)
         self.assertFalse(profile['services']['golaberto-database'].get('ports'))
         self.assertFalse(profile['volumes']['archive-postgres'].get('external'))
+
+    def test_dump_ledger_names_only_public_schema_migrations(self):
+        copy = '\n'.join([
+            'SET client_encoding = \'UTF8\';',
+            'COPY pgroll.migrations (schema, name, migration, created_at, updated_at, parent, done, resulting_schema, migration_type) FROM stdin;',
+            'public\t00_initdb\t{}\tt0\tt0\t\\N\tt\t{}\tbaseline',
+            'public\t041_native_media\t{"a":"x\\ty"}\tt1\tt1\t00_initdb\tt\t{}\tpgroll',
+            'public\t041_native_media_2026\t{}\tt2\tt2\t041_native_media\tt\t{}\tinferred',
+            'pg_temp\t00000_initial_2026\t{}\tt3\tt3\t\\N\tt\t{}\tinferred',
+            '\\.',
+        ])
+        self.assertEqual(ledger_names(copy),{'00_initdb','041_native_media'})
+        with self.assertRaises(ValueError):
+            ledger_names('SET client_encoding = \'UTF8\';')
 
     def test_temporary_initialization_daemon_is_not_restore_ready(self):
         with patch('archive_workflow.docker',side_effect=['docker-entrypoi','true','mysqld']) as docker, \
@@ -56,7 +70,7 @@ class ArchiveWorkflowTest(unittest.TestCase):
         directory = Path(__file__).parent/'archive'
         provenance = json.loads((directory/'production-2026-10-06.provenance.json').read_text())
         corrections = json.loads((directory/provenance['corrections']).read_text())
-        self.assertEqual(set(corrections),{'games','teams','team_groups','player_games','groups'})
+        self.assertEqual(set(corrections),{'games','teams','team_groups','player_games','groups','game_versions'})
         self.assertEqual(len(provenance['archive_sha256']),64)
         self.assertTrue(all('reason' in record for records in corrections.values() for record in records.values()))
 
@@ -71,7 +85,7 @@ class ArchiveWorkflowTest(unittest.TestCase):
         self.assertNotIn('onComplete',jobs[0])
         self.assertNotIn('team_rating',jobs[0]['to'])
         self.assertEqual(profile['volumes']['archive-postgres'],{})
-        self.assertIn('archive-postgres:/var/lib/postgresql',profile['services']['golaberto-database']['volumes'])
+        self.assertIn('archive-postgres:/postgresql-data',profile['services']['golaberto-database']['volumes'])
         self.assertEqual(profile['services']['golaberto-database']['ports'],[])
 
 

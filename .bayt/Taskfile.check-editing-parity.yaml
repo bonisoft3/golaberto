@@ -1,0 +1,12 @@
+# generated from bayt.cue — do not edit
+tasks:
+  default:
+    deps:
+    - "::bayt:setup"
+    - "::bayt:launch"
+    run: once
+    status:
+    - >-
+      mise x -- bayt fingerprint --manifest
+      '{{.TASKFILE_DIR}}/bayt.check-editing-parity.json' --stamp-file .task/bayt/check-editing-parity.hash
+version: "3"

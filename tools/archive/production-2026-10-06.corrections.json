@@ -153,5 +153,993 @@
       },
       "reason": "Empty zone label replaced by its exact position label; no sporting role inferred. Original source YAML remains in private archive."
     }
+  },
+  "game_versions": {
+    "1366": {
+      "before": {
+        "game_id": 1527,
+        "version": 1,
+        "home_id": 120,
+        "away_id": 18,
+        "phase_id": 8
+      },
+      "after": null,
+      "reason": "The version names a team or phase absent from the source, so the change cannot be described; the version is dropped."
+    },
+    "1367": {
+      "before": {
+        "game_id": 1528,
+        "version": 1,
+        "home_id": 18,
+        "away_id": 120,
+        "phase_id": 8
+      },
+      "after": null,
+      "reason": "The version names a team or phase absent from the source, so the change cannot be described; the version is dropped."
+    },
+    "21594": {
+      "before": {
+        "game_id": 18359,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21595": {
+      "before": {
+        "game_id": 18378,
+        "version": 1,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21596": {
+      "before": {
+        "game_id": 18378,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21597": {
+      "before": {
+        "game_id": 18379,
+        "version": 1,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21598": {
+      "before": {
+        "game_id": 18379,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21599": {
+      "before": {
+        "game_id": 18379,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21600": {
+      "before": {
+        "game_id": 18378,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21601": {
+      "before": {
+        "game_id": 18380,
+        "version": 1,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21602": {
+      "before": {
+        "game_id": 18380,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21603": {
+      "before": {
+        "game_id": 18381,
+        "version": 1,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21604": {
+      "before": {
+        "game_id": 18381,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21605": {
+      "before": {
+        "game_id": 18382,
+        "version": 1,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21606": {
+      "before": {
+        "game_id": 18382,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21607": {
+      "before": {
+        "game_id": 18383,
+        "version": 1,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21608": {
+      "before": {
+        "game_id": 18383,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21609": {
+      "before": {
+        "game_id": 18372,
+        "version": 4,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21610": {
+      "before": {
+        "game_id": 18383,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21611": {
+      "before": {
+        "game_id": 18367,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21612": {
+      "before": {
+        "game_id": 18384,
+        "version": 1,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21613": {
+      "before": {
+        "game_id": 18384,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21614": {
+      "before": {
+        "game_id": 18385,
+        "version": 1,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "21615": {
+      "before": {
+        "game_id": 18385,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "42124": {
+      "before": {
+        "game_id": 29919,
+        "version": 3,
+        "updated_at": "2009-05-12 14:00:55.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "59288": {
+      "before": {
+        "game_id": 41852,
+        "version": 1,
+        "home_id": 1017,
+        "away_id": 89,
+        "phase_id": 716
+      },
+      "after": null,
+      "reason": "The version names a team or phase absent from the source, so the change cannot be described; the version is dropped."
+    },
+    "59290": {
+      "before": {
+        "game_id": 41854,
+        "version": 1,
+        "home_id": 144,
+        "away_id": 1017,
+        "phase_id": 716
+      },
+      "after": null,
+      "reason": "The version names a team or phase absent from the source, so the change cannot be described; the version is dropped."
+    },
+    "59292": {
+      "before": {
+        "game_id": 41856,
+        "version": 1,
+        "home_id": 185,
+        "away_id": 1017,
+        "phase_id": 716
+      },
+      "after": null,
+      "reason": "The version names a team or phase absent from the source, so the change cannot be described; the version is dropped."
+    },
+    "59294": {
+      "before": {
+        "game_id": 41858,
+        "version": 1,
+        "home_id": 1017,
+        "away_id": 185,
+        "phase_id": 716
+      },
+      "after": null,
+      "reason": "The version names a team or phase absent from the source, so the change cannot be described; the version is dropped."
+    },
+    "59297": {
+      "before": {
+        "game_id": 41861,
+        "version": 1,
+        "home_id": 1017,
+        "away_id": 144,
+        "phase_id": 716
+      },
+      "after": null,
+      "reason": "The version names a team or phase absent from the source, so the change cannot be described; the version is dropped."
+    },
+    "59298": {
+      "before": {
+        "game_id": 41862,
+        "version": 1,
+        "home_id": 89,
+        "away_id": 1017,
+        "phase_id": 716
+      },
+      "after": null,
+      "reason": "The version names a team or phase absent from the source, so the change cannot be described; the version is dropped."
+    },
+    "80360": {
+      "before": {
+        "game_id": 51632,
+        "version": 3,
+        "updated_at": "2010-05-19 16:03:19.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "82717": {
+      "before": {
+        "game_id": 50608,
+        "version": 4,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "82718": {
+      "before": {
+        "game_id": 50604,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "103172": {
+      "before": {
+        "game_id": 63682,
+        "version": 2,
+        "updated_at": "2011-01-05 17:02:11.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "150059": {
+      "before": {
+        "game_id": 82334,
+        "version": 2,
+        "updated_at": "2012-05-25 02:20:11.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "161139": {
+      "before": {
+        "game_id": 86004,
+        "version": 3,
+        "updated_at": "2012-09-12 18:32:42.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "179786": {
+      "before": {
+        "game_id": 94498,
+        "version": 2,
+        "updated_at": "2013-09-20 11:46:49.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "182107": {
+      "before": {
+        "game_id": 92100,
+        "version": 3,
+        "updated_at": "2013-09-29 15:20:04.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "183670": {
+      "before": {
+        "game_id": 96304,
+        "version": 2,
+        "updated_at": "2013-10-04 18:13:15.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "183732": {
+      "before": {
+        "game_id": 96339,
+        "version": 1,
+        "home_id": 1439,
+        "away_id": 1934,
+        "phase_id": 1882
+      },
+      "after": null,
+      "reason": "The version names a team or phase absent from the source, so the change cannot be described; the version is dropped."
+    },
+    "183785": {
+      "before": {
+        "game_id": 96391,
+        "version": 1,
+        "home_id": 1934,
+        "away_id": 1439,
+        "phase_id": 1882
+      },
+      "after": null,
+      "reason": "The version names a team or phase absent from the source, so the change cannot be described; the version is dropped."
+    },
+    "185293": {
+      "before": {
+        "game_id": 97129,
+        "version": 3,
+        "updated_at": "2013-10-24 03:18:03.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "186647": {
+      "before": {
+        "game_id": 97539,
+        "version": 2,
+        "updated_at": "2013-11-12 18:03:23.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "187605": {
+      "before": {
+        "game_id": 97947,
+        "version": 2,
+        "updated_at": "2013-11-26 18:37:28.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "190364": {
+      "before": {
+        "game_id": 99474,
+        "version": 3,
+        "updated_at": "2013-12-01 02:28:47.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "232068": {
+      "before": {
+        "game_id": 122049,
+        "version": 1,
+        "home_id": 2171,
+        "away_id": 1934,
+        "phase_id": 2326
+      },
+      "after": null,
+      "reason": "The version names a team or phase absent from the source, so the change cannot be described; the version is dropped."
+    },
+    "232069": {
+      "before": {
+        "game_id": 122050,
+        "version": 1,
+        "home_id": 1934,
+        "away_id": 2171,
+        "phase_id": 2326
+      },
+      "after": null,
+      "reason": "The version names a team or phase absent from the source, so the change cannot be described; the version is dropped."
+    },
+    "447596": {
+      "before": {
+        "game_id": 251200,
+        "version": 2,
+        "updated_at": "2019-04-04 18:39:32.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "511967": {
+      "before": {
+        "game_id": 257505,
+        "version": 3,
+        "updated_at": "2020-01-12 19:53:05.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "511969": {
+      "before": {
+        "game_id": 257509,
+        "version": 3,
+        "updated_at": "2020-01-12 19:53:05.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "511971": {
+      "before": {
+        "game_id": 257513,
+        "version": 2,
+        "updated_at": "2020-01-12 19:53:06.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "511985": {
+      "before": {
+        "game_id": 257520,
+        "version": 2,
+        "updated_at": "2020-01-12 19:53:07.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "511987": {
+      "before": {
+        "game_id": 257521,
+        "version": 2,
+        "updated_at": "2020-01-12 19:53:07.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "511989": {
+      "before": {
+        "game_id": 257522,
+        "version": 2,
+        "updated_at": "2020-01-12 19:53:07.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "511991": {
+      "before": {
+        "game_id": 257523,
+        "version": 2,
+        "updated_at": "2020-01-12 19:53:07.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "514836": {
+      "before": {
+        "game_id": 202386,
+        "version": 5,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515463": {
+      "before": {
+        "game_id": 291028,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515464": {
+      "before": {
+        "game_id": 291026,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515465": {
+      "before": {
+        "game_id": 291030,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515466": {
+      "before": {
+        "game_id": 291032,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515467": {
+      "before": {
+        "game_id": 291034,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515468": {
+      "before": {
+        "game_id": 291036,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515469": {
+      "before": {
+        "game_id": 291040,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515470": {
+      "before": {
+        "game_id": 291038,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515471": {
+      "before": {
+        "game_id": 291033,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515472": {
+      "before": {
+        "game_id": 291031,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515473": {
+      "before": {
+        "game_id": 291029,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515474": {
+      "before": {
+        "game_id": 291027,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515475": {
+      "before": {
+        "game_id": 291041,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515476": {
+      "before": {
+        "game_id": 291039,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515477": {
+      "before": {
+        "game_id": 291039,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515478": {
+      "before": {
+        "game_id": 291037,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515479": {
+      "before": {
+        "game_id": 291035,
+        "version": 2,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515481": {
+      "before": {
+        "game_id": 291026,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515482": {
+      "before": {
+        "game_id": 291027,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515483": {
+      "before": {
+        "game_id": 291028,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515484": {
+      "before": {
+        "game_id": 291029,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515485": {
+      "before": {
+        "game_id": 291030,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515486": {
+      "before": {
+        "game_id": 291031,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515487": {
+      "before": {
+        "game_id": 291032,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515488": {
+      "before": {
+        "game_id": 291033,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515489": {
+      "before": {
+        "game_id": 291034,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515490": {
+      "before": {
+        "game_id": 291035,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515491": {
+      "before": {
+        "game_id": 291036,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515492": {
+      "before": {
+        "game_id": 291037,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515493": {
+      "before": {
+        "game_id": 291038,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515494": {
+      "before": {
+        "game_id": 291039,
+        "version": 4,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515495": {
+      "before": {
+        "game_id": 291040,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "515496": {
+      "before": {
+        "game_id": 291041,
+        "version": 3,
+        "updater_id": 2
+      },
+      "after": {
+        "updater_id": 0
+      },
+      "reason": "The editing account (legacy user 2) was deleted from the source; the edit is kept and shown without an author."
+    },
+    "518782": {
+      "before": {
+        "game_id": 261831,
+        "version": 3,
+        "updated_at": "2020-03-14 05:49:51.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "518784": {
+      "before": {
+        "game_id": 261642,
+        "version": 3,
+        "updated_at": "2020-03-14 05:49:51.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "518786": {
+      "before": {
+        "game_id": 261722,
+        "version": 3,
+        "updated_at": "2020-03-14 05:49:51.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    },
+    "518788": {
+      "before": {
+        "game_id": 261574,
+        "version": 3,
+        "updated_at": "2020-03-14 05:49:52.000000"
+      },
+      "after": null,
+      "reason": "Rails saved this game/version twice in the same second; the later save (higher id) is kept as the version."
+    }
   }
 }

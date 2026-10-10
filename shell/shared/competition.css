@@ -1,0 +1,57 @@
+.competition-admin, .competition-phases, .competition-section {
+  display: flex; flex-direction: column; gap: var(--sp-lg); min-width: 0;
+}
+.competition-create {
+  padding: var(--sp-lg); background: var(--surface-muted); border-radius: var(--r-sm);
+}
+.competition-search { width: min(100%, 28rem); }
+.competition-catalog, .competition-phase-list, .competition-groups, .competition-records {
+  list-style: none; margin: 0; padding: 0;
+}
+.competition-catalog { border-top: var(--border-size-1) solid var(--border); }
+.competition-catalog > li { border-bottom: var(--border-size-1) solid var(--border); }
+.competition-catalog a {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-md);
+  min-height: var(--control-h-lg); padding: var(--sp-sm) var(--sp-md); text-decoration: none;
+}
+.competition-catalog a:hover { background: var(--surface-muted); }
+.competition-catalog small { color: var(--secondary); font-variant-numeric: tabular-nums; }
+.competition-phase-list, .competition-groups, .competition-records {
+  display: flex; flex-direction: column; gap: var(--sp-md);
+}
+.competition-record {
+  border: var(--border-size-1) solid var(--border); border-radius: var(--r-sm); background: var(--surface);
+}
+.competition-record > summary, .competition-records details > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-md);
+  min-height: var(--control-h); padding: var(--sp-sm) var(--sp-md); cursor: pointer; font-weight: 700;
+}
+.competition-record > summary { background: var(--table-head); color: var(--table-head-ink); }
+.competition-record summary small { font-size: var(--type-caption); font-weight: 400; }
+.competition-record > .edit, .competition-record > .competition-section,
+.competition-record > .edit-sec, .competition-records details > .edit,
+.competition-records details > .edit-sec { margin: var(--sp-lg); }
+.competition-section {
+  margin-inline: var(--sp-lg); padding-block-start: var(--sp-md);
+  border-block-start: var(--border-size-1) solid var(--border);
+}
+.competition-section h3, .competition-section h4 { margin: 0; }
+.competition-section > .hint, .competition-phases > .hint { margin: 0; color: var(--secondary); font-size: var(--type-caption); }
+.competition-records details {
+  border-bottom: var(--border-size-1) solid var(--border);
+}
+.competition-records details > summary { font-size: var(--type-caption); }
+.competition-records details > summary small { color: var(--secondary); }
+.competition-clone { margin: var(--sp-lg); padding: var(--sp-md); background: var(--surface-muted); border-radius: var(--r-sm); }
+.competition-clone-target { margin: 0; }
+.competition-confirm { flex-direction: row; align-items: center; }
+
+@media (max-width: 720px) {
+  .competition-create { padding: var(--sp-md); }
+  .competition-catalog a { align-items: flex-start; flex-direction: column; }
+  .competition-record > .edit, .competition-record > .competition-section,
+  .competition-record > .edit-sec, .competition-records details > .edit,
+  .competition-records details > .edit-sec { margin: var(--sp-md); }
+  .competition-section { margin-inline: var(--sp-md); }
+  .competition-record > summary, .competition-records details > summary { align-items: flex-start; }
+}

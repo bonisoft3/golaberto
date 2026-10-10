@@ -74,3 +74,12 @@
   .zone-odds .row { grid-auto-columns: 5.5rem; }
   .zone-odds .name { min-width: 8rem; }
 }
+
+/* Compact odds: a run of repeated nines or zeros is counted above its dots. */
+.position-odds__compact-percent { display: inline-flex; white-space: nowrap; text-decoration: none; font-variant-numeric: tabular-nums; }
+.position-odds__compact-percent > span, .position-odds__prefix { display: inline-flex; align-items: center; line-height: 1; }
+.position-odds__decimal { width: .5ch; text-align: center; }
+.position-odds__repeat { display: inline-block; position: relative; width: 1ch; height: 1em; line-height: 1; }
+.position-odds__repeat sup { position: absolute; top: 0; left: 25%; font-size: inherit; font-weight: 400; line-height: 1; transform: translateX(-50%) scale(.75); transform-origin: center top; }
+.position-odds__repeat sup.position-odds__count--two-digits { top: .08em; transform: translateX(-50%) scale(.6); }
+.position-odds__repeat > span { position: absolute; bottom: 0; left: 0; font-size: inherit; line-height: 1; }

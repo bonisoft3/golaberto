@@ -110,6 +110,33 @@ services:
         path: ../services/database/migrations/034_idempotent_odds_capture.sql
         target: /docker-entrypoint-initdb.d
       - action: rebuild
+        path: ../services/database/migrations/035_read_parity.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/036_editing_parity.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/037_competition_admin.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/038_match_context.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/039_match_probability.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/040_community.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/041_native_media.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/042_team_odds_progress.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/043_queued_odds_refresh.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
         path: ../services/database/migrations/900_seed.sql
         target: /docker-entrypoint-initdb.d
     environment:

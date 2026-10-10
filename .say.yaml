@@ -44,6 +44,38 @@ say:
         priority: 1
         cmds:
           - do: mise exec -- docker compose -p (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim | str replace -r '^$' 'golaberto') --profile '*' -f .bayt/compose.check-request-reads.closure.yaml up bayt --abort-on-container-failure --exit-code-from bayt --build --remove-orphans --attach-dependencies
+      community-parity:
+        priority: 1
+        cmds:
+          - do: mise exec -- docker compose -p (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim | str replace -r '^$' 'golaberto') --profile '*' -f .bayt/compose.check-community-parity.closure.yaml up bayt --abort-on-container-failure --exit-code-from bayt --build --remove-orphans --attach-dependencies
+      community-access:
+        priority: 1
+        cmds:
+          - do: mise exec -- docker compose -p (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim | str replace -r '^$' 'golaberto') --profile '*' -f .bayt/compose.check-community-access.closure.yaml up bayt --abort-on-container-failure --exit-code-from bayt --build --remove-orphans --attach-dependencies
+      competition-admin:
+        priority: 1
+        cmds:
+          - do: mise exec -- docker compose -p (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim | str replace -r '^$' 'golaberto') --profile '*' -f .bayt/compose.check-competition-admin.closure.yaml up bayt --abort-on-container-failure --exit-code-from bayt --build --remove-orphans --attach-dependencies
+      editing-parity:
+        priority: 1
+        cmds:
+          - do: mise exec -- docker compose -p (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim | str replace -r '^$' 'golaberto') --profile '*' -f .bayt/compose.check-editing-parity.closure.yaml up bayt --abort-on-container-failure --exit-code-from bayt --build --remove-orphans --attach-dependencies
+      match-context:
+        priority: 1
+        cmds:
+          - do: mise exec -- docker compose -p (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim | str replace -r '^$' 'golaberto') --profile '*' -f .bayt/compose.check-match-context.closure.yaml up bayt --abort-on-container-failure --exit-code-from bayt --build --remove-orphans --attach-dependencies
+      match-probability:
+        priority: 1
+        cmds:
+          - do: mise exec -- docker compose -p (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim | str replace -r '^$' 'golaberto') --profile '*' -f .bayt/compose.check-match-probability.closure.yaml up bayt --abort-on-container-failure --exit-code-from bayt --build --remove-orphans --attach-dependencies
+      native-media:
+        priority: 1
+        cmds:
+          - do: mise exec -- docker compose -p (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim | str replace -r '^$' 'golaberto') --profile '*' -f .bayt/compose.check-native-media.closure.yaml up bayt --abort-on-container-failure --exit-code-from bayt --build --remove-orphans --attach-dependencies
+      odds-progress:
+        priority: 1
+        cmds:
+          - do: mise exec -- docker compose -p (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim | str replace -r '^$' 'golaberto') --profile '*' -f .bayt/compose.check-odds-progress.closure.yaml up bayt --abort-on-container-failure --exit-code-from bayt --build --remove-orphans --attach-dependencies
       visual:
         cmds:
           - do: mise exec -- docker compose -p (^mise exec -- printenv COMPOSE_PROJECT_NAME | complete | get stdout | str trim | str replace -r '^$' 'golaberto') up -d --wait --build launch
@@ -98,7 +130,7 @@ say:
     rulemap:
       pages:
         cmds:
-          - do: 'use tools.nu [run-mise]; let pronto = (run-mise where github:bonisoft3/pronto | str trim); run-mise exec -- deno run -A --config ($pronto | path join bundle deno.json) ($pronto | path join bundle derived.ts) . --tables comment,game_card,game_importance,geography_country,geography_region,goal,home_championship,home_game_card,matches_game_card,phase_round,player_rating,player_stat,position_chance,rating_eval,standing,team_championship,team_chance,team_comment,team_directory,team_game,team_odds_chart,team_odds_history,team_player_history,team_rating,team_rating_chart,team_roster,team_roster_total,zone_chance --streams golaberto-game-cards,golaberto-home-games,golaberto-matches-games,golaberto-player-stats,golaberto-recent-championships,golaberto-rounds,golaberto-standings,golaberto-team-directory,golaberto-team-enrichment,golaberto-team-profiles --out dist/derived.sql'
+          - do: 'use tools.nu [run-mise]; let pronto = (run-mise where github:bonisoft3/pronto | str trim); run-mise exec -- deno run -A --config ($pronto | path join bundle deno.json) ($pronto | path join bundle derived.ts) . --tables comment,game_card,game_importance,geography_country,geography_region,goal,home_championship,home_game_card,matches_game_card,phase_round,player_rating,player_stat,position_chance,rating_eval,standing,team_championship,team_chance,team_comment,team_directory,team_game,team_odds_chart,team_odds_history,team_odds_progress,team_player_history,team_rating,team_rating_chart,team_roster,team_roster_total,zone_chance --streams golaberto-game-cards,golaberto-home-games,golaberto-matches-games,golaberto-player-stats,golaberto-recent-championships,golaberto-rounds,golaberto-standings,golaberto-team-directory,golaberto-team-enrichment,golaberto-team-profiles --out dist/derived.sql'
           - do: 'use tools.nu [run-mise]; let pronto = (run-mise where github:bonisoft3/pronto | str trim); run-mise exec -- deno run -A --config ($pronto | path join bundle deno.json) ($pronto | path join bundle bundle.ts) . --omnishell (run-mise where github:bonisoft3/omnishell | str trim) --mecha (run-mise where github:bonisoft3/mecha | str trim) --out dist/browser --base ($env.SAY_RELEASE_ARGS_BASE? | default "") --derived dist/derived.sql'
           - do: 'if ($env.SAY_RELEASE_ARGS_SNAPSHOT? | is-empty) { release --skip=validate --clean } else { release --snapshot --skip=validate --clean }'
             use: ./release.nu
@@ -135,6 +167,42 @@ say:
       team-enrichment-import:
         cmds:
           - do: python3 -m unittest discover -s tools -p team_enrichment_import_test.py
+      archive-controls:
+        cmds:
+          - do: mise exec -- deno run --no-config --allow-read --allow-write --allow-run=mise tests/dependency-test.ts omnishell --config tests/deno.json --no-lock --allow-read --allow-env tests/archive-controls.ts
+      match-score:
+        cmds:
+          - do: mise exec -- deno run --no-config --allow-read --allow-write --allow-run=mise tests/dependency-test.ts omnishell --config tests/deno.json --no-lock --allow-read --allow-env tests/match-score.ts
+      player-csv:
+        cmds:
+          - do: mise exec -- deno run --no-config --allow-read --allow-write --allow-run=mise tests/dependency-test.ts omnishell --no-config --no-lock --allow-read --allow-env tests/player-csv.ts
+      editing-controls:
+        cmds:
+          - do: mise exec -- deno run --no-config --allow-read --allow-write --allow-run=mise tests/dependency-test.ts omnishell --config tests/deno.json --no-lock --allow-read --allow-env tests/editing-controls.ts
+      player-standalone:
+        cmds:
+          - do: mise exec -- deno run --no-config --allow-read --allow-write --allow-run=mise tests/dependency-test.ts mecha --no-config --unstable-sloppy-imports --no-lock --allow-read tests/player-standalone.ts
+      community-import:
+        cmds:
+          - do: python3 -m unittest discover -s tools -p community_import_test.py
+      community-standalone:
+        cmds:
+          - do: mise exec -- deno run --no-config --allow-read --allow-write --allow-run=mise tests/dependency-test.ts mecha --no-config --unstable-sloppy-imports --no-lock --allow-read tests/community-standalone.ts
+      community-controls:
+        cmds:
+          - do: mise exec -- deno run --no-config --allow-read --allow-write --allow-run=mise tests/dependency-test.ts omnishell --config tests/deno.json --no-lock --allow-read --allow-env tests/community-controls.ts
+      match-context-renderer:
+        cmds:
+          - do: mise exec -- deno test --config tests/deno.json --no-lock tests/match-context-renderer.ts
+      match-probability-renderer:
+        cmds:
+          - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/match-probability-renderer.ts tests/match-probability-events.ts
+      media-controls:
+        cmds:
+          - do: mise exec -- deno run --no-config --allow-read --allow-write --allow-run=mise tests/dependency-test.ts omnishell --config tests/deno.json --no-lock --allow-read --allow-env tests/media-controls.ts
+      odds-progress-renderer:
+        cmds:
+          - do: mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/odds-progress-renderer.ts tests/odds-progress-controls.ts tests/position-odds-renderer.ts tests/position-odds-controls.ts
       computations:
         cmds:
           - do: 'use tools.nu [run-mise]; let pronto = (run-mise where github:bonisoft3/pronto | str trim); run-mise exec -- deno test --config ((run-mise where github:bonisoft3/mecha | str trim) | path join services compute deno.json) --frozen --permit-no-files --unstable-worker-options --allow-read --allow-ffi --allow-env computations'

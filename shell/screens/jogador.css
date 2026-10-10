@@ -1,18 +1,16 @@
 @import url("shared/chrome.css");
 @import url("shared/games.css");
+@import url("shared/team.css");
 /* A player's seasons scroll inside their own box on a phone rather than
    pushing the page wider. */
 .seasons { overflow-x: auto; }
 .season-table { font-variant-numeric: tabular-nums; }
 .season-table td a { font-weight: 700; }
-/* An appearance: the game's own row, then the minutes and the cards. */
-.player-games > li { display: grid; grid-template-columns: minmax(0, 1fr) 5em 2.5em; align-items: center; gap: var(--sp-sm); }
 .player-games .minutes { color: var(--secondary); font-variant-numeric: tabular-nums; text-align: end; }
-.player-games li[data-bench="true"] .minutes { visibility: hidden; }
+.player-games li[data-bench="true"] .minutes { display: none; }
 @media (min-width: 721px) {
   .player-games .game-row { grid-template-columns: 6em minmax(0, 1fr) minmax(0, 1fr) 4em minmax(0, 1fr); }
 }
 @media (max-width: 720px) {
-  .player-games > li { grid-template-columns: minmax(0, 1fr) 4em; }
   .player-games .cards { display: none; }
 }

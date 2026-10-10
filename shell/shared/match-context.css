@@ -1,0 +1,44 @@
+.match-context-top, .match-context-history, .match-context-location {
+  display: flex; flex-direction: column; gap: var(--sp-md); min-width: 0;
+}
+.match-context-top { padding-block: var(--sp-lg); }
+.match-context-forms {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--sp-lg);
+}
+.match-context-form h2, .match-context-location h2, .match-context-history h2 {
+  margin: 0; font-size: var(--type-subtitle);
+}
+.match-context-form ol {
+  display: flex; flex-wrap: wrap; gap: var(--sp-sm); margin: 0; padding: 0; list-style: none;
+}
+.match-context-form a {
+  display: grid; place-items: center; box-sizing: border-box; min-width: var(--min-touch); min-height: var(--min-touch);
+  border: var(--border-size-1) solid var(--form-rim); border-radius: var(--r-full);
+  color: var(--primary); font-size: var(--type-caption); font-weight: 700; text-decoration: none; text-transform: uppercase;
+}
+.match-context-form li[data-result="w"] a { background: var(--form-win); }
+.match-context-form li[data-result="d"] a { background: var(--form-draw); }
+.match-context-form li[data-result="l"] a { background: var(--form-loss); }
+.match-context-map-shell, .match-context-map { min-width: 0; }
+.match-context-map-embed {
+  display: block; box-sizing: border-box; width: 100%; height: min(25rem, 58vw); min-height: 14rem;
+  border: var(--border-size-1) solid var(--border); border-radius: var(--r-sm); background: var(--surface-muted);
+}
+.match-context-map-attribution { margin: var(--sp-xs) 0 0; color: var(--secondary); font-size: var(--type-caption); }
+.match-context-distance, .match-context-map-teams, .match-context-location-empty { margin: 0; color: var(--secondary); }
+.match-context-map-link {
+  display: block; box-sizing: border-box; margin-block: var(--sp-sm);
+  border: var(--border-size-1) solid var(--border); border-radius: var(--r-sm);
+  background: var(--surface-muted); color: var(--primary);
+}
+.match-context-map-link svg { display: block; width: 100%; height: min(12rem, 32vw); min-height: 7.5rem; }
+.match-context-route { stroke: var(--accent); stroke-width: 4; stroke-linecap: round; }
+.match-context-home-marker { fill: var(--band); stroke: var(--surface); stroke-width: 3; }
+.match-context-away-marker { fill: var(--accent); stroke: var(--surface); stroke-width: 3; }
+.match-context-map-teams { font-size: var(--type-caption); }
+.match-context-history { padding-block-start: var(--sp-lg); }
+.lineup td.num, .lineup th.num { font-variant-numeric: tabular-nums; }
+
+@media (max-width: 720px) {
+  .match-context-forms { grid-template-columns: minmax(0, 1fr); gap: var(--sp-md); }
+}

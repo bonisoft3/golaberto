@@ -1,0 +1,12 @@
+# generated from bayt.cue — do not edit
+tasks:
+  default:
+    deps:
+    - "::bayt:setup"
+    - "::bayt:launch"
+    run: once
+    status:
+    - >-
+      mise x -- bayt fingerprint --manifest
+      '{{.TASKFILE_DIR}}/bayt.check-community-parity.json' --stamp-file .task/bayt/check-community-parity.hash
+version: "3"

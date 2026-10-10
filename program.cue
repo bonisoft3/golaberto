@@ -11,69 +11,71 @@ import (
 	"strings"
 )
 
-_designMd: _ @embed(file="DESIGN.md", type=text)
-_oddsCaptureSql: string @embed(file="services/database/sql/034_idempotent_odds_capture.sql", type=text)
-_catalogues: _ @embed(glob="messages/*.json")
-_homeGamesSql: string @embed(file="services/database/sql/013_home_games.sql", type=text)
-_homeGamesUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeGamesSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
-_homeChampionshipsSql: string @embed(file="services/database/sql/014_home_championships.sql", type=text)
+_readParitySql:     string @embed(file="services/database/sql/035_read_parity.sql", type=text)
+_readParityUpgrade: strings.Replace(strings.Replace(_readParitySql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
+
+_designMd:                 _      @embed(file="DESIGN.md", type=text)
+_oddsCaptureSql:           string @embed(file="services/database/sql/034_idempotent_odds_capture.sql", type=text)
+_catalogues:               _      @embed(glob="messages/*.json")
+_homeGamesSql:             string @embed(file="services/database/sql/013_home_games.sql", type=text)
+_homeGamesUpgrade:         strings.Join(strings.Split(strings.Join(strings.Split(_homeGamesSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_homeChampionshipsSql:     string @embed(file="services/database/sql/014_home_championships.sql", type=text)
 _homeChampionshipsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeChampionshipsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
-_homePerformanceSql: string @embed(file="services/database/sql/015_home_performance.sql", type=text)
+_homePerformanceSql:     string @embed(file="services/database/sql/015_home_performance.sql", type=text)
 _homePerformanceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homePerformanceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
-_matchesPerformanceSql: string @embed(file="services/database/sql/016_matches_performance.sql", type=text)
+_matchesPerformanceSql:     string @embed(file="services/database/sql/016_matches_performance.sql", type=text)
 _matchesPerformanceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_matchesPerformanceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
-_gameCountriesSql: string @embed(file="services/database/sql/017_game_countries.sql", type=text)
+_gameCountriesSql:     string @embed(file="services/database/sql/017_game_countries.sql", type=text)
 _gameCountriesUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_gameCountriesSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
-_normalizedGameFlagsSql: string @embed(file="services/database/sql/019_normalized_game_flags.sql", type=text)
+_normalizedGameFlagsSql:     string @embed(file="services/database/sql/019_normalized_game_flags.sql", type=text)
 _normalizedGameFlagsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_normalizedGameFlagsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
-_homeReferenceSql: string @embed(file="services/database/sql/020_home_reference_order.sql", type=text)
+_homeReferenceSql:     string @embed(file="services/database/sql/020_home_reference_order.sql", type=text)
 _homeReferenceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeReferenceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
-_recentChampionshipsSql: string @embed(file="services/database/sql/022_recent_championships.sql", type=text)
+_recentChampionshipsSql:     string @embed(file="services/database/sql/022_recent_championships.sql", type=text)
 _recentChampionshipsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_recentChampionshipsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
-_searchCollationSql: string @embed(file="services/database/sql/023_search_collation.sql", type=text)
+_searchCollationSql:     string @embed(file="services/database/sql/023_search_collation.sql", type=text)
 _searchCollationUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_searchCollationSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
-_teamDirectorySql: string @embed(file="services/database/sql/024_team_directory.sql", type=text)
-_teamDirectoryUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamDirectorySql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
-_teamEnrichmentSql: string @embed(file="services/database/sql/029_team_enrichment.sql", type=text)
+_teamDirectorySql:      string @embed(file="services/database/sql/024_team_directory.sql", type=text)
+_teamDirectoryUpgrade:  strings.Join(strings.Split(strings.Join(strings.Split(_teamDirectorySql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_teamEnrichmentSql:     string @embed(file="services/database/sql/029_team_enrichment.sql", type=text)
 _teamEnrichmentUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamEnrichmentSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
-_teamProfilesSql: string @embed(file="services/database/sql/028_team_profiles.sql", type=text)
+_teamProfilesSql:     string @embed(file="services/database/sql/028_team_profiles.sql", type=text)
 _teamProfilesUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamProfilesSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
-_campaignReadSql: string @embed(file="services/database/sql/030_campaign_read.sql", type=text)
+_campaignReadSql:     string @embed(file="services/database/sql/030_campaign_read.sql", type=text)
 _campaignReadUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_campaignReadSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
-_archiveCompatibilitySql: string @embed(file="services/database/sql/032_archive_compatibility.sql", type=text)
+_archiveCompatibilitySql:     string @embed(file="services/database/sql/032_archive_compatibility.sql", type=text)
 _archiveCompatibilityUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_archiveCompatibilitySql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
-
-_readableAddressesSql: string @embed(file="services/database/sql/031_readable_addresses.sql", type=text)
+_readableAddressesSql:     string @embed(file="services/database/sql/031_readable_addresses.sql", type=text)
 _readableAddressesUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_readableAddressesSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
 // SQLite tab queries and PostgreSQL stored keys share the same two mappings.
 #SearchKey: {col: string, out: "replace(replace(replace(\(col), 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')"}
 
-_extendedSearchCollationSql: string @embed(file="services/database/sql/025_search_letter_equivalences.sql", type=text)
+_extendedSearchCollationSql:     string @embed(file="services/database/sql/025_search_letter_equivalences.sql", type=text)
 _extendedSearchCollationUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_extendedSearchCollationSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
-_teamGeographySql: string @embed(file="services/database/sql/026_team_geography.sql", type=text)
+_teamGeographySql:     string @embed(file="services/database/sql/026_team_geography.sql", type=text)
 _teamGeographyUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamGeographySql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
-_teamTypeSql: string @embed(file="services/database/sql/027_team_directory_type.sql", type=text)
+_teamTypeSql:     string @embed(file="services/database/sql/027_team_directory_type.sql", type=text)
 _teamTypeUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamTypeSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
-_homeHighlightsSql: string @embed(file="services/database/sql/021_home_highlights.sql", type=text)
+_homeHighlightsSql:     string @embed(file="services/database/sql/021_home_highlights.sql", type=text)
 _homeHighlightsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeHighlightsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
-_routePerformanceSql: string @embed(file="services/database/sql/018_route_performance.sql", type=text)
+_routePerformanceSql:     string @embed(file="services/database/sql/018_route_performance.sql", type=text)
 _routePerformanceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_routePerformanceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
 // "2026" or "2026/2027", in immutable SQL: to_char is only STABLE.
@@ -97,7 +99,7 @@ code: pronto.#App & {
 		// The auth plane's person: every reader is one, a guest until a passkey
 		// keeps them (ir decision-guest-reading).
 		AppUser: {
-			id: "0x8648317c916df7f6"
+			id:         "0x8648317c916df7f6"
 			table:      "app_user"
 			durability: "server"
 			// Public: a handle is a byline (ir decision-comments).
@@ -110,7 +112,7 @@ code: pronto.#App & {
 			]
 		}
 		Category: {
-			id: "0xfb1a379e02ff00a5"
+			id:         "0xfb1a379e02ff00a5"
 			table:      "category"
 			durability: "server"
 			access: {scope: "public"}
@@ -120,7 +122,7 @@ code: pronto.#App & {
 			]
 		}
 		Championship: {
-			id: "0xc7dbf58fcb09211a"
+			id:         "0xc7dbf58fcb09211a"
 			table:      "championship"
 			durability: "server"
 			access: {scope: "public"}
@@ -144,15 +146,17 @@ code: pronto.#App & {
 				{ordinal: 15, name: "search_name", type: "string", generated: "region_name || ' - ' || name || ' ' || \(_season)"},
 				{ordinal: 16, name: "search_key", type: "string", generated: (#SearchKey & {col: "region_name || ' - ' || name || ' ' || \(_season)"}).out},
 				{ordinal: 17, name: "slug", type: "string", unique: true, default: "''", cel: "this.matches('^[a-z0-9]+(-[a-z0-9]+)*$')"},
+				{ordinal: 18, name: "created_by", type: "uuid", required: false, ref: "app_user"},
+				{ordinal: 19, name: "updated_by", type: "uuid", required: false, ref: "app_user"},
 			]
 			invariant: {cel: "this.ends >= this.begins"}
 			indexes: [{on: "begins"}]
 		}
 		HomeChampionship: {
-			id: "0x9f7e16021a981047"
-			table: "home_championship"
+			id:         "0x9f7e16021a981047"
+			table:      "home_championship"
 			durability: "live"
-			writers: "pipeline"
+			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "championship"},
@@ -163,7 +167,7 @@ code: pronto.#App & {
 			]
 		}
 		Phase: {
-			id: "0xb8d8d6dc02bc184b"
+			id:         "0xb8d8d6dc02bc184b"
 			table:      "phase"
 			durability: "server"
 			access: {scope: "public"}
@@ -176,11 +180,13 @@ code: pronto.#App & {
 				{ordinal: 5, name: "sort", type: "string", default: "'pt,w,gd,gf,gp,g_away,name'", cel: "this.matches('^(pt|w|gd|gf|name|g_average|gp|g_aet|head|g_away|bias)(,(pt|w|gd|gf|name|g_average|gp|g_aet|head|g_away|bias))*$')"},
 				{ordinal: 6, name: "bonus_points", type: "int32", default: "0", cel: "this >= 0 && this <= 9"},
 				{ordinal: 7, name: "bonus_points_threshold", type: "int32", default: "0", cel: _score},
+				{ordinal: 8, name: "created_by", type: "uuid", required: false, ref: "app_user"},
+				{ordinal: 9, name: "updated_by", type: "uuid", required: false, ref: "app_user"},
 			]
 			indexes: [{on: "championship_id"}]
 		}
 		Group: {
-			id: "0xf221e9f7e13f6121"
+			id:         "0xf221e9f7e13f6121"
 			table:      "stage_group"
 			durability: "server"
 			access: {scope: "public"}
@@ -190,11 +196,13 @@ code: pronto.#App & {
 				{ordinal: 3, name: "name", type: "string", cel: "this.size() > 0 && this.size() <= 40"},
 				{ordinal: 4, name: "position", type: "int32", default: "0", cel: "this >= 0"},
 				{ordinal: 5, name: "slug", type: "string", unique: true, default: "''", cel: "this.matches('^[a-z0-9]+(-[a-z0-9]+)*$')"},
+				{ordinal: 6, name: "created_by", type: "uuid", required: false, ref: "app_user"},
+				{ordinal: 7, name: "updated_by", type: "uuid", required: false, ref: "app_user"},
 			]
 			indexes: [{on: "phase_id"}]
 		}
 		Zone: {
-			id: "0xdc19a20e3738e3ce"
+			id:         "0xdc19a20e3738e3ce"
 			table:      "zone"
 			durability: "server"
 			access: {scope: "public"}
@@ -205,12 +213,15 @@ code: pronto.#App & {
 				{ordinal: 4, name: "color", type: "string", cel: "this in ['champion', 'promotion', 'qualify', 'playoff', 'relegation'] || this.matches('^#[0-9a-fA-F]{6}$')"},
 				{ordinal: 5, name: "first", type: "int32", cel: "this >= 1"},
 				{ordinal: 6, name: "last", type: "int32", cel: "this >= 1"},
+				{ordinal: 7, name: "positions", type: "string", default: "''", cel: "this == '' || (this.size() <= 4999 && this.matches('^[1-9][0-9]{0,3}(,[1-9][0-9]{0,3})*$'))"},
+				{ordinal: 8, name: "created_by", type: "uuid", required: false, ref: "app_user"},
+				{ordinal: 9, name: "updated_by", type: "uuid", required: false, ref: "app_user"},
 			]
 			invariant: {cel: "this.last >= this.first"}
 			indexes: [{on: "group_id"}]
 		}
 		Stadium: {
-			id: "0x9f93bd78c79319bf"
+			id:         "0x9f93bd78c79319bf"
 			table:      "stadium"
 			durability: "server"
 			access: {scope: "public"}
@@ -223,10 +234,12 @@ code: pronto.#App & {
 				{ordinal: 6, name: "search_name", type: "string", generated: "name"},
 				{ordinal: 7, name: "search_key", type: "string", generated: (#SearchKey & {col: "name"}).out},
 				{ordinal: 8, name: "slug", type: "string", unique: true, default: "''", cel: "this.matches('^[a-z0-9]+(-[a-z0-9]+)*$')"},
+				{ordinal: 9, name: "created_by", type: "uuid", required: false, ref: "app_user"},
+				{ordinal: 10, name: "updated_by", type: "uuid", required: false, ref: "app_user"},
 			]
 		}
 		Team: {
-			id: "0xb229052b7479a008"
+			id:         "0xb229052b7479a008"
 			table:      "team"
 			durability: "server"
 			access: {scope: "public"}
@@ -245,14 +258,17 @@ code: pronto.#App & {
 				{ordinal: 12, name: "latitude", type: "double", required: false, cel: "this >= -90 && this <= 90"},
 				{ordinal: 13, name: "longitude", type: "double", required: false, cel: "this >= -180 && this <= 180"},
 				{ordinal: 14, name: "slug", type: "string", unique: true, default: "''", cel: "this.matches('^[a-z0-9]+(-[a-z0-9]+)*$')"},
+				{ordinal: 15, name: "created_by", type: "uuid", required: false, ref: "app_user"},
+				{ordinal: 16, name: "updated_by", type: "uuid", required: false, ref: "app_user"},
+				{ordinal: 17, name: "logo_key", type: "string", required: false},
 			]
 			indexes: [{on: "name"}]
 		}
 		TeamChampionship: {
-			id: "0xfaf8931af57f6e66"
-			table: "team_championship"
+			id:         "0xfaf8931af57f6e66"
+			table:      "team_championship"
 			durability: "live"
-			writers: "pipeline"
+			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "string", pk: true},
@@ -266,7 +282,7 @@ code: pronto.#App & {
 			indexes: [{on: "team_id"}]
 		}
 		TeamGroup: {
-			id: "0xa881d0753d2d99d0"
+			id:         "0xa881d0753d2d99d0"
 			table:      "team_group"
 			durability: "server"
 			access: {scope: "public"}
@@ -278,11 +294,13 @@ code: pronto.#App & {
 				{ordinal: 4, name: "add_sub", type: "int32", default: "0", cel: "this >= -99 && this <= 99"},
 				{ordinal: 5, name: "bias", type: "int32", default: "0", cel: "this >= -99 && this <= 99"},
 				{ordinal: 6, name: "comment", type: "string", required: false, cel: "this.size() <= 1000"},
+				{ordinal: 7, name: "created_by", type: "uuid", required: false, ref: "app_user"},
+				{ordinal: 8, name: "updated_by", type: "uuid", required: false, ref: "app_user"},
 			]
 			indexes: [{on: "team_id"}]
 		}
 		Referee: {
-			id: "0xeeeb9eb6d5806593"
+			id:         "0xeeeb9eb6d5806593"
 			table:      "referee"
 			durability: "server"
 			access: {scope: "public"}
@@ -293,13 +311,15 @@ code: pronto.#App & {
 				{ordinal: 4, name: "search_name", type: "string", generated: "name"},
 				{ordinal: 5, name: "search_key", type: "string", generated: (#SearchKey & {col: "name"}).out},
 				{ordinal: 6, name: "slug", type: "string", unique: true, default: "''", cel: "this.matches('^[a-z0-9]+(-[a-z0-9]+)*$')"},
+				{ordinal: 7, name: "created_by", type: "uuid", required: false, ref: "app_user"},
+				{ordinal: 8, name: "updated_by", type: "uuid", required: false, ref: "app_user"},
 			]
 		}
 		GeographyRegion: {
-			id: "0xbd185e5ceb027f7d"
-			table: "geography_region"
+			id:         "0xbd185e5ceb027f7d"
+			table:      "geography_region"
 			durability: "live"
-			writers: "pipeline"
+			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "string", pk: true},
@@ -309,10 +329,10 @@ code: pronto.#App & {
 			]
 		}
 		GeographyCountry: {
-			id: "0xb37475df2e5b43d6"
-			table: "geography_country"
+			id:         "0xb37475df2e5b43d6"
+			table:      "geography_country"
 			durability: "live"
-			writers: "pipeline"
+			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "string", pk: true},
@@ -325,10 +345,10 @@ code: pronto.#App & {
 			]
 		}
 		TeamDirectory: {
-			id: "0x93d75c8ddada8190"
-			table: "team_directory"
+			id:         "0x93d75c8ddada8190"
+			table:      "team_directory"
 			durability: "live"
-			writers: "pipeline"
+			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "team"},
@@ -350,7 +370,7 @@ code: pronto.#App & {
 			]
 		}
 		Player: {
-			id: "0xb159e5039a3133ce"
+			id:         "0xb159e5039a3133ce"
 			table:      "player"
 			durability: "server"
 			access: {scope: "public"}
@@ -363,11 +383,13 @@ code: pronto.#App & {
 				{ordinal: 6, name: "height", type: "int32", required: false, cel: "this >= 100 && this <= 230"},
 				{ordinal: 7, name: "position", type: "string", required: false, cel: "this in ['g', 'dr', 'dc', 'dl', 'dm', 'cm', 'am', 'fw']"},
 				{ordinal: 8, name: "slug", type: "string", unique: true, default: "''", cel: "this.matches('^[a-z0-9]+(-[a-z0-9]+)*$')"},
+				{ordinal: 9, name: "created_by", type: "uuid", required: false, ref: "app_user"},
+				{ordinal: 10, name: "updated_by", type: "uuid", required: false, ref: "app_user"},
 			]
 			indexes: [{on: "name"}]
 		}
 		TeamPlayer: {
-			id: "0xdbcdb9bb5c808317"
+			id:         "0xdbcdb9bb5c808317"
 			table:      "team_player"
 			durability: "server"
 			access: {scope: "public"}
@@ -377,14 +399,16 @@ code: pronto.#App & {
 				{ordinal: 2, name: "championship_id", type: "uuid", ref: "championship"},
 				{ordinal: 3, name: "team_id", type: "uuid", ref: "team"},
 				{ordinal: 4, name: "player_id", type: "uuid", ref: "player"},
+				{ordinal: 5, name: "created_by", type: "uuid", required: false, ref: "app_user"},
+				{ordinal: 6, name: "updated_by", type: "uuid", required: false, ref: "app_user"},
 			]
 			indexes: [{on: "player_id"}, {on: "team_id"}]
 		}
 		TeamRoster: {
-			id: "0xbf8641dc49e18232"
-			table: "team_roster"
+			id:         "0xbf8641dc49e18232"
+			table:      "team_roster"
 			durability: "live"
-			writers: "pipeline"
+			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "string", pk: true},
@@ -414,10 +438,10 @@ code: pronto.#App & {
 			indexes: [{on: "team_id"}]
 		}
 		TeamPlayerHistory: {
-			id: "0x8fdba800739aa0f7"
-			table: "team_player_history"
+			id:         "0x8fdba800739aa0f7"
+			table:      "team_player_history"
 			durability: "live"
-			writers: "pipeline"
+			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "string", pk: true},
@@ -432,7 +456,7 @@ code: pronto.#App & {
 			indexes: [{on: "team_id"}]
 		}
 		Game: {
-			id: "0xa503999231c39ca2"
+			id:         "0xa503999231c39ca2"
 			table:      "game"
 			durability: "server"
 			access: {scope: "public"}
@@ -461,12 +485,14 @@ code: pronto.#App & {
 				{ordinal: 19, name: "day_display", type: "string", generated: _dmy},
 				{ordinal: 20, name: "kickoff_local", type: "string", generated: _hm},
 				{ordinal: 21, name: "slug", type: "string", unique: true, default: "''", cel: "this.matches('^[a-z0-9]+(-[a-z0-9]+)*$')"},
+				{ordinal: 22, name: "created_by", type: "uuid", required: false, ref: "app_user"},
+				{ordinal: 23, name: "updated_by", type: "uuid", required: false, ref: "app_user"},
 			]
 			invariant: {cel: "this.home_id != this.away_id && this.played == (has(this.home_score) && has(this.away_score)) && has(this.home_score) == has(this.away_score) && has(this.home_aet) == has(this.away_aet) && has(this.home_pen) == has(this.away_pen) && (has(this.home_aet) == false || this.played) && (has(this.home_pen) == false || this.played)"}
 			indexes: [{on: "phase_id"}, {on: "home_id"}, {on: "away_id"}, {on: "day"}, {on: "referee_id"}, {on: "stadium_id"}]
 		}
 		Goal: {
-			id: "0xf2913e51cccaa056"
+			id:         "0xf2913e51cccaa056"
 			table:      "goal"
 			durability: "live"
 			access: {scope: "public"}
@@ -480,12 +506,14 @@ code: pronto.#App & {
 				{ordinal: 6, name: "penalty", type: "bool", default: "false"},
 				{ordinal: 7, name: "own_goal", type: "bool", default: "false"},
 				{ordinal: 8, name: "aet", type: "bool", default: "false"},
+				{ordinal: 9, name: "created_by", type: "uuid", required: false, ref: "app_user"},
+				{ordinal: 10, name: "updated_by", type: "uuid", required: false, ref: "app_user"},
 			]
 			invariant: {cel: "this.penalty == false || this.own_goal == false"}
 			indexes: [{on: "game_id"}, {on: "player_id"}]
 		}
 		PlayerGame: {
-			id: "0xeba60899800e6f98"
+			id:         "0xeba60899800e6f98"
 			table:      "player_game"
 			durability: "server"
 			access: {scope: "public"}
@@ -507,6 +535,8 @@ code: pronto.#App & {
 				{ordinal: 11, name: "day_display", type: "string", generated: _dmy},
 				{ordinal: 12, name: "off_rating", type: "double", required: false},
 				{ordinal: 13, name: "def_rating", type: "double", required: false},
+				{ordinal: 14, name: "created_by", type: "uuid", required: false, ref: "app_user"},
+				{ordinal: 15, name: "updated_by", type: "uuid", required: false, ref: "app_user"},
 			]
 			invariant: {cel: "this.bench == false || (this.on_minute == 0 && has(this.off_minute) == false)"}
 			indexes: [{on: "player_id"}, {on: "game_id"}]
@@ -515,7 +545,7 @@ code: pronto.#App & {
 		// never typed (ir standings). Live and off the CDC publication, so the
 		// stream that writes it cannot hear its own writes.
 		Standing: {
-			id: "0x926e5bdae6121306"
+			id:         "0x926e5bdae6121306"
 			table:      "standing"
 			durability: "live"
 			writers:    "pipeline"
@@ -551,7 +581,7 @@ code: pronto.#App & {
 		// order, with what each final position and each of the group's zones is
 		// worth to it.
 		TeamChance: {
-			id: "0xd113a24abf038541"
+			id:         "0xd113a24abf038541"
 			table:      "team_chance"
 			durability: "live"
 			writers:    "pipeline"
@@ -568,7 +598,7 @@ code: pronto.#App & {
 			indexes: [{on: "group_id"}]
 		}
 		ZoneChance: {
-			id: "0xdb4e4660787b8728"
+			id:         "0xdb4e4660787b8728"
 			table:      "zone_chance"
 			durability: "live"
 			writers:    "pipeline"
@@ -593,7 +623,7 @@ code: pronto.#App & {
 			indexes: [{on: "group_id"}]
 		}
 		PositionChance: {
-			id: "0xdf842a9ab21d8ec3"
+			id:         "0xdf842a9ab21d8ec3"
 			table:      "position_chance"
 			durability: "live"
 			writers:    "pipeline"
@@ -617,7 +647,7 @@ code: pronto.#App & {
 		// What a game's result can still change, written by the chances
 		// computation (ir decision-chances): odds-rust's game importance, per side.
 		GameImportance: {
-			id: "0xd6038ae1ca7e0e64"
+			id:         "0xd6038ae1ca7e0e64"
 			table:      "game_importance"
 			durability: "live"
 			writers:    "pipeline"
@@ -632,7 +662,7 @@ code: pronto.#App & {
 		// decision-ratings): upstream's SPI, refit as the archive grows. The
 		// chances read it for each game's expected goals.
 		TeamRating: {
-			id: "0xe0bdc3160f737f46"
+			id:         "0xe0bdc3160f737f46"
 			table:      "team_rating"
 			durability: "live"
 			writers:    "pipeline"
@@ -650,7 +680,7 @@ code: pronto.#App & {
 		// A player's rating from every minute he played, written by the ratings
 		// computation (upstream's player ratings).
 		PlayerRating: {
-			id: "0xd7098e87ab67f7eb"
+			id:         "0xd7098e87ab67f7eb"
 			table:      "player_rating"
 			durability: "live"
 			writers:    "pipeline"
@@ -658,12 +688,14 @@ code: pronto.#App & {
 			fields: [
 				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "player"},
 				{ordinal: 2, name: "rating", type: "double"},
+				{ordinal: 3, name: "off_rating", type: "double", required: false},
+				{ordinal: 4, name: "def_rating", type: "double", required: false},
 			]
 		}
 		// How well the ratings predicted a phase's played games (upstream's
 		// /eval): the ranked probability score, lower is better.
 		RatingEval: {
-			id: "0xf8a29784e425c143"
+			id:         "0xf8a29784e425c143"
 			table:      "rating_eval"
 			durability: "live"
 			writers:    "pipeline"
@@ -677,7 +709,7 @@ code: pronto.#App & {
 		// game-cards stream. Flag settings and countries join their owners (ir
 		// decision-local-reads). Keyed by the game, and gone with it.
 		GameCard: {
-			id: "0xc922f963c8b2479d"
+			id:         "0xc922f963c8b2479d"
 			table:      "game_card"
 			durability: "live"
 			writers:    "pipeline"
@@ -721,7 +753,7 @@ code: pronto.#App & {
 		}
 		// The selected forty cards only: the home page never syncs the archive.
 		HomeGameCard: {
-			id: "0x86cf93d86b91d654"
+			id:         "0x86cf93d86b91d654"
 			table:      "home_game_card"
 			durability: "live"
 			writers:    "pipeline"
@@ -766,7 +798,7 @@ code: pronto.#App & {
 		}
 		// The matches page syncs only its two chronological forty-card feeds.
 		MatchesGameCard: {
-			id: "0x87ef7c2b79e4b4e4"
+			id:         "0x87ef7c2b79e4b4e4"
 			table:      "matches_game_card"
 			durability: "live"
 			writers:    "pipeline"
@@ -811,7 +843,7 @@ code: pronto.#App & {
 		// One game from one of its teams' side: the opponent, where, and how it
 		// went for this team (ir decision-local-reads).
 		TeamGame: {
-			id: "0x91f9338be221f43d"
+			id:         "0x91f9338be221f43d"
 			table:      "team_game"
 			durability: "live"
 			writers:    "pipeline"
@@ -845,7 +877,7 @@ code: pronto.#App & {
 		}
 		// What a signed-in reader said about a game (ir decision-comments).
 		Comment: {
-			id: "0x9d5b62b134186fd8"
+			id:         "0x9d5b62b134186fd8"
 			table:      "comment"
 			durability: "live"
 			access: {scope: "public"}
@@ -862,7 +894,7 @@ code: pronto.#App & {
 		// A comment being written, one per game, held by the tab and moved by the
 		// composer machine.
 		CommentDraft: {
-			id: "0xa0ef4bf8391c0c4e"
+			id:         "0xa0ef4bf8391c0c4e"
 			table:      "comment_draft"
 			durability: "tab"
 			fields: [
@@ -875,7 +907,7 @@ code: pronto.#App & {
 		// The grant that makes a reader an editor (ir decision-editing): given
 		// out of band, and synced to its holder alone.
 		Editor: {
-			id: "0xdd205e5b35051510"
+			id:         "0xdd205e5b35051510"
 			table:      "editor"
 			durability: "server"
 			access: {scope: "private", owner: "app_user_id"}
@@ -887,7 +919,7 @@ code: pronto.#App & {
 		// A game being corrected, one per game, held by the tab and moved by the
 		// editor machine; it starts from the game it is nested in.
 		GameEdit: {
-			id: "0xe8e8f26032b30c03"
+			id:         "0xe8e8f26032b30c03"
 			table:      "game_edit"
 			durability: "tab"
 			fields: [
@@ -916,7 +948,7 @@ code: pronto.#App & {
 		// player-stats stream from the line-ups and goals (ir
 		// decision-player-stats).
 		PlayerStat: {
-			id: "0xb51a5cb741600107"
+			id:         "0xb51a5cb741600107"
 			table:      "player_stat"
 			durability: "live"
 			writers:    "pipeline"
@@ -946,13 +978,14 @@ code: pronto.#App & {
 				{ordinal: 21, name: "contribution", type: "double", required: false},
 				{ordinal: 22, name: "contribution_per90", type: "double", required: false},
 				{ordinal: 23, name: "goals_per90", type: "double", required: false},
+				{ordinal: 24, name: "search_key", type: "string", default: "''"},
 			]
 			indexes: [{on: "player_id"}, {on: "team_id"}]
 		}
 		// A phase's current round and the next, recounted by the rounds stream
 		// (ir decision-phase-round).
 		PhaseRound: {
-			id: "0xe326676ae2b1bd9a"
+			id:         "0xe326676ae2b1bd9a"
 			table:      "phase_round"
 			durability: "live"
 			writers:    "pipeline"
@@ -968,7 +1001,7 @@ code: pronto.#App & {
 		// Which list the games page shows, held by the tab and switched by a
 		// machine (ir decision-machines).
 		GamesView: {
-			id: "0xb03036305d7807fe"
+			id:         "0xb03036305d7807fe"
 			table:      "games_view"
 			durability: "tab"
 			fields: [
@@ -980,7 +1013,7 @@ code: pronto.#App & {
 		// A directory's search, one row per directory (teams, stadiums, referees),
 		// held by the tab and written by a machine (ir decision-catalog-tab).
 		DirectoryFilter: {
-			id: "0xae1a2e56ca75c9e6"
+			id:         "0xae1a2e56ca75c9e6"
 			table:      "directory_filter"
 			durability: "tab"
 			fields: [
@@ -1004,7 +1037,7 @@ code: pronto.#App & {
 		// The catalogue's search, held by the tab: what a reader typed survives a
 		// trip to a championship and back, and belongs to nobody else.
 		CatalogFilter: {
-			id: "0xe858e7ade293bca2"
+			id:         "0xe858e7ade293bca2"
 			table:      "catalog_filter"
 			durability: "tab"
 			fields: [
@@ -1022,8 +1055,8 @@ code: pronto.#App & {
 			seed: [{id: "catalog", q: "", q_key: "", region: "", state: "browsing", offset: 0, next_offset: 40, page: 1}]
 		}
 		TeamComment: {
-			id: "0xec225aa743df8214"
-			table: "team_comment"
+			id:         "0xec225aa743df8214"
+			table:      "team_comment"
 			durability: "live"
 			access: {scope: "public"}
 			fields: [
@@ -1036,8 +1069,8 @@ code: pronto.#App & {
 			indexes: [{on: "team_id"}]
 		}
 		TeamCommentDraft: {
-			id: "0xca07330d6663ef60"
-			table: "team_comment_draft"
+			id:         "0xca07330d6663ef60"
+			table:      "team_comment_draft"
 			durability: "tab"
 			fields: [
 				{ordinal: 1, name: "id", type: "string", pk: true},
@@ -1046,8 +1079,8 @@ code: pronto.#App & {
 			]
 		}
 		TeamCampaignPoint: {
-			id: "0x9baa066851e521e0"
-			table: "team_campaign_point"
+			id:         "0x9baa066851e521e0"
+			table:      "team_campaign_point"
 			durability: "server"
 			access: {scope: "public"}
 			writers: "pipeline"
@@ -1064,8 +1097,8 @@ code: pronto.#App & {
 			]
 		}
 		TeamOddsHistory: {
-			id: "0xbef4d34708f58150"
-			table: "team_odds_history"
+			id:         "0xbef4d34708f58150"
+			table:      "team_odds_history"
 			durability: "live"
 			access: {scope: "public"}
 			writers: "pipeline"
@@ -1079,11 +1112,11 @@ code: pronto.#App & {
 				{ordinal: 7, name: "percent", type: "double", cel: "this >= 0 && this <= 100"},
 				{ordinal: 8, name: "source", type: "string", cel: "this in ['imported', 'computed']"},
 			]
-			indexes: [{on: "group_id"},{on: "team_id"}]
+			indexes: [{on: "group_id"}, {on: "team_id"}]
 		}
 		TeamRatingChart: {
-			id: "0xee726246d2463572"
-			table: "team_rating_chart"
+			id:         "0xee726246d2463572"
+			table:      "team_rating_chart"
 			durability: "live"
 			access: {scope: "public"}
 			writers: "pipeline"
@@ -1096,8 +1129,8 @@ code: pronto.#App & {
 			indexes: [{on: "team_id"}]
 		}
 		TeamOddsChart: {
-			id: "0xc3d5774bc952a01a"
-			table: "team_odds_chart"
+			id:         "0xc3d5774bc952a01a"
+			table:      "team_odds_chart"
 			durability: "live"
 			access: {scope: "public"}
 			writers: "pipeline"
@@ -1108,11 +1141,11 @@ code: pronto.#App & {
 				{ordinal: 4, name: "zone_id", type: "uuid", ref: "zone"},
 				{ordinal: 5, name: "series_json", type: "string"},
 			]
-			indexes: [{on: "group_id"},{on: "team_id"}]
+			indexes: [{on: "group_id"}, {on: "team_id"}]
 		}
 		TeamRosterTotal: {
-			id: "0xcb46033cabbd7525"
-			table: "team_roster_total"
+			id:         "0xcb46033cabbd7525"
+			table:      "team_roster_total"
 			durability: "live"
 			access: {scope: "public"}
 			writers: "pipeline"
@@ -1140,22 +1173,24 @@ code: pronto.#App & {
 			indexes: [{on: "team_id"}]
 		}
 		TeamChartState: {
-			id: "0xd717db218a646b83"
-			table: "team_chart_state"
+			id:         "0xd717db218a646b83"
+			table:      "team_chart_state"
 			durability: "tab"
 			fields: [
 				{ordinal: 1, name: "id", type: "string", pk: true},
 				{ordinal: 2, name: "group_id", type: "uuid"},
 				{ordinal: 3, name: "team_id", type: "uuid"},
 				{ordinal: 4, name: "compare_id", type: "uuid"},
-				{ordinal: 5, name: "metric", type: "string", default: "'points'", cel: "this in ['points', 'position', 'percent']"},
+				{ordinal: 5, name: "metric", type: "string", default: "'points'", cel: "this in ['points']"},
 				{ordinal: 6, name: "series_json", type: "string", default: "'{}'"},
 				{ordinal: 7, name: "game_prefix", type: "string", default: "'/jogo/'"},
+				{ordinal: 8, name: "range_from", type: "string", default: "''", retired: true},
+				{ordinal: 9, name: "range_to", type: "string", default: "''", retired: true},
 			]
 		}
 		ArchivePage: {
-			id: "0x93cef5ac14f2a64a"
-			table: "archive_page"
+			id:         "0x93cef5ac14f2a64a"
+			table:      "archive_page"
 			durability: "tab"
 			fields: [
 				{ordinal: 1, name: "id", type: "string", pk: true},
@@ -1166,12 +1201,27 @@ code: pronto.#App & {
 				{ordinal: 6, name: "state", type: "string", default: "'browsing'", cel: "this in ['browsing']"},
 				{ordinal: 7, name: "q", type: "string", default: "''", cel: "this.size() <= 80"},
 				{ordinal: 8, name: "q_key", type: "string", default: "''", cel: "this.size() <= 160"},
-				{ordinal: 9, name: "sort", type: "string", default: "'name'", cel: "this in ['name', 'played', 'minutes', 'goals', 'goals_per90', 'contribution', 'contribution_per90']"},
+				{ordinal: 9, name: "sort", type: "string", default: "'name'", cel: "this in ['name', 'played', 'minutes', 'goals', 'goals_per90', 'contribution', 'contribution_per90', 'rating']"},
 				{ordinal: 10, name: "period", type: "string", default: "'1y'", cel: "this in ['1m', '3m', '6m', '1y', '5y', 'all']"},
 				{ordinal: 11, name: "side", type: "string", default: "'*'", cel: "this in ['*', 'home', 'away']"},
 				{ordinal: 12, name: "phase", type: "string", default: "'*'"},
 				{ordinal: 13, name: "category", type: "string", default: "'*'"},
 				{ordinal: 14, name: "championship_id", type: "uuid", required: false},
+				{ordinal: 15, name: "country", type: "string", default: "''"},
+				{ordinal: 16, name: "country_key", type: "string", default: "''"},
+				{ordinal: 17, name: "region", type: "string", default: "'*'"},
+				{ordinal: 18, name: "position", type: "string", default: "'*'"},
+				{ordinal: 19, name: "minimum_minutes", type: "int32", default: "0", cel: "this >= 0 && this <= 1000000"},
+				{ordinal: 20, name: "played", type: "string", default: "'true'", cel: "this in ['*', 'true', 'false']"},
+				{ordinal: 21, name: "team_id", type: "uuid", required: false},
+				{ordinal: 22, name: "week", type: "string", default: "'*'"},
+				{ordinal: 23, name: "week_day", type: "string", default: "''"},
+				{ordinal: 24, name: "round", type: "string", default: "'*'"},
+				{ordinal: 25, name: "round_value", type: "string", default: "''"},
+				{ordinal: 26, name: "csv_rows", type: "string", default: "'[]'"},
+				{ordinal: 27, name: "date_from", type: "string", default: "''", cel: "this.size() <= 10"},
+				{ordinal: 28, name: "date_to", type: "string", default: "''", cel: "this.size() <= 10"},
+				{ordinal: 29, name: "series_json", type: "string", default: "'{}'"},
 			]
 		}
 	}
@@ -1181,7 +1231,6 @@ code: pronto.#App & {
 	capabilities: auth: {required: false, service: "/auth", promote: true}
 
 	surface: design: (pronto.#DesignMd & {text: _designMd}).design
-
 
 	state: pipelines: standings: {
 		raw:   true
@@ -1214,6 +1263,15 @@ code: pronto.#App & {
 		{name: "031_readable_addresses.sql", src: "services/database/sql/031_readable_addresses.sql"},
 		{name: "032_archive_compatibility.sql", src: "services/database/sql/032_archive_compatibility.sql"},
 		{name: "034_idempotent_odds_capture.sql", src: "services/database/sql/034_idempotent_odds_capture.sql"},
+		{name: "035_read_parity.sql", src: "services/database/sql/035_read_parity.sql"},
+		{name: "036_editing_parity.sql", src: "services/database/sql/036_editing_parity.sql"},
+		{name: "037_competition_admin.sql", src: "services/database/sql/037_competition_admin.sql"},
+		{name: "038_match_context.sql", src: "services/database/sql/038_match_context.sql"},
+		{name: "039_match_probability.sql", src: "services/database/sql/039_match_probability.sql"},
+		{name: "040_community.sql", src: "services/database/sql/040_community.sql"},
+		{name: "041_native_media.sql", src: "services/database/sql/041_native_media.sql"},
+		{name: "042_team_odds_progress.sql", src: "services/database/sql/042_team_odds_progress.sql"},
+		{name: "043_queued_odds_refresh.sql", src: "services/database/sql/043_queued_odds_refresh.sql"},
 		// Large archive fixtures are copied at build, never expanded through CUE.
 		{name: "900_seed.sql", src: "services/database/sql/900_seed.sql"},
 	]
@@ -1242,6 +1300,7 @@ code: pronto.#App & {
 	state: migrations: "030_campaign_read": {operations: [{sql: {up: _campaignReadUpgrade, onComplete: true}}]}
 	state: migrations: "032_archive_compatibility": {operations: [{sql: {up: _archiveCompatibilityUpgrade, onComplete: true}}]}
 	state: migrations: "033_cdc_outputs": {operations: [{sql: {up: _cdcOutputsSql, onComplete: true}}]}
+	state: migrations: "035_read_parity": {operations: [{sql: {up: _readParityUpgrade, onComplete: true}}]}
 	state: migrations: "034_idempotent_odds_capture": {operations: [{sql: {up: _oddsCaptureSql, onComplete: true}}]}
 	state: migrations: "031_readable_addresses": {operations: [{sql: {up: _readableAddressesUpgrade, onComplete: true}}]}
 	// The numeric stage (ir decision-chances).
@@ -1263,21 +1322,21 @@ code: pronto.#App & {
 		group: "golaberto-game-cards"
 	}
 	state: pipelines: "home-games": {
-		raw: true
-		from: "Game"
-		to: "HomeGameCard"
+		raw:   true
+		from:  "Game"
+		to:    "HomeGameCard"
 		group: "golaberto-home-games"
 	}
 	state: pipelines: "recent-championships": {
-		raw: true
-		from: "Championship"
-		to: "HomeChampionship"
+		raw:   true
+		from:  "Championship"
+		to:    "HomeChampionship"
 		group: "golaberto-recent-championships"
 	}
 	state: pipelines: "matches-games": {
-		raw: true
-		from: "Game"
-		to: "MatchesGameCard"
+		raw:   true
+		from:  "Game"
+		to:    "MatchesGameCard"
 		group: "golaberto-matches-games"
 	}
 	state: pipelines: "player-stats": {
@@ -1294,9 +1353,15 @@ code: pronto.#App & {
 	}
 
 	surface: handlers: {
+		"player-csv-seed": {ir: "handler-player-csv-seed", of: "jogador", src: "shell/handlers/player-csv-seed.js", note: "Persist the statistics page context before collecting its bounded export."}
+		"player-csv-fold": {ir: "handler-player-csv-fold", of: "jogador", src: "shell/handlers/player-csv-fold.js", note: "Collect only the current statistics page for CSV export."}
+		"archive-round": {ir: "handler-archive-round", of: "arquivo", src: "shell/handlers/archive-round.js", note: "A positive whole round number narrows the archive; clearing restores every round."}
+		"archive-week": {ir: "handler-archive-week", of: "arquivo", src: "shell/handlers/archive-week.js", note: "A selected calendar date names its ISO Monday; clearing restores every week."}
+		"parity-minutes": {ir: "handler-parity-minutes", of: "jogador", src: "shell/handlers/parity-minutes.js", note: "a non-negative whole-minute threshold resets the bounded statistics page"}
+		"team-rating-series": {ir: "handler-team-rating-series", of: "equipe", src: "shell/handlers/team-rating-series.js", note: "Store the rating page row on first paint and keep the selected period's series beside its date range."}
 		"team-chart-seed": {ir: "handler-team-chart-seed", of: "equipe-campeonato", src: "shell/handlers/team-chart-seed.js", note: "initialize one typed tab chart row from its explicit fallback"}
 		"chart-compare": {ir: "handler-chart-compare", of: "equipe-campeonato", src: "shell/handlers/chart-compare.js", note: "typed chart control retains existing state for unrelated gestures"}
-		"chart-metric": {ir: "handler-chart-metric", of: "equipe-campeonato", src: "shell/handlers/chart-metric.js", note: "typed chart control retains existing state for unrelated gestures"}
+		"chart-position-bound": {ir: "handler-chart-position-bound", of: "equipe-campeonato", src: "shell/handlers/chart-position-bound.js", note: "a row-owned final-position control yields an empty or bounded positive whole position"}
 		"team-chart-fold": {ir: "handler-team-chart-fold", of: "equipe-campeonato", src: "shell/handlers/team-chart-fold.js", note: "bounded source rows become a pure chart payload, with comparison and accessible source tables"}
 		"geography-selection": {ir: "handler-geography-selection", of: "equipes", src: "shell/handlers/geography-selection.js", note: "a cleared dropdown selects the whole scope using the wildcard sentinel"}
 		"country-option": {ir: "handler-country-option", of: "equipes", src: "shell/handlers/country-option.js", note: "a row click selects a current fixed country and resets the directory page while preserving other filters"}
@@ -1308,6 +1373,12 @@ code: pronto.#App & {
 		"row-id": {ir: "handler-row-id", of: "editar", src: "shell/handlers/row-id.js", note: "the guard that lets a click remove a goal only when it names one"}
 	}
 	surface: screens: {
+		"arquivo": {title: "Game archive", route: "/arquivo", ssr: "ssr", keep: 0, strip: false, markup: _archiveMarkup, forms: [], states: ["loading", "populated", "gone", "populated-dark"], paths: {"read": {"states": ["loading", "populated"], "accepts": ["accept-games-results"]}, "empty": {"states": ["loading", "gone"], "accepts": ["accept-games-results"]}, "night": {"states": ["populated", "populated-dark"], "accepts": ["accept-dark"]}}, files: {renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"], shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/team.css"]}}
+		"arquivo-campeonato": {title: "Championship archive", route: "/campeonato/:slug/arquivo", ssr: "ssr", keep: 0, strip: false, markup: _championshipArchiveMarkup, forms: [], states: ["loading", "populated", "gone", "populated-dark"], paths: {"read": {"states": ["loading", "populated"], "accepts": ["accept-games-results"]}, "empty": {"states": ["loading", "gone"], "accepts": ["accept-games-results"]}, "night": {"states": ["populated", "populated-dark"], "accepts": ["accept-dark"]}}, files: {renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"], shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/team.css"]}}
+		"publico": {title: "Attendance", route: "/campeonato/:slug/publico", ssr: "ssr", keep: 0, strip: false, markup: _attendanceMarkup, forms: [], states: ["loading", "populated", "gone", "populated-dark"], paths: {"read": {"states": ["loading", "populated"], "accepts": ["accept-games-results"]}, "empty": {"states": ["loading", "gone"], "accepts": ["accept-games-results"]}, "night": {"states": ["populated", "populated-dark"], "accepts": ["accept-dark"]}}, files: {renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"], shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/team.css"]}}
+		"jogadores": {title: "Players", route: "/jogadores", slug: "route_players", ssr: "ssr", keep: 0, label: "players_title", markup: _playerDirectoryMarkup, forms: [], states: ["loading", "populated", "gone", "populated-dark"], paths: {"read": {"states": ["loading", "populated"], "accepts": ["accept-player-page", "accept-player-stats"]}, "missing": {"states": ["loading", "gone"], "accepts": ["accept-team-gone"]}, "night": {"states": ["populated", "populated-dark"], "accepts": ["accept-dark"]}}, files: {renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/player-csv.js", "shell/renderers/player-rate-per90.js", "shell/renderers/player-position.js", "shell/renderers/player-event-label.js"], shared: ["shell/shared/chrome.css", "shell/shared/catalog.css", "shell/shared/games.css", "shell/shared/team.css"]}}
+		"campeonato-jogadores": {title: "Championship players", route: "/campeonato-jogadores/:slug", slug: "route_championship_players", ssr: "ssr", keep: 0, strip: false, markup: _championshipPlayersMarkup, forms: [], states: ["loading", "populated", "gone", "populated-dark"], paths: {"read": {"states": ["loading", "populated"], "accepts": ["accept-player-page", "accept-player-stats"]}, "missing": {"states": ["loading", "gone"], "accepts": ["accept-team-gone"]}, "night": {"states": ["populated", "populated-dark"], "accepts": ["accept-dark"]}}, files: {renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/player-csv.js", "shell/renderers/player-rate-per90.js", "shell/renderers/player-position.js", "shell/renderers/player-event-label.js"], shared: ["shell/shared/chrome.css", "shell/shared/catalog.css", "shell/shared/games.css", "shell/shared/team.css"]}}
+		"jogador-campeonato": {title: "Player season", route: "/jogador-campeonato/:slug/:team/:championship", slug: "route_scoped_player", ssr: "ssr", keep: 0, strip: false, markup: _scopedPlayerMarkup, forms: [], states: ["loading", "populated", "gone", "populated-dark"], paths: {"read": {"states": ["loading", "populated"], "accepts": ["accept-player-page", "accept-player-stats"]}, "missing": {"states": ["loading", "gone"], "accepts": ["accept-team-gone"]}, "night": {"states": ["populated", "populated-dark"], "accepts": ["accept-dark"]}}, files: {renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/player-csv.js", "shell/renderers/player-rate-per90.js", "shell/renderers/player-position.js", "shell/renderers/player-event-label.js"], shared: ["shell/shared/chrome.css", "shell/shared/catalog.css", "shell/shared/games.css", "shell/shared/team.css"]}}
 		principal: {
 			title:  "Principal"
 			route:  "/"
@@ -1321,19 +1392,19 @@ code: pronto.#App & {
 				quiet: {states: ["populated", "no-games", "populated"], accepts: ["accept-home-games"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/home-date.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/home-date.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		campeonatos: {
-			title:     "Campeonatos"
-			route:     "/campeonatos"
-			slug:      "route_championships"
+			title: "Campeonatos"
+			route: "/campeonatos"
+			slug:  "route_championships"
 			// Rebuilt on every visit: the search a reader comes back to is the
 			// tab's row, not a held page (ir decision-catalog-tab).
-			keep:      0
-			label:     "nav_championships"
-			ssr:       "ssr"
-			markup:    _campeonatosMarkup
+			keep:   0
+			label:  "nav_championships"
+			ssr:    "ssr"
+			markup: _campeonatosMarkup
 			forms: []
 			states: ["loading", "populated", "filtered", "no-match", "populated-dark"]
 			paths: {
@@ -1341,7 +1412,7 @@ code: pronto.#App & {
 				search: {states: ["populated", "filtered", "no-match", "populated"], accepts: ["accept-catalog-search"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		jogos: {
@@ -1358,7 +1429,7 @@ code: pronto.#App & {
 				switch: {states: ["populated", "results", "populated"], accepts: ["accept-games-results"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		jogo: {
@@ -1370,8 +1441,10 @@ code: pronto.#App & {
 			keep:   3
 			markup: _jogoMarkup
 			forms: []
-			states: ["loading", "populated", "scheduled", "gone", "sending", "refused", "populated-dark"]
+			states: ["loading", "populated", "scheduled", "gone", "sending", "refused", "populated-dark", "validation-error", "network-error", "form-submit", "success"]
 			paths: {
+				delete_comment: {states: ["populated", "form-submit", "success", "populated"], accepts: ["accept-community-ownership"]}
+				delete_refused: {states: ["populated", "form-submit", "validation-error"], accepts: ["accept-community-ownership"]}
 				read: {states: ["loading", "populated"], accepts: ["accept-game-page", "accept-game-venue"]}
 				comment: {states: ["populated", "sending", "populated"], accepts: ["accept-comment"]}
 				refused: {states: ["populated", "sending", "refused"], accepts: ["accept-comment-refused"]}
@@ -1380,11 +1453,11 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-game-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
-			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
+			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/match-context-map.js", "shell/renderers/match-probability.js"]
+			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/match-context.css", "shell/shared/match-probability.css", "shell/shared/editing.css", "shell/shared/community.css"]
 		}
 		chances: {
-			ssr: "ssr"
+			ssr:    "ssr"
 			title:  "Chances"
 			route:  "/chances/:slug"
 			slug:   "route_chances"
@@ -1398,7 +1471,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-chances"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/position-odds.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		editar: {
@@ -1416,19 +1489,19 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-game-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		equipes: {
-			title:     "Equipes"
-			route:     "/equipes"
-			slug:      "route_teams"
+			title: "Equipes"
+			route: "/equipes"
+			slug:  "route_teams"
 			// Rebuilt on every visit, as the catalogue is (ir
 			// decision-catalog-tab).
-			keep:      0
-			label:     "nav_teams"
-			ssr:       "ssr"
-			markup:    _equipesMarkup
+			keep:   0
+			label:  "nav_teams"
+			ssr:    "ssr"
+			markup: _equipesMarkup
 			forms: []
 			states: ["loading", "populated", "filtered", "no-match", "populated-dark"]
 			paths: {
@@ -1436,17 +1509,17 @@ code: pronto.#App & {
 				search: {states: ["populated", "filtered", "no-match", "populated"], accepts: ["accept-teams"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		estadios: {
-			title:     "Estádios"
-			route:     "/estadios"
-			slug:      "route_stadiums"
-			keep:      0
-			label:     "nav_stadiums"
-			ssr:       "ssr"
-			markup:    _estadiosMarkup
+			title:  "Estádios"
+			route:  "/estadios"
+			slug:   "route_stadiums"
+			keep:   0
+			label:  "nav_stadiums"
+			ssr:    "ssr"
+			markup: _estadiosMarkup
 			forms: []
 			states: ["loading", "populated", "filtered", "no-match", "populated-dark"]
 			paths: {
@@ -1454,11 +1527,11 @@ code: pronto.#App & {
 				search: {states: ["populated", "filtered", "no-match", "populated"], accepts: ["accept-venues"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		estadio: {
-			ssr: "ssr"
+			ssr:    "ssr"
 			title:  "Estádio"
 			route:  "/estadio/:slug"
 			slug:   "route_stadium"
@@ -1472,17 +1545,17 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-venue-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		arbitros: {
-			title:     "Árbitros"
-			route:     "/arbitros"
-			slug:      "route_referees"
-			keep:      0
-			label:     "nav_referees"
-			ssr:       "ssr"
-			markup:    _arbitrosMarkup
+			title:  "Árbitros"
+			route:  "/arbitros"
+			slug:   "route_referees"
+			keep:   0
+			label:  "nav_referees"
+			ssr:    "ssr"
+			markup: _arbitrosMarkup
 			forms: []
 			states: ["loading", "populated", "filtered", "no-match", "populated-dark"]
 			paths: {
@@ -1490,11 +1563,11 @@ code: pronto.#App & {
 				search: {states: ["populated", "filtered", "no-match", "populated"], accepts: ["accept-venues"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		arbitro: {
-			ssr: "ssr"
+			ssr:    "ssr"
 			title:  "Árbitro"
 			route:  "/arbitro/:slug"
 			slug:   "route_referee"
@@ -1508,34 +1581,36 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-venue-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		equipe: {
 			title:  "Equipe"
 			route:  "/equipe/:slug"
-			ssr: "ssr"
+			ssr:    "ssr"
 			slug:   "route_team"
 			strip:  false
 			keep:   3
 			markup: _equipeMarkup
 			forms: []
-			states: ["loading", "populated", "gone", "populated-dark"]
+			states: ["loading", "populated", "gone", "populated-dark", "validation-error", "network-error", "form-submit", "success"]
 			paths: {
+				delete_comment: {states: ["populated", "form-submit", "success", "populated"], accepts: ["accept-community-ownership"]}
+				delete_refused: {states: ["populated", "form-submit", "validation-error"], accepts: ["accept-community-ownership"]}
 				read: {states: ["loading", "populated"], accepts: ["accept-team-page"]}
 				missing: {states: ["loading", "gone"], accepts: ["accept-team-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/team-chart.js", "shell/renderers/team-location.js"]
-			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/team.css"]
+			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/team-chart.js", "shell/renderers/team-location.js", "shell/renderers/media-image.js"]
+			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/team.css", "shell/shared/editing.css", "shell/shared/community.css"]
 		}
 		"equipe-campeonato": {
-			title: "Equipe no campeonato"
-			route: "/equipe-campeonato/:slug/:championship"
-			ssr: "ssr"
-			slug: "route_team_championship"
-			strip: false
-			keep: 3
+			title:  "Equipe no campeonato"
+			route:  "/equipe-campeonato/:slug/:championship"
+			ssr:    "ssr"
+			slug:   "route_team_championship"
+			strip:  false
+			keep:   3
 			markup: _equipe_campeonatoMarkup
 			forms: []
 			states: ["loading", "populated", "empty", "populated-dark"]
@@ -1544,7 +1619,7 @@ code: pronto.#App & {
 				missing: {states: ["loading", "empty"], accepts: ["accept-team-championship-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/team-chart.js", "shell/renderers/team-location.js"]
+			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/team-chart.js", "shell/renderers/team-location.js", "shell/renderers/odds-progress.js", "shell/renderers/position-odds.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/team.css"]
 		}
 		jogador: {
@@ -1554,7 +1629,7 @@ code: pronto.#App & {
 			slug:   "route_player"
 			strip:  false
 			keep:   3
-			markup: _jogadorMarkup
+			markup: _playerProfileMarkup
 			forms: []
 			states: ["loading", "populated", "gone", "populated-dark"]
 			paths: {
@@ -1562,8 +1637,8 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-team-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
-			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
+			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/player-csv.js", "shell/renderers/player-rate-per90.js", "shell/renderers/player-position.js", "shell/renderers/player-height.js", "shell/renderers/player-event-label.js"]
+			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/team.css"]
 		}
 		campeonato: {
 			title:  "Campeonato"
@@ -1581,11 +1656,10 @@ code: pronto.#App & {
 				missing: {states: ["loading", "gone"], accepts: ["accept-championship-gone"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 	}
-
 
 	meta: {
 		name:        "golaberto"
@@ -1614,7 +1688,7 @@ code: pronto.#App & {
 			}
 			catalogues: _catalogues
 		}
-		ir: sha256: "8ad36f4a9976021d022e007389dad63b2db3e708efe0bc28935774a96635e763"
+		ir: sha256: "25a5a02d5aa396d41d48c7b5489df04383e636934baf919d82853876a5723a32"
 		targets: ["pages"]
 		decisions: {
 			"decision-team-page-split": {}
@@ -1654,579 +1728,583 @@ code: pronto.#App & {
 			"decision-game-lists": {}
 			"decision-guest-reading": {}
 			"decision-hatches": {}
+			"decision-competition-admin": {}
+			"decision-match-context": {}
+			"decision-match-probability-history": {}
+			"decision-community-ownership": {}
+			"decision-native-media": {}
 		}
 		tests: {
 			"test-score-whole": {
-				of:    "Game"
-				says:  "a half-typed score is refused"
+				of:   "Game"
+				says: "a half-typed score is refused"
 				given: {played: true, home_score: 2}
-				when:  "create"
-				then:  "error.kind == \"constraint\""
+				when: "create"
+				then: "error.kind == \"constraint\""
 			}
 			"test-played-game": {
-				of:    "Game"
-				says:  "a played game with both scores is kept as given"
+				of:   "Game"
+				says: "a played game with both scores is kept as given"
 				given: {played: true, home_score: 2, away_score: 1}
-				when:  "create"
-				then:  "output.home_score == 2 && output.away_score == 1"
+				when: "create"
+				then: "output.home_score == 2 && output.away_score == 1"
 			}
 			"test-no-self-game": {
-				of:    "Game"
-				says:  "a team never plays itself"
+				of:   "Game"
+				says: "a team never plays itself"
 				given: {home_id: "aaaaaaaa-0000-4000-8000-000000000001", away_id: "aaaaaaaa-0000-4000-8000-000000000001"}
-				when:  "create"
-				then:  "error.kind == \"constraint\""
+				when: "create"
+				then: "error.kind == \"constraint\""
 			}
 			"test-points-default": {
-				of:    "Championship"
-				says:  "a championship that states no points takes three, one and none"
+				of:   "Championship"
+				says: "a championship that states no points takes three, one and none"
 				given: {name: "Campeonato Brasileiro", region_name: "Brasil", begins: "2026-01-28", ends: "2026-12-02"}
-				when:  "create"
-				then:  "output.point_win == 3 && output.point_draw == 1 && output.point_loss == 0"
+				when: "create"
+				then: "output.point_win == 3 && output.point_draw == 1 && output.point_loss == 0"
 			}
 			"test-season-single": {
-				of:    "Championship"
-				says:  "a season inside one year reads as that year"
+				of:   "Championship"
+				says: "a season inside one year reads as that year"
 				given: {begins: "2026-01-28", ends: "2026-12-02"}
-				when:  "create"
-				then:  "output.season == \"2026\""
+				when: "create"
+				then: "output.season == \"2026\""
 			}
 			"test-season-span": {
-				of:    "Championship"
-				says:  "a season across two years reads as both"
+				of:   "Championship"
+				says: "a season across two years reads as both"
 				given: {begins: "2026-08-21", ends: "2027-05-30", region_name: "Inglaterra", name: "Premier League"}
-				when:  "create"
-				then:  "output.season == \"2026/2027\" && output.full_name == \"Inglaterra - Premier League 2026/2027\""
+				when: "create"
+				then: "output.season == \"2026/2027\" && output.full_name == \"Inglaterra - Premier League 2026/2027\""
 			}
 			"test-half-score-unplayed": {
-				of:    "Game"
-				says:  "a score with one side is refused even on an unplayed game"
+				of:   "Game"
+				says: "a score with one side is refused even on an unplayed game"
 				given: {played: false, home_score: 2}
-				when:  "create"
-				then:  "error.kind == \"constraint\""
+				when: "create"
+				then: "error.kind == \"constraint\""
 			}
 			"test-unplayed-scored": {
-				of:    "Game"
-				says:  "an unplayed game carries no score"
+				of:   "Game"
+				says: "an unplayed game carries no score"
 				given: {played: false, home_score: 2, away_score: 1}
-				when:  "create"
-				then:  "error.kind == \"constraint\""
+				when: "create"
+				then: "error.kind == \"constraint\""
 			}
 			"test-unplayed-game": {
-				of:    "Game"
-				says:  "a game not yet played is kept with no score"
+				of:   "Game"
+				says: "a game not yet played is kept with no score"
 				given: {}
-				when:  "create"
-				then:  "output.played == false"
+				when: "create"
+				then: "output.played == false"
 			}
 			"test-aet-half": {
-				of:    "Game"
-				says:  "an extra-time score with one side is refused"
+				of:   "Game"
+				says: "an extra-time score with one side is refused"
 				given: {played: true, home_score: 1, away_score: 1, home_aet: 2}
-				when:  "create"
-				then:  "error.kind == \"constraint\""
+				when: "create"
+				then: "error.kind == \"constraint\""
 			}
 			"test-pen-half": {
-				of:    "Game"
-				says:  "a shoot-out with one side is refused"
+				of:   "Game"
+				says: "a shoot-out with one side is refused"
 				given: {played: true, home_score: 1, away_score: 1, home_pen: 4}
-				when:  "create"
-				then:  "error.kind == \"constraint\""
+				when: "create"
+				then: "error.kind == \"constraint\""
 			}
 			"test-aet-unplayed": {
-				of:    "Game"
-				says:  "extra time on an unplayed game is refused"
+				of:   "Game"
+				says: "extra time on an unplayed game is refused"
 				given: {played: false, home_aet: 2, away_aet: 1}
-				when:  "create"
-				then:  "error.kind == \"constraint\""
+				when: "create"
+				then: "error.kind == \"constraint\""
 			}
 			"test-pen-unplayed": {
-				of:    "Game"
-				says:  "a shoot-out on an unplayed game is refused"
+				of:   "Game"
+				says: "a shoot-out on an unplayed game is refused"
 				given: {played: false, home_pen: 4, away_pen: 3}
-				when:  "create"
-				then:  "error.kind == \"constraint\""
+				when: "create"
+				then: "error.kind == \"constraint\""
 			}
 			"test-aet-pen-kept": {
-				of:    "Game"
-				says:  "a game decided after extra time and penalties keeps all three scores"
+				of:   "Game"
+				says: "a game decided after extra time and penalties keeps all three scores"
 				given: {played: true, home_score: 1, away_score: 1, home_aet: 2, away_aet: 2, home_pen: 4, away_pen: 3}
-				when:  "create"
-				then:  "output.home_pen == 4"
+				when: "create"
+				then: "output.home_pen == 4"
 			}
 			"test-season-order": {
-				of:    "Championship"
-				says:  "a season that ends before it begins is refused"
+				of:   "Championship"
+				says: "a season that ends before it begins is refused"
 				given: {begins: "2026-12-02", ends: "2026-01-28"}
-				when:  "create"
-				then:  "error.kind == \"constraint\""
+				when: "create"
+				then: "error.kind == \"constraint\""
 			}
 			"test-season-one-day": {
-				of:    "Championship"
-				says:  "a one-day tournament is a season"
+				of:   "Championship"
+				says: "a one-day tournament is a season"
 				given: {begins: "2026-07-19", ends: "2026-07-19"}
-				when:  "create"
-				then:  "output.season == \"2026\""
+				when: "create"
+				then: "output.season == \"2026\""
 			}
 			"test-points-own": {
-				of:    "Championship"
-				says:  "a championship keeps the points it states"
+				of:   "Championship"
+				says: "a championship keeps the points it states"
 				given: {point_win: 2}
-				when:  "create"
-				then:  "output.point_win == 2 && output.point_draw == 1"
+				when: "create"
+				then: "output.point_win == 2 && output.point_draw == 1"
 			}
 			"test-points-range": {
-				of:    "Championship"
-				says:  "points outside a single digit are refused"
+				of:   "Championship"
+				says: "points outside a single digit are refused"
 				given: {point_win: 10}
-				when:  "create"
-				then:  "error.field == \"point_win\""
+				when: "create"
+				then: "error.field == \"point_win\""
 			}
 			"test-position-kept": {
-				of:    "Player"
-				says:  "each of the eight positions, and none, is kept"
+				of:   "Player"
+				says: "each of the eight positions, and none, is kept"
 				given: {position: "am"}
-				when:  "create"
-				then:  "output.position == input.position"
+				when: "create"
+				then: "output.position == input.position"
 			}
 			"test-zone-order": {
-				of:    "Zone"
-				says:  "a zone whose last place is above its first is refused"
+				of:   "Zone"
+				says: "a zone whose last place is above its first is refused"
 				given: {first: 17, last: 4}
-				when:  "create"
-				then:  "error.kind == \"constraint\""
+				when: "create"
+				then: "error.kind == \"constraint\""
 			}
 			"test-goal-kind": {
-				of:    "Goal"
-				says:  "a goal is not both a penalty and an own goal"
+				of:   "Goal"
+				says: "a goal is not both a penalty and an own goal"
 				given: {penalty: true, own_goal: true}
-				when:  "create"
-				then:  "error.kind == \"constraint\""
+				when: "create"
+				then: "error.kind == \"constraint\""
 			}
 			"test-sort-upstream": {
-				of:    "Phase"
-				says:  "upstream's own ladder is kept"
+				of:   "Phase"
+				says: "upstream's own ladder is kept"
 				given: {sort: "pt,w,gd,gf,gp,g_away,name"}
-				when:  "create"
-				then:  "output.sort == input.sort"
+				when: "create"
+				then: "output.sort == input.sort"
 			}
 			"test-sort-default": {
-				of:    "Phase"
-				says:  "a phase that states no ladder takes upstream's"
+				of:   "Phase"
+				says: "a phase that states no ladder takes upstream's"
 				given: {name: "Mata-mata"}
-				when:  "create"
-				then:  "output.sort == \"pt,w,gd,gf,gp,g_away,name\""
+				when: "create"
+				then: "output.sort == \"pt,w,gd,gf,gp,g_away,name\""
 			}
 			"test-sort-unknown": {
-				of:    "Phase"
-				says:  "a key outside the vocabulary is refused"
+				of:   "Phase"
+				says: "a key outside the vocabulary is refused"
 				given: {sort: "pt,xx"}
-				when:  "create"
-				then:  "error.field == \"sort\""
+				when: "create"
+				then: "error.field == \"sort\""
 			}
 			"test-side": {
-				of:    "Goal"
-				says:  "a goal counts for home or away and nothing else"
+				of:   "Goal"
+				says: "a goal counts for home or away and nothing else"
 				given: {side: "visitor"}
-				when:  "create"
-				then:  "error.field == \"side\""
+				when: "create"
+				then: "error.field == \"side\""
 			}
 			"test-home-featured": {
-				of:    "principal"
-				says:  "the front page retains the featured 2026 Brasileirão: its top six, Flamengo first, below the game feeds"
+				of:   "principal"
+				says: "the front page retains the featured 2026 Brasileirão: its top six, Flamengo first, below the game feeds"
 				given: {featured: "Campeonato Brasileiro 2026"}
-				when:  "open"
-				then:  "output.top[0].team == \"Flamengo-RJ\" && output.top.size() == 6"
+				when: "open"
+				then: "output.top[0].team == \"Flamengo-RJ\" && output.top.size() == 6"
 			}
 			"test-home-games": {
-				of: "principal"
+				of:   "principal"
 				says: "upcoming fixtures and recent results lead the home page in server rank order under shared dates with localized weekdays and phase headings, emphasize the selected important games and open their details"
 				given: {upcoming: true, recent: true}
 				when: "arrive"
 				then: "output.upcoming.size() > 0 && output.recent.size() > 0"
 			}
 			"test-home-levels": {
-				of:    "principal"
-				says:  "the front page lists national, continental, then world championships, with all eligible tournaments ordered by descending geometric team strength within each region"
+				of:   "principal"
+				says: "the front page lists national, continental, then world championships, with all eligible tournaments ordered by descending geometric team strength within each region"
 				given: {}
-				when:  "view"
-				then:  "output.matches_projection == true"
+				when: "view"
+				then: "output.matches_projection == true"
 			}
 			"test-catalog-category": {
-				of:    "campeonatos"
-				says:  "the catalogue lists every championship with its category, professional by default"
+				of:   "campeonatos"
+				says: "the catalogue lists every championship with its category, professional by default"
 				given: {}
-				when:  "view"
-				then:  "output.rows.size() == 13 && output.category[\"Brasil - Campeonato Brasileiro 2026\"] == \"Profissional\""
+				when: "view"
+				then: "output.rows.size() == 13 && output.category[\"Brasil - Campeonato Brasileiro 2026\"] == \"Profissional\""
 			}
 			"test-catalog-search": {
-				of:    "campeonatos"
-				says:  "part of a name narrows the catalogue"
+				of:   "campeonatos"
+				says: "part of a name narrows the catalogue"
 				given: {q: "libertadores"}
-				when:  "type"
-				then:  "output.rows == [\"América do Sul - Copa Libertadores 2026\"]"
+				when: "type"
+				then: "output.rows == [\"América do Sul - Copa Libertadores 2026\"]"
 			}
 			"test-catalog-no-match": {
-				of:    "campeonatos"
-				says:  "a search that matches nothing says so"
+				of:   "campeonatos"
+				says: "a search that matches nothing says so"
 				given: {q: "xyzzy"}
-				when:  "type"
-				then:  "output.empty == \"Nenhum campeonato com esse nome nesta esfera.\""
+				when: "type"
+				then: "output.empty == \"Nenhum campeonato com esse nome nesta esfera.\""
 			}
 			"test-catalog-kept": {
-				of:    "campeonatos"
-				says:  "what was typed survives a trip to a championship and back"
+				of:   "campeonatos"
+				says: "what was typed survives a trip to a championship and back"
 				given: {q: "brasileiro"}
-				when:  "return"
-				then:  "output.q == \"brasileiro\""
+				when: "return"
+				then: "output.q == \"brasileiro\""
 			}
 			"test-championship-structure": {
-				of:    "campeonato"
-				says:  "a championship shows its phases, groups, teams, zones and points"
+				of:   "campeonato"
+				says: "a championship shows its phases, groups, teams, zones and points"
 				given: {}
-				when:  "view"
-				then:  "output.phases == [\"Turno e Returno\"] && output.members.size() == 20 && output.points == [3, 1, 0]"
+				when: "view"
+				then: "output.phases == [\"Turno e Returno\"] && output.members.size() == 20 && output.points == [3, 1, 0]"
 			}
 			"test-championship-old-points": {
-				of:    "campeonato"
-				says:  "a championship from the two-point era states its own points"
+				of:   "campeonato"
+				says: "a championship from the two-point era states its own points"
 				given: {}
-				when:  "view"
-				then:  "output.points == [2, 1, 0]"
+				when: "view"
+				then: "output.points == [2, 1, 0]"
 			}
 			"test-championship-no-groups": {
-				of:    "campeonato"
-				says:  "a phase with no groups says so"
+				of:   "campeonato"
+				says: "a phase with no groups says so"
 				given: {}
-				when:  "view"
-				then:  "output.phases.size() == 2"
+				when: "view"
+				then: "output.phases.size() == 2"
 			}
 			"test-championship-gone": {
-				of:    "campeonato"
-				says:  "an address naming no championship says so"
+				of:   "campeonato"
+				says: "an address naming no championship says so"
 				given: {slug: "missing-address"}
-				when:  "view"
-				then:  "output.empty == \"Este campeonato não existe ou foi removido.\""
+				when: "view"
+				then: "output.empty == \"Este campeonato não existe ou foi removido.\""
 			}
 			"test-languages": {
-				of:    "campeonatos"
-				says:  "every page reads in three languages at its own address"
+				of:   "campeonatos"
+				says: "every page reads in three languages at its own address"
 				given: {}
-				when:  "view"
-				then:  "output.title[\"en-GB\"] == \"Championships\""
+				when: "view"
+				then: "output.title[\"en-GB\"] == \"Championships\""
 			}
 			"test-dark": {
-				of:    "principal"
-				says:  "the dark appearance resolves the dark tokens"
+				of:   "principal"
+				says: "the dark appearance resolves the dark tokens"
 				given: {}
-				when:  "view"
-				then:  "output.column == \"rgb(35, 38, 15)\""
+				when: "view"
+				then: "output.column == \"rgb(35, 38, 15)\""
 			}
 			"test-screen-range": {
-				of:    "principal"
-				says:  "no page scrolls sideways from phone to desktop"
+				of:   "principal"
+				says: "no page scrolls sideways from phone to desktop"
 				given: {width: 390}
-				when:  "view"
-				then:  "output.scrollWidth <= output.clientWidth"
+				when: "view"
+				then: "output.scrollWidth <= output.clientWidth"
 			}
 			"test-standings-archive": {
-				of:    "standings"
-				says:  "the crawled 2026 Serie A recounts to the table golaberto.com.br shows"
+				of:   "standings"
+				says: "the crawled 2026 Serie A recounts to the table golaberto.com.br shows"
 				given: {games: 277}
-				when:  "recount"
-				then:  "output.size() == 20"
+				when: "recount"
+				then: "output.size() == 20"
 			}
 			"test-standings-zones": {
-				of:    "standings"
-				says:  "a position takes the narrowest zone it falls in"
+				of:   "standings"
+				says: "a position takes the narrowest zone it falls in"
 				given: {position: 1}
-				when:  "recount"
-				then:  "output[0].zone == \"champion\""
+				when: "recount"
+				then: "output[0].zone == \"champion\""
 			}
 			"test-standings-page": {
-				of:    "campeonato"
-				says:  "the championship page shows the recounted table"
+				of:   "campeonato"
+				says: "the championship page shows the recounted table"
 				given: {}
-				when:  "view"
-				then:  "output.rows.size() == 20"
+				when: "view"
+				then: "output.rows.size() == 20"
 			}
 			"test-standings-live": {
-				of:    "standings"
-				says:  "a result recorded after the fact moves the table with no reload"
+				of:   "standings"
+				says: "a result recorded after the fact moves the table with no reload"
 				given: {home_score: 1, away_score: 0}
-				when:  "update"
-				then:  "output.points == input.points + 2"
+				when: "update"
+				then: "output.points == input.points + 2"
 			}
 			"test-games-upcoming": {
-				of:    "jogos"
-				says:  "the games page opens on the upcoming games, soonest first"
+				of:   "jogos"
+				says: "the games page opens on the upcoming games, soonest first"
 				given: {}
-				when:  "view"
-				then:  "output.rows.size() > 0"
+				when: "view"
+				then: "output.rows.size() > 0"
 			}
 			"test-games-results": {
-				of:    "jogos"
-				says:  "the results tab lists played games and is remembered"
+				of:   "jogos"
+				says: "the results tab lists played games and is remembered"
 				given: {}
-				when:  "view"
-				then:  "output.view == \"results\""
+				when: "view"
+				then: "output.view == \"results\""
 			}
 			"test-game-page": {
-				of:    "jogo"
-				says:  "a game's page shows its score, facts, goals and line-ups"
+				of:   "jogo"
+				says: "a game's page shows its score, facts, goals and line-ups"
 				given: {}
-				when:  "view"
-				then:  "output.score == \"2x1\""
+				when: "view"
+				then: "output.score == \"2x1\""
 			}
 			"test-game-gone": {
-				of:    "jogo"
-				says:  "an address naming no game says so"
+				of:   "jogo"
+				says: "an address naming no game says so"
 				given: {}
-				when:  "view"
-				then:  "output.empty == \"Este jogo n\u00e3o existe ou foi removido.\""
+				when: "view"
+				then: "output.empty == \"Este jogo n\u00e3o existe ou foi removido.\""
 			}
 			"test-rounds": {
-				of:    "campeonato"
-				says:  "the championship page shows the current round and the next"
+				of:   "campeonato"
+				says: "the championship page shows the current round and the next"
 				given: {}
-				when:  "view"
-				then:  "output.rounds.size() == 2"
+				when: "view"
+				then: "output.rounds.size() == 2"
 			}
 			"test-bench-whole": {
-				of:    "PlayerGame"
-				says:  "a substitute never brought on has no minute off"
+				of:   "PlayerGame"
+				says: "a substitute never brought on has no minute off"
 				given: {bench: true, on_minute: 0, off_minute: 90}
-				when:  "create"
-				then:  "error.kind == \"constraint\""
+				when: "create"
+				then: "error.kind == \"constraint\""
 			}
 			"test-bench-on": {
-				of:    "PlayerGame"
-				says:  "a substitute never brought on came on at nothing"
+				of:   "PlayerGame"
+				says: "a substitute never brought on came on at nothing"
 				given: {bench: true, on_minute: 10}
-				when:  "create"
-				then:  "error.kind == \"constraint\""
+				when: "create"
+				then: "error.kind == \"constraint\""
 			}
 			"test-appearance-live": {
-				of:    "player-stats"
-				says:  "an appearance removed after the fact moves the player's season with no reload"
+				of:   "player-stats"
+				says: "an appearance removed after the fact moves the player's season with no reload"
 				given: {played: 26}
-				when:  "delete"
-				then:  "output.played == input.played - 1"
+				when: "delete"
+				then: "output.played == input.played - 1"
 			}
 			"test-player-stats-archive": {
-				of:    "player-stats"
-				says:  "the crawled 2026 Serie A's players recount to the lines golaberto.com.br shows"
+				of:   "player-stats"
+				says: "the crawled 2026 Serie A's players recount to the lines golaberto.com.br shows"
 				given: {players: 885}
-				when:  "recount"
-				then:  "output.size() == 885"
+				when: "recount"
+				then: "output.size() == 885"
 			}
 			"test-player-stats-live": {
-				of:    "player-stats"
-				says:  "a goal recorded after the fact moves the scorer's season with no reload"
+				of:   "player-stats"
+				says: "a goal recorded after the fact moves the scorer's season with no reload"
 				given: {minute: 90}
-				when:  "create"
-				then:  "output.goals == input.goals + 1"
+				when: "create"
+				then: "output.goals == input.goals + 1"
 			}
 			"test-game-cards": {
-				of:    "game-cards"
-				says:  "every game's card carries its names, and each team's line its own result"
+				of:   "game-cards"
+				says: "every game's card carries its names, and each team's line its own result"
 				given: {home_score: 2, away_score: 1}
-				when:  "recount"
-				then:  "output.lines.map(l, l.result) == [\"w\", \"l\"]"
+				when: "recount"
+				then: "output.lines.map(l, l.result) == [\"w\", \"l\"]"
 			}
 			"test-teams": {
-				of:    "equipes"
-				says:  "part of a name narrows the teams"
+				of:   "equipes"
+				says: "part of a name narrows the teams"
 				given: {q: "athletico"}
-				when:  "type"
-				then:  "output.rows == [\"Athletico-PR\"]"
+				when: "type"
+				then: "output.rows == [\"Athletico-PR\"]"
 			}
 			"test-team-page": {
-				of:    "equipe"
-				says:  "a team's profile shows its facts, current and past championships, and deduplicated current and past players"
+				of:   "equipe"
+				says: "a team's profile shows its facts, current and past championships, and deduplicated current and past players"
 				given: {}
-				when:  "view"
-				then:  "output.championships.size() > 0 && output.players.size() > 11"
+				when: "view"
+				then: "output.championships.size() > 0 && output.players.size() > 11"
 			}
 			"test-team-championship-page": {
-				of: "equipe-campeonato"
+				of:   "equipe-campeonato"
 				says: "one team in one championship shows only its fixtures, its group tables, roster and detailed probabilities"
 				given: {}
 				when: "view"
 				then: "output.roster.size() > 11 && output.other_championship_rows == 0"
 			}
 			"test-team-championship-gone": {
-				of: "equipe-campeonato"
+				of:   "equipe-campeonato"
 				says: "a team and championship with no connection say so"
 				given: {}
 				when: "view"
 				then: "output.empty == \"Esta equipe não está registrada neste campeonato.\""
 			}
 			"test-player-page": {
-				of:    "jogador"
-				says:  "a player's page shows their season and their games"
+				of:   "jogador"
+				says: "a player's page shows their season and their games"
 				given: {}
-				when:  "view"
-				then:  "output.goals == 18"
+				when: "view"
+				then: "output.goals == 18"
 			}
 			"test-team-gone": {
-				of:    "equipe"
-				says:  "an address naming no team says so"
+				of:   "equipe"
+				says: "an address naming no team says so"
 				given: {slug: "missing-address"}
-				when:  "view"
-				then:  "output.empty == \"Esta equipe não existe ou foi removida.\""
+				when: "view"
+				then: "output.empty == \"Esta equipe não existe ou foi removida.\""
 			}
 			"test-player-gone": {
-				of:    "jogador"
-				says:  "an address naming no player says so"
+				of:   "jogador"
+				says: "an address naming no player says so"
 				given: {slug: "missing-address"}
-				when:  "view"
-				then:  "output.empty == \"Este jogador não existe ou foi removido.\""
+				when: "view"
+				then: "output.empty == \"Este jogador não existe ou foi removido.\""
 			}
 			"test-comment": {
-				of:    "jogo"
-				says:  "a signed-in reader's comment appears for every reader of the game"
+				of:   "jogo"
+				says: "a signed-in reader's comment appears for every reader of the game"
 				given: {body: "Que virada!"}
-				when:  "post"
-				then:  "output.comments[0].body == input.body"
+				when: "post"
+				then: "output.comments[0].body == input.body"
 			}
 			"test-comment-refused": {
-				of:    "jogo"
-				says:  "a guest's comment is refused and what was typed is kept"
+				of:   "jogo"
+				says: "a guest's comment is refused and what was typed is kept"
 				given: {body: "Golaço!"}
-				when:  "post"
-				then:  "output.state == \"refused\" && output.body == input.body"
+				when: "post"
+				then: "output.state == \"refused\" && output.body == input.body"
 			}
 			"test-edit-link": {
-				of:    "jogo"
-				says:  "an editor is offered the editor on a game's page, and a reader who is not is offered nothing"
+				of:   "jogo"
+				says: "an editor is offered the editor on a game's page, and a reader who is not is offered nothing"
 				given: {editor: true}
-				when:  "open"
-				then:  "output.edit_link == input.editor"
+				when: "open"
+				then: "output.edit_link == input.editor"
 			}
 			"test-edit-game": {
-				of:    "editar"
-				says:  "an editor's correction of the score and the crowd reaches the game's page"
+				of:   "editar"
+				says: "an editor's correction of the score and the crowd reaches the game's page"
 				given: {home_score: 3, attendance: 38000}
-				when:  "save"
-				then:  "output.home_score == input.home_score && output.attendance == input.attendance"
+				when: "save"
+				then: "output.home_score == input.home_score && output.attendance == input.attendance"
 			}
 			"test-edit-goal": {
-				of:    "editar"
-				says:  "a goal an editor adds and then removes moves the game's goals and the scorer's season each time"
+				of:   "editar"
+				says: "a goal an editor adds and then removes moves the game's goals and the scorer's season each time"
 				given: {goals: 2}
-				when:  "add, remove"
-				then:  "output.goals_after_add == input.goals + 1 && output.season_after_add == input.season + 1 && output.goals_after_remove == input.goals && output.season_after_remove == input.season"
+				when: "add, remove"
+				then: "output.goals_after_add == input.goals + 1 && output.season_after_add == input.season + 1 && output.goals_after_remove == input.goals && output.season_after_remove == input.season"
 			}
 			"test-edit-refused": {
-				of:    "editar"
-				says:  "a non-editor's save and a goal with no scorer are refused with the reason, and the edits stay"
+				of:   "editar"
+				says: "a non-editor's save and a goal with no scorer are refused with the reason, and the edits stay"
 				given: {home_score: 7, goal_minute: 77}
-				when:  "save, add goal"
-				then:  "output.state == \"refused\" && output.refusal == input.reason && output.home_score == input.home_score && output.goal_minute == input.goal_minute"
+				when: "save, add goal"
+				then: "output.state == \"refused\" && output.refusal == input.reason && output.home_score == input.home_score && output.goal_minute == input.goal_minute"
 			}
 			"test-chances": {
-				of:    "chances"
-				says:  "the 2026 Série A's chances lead with Flamengo, near golaberto's own figure, and each team's positions sum to whole seasons"
+				of:   "chances"
+				says: "the 2026 Série A's chances lead with Flamengo, near golaberto's own figure, and each team's positions sum to whole seasons"
 				given: {group: "2026 Série A, Grupo Único"}
-				when:  "open"
-				then:  "output.leader == \"Flamengo-RJ\" && output.title >= 60.0 && output.title <= 90.0 && output.positions_sum >= 99.0 && output.positions_sum <= 101.0"
+				when: "open"
+				then: "output.leader == \"Flamengo-RJ\" && output.title >= 60.0 && output.title <= 90.0 && output.positions_sum >= 99.0 && output.positions_sum <= 101.0"
 			}
 			"test-chances-live": {
-				of:    "chances"
-				says:  "a result recorded for a game still to play moves the chances on a page left open, and undoing it brings them back"
+				of:   "chances"
+				says: "a result recorded for a game still to play moves the chances on a page left open, and undoing it brings them back"
 				given: {before: "the leader's title chance"}
-				when:  "record a result, then undo it"
-				then:  "output.after != input.before && output.restored == input.before"
+				when: "record a result, then undo it"
+				then: "output.after != input.before && output.restored == input.before"
 			}
 			"test-chances-reach": {
-				of:    "chances"
-				says:  "in the 2026 Série A every chance that shows 0 says whether it can still happen, marked * when it can and unmarked when the points rule it out"
+				of:   "chances"
+				says: "in the 2026 Série A every chance that shows 0 says whether it can still happen, marked * when it can and unmarked when the points rule it out"
 				given: {group: "2026 Série A, Grupo Único"}
-				when:  "open"
-				then:  "output.zeros_unsaid == 0 && output.impossible_mark == \"\" && output.reachable_mark == \"*\""
+				when: "open"
+				then: "output.zeros_unsaid == 0 && output.impossible_mark == \"\" && output.reachable_mark == \"*\""
 			}
 			"test-team-rating": {
-				of:    "equipe"
-				says:  "a team's page shows its latest rating, a number from 0 to 100"
+				of:   "equipe"
+				says: "a team's page shows its latest rating, a number from 0 to 100"
 				given: {team: "Flamengo-RJ"}
-				when:  "open"
-				then:  "output.rating >= 0.0 && output.rating <= 100.0"
+				when: "open"
+				then: "output.rating >= 0.0 && output.rating <= 100.0"
 			}
 			"test-game-importance": {
-				of:    "jogo"
-				says:  "a game still to play shows how much its result matters to each side"
+				of:   "jogo"
+				says: "a game still to play shows how much its result matters to each side"
 				given: {game: "Flamengo's next home game"}
-				when:  "open"
-				then:  "output.importance.size() == 2"
+				when: "open"
+				then: "output.importance.size() == 2"
 			}
 			"test-comment-empty": {
-				of:    "Comment"
-				says:  "a comment of blanks is refused"
+				of:   "Comment"
+				says: "a comment of blanks is refused"
 				given: {body: "   "}
-				when:  "create"
-				then:  "error.kind == \"constraint\""
+				when: "create"
+				then: "error.kind == \"constraint\""
 			}
 			"test-sign-in": {
-				of:    "jogo"
-				says:  "a guest is offered a passkey, which keeps the guest's identity"
+				of:   "jogo"
+				says: "a guest is offered a passkey, which keeps the guest's identity"
 				given: {}
-				when:  "view"
-				then:  "output.strip.contains(\"Entrar\")"
+				when: "view"
+				then: "output.strip.contains(\"Entrar\")"
 			}
 			"test-venue-home": {
-				of:    "estadio"
-				says:  "a team's ground shows the team and the games played there, under one name"
+				of:   "estadio"
+				says: "a team's ground shows the team and the games played there, under one name"
 				given: {}
-				when:  "view"
-				then:  "output.teams.exists(t, t == \"São Paulo-SP\") && output.games.size() > 0"
+				when: "view"
+				then: "output.teams.exists(t, t == \"São Paulo-SP\") && output.games.size() > 0"
 			}
 			"test-venues": {
-				of:    "estadios"
-				says:  "part of a name narrows the stadiums and the referees"
+				of:   "estadios"
+				says: "part of a name narrows the stadiums and the referees"
 				given: {q: "pacaembu"}
-				when:  "type"
-				then:  "output.rows == [\"Pacaembu\"]"
+				when: "type"
+				then: "output.rows == [\"Pacaembu\"]"
 			}
 			"test-stadium-page": {
-				of:    "estadio"
-				says:  "a stadium's page lists the games played there, newest first"
+				of:   "estadio"
+				says: "a stadium's page lists the games played there, newest first"
 				given: {}
-				when:  "view"
-				then:  "output.games.size() > 0"
+				when: "view"
+				then: "output.games.size() > 0"
 			}
 			"test-referee-page": {
-				of:    "arbitro"
-				says:  "a referee's page lists the games they refereed, newest first"
+				of:   "arbitro"
+				says: "a referee's page lists the games they refereed, newest first"
 				given: {}
-				when:  "view"
-				then:  "output.games.size() > 0"
+				when: "view"
+				then: "output.games.size() > 0"
 			}
 			"test-game-venue": {
-				of:    "jogo"
-				says:  "a game's page names its stadium and its referee, each leading to their page"
+				of:   "jogo"
+				says: "a game's page names its stadium and its referee, each leading to their page"
 				given: {}
-				when:  "view"
-				then:  "output.facts == [\"Pacaembu\", \"Cléber Wellington Abade\"]"
+				when: "view"
+				then: "output.facts == [\"Pacaembu\", \"Cléber Wellington Abade\"]"
 			}
 			"test-venue-gone": {
-				of:    "estadio"
-				says:  "an address naming no stadium, or no referee, says so"
+				of:   "estadio"
+				says: "an address naming no stadium, or no referee, says so"
 				given: {slug: "missing-address"}
-				when:  "view"
-				then:  "output.empty == \"Este estádio não existe ou foi removido.\""
+				when: "view"
+				then: "output.empty == \"Este estádio não existe ou foi removido.\""
 			}
 			"test-position": {
-				of:    "Player"
-				says:  "a position outside the eight is refused"
+				of:   "Player"
+				says: "a position outside the eight is refused"
 				given: {name: "Vinícius", position: "lw"}
-				when:  "create"
-				then:  "error.field == \"position\""
+				when: "create"
+				then: "error.field == \"position\""
 			}
 		}
 	}
 }
-
 
 cluster: (pronto.#DefaultCluster & {
 	"code": code
@@ -2242,9 +2320,9 @@ cluster: (pronto.#DefaultCluster & {
 }).out
 _appBoot: string @embed(file="boot.js", type=text)
 terminal: (pronto.#DefaultTerminal & {"code": code, boot: _appBoot}).out
-loop:     (pronto.#DefaultLoop & {"code": code, "cluster": cluster, "terminal": terminal}).out
+loop: (pronto.#DefaultLoop & {"code": code, "cluster": cluster, "terminal": terminal}).out
 
-build:    (pronto.#DefaultBuild & {"code": code, "loop": loop, "cluster": cluster, "terminal": terminal}).out
+build: (pronto.#DefaultBuild & {"code": code, "loop": loop, "cluster": cluster, "terminal": terminal}).out
 
 // The archive's constraints live in Postgres, so they are graded there.
 build: checks: "constraints": {
@@ -2260,7 +2338,7 @@ build: checks: "acceptance": {
 	priority: 1
 	browser:  true
 	database: true
-	cmds: ["deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=caddy tests/acceptance.ts"]
+	cmds: ["deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=caddy tests/acceptance.ts tests/player-reading.ts tests/archive-reading.ts tests/editing-acceptance.ts tests/competition-acceptance.ts tests/community-acceptance.ts"]
 	note: "the ir's screen invariants against the running archive: levels, catalogue and search, a championship's structure, three languages, the dark twin and the screen range"
 }
 
@@ -2277,9 +2355,9 @@ loop: surface: checks: "standings": {
 }
 
 loop: surface: checks: "image-renderers": {
-  verb: "test"
-  cmds: ["mise exec -- deno test --config tests/deno.json --no-lock tests/image-renderers.ts"]
-  note: "imported hexadecimal IDs, fixture mappings, country aliases and neutral badges"
+	verb: "test"
+	cmds: ["mise exec -- deno test --config tests/deno.json --no-lock tests/image-renderers.ts"]
+	note: "imported hexadecimal IDs, fixture mappings, country aliases and neutral badges"
 }
 
 loop: surface: checks: "team-chart-renderer": {verb: "test", cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/team-chart-renderer.ts"], note: "pure chart geometry, accessible links and safe SVG node output"}
@@ -2289,10 +2367,11 @@ code: state: pipelines: "team-enrichment": {raw: true, from: "TeamRating", to: "
 loop: surface: checks: "team-enrichment-import": {verb: "test", cmds: ["python3 -m unittest discover -s tools -p team_enrichment_import_test.py"], note: "legacy snapshot parsing, stable identity and validation are deterministic"}
 
 build: checks: "request-reads": {
-    priority: 1
-    database: true
-    cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-net --allow-read --allow-sys tests/campaign-read.ts tests/readable-addresses.ts"]
-    note: "request-time historical rankings and readable address uniqueness"
+	priority: 1
+	database: true
+	srcs: ["services/database/sql/035_read_parity.sql"]
+	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-net --allow-read --allow-sys tests/campaign-read.ts tests/readable-addresses.ts tests/read-parity.ts"]
+	note: "request-time historical rankings and readable address uniqueness"
 }
 
 out: pronto.#emit & {"code": code, "cluster": cluster, "terminal": terminal, "loop": loop, "build": build}

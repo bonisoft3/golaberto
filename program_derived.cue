@@ -21,6 +21,28 @@ code: surface: screens: {
 		writes: []
 		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
 	}
+	arquivo: {
+		reads: [
+			{table: "archive_page", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "category", kind: "live", nested: true, lists: [], route: "view", clauses: [], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "game_archive", kind: "live", nested: true, lists: [], route: "server", embeds: [], limit: 40, orders: ["day","kickoff","id"]},
+			{table: "game_archive", kind: "live", nested: true, lists: [], route: "server", embeds: [], limit: 1, orders: ["day","kickoff","id"]},
+		]
+		writes: []
+		files: {handlers: ["shell/handlers/archive-round.js", "shell/handlers/archive-week.js", "shell/handlers/page-value.js"], adapters: []}
+	}
+	"arquivo-campeonato": {
+		reads: [
+			{table: "championship", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"slug","op":"eq"}], embeds: [], limit: 1, orders: []},
+			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "category", kind: "live", nested: true, lists: [0], route: "view", clauses: [], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "phase", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"championship_id","op":"eq"}], embeds: [], limit: 100, orders: ["position","id"]},
+			{table: "game_archive", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 40, orders: ["day","kickoff","id"]},
+			{table: "game_archive", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["day","kickoff","id"]},
+		]
+		writes: []
+		files: {handlers: ["shell/handlers/archive-round.js", "shell/handlers/archive-week.js", "shell/handlers/page-value.js"], adapters: []}
+	}
 	campeonato: {
 		reads: [
 			{table: "championship", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"slug","op":"eq"}], embeds: [], orders: []},
@@ -38,6 +60,22 @@ code: surface: screens: {
 		]
 		writes: []
 		files: {handlers: [], adapters: []}
+	}
+	"campeonato-jogadores": {
+		reads: [
+			{table: "championship", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"slug","op":"eq"}], embeds: [], limit: 1, orders: []},
+			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "archive_page", kind: "named", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "player_stat", kind: "live", nested: true, lists: [0], route: "server", embeds: ["player","team","championship"], limit: 40, orders: ["player_name","team_name","id","played","minutes","goals","goals_per90","contribution","contribution_per90"]},
+			{table: "archive_page", kind: "named", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "player_stat", kind: "live", nested: true, lists: [0], route: "server", clauses: [{"col":"championship_id","op":"eq"},{"col":"search_key","op":"like"},{"col":"minutes","op":"gte"}], embeds: [], limit: 1, orders: []},
+			{table: "player_stat", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["player_name","team_name","id","played","minutes","goals","goals_per90","contribution","contribution_per90"]},
+		]
+		writes: [
+			{table: "archive_page", op: "reduce"},
+			{table: "player_stat", op: "reduce"},
+		]
+		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/parity-minutes.js", "shell/handlers/player-csv-fold.js", "shell/handlers/player-csv-seed.js", "shell/handlers/search-key.js"], adapters: []}
 	}
 	campeonatos: {
 		reads: [
@@ -89,6 +127,126 @@ code: surface: screens: {
 		]
 		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/both-scored.js", "shell/handlers/count-or-null.js", "shell/handlers/row-id.js", "shell/handlers/search-key.js"], adapters: []}
 	}
+	"editar-arbitro": {
+		reads: [
+			{table: "editor", kind: "live", nested: false, lists: [], route: "view", clauses: [], embeds: [], limit: 1, orders: []},
+			{table: "referee", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"slug","op":"eq"}], embeds: [], limit: 1, orders: []},
+		]
+		writes: [
+			{table: "referee", op: "update"},
+			{table: "referee", op: "delete"},
+		]
+		files: {handlers: [], adapters: ["shell/handlers/editing-text.js"]}
+	}
+	"editar-competicao": {
+		reads: [
+			{table: "editor", kind: "live", nested: false, lists: [], route: "view", clauses: [], embeds: [], limit: 1, orders: []},
+			{table: "championship", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"slug","op":"eq"}], embeds: [], limit: 1, orders: []},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "category", kind: "live", nested: true, lists: [0,1], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "category", kind: "live", nested: true, lists: [0,1], route: "snapshot", clauses: [{"col":"name","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "phase", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"championship_id","op":"eq"}], embeds: ["championship"], orders: ["position","id"]},
+			{table: "phase_clone", kind: "live", nested: true, lists: [0,1,5], route: "view", clauses: [{"col":"source_phase_id","op":"eq"}], embeds: [], limit: 1, orders: ["created_at","id"]},
+			{table: "championship", kind: "live", nested: true, lists: [0,1,5,6], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], limit: 1, orders: []},
+			{table: "stage_group", kind: "live", nested: true, lists: [0,1,5], route: "view", clauses: [{"col":"phase_id","op":"eq"}], embeds: [], orders: ["position","name","id"]},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0,1,5,8], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team", kind: "live", nested: true, lists: [0,1,5,8], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "team", kind: "live", nested: true, lists: [0,1,5,8], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "team_group", kind: "live", nested: true, lists: [0,1,5,8], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: ["team"], orders: ["team_id","id"]},
+			{table: "zone", kind: "live", nested: true, lists: [0,1,5,8], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], orders: ["first","last","id"]},
+		]
+		writes: [
+			{table: "championship", op: "update"},
+			{table: "phase", op: "create"},
+			{table: "phase", op: "update"},
+			{table: "phase_clone", op: "create"},
+			{table: "stage_group", op: "create"},
+			{table: "stage_group", op: "update"},
+			{table: "team_group", op: "create"},
+			{table: "team_group", op: "update"},
+			{table: "team_group", op: "delete"},
+			{table: "zone", op: "create"},
+			{table: "zone", op: "update"},
+			{table: "zone", op: "delete"},
+			{table: "stage_group", op: "delete"},
+			{table: "phase", op: "delete"},
+			{table: "championship", op: "delete"},
+		]
+		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-integer.js", "shell/handlers/editing-text.js", "shell/handlers/editing-uuid.js"]}
+	}
+	"editar-equipe": {
+		reads: [
+			{table: "editor", kind: "live", nested: false, lists: [], route: "view", clauses: [], embeds: [], limit: 1, orders: []},
+			{table: "team", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"slug","op":"eq"}], embeds: [], limit: 1, orders: []},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "stadium", kind: "live", nested: true, lists: [0,1], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "stadium", kind: "live", nested: true, lists: [0,1], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "user_pending_upload", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [], embeds: [], limit: 4, orders: ["created_at","id"]},
+		]
+		writes: [
+			{table: "team", op: "update"},
+			{table: "team", op: "update"},
+			{table: "user_pending_upload", op: "delete"},
+			{table: "stadium", op: "create"},
+			{table: "team", op: "delete"},
+		]
+		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-text.js", "shell/handlers/editing-uuid.js"]}
+	}
+	"editar-estadio": {
+		reads: [
+			{table: "editor", kind: "live", nested: false, lists: [], route: "view", clauses: [], embeds: [], limit: 1, orders: []},
+			{table: "stadium", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"slug","op":"eq"}], embeds: [], limit: 1, orders: []},
+		]
+		writes: [
+			{table: "stadium", op: "update"},
+			{table: "stadium", op: "delete"},
+		]
+		files: {handlers: [], adapters: ["shell/handlers/editing-text.js"]}
+	}
+	"editar-jogador": {
+		reads: [
+			{table: "editor", kind: "live", nested: false, lists: [], route: "view", clauses: [], embeds: [], limit: 1, orders: []},
+			{table: "player", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"slug","op":"eq"}], embeds: [], limit: 1, orders: []},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "player", kind: "live", nested: true, lists: [0,1], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "player_directory", kind: "live", nested: true, lists: [0,1], route: "snapshot", clauses: [{"col":"search_key","op":"like"},{"col":"id","op":"neq"}], embeds: [], limit: 40, orders: ["name","id"]},
+		]
+		writes: [
+			{table: "player", op: "update"},
+			{table: "player_merge", op: "create"},
+			{table: "player", op: "delete"},
+		]
+		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-integer.js", "shell/handlers/editing-text.js", "shell/handlers/editing-uuid.js"]}
+	}
+	"editar-jogo": {
+		reads: [
+			{table: "editor", kind: "live", nested: false, lists: [], route: "view", clauses: [], embeds: [], limit: 1, orders: []},
+			{table: "game", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"slug","op":"eq"}], embeds: [], limit: 1, orders: []},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "phase_directory", kind: "live", nested: true, lists: [0,1], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "phase_directory", kind: "live", nested: true, lists: [0,1], route: "server", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team", kind: "live", nested: true, lists: [0,1], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "team", kind: "live", nested: true, lists: [0,1], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team", kind: "live", nested: true, lists: [0,1], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "team", kind: "live", nested: true, lists: [0,1], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "stadium", kind: "live", nested: true, lists: [0,1], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "stadium", kind: "live", nested: true, lists: [0,1], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "referee", kind: "live", nested: true, lists: [0,1], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "referee", kind: "live", nested: true, lists: [0,1], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+		]
+		writes: [
+			{table: "game", op: "update"},
+			{table: "stadium", op: "create"},
+			{table: "referee", op: "create"},
+			{table: "game", op: "delete"},
+		]
+		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/count-or-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/editing-played.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-integer.js", "shell/handlers/editing-text.js", "shell/handlers/editing-timestamp.js", "shell/handlers/editing-uuid.js"]}
+	}
 	equipe: {
 		reads: [
 			{table: "team", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"slug","op":"eq"}], embeds: [], orders: []},
@@ -96,6 +254,7 @@ code: surface: screens: {
 			{table: "stadium", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
 			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
 			{table: "team_rating_chart", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"team_id","op":"eq"},{"col":"period","op":"eq"}], embeds: [], orders: []},
+			{table: "archive_page", kind: "named", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
 			{table: "team_rating", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 40, orders: ["measure_date","id"]},
 			{table: "team_rating", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["measure_date","id"]},
 			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
@@ -121,13 +280,16 @@ code: surface: screens: {
 			{table: "team_comment_draft", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
 			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
 			{table: "team_comment", kind: "live", nested: true, lists: [0], route: "server", embeds: ["app_user"], limit: 40, orders: ["created_at","id"]},
+			{table: "community_access", kind: "live", nested: true, lists: [0,30], route: "view", clauses: [{"col":"kind","op":"eq"},{"col":"record_id","op":"eq"}], embeds: [], limit: 1, orders: []},
 			{table: "team_comment", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["created_at","id"]},
 		]
 		writes: [
+			{table: "team_rating_chart", op: "reduce"},
+			{table: "team_comment", op: "delete", filter: "id=eq.{record_id}"},
 			{table: "team_comment", op: "create"},
 			{table: "team_comment", op: "create"},
 		]
-		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
+		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/search-key.js", "shell/handlers/team-rating-series.js"], adapters: []}
 	}
 	"equipe-campeonato": {
 		reads: [
@@ -153,25 +315,44 @@ code: surface: screens: {
 			{table: "standing", kind: "live", nested: true, lists: [0,16], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: ["team"], limit: 250, orders: ["team_name","team_id"]},
 			{table: "team_campaign_point", kind: "live", nested: true, lists: [0,16], route: "server", embeds: ["team","game"], limit: 800, orders: ["sequence","team_id"]},
 			{table: "team_chart_state", kind: "named", nested: true, lists: [0,16], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team_group", kind: "named", nested: true, lists: [0,16], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], limit: 250, orders: []},
 			{table: "archive_page", kind: "live", nested: true, lists: [0,16], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
 			{table: "team_campaign_point", kind: "live", nested: true, lists: [0,16], route: "server", embeds: ["game"], limit: 40, orders: ["sequence"]},
 			{table: "team_campaign_point", kind: "live", nested: true, lists: [0,16], route: "server", embeds: [], limit: 1, orders: ["sequence"]},
 			{table: "team_group", kind: "live", nested: true, lists: [0], route: "server", embeds: ["stage_group","phase"], orders: ["group_id"]},
-			{table: "team_chance", kind: "live", nested: true, lists: [0,25], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: ["team","group_id"], limit: 1, orders: ["rank","id"]},
-			{table: "zone_chance", kind: "live", nested: true, lists: [0,25,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: ["zone_id"], orders: ["first","last"]},
-			{table: "team_chart_state", kind: "live", nested: true, lists: [0,25,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
-			{table: "team_chart_state", kind: "named", nested: true, lists: [0,25,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
-			{table: "position_chance", kind: "live", nested: true, lists: [0,25,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: ["team"], limit: 250, orders: ["position"]},
-			{table: "team_chart_state", kind: "named", nested: true, lists: [0,25,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
-			{table: "position_chance", kind: "live", nested: true, lists: [0,25,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], orders: ["position"]},
-			{table: "team_odds_chart", kind: "live", nested: true, lists: [0,25], route: "view", clauses: [{"col":"team_id","op":"eq"},{"col":"group_id","op":"eq"}], embeds: ["zone"], limit: 50, orders: ["zone_id"]},
+			{table: "team_chance", kind: "live", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: ["team","group_id"], limit: 1, orders: ["rank","id"]},
+			{table: "zone_chance", kind: "live", nested: true, lists: [0,26,27], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: ["zone_id"], orders: ["first","last"]},
+			{table: "team_odds_progress_state", kind: "live", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team_odds_progress_state", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "position_chance", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 250, orders: ["position"]},
+			{table: "zone", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], limit: 250, orders: ["first","last","id"]},
+			{table: "team_odds_progress", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 1, orders: ["group_id","team_id"]},
+			{table: "zone", kind: "live", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], limit: 50, orders: ["first","last","id"]},
+			{table: "team_odds_progress", kind: "live", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 1, orders: ["group_id","team_id"]},
+			{table: "team_odds_progress_state", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "position_chance", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 250, orders: ["position"]},
+			{table: "zone", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], limit: 250, orders: ["first","last","id"]},
+			{table: "team_odds_progress", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 1, orders: ["group_id","team_id"]},
+			{table: "position_chance", kind: "live", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 250, orders: ["position"]},
+			{table: "team_odds_progress_state", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "position_chance", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 250, orders: ["position"]},
+			{table: "zone", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], limit: 250, orders: ["first","last","id"]},
+			{table: "team_odds_progress", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 1, orders: ["group_id","team_id"]},
+			{table: "zone", kind: "live", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], limit: 250, orders: ["first","last","id"]},
+			{table: "team_odds_progress_state", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "position_chance", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 250, orders: ["position"]},
+			{table: "zone", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], limit: 250, orders: ["first","last","id"]},
+			{table: "team_odds_progress", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 1, orders: ["group_id","team_id"]},
 		]
 		writes: [
 			{table: "team_chart_state", op: "reduce"},
 			{table: "team_campaign_point", op: "reduce"},
+			{table: "team_odds_progress_state", op: "reduce"},
+			{table: "team_odds_progress", op: "reduce"},
 			{table: "position_chance", op: "reduce"},
+			{table: "zone", op: "reduce"},
 		]
-		files: {handlers: ["shell/handlers/chart-compare.js", "shell/handlers/chart-metric.js", "shell/handlers/page-value.js", "shell/handlers/search-key.js", "shell/handlers/team-chart-fold.js", "shell/handlers/team-chart-seed.js"], adapters: []}
+		files: {handlers: ["shell/handlers/chart-compare.js", "shell/handlers/chart-position-bound.js", "shell/handlers/odds-progress-point.js", "shell/handlers/odds-progress-snapshot.js", "shell/handlers/odds-progress-zone.js", "shell/handlers/page-value.js", "shell/handlers/position-odds-control.js", "shell/handlers/position-odds-fold.js", "shell/handlers/search-key.js", "shell/handlers/team-chart-fold.js", "shell/handlers/team-chart-seed.js"], adapters: []}
 	}
 	equipes: {
 		reads: [
@@ -186,6 +367,28 @@ code: surface: screens: {
 			{table: "geography_country", op: "reduce"},
 		]
 		files: {handlers: ["shell/handlers/country-option.js", "shell/handlers/geography-selection.js", "shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
+	}
+	"escalacao-jogo": {
+		reads: [
+			{table: "editor", kind: "live", nested: false, lists: [], route: "view", clauses: [], embeds: [], limit: 1, orders: []},
+			{table: "game", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"slug","op":"eq"}], embeds: [], limit: 1, orders: []},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "player", kind: "live", nested: true, lists: [0,1], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "player_directory", kind: "live", nested: true, lists: [0,1], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "archive_page", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "player_game", kind: "live", nested: true, lists: [0,1], route: "server", embeds: ["player"], limit: 40, orders: ["side","bench","on_minute","id"]},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0,1,6], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "player", kind: "live", nested: true, lists: [0,1,6], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "player_directory", kind: "live", nested: true, lists: [0,1,6], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "player_game", kind: "live", nested: true, lists: [0,1], route: "server", embeds: [], limit: 1, orders: ["side","bench","on_minute","id"]},
+		]
+		writes: [
+			{table: "player_game", op: "create"},
+			{table: "player", op: "create"},
+			{table: "player_game", op: "update"},
+			{table: "player_game", op: "delete"},
+		]
+		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-integer.js", "shell/handlers/editing-text.js", "shell/handlers/editing-uuid.js"]}
 	}
 	estadio: {
 		reads: [
@@ -207,39 +410,187 @@ code: surface: screens: {
 		writes: []
 		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
 	}
-	jogador: {
+	gerenciar: {
 		reads: [
-			{table: "player", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"slug","op":"eq"}], embeds: [], orders: []},
-			{table: "player_rating", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "editor", kind: "live", nested: false, lists: [], route: "view", clauses: [], embeds: [], limit: 1, orders: []},
 			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
-			{table: "player_stat", kind: "live", nested: true, lists: [0], route: "server", embeds: ["team","championship"], limit: 40, orders: ["championship_name","team_name"]},
-			{table: "player_stat", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["championship_name","team_name"]},
+			{table: "team", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "team", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["name","id"]},
 			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
-			{table: "player_game", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 40, orders: ["day"]},
-			{table: "game_card", kind: "live", nested: true, lists: [0,6], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: ["id","stadium","referee","championship","home_id","away_id"], orders: []},
-			{table: "player_game", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["day"]},
+			{table: "player_directory", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "player_directory", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["name","id"]},
+			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "stadium", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "stadium", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["name","id"]},
+			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "referee", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "referee", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["name","id"]},
+			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "game_archive", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 40, orders: ["day","id"]},
+			{table: "game_archive", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["day","id"]},
+		]
+		writes: []
+		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
+	}
+	"gerenciar-competicoes": {
+		reads: [
+			{table: "editor", kind: "live", nested: false, lists: [], route: "view", clauses: [], embeds: [], limit: 1, orders: []},
+			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "championship", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 40, orders: ["region_name","name","begins","id"]},
+			{table: "championship", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["region_name","name","begins","id"]},
+		]
+		writes: []
+		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
+	}
+	"gols-jogo": {
+		reads: [
+			{table: "editor", kind: "live", nested: false, lists: [], route: "view", clauses: [], embeds: [], limit: 1, orders: []},
+			{table: "game", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"slug","op":"eq"}], embeds: [], limit: 1, orders: []},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "player", kind: "live", nested: true, lists: [0,1], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "player_directory", kind: "live", nested: true, lists: [0,1], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "archive_page", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "goal", kind: "live", nested: true, lists: [0,1], route: "server", embeds: ["player"], limit: 40, orders: ["side","aet","minute","id"]},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0,1,6], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "player", kind: "live", nested: true, lists: [0,1,6], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "player_directory", kind: "live", nested: true, lists: [0,1,6], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "goal", kind: "live", nested: true, lists: [0,1], route: "server", embeds: [], limit: 1, orders: ["side","aet","minute","id"]},
+		]
+		writes: [
+			{table: "goal", op: "create"},
+			{table: "player", op: "create"},
+			{table: "goal", op: "update"},
+			{table: "goal", op: "delete"},
+		]
+		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-integer.js", "shell/handlers/editing-text.js", "shell/handlers/editing-uuid.js"]}
+	}
+	"historico-jogo": {
+		reads: [
+			{table: "game", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"slug","op":"eq"}], embeds: [], limit: 1, orders: []},
+			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "game_change", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 40, orders: ["created_at","id"]},
+			{table: "game_change", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["created_at","id"]},
 		]
 		writes: []
 		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
+	}
+	"inscricoes-jogador": {
+		reads: [
+			{table: "editor", kind: "live", nested: false, lists: [], route: "view", clauses: [], embeds: [], limit: 1, orders: []},
+			{table: "player", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"slug","op":"eq"}], embeds: [], limit: 1, orders: []},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "championship", kind: "live", nested: true, lists: [0,1], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "championship", kind: "live", nested: true, lists: [0,1], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["full_name","id"]},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team", kind: "live", nested: true, lists: [0,1], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "team", kind: "live", nested: true, lists: [0,1], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "archive_page", kind: "live", nested: true, lists: [0,1], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team_player", kind: "live", nested: true, lists: [0,1], route: "server", embeds: ["team","championship"], limit: 40, orders: ["championship_id","team_id","id"]},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0,1,9], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "championship", kind: "live", nested: true, lists: [0,1,9], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "championship", kind: "live", nested: true, lists: [0,1,9], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["full_name","id"]},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0,1,9], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team", kind: "live", nested: true, lists: [0,1,9], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "team", kind: "live", nested: true, lists: [0,1,9], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "team_player", kind: "live", nested: true, lists: [0,1], route: "server", embeds: [], limit: 1, orders: ["championship_id","team_id","id"]},
+		]
+		writes: [
+			{table: "team_player", op: "create"},
+			{table: "team_player", op: "update"},
+			{table: "team_player", op: "delete"},
+		]
+		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-uuid.js"]}
+	}
+	jogador: {
+		reads: [
+			{table: "player_directory", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"slug","op":"eq"}], embeds: [], limit: 1, orders: []},
+			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "archive_page", kind: "named", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "player_stat", kind: "live", nested: true, lists: [0], route: "server", embeds: ["player","team","championship"], limit: 40, orders: ["player_name","team_name","id","played","minutes","goals","goals_per90","contribution","contribution_per90"]},
+			{table: "archive_page", kind: "named", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "player_stat", kind: "live", nested: true, lists: [0], route: "server", clauses: [{"col":"player_id","op":"eq"},{"col":"search_key","op":"like"},{"col":"minutes","op":"gte"}], embeds: [], limit: 1, orders: []},
+			{table: "player_stat", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["player_name","team_name","id","played","minutes","goals","goals_per90","contribution","contribution_per90"]},
+			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "category", kind: "live", nested: true, lists: [0], route: "view", clauses: [], embeds: [], limit: 40, orders: ["name"]},
+			{table: "player_appearance", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 40, orders: ["day","kickoff","id"]},
+			{table: "goal", kind: "live", nested: true, lists: [0,9], route: "view", clauses: [{"col":"player_id","op":"eq"},{"col":"game_id","op":"eq"}], embeds: [], limit: 40, orders: ["minute","id"]},
+			{table: "player_appearance", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["day","kickoff","id"]},
+			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "archive_page", kind: "named", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "player_stat", kind: "live", nested: true, lists: [0], route: "server", embeds: ["player","team","championship"], limit: 40, orders: ["player_name","team_name","id","played","minutes","goals","goals_per90","contribution","contribution_per90"]},
+			{table: "archive_page", kind: "named", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "player_stat", kind: "live", nested: true, lists: [0], route: "server", clauses: [{"col":"player_id","op":"eq"},{"col":"search_key","op":"like"},{"col":"minutes","op":"gte"}], embeds: [], limit: 1, orders: []},
+			{table: "player_stat", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["player_name","team_name","id","played","minutes","goals","goals_per90","contribution","contribution_per90"]},
+			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "category", kind: "live", nested: true, lists: [0], route: "view", clauses: [], embeds: [], limit: 40, orders: ["name"]},
+			{table: "player_appearance", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 40, orders: ["day","kickoff","id"]},
+			{table: "goal", kind: "live", nested: true, lists: [0,20], route: "view", clauses: [{"col":"player_id","op":"eq"},{"col":"game_id","op":"eq"}], embeds: [], limit: 40, orders: ["minute","id"]},
+			{table: "player_appearance", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["day","kickoff","id"]},
+		]
+		writes: [
+			{table: "archive_page", op: "reduce"},
+			{table: "player_stat", op: "reduce"},
+		]
+		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/parity-minutes.js", "shell/handlers/player-csv-fold.js", "shell/handlers/player-csv-seed.js", "shell/handlers/search-key.js"], adapters: []}
+	}
+	"jogador-campeonato": {
+		reads: [
+			{table: "player_stat", kind: "live", nested: false, lists: [], route: "server", embeds: ["player","team","championship"], limit: 1, orders: []},
+			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "category", kind: "live", nested: true, lists: [0], route: "view", clauses: [], embeds: [], limit: 40, orders: ["name"]},
+			{table: "player_appearance", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 40, orders: ["day","kickoff","id"]},
+			{table: "goal", kind: "live", nested: true, lists: [0,3], route: "view", clauses: [{"col":"player_id","op":"eq"},{"col":"game_id","op":"eq"}], embeds: [], limit: 40, orders: ["minute","id"]},
+			{table: "player_appearance", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["day","kickoff","id"]},
+		]
+		writes: []
+		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
+	}
+	jogadores: {
+		reads: [
+			{table: "archive_page", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "geography_region", kind: "live", nested: true, lists: [], route: "view", clauses: [], embeds: [], limit: 6, orders: ["name"]},
+			{table: "player_directory", kind: "live", nested: true, lists: [], route: "server", embeds: [], limit: 40, orders: ["name","id","rating"]},
+			{table: "player_directory", kind: "live", nested: true, lists: [], route: "server", embeds: [], limit: 1, orders: ["name","id","rating"]},
+		]
+		writes: []
+		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
 	}
 	jogo: {
 		reads: [
 			{table: "game_card", kind: "live", nested: false, lists: [], route: "server", embeds: ["id","stadium","referee","championship","home_id","away_id"], orders: []},
 			{table: "editor", kind: "live", nested: true, lists: [0], route: "whole", clauses: [], embeds: [], orders: []},
 			{table: "game_importance", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "match_recent_result", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"target_game_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 5, orders: ["day","kickoff","id"]},
+			{table: "match_recent_result", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"target_game_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 5, orders: ["day","kickoff","id"]},
+			{table: "match_location", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], limit: 1, orders: []},
 			{table: "goal", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"game_id","op":"eq"}], embeds: ["player"], orders: ["aet","minute"]},
-			{table: "player_game", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"game_id","op":"eq"},{"col":"side","op":"eq"}], embeds: ["player"], orders: ["bench","on_minute"]},
-			{table: "player_game", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"game_id","op":"eq"},{"col":"side","op":"eq"}], embeds: ["player"], orders: ["bench","on_minute"]},
+			{table: "match_probability_scenario", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "match_probability_scenario", kind: "named", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "match_probability", kind: "named", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], limit: 1, orders: []},
+			{table: "match_probability_scenario_event", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"game_id","op":"eq"}], embeds: [], limit: 21, orders: ["sequence"]},
+			{table: "match_probability_scenario", kind: "named", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "match_probability_scenario_event", kind: "live", nested: true, lists: [0,10], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "match_probability", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], limit: 1, orders: []},
+			{table: "match_lineup", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"game_id","op":"eq"},{"col":"side","op":"eq"}], embeds: [], limit: 100, orders: ["bench","on_minute","id"]},
+			{table: "match_lineup", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"game_id","op":"eq"},{"col":"side","op":"eq"}], embeds: [], limit: 100, orders: ["bench","on_minute","id"]},
+			{table: "match_head_to_head", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"target_game_id","op":"eq"}], embeds: [], limit: 5, orders: ["day","kickoff","id"]},
 			{table: "comment_draft", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
 			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
 			{table: "comment", kind: "live", nested: true, lists: [0], route: "server", embeds: ["app_user"], limit: 40, orders: ["created_at"]},
+			{table: "community_access", kind: "live", nested: true, lists: [0,19], route: "view", clauses: [{"col":"kind","op":"eq"},{"col":"record_id","op":"eq"}], embeds: [], limit: 1, orders: []},
 			{table: "comment", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["created_at"]},
 		]
 		writes: [
+			{table: "match_probability_scenario", op: "reduce"},
+			{table: "match_probability_scenario_event", op: "reduce"},
+			{table: "comment", op: "delete", filter: "id=eq.{record_id}"},
+			{table: "match_probability_scenario_event", op: "create"},
+			{table: "match_probability_scenario_event", op: "create"},
+			{table: "match_probability_scenario_event", op: "delete"},
 			{table: "comment", op: "create"},
 			{table: "comment", op: "create"},
 		]
-		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
+		files: {handlers: ["shell/handlers/match-probability-event-control.js", "shell/handlers/match-probability-event-edit.js", "shell/handlers/match-probability-event-fold.js", "shell/handlers/match-probability-seed.js", "shell/handlers/page-value.js"], adapters: []}
 	}
 	jogos: {
 		reads: [
@@ -249,6 +600,87 @@ code: surface: screens: {
 		]
 		writes: []
 		files: {handlers: [], adapters: []}
+	}
+	"nova-competicao": {
+		reads: [
+			{table: "editor", kind: "live", nested: false, lists: [], route: "view", clauses: [], embeds: [], limit: 1, orders: []},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "category", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "category", kind: "live", nested: true, lists: [0], route: "snapshot", clauses: [{"col":"name","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+		]
+		writes: [
+			{table: "championship", op: "create"},
+		]
+		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-integer.js", "shell/handlers/editing-text.js", "shell/handlers/editing-uuid.js"]}
+	}
+	"novo-arbitro": {
+		reads: [
+			{table: "editor", kind: "live", nested: false, lists: [], route: "view", clauses: [], embeds: [], limit: 1, orders: []},
+		]
+		writes: [
+			{table: "referee", op: "create"},
+		]
+		files: {handlers: [], adapters: ["shell/handlers/editing-text.js"]}
+	}
+	"novo-equipe": {
+		reads: [
+			{table: "editor", kind: "live", nested: false, lists: [], route: "view", clauses: [], embeds: [], limit: 1, orders: []},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "stadium", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "stadium", kind: "live", nested: true, lists: [0], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "user_pending_upload", kind: "live", nested: true, lists: [0], route: "view", clauses: [], embeds: [], limit: 4, orders: ["created_at","id"]},
+		]
+		writes: [
+			{table: "team", op: "create"},
+			{table: "user_pending_upload", op: "delete"},
+			{table: "stadium", op: "create"},
+		]
+		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-text.js", "shell/handlers/editing-uuid.js"]}
+	}
+	"novo-estadio": {
+		reads: [
+			{table: "editor", kind: "live", nested: false, lists: [], route: "view", clauses: [], embeds: [], limit: 1, orders: []},
+		]
+		writes: [
+			{table: "stadium", op: "create"},
+		]
+		files: {handlers: [], adapters: ["shell/handlers/editing-text.js"]}
+	}
+	"novo-jogador": {
+		reads: [
+			{table: "editor", kind: "live", nested: false, lists: [], route: "view", clauses: [], embeds: [], limit: 1, orders: []},
+		]
+		writes: [
+			{table: "player", op: "create"},
+		]
+		files: {handlers: [], adapters: ["shell/handlers/editing-integer.js", "shell/handlers/editing-text.js"]}
+	}
+	"novo-jogo": {
+		reads: [
+			{table: "editor", kind: "live", nested: false, lists: [], route: "view", clauses: [], embeds: [], limit: 1, orders: []},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "phase_directory", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "phase_directory", kind: "live", nested: true, lists: [0], route: "server", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "team", kind: "live", nested: true, lists: [0], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "team", kind: "live", nested: true, lists: [0], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "stadium", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "stadium", kind: "live", nested: true, lists: [0], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+			{table: "editing_choice", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "referee", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: []},
+			{table: "referee", kind: "live", nested: true, lists: [0], route: "snapshot", clauses: [{"col":"search_key","op":"like"}], embeds: [], limit: 40, orders: ["name","id"]},
+		]
+		writes: [
+			{table: "game", op: "create"},
+			{table: "stadium", op: "create"},
+			{table: "referee", op: "create"},
+		]
+		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/count-or-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/editing-played.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-integer.js", "shell/handlers/editing-text.js", "shell/handlers/editing-timestamp.js", "shell/handlers/editing-uuid.js"]}
 	}
 	principal: {
 		reads: [
@@ -271,6 +703,53 @@ code: surface: screens: {
 		writes: []
 		files: {handlers: [], adapters: []}
 	}
+	publico: {
+		reads: [
+			{table: "championship", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"slug","op":"eq"}], embeds: [], limit: 1, orders: []},
+			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "championship_attendance", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 40, orders: ["average","team_name","id"]},
+			{table: "championship_attendance", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["average","team_name","id"]},
+			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "game_archive", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 40, orders: ["attendance","day","id"]},
+			{table: "game_archive", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["attendance","day","id"]},
+		]
+		writes: []
+		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
+	}
+	usuario: {
+		reads: [
+			{table: "user_directory", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: ["user_biography"], limit: 1, orders: []},
+			{table: "user_avatar", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], limit: 1, orders: []},
+			{table: "community_access", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"kind","op":"eq"},{"col":"record_id","op":"eq"}], embeds: ["user_biography"], limit: 1, orders: []},
+			{table: "user_biography", kind: "live", nested: true, lists: [0,2], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], limit: 1, orders: []},
+			{table: "community_access", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"kind","op":"eq"},{"col":"record_id","op":"eq"}], embeds: ["user_avatar"], limit: 1, orders: []},
+			{table: "user_pending_upload", kind: "live", nested: true, lists: [0,4], route: "view", clauses: [], embeds: [], limit: 4, orders: ["created_at","id"]},
+			{table: "user_avatar", kind: "live", nested: true, lists: [0,4], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], limit: 1, orders: []},
+			{table: "user_pending_upload", kind: "live", nested: true, lists: [0,4], route: "view", clauses: [], embeds: [], limit: 4, orders: ["created_at","id"]},
+			{table: "archive_page", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "game_change", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 40, orders: ["created_at","id"]},
+			{table: "game_change", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["created_at","id"]},
+		]
+		writes: [
+			{table: "user_biography", op: "create"},
+			{table: "user_biography", op: "update"},
+			{table: "user_avatar", op: "create"},
+			{table: "user_pending_upload", op: "delete"},
+			{table: "user_avatar", op: "update"},
+			{table: "user_avatar", op: "delete"},
+			{table: "user_pending_upload", op: "delete"},
+		]
+		files: {handlers: ["shell/handlers/page-value.js"], adapters: ["shell/handlers/editing-text.js"]}
+	}
+	usuarios: {
+		reads: [
+			{table: "archive_page", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "user_directory", kind: "live", nested: true, lists: [], route: "server", embeds: [], limit: 40, orders: ["display_name","id"]},
+			{table: "user_directory", kind: "live", nested: true, lists: [], route: "server", embeds: [], limit: 1, orders: ["display_name","id"]},
+		]
+		writes: []
+		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
+	}
 }
 
 _irNotes: {
@@ -281,6 +760,8 @@ _irNotes: {
 	"decision-catalog-tab": "The catalogue's search is a tab row, written by a form on change. Every text search uses the generated search_key column with PostgreSQL 18 LIKE and ICU primary-strength collation (und-u-ks-level1, nondeterministic), mirroring the linked upstream utf8mb3_unicode_ci rule for case and accents. Both atletico and atlético match both spellings, including uppercase and decomposed Unicode. This applies to the championship catalogue, team/stadium/referee directories, and both editor pickers; pagination probes use the same predicate. Names, uniqueness and display ordering retain their original spelling and collation. Queries retain what the reader typed and existing bounded server reads; no client-only filtering or layout change. The additive 025 migration adds keys on fresh and retained databases. Keys fold ı to i and Þ/þ to th before the original ICU collation compares them; æ remains equal ae. Tab filters and editor drafts use the same mapping through the search-key handler for query predicates, while inputs keep the typed spelling. PostgreSQL custom ICU rules force tertiary strength, so the original primary-strength collation is preserved. The original search_name columns and their version views remain available. The new keys follow every name edit without changing displayed spelling. Filtering is a live query over the championship table interpolating the search row's columns; a machine over that row assigns them from the controls' own events, so every keystroke narrows the list and nothing leaves the browser. The catalogue is rebuilt on every visit (keep: 0), so the search a reader returns to is the row's, which is the claim. A URL parameter would be the alternative; it would make a search shareable, but the archive's catalogue is short enough that a shared search is not worth an address"
 	"decision-chances": "Chances are upstream's odds estimator, odds-rust itself compiled to Wasm. Upstream computes each group's odds in odds-rust: a 20 000-season importance scout, a 100 000-season matched pool with exact point PMFs, and a rare-position search (proofs, conditioned and importance sampling, joint caps, tilts, witnesses, rescues, reconcile) that certifies probabilities down to 1e-14. Here that crate is compiled to a WASI module, computations/golaberto-odds.wasm, built by tools/odds-wasm. The chances computation is one JavaScript module run by mecha's compute service over a DuckLake published from the tables it reads: it builds each live group's request as Rails' Group#odds does and asks the module once per group, one group at a time, each with a seed hashed from the computation's name and the group's id. Each game's expected goals come from the latest TeamRating before it, by Rails' formula. Results land in four live sinks. CDC invalidates computations by their declared reads, including derived inputs such as ratings and standings; probability outputs are not inputs to this computation. Upstream funds a last rare-position tail with a share of the wall time its earlier stages took, so with it a response hangs on the machine's speed; the module runs with it off (upstream's RUST_ODDS_RARE_TAIL=0), and its response is the native one under that setting byte for byte, the seed's alone. What the tail adds is estimates under 1e-11 percent where the earlier stages found none, far under the cent the cells show; the cost is that such a cell the tail would have proved reachable by a witness season stays undecided. A cell that shows 0 says whether it can still happen, as upstream's odds_reachability does: odds-rust labels each final position impossible (proved by points or ranks), reachable (an estimate above zero or a witness season) or undecided, and a zone is impossible when each of its positions is, reachable when any is. The computation writes that as reach on the PositionChance and ZoneChance rows that round to 0 — a finished group's other positions are impossible — and the chances page and the front page's title column mark a reachable 0 with * and an undecided one with ?, an impossible one unmarked, each saying its status in words. Upstream's other use of the status, a zone shown as exactly 100 only when every position outside it is proved impossible, has no counterpart: cells here are rounded to the cent, and a 100 is a rounding like any other"
 	"decision-comments": "Comments are a signed-in reader's, written by a machine. Upstream lets a logged-in user comment; here a reader is a guest from the first page, so commenting is what a passkey is for: the guest's token says it is a guest, and the comment table's write policy refuses one. Signing in keeps the guest's identity — mecha's auth service binds a passkey registered from a guest's session to that guest — so nothing a reader did as a guest is orphaned. The composer is a machine over a tab row, not a form: it states its writing, sending and refused states, its post is a declared create effect the terminal sends, and a refusal is an arrow, so what was typed survives it. A handle is a byline, so AppUser is readable by everyone; the author column is named for its table so the byline is an embed the reader's own store answers. Comments are not edited; an author may delete their own"
+	"decision-community-ownership": "Account identity stays with the passkey source. Public historical handles remain bylines. Matching a name never grants ownership. Eligibility is a read-only app view of authenticated ownership, not a new auth plane; native mutation policies remain the authority. History stores immutable actors and field snapshots independently of current accounts and games"
+	"decision-competition-admin": "Competition administration oracle. The original Rails administration defines the editable championship, phase, group, membership and zone relationships. The accepted native forms keep those relationships explicit, allow overlapping and sparse classification zones, preserve organiser point adjustments and tiebreak bias, and use one confirmed command for Rails’ “copy phase to new championship” action. The clone deliberately contains no games or player registrations; its sole phase begins at position 1, matching Rails order_by: 1. A bounded private command read resolves the generated championship through the ordinary Championship entity and offers its edit route, preserving Rails’ post-clone navigation without a new client event"
 	"decision-derived-joins": "What games already say is not stored again. Upstream's referee_champs duplicates the referees of a championship's games; it is not kept. A group's games are its phase's games between its teams, as upstream derives them. Upstream's cached importance columns belong to the chances turn and are not modelled until then"
 	"decision-design-identity": "The archive's own identity, stated whole, with no preset. Every token the default preset would supply is overridden in DESIGN.md with a value read off upstream's stylesheet or the live site, so nothing of the preset survives. Two departures are argued there: the column widens from 790px to a fluid 960px, and the link brown darkens from #963 to #784d1e to clear 4.5:1. A dark twin exists where upstream has none, keeping the hierarchy by value, not hue"
 	"decision-editing": "Editors correct games through a machine; the cluster decides who is one. Upstream gives an editor role the run of the archive. Here the role is an Editor grant row, given out of band; the game's update and the goal's insert and delete admit a signed-in account holding one, and nothing else — the policies, not the screen, are the rule. The grant syncs to its holder alone, so the game page offers the editor exactly where a write would land. The editor is a machine over a tab draft seeded from the game it is nested in: no form, a save is one update, a goal is added or removed as the row it is, and a refusal keeps the draft. A goal changes the goal lines, the table and the players' seasons through the streams that already recount them (decision-standings-derived, decision-player-stats). Whether the game was played is not the editor's to tick: the game is played exactly when both sides have a score, so a typed score decides it. A draft outlives leaving the page within the tab, as the comment draft does, and a save writes every column it holds, so the last editor to save wins. Left for later: extra time and penalties, the date and kickoff, a goal's penalty and own-goal marks, and whether a side's goals add up to its score"
@@ -289,7 +770,7 @@ _irNotes: {
 	"decision-game-lists": "Every list of games is one row, written once. A game in a list reads the same on the games page and in a championship's rounds: when, which championship, who, the score. It is one CUE fragment (#GameList), its teams' and championship's names embedded in the read rather than looked up per row, so a forty-game list is one query"
 	"decision-generated-names": "A championship's season and full name are generated columns. Every page names championships as upstream's full_name does — region, name, season. Generated at the store, the spelling is one expression and no screen assembles it. The category suffix upstream appends is not in it, because a generated column cannot read another table; the pages show the category beside the name instead"
 	"decision-guest-reading": "Every reader is a guest the moment they arrive. A public row is readable by the signed-in role, and the terminal, with the auth plane on and sign-in not required, mints a guest for every reader silently: no gate, no ceremony, no screen. So the archive reads like a website to someone who never signs in, and the accounts the comments turn needs are the same identity, promoted by a passkey, rather than a second system. The cost is a row per reader: every new tab mints a guest, nothing reaps them, and a crawler that runs scripts mints one per visit. The alternative — public readable by the anonymous role, a guest minted only at the first write — would need the platform to grant anon, which it does not; the comments turn, which gives a guest something to keep, owns reaping the ones that never wrote"
-	"decision-hatches": "Escape hatches: none. No vendored unit, no container, no external endpoint; the one Wasm module is upstream's odds-rust, which the numeric stage runs (decision-chances). Everything the archive shows is rows, generated columns, pipelines and the terminal's machines; the maps upstream draws need a map service and are out of scope in the brief"
+	"decision-hatches": "Escape hatches: authenticated native media. The app media container adapts the existing blob upstream with authenticated immutable uploads and SQL-owned attachments (hatch-native-media). Public reads expose only attached normalized image styles. The existing Wasm odds module remains upstream's odds-rust (decision-chances)"
 	"decision-head-to-head": "Head to head is the mini-league's points. Upstream's head key builds a sub-table among the teams level on points and compares them within it. Here the key is the points each earned in games against the others level with it plus its add_sub, which is that sub-table's first criterion, and, as upstream, it separates no one in a group of two or when every team is level; two teams level on it fall through to the next key of the ladder, where upstream would continue within the sub-table. No 2026 table in the archive's sample needs the difference"
 	"decision-home": "The front page follows upstream's quality selection and date/phase presentation. Following the referenced controller, each feed selects the strongest twenty games with known kickoffs before arranging them for display. The requested upcoming window runs strictly after the actual clock minus three hours and strictly before the actual clock plus fourteen days. Results mirror upstream's two-sided played-game window, extended to fourteen days on either side of the clock minus three hours. Played games with future kickoffs are eligible as in that controller. The quality clock is the actual clock minus three hours: the harmonic mean of the latest known team ratings, multiplied by one plus mean match importance, is halved for each day's absolute distance from that clock. Missing ratings and importance contribute zero. Weighted quality chooses the top twenty per feed; equal qualities retain raw-quality descending, kickoff descending order, with id as a deterministic final tie break. Presentation sorts Brasília dates ascending for upcoming and descending for results, then the phase/date's strongest candidate quality descending, kickoff ascending or descending respectively, quality descending and id. Equal phase strengths therefore retain kickoff order across phases, as upstream does. Highlighting mirrors the controller independently for each feed: the union of the five displayed games with greatest raw quality and one game with greatest weighted quality for each phase/Brasília date among all eligible candidates. Overall raw-quality ties retain display order. A tied phase/date maximum chooses the last candidate in the raw-quality descending, kickoff descending, id ascending input order, reproducing upstream's greater-than-or-equal replacement with a deterministic id tie break. The phase/date winner is chosen before the twenty-game cap; if it is not selected, another displayed row is not promoted in its place. The selected games use semibold primary-color team names and bold theme-accent scores and separators against normal-weight secondary-color ordinary names and scores, following the accepted Stitch refinement. Kickoff times and backgrounds keep their existing styles. The screen reads one flat list in server rank order. Each date appears once across competitions in its feed, followed by a linked championship and named phase heading on the first row and each date/phase transition. A phase may appear again on another day or when tied phase strengths interleave. The terminal's first-row-per-day projection and exact-key nested reads place date headings. Its previous-row projection and a hidden exact-key comparison of that row's date and phase derive visible phase transitions. Headings therefore transfer immediately after removal or restoration without another SQL refresh; the stored group flags retain the server's transition state. Row links retain accessible dates while showing only kickoff time, full team names, badges and score. HomeGameCard's day derives from its kickoff in Brasília so headings match the ranking date even when the archive's date differs. The thirty-second service-only refresh updates the ranks, phase markers, highlights and bounded forty-row projection atomically, suppresses unchanged writes, and skips overlapping calls. Removing a selected kickoff immediately removes its projected row; restoring a known kickoff copies it again while its rank remains selected. Screens own no timer or fetch. The featured season and archive follow the feeds; empty windows remove old rows and show the translated message"
 	"decision-increments": "The archive's shape first, one page family per turn after. This compile has entities and invariants only. Comments and the people who write them, crests, the edit history and the chances each arrive with the turn that shows them, so no entity exists that nothing reads. The standings turn inherits a dependency set, not a trigger: a table is a function of the group's games, its team_group rows, its phase's sort and bonus, and its championship's points, so a change to any of them recomputes it, and its sink is not server, or it would feed its own input"
@@ -297,6 +778,9 @@ _irNotes: {
 	"decision-local-reads": "Every screen reads synced tables, filtered on the reader's side. A region the terminal cannot decide on its own — a nested embed, a home-or-away filter — becomes a read only the server can answer: not there offline, re-read on any change to its tables. So what a list needs from several tables is written into one by a stream: a game's names into its GameCard, a team's view of it into a TeamGame, and the day a player's games sort by onto the appearance, by a trigger in the database (services/database/sql/010_game_days.sql), since a day that moves must move every appearance with it in one transaction. A materialized view would hold the same join, but the change publication does not carry one, so it could not be synced. The cost is one more row per game and two per team, and a list that shows a name a moment after it changes rather than at once"
 	"decision-machines": "Every interaction is a machine; no screen has a plain form. A form is two implicit states with no timeout, no coordinated rollback and nothing a checker can walk. A machine states its states, its arrows and the effects it emits, the terminal's walk fires every arrow, and a write it makes is answered with sync_ack or refused where the chart draws an arrow for each. The catalogue's search is the first: two arrows over a tab row. Every later write — a comment, an editor's correction — is a machine whose effect is the write"
 	"decision-masthead": "The masthead is the screen's, the strip is the terminal's. The terminal draws the navigation strip before the screen's mount and owns it — its labels, its current-page mark, its future sign-in chrome. The wordmark and the language switcher are the screen's markup, written once (#Masthead in screens.cue) and placed by CSS into the band the body reserves above the strip, so the page reads masthead, strip, band as upstream's does without an app reimplementing navigation"
+	"decision-match-context": "Match context boundary. The Rails oracle takes five prior played results for each side, five prior head-to-head games in the same nullable category before the target day, regulation scores for form, and reverses the descending form query for chronological display. Lineup contribution is offense plus defense with absent components treated as zero. PostgreSQL owns date/category selection and haversine distance. A valid coordinate pair yields a lazy sandboxed raw-screen OpenStreetMap export iframe with attribution plus a separate validated directions link; no API key or renderer iframe capability is introduced"
+	"decision-match-probability-history": "Historical probability boundary. A match is valued only from ratings available before that match. A dated rating is treated as midnight UTC: it must precede the timestamped kickoff, while a match without kickoff excludes every rating on its own day. The database owns this temporal selection and duplicate detection. Jessie receives finite powers and a bounded event snapshot, implements the accepted Rails Poisson equations without normalization, and owns no date parser, clock, import or ambient capability"
+	"decision-native-media": "Avatar and team-logo controls use the existing native data-upload contract and the shared authenticated upload method. SQL checks both upload ownership and target authority in the ordinary record mutation. Failed attachments retain a bounded private pending object; cancellation is an ordinary private table delete so the existing stream confirms it. Image styles match Rails: transparent-margin crop, aspect fit and transparent square padding at 100 and 15 pixels. Every archive, list, standings and head-to-head badge reads the current Team logo through its existing embed or a request-time view. Optional background filtering and legacy remote image fetching remain outside this slice"
 	"decision-phase-round": "A phase's current round is derived, beside the tables. Upstream opens a phase on its current round. A machine cannot start from a foreign fact, so the round a page opens on is a row a stream of its own writes, one per phase: the latest round with a played game (the first while none is played), and the next round that exists. The championship page shows those two rounds' games; every round is the games page's. Its own stream rather than a second sink of the standings: a phase's rounds depend on its games alone, a phase with no groups still has rounds, and a phase with many groups would otherwise post the same row once per group"
 	"decision-phases-stacked": "A championship shows every phase, stacked, with chips that jump to each. Upstream shows one phase at a time behind buttons. Phases are rows, and a selection machine's states are fixed when the program is written, so a tab per phase would need a machine per championship shape. Stacked sections under anchor chips show a league (one phase) and a cup (several) the same way, and a phone reads them as one scroll"
 	"decision-player-stats": "A player's season is recounted, never typed. Upstream computes its player table on request; here, as the tables are, it is rows a stream writes from the appearances and goals, per player, championship and team, so every page that shows a season agrees with every other. The recount is checked against upstream's own table for the 885 players of the 2026 Série A named once in their squads, every column. Two players of one name in one squad cannot be told apart by a line-up, which names a player and does not identify one; the crawl that seeds them merges them, and the check leaves them out"
@@ -313,7 +797,11 @@ _irNotes: {
 	"decision-zones": "A table's zones are rows, not a serialized list on the group. Upstream keeps them as YAML inside groups.zones. Rows preserve their contiguous position ranges and RGB colors. Existing design roles remain valid. The color contract admits only those roles and six-digit hex colors, so importing a color cannot introduce arbitrary CSS. Literal colors retain their hue in the dark appearance with reduced intensity"
 }
 
-code: meta: decisions: [Id=string]: note: _irNotes[Id]
+_deriving: *false | bool @tag(derive,type=bool)
+
+if !_deriving {
+	code: meta: decisions: [Id=string]: note: _irNotes[Id]
+}
 
 _irAccepts: {
 	"test-aet-half": ["accept-extra-time"]
@@ -336,11 +824,19 @@ _irAccepts: {
 	"test-comment": ["accept-comment"]
 	"test-comment-empty": ["accept-comment-refused"]
 	"test-comment-refused": ["accept-comment-refused"]
+	"test-community-history": ["accept-community-history"]
+	"test-community-media": ["accept-community-media"]
+	"test-community-ownership": ["accept-community-ownership"]
+	"test-community-profile": ["accept-community-profile"]
+	"test-competition-admin": ["accept-everyday-editing"]
+	"test-competition-grant": ["accept-editing-grant"]
 	"test-dark": ["accept-dark"]
 	"test-edit-game": ["accept-edit-game"]
 	"test-edit-goal": ["accept-edit-game"]
 	"test-edit-link": ["accept-edit-game"]
 	"test-edit-refused": ["accept-edit-refused"]
+	"test-editing-grant": ["accept-editing-grant"]
+	"test-everyday-editing": ["accept-everyday-editing"]
 	"test-game-cards": ["accept-team-page"]
 	"test-game-gone": ["accept-game-gone"]
 	"test-game-importance": ["accept-chances"]
@@ -354,7 +850,10 @@ _irAccepts: {
 	"test-home-games": ["accept-home-games"]
 	"test-home-levels": ["accept-home-levels"]
 	"test-languages": ["accept-languages"]
+	"test-match-context": ["accept-game-page"]
+	"test-match-probability": ["accept-game-page"]
 	"test-no-self-game": ["accept-no-self-game"]
+	"test-odds-history": ["accept-team-championship-page"]
 	"test-pen-half": ["accept-extra-time"]
 	"test-pen-unplayed": ["accept-extra-time"]
 	"test-played-game": ["accept-score-whole"]
@@ -399,4 +898,6 @@ _irAccepts: {
 	"test-zone-order": ["accept-zone-order"]
 }
 
-code: meta: tests: [Id=string]: accepts: _irAccepts[Id]
+if !_deriving {
+	code: meta: tests: [Id=string]: accepts: _irAccepts[Id]
+}

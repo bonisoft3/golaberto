@@ -830,3 +830,115 @@ pairs:
       position: lw
     when: create
     then: error.field == "position"
+  - id: test-community-media
+    ir: test-community-media
+    of: usuario
+    accepts:
+      - accept-community-media
+    says: native avatar and logo uploads enforce owner and editor authority
+    given:
+      role: owner
+    when: upload and remove a profile image and team logo
+    then: output.persisted && output.public && output.owner_only
+  - id: test-community-profile
+    ir: test-community-profile
+    of: usuario
+    accepts:
+      - accept-community-profile
+    says: public biographies have counters and only their signed-in owner can create or edit them
+    given:
+      role: owner
+    when: save a biography and open it as another account
+    then: output.persisted && output.public && output.owner_only
+  - id: test-community-ownership
+    ir: test-community-ownership
+    of: usuario
+    accepts:
+      - accept-community-ownership
+    says: guests and other accounts cannot edit a biography or delete another author's comment
+    given:
+      role: reader
+    when: view another account's profile and comments
+    then: output.refused && output.unchanged
+  - id: test-community-history
+    ir: test-community-history
+    of: historico-jogo
+    accepts:
+      - accept-community-history
+    says: game edits retain their author and field changes across public pages
+    given:
+      edits: 41
+    when: read both history pages and the author's profile
+    then: output.paginated && output.attributed && output.safe_text
+  - id: test-competition-admin
+    ir: test-competition-admin
+    of: gerenciar-competicoes
+    accepts:
+      - accept-everyday-editing
+    says: an editor maintains a championship's structure and clones it into a fresh championship
+    given:
+      role: editor
+    when: 'create and search a championship, edit its rules, phases, groups, members and zones, then clone it'
+    then: output.persisted && output.clone_has_no_games && output.clone_opens
+  - id: test-competition-grant
+    ir: test-competition-grant
+    of: gerenciar-competicoes
+    accepts:
+      - accept-editing-grant
+    says: readers get no competition forms and the database refuses their writes
+    given:
+      role: reader
+    when: open competition administration and submit a source mutation
+    then: output.refused && output.dependents_preserved
+  - id: test-everyday-editing
+    ir: test-everyday-editing
+    of: gerenciar
+    accepts:
+      - accept-everyday-editing
+    says: 'an editor maintains source records, resolves bounded references and merges a duplicate without losing history'
+    given:
+      role: editor
+    when: 'create, update and delete records; maintain goals, squads and registrations; merge a duplicate'
+    then: output.persisted && output.attributed && output.history_preserved
+  - id: test-editing-grant
+    ir: test-editing-grant
+    of: gerenciar
+    accepts:
+      - accept-editing-grant
+    says: readers cannot edit and deleting a referenced source record preserves its dependents
+    given:
+      role: reader
+      referenced: true
+    when: open editing and submit a source mutation
+    then: output.refused && output.dependents_preserved
+  - id: test-match-context
+    ir: test-match-context
+    of: jogo
+    accepts:
+      - accept-game-page
+    says: a game's context bounds form and meetings at five and never fabricates a distance
+    given:
+      coordinates: partial
+    when: read the game page
+    then: output.bounded && output.ordered && output.distance_explicit
+  - id: test-match-probability
+    ir: test-match-probability
+    of: jogo
+    accepts:
+      - accept-game-page
+    says: a game's chances use only ratings from before it and stay bounded under scenarios
+    given:
+      events: 20
+    when: read the game page and edit hypothetical goals and red cards
+    then: output.prior_ratings_only && output.matches_rails && output.bounded
+  - id: test-odds-history
+    ir: test-odds-history
+    of: equipe-campeonato
+    accepts:
+      - accept-team-championship-page
+    says: the recorded odds history keeps whole days within its retention limit
+    given:
+      source_count: 404
+      retained_limit: 360
+    when: read recorded odds
+    then: output.sourceCount == input.source_count && output.omittedCount == 4 && output.retainedCount == input.retained_limit

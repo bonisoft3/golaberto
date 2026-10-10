@@ -13,9 +13,9 @@ import (
 	prontoloop "github.com/bonisoft3/pronto/loops:sayt"
 )
 
-// Escape hatches: none (ir.html) — the default runtime,
-// redeclared unchanged. A program whose ir declares a hatch
-// unifies its overrides right here (add a cluster target,
+// Compiled escape hatches (ir.html: rclone-s3)
+// live in program.cue's cluster unification; this redeclaration
+// is the out-of-band human override seam (add a cluster target,
 // modify one, null to drop one; extend the terminal).
 cluster:  mecha.#Cluster
 terminal: omnishell.#Terminal

@@ -75,6 +75,62 @@ services:
     profiles:
     - check-request-reads
     scale: 1
+  check-community-parity:
+    extends:
+      file: ./compose.check-community-parity.yaml
+      service: golaberto-check-community-parity
+    profiles:
+    - check-community-parity
+    scale: 1
+  check-community-access:
+    extends:
+      file: ./compose.check-community-access.yaml
+      service: golaberto-check-community-access
+    profiles:
+    - check-community-access
+    scale: 1
+  check-competition-admin:
+    extends:
+      file: ./compose.check-competition-admin.yaml
+      service: golaberto-check-competition-admin
+    profiles:
+    - check-competition-admin
+    scale: 1
+  check-editing-parity:
+    extends:
+      file: ./compose.check-editing-parity.yaml
+      service: golaberto-check-editing-parity
+    profiles:
+    - check-editing-parity
+    scale: 1
+  check-match-context:
+    extends:
+      file: ./compose.check-match-context.yaml
+      service: golaberto-check-match-context
+    profiles:
+    - check-match-context
+    scale: 1
+  check-match-probability:
+    extends:
+      file: ./compose.check-match-probability.yaml
+      service: golaberto-check-match-probability
+    profiles:
+    - check-match-probability
+    scale: 1
+  check-native-media:
+    extends:
+      file: ./compose.check-native-media.yaml
+      service: golaberto-check-native-media
+    profiles:
+    - check-native-media
+    scale: 1
+  check-odds-progress:
+    extends:
+      file: ./compose.check-odds-progress.yaml
+      service: golaberto-check-odds-progress
+    profiles:
+    - check-odds-progress
+    scale: 1
   database:
     extends:
       file: ./compose.database.yaml
@@ -123,6 +179,13 @@ services:
       service: golaberto-conduit
     profiles:
     - conduit
+    scale: 1
+  rclone-s3:
+    extends:
+      file: ./compose.rclone-s3.yaml
+      service: golaberto-rclone-s3
+    profiles:
+    - rclone-s3
     scale: 1
   transform:
     extends:

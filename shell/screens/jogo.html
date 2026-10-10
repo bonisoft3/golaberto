@@ -2,6 +2,7 @@
 <section class="screen" data-screen="jogo">
 <header class="masthead">
   <a class="wordmark" data-route="principal" aria-label="{msg.brand}"><b data-text="{msg.brand_gol}"></b><span data-text="{msg.brand_aberto}"></span></a>
+  <a class="editing-management-link" data-route="gerenciar" data-text="{msg.manage_home}"></a>
   <nav class="langs" aria-label="{msg.lang_label}">
     <a data-route="jogo" data-param-slug="{param.slug}" data-locale="pt-BR" data-locale-current="page" lang="pt-BR"><span class="long" data-text="{msg.lang_pt}"></span><span class="short" data-text="{msg.lang_pt_short}"></span></a>
     <a data-route="jogo" data-param-slug="{param.slug}" data-locale="es-AR" data-locale-current="page" lang="es-AR"><span class="long" data-text="{msg.lang_es}"></span><span class="short" data-text="{msg.lang_es_short}"></span></a>
@@ -11,7 +12,7 @@
     <a data-route="jogo" data-param-slug="{param.slug}" data-locale="fr-FR" data-locale-current="page" lang="fr-FR"><span class="long" data-text="{msg.lang_fr}"></span><span class="short" data-text="{msg.lang_fr_short}"></span></a>
   </nav>
 </header>
-<div data-live="game_card" data-select="*,game:id!inner(slug),stadium(slug),referee(slug),championship(show_country,slug),home:home_id(country,slug),away:away_id(country,slug)" data-filter="game.slug=eq.{param.slug}" data-exit-motion="none" data-empty="{msg.game_gone}">
+<div data-live="game_card" data-select="*,game:id!inner(slug),stadium(slug),referee(slug),championship(show_country,slug),home:home_id(country,slug,logo_key),away:away_id(country,slug,logo_key)" data-filter="game.slug=eq.{param.slug}" data-exit-motion="none" data-empty="{msg.game_gone}">
   <template data-item>
     <article class="game" data-played="{played}">
       <h1 class="band"><a data-route="campeonato" data-param-slug="{championship.slug}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span></a></h1>
@@ -22,9 +23,9 @@
             <div class="edit-gate" data-live="editor" data-empty=""><template data-item><a class="btn-quiet edit-link" data-route="editar" data-param-slug="{param.slug}" data-text="{msg.edit_link}"></a></template></div>
           </div>
           <div class="scoreboard" data-show-country="{championship.show_country}">
-            <a class="home" data-route="equipe" data-param-slug="{home.slug}"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></a>
+            <a class="home" data-route="equipe" data-param-slug="{home.slug}"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}|{home.logo_key}" data-text-format="team-badge"></span></span></a>
             <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-            <a class="away" data-route="equipe" data-param-slug="{away.slug}"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></a>
+            <a class="away" data-route="equipe" data-param-slug="{away.slug}"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}|{away.logo_key}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></a>
           </div>
           <p class="extra"><span class="aet"><span data-text="{msg.game_aet}"></span> <b data-text="{home_aet}"></b>–<b data-text="{away_aet}"></b></span> <span class="pen"><span data-text="{msg.game_pen}"></span> <b data-text="{home_pen}"></b>–<b data-text="{away_pen}"></b></span></p>
           <dl class="game-facts">
@@ -36,6 +37,29 @@
             <dt data-text="{msg.game_attendance}"></dt><dd data-text="{attendance}" data-text-format="number"></dd>
             <dt data-text="{msg.game_importance}"></dt><dd class="importance" data-live="game_importance" data-filter="id=eq.{id}" data-empty=""><template data-item><abbr title="{msg.game_importance_long}"><span data-text="{home}" data-text-format="number"></span> · <span data-text="{away}" data-text-format="number"></span></abbr></template></dd>
           </dl>
+          <section class="match-context-top">
+ <div class="match-context-forms">
+  <section class="match-context-form">
+ <h2><span data-text="{msg.match_context_form}"></span> · <span data-text="{home_name}"></span></h2>
+ <ol data-live="match_recent_result" data-filter="target_game_id=eq.{id}&team_id=eq.{home_id}&limit=5" data-order="day.asc,kickoff.asc.nullsfirst,id.asc" data-empty="{msg.match_context_form_empty}">
+  <template data-item><li data-result="{result}"><a data-route="jogo" data-param-slug="{game_slug}" title="{day_display} · {championship_name}: {home_name} {home_score} x {away_score} {away_name}"><span aria-hidden="true" data-text="{result}"></span><span class="visually-hidden"><span data-text="{day_display}"></span> · <span data-text="{championship_name}"></span>: <span data-text="{home_name}"></span> <span data-text="{home_score}"></span> x <span data-text="{away_score}"></span> <span data-text="{away_name}"></span></span></a></li></template>
+ </ol>
+</section>
+  <section class="match-context-form">
+ <h2><span data-text="{msg.match_context_form}"></span> · <span data-text="{away_name}"></span></h2>
+ <ol data-live="match_recent_result" data-filter="target_game_id=eq.{id}&team_id=eq.{away_id}&limit=5" data-order="day.asc,kickoff.asc.nullsfirst,id.asc" data-empty="{msg.match_context_form_empty}">
+  <template data-item><li data-result="{result}"><a data-route="jogo" data-param-slug="{game_slug}" title="{day_display} · {championship_name}: {home_name} {home_score} x {away_score} {away_name}"><span aria-hidden="true" data-text="{result}"></span><span class="visually-hidden"><span data-text="{day_display}"></span> · <span data-text="{championship_name}"></span>: <span data-text="{home_name}"></span> <span data-text="{home_score}"></span> x <span data-text="{away_score}"></span> <span data-text="{away_name}"></span></span></a></li></template>
+ </ol>
+</section>
+ </div>
+ <section class="match-context-location" aria-labelledby="match-context-location-{id}">
+  <h2 id="match-context-location-{id}" data-text="{msg.match_context_location}"></h2>
+  <div data-live="match_location" data-filter="id=eq.{id}&limit=1" data-empty="{msg.match_context_location_none}">
+   <template data-item data-when="map_embed_url=not.is.null"><div class="match-context-map-shell"><iframe class="match-context-map-embed" src="{map_embed_url}" title="{msg.match_context_map_title}" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"></iframe><p class="match-context-map-attribution"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" data-text="{msg.match_context_map_attribution}"></a></p><div data-text="{home_latitude}{home_longitude}{away_latitude}{away_longitude}{home_name}{away_name}{distance_km}{msg.match_context_distance}{msg.match_context_map_open}{msg.match_context_location_none}" data-text-format="match-context-map"></div></div></template>
+   <template data-item data-when="map_embed_url=is.null"><div data-text="{home_latitude}{home_longitude}{away_latitude}{away_longitude}{home_name}{away_name}{distance_km}{msg.match_context_distance}{msg.match_context_map_open}{msg.match_context_location_none}" data-text-format="match-context-map"></div></template>
+  </div>
+ </section>
+</section>
           <section class="goals-sec">
             <h2 data-text="{msg.game_goals}"></h2>
             <ol class="goals" data-live="goal" data-select="*,player(name,slug)" data-filter="game_id=eq.{id}" data-order="aet.asc,minute.asc" data-empty="{msg.game_no_goals}">
@@ -44,29 +68,70 @@
               </template>
             </ol>
           </section>
+          <section class="match-probability-shell" aria-labelledby="match-probability-{id}">
+ <h2 id="match-probability-{id}" data-text="{msg.match_probability_title}"></h2>
+ <div data-live="match_probability_scenario" data-filter="id=eq.{id}" data-machine='{"field":"state","initial":"ready","context":{"minute":"0","added_time":"5","event_sequence":0,"next_event_id":"","event_count":0,"events_json":"[]","payload_json":"","home_name":"","away_name":""},"states":{"ready":{"on":{"input@match-probability-minute":{"assign":{"minute":{"type":"event","params":{"field":"value"}}}},"input@match-probability-added":{"assign":{"added_time":{"type":"event","params":{"field":"value"}}}},"click@match-probability-add-goal":{"guard":{"type":"match-probability-event-control","params":{"operation":"can-add"}},"assign":{"next_event_id":{"type":"match-probability-event-control","params":{"operation":"next-id"}},"event_sequence":{"type":"match-probability-event-control","params":{"operation":"next-sequence"}},"event_count":{"type":"match-probability-event-control","params":{"operation":"next-count"}}},"effect":{"level":"ephemeral","op":"create","entity":"match_probability_scenario_event","values":{"id":"{next_event_id}","game_id":"{id}","state":"ready","sequence":"{event_sequence}","kind":"goal","side":"home","minute":0}}},"click@match-probability-add-red-card":{"guard":{"type":"match-probability-event-control","params":{"operation":"can-add"}},"assign":{"next_event_id":{"type":"match-probability-event-control","params":{"operation":"next-id"}},"event_sequence":{"type":"match-probability-event-control","params":{"operation":"next-sequence"}},"event_count":{"type":"match-probability-event-control","params":{"operation":"next-count"}}},"effect":{"level":"ephemeral","op":"create","entity":"match_probability_scenario_event","values":{"id":"{next_event_id}","game_id":"{id}","state":"ready","sequence":"{event_sequence}","kind":"red_card","side":"home","minute":0}}}}}}}' data-empty-row='{"id":"{id}","state":"ready","minute":"0","added_time":"5","event_sequence":0,"next_event_id":"","event_count":0,"events_json":"[]","payload_json":"","home_name":"","away_name":""}' data-on-mutation="match-probability-seed" data-read-stored="match_probability_scenario?id=eq.{id}" data-read-source="match_probability?id=eq.{id}&limit=1">
+  <fieldset class="match-probability-controls"><legend data-text="{msg.match_probability_scenario}"></legend>
+   <div class="match-probability-control-grid">
+    <label><span data-text="{msg.match_probability_minute}"></span><input id="match-probability-minute" type="number" min="0" max="130" step="1" value="{minute}"></label>
+    <label><span data-text="{msg.match_probability_added_time}"></span><input id="match-probability-added" type="number" min="0" max="40" step="1" value="{added_time}"></label>
+   </div>
+   <div class="match-probability-event-actions">
+    <button id="match-probability-add-goal" type="button" class="btn-quiet" data-text="{msg.match_probability_add_goal}"></button>
+    <button id="match-probability-add-red-card" type="button" class="btn-quiet" data-text="{msg.match_probability_add_red_card}"></button>
+   </div>
+   <div class="match-probability-events" data-live="match_probability_scenario_event" data-filter="game_id=eq.{id}&limit=21" data-order="sequence.asc" data-empty="{msg.match_probability_events_empty}" data-on-mutation="match-probability-event-fold" data-read-view="match_probability_scenario?id=eq.{id}">
+    <template data-item><div class="match-probability-event-row">
+     <div data-live="match_probability_scenario_event" data-filter="id=eq.{id}" data-machine='{"field":"state","initial":"ready","context":{"side":"home","minute":0},"states":{"ready":{"on":{"input":{"assign":{"side":{"type":"match-probability-event-edit","params":{"field":"side"}},"minute":{"type":"match-probability-event-edit","params":{"field":"minute"}}}},"click":{"guard":{"type":"match-probability-event-edit","params":{"field":"remove"}},"effect":{"level":"ephemeral","op":"delete","entity":"match_probability_scenario_event","values":{"id":"{id}"}}}}}}}'>
+      <template data-item><div class="match-probability-event match-probability-event--{kind}">
+       <span class="match-probability-event__kind match-probability-event__kind--goal" data-text="{msg.match_probability_event_goal}"></span>
+       <span class="match-probability-event__kind match-probability-event__kind--red-card" data-text="{msg.match_probability_event_red_card}"></span>
+       <label><span data-text="{msg.match_probability_event_side}"></span><select id="{id}-side" data-value="{side}"><option value="home" data-text="{msg.match_probability_home_side}"></option><option value="away" data-text="{msg.match_probability_away_side}"></option></select></label>
+       <label><span data-text="{msg.match_probability_event_time}"></span><input id="{id}-minute" type="number" min="0" max="130" step="1" value="{minute}"></label>
+       <button id="{id}-remove" type="button" class="btn-quiet match-probability-event__remove" data-text="{msg.match_probability_remove_event}"></button>
+      </div></template>
+     </div>
+    </div>
+    </template>
+   </div>
+   <p class="hint" data-text="{msg.match_probability_scenario_hint}"></p>
+  </fieldset>
+  <div class="match-probability-source" data-live="match_probability" data-filter="id=eq.{id}&limit=1" data-empty="{msg.match_probability_no_data}"><template data-item><span hidden></span></template></div>
+  <div data-text="{payload_json}{minute}{added_time}{events_json}{home_name}{away_name}{msg.match_probability_draw}{msg.match_probability_prematch}{msg.match_probability_rated_on}{msg.match_probability_timeline}{msg.match_probability_missing_rating}{msg.match_probability_ambiguous_rating}{msg.match_probability_unknown_minute}{msg.match_probability_event_limit}{msg.match_probability_invalid_scenario}{msg.chart_locale}{msg.match_probability_minute}" data-text-format="match-probability"></div>
+ </div>
+</section>
           <section class="lineups">
             <h2 data-text="{msg.game_lineups}"></h2>
             <div class="sides">
               <table class="grid lineup" data-side="home">
-  <caption data-text="{home_name}"></caption>
-  <thead><tr><th scope="col" data-text="{msg.col_player}"></th><th scope="col" class="num"><abbr title="{msg.col_position_long}" data-text="{msg.col_pos}"></abbr></th><th scope="col" class="num" data-text="{msg.col_on}"></th><th scope="col" class="num" data-text="{msg.col_off}"></th><th scope="col"><span class="visually-hidden" data-text="{msg.col_cards}"></span></th></tr></thead>
-  <tbody data-live="player_game" data-select="*,player(name,position,slug)" data-filter="game_id=eq.{id}&side=eq.home" data-order="bench.asc,on_minute.asc" data-empty="{msg.game_no_lineup}">
-    <template data-item>
-      <tr data-yellow="{yellow}" data-red="{red}" data-bench="{bench}"><td><a data-route="jogador" data-param-slug="{player.slug}" data-text="{player.name}"></a></td><td class="num" data-text="{player.position}"></td><td class="num" data-text="{on_minute}"></td><td class="num" data-text="{off_minute}"></td><td class="cards"><i class="yellow" title="{msg.card_yellow}"></i><i class="red" title="{msg.card_red}"></i></td></tr>
-    </template>
-  </tbody>
+ <caption data-text="{home_name}"></caption>
+ <thead><tr><th scope="col" data-text="{msg.col_player}"></th><th scope="col" class="num"><abbr title="{msg.col_position_long}" data-text="{msg.col_pos}"></abbr></th><th scope="col" class="num" data-text="{msg.col_on}"></th><th scope="col" class="num" data-text="{msg.col_off}"></th><th scope="col" class="num"><abbr title="{msg.col_contribution_long}" data-text="{msg.col_contribution}"></abbr></th><th scope="col"><span class="visually-hidden" data-text="{msg.col_cards}"></span></th></tr></thead>
+ <tbody data-live="match_lineup" data-filter="game_id=eq.{id}&side=eq.home&limit=100" data-order="bench.asc,on_minute.asc,id.asc" data-empty="{msg.game_no_lineup}">
+  <template data-item><tr data-yellow="{yellow}" data-red="{red}" data-bench="{bench}"><td><a data-route="jogador" data-param-slug="{player_slug}" data-text="{player_name}"></a></td><td class="num" data-text="{position}"></td><td class="num" data-text="{on_minute}"></td><td class="num" data-text="{off_minute}"></td><td class="num" data-text="{contribution}" data-text-format="number"></td><td class="cards"><i class="yellow" title="{msg.card_yellow}"></i><i class="red" title="{msg.card_red}"></i></td></tr></template>
+ </tbody>
 </table>
               <table class="grid lineup" data-side="away">
-  <caption data-text="{away_name}"></caption>
-  <thead><tr><th scope="col" data-text="{msg.col_player}"></th><th scope="col" class="num"><abbr title="{msg.col_position_long}" data-text="{msg.col_pos}"></abbr></th><th scope="col" class="num" data-text="{msg.col_on}"></th><th scope="col" class="num" data-text="{msg.col_off}"></th><th scope="col"><span class="visually-hidden" data-text="{msg.col_cards}"></span></th></tr></thead>
-  <tbody data-live="player_game" data-select="*,player(name,position,slug)" data-filter="game_id=eq.{id}&side=eq.away" data-order="bench.asc,on_minute.asc" data-empty="{msg.game_no_lineup}">
-    <template data-item>
-      <tr data-yellow="{yellow}" data-red="{red}" data-bench="{bench}"><td><a data-route="jogador" data-param-slug="{player.slug}" data-text="{player.name}"></a></td><td class="num" data-text="{player.position}"></td><td class="num" data-text="{on_minute}"></td><td class="num" data-text="{off_minute}"></td><td class="cards"><i class="yellow" title="{msg.card_yellow}"></i><i class="red" title="{msg.card_red}"></i></td></tr>
-    </template>
-  </tbody>
+ <caption data-text="{away_name}"></caption>
+ <thead><tr><th scope="col" data-text="{msg.col_player}"></th><th scope="col" class="num"><abbr title="{msg.col_position_long}" data-text="{msg.col_pos}"></abbr></th><th scope="col" class="num" data-text="{msg.col_on}"></th><th scope="col" class="num" data-text="{msg.col_off}"></th><th scope="col" class="num"><abbr title="{msg.col_contribution_long}" data-text="{msg.col_contribution}"></abbr></th><th scope="col"><span class="visually-hidden" data-text="{msg.col_cards}"></span></th></tr></thead>
+ <tbody data-live="match_lineup" data-filter="game_id=eq.{id}&side=eq.away&limit=100" data-order="bench.asc,on_minute.asc,id.asc" data-empty="{msg.game_no_lineup}">
+  <template data-item><tr data-yellow="{yellow}" data-red="{red}" data-bench="{bench}"><td><a data-route="jogador" data-param-slug="{player_slug}" data-text="{player_name}"></a></td><td class="num" data-text="{position}"></td><td class="num" data-text="{on_minute}"></td><td class="num" data-text="{off_minute}"></td><td class="num" data-text="{contribution}" data-text-format="number"></td><td class="cards"><i class="yellow" title="{msg.card_yellow}"></i><i class="red" title="{msg.card_red}"></i></td></tr></template>
+ </tbody>
 </table>
             </div>
           </section>
+          <section class="match-context-history">
+ <h2 data-text="{msg.match_context_previous}"></h2>
+ <ol class="games" data-live="match_head_to_head" data-filter="target_game_id=eq.{id}&limit=5" data-order="day.desc,kickoff.desc.nullslast,id.desc" data-empty="{msg.match_context_previous_empty}">
+  <template data-item><li><a class="game-row" data-show-country="{show_country}" data-route="jogo" data-param-slug="{game_slug}" data-played="true">
+ <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
+ <span class="where" data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span>
+ <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{show_country}|{home_country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}|{home_logo_key}" data-text-format="team-badge"></span></span></span>
+ <span class="score"><b data-text="{home_score}|{home_aet}|{msg.game_aet}" data-text-format="match-final-score"></b><i>x</i><b data-text="{away_score}|{away_aet}|{msg.game_aet}" data-text-format="match-final-score"></b><span class="score-decider" data-text="{home_pen}|{away_pen}|{msg.game_pen}" data-text-format="match-shootout"></span></span>
+ <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}|{away_logo_key}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{show_country}|{away_country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>
+</a></li></template>
+ </ol>
+</section>
+          <nav class="buttons"><a class="btn-quiet" data-route="historico-jogo" data-param-slug="{param.slug}" data-text="{msg.community_history}"></a></nav>
         </div>
         <aside class="side">
           <p><a data-route="jogos" data-text="{msg.back_games}"></a></p>
@@ -87,7 +152,13 @@
 
     <ol class="comment-list" data-live="comment" data-select="*,app_user(handle)" data-filter="game_id=eq.{owner_id}&amp;offset={offset}&amp;limit=40" data-order="created_at.desc" data-empty="{msg.comments_none}">
       <template data-item>
-        <li><p class="byline"><b data-text="{app_user.handle}"></b> <time data-text="{created_at}" data-text-format="datetime"></time></p><p class="body" data-text="{body}"></p></li>
+        <li><p class="byline"><a data-route="usuario" data-param-id="{app_user_id}" data-text="{app_user.handle}"></a> <time data-text="{created_at}" data-text-format="datetime"></time></p><p class="body" data-text="{body}"></p><div data-live="community_access" data-filter="kind=eq.comment&record_id=eq.{id}&limit=1" data-empty=""><template data-item>
+<details class="community-comment-delete"><summary data-text="{msg.community_delete_comment}"></summary>
+<form data-form="community-comment-delete" data-entity="comment" data-action="delete" data-filter="id=eq.{record_id}">
+<label class="field"><input type="checkbox" required><span data-text="{msg.community_confirm_delete}"></span></label>
+<p class="invalid" role="alert" hidden data-text="{msg.manage_invalid}"></p>
+<p class="store-error" role="alert" hidden data-text="{msg.manage_refused}"></p><button class="btn-quiet" type="submit" data-text="{msg.manage_remove}"></button>
+</form></details></template></div></li>
       </template>
     </ol>
 <nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">

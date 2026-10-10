@@ -26,6 +26,21 @@ message ArchivePage {
   optional string phase = 12 [json_name = "phase"];
   optional string category = 13 [json_name = "category"];
   optional string championship_id = 14 [json_name = "championship_id"];
+  optional string country = 15 [json_name = "country"];
+  optional string country_key = 16 [json_name = "country_key"];
+  optional string region = 17 [json_name = "region"];
+  optional string position = 18 [json_name = "position"];
+  optional int32 minimum_minutes = 19 [json_name = "minimum_minutes"];
+  optional string played = 20 [json_name = "played"];
+  optional string team_id = 21 [json_name = "team_id"];
+  optional string week = 22 [json_name = "week"];
+  optional string week_day = 23 [json_name = "week_day"];
+  optional string round = 24 [json_name = "round"];
+  optional string round_value = 25 [json_name = "round_value"];
+  optional string csv_rows = 26 [json_name = "csv_rows"];
+  optional string date_from = 27 [json_name = "date_from"];
+  optional string date_to = 28 [json_name = "date_to"];
+  optional string series_json = 29 [json_name = "series_json"];
 }
 
 message CatalogFilter {
@@ -62,6 +77,23 @@ message Championship {
   optional string search_name = 15 [json_name = "search_name"];
   optional string search_key = 16 [json_name = "search_key"];
   optional string slug = 17 [json_name = "slug"];
+  optional string created_by = 18 [json_name = "created_by"];
+  optional string updated_by = 19 [json_name = "updated_by"];
+}
+
+message ChampionshipAttendance {
+  optional string id = 1 [json_name = "id"];
+  optional string championship_id = 2 [json_name = "championship_id"];
+  optional string team_id = 3 [json_name = "team_id"];
+  optional string team_name = 4 [json_name = "team_name"];
+  optional string team_slug = 5 [json_name = "team_slug"];
+  optional int32 games = 6 [json_name = "games"];
+  optional int32 attendance_count = 7 [json_name = "attendance_count"];
+  optional int64 total = 8 [json_name = "total"];
+  optional double average = 9 [json_name = "average"];
+  optional int32 minimum = 10 [json_name = "minimum"];
+  optional int32 maximum = 11 [json_name = "maximum"];
+  optional string team_logo_key = 12 [json_name = "team_logo_key"];
 }
 
 message Comment {
@@ -76,6 +108,14 @@ message CommentDraft {
   optional string id = 1 [json_name = "id"];
   optional string body = 2 [json_name = "body"];
   optional string state = 3 [json_name = "state"];
+}
+
+message CommunityAccess {
+  optional string id = 1 [json_name = "id"];
+  optional string record_id = 2 [json_name = "record_id"];
+  optional string kind = 3 [json_name = "kind"];
+  optional string biography_id = 4 [json_name = "biography_id"];
+  optional string avatar_id = 5 [json_name = "avatar_id"];
 }
 
 message DirectoryFilter {
@@ -93,6 +133,18 @@ message DirectoryFilter {
   optional string region_selection = 12 [json_name = "region_selection"];
   optional string country_selection = 13 [json_name = "country_selection"];
   optional string team_type = 14 [json_name = "team_type"];
+}
+
+message EditingChoice {
+  optional string id = 1 [json_name = "id"];
+  optional string state = 2 [json_name = "state"];
+  optional string q = 3 [json_name = "q"];
+  optional string q_key = 4 [json_name = "q_key"];
+  optional string selected_id = 5 [json_name = "selected_id"];
+  optional int32 home_score = 6 [json_name = "home_score"];
+  optional int32 away_score = 7 [json_name = "away_score"];
+  optional bool played = 8 [json_name = "played"];
+  optional string excluded_id = 9 [json_name = "excluded_id"];
 }
 
 message Editor {
@@ -122,6 +174,53 @@ message Game {
   optional string day_display = 19 [json_name = "day_display"];
   optional string kickoff_local = 20 [json_name = "kickoff_local"];
   optional string slug = 21 [json_name = "slug"];
+  optional string created_by = 22 [json_name = "created_by"];
+  optional string updated_by = 23 [json_name = "updated_by"];
+}
+
+message GameArchive {
+  optional string id = 1 [json_name = "id"];
+  optional string phase_id = 2 [json_name = "phase_id"];
+  optional int32 round = 3 [json_name = "round"];
+  optional string day = 4 [json_name = "day"];
+  google.protobuf.Timestamp kickoff = 5 [json_name = "kickoff"];
+  optional string home_id = 6 [json_name = "home_id"];
+  optional string away_id = 7 [json_name = "away_id"];
+  optional string home_field = 8 [json_name = "home_field"];
+  optional bool played = 9 [json_name = "played"];
+  optional int32 home_score = 10 [json_name = "home_score"];
+  optional int32 away_score = 11 [json_name = "away_score"];
+  optional int32 home_aet = 12 [json_name = "home_aet"];
+  optional int32 away_aet = 13 [json_name = "away_aet"];
+  optional int32 home_pen = 14 [json_name = "home_pen"];
+  optional int32 away_pen = 15 [json_name = "away_pen"];
+  optional string stadium_id = 16 [json_name = "stadium_id"];
+  optional string referee_id = 17 [json_name = "referee_id"];
+  optional int32 attendance = 18 [json_name = "attendance"];
+  optional string day_display = 19 [json_name = "day_display"];
+  optional string kickoff_local = 20 [json_name = "kickoff_local"];
+  optional string slug = 21 [json_name = "slug"];
+  optional string championship_id = 22 [json_name = "championship_id"];
+  optional string championship_name = 23 [json_name = "championship_name"];
+  optional string championship_slug = 24 [json_name = "championship_slug"];
+  optional string phase_name = 25 [json_name = "phase_name"];
+  optional string category_id = 26 [json_name = "category_id"];
+  optional string category_key = 27 [json_name = "category_key"];
+  optional string phase_key = 28 [json_name = "phase_key"];
+  optional string round_key = 29 [json_name = "round_key"];
+  optional string week = 30 [json_name = "week"];
+  optional string week_key = 31 [json_name = "week_key"];
+  optional bool show_country = 32 [json_name = "show_country"];
+  optional string home_name = 33 [json_name = "home_name"];
+  optional string away_name = 34 [json_name = "away_name"];
+  optional string home_country = 35 [json_name = "home_country"];
+  optional string away_country = 36 [json_name = "away_country"];
+  optional string home_slug = 37 [json_name = "home_slug"];
+  optional string away_slug = 38 [json_name = "away_slug"];
+  optional string stadium_name = 39 [json_name = "stadium_name"];
+  optional string referee_name = 40 [json_name = "referee_name"];
+  optional string home_logo_key = 41 [json_name = "home_logo_key"];
+  optional string away_logo_key = 42 [json_name = "away_logo_key"];
 }
 
 message GameCard {
@@ -161,6 +260,21 @@ message GameCard {
   reserved "home_country";
   reserved 33;
   reserved "away_country";
+}
+
+message GameChange {
+  optional string id = 1 [json_name = "id"];
+  optional string game_id = 2 [json_name = "game_id"];
+  optional int32 version = 3 [json_name = "version"];
+  optional string actor_id = 4 [json_name = "actor_id"];
+  optional string actor_handle = 5 [json_name = "actor_handle"];
+  optional string game_slug = 6 [json_name = "game_slug"];
+  optional string game_day = 7 [json_name = "game_day"];
+  optional string home_name = 8 [json_name = "home_name"];
+  optional string away_name = 9 [json_name = "away_name"];
+  optional string championship_name = 10 [json_name = "championship_name"];
+  optional string changes_json = 11 [json_name = "changes_json"];
+  google.protobuf.Timestamp created_at = 12 [json_name = "created_at"];
 }
 
 message GameEdit {
@@ -219,6 +333,8 @@ message Goal {
   optional bool penalty = 6 [json_name = "penalty"];
   optional bool own_goal = 7 [json_name = "own_goal"];
   optional bool aet = 8 [json_name = "aet"];
+  optional string created_by = 9 [json_name = "created_by"];
+  optional string updated_by = 10 [json_name = "updated_by"];
 }
 
 message Group {
@@ -227,6 +343,8 @@ message Group {
   optional string name = 3 [json_name = "name"];
   optional int32 position = 4 [json_name = "position"];
   optional string slug = 5 [json_name = "slug"];
+  optional string created_by = 6 [json_name = "created_by"];
+  optional string updated_by = 7 [json_name = "updated_by"];
 }
 
 message HomeChampionship {
@@ -316,6 +434,136 @@ message MatchesGameCard {
   reserved "away_country";
 }
 
+message MatchHeadToHead {
+  optional string id = 1 [json_name = "id"];
+  optional string target_game_id = 2 [json_name = "target_game_id"];
+  optional string game_id = 3 [json_name = "game_id"];
+  optional string game_slug = 4 [json_name = "game_slug"];
+  optional string day = 5 [json_name = "day"];
+  optional string day_display = 6 [json_name = "day_display"];
+  google.protobuf.Timestamp kickoff = 7 [json_name = "kickoff"];
+  optional string kickoff_local = 8 [json_name = "kickoff_local"];
+  optional string championship_id = 9 [json_name = "championship_id"];
+  optional string championship_name = 10 [json_name = "championship_name"];
+  optional string championship_slug = 11 [json_name = "championship_slug"];
+  optional string category_id = 12 [json_name = "category_id"];
+  optional bool show_country = 13 [json_name = "show_country"];
+  optional string home_id = 14 [json_name = "home_id"];
+  optional string home_name = 15 [json_name = "home_name"];
+  optional string home_country = 16 [json_name = "home_country"];
+  optional string home_slug = 17 [json_name = "home_slug"];
+  optional string away_id = 18 [json_name = "away_id"];
+  optional string away_name = 19 [json_name = "away_name"];
+  optional string away_country = 20 [json_name = "away_country"];
+  optional string away_slug = 21 [json_name = "away_slug"];
+  optional int32 home_score = 22 [json_name = "home_score"];
+  optional int32 away_score = 23 [json_name = "away_score"];
+  optional int32 home_aet = 24 [json_name = "home_aet"];
+  optional int32 away_aet = 25 [json_name = "away_aet"];
+  optional int32 home_pen = 26 [json_name = "home_pen"];
+  optional int32 away_pen = 27 [json_name = "away_pen"];
+  optional string home_logo_key = 28 [json_name = "home_logo_key"];
+  optional string away_logo_key = 29 [json_name = "away_logo_key"];
+}
+
+message MatchLineup {
+  optional string id = 1 [json_name = "id"];
+  optional string game_id = 2 [json_name = "game_id"];
+  optional string player_id = 3 [json_name = "player_id"];
+  optional string side = 4 [json_name = "side"];
+  optional int32 on_minute = 5 [json_name = "on_minute"];
+  optional int32 off_minute = 6 [json_name = "off_minute"];
+  optional bool yellow = 7 [json_name = "yellow"];
+  optional bool red = 8 [json_name = "red"];
+  optional bool bench = 9 [json_name = "bench"];
+  optional string player_name = 10 [json_name = "player_name"];
+  optional string position = 11 [json_name = "position"];
+  optional string player_slug = 12 [json_name = "player_slug"];
+  optional double off_rating = 13 [json_name = "off_rating"];
+  optional double def_rating = 14 [json_name = "def_rating"];
+  optional double contribution = 15 [json_name = "contribution"];
+}
+
+message MatchLocation {
+  optional string id = 1 [json_name = "id"];
+  optional string home_id = 2 [json_name = "home_id"];
+  optional string home_name = 3 [json_name = "home_name"];
+  optional double home_latitude = 4 [json_name = "home_latitude"];
+  optional double home_longitude = 5 [json_name = "home_longitude"];
+  optional string away_id = 6 [json_name = "away_id"];
+  optional string away_name = 7 [json_name = "away_name"];
+  optional double away_latitude = 8 [json_name = "away_latitude"];
+  optional double away_longitude = 9 [json_name = "away_longitude"];
+  optional double distance_km = 10 [json_name = "distance_km"];
+  optional string map_embed_url = 11 [json_name = "map_embed_url"];
+}
+
+message MatchProbability {
+  optional string id = 1 [json_name = "id"];
+  optional string game_id = 2 [json_name = "game_id"];
+  optional string home_name = 3 [json_name = "home_name"];
+  optional string away_name = 4 [json_name = "away_name"];
+  optional string rating_status = 5 [json_name = "rating_status"];
+  optional string timeline_status = 6 [json_name = "timeline_status"];
+  optional string payload_json = 7 [json_name = "payload_json"];
+}
+
+message MatchProbabilityScenario {
+  optional string id = 1 [json_name = "id"];
+  optional string state = 2 [json_name = "state"];
+  optional string minute = 3 [json_name = "minute"];
+  optional string added_time = 4 [json_name = "added_time"];
+  optional int32 event_sequence = 5 [json_name = "event_sequence"];
+  optional string next_event_id = 6 [json_name = "next_event_id"];
+  optional int32 event_count = 7 [json_name = "event_count"];
+  optional string events_json = 8 [json_name = "events_json"];
+  optional string payload_json = 9 [json_name = "payload_json"];
+  optional string home_name = 10 [json_name = "home_name"];
+  optional string away_name = 11 [json_name = "away_name"];
+}
+
+message MatchProbabilityScenarioEvent {
+  optional string id = 1 [json_name = "id"];
+  optional string game_id = 2 [json_name = "game_id"];
+  optional string state = 3 [json_name = "state"];
+  optional int32 sequence = 4 [json_name = "sequence"];
+  optional string kind = 5 [json_name = "kind"];
+  optional string side = 6 [json_name = "side"];
+  optional int32 minute = 7 [json_name = "minute"];
+}
+
+message MatchRecentResult {
+  optional string id = 1 [json_name = "id"];
+  optional string target_game_id = 2 [json_name = "target_game_id"];
+  optional string team_id = 3 [json_name = "team_id"];
+  optional string side = 4 [json_name = "side"];
+  optional string game_id = 5 [json_name = "game_id"];
+  optional string game_slug = 6 [json_name = "game_slug"];
+  optional string day = 7 [json_name = "day"];
+  optional string day_display = 8 [json_name = "day_display"];
+  google.protobuf.Timestamp kickoff = 9 [json_name = "kickoff"];
+  optional string kickoff_local = 10 [json_name = "kickoff_local"];
+  optional string championship_id = 11 [json_name = "championship_id"];
+  optional string championship_name = 12 [json_name = "championship_name"];
+  optional string championship_slug = 13 [json_name = "championship_slug"];
+  optional bool show_country = 14 [json_name = "show_country"];
+  optional string home_id = 15 [json_name = "home_id"];
+  optional string home_name = 16 [json_name = "home_name"];
+  optional string home_country = 17 [json_name = "home_country"];
+  optional string home_slug = 18 [json_name = "home_slug"];
+  optional string away_id = 19 [json_name = "away_id"];
+  optional string away_name = 20 [json_name = "away_name"];
+  optional string away_country = 21 [json_name = "away_country"];
+  optional string away_slug = 22 [json_name = "away_slug"];
+  optional int32 home_score = 23 [json_name = "home_score"];
+  optional int32 away_score = 24 [json_name = "away_score"];
+  optional int32 home_aet = 25 [json_name = "home_aet"];
+  optional int32 away_aet = 26 [json_name = "away_aet"];
+  optional int32 home_pen = 27 [json_name = "home_pen"];
+  optional int32 away_pen = 28 [json_name = "away_pen"];
+  optional string result = 29 [json_name = "result"];
+}
+
 message Phase {
   optional string id = 1 [json_name = "id"];
   optional string championship_id = 2 [json_name = "championship_id"];
@@ -324,6 +572,28 @@ message Phase {
   optional string sort = 5 [json_name = "sort"];
   optional int32 bonus_points = 6 [json_name = "bonus_points"];
   optional int32 bonus_points_threshold = 7 [json_name = "bonus_points_threshold"];
+  optional string created_by = 8 [json_name = "created_by"];
+  optional string updated_by = 9 [json_name = "updated_by"];
+}
+
+message PhaseClone {
+  optional string id = 1 [json_name = "id"];
+  optional string app_user_id = 2 [json_name = "app_user_id"];
+  optional string source_phase_id = 3 [json_name = "source_phase_id"];
+  optional string target_championship_id = 4 [json_name = "target_championship_id"];
+  optional string target_phase_id = 5 [json_name = "target_phase_id"];
+  optional string name = 6 [json_name = "name"];
+  optional string begins = 7 [json_name = "begins"];
+  optional string ends = 8 [json_name = "ends"];
+  google.protobuf.Timestamp created_at = 9 [json_name = "created_at"];
+}
+
+message PhaseDirectory {
+  optional string id = 1 [json_name = "id"];
+  optional string name = 2 [json_name = "name"];
+  optional string championship_id = 3 [json_name = "championship_id"];
+  optional string championship_name = 4 [json_name = "championship_name"];
+  optional string search_key = 5 [json_name = "search_key"];
 }
 
 message PhaseRound {
@@ -342,6 +612,89 @@ message Player {
   optional int32 height = 6 [json_name = "height"];
   optional string position = 7 [json_name = "position"];
   optional string slug = 8 [json_name = "slug"];
+  optional string created_by = 9 [json_name = "created_by"];
+  optional string updated_by = 10 [json_name = "updated_by"];
+}
+
+message PlayerAppearance {
+  optional string id = 1 [json_name = "id"];
+  optional string player_id = 2 [json_name = "player_id"];
+  optional string game_id = 3 [json_name = "game_id"];
+  optional string side = 4 [json_name = "side"];
+  optional int32 on_minute = 5 [json_name = "on_minute"];
+  optional int32 off_minute = 6 [json_name = "off_minute"];
+  optional bool yellow = 7 [json_name = "yellow"];
+  optional bool red = 8 [json_name = "red"];
+  optional bool bench = 9 [json_name = "bench"];
+  optional string day = 10 [json_name = "day"];
+  optional string day_display = 11 [json_name = "day_display"];
+  google.protobuf.Timestamp kickoff = 12 [json_name = "kickoff"];
+  optional string kickoff_local = 13 [json_name = "kickoff_local"];
+  optional bool played = 14 [json_name = "played"];
+  optional string played_key = 15 [json_name = "played_key"];
+  optional string game_slug = 16 [json_name = "game_slug"];
+  optional string phase_id = 17 [json_name = "phase_id"];
+  optional string phase_name = 18 [json_name = "phase_name"];
+  optional string championship_id = 19 [json_name = "championship_id"];
+  optional string championship_name = 20 [json_name = "championship_name"];
+  optional string championship_slug = 21 [json_name = "championship_slug"];
+  optional string category_id = 22 [json_name = "category_id"];
+  optional string category_key = 23 [json_name = "category_key"];
+  optional int32 round = 24 [json_name = "round"];
+  optional string round_key = 25 [json_name = "round_key"];
+  optional string week = 26 [json_name = "week"];
+  optional string week_key = 27 [json_name = "week_key"];
+  optional string team_id = 28 [json_name = "team_id"];
+  optional string team_name = 29 [json_name = "team_name"];
+  optional string team_slug = 30 [json_name = "team_slug"];
+  optional string home_id = 31 [json_name = "home_id"];
+  optional string away_id = 32 [json_name = "away_id"];
+  optional string home_name = 33 [json_name = "home_name"];
+  optional string away_name = 34 [json_name = "away_name"];
+  optional string home_country = 35 [json_name = "home_country"];
+  optional string away_country = 36 [json_name = "away_country"];
+  optional bool show_country = 37 [json_name = "show_country"];
+  optional int32 home_score = 38 [json_name = "home_score"];
+  optional int32 away_score = 39 [json_name = "away_score"];
+  optional int32 home_aet = 40 [json_name = "home_aet"];
+  optional int32 away_aet = 41 [json_name = "away_aet"];
+  optional int32 home_pen = 42 [json_name = "home_pen"];
+  optional int32 away_pen = 43 [json_name = "away_pen"];
+  optional int32 minutes = 44 [json_name = "minutes"];
+  optional double off_rating = 45 [json_name = "off_rating"];
+  optional double def_rating = 46 [json_name = "def_rating"];
+  optional double contribution = 47 [json_name = "contribution"];
+  optional double contribution_per90 = 48 [json_name = "contribution_per90"];
+  optional int32 goals = 49 [json_name = "goals"];
+  optional int32 penalties = 50 [json_name = "penalties"];
+  optional int32 own_goals = 51 [json_name = "own_goals"];
+  optional double goals_per90 = 52 [json_name = "goals_per90"];
+  optional string home_logo_key = 53 [json_name = "home_logo_key"];
+  optional string away_logo_key = 54 [json_name = "away_logo_key"];
+}
+
+message PlayerDirectory {
+  optional string id = 1 [json_name = "id"];
+  optional string name = 2 [json_name = "name"];
+  optional string full_name = 3 [json_name = "full_name"];
+  optional string birth = 4 [json_name = "birth"];
+  optional string country = 5 [json_name = "country"];
+  optional int32 height = 6 [json_name = "height"];
+  optional string position = 7 [json_name = "position"];
+  optional string slug = 8 [json_name = "slug"];
+  optional double rating = 9 [json_name = "rating"];
+  optional double off_rating = 10 [json_name = "off_rating"];
+  optional double def_rating = 11 [json_name = "def_rating"];
+  optional string position_key = 12 [json_name = "position_key"];
+  optional string country_id = 13 [json_name = "country_id"];
+  optional string region_id = 14 [json_name = "region_id"];
+  optional string search_key = 15 [json_name = "search_key"];
+  optional string country_search_key = 16 [json_name = "country_search_key"];
+  optional string region_search_key = 17 [json_name = "region_search_key"];
+  optional string latest_team_id = 18 [json_name = "latest_team_id"];
+  optional string latest_team_name = 19 [json_name = "latest_team_name"];
+  optional string latest_team_slug = 20 [json_name = "latest_team_slug"];
+  optional string latest_team_logo_key = 21 [json_name = "latest_team_logo_key"];
 }
 
 message PlayerGame {
@@ -358,11 +711,23 @@ message PlayerGame {
   optional string day_display = 11 [json_name = "day_display"];
   optional double off_rating = 12 [json_name = "off_rating"];
   optional double def_rating = 13 [json_name = "def_rating"];
+  optional string created_by = 14 [json_name = "created_by"];
+  optional string updated_by = 15 [json_name = "updated_by"];
+}
+
+message PlayerMerge {
+  optional string id = 1 [json_name = "id"];
+  optional string app_user_id = 2 [json_name = "app_user_id"];
+  optional string target_player_id = 3 [json_name = "target_player_id"];
+  optional string source_player_id = 4 [json_name = "source_player_id"];
+  google.protobuf.Timestamp created_at = 5 [json_name = "created_at"];
 }
 
 message PlayerRating {
   optional string id = 1 [json_name = "id"];
   optional double rating = 2 [json_name = "rating"];
+  optional double off_rating = 3 [json_name = "off_rating"];
+  optional double def_rating = 4 [json_name = "def_rating"];
 }
 
 message PlayerStat {
@@ -389,6 +754,7 @@ message PlayerStat {
   optional double contribution = 21 [json_name = "contribution"];
   optional double contribution_per90 = 22 [json_name = "contribution_per90"];
   optional double goals_per90 = 23 [json_name = "goals_per90"];
+  optional string search_key = 24 [json_name = "search_key"];
 }
 
 message PositionChance {
@@ -414,6 +780,8 @@ message Referee {
   optional string search_name = 4 [json_name = "search_name"];
   optional string search_key = 5 [json_name = "search_key"];
   optional string slug = 6 [json_name = "slug"];
+  optional string created_by = 7 [json_name = "created_by"];
+  optional string updated_by = 8 [json_name = "updated_by"];
 }
 
 message Stadium {
@@ -425,6 +793,8 @@ message Stadium {
   optional string search_name = 6 [json_name = "search_name"];
   optional string search_key = 7 [json_name = "search_key"];
   optional string slug = 8 [json_name = "slug"];
+  optional string created_by = 9 [json_name = "created_by"];
+  optional string updated_by = 10 [json_name = "updated_by"];
 }
 
 message Standing {
@@ -464,6 +834,9 @@ message Team {
   optional double latitude = 12 [json_name = "latitude"];
   optional double longitude = 13 [json_name = "longitude"];
   optional string slug = 14 [json_name = "slug"];
+  optional string created_by = 15 [json_name = "created_by"];
+  optional string updated_by = 16 [json_name = "updated_by"];
+  optional string logo_key = 17 [json_name = "logo_key"];
 }
 
 message TeamCampaignPoint {
@@ -506,6 +879,10 @@ message TeamChartState {
   optional string metric = 5 [json_name = "metric"];
   optional string series_json = 6 [json_name = "series_json"];
   optional string game_prefix = 7 [json_name = "game_prefix"];
+  reserved 8;
+  reserved "range_from";
+  reserved 9;
+  reserved "range_to";
 }
 
 message TeamComment {
@@ -574,6 +951,8 @@ message TeamGroup {
   optional int32 add_sub = 4 [json_name = "add_sub"];
   optional int32 bias = 5 [json_name = "bias"];
   optional string comment = 6 [json_name = "comment"];
+  optional string created_by = 7 [json_name = "created_by"];
+  optional string updated_by = 8 [json_name = "updated_by"];
 }
 
 message TeamOddsChart {
@@ -595,11 +974,38 @@ message TeamOddsHistory {
   optional string source = 8 [json_name = "source"];
 }
 
+message TeamOddsProgress {
+  optional string id = 1 [json_name = "id"];
+  optional string group_id = 2 [json_name = "group_id"];
+  optional string team_id = 3 [json_name = "team_id"];
+  optional string series_json = 4 [json_name = "series_json"];
+}
+
+message TeamOddsProgressState {
+  optional string id = 1 [json_name = "id"];
+  optional string group_id = 2 [json_name = "group_id"];
+  optional string team_id = 3 [json_name = "team_id"];
+  optional string state = 4 [json_name = "state"];
+  optional string zone_id = 5 [json_name = "zone_id"];
+  optional int32 snapshot_index = 6 [json_name = "snapshot_index"];
+  optional int32 snapshot_last = 7 [json_name = "snapshot_last"];
+  optional int32 pointer_x = 8 [json_name = "pointer_x"];
+  optional string series_json = 9 [json_name = "series_json"];
+  optional string current_json = 10 [json_name = "current_json"];
+  optional int32 position_number = 11 [json_name = "position_number"];
+  optional int32 position_last = 12 [json_name = "position_last"];
+  optional string table_mode = 13 [json_name = "table_mode"];
+  optional string range_from = 14 [json_name = "range_from"];
+  optional string range_to = 15 [json_name = "range_to"];
+}
+
 message TeamPlayer {
   optional string id = 1 [json_name = "id"];
   optional string championship_id = 2 [json_name = "championship_id"];
   optional string team_id = 3 [json_name = "team_id"];
   optional string player_id = 4 [json_name = "player_id"];
+  optional string created_by = 5 [json_name = "created_by"];
+  optional string updated_by = 6 [json_name = "updated_by"];
 }
 
 message TeamPlayerHistory {
@@ -677,6 +1083,43 @@ message TeamRosterTotal {
   optional double goals_per90 = 19 [json_name = "goals_per90"];
 }
 
+message UserAvatar {
+  optional string id = 1 [json_name = "id"];
+  optional string avatar_key = 2 [json_name = "avatar_key"];
+}
+
+message UserBiography {
+  optional string id = 1 [json_name = "id"];
+  optional string app_user_id = 2 [json_name = "app_user_id"];
+  optional string display_name = 3 [json_name = "display_name"];
+  optional string location = 4 [json_name = "location"];
+  optional string about_me = 5 [json_name = "about_me"];
+  google.protobuf.Timestamp updated_at = 6 [json_name = "updated_at"];
+}
+
+message UserDirectory {
+  optional string id = 1 [json_name = "id"];
+  optional string handle = 2 [json_name = "handle"];
+  optional string display_name = 3 [json_name = "display_name"];
+  optional string location = 4 [json_name = "location"];
+  optional string about_me = 5 [json_name = "about_me"];
+  google.protobuf.Timestamp joined_at = 6 [json_name = "joined_at"];
+  optional string biography_id = 7 [json_name = "biography_id"];
+  optional int64 comment_count = 8 [json_name = "comment_count"];
+  optional int64 edit_count = 9 [json_name = "edit_count"];
+  google.protobuf.Timestamp last_edit_at = 10 [json_name = "last_edit_at"];
+  optional string search_key = 11 [json_name = "search_key"];
+  optional string joined_on = 12 [json_name = "joined_on"];
+  optional string avatar_key = 13 [json_name = "avatar_key"];
+}
+
+message UserPendingUpload {
+  optional string id = 1 [json_name = "id"];
+  optional string app_user_id = 2 [json_name = "app_user_id"];
+  google.protobuf.Timestamp created_at = 3 [json_name = "created_at"];
+  google.protobuf.Timestamp expires_at = 4 [json_name = "expires_at"];
+}
+
 message Zone {
   optional string id = 1 [json_name = "id"];
   optional string group_id = 2 [json_name = "group_id"];
@@ -684,6 +1127,9 @@ message Zone {
   optional string color = 4 [json_name = "color"];
   optional int32 first = 5 [json_name = "first"];
   optional int32 last = 6 [json_name = "last"];
+  optional string positions = 7 [json_name = "positions"];
+  optional string created_by = 8 [json_name = "created_by"];
+  optional string updated_by = 9 [json_name = "updated_by"];
 }
 
 message ZoneChance {

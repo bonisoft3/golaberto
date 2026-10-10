@@ -224,10 +224,190 @@
       redir {uri} permanent
     }
     route {
-      @negotiable path / /arbitro/* /arbitros /campeonato/* /campeonatos /chances/* /editar/* /equipe-campeonato/*/* /equipe/* /equipes /estadio/* /estadios /jogador/* /jogo/* /jogos
+      @negotiable path / /arbitro/* /arbitros /arquivo /campeonato-jogadores/* /campeonato/* /campeonato/*/arquivo /campeonato/*/publico /campeonatos /chances/* /editar-arbitro/* /editar-competicao/* /editar-equipe/* /editar-estadio/* /editar-jogador/* /editar-jogo/* /editar/* /equipe-campeonato/*/* /equipe/* /equipes /escalacao-jogo/* /estadio/* /estadios /gerenciar /gerenciar-competicoes /gols-jogo/* /historico-jogo/* /inscricoes-jogador/* /jogador-campeonato/*/*/* /jogador/* /jogadores /jogo/* /jogos /nova-competicao /novo-arbitro /novo-equipe /novo-estadio /novo-jogador /novo-jogo /usuario/* /usuarios
       header @negotiable Vary Accept-Language
       @lang header_regexp lang Accept-Language (?i)(?:^|,)\s*(pt-BR|es-AR|en-GB|it-IT|de-DE|fr-FR|pt|es|en|it|de|fr)\b
       handle @lang {
+        @arquivo_de {
+          path /arquivo
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @arquivo_de /de/arquivo
+        @arquivo_en {
+          path /arquivo
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @arquivo_en /en/arquivo
+        @arquivo_es {
+          path /arquivo
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @arquivo_es /es/arquivo
+        @arquivo_fr {
+          path /arquivo
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @arquivo_fr /fr/arquivo
+        @arquivo_it {
+          path /arquivo
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @arquivo_it /it/arquivo
+        @arquivo-campeonato_de {
+          path_regexp arquivo-campeonato ^/campeonato/([^/]+)/arquivo$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @arquivo-campeonato_de /de/campeonato/{re.arquivo-campeonato.1}/arquivo
+        @arquivo-campeonato_en {
+          path_regexp arquivo-campeonato ^/campeonato/([^/]+)/arquivo$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @arquivo-campeonato_en /en/campeonato/{re.arquivo-campeonato.1}/arquivo
+        @arquivo-campeonato_es {
+          path_regexp arquivo-campeonato ^/campeonato/([^/]+)/arquivo$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @arquivo-campeonato_es /es/campeonato/{re.arquivo-campeonato.1}/arquivo
+        @arquivo-campeonato_fr {
+          path_regexp arquivo-campeonato ^/campeonato/([^/]+)/arquivo$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @arquivo-campeonato_fr /fr/campeonato/{re.arquivo-campeonato.1}/arquivo
+        @arquivo-campeonato_it {
+          path_regexp arquivo-campeonato ^/campeonato/([^/]+)/arquivo$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @arquivo-campeonato_it /it/campeonato/{re.arquivo-campeonato.1}/arquivo
+        @publico_de {
+          path_regexp publico ^/campeonato/([^/]+)/publico$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @publico_de /de/campeonato/{re.publico.1}/publico
+        @publico_en {
+          path_regexp publico ^/campeonato/([^/]+)/publico$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @publico_en /en/campeonato/{re.publico.1}/publico
+        @publico_es {
+          path_regexp publico ^/campeonato/([^/]+)/publico$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @publico_es /es/campeonato/{re.publico.1}/publico
+        @publico_fr {
+          path_regexp publico ^/campeonato/([^/]+)/publico$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @publico_fr /fr/campeonato/{re.publico.1}/publico
+        @publico_it {
+          path_regexp publico ^/campeonato/([^/]+)/publico$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @publico_it /it/campeonato/{re.publico.1}/publico
+        @jogadores_de {
+          path /jogadores
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @jogadores_de /de/spieler
+        @jogadores_en {
+          path /jogadores
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @jogadores_en /en/players
+        @jogadores_es {
+          path /jogadores
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @jogadores_es /es/jugadores
+        @jogadores_fr {
+          path /jogadores
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @jogadores_fr /fr/joueurs
+        @jogadores_it {
+          path /jogadores
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @jogadores_it /it/giocatori
+        @campeonato-jogadores_de {
+          path_regexp campeonato-jogadores ^/campeonato-jogadores/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @campeonato-jogadores_de /de/meisterschaft-spieler/{re.campeonato-jogadores.1}
+        @campeonato-jogadores_en {
+          path_regexp campeonato-jogadores ^/campeonato-jogadores/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @campeonato-jogadores_en /en/championship-players/{re.campeonato-jogadores.1}
+        @campeonato-jogadores_es {
+          path_regexp campeonato-jogadores ^/campeonato-jogadores/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @campeonato-jogadores_es /es/campeonato-jugadores/{re.campeonato-jogadores.1}
+        @campeonato-jogadores_fr {
+          path_regexp campeonato-jogadores ^/campeonato-jogadores/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @campeonato-jogadores_fr /fr/championnat-joueurs/{re.campeonato-jogadores.1}
+        @campeonato-jogadores_it {
+          path_regexp campeonato-jogadores ^/campeonato-jogadores/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @campeonato-jogadores_it /it/campionato-giocatori/{re.campeonato-jogadores.1}
+        @jogador-campeonato_de {
+          path_regexp jogador-campeonato ^/jogador-campeonato/([^/]+)/([^/]+)/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @jogador-campeonato_de /de/spieler-meisterschaft/{re.jogador-campeonato.1}/{re.jogador-campeonato.2}/{re.jogador-campeonato.3}
+        @jogador-campeonato_en {
+          path_regexp jogador-campeonato ^/jogador-campeonato/([^/]+)/([^/]+)/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @jogador-campeonato_en /en/player-championship/{re.jogador-campeonato.1}/{re.jogador-campeonato.2}/{re.jogador-campeonato.3}
+        @jogador-campeonato_es {
+          path_regexp jogador-campeonato ^/jogador-campeonato/([^/]+)/([^/]+)/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @jogador-campeonato_es /es/jugador-campeonato/{re.jogador-campeonato.1}/{re.jogador-campeonato.2}/{re.jogador-campeonato.3}
+        @jogador-campeonato_fr {
+          path_regexp jogador-campeonato ^/jogador-campeonato/([^/]+)/([^/]+)/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @jogador-campeonato_fr /fr/joueur-championnat/{re.jogador-campeonato.1}/{re.jogador-campeonato.2}/{re.jogador-campeonato.3}
+        @jogador-campeonato_it {
+          path_regexp jogador-campeonato ^/jogador-campeonato/([^/]+)/([^/]+)/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @jogador-campeonato_it /it/giocatore-campionato/{re.jogador-campeonato.1}/{re.jogador-campeonato.2}/{re.jogador-campeonato.3}
         @principal_de {
           path /
           not query lang=*
@@ -678,10 +858,610 @@
           vars_regexp {re.lang.1} (?i)^(it-IT|it)$
         }
         rewrite @campeonato_it /it/campionato/{re.campeonato.1}
+        @editar-arbitro_de {
+          path_regexp editar-arbitro ^/editar-arbitro/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @editar-arbitro_de /de/editar-arbitro/{re.editar-arbitro.1}
+        @editar-arbitro_en {
+          path_regexp editar-arbitro ^/editar-arbitro/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @editar-arbitro_en /en/editar-arbitro/{re.editar-arbitro.1}
+        @editar-arbitro_es {
+          path_regexp editar-arbitro ^/editar-arbitro/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @editar-arbitro_es /es/editar-arbitro/{re.editar-arbitro.1}
+        @editar-arbitro_fr {
+          path_regexp editar-arbitro ^/editar-arbitro/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @editar-arbitro_fr /fr/editar-arbitro/{re.editar-arbitro.1}
+        @editar-arbitro_it {
+          path_regexp editar-arbitro ^/editar-arbitro/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @editar-arbitro_it /it/editar-arbitro/{re.editar-arbitro.1}
+        @editar-competicao_de {
+          path_regexp editar-competicao ^/editar-competicao/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @editar-competicao_de /de/editar-competicao/{re.editar-competicao.1}
+        @editar-competicao_en {
+          path_regexp editar-competicao ^/editar-competicao/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @editar-competicao_en /en/editar-competicao/{re.editar-competicao.1}
+        @editar-competicao_es {
+          path_regexp editar-competicao ^/editar-competicao/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @editar-competicao_es /es/editar-competicao/{re.editar-competicao.1}
+        @editar-competicao_fr {
+          path_regexp editar-competicao ^/editar-competicao/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @editar-competicao_fr /fr/editar-competicao/{re.editar-competicao.1}
+        @editar-competicao_it {
+          path_regexp editar-competicao ^/editar-competicao/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @editar-competicao_it /it/editar-competicao/{re.editar-competicao.1}
+        @editar-equipe_de {
+          path_regexp editar-equipe ^/editar-equipe/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @editar-equipe_de /de/editar-equipe/{re.editar-equipe.1}
+        @editar-equipe_en {
+          path_regexp editar-equipe ^/editar-equipe/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @editar-equipe_en /en/editar-equipe/{re.editar-equipe.1}
+        @editar-equipe_es {
+          path_regexp editar-equipe ^/editar-equipe/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @editar-equipe_es /es/editar-equipe/{re.editar-equipe.1}
+        @editar-equipe_fr {
+          path_regexp editar-equipe ^/editar-equipe/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @editar-equipe_fr /fr/editar-equipe/{re.editar-equipe.1}
+        @editar-equipe_it {
+          path_regexp editar-equipe ^/editar-equipe/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @editar-equipe_it /it/editar-equipe/{re.editar-equipe.1}
+        @editar-estadio_de {
+          path_regexp editar-estadio ^/editar-estadio/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @editar-estadio_de /de/editar-estadio/{re.editar-estadio.1}
+        @editar-estadio_en {
+          path_regexp editar-estadio ^/editar-estadio/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @editar-estadio_en /en/editar-estadio/{re.editar-estadio.1}
+        @editar-estadio_es {
+          path_regexp editar-estadio ^/editar-estadio/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @editar-estadio_es /es/editar-estadio/{re.editar-estadio.1}
+        @editar-estadio_fr {
+          path_regexp editar-estadio ^/editar-estadio/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @editar-estadio_fr /fr/editar-estadio/{re.editar-estadio.1}
+        @editar-estadio_it {
+          path_regexp editar-estadio ^/editar-estadio/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @editar-estadio_it /it/editar-estadio/{re.editar-estadio.1}
+        @editar-jogador_de {
+          path_regexp editar-jogador ^/editar-jogador/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @editar-jogador_de /de/editar-jogador/{re.editar-jogador.1}
+        @editar-jogador_en {
+          path_regexp editar-jogador ^/editar-jogador/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @editar-jogador_en /en/editar-jogador/{re.editar-jogador.1}
+        @editar-jogador_es {
+          path_regexp editar-jogador ^/editar-jogador/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @editar-jogador_es /es/editar-jogador/{re.editar-jogador.1}
+        @editar-jogador_fr {
+          path_regexp editar-jogador ^/editar-jogador/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @editar-jogador_fr /fr/editar-jogador/{re.editar-jogador.1}
+        @editar-jogador_it {
+          path_regexp editar-jogador ^/editar-jogador/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @editar-jogador_it /it/editar-jogador/{re.editar-jogador.1}
+        @editar-jogo_de {
+          path_regexp editar-jogo ^/editar-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @editar-jogo_de /de/editar-jogo/{re.editar-jogo.1}
+        @editar-jogo_en {
+          path_regexp editar-jogo ^/editar-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @editar-jogo_en /en/editar-jogo/{re.editar-jogo.1}
+        @editar-jogo_es {
+          path_regexp editar-jogo ^/editar-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @editar-jogo_es /es/editar-jogo/{re.editar-jogo.1}
+        @editar-jogo_fr {
+          path_regexp editar-jogo ^/editar-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @editar-jogo_fr /fr/editar-jogo/{re.editar-jogo.1}
+        @editar-jogo_it {
+          path_regexp editar-jogo ^/editar-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @editar-jogo_it /it/editar-jogo/{re.editar-jogo.1}
+        @escalacao-jogo_de {
+          path_regexp escalacao-jogo ^/escalacao-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @escalacao-jogo_de /de/escalacao-jogo/{re.escalacao-jogo.1}
+        @escalacao-jogo_en {
+          path_regexp escalacao-jogo ^/escalacao-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @escalacao-jogo_en /en/escalacao-jogo/{re.escalacao-jogo.1}
+        @escalacao-jogo_es {
+          path_regexp escalacao-jogo ^/escalacao-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @escalacao-jogo_es /es/escalacao-jogo/{re.escalacao-jogo.1}
+        @escalacao-jogo_fr {
+          path_regexp escalacao-jogo ^/escalacao-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @escalacao-jogo_fr /fr/escalacao-jogo/{re.escalacao-jogo.1}
+        @escalacao-jogo_it {
+          path_regexp escalacao-jogo ^/escalacao-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @escalacao-jogo_it /it/escalacao-jogo/{re.escalacao-jogo.1}
+        @gerenciar_de {
+          path /gerenciar
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @gerenciar_de /de/gerenciar
+        @gerenciar_en {
+          path /gerenciar
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @gerenciar_en /en/gerenciar
+        @gerenciar_es {
+          path /gerenciar
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @gerenciar_es /es/gerenciar
+        @gerenciar_fr {
+          path /gerenciar
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @gerenciar_fr /fr/gerenciar
+        @gerenciar_it {
+          path /gerenciar
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @gerenciar_it /it/gerenciar
+        @gerenciar-competicoes_de {
+          path /gerenciar-competicoes
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @gerenciar-competicoes_de /de/gerenciar-competicoes
+        @gerenciar-competicoes_en {
+          path /gerenciar-competicoes
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @gerenciar-competicoes_en /en/gerenciar-competicoes
+        @gerenciar-competicoes_es {
+          path /gerenciar-competicoes
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @gerenciar-competicoes_es /es/gerenciar-competicoes
+        @gerenciar-competicoes_fr {
+          path /gerenciar-competicoes
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @gerenciar-competicoes_fr /fr/gerenciar-competicoes
+        @gerenciar-competicoes_it {
+          path /gerenciar-competicoes
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @gerenciar-competicoes_it /it/gerenciar-competicoes
+        @gols-jogo_de {
+          path_regexp gols-jogo ^/gols-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @gols-jogo_de /de/gols-jogo/{re.gols-jogo.1}
+        @gols-jogo_en {
+          path_regexp gols-jogo ^/gols-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @gols-jogo_en /en/gols-jogo/{re.gols-jogo.1}
+        @gols-jogo_es {
+          path_regexp gols-jogo ^/gols-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @gols-jogo_es /es/gols-jogo/{re.gols-jogo.1}
+        @gols-jogo_fr {
+          path_regexp gols-jogo ^/gols-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @gols-jogo_fr /fr/gols-jogo/{re.gols-jogo.1}
+        @gols-jogo_it {
+          path_regexp gols-jogo ^/gols-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @gols-jogo_it /it/gols-jogo/{re.gols-jogo.1}
+        @historico-jogo_de {
+          path_regexp historico-jogo ^/historico-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @historico-jogo_de /de/historico-jogo/{re.historico-jogo.1}
+        @historico-jogo_en {
+          path_regexp historico-jogo ^/historico-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @historico-jogo_en /en/historico-jogo/{re.historico-jogo.1}
+        @historico-jogo_es {
+          path_regexp historico-jogo ^/historico-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @historico-jogo_es /es/historico-jogo/{re.historico-jogo.1}
+        @historico-jogo_fr {
+          path_regexp historico-jogo ^/historico-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @historico-jogo_fr /fr/historico-jogo/{re.historico-jogo.1}
+        @historico-jogo_it {
+          path_regexp historico-jogo ^/historico-jogo/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @historico-jogo_it /it/historico-jogo/{re.historico-jogo.1}
+        @inscricoes-jogador_de {
+          path_regexp inscricoes-jogador ^/inscricoes-jogador/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @inscricoes-jogador_de /de/inscricoes-jogador/{re.inscricoes-jogador.1}
+        @inscricoes-jogador_en {
+          path_regexp inscricoes-jogador ^/inscricoes-jogador/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @inscricoes-jogador_en /en/inscricoes-jogador/{re.inscricoes-jogador.1}
+        @inscricoes-jogador_es {
+          path_regexp inscricoes-jogador ^/inscricoes-jogador/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @inscricoes-jogador_es /es/inscricoes-jogador/{re.inscricoes-jogador.1}
+        @inscricoes-jogador_fr {
+          path_regexp inscricoes-jogador ^/inscricoes-jogador/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @inscricoes-jogador_fr /fr/inscricoes-jogador/{re.inscricoes-jogador.1}
+        @inscricoes-jogador_it {
+          path_regexp inscricoes-jogador ^/inscricoes-jogador/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @inscricoes-jogador_it /it/inscricoes-jogador/{re.inscricoes-jogador.1}
+        @nova-competicao_de {
+          path /nova-competicao
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @nova-competicao_de /de/nova-competicao
+        @nova-competicao_en {
+          path /nova-competicao
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @nova-competicao_en /en/nova-competicao
+        @nova-competicao_es {
+          path /nova-competicao
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @nova-competicao_es /es/nova-competicao
+        @nova-competicao_fr {
+          path /nova-competicao
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @nova-competicao_fr /fr/nova-competicao
+        @nova-competicao_it {
+          path /nova-competicao
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @nova-competicao_it /it/nova-competicao
+        @novo-arbitro_de {
+          path /novo-arbitro
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @novo-arbitro_de /de/novo-arbitro
+        @novo-arbitro_en {
+          path /novo-arbitro
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @novo-arbitro_en /en/novo-arbitro
+        @novo-arbitro_es {
+          path /novo-arbitro
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @novo-arbitro_es /es/novo-arbitro
+        @novo-arbitro_fr {
+          path /novo-arbitro
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @novo-arbitro_fr /fr/novo-arbitro
+        @novo-arbitro_it {
+          path /novo-arbitro
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @novo-arbitro_it /it/novo-arbitro
+        @novo-equipe_de {
+          path /novo-equipe
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @novo-equipe_de /de/novo-equipe
+        @novo-equipe_en {
+          path /novo-equipe
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @novo-equipe_en /en/novo-equipe
+        @novo-equipe_es {
+          path /novo-equipe
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @novo-equipe_es /es/novo-equipe
+        @novo-equipe_fr {
+          path /novo-equipe
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @novo-equipe_fr /fr/novo-equipe
+        @novo-equipe_it {
+          path /novo-equipe
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @novo-equipe_it /it/novo-equipe
+        @novo-estadio_de {
+          path /novo-estadio
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @novo-estadio_de /de/novo-estadio
+        @novo-estadio_en {
+          path /novo-estadio
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @novo-estadio_en /en/novo-estadio
+        @novo-estadio_es {
+          path /novo-estadio
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @novo-estadio_es /es/novo-estadio
+        @novo-estadio_fr {
+          path /novo-estadio
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @novo-estadio_fr /fr/novo-estadio
+        @novo-estadio_it {
+          path /novo-estadio
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @novo-estadio_it /it/novo-estadio
+        @novo-jogador_de {
+          path /novo-jogador
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @novo-jogador_de /de/novo-jogador
+        @novo-jogador_en {
+          path /novo-jogador
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @novo-jogador_en /en/novo-jogador
+        @novo-jogador_es {
+          path /novo-jogador
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @novo-jogador_es /es/novo-jogador
+        @novo-jogador_fr {
+          path /novo-jogador
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @novo-jogador_fr /fr/novo-jogador
+        @novo-jogador_it {
+          path /novo-jogador
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @novo-jogador_it /it/novo-jogador
+        @novo-jogo_de {
+          path /novo-jogo
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @novo-jogo_de /de/novo-jogo
+        @novo-jogo_en {
+          path /novo-jogo
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @novo-jogo_en /en/novo-jogo
+        @novo-jogo_es {
+          path /novo-jogo
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @novo-jogo_es /es/novo-jogo
+        @novo-jogo_fr {
+          path /novo-jogo
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @novo-jogo_fr /fr/novo-jogo
+        @novo-jogo_it {
+          path /novo-jogo
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @novo-jogo_it /it/novo-jogo
+        @usuario_de {
+          path_regexp usuario ^/usuario/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @usuario_de /de/usuario/{re.usuario.1}
+        @usuario_en {
+          path_regexp usuario ^/usuario/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @usuario_en /en/usuario/{re.usuario.1}
+        @usuario_es {
+          path_regexp usuario ^/usuario/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @usuario_es /es/usuario/{re.usuario.1}
+        @usuario_fr {
+          path_regexp usuario ^/usuario/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @usuario_fr /fr/usuario/{re.usuario.1}
+        @usuario_it {
+          path_regexp usuario ^/usuario/([^/]+)$
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @usuario_it /it/usuario/{re.usuario.1}
+        @usuarios_de {
+          path /usuarios
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(de-DE|de)$
+        }
+        rewrite @usuarios_de /de/usuarios
+        @usuarios_en {
+          path /usuarios
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(en-GB|en)$
+        }
+        rewrite @usuarios_en /en/usuarios
+        @usuarios_es {
+          path /usuarios
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(es-AR|es)$
+        }
+        rewrite @usuarios_es /es/usuarios
+        @usuarios_fr {
+          path /usuarios
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(fr-FR|fr)$
+        }
+        rewrite @usuarios_fr /fr/usuarios
+        @usuarios_it {
+          path /usuarios
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(it-IT|it)$
+        }
+        rewrite @usuarios_it /it/usuarios
       }
     }
     @rendered {
-      path / // /arbitro/* /arbitro/*/ /arbitros /arbitros/ /campeonato/* /campeonato/*/ /campeonatos /campeonatos/ /chances/* /chances/*/ /de /de/ /de/chancen/* /de/chancen/*/ /de/mannschaft-meisterschaft/*/* /de/mannschaft-meisterschaft/*/*/ /de/mannschaft/* /de/mannschaft/*/ /de/mannschaften /de/mannschaften/ /de/schiedsrichter/* /de/schiedsrichter/*/ /de/spiel/* /de/spiel/*/ /de/spiele /de/spiele/ /de/spieler/* /de/spieler/*/ /de/stadien /de/stadien/ /de/stadion/* /de/stadion/*/ /de/unparteiische /de/unparteiische/ /de/wettbewerb/* /de/wettbewerb/*/ /de/wettbewerbe /de/wettbewerbe/ /en /en/ /en/championship/* /en/championship/*/ /en/championships /en/championships/ /en/chances/* /en/chances/*/ /en/match/* /en/match/*/ /en/matches /en/matches/ /en/player/* /en/player/*/ /en/referee/* /en/referee/*/ /en/referees /en/referees/ /en/stadium/* /en/stadium/*/ /en/stadiums /en/stadiums/ /en/team-championship/*/* /en/team-championship/*/*/ /en/team/* /en/team/*/ /en/teams /en/teams/ /equipe-campeonato/*/* /equipe-campeonato/*/*/ /equipe/* /equipe/*/ /equipes /equipes/ /es /es/ /es/arbitro/* /es/arbitro/*/ /es/arbitros /es/arbitros/ /es/campeonato/* /es/campeonato/*/ /es/campeonatos /es/campeonatos/ /es/chances/* /es/chances/*/ /es/equipo-campeonato/*/* /es/equipo-campeonato/*/*/ /es/equipo/* /es/equipo/*/ /es/equipos /es/equipos/ /es/estadio/* /es/estadio/*/ /es/estadios /es/estadios/ /es/jugador/* /es/jugador/*/ /es/partido/* /es/partido/*/ /es/partidos /es/partidos/ /estadio/* /estadio/*/ /estadios /estadios/ /fr /fr/ /fr/arbitre/* /fr/arbitre/*/ /fr/arbitres /fr/arbitres/ /fr/championnat/* /fr/championnat/*/ /fr/championnats /fr/championnats/ /fr/chances/* /fr/chances/*/ /fr/equipe-championnat/*/* /fr/equipe-championnat/*/*/ /fr/equipe/* /fr/equipe/*/ /fr/equipes /fr/equipes/ /fr/joueur/* /fr/joueur/*/ /fr/match/* /fr/match/*/ /fr/matchs /fr/matchs/ /fr/stade/* /fr/stade/*/ /fr/stades /fr/stades/ /it /it/ /it/arbitri /it/arbitri/ /it/arbitro/* /it/arbitro/*/ /it/campionati /it/campionati/ /it/campionato/* /it/campionato/*/ /it/giocatore/* /it/giocatore/*/ /it/partita/* /it/partita/*/ /it/partite /it/partite/ /it/probabilita/* /it/probabilita/*/ /it/squadra-campionato/*/* /it/squadra-campionato/*/*/ /it/squadra/* /it/squadra/*/ /it/squadre /it/squadre/ /it/stadi /it/stadi/ /it/stadio/* /it/stadio/*/ /jogador/* /jogador/*/ /jogo/* /jogo/*/ /jogos /jogos/
+      path / // /arbitro/* /arbitro/*/ /arbitros /arbitros/ /arquivo /arquivo/ /campeonato-jogadores/* /campeonato-jogadores/*/ /campeonato/* /campeonato/*/ /campeonato/*/arquivo /campeonato/*/arquivo/ /campeonato/*/publico /campeonato/*/publico/ /campeonatos /campeonatos/ /chances/* /chances/*/ /de /de/ /de/arquivo /de/arquivo/ /de/campeonato/*/arquivo /de/campeonato/*/arquivo/ /de/campeonato/*/publico /de/campeonato/*/publico/ /de/chancen/* /de/chancen/*/ /de/historico-jogo/* /de/historico-jogo/*/ /de/mannschaft-meisterschaft/*/* /de/mannschaft-meisterschaft/*/*/ /de/mannschaft/* /de/mannschaft/*/ /de/mannschaften /de/mannschaften/ /de/meisterschaft-spieler/* /de/meisterschaft-spieler/*/ /de/schiedsrichter/* /de/schiedsrichter/*/ /de/spiel/* /de/spiel/*/ /de/spiele /de/spiele/ /de/spieler /de/spieler-meisterschaft/*/*/* /de/spieler-meisterschaft/*/*/*/ /de/spieler/ /de/spieler/* /de/spieler/*/ /de/stadien /de/stadien/ /de/stadion/* /de/stadion/*/ /de/unparteiische /de/unparteiische/ /de/usuario/* /de/usuario/*/ /de/usuarios /de/usuarios/ /de/wettbewerb/* /de/wettbewerb/*/ /de/wettbewerbe /de/wettbewerbe/ /en /en/ /en/arquivo /en/arquivo/ /en/campeonato/*/arquivo /en/campeonato/*/arquivo/ /en/campeonato/*/publico /en/campeonato/*/publico/ /en/championship-players/* /en/championship-players/*/ /en/championship/* /en/championship/*/ /en/championships /en/championships/ /en/chances/* /en/chances/*/ /en/historico-jogo/* /en/historico-jogo/*/ /en/match/* /en/match/*/ /en/matches /en/matches/ /en/player-championship/*/*/* /en/player-championship/*/*/*/ /en/player/* /en/player/*/ /en/players /en/players/ /en/referee/* /en/referee/*/ /en/referees /en/referees/ /en/stadium/* /en/stadium/*/ /en/stadiums /en/stadiums/ /en/team-championship/*/* /en/team-championship/*/*/ /en/team/* /en/team/*/ /en/teams /en/teams/ /en/usuario/* /en/usuario/*/ /en/usuarios /en/usuarios/ /equipe-campeonato/*/* /equipe-campeonato/*/*/ /equipe/* /equipe/*/ /equipes /equipes/ /es /es/ /es/arbitro/* /es/arbitro/*/ /es/arbitros /es/arbitros/ /es/arquivo /es/arquivo/ /es/campeonato-jugadores/* /es/campeonato-jugadores/*/ /es/campeonato/* /es/campeonato/*/ /es/campeonato/*/arquivo /es/campeonato/*/arquivo/ /es/campeonato/*/publico /es/campeonato/*/publico/ /es/campeonatos /es/campeonatos/ /es/chances/* /es/chances/*/ /es/equipo-campeonato/*/* /es/equipo-campeonato/*/*/ /es/equipo/* /es/equipo/*/ /es/equipos /es/equipos/ /es/estadio/* /es/estadio/*/ /es/estadios /es/estadios/ /es/historico-jogo/* /es/historico-jogo/*/ /es/jugador-campeonato/*/*/* /es/jugador-campeonato/*/*/*/ /es/jugador/* /es/jugador/*/ /es/jugadores /es/jugadores/ /es/partido/* /es/partido/*/ /es/partidos /es/partidos/ /es/usuario/* /es/usuario/*/ /es/usuarios /es/usuarios/ /estadio/* /estadio/*/ /estadios /estadios/ /fr /fr/ /fr/arbitre/* /fr/arbitre/*/ /fr/arbitres /fr/arbitres/ /fr/arquivo /fr/arquivo/ /fr/campeonato/*/arquivo /fr/campeonato/*/arquivo/ /fr/campeonato/*/publico /fr/campeonato/*/publico/ /fr/championnat-joueurs/* /fr/championnat-joueurs/*/ /fr/championnat/* /fr/championnat/*/ /fr/championnats /fr/championnats/ /fr/chances/* /fr/chances/*/ /fr/equipe-championnat/*/* /fr/equipe-championnat/*/*/ /fr/equipe/* /fr/equipe/*/ /fr/equipes /fr/equipes/ /fr/historico-jogo/* /fr/historico-jogo/*/ /fr/joueur-championnat/*/*/* /fr/joueur-championnat/*/*/*/ /fr/joueur/* /fr/joueur/*/ /fr/joueurs /fr/joueurs/ /fr/match/* /fr/match/*/ /fr/matchs /fr/matchs/ /fr/stade/* /fr/stade/*/ /fr/stades /fr/stades/ /fr/usuario/* /fr/usuario/*/ /fr/usuarios /fr/usuarios/ /historico-jogo/* /historico-jogo/*/ /it /it/ /it/arbitri /it/arbitri/ /it/arbitro/* /it/arbitro/*/ /it/arquivo /it/arquivo/ /it/campeonato/*/arquivo /it/campeonato/*/arquivo/ /it/campeonato/*/publico /it/campeonato/*/publico/ /it/campionati /it/campionati/ /it/campionato-giocatori/* /it/campionato-giocatori/*/ /it/campionato/* /it/campionato/*/ /it/giocatore-campionato/*/*/* /it/giocatore-campionato/*/*/*/ /it/giocatore/* /it/giocatore/*/ /it/giocatori /it/giocatori/ /it/historico-jogo/* /it/historico-jogo/*/ /it/partita/* /it/partita/*/ /it/partite /it/partite/ /it/probabilita/* /it/probabilita/*/ /it/squadra-campionato/*/* /it/squadra-campionato/*/*/ /it/squadra/* /it/squadra/*/ /it/squadre /it/squadre/ /it/stadi /it/stadi/ /it/stadio/* /it/stadio/*/ /it/usuario/* /it/usuario/*/ /it/usuarios /it/usuarios/ /jogador-campeonato/*/*/* /jogador-campeonato/*/*/*/ /jogador/* /jogador/*/ /jogadores /jogadores/ /jogo/* /jogo/*/ /jogos /jogos/ /usuario/* /usuario/*/ /usuarios /usuarios/
       not file {
         root /srv
         try_files {path} {path}/index.html
@@ -695,7 +1475,7 @@
       header Cache-Control "no-cache"
       @file file {path} {path}/index.html
       rewrite @file {http.matchers.file.relative}
-      @route path / /arbitro/* /arbitro/*/ /arbitros /arbitros/ /campeonato/* /campeonato/*/ /campeonatos /campeonatos/ /chances/* /chances/*/ /de /de/ /de/bearbeiten/* /de/bearbeiten/*/ /de/chancen/* /de/chancen/*/ /de/mannschaft-meisterschaft/*/* /de/mannschaft-meisterschaft/*/*/ /de/mannschaft/* /de/mannschaft/*/ /de/mannschaften /de/mannschaften/ /de/schiedsrichter/* /de/schiedsrichter/*/ /de/spiel/* /de/spiel/*/ /de/spiele /de/spiele/ /de/spieler/* /de/spieler/*/ /de/stadien /de/stadien/ /de/stadion/* /de/stadion/*/ /de/unparteiische /de/unparteiische/ /de/wettbewerb/* /de/wettbewerb/*/ /de/wettbewerbe /de/wettbewerbe/ /editar/* /editar/*/ /en /en/ /en/championship/* /en/championship/*/ /en/championships /en/championships/ /en/chances/* /en/chances/*/ /en/edit/* /en/edit/*/ /en/match/* /en/match/*/ /en/matches /en/matches/ /en/player/* /en/player/*/ /en/referee/* /en/referee/*/ /en/referees /en/referees/ /en/stadium/* /en/stadium/*/ /en/stadiums /en/stadiums/ /en/team-championship/*/* /en/team-championship/*/*/ /en/team/* /en/team/*/ /en/teams /en/teams/ /equipe-campeonato/*/* /equipe-campeonato/*/*/ /equipe/* /equipe/*/ /equipes /equipes/ /es /es/ /es/arbitro/* /es/arbitro/*/ /es/arbitros /es/arbitros/ /es/campeonato/* /es/campeonato/*/ /es/campeonatos /es/campeonatos/ /es/chances/* /es/chances/*/ /es/editar/* /es/editar/*/ /es/equipo-campeonato/*/* /es/equipo-campeonato/*/*/ /es/equipo/* /es/equipo/*/ /es/equipos /es/equipos/ /es/estadio/* /es/estadio/*/ /es/estadios /es/estadios/ /es/jugador/* /es/jugador/*/ /es/partido/* /es/partido/*/ /es/partidos /es/partidos/ /estadio/* /estadio/*/ /estadios /estadios/ /fr /fr/ /fr/arbitre/* /fr/arbitre/*/ /fr/arbitres /fr/arbitres/ /fr/championnat/* /fr/championnat/*/ /fr/championnats /fr/championnats/ /fr/chances/* /fr/chances/*/ /fr/equipe-championnat/*/* /fr/equipe-championnat/*/*/ /fr/equipe/* /fr/equipe/*/ /fr/equipes /fr/equipes/ /fr/joueur/* /fr/joueur/*/ /fr/match/* /fr/match/*/ /fr/matchs /fr/matchs/ /fr/modifier/* /fr/modifier/*/ /fr/stade/* /fr/stade/*/ /fr/stades /fr/stades/ /it /it/ /it/arbitri /it/arbitri/ /it/arbitro/* /it/arbitro/*/ /it/campionati /it/campionati/ /it/campionato/* /it/campionato/*/ /it/giocatore/* /it/giocatore/*/ /it/modifica/* /it/modifica/*/ /it/partita/* /it/partita/*/ /it/partite /it/partite/ /it/probabilita/* /it/probabilita/*/ /it/squadra-campionato/*/* /it/squadra-campionato/*/*/ /it/squadra/* /it/squadra/*/ /it/squadre /it/squadre/ /it/stadi /it/stadi/ /it/stadio/* /it/stadio/*/ /jogador/* /jogador/*/ /jogo/* /jogo/*/ /jogos /jogos/
+      @route path / /arbitro/* /arbitro/*/ /arbitros /arbitros/ /arquivo /arquivo/ /campeonato-jogadores/* /campeonato-jogadores/*/ /campeonato/* /campeonato/*/ /campeonato/*/arquivo /campeonato/*/arquivo/ /campeonato/*/publico /campeonato/*/publico/ /campeonatos /campeonatos/ /chances/* /chances/*/ /de /de/ /de/arquivo /de/arquivo/ /de/bearbeiten/* /de/bearbeiten/*/ /de/campeonato/*/arquivo /de/campeonato/*/arquivo/ /de/campeonato/*/publico /de/campeonato/*/publico/ /de/chancen/* /de/chancen/*/ /de/editar-arbitro/* /de/editar-arbitro/*/ /de/editar-competicao/* /de/editar-competicao/*/ /de/editar-equipe/* /de/editar-equipe/*/ /de/editar-estadio/* /de/editar-estadio/*/ /de/editar-jogador/* /de/editar-jogador/*/ /de/editar-jogo/* /de/editar-jogo/*/ /de/escalacao-jogo/* /de/escalacao-jogo/*/ /de/gerenciar /de/gerenciar-competicoes /de/gerenciar-competicoes/ /de/gerenciar/ /de/gols-jogo/* /de/gols-jogo/*/ /de/historico-jogo/* /de/historico-jogo/*/ /de/inscricoes-jogador/* /de/inscricoes-jogador/*/ /de/mannschaft-meisterschaft/*/* /de/mannschaft-meisterschaft/*/*/ /de/mannschaft/* /de/mannschaft/*/ /de/mannschaften /de/mannschaften/ /de/meisterschaft-spieler/* /de/meisterschaft-spieler/*/ /de/nova-competicao /de/nova-competicao/ /de/novo-arbitro /de/novo-arbitro/ /de/novo-equipe /de/novo-equipe/ /de/novo-estadio /de/novo-estadio/ /de/novo-jogador /de/novo-jogador/ /de/novo-jogo /de/novo-jogo/ /de/schiedsrichter/* /de/schiedsrichter/*/ /de/spiel/* /de/spiel/*/ /de/spiele /de/spiele/ /de/spieler /de/spieler-meisterschaft/*/*/* /de/spieler-meisterschaft/*/*/*/ /de/spieler/ /de/spieler/* /de/spieler/*/ /de/stadien /de/stadien/ /de/stadion/* /de/stadion/*/ /de/unparteiische /de/unparteiische/ /de/usuario/* /de/usuario/*/ /de/usuarios /de/usuarios/ /de/wettbewerb/* /de/wettbewerb/*/ /de/wettbewerbe /de/wettbewerbe/ /editar-arbitro/* /editar-arbitro/*/ /editar-competicao/* /editar-competicao/*/ /editar-equipe/* /editar-equipe/*/ /editar-estadio/* /editar-estadio/*/ /editar-jogador/* /editar-jogador/*/ /editar-jogo/* /editar-jogo/*/ /editar/* /editar/*/ /en /en/ /en/arquivo /en/arquivo/ /en/campeonato/*/arquivo /en/campeonato/*/arquivo/ /en/campeonato/*/publico /en/campeonato/*/publico/ /en/championship-players/* /en/championship-players/*/ /en/championship/* /en/championship/*/ /en/championships /en/championships/ /en/chances/* /en/chances/*/ /en/edit/* /en/edit/*/ /en/editar-arbitro/* /en/editar-arbitro/*/ /en/editar-competicao/* /en/editar-competicao/*/ /en/editar-equipe/* /en/editar-equipe/*/ /en/editar-estadio/* /en/editar-estadio/*/ /en/editar-jogador/* /en/editar-jogador/*/ /en/editar-jogo/* /en/editar-jogo/*/ /en/escalacao-jogo/* /en/escalacao-jogo/*/ /en/gerenciar /en/gerenciar-competicoes /en/gerenciar-competicoes/ /en/gerenciar/ /en/gols-jogo/* /en/gols-jogo/*/ /en/historico-jogo/* /en/historico-jogo/*/ /en/inscricoes-jogador/* /en/inscricoes-jogador/*/ /en/match/* /en/match/*/ /en/matches /en/matches/ /en/nova-competicao /en/nova-competicao/ /en/novo-arbitro /en/novo-arbitro/ /en/novo-equipe /en/novo-equipe/ /en/novo-estadio /en/novo-estadio/ /en/novo-jogador /en/novo-jogador/ /en/novo-jogo /en/novo-jogo/ /en/player-championship/*/*/* /en/player-championship/*/*/*/ /en/player/* /en/player/*/ /en/players /en/players/ /en/referee/* /en/referee/*/ /en/referees /en/referees/ /en/stadium/* /en/stadium/*/ /en/stadiums /en/stadiums/ /en/team-championship/*/* /en/team-championship/*/*/ /en/team/* /en/team/*/ /en/teams /en/teams/ /en/usuario/* /en/usuario/*/ /en/usuarios /en/usuarios/ /equipe-campeonato/*/* /equipe-campeonato/*/*/ /equipe/* /equipe/*/ /equipes /equipes/ /es /es/ /es/arbitro/* /es/arbitro/*/ /es/arbitros /es/arbitros/ /es/arquivo /es/arquivo/ /es/campeonato-jugadores/* /es/campeonato-jugadores/*/ /es/campeonato/* /es/campeonato/*/ /es/campeonato/*/arquivo /es/campeonato/*/arquivo/ /es/campeonato/*/publico /es/campeonato/*/publico/ /es/campeonatos /es/campeonatos/ /es/chances/* /es/chances/*/ /es/editar-arbitro/* /es/editar-arbitro/*/ /es/editar-competicao/* /es/editar-competicao/*/ /es/editar-equipe/* /es/editar-equipe/*/ /es/editar-estadio/* /es/editar-estadio/*/ /es/editar-jogador/* /es/editar-jogador/*/ /es/editar-jogo/* /es/editar-jogo/*/ /es/editar/* /es/editar/*/ /es/equipo-campeonato/*/* /es/equipo-campeonato/*/*/ /es/equipo/* /es/equipo/*/ /es/equipos /es/equipos/ /es/escalacao-jogo/* /es/escalacao-jogo/*/ /es/estadio/* /es/estadio/*/ /es/estadios /es/estadios/ /es/gerenciar /es/gerenciar-competicoes /es/gerenciar-competicoes/ /es/gerenciar/ /es/gols-jogo/* /es/gols-jogo/*/ /es/historico-jogo/* /es/historico-jogo/*/ /es/inscricoes-jogador/* /es/inscricoes-jogador/*/ /es/jugador-campeonato/*/*/* /es/jugador-campeonato/*/*/*/ /es/jugador/* /es/jugador/*/ /es/jugadores /es/jugadores/ /es/nova-competicao /es/nova-competicao/ /es/novo-arbitro /es/novo-arbitro/ /es/novo-equipe /es/novo-equipe/ /es/novo-estadio /es/novo-estadio/ /es/novo-jogador /es/novo-jogador/ /es/novo-jogo /es/novo-jogo/ /es/partido/* /es/partido/*/ /es/partidos /es/partidos/ /es/usuario/* /es/usuario/*/ /es/usuarios /es/usuarios/ /escalacao-jogo/* /escalacao-jogo/*/ /estadio/* /estadio/*/ /estadios /estadios/ /fr /fr/ /fr/arbitre/* /fr/arbitre/*/ /fr/arbitres /fr/arbitres/ /fr/arquivo /fr/arquivo/ /fr/campeonato/*/arquivo /fr/campeonato/*/arquivo/ /fr/campeonato/*/publico /fr/campeonato/*/publico/ /fr/championnat-joueurs/* /fr/championnat-joueurs/*/ /fr/championnat/* /fr/championnat/*/ /fr/championnats /fr/championnats/ /fr/chances/* /fr/chances/*/ /fr/editar-arbitro/* /fr/editar-arbitro/*/ /fr/editar-competicao/* /fr/editar-competicao/*/ /fr/editar-equipe/* /fr/editar-equipe/*/ /fr/editar-estadio/* /fr/editar-estadio/*/ /fr/editar-jogador/* /fr/editar-jogador/*/ /fr/editar-jogo/* /fr/editar-jogo/*/ /fr/equipe-championnat/*/* /fr/equipe-championnat/*/*/ /fr/equipe/* /fr/equipe/*/ /fr/equipes /fr/equipes/ /fr/escalacao-jogo/* /fr/escalacao-jogo/*/ /fr/gerenciar /fr/gerenciar-competicoes /fr/gerenciar-competicoes/ /fr/gerenciar/ /fr/gols-jogo/* /fr/gols-jogo/*/ /fr/historico-jogo/* /fr/historico-jogo/*/ /fr/inscricoes-jogador/* /fr/inscricoes-jogador/*/ /fr/joueur-championnat/*/*/* /fr/joueur-championnat/*/*/*/ /fr/joueur/* /fr/joueur/*/ /fr/joueurs /fr/joueurs/ /fr/match/* /fr/match/*/ /fr/matchs /fr/matchs/ /fr/modifier/* /fr/modifier/*/ /fr/nova-competicao /fr/nova-competicao/ /fr/novo-arbitro /fr/novo-arbitro/ /fr/novo-equipe /fr/novo-equipe/ /fr/novo-estadio /fr/novo-estadio/ /fr/novo-jogador /fr/novo-jogador/ /fr/novo-jogo /fr/novo-jogo/ /fr/stade/* /fr/stade/*/ /fr/stades /fr/stades/ /fr/usuario/* /fr/usuario/*/ /fr/usuarios /fr/usuarios/ /gerenciar /gerenciar-competicoes /gerenciar-competicoes/ /gerenciar/ /gols-jogo/* /gols-jogo/*/ /historico-jogo/* /historico-jogo/*/ /inscricoes-jogador/* /inscricoes-jogador/*/ /it /it/ /it/arbitri /it/arbitri/ /it/arbitro/* /it/arbitro/*/ /it/arquivo /it/arquivo/ /it/campeonato/*/arquivo /it/campeonato/*/arquivo/ /it/campeonato/*/publico /it/campeonato/*/publico/ /it/campionati /it/campionati/ /it/campionato-giocatori/* /it/campionato-giocatori/*/ /it/campionato/* /it/campionato/*/ /it/editar-arbitro/* /it/editar-arbitro/*/ /it/editar-competicao/* /it/editar-competicao/*/ /it/editar-equipe/* /it/editar-equipe/*/ /it/editar-estadio/* /it/editar-estadio/*/ /it/editar-jogador/* /it/editar-jogador/*/ /it/editar-jogo/* /it/editar-jogo/*/ /it/escalacao-jogo/* /it/escalacao-jogo/*/ /it/gerenciar /it/gerenciar-competicoes /it/gerenciar-competicoes/ /it/gerenciar/ /it/giocatore-campionato/*/*/* /it/giocatore-campionato/*/*/*/ /it/giocatore/* /it/giocatore/*/ /it/giocatori /it/giocatori/ /it/gols-jogo/* /it/gols-jogo/*/ /it/historico-jogo/* /it/historico-jogo/*/ /it/inscricoes-jogador/* /it/inscricoes-jogador/*/ /it/modifica/* /it/modifica/*/ /it/nova-competicao /it/nova-competicao/ /it/novo-arbitro /it/novo-arbitro/ /it/novo-equipe /it/novo-equipe/ /it/novo-estadio /it/novo-estadio/ /it/novo-jogador /it/novo-jogador/ /it/novo-jogo /it/novo-jogo/ /it/partita/* /it/partita/*/ /it/partite /it/partite/ /it/probabilita/* /it/probabilita/*/ /it/squadra-campionato/*/* /it/squadra-campionato/*/*/ /it/squadra/* /it/squadra/*/ /it/squadre /it/squadre/ /it/stadi /it/stadi/ /it/stadio/* /it/stadio/*/ /it/usuario/* /it/usuario/*/ /it/usuarios /it/usuarios/ /jogador-campeonato/*/*/* /jogador-campeonato/*/*/*/ /jogador/* /jogador/*/ /jogadores /jogadores/ /jogo/* /jogo/*/ /jogos /jogos/ /nova-competicao /nova-competicao/ /novo-arbitro /novo-arbitro/ /novo-equipe /novo-equipe/ /novo-estadio /novo-estadio/ /novo-jogador /novo-jogador/ /novo-jogo /novo-jogo/ /usuario/* /usuario/*/ /usuarios /usuarios/
       rewrite @route /shell/index.html
       import files
     }

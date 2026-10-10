@@ -107,3 +107,28 @@
 .reach[data-reach="reachable"]::after { content: "*"; }
 .reach[data-reach="undecided"]::after { content: "?"; }
 .reach::after { font-size: var(--type-label); vertical-align: super; line-height: 0; }
+
+.game-row .score { flex-wrap: wrap; align-content: center; }
+.score-decider:empty { display: none; }
+.score-decider:not(:empty) { flex-basis: 100%; text-align: center; font-weight: normal; }
+
+/* Appearance links and metadata occupy distinct rows so their hit regions cannot overlap. */
+.player-games > li {
+  display: grid; grid-template-columns: minmax(0, 1fr); align-items: stretch; gap: 0;
+}
+.player-games > li > a:not(.game-row) {
+  display: flex; align-items: center; min-width: 0; min-height: var(--min-touch);
+  box-sizing: border-box; padding: var(--sp-sm);
+}
+.player-games > li > a:not(.game-row) > span:last-child { min-width: 0; overflow-wrap: anywhere; }
+.player-games > li > .game-row { box-sizing: border-box; min-width: 0; width: 100%; }
+.player-appearance-detail {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center; gap: var(--sp-sm); min-width: 0; padding: var(--sp-sm);
+}
+.player-appearance-detail :is(.game-facts, .chips) { grid-column: 1 / -1; }
+.player-appearance-detail .chips {
+  display: flex; flex-wrap: wrap; gap: var(--sp-sm); list-style: none; margin: 0; padding: 0;
+}
+.player-bench { display: none; }
+.player-games [data-bench="true"] .player-bench { display: inline; }

@@ -1,7 +1,13 @@
 // Imported UUIDs retain the upstream ID. Seed UUIDs have a stable archive mapping,
 // so editing a team name does not change its crest. New teams use the neutral badge.
 export default function render(value) {
-  const id = String(value).split("|")[0];
+  const parts = String(value).split("|");
+  const id = parts[0];
+  const uploaded = parts[2];
+  if (uploaded) {
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.[A-Za-z0-9]{1,12}$/.test(uploaded)) throw new Error("Invalid logo key");
+    return [{tag: "img", attrs: {src: "/blobs/mecha-objects/" + uploaded + "/thumb.png", alt: "", width: 15, height: 15, loading: "lazy"}}];
+  }
   const fixture = {
   "000000000001": 17,
   "000000000002": 16,

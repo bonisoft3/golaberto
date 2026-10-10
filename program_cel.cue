@@ -68,6 +68,100 @@ code: state: entities: {
 			slug: {regex: "^[a-z0-9]+(-[a-z0-9]+)*$"}
 		}
 	}
+	CommunityAccess: {
+		checks: {
+			kind: "kind IN ('profile', 'comment', 'team_comment')"
+		}
+		seed: [...{
+			kind?: ("profile" | "comment" | "team_comment")
+		}]
+		enums: {
+			kind: ["profile","comment","team_comment"]
+		}
+	}
+	EditingChoice: {
+		seed: [...{
+			state?: "choosing"
+			q?: strings.MaxRunes(80)
+			q_key?: strings.MaxRunes(160)
+			home_score?: >=0 & <100
+			away_score?: >=0 & <100
+		}]
+		enums: {
+			state: ["choosing"]
+		}
+		bounds: {
+			q: {sizeMax: 80}
+			q_key: {sizeMax: 160}
+			home_score: {intMin: 0, intMax: 99}
+			away_score: {intMin: 0, intMax: 99}
+		}
+	}
+	MatchProbability: {
+		checks: {
+			rating_status: "rating_status IN ('available', 'missing-rating', 'ambiguous-rating')"
+			timeline_status: "timeline_status IN ('available', 'missing-rating', 'ambiguous-rating', 'unknown-event-minute', 'event-limit')"
+		}
+		seed: [...{
+			rating_status?: ("available" | "missing-rating" | "ambiguous-rating")
+			timeline_status?: ("available" | "missing-rating" | "ambiguous-rating" | "unknown-event-minute" | "event-limit")
+		}]
+		enums: {
+			rating_status: ["available","missing-rating","ambiguous-rating"]
+			timeline_status: ["available","missing-rating","ambiguous-rating","unknown-event-minute","event-limit"]
+		}
+	}
+	MatchProbabilityScenario: {
+		seed: [...{
+			state?: "ready"
+			minute?: ("" | =~ "^(0|[1-9]|[1-9][0-9]|1[0-2][0-9]|130)$")
+			added_time?: ("" | =~ "^(0|[1-9]|[1-3][0-9]|40)$")
+			event_sequence?: >=0
+			next_event_id?: strings.MaxRunes(80)
+			event_count?: >=0 & <=20
+			events_json?: strings.MaxRunes(4000)
+		}]
+		enums: {
+			state: ["ready"]
+		}
+		bounds: {
+			event_sequence: {intMin: 0}
+			next_event_id: {sizeMax: 80}
+			event_count: {intMin: 0, intMax: 20}
+			events_json: {sizeMax: 4000}
+		}
+	}
+	MatchProbabilityScenarioEvent: {
+		seed: [...{
+			id?: strings.MinRunes(1) & strings.MaxRunes(80)
+			state?: "ready"
+			sequence?: >=1
+			kind?: ("goal" | "red_card")
+			side?: ("home" | "away")
+			minute?: >=0 & <=130
+		}]
+		enums: {
+			state: ["ready"]
+			kind: ["goal","red_card"]
+			side: ["home","away"]
+		}
+		bounds: {
+			id: {sizeMin: 1, sizeMax: 80}
+			sequence: {intMin: 1}
+			minute: {intMin: 0, intMax: 130}
+		}
+	}
+	MatchRecentResult: {
+		checks: {
+			result: "result IN ('w', 'd', 'l')"
+		}
+		seed: [...{
+			result?: ("w" | "d" | "l")
+		}]
+		enums: {
+			result: ["w","d","l"]
+		}
+	}
 	Phase: {
 		checks: {
 			name: "char_length(name) > 0 AND char_length(name) <= 60"
@@ -108,12 +202,82 @@ code: state: entities: {
 			slug: {regex: "^[a-z0-9]+(-[a-z0-9]+)*$"}
 		}
 	}
+	PhaseClone: {
+		checks: {
+			name: "char_length(name) > 0 AND char_length(name) <= 120"
+		}
+		invariant: check: "ends >= begins"
+		seed: [...{
+			name?: strings.MinRunes(1) & strings.MaxRunes(120)
+		}]
+		bounds: {
+			name: {sizeMin: 1, sizeMax: 120}
+		}
+	}
+	PlayerMerge: {
+		invariant: check: "target_player_id <> source_player_id"
+	}
+	TeamOddsProgressState: {
+		seed: [...{
+			state?: ("viewing")
+			snapshot_index?: >=-1 & <=359
+			snapshot_last?: >=0 & <=359
+			pointer_x?: >=0 & <=1000
+			position_number?: >=-1 & <=10000
+			position_last?: >=0 & <=10000
+			table_mode?: ("current" | "history")
+			range_from?: strings.MaxRunes(12)
+			range_to?: strings.MaxRunes(12)
+		}]
+		enums: {
+			state: ["viewing"]
+			table_mode: ["current","history"]
+		}
+		bounds: {
+			snapshot_index: {intMin: -1, intMax: 359}
+			snapshot_last: {intMin: 0, intMax: 359}
+			pointer_x: {intMin: 0, intMax: 1000}
+			position_number: {intMin: -1, intMax: 10000}
+			position_last: {intMin: 0, intMax: 10000}
+			range_from: {sizeMax: 12}
+			range_to: {sizeMax: 12}
+		}
+	}
+	UserBiography: {
+		checks: {
+			display_name: "char_length(display_name) <= 100"
+			location: "char_length(location) <= 100"
+			about_me: "char_length(about_me) <= 2000"
+		}
+		seed: [...{
+			display_name?: strings.MaxRunes(100)
+			location?: strings.MaxRunes(100)
+			about_me?: strings.MaxRunes(2000)
+		}]
+		bounds: {
+			display_name: {sizeMax: 100}
+			location: {sizeMax: 100}
+			about_me: {sizeMax: 2000}
+		}
+	}
+	GameChange: {
+		checks: {
+			version: "version > 0"
+		}
+		seed: [...{
+			version?: >0
+		}]
+		bounds: {
+			version: {intMin: 1}
+		}
+	}
 	Zone: {
 		checks: {
 			name: "char_length(name) > 0 AND char_length(name) <= 120"
 			color: "color IN ('champion', 'promotion', 'qualify', 'playoff', 'relegation') OR color ~ '^#[0-9a-fA-F]{6}$'"
 			first: "first >= 1"
 			last: "last >= 1"
+			positions: "positions = '' OR (char_length(positions) <= 4999 AND positions ~ '^[1-9][0-9]{0,3}(,[1-9][0-9]{0,3})*$')"
 		}
 		invariant: check: "last >= first"
 		seed: [...{
@@ -121,6 +285,7 @@ code: state: entities: {
 			color?: (("champion" | "promotion" | "qualify" | "playoff" | "relegation") | =~ "^#[0-9a-fA-F]{6}$")
 			first?: >=1
 			last?: >=1
+			positions?: ("" | strings.MaxRunes(4999) & =~ "^[1-9][0-9]{0,3}(,[1-9][0-9]{0,3})*$")
 		}]
 		bounds: {
 			name: {sizeMin: 1, sizeMax: 120}
@@ -966,10 +1131,10 @@ code: state: entities: {
 	}
 	TeamChartState: {
 		seed: [...{
-			metric?: ("points" | "position" | "percent")
+			metric?: ("points")
 		}]
 		enums: {
-			metric: ["points","position","percent"]
+			metric: ["points"]
 		}
 	}
 	ArchivePage: {
@@ -980,15 +1145,20 @@ code: state: entities: {
 			state?: ("browsing")
 			q?: strings.MaxRunes(80)
 			q_key?: strings.MaxRunes(160)
-			sort?: ("name" | "played" | "minutes" | "goals" | "goals_per90" | "contribution" | "contribution_per90")
+			sort?: ("name" | "played" | "minutes" | "goals" | "goals_per90" | "contribution" | "contribution_per90" | "rating")
 			period?: ("1m" | "3m" | "6m" | "1y" | "5y" | "all")
 			side?: ("*" | "home" | "away")
+			minimum_minutes?: >=0 & <=1000000
+			played?: ("*" | "true" | "false")
+			date_from?: strings.MaxRunes(10)
+			date_to?: strings.MaxRunes(10)
 		}]
 		enums: {
 			state: ["browsing"]
-			sort: ["name","played","minutes","goals","goals_per90","contribution","contribution_per90"]
+			sort: ["name","played","minutes","goals","goals_per90","contribution","contribution_per90","rating"]
 			period: ["1m","3m","6m","1y","5y","all"]
 			side: ["*","home","away"]
+			played: ["*","true","false"]
 		}
 		bounds: {
 			offset: {intMin: 0}
@@ -996,6 +1166,9 @@ code: state: entities: {
 			page: {intMin: 1}
 			q: {sizeMax: 80}
 			q_key: {sizeMax: 160}
+			minimum_minutes: {intMin: 0, intMax: 1000000}
+			date_from: {sizeMax: 10}
+			date_to: {sizeMax: 10}
 		}
 	}
 }

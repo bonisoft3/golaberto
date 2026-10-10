@@ -27,6 +27,14 @@ export async function query(script: string): Promise<string> {
 }
 
 /**
+ * Taken first by a transaction that replays a migration. The checks run at
+ * once against one database, and replays rewrite views over tables other
+ * replays rewrite too; two holding locks in opposite orders deadlock. A DO
+ * block, so it adds no row to what `query` answers.
+ */
+export const replayLock = "DO $$ BEGIN PERFORM pg_advisory_xact_lock(hashtext('golaberto-migration-replay')); END $$;";
+
+/**
  * A refusal is the database's answer, not a failure of the query: an integrity
  * violation (SQLSTATE class 23). Anything else — a refused login, a database
  * still starting, a fixture's typo — is the run failing.

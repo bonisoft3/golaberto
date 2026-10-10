@@ -2,6 +2,7 @@
 <section class="screen" data-screen="chances">
 <header class="masthead">
   <a class="wordmark" data-route="principal" aria-label="{msg.brand}"><b data-text="{msg.brand_gol}"></b><span data-text="{msg.brand_aberto}"></span></a>
+  <a class="editing-management-link" data-route="gerenciar" data-text="{msg.manage_home}"></a>
   <nav class="langs" aria-label="{msg.lang_label}">
     <a data-route="chances" data-param-slug="{param.slug}" data-locale="pt-BR" data-locale-current="page" lang="pt-BR"><span class="long" data-text="{msg.lang_pt}"></span><span class="short" data-text="{msg.lang_pt_short}"></span></a>
     <a data-route="chances" data-param-slug="{param.slug}" data-locale="es-AR" data-locale-current="page" lang="es-AR"><span class="long" data-text="{msg.lang_es}"></span><span class="short" data-text="{msg.lang_es_short}"></span></a>
@@ -21,7 +22,7 @@
             <h2 data-text="{msg.chances_title}"></h2>
             <p><span data-text="{phase.name}"></span> · <span data-text="{name}"></span> · <span data-text="{msg.chances_seasons}"></span></p>
           </div>
-          <section class="chances-sec" data-live="team_chance" data-select="*,team(slug),group:group_id(slug)" data-filter="group_id=eq.{id}&rank=eq.1" data-empty="{msg.chances_none}">
+          <section class="chances-sec" data-live="team_chance" data-select="*,team(slug,logo_key),group:group_id(slug)" data-filter="group_id=eq.{id}&rank=eq.1" data-empty="{msg.chances_none}">
             <template data-item>
               <div class="chances-tables">
                 <h3 data-text="{msg.chances_zones}"></h3>
@@ -31,11 +32,11 @@
                       <span class="pos" role="columnheader">#</span><span class="name" role="columnheader" data-text="{msg.col_team}"></span><span class="pts" role="columnheader" data-text="{msg.col_points}"></span>
                       <span class="cells" data-live="zone" data-filter="group_id=eq.{group_id}" data-order="first.asc,last.asc" data-empty=""><template data-item><span class="zone" role="columnheader" data-zone="{color}" style="--zone-source: {color}"><i aria-hidden="true"></i><span data-text="{name}"></span><small data-text="{first}–{last}"></small></span></template></span>
                     </div>
-                    <div class="rows" data-live="team_chance" data-select="*,team(slug),group:group_id(slug)" data-filter="group_id=eq.{group_id}" data-order="rank.asc" data-empty="">
+                    <div class="rows" data-live="team_chance" data-select="*,team(slug,logo_key),group:group_id(slug)" data-filter="group_id=eq.{group_id}" data-order="rank.asc" data-empty="">
                       <template data-item>
                         <div class="row" role="row">
-                          <span class="pos" role="cell" data-text="{rank}"></span><span class="name" role="rowheader"><a data-route="equipe" data-param-slug="{team.slug}"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></span><span class="pts" role="cell" data-text="{points}"></span>
-                          <span class="cells" data-live="zone_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}" data-order="first.asc,last.asc" data-empty=""><template data-item><span class="pct" role="cell" data-zone="{color}" style="--zone-source: {color}" data-band="{band}"><span data-text="{percent}" data-text-format="number"></span><span class="reach" data-reach="{reach}" title="{msg[reach]}" aria-hidden="true"></span><span class="visually-hidden" data-text="{msg[reach]}"></span></span></template></span>
+                          <span class="pos" role="cell" data-text="{rank}"></span><span class="name" role="rowheader"><a data-route="equipe" data-param-slug="{team.slug}"><span class="archive-icon" data-text="{team_id}|{team_name}|{team.logo_key}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></span><span class="pts" role="cell" data-text="{points}"></span>
+                          <span class="cells" data-live="zone_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}" data-order="first.asc,last.asc" data-empty=""><template data-item><span class="pct" role="cell" data-zone="{color}" style="--zone-source: {color}" data-band="{band}"><span aria-hidden="true" data-text="{percent}{msg.chart_locale}compact-percent" data-text-format="position-odds"></span><span class="visually-hidden"><span class="exact" data-text="{percent}" data-text-format="number"></span>%</span><span class="reach" data-reach="{reach}" title="{msg[reach]}" aria-hidden="true"></span><span class="visually-hidden" data-text="{msg[reach]}"></span></span></template></span>
                         </div>
                       </template>
                     </div>
@@ -48,11 +49,11 @@
                       <span class="pos" role="columnheader">#</span><span class="name" role="columnheader" data-text="{msg.col_team}"></span>
                       <span class="cells" data-live="position_chance" data-filter="group_id=eq.{group_id}&current=is.true" data-order="position.asc" data-empty=""><template data-item><span class="at" role="columnheader" data-text="{position}"></span></template></span>
                     </div>
-                    <div class="rows" data-live="team_chance" data-select="*,team(slug),group:group_id(slug)" data-filter="group_id=eq.{group_id}" data-order="rank.asc" data-empty="">
+                    <div class="rows" data-live="team_chance" data-select="*,team(slug,logo_key),group:group_id(slug)" data-filter="group_id=eq.{group_id}" data-order="rank.asc" data-empty="">
                       <template data-item>
                         <div class="row" role="row">
-                          <span class="pos" role="cell" data-text="{rank}"></span><span class="name" role="rowheader"><a data-route="equipe" data-param-slug="{team.slug}"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></span>
-                          <span class="cells" data-live="position_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}" data-order="position.asc" data-empty=""><template data-item><span class="heat-cell" role="cell" data-band="{band}" data-current="{current}" title="{percent}%"><span class="visually-hidden" data-text="{percent}" data-text-format="number"></span><span class="reach" data-reach="{reach}" title="{msg[reach]}" aria-hidden="true"></span><span class="visually-hidden" data-text="{msg[reach]}"></span></span></template></span>
+                          <span class="pos" role="cell" data-text="{rank}"></span><span class="name" role="rowheader"><a data-route="equipe" data-param-slug="{team.slug}"><span class="archive-icon" data-text="{team_id}|{team_name}|{team.logo_key}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></span>
+                          <span class="cells" data-live="position_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}" data-order="position.asc" data-empty=""><template data-item><span class="heat-cell" role="cell" data-band="{band}" data-current="{current}" title="{percent}%"><span class="visually-hidden"><span class="exact" data-text="{percent}" data-text-format="number"></span>%</span><span class="reach" data-reach="{reach}" title="{msg[reach]}" aria-hidden="true"></span><span class="visually-hidden" data-text="{msg[reach]}"></span></span></template></span>
                         </div>
                       </template>
                     </div>

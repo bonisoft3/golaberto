@@ -1,0 +1,60 @@
+# generated from bayt.cue — do not edit
+services:
+  golaberto-rclone-s3:
+    build:
+      additional_contexts:
+        golaberto-database: service:golaberto-database
+        golaberto-migrate: service:golaberto-migrate
+      context: ..
+      dockerfile: .bayt/Dockerfile.rclone-s3
+      target: rclone-s3
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    depends_on:
+      golaberto-database:
+        condition: service_healthy
+        restart: true
+      golaberto-migrate:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: >-
+        postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}
+      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
+    healthcheck:
+      test:
+      - CMD
+      - deno
+      - eval
+      - const r=await fetch('http://127.0.0.1:3900/health'); if(!r.ok) Deno.exit(1)
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    image: bayt-golaberto-rclone-s3:${BAYT_IMAGE_TAG:-latest}
+    networks:
+      default:
+        aliases:
+        - rclone-s3
+  golaberto-rclone-s3_bayt:
+    build:
+      additional_contexts:
+        golaberto-database_bayt: service:golaberto-database_bayt
+        golaberto-migrate_bayt: service:golaberto-migrate_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.rclone-s3
+      target: rclone-s3_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-rclone-s3_bayt:latest
+    scale: 0
+  golaberto-rclone-s3_srcs:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.rclone-s3
+      target: rclone-s3_srcs
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-rclone-s3_srcs:latest
+    scale: 0

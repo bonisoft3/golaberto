@@ -5,7 +5,7 @@ services:
       additional_contexts:
         root: ..
         plugins_omnishell-runtime-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.2@sha256:7b7e454701f9f383b9359b935631369d4c03520b7bee82d100ed8c2b4836171d}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.4@sha256:ee911caa20b37f4b7c6ad3e8d7e8ffeef15bc1523cbe772137d34de443b489df}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}
       context: ..
       dockerfile: .bayt/Dockerfile.caddy
       target: caddy
@@ -45,6 +45,42 @@ services:
       - action: sync+restart
         path: ../shell/design.css
         target: /srv/shell/design.css
+      - action: sync+restart
+        path: ../shell/screens/arquivo.html
+        target: /srv/shell/screens/arquivo.html
+      - action: sync+restart
+        path: ../shell/screens/arquivo.css
+        target: /srv/shell/screens/arquivo.css
+      - action: sync+restart
+        path: ../shell/screens/arquivo-campeonato.html
+        target: /srv/shell/screens/arquivo-campeonato.html
+      - action: sync+restart
+        path: ../shell/screens/arquivo-campeonato.css
+        target: /srv/shell/screens/arquivo-campeonato.css
+      - action: sync+restart
+        path: ../shell/screens/publico.html
+        target: /srv/shell/screens/publico.html
+      - action: sync+restart
+        path: ../shell/screens/publico.css
+        target: /srv/shell/screens/publico.css
+      - action: sync+restart
+        path: ../shell/screens/jogadores.html
+        target: /srv/shell/screens/jogadores.html
+      - action: sync+restart
+        path: ../shell/screens/jogadores.css
+        target: /srv/shell/screens/jogadores.css
+      - action: sync+restart
+        path: ../shell/screens/campeonato-jogadores.html
+        target: /srv/shell/screens/campeonato-jogadores.html
+      - action: sync+restart
+        path: ../shell/screens/campeonato-jogadores.css
+        target: /srv/shell/screens/campeonato-jogadores.css
+      - action: sync+restart
+        path: ../shell/screens/jogador-campeonato.html
+        target: /srv/shell/screens/jogador-campeonato.html
+      - action: sync+restart
+        path: ../shell/screens/jogador-campeonato.css
+        target: /srv/shell/screens/jogador-campeonato.css
       - action: sync+restart
         path: ../shell/screens/principal.html
         target: /srv/shell/screens/principal.html
@@ -136,6 +172,132 @@ services:
         path: ../shell/screens/campeonato.css
         target: /srv/shell/screens/campeonato.css
       - action: sync+restart
+        path: ../shell/screens/editar-arbitro.html
+        target: /srv/shell/screens/editar-arbitro.html
+      - action: sync+restart
+        path: ../shell/screens/editar-arbitro.css
+        target: /srv/shell/screens/editar-arbitro.css
+      - action: sync+restart
+        path: ../shell/screens/editar-competicao.html
+        target: /srv/shell/screens/editar-competicao.html
+      - action: sync+restart
+        path: ../shell/screens/editar-competicao.css
+        target: /srv/shell/screens/editar-competicao.css
+      - action: sync+restart
+        path: ../shell/screens/editar-equipe.html
+        target: /srv/shell/screens/editar-equipe.html
+      - action: sync+restart
+        path: ../shell/screens/editar-equipe.css
+        target: /srv/shell/screens/editar-equipe.css
+      - action: sync+restart
+        path: ../shell/screens/editar-estadio.html
+        target: /srv/shell/screens/editar-estadio.html
+      - action: sync+restart
+        path: ../shell/screens/editar-estadio.css
+        target: /srv/shell/screens/editar-estadio.css
+      - action: sync+restart
+        path: ../shell/screens/editar-jogador.html
+        target: /srv/shell/screens/editar-jogador.html
+      - action: sync+restart
+        path: ../shell/screens/editar-jogador.css
+        target: /srv/shell/screens/editar-jogador.css
+      - action: sync+restart
+        path: ../shell/screens/editar-jogo.html
+        target: /srv/shell/screens/editar-jogo.html
+      - action: sync+restart
+        path: ../shell/screens/editar-jogo.css
+        target: /srv/shell/screens/editar-jogo.css
+      - action: sync+restart
+        path: ../shell/screens/escalacao-jogo.html
+        target: /srv/shell/screens/escalacao-jogo.html
+      - action: sync+restart
+        path: ../shell/screens/escalacao-jogo.css
+        target: /srv/shell/screens/escalacao-jogo.css
+      - action: sync+restart
+        path: ../shell/screens/gerenciar.html
+        target: /srv/shell/screens/gerenciar.html
+      - action: sync+restart
+        path: ../shell/screens/gerenciar.css
+        target: /srv/shell/screens/gerenciar.css
+      - action: sync+restart
+        path: ../shell/screens/gerenciar-competicoes.html
+        target: /srv/shell/screens/gerenciar-competicoes.html
+      - action: sync+restart
+        path: ../shell/screens/gerenciar-competicoes.css
+        target: /srv/shell/screens/gerenciar-competicoes.css
+      - action: sync+restart
+        path: ../shell/screens/gols-jogo.html
+        target: /srv/shell/screens/gols-jogo.html
+      - action: sync+restart
+        path: ../shell/screens/gols-jogo.css
+        target: /srv/shell/screens/gols-jogo.css
+      - action: sync+restart
+        path: ../shell/screens/historico-jogo.html
+        target: /srv/shell/screens/historico-jogo.html
+      - action: sync+restart
+        path: ../shell/screens/historico-jogo.css
+        target: /srv/shell/screens/historico-jogo.css
+      - action: sync+restart
+        path: ../shell/screens/inscricoes-jogador.html
+        target: /srv/shell/screens/inscricoes-jogador.html
+      - action: sync+restart
+        path: ../shell/screens/inscricoes-jogador.css
+        target: /srv/shell/screens/inscricoes-jogador.css
+      - action: sync+restart
+        path: ../shell/screens/nova-competicao.html
+        target: /srv/shell/screens/nova-competicao.html
+      - action: sync+restart
+        path: ../shell/screens/nova-competicao.css
+        target: /srv/shell/screens/nova-competicao.css
+      - action: sync+restart
+        path: ../shell/screens/novo-arbitro.html
+        target: /srv/shell/screens/novo-arbitro.html
+      - action: sync+restart
+        path: ../shell/screens/novo-arbitro.css
+        target: /srv/shell/screens/novo-arbitro.css
+      - action: sync+restart
+        path: ../shell/screens/novo-equipe.html
+        target: /srv/shell/screens/novo-equipe.html
+      - action: sync+restart
+        path: ../shell/screens/novo-equipe.css
+        target: /srv/shell/screens/novo-equipe.css
+      - action: sync+restart
+        path: ../shell/screens/novo-estadio.html
+        target: /srv/shell/screens/novo-estadio.html
+      - action: sync+restart
+        path: ../shell/screens/novo-estadio.css
+        target: /srv/shell/screens/novo-estadio.css
+      - action: sync+restart
+        path: ../shell/screens/novo-jogador.html
+        target: /srv/shell/screens/novo-jogador.html
+      - action: sync+restart
+        path: ../shell/screens/novo-jogador.css
+        target: /srv/shell/screens/novo-jogador.css
+      - action: sync+restart
+        path: ../shell/screens/novo-jogo.html
+        target: /srv/shell/screens/novo-jogo.html
+      - action: sync+restart
+        path: ../shell/screens/novo-jogo.css
+        target: /srv/shell/screens/novo-jogo.css
+      - action: sync+restart
+        path: ../shell/screens/usuario.html
+        target: /srv/shell/screens/usuario.html
+      - action: sync+restart
+        path: ../shell/screens/usuario.css
+        target: /srv/shell/screens/usuario.css
+      - action: sync+restart
+        path: ../shell/screens/usuarios.html
+        target: /srv/shell/screens/usuarios.html
+      - action: sync+restart
+        path: ../shell/screens/usuarios.css
+        target: /srv/shell/screens/usuarios.css
+      - action: sync+restart
+        path: ../shell/handlers/archive-round.js
+        target: /srv/shell/handlers/archive-round.js
+      - action: sync+restart
+        path: ../shell/handlers/archive-week.js
+        target: /srv/shell/handlers/archive-week.js
+      - action: sync+restart
         path: ../shell/handlers/blank-null.js
         target: /srv/shell/handlers/blank-null.js
       - action: sync+restart
@@ -145,8 +307,8 @@ services:
         path: ../shell/handlers/chart-compare.js
         target: /srv/shell/handlers/chart-compare.js
       - action: sync+restart
-        path: ../shell/handlers/chart-metric.js
-        target: /srv/shell/handlers/chart-metric.js
+        path: ../shell/handlers/chart-position-bound.js
+        target: /srv/shell/handlers/chart-position-bound.js
       - action: sync+restart
         path: ../shell/handlers/count-or-null.js
         target: /srv/shell/handlers/count-or-null.js
@@ -154,11 +316,65 @@ services:
         path: ../shell/handlers/country-option.js
         target: /srv/shell/handlers/country-option.js
       - action: sync+restart
+        path: ../shell/handlers/editing-choice-event.js
+        target: /srv/shell/handlers/editing-choice-event.js
+      - action: sync+restart
+        path: ../shell/handlers/editing-integer.js
+        target: /srv/shell/handlers/editing-integer.js
+      - action: sync+restart
+        path: ../shell/handlers/editing-played.js
+        target: /srv/shell/handlers/editing-played.js
+      - action: sync+restart
+        path: ../shell/handlers/editing-text.js
+        target: /srv/shell/handlers/editing-text.js
+      - action: sync+restart
+        path: ../shell/handlers/editing-timestamp.js
+        target: /srv/shell/handlers/editing-timestamp.js
+      - action: sync+restart
+        path: ../shell/handlers/editing-uuid.js
+        target: /srv/shell/handlers/editing-uuid.js
+      - action: sync+restart
         path: ../shell/handlers/geography-selection.js
         target: /srv/shell/handlers/geography-selection.js
       - action: sync+restart
+        path: ../shell/handlers/match-probability-event-control.js
+        target: /srv/shell/handlers/match-probability-event-control.js
+      - action: sync+restart
+        path: ../shell/handlers/match-probability-event-edit.js
+        target: /srv/shell/handlers/match-probability-event-edit.js
+      - action: sync+restart
+        path: ../shell/handlers/match-probability-event-fold.js
+        target: /srv/shell/handlers/match-probability-event-fold.js
+      - action: sync+restart
+        path: ../shell/handlers/match-probability-seed.js
+        target: /srv/shell/handlers/match-probability-seed.js
+      - action: sync+restart
+        path: ../shell/handlers/odds-progress-point.js
+        target: /srv/shell/handlers/odds-progress-point.js
+      - action: sync+restart
+        path: ../shell/handlers/odds-progress-snapshot.js
+        target: /srv/shell/handlers/odds-progress-snapshot.js
+      - action: sync+restart
+        path: ../shell/handlers/odds-progress-zone.js
+        target: /srv/shell/handlers/odds-progress-zone.js
+      - action: sync+restart
         path: ../shell/handlers/page-value.js
         target: /srv/shell/handlers/page-value.js
+      - action: sync+restart
+        path: ../shell/handlers/parity-minutes.js
+        target: /srv/shell/handlers/parity-minutes.js
+      - action: sync+restart
+        path: ../shell/handlers/player-csv-fold.js
+        target: /srv/shell/handlers/player-csv-fold.js
+      - action: sync+restart
+        path: ../shell/handlers/player-csv-seed.js
+        target: /srv/shell/handlers/player-csv-seed.js
+      - action: sync+restart
+        path: ../shell/handlers/position-odds-control.js
+        target: /srv/shell/handlers/position-odds-control.js
+      - action: sync+restart
+        path: ../shell/handlers/position-odds-fold.js
+        target: /srv/shell/handlers/position-odds-fold.js
       - action: sync+restart
         path: ../shell/handlers/row-id.js
         target: /srv/shell/handlers/row-id.js
@@ -172,6 +388,12 @@ services:
         path: ../shell/handlers/team-chart-seed.js
         target: /srv/shell/handlers/team-chart-seed.js
       - action: sync+restart
+        path: ../shell/handlers/team-rating-series.js
+        target: /srv/shell/handlers/team-rating-series.js
+      - action: sync+restart
+        path: ../shell/renderers/community-history.js
+        target: /srv/shell/renderers/community-history.js
+      - action: sync+restart
         path: ../shell/renderers/country-flag.js
         target: /srv/shell/renderers/country-flag.js
       - action: sync+restart
@@ -180,6 +402,42 @@ services:
       - action: sync+restart
         path: ../shell/renderers/home-date.js
         target: /srv/shell/renderers/home-date.js
+      - action: sync+restart
+        path: ../shell/renderers/match-context-map.js
+        target: /srv/shell/renderers/match-context-map.js
+      - action: sync+restart
+        path: ../shell/renderers/match-final-score.js
+        target: /srv/shell/renderers/match-final-score.js
+      - action: sync+restart
+        path: ../shell/renderers/match-probability.js
+        target: /srv/shell/renderers/match-probability.js
+      - action: sync+restart
+        path: ../shell/renderers/match-shootout.js
+        target: /srv/shell/renderers/match-shootout.js
+      - action: sync+restart
+        path: ../shell/renderers/media-image.js
+        target: /srv/shell/renderers/media-image.js
+      - action: sync+restart
+        path: ../shell/renderers/odds-progress.js
+        target: /srv/shell/renderers/odds-progress.js
+      - action: sync+restart
+        path: ../shell/renderers/player-csv.js
+        target: /srv/shell/renderers/player-csv.js
+      - action: sync+restart
+        path: ../shell/renderers/player-event-label.js
+        target: /srv/shell/renderers/player-event-label.js
+      - action: sync+restart
+        path: ../shell/renderers/player-height.js
+        target: /srv/shell/renderers/player-height.js
+      - action: sync+restart
+        path: ../shell/renderers/player-position.js
+        target: /srv/shell/renderers/player-position.js
+      - action: sync+restart
+        path: ../shell/renderers/player-rate-per90.js
+        target: /srv/shell/renderers/player-rate-per90.js
+      - action: sync+restart
+        path: ../shell/renderers/position-odds.js
+        target: /srv/shell/renderers/position-odds.js
       - action: sync+restart
         path: ../shell/renderers/team-badge.js
         target: /srv/shell/renderers/team-badge.js
@@ -196,8 +454,23 @@ services:
         path: ../shell/shared/chrome.css
         target: /srv/shell/shared/chrome.css
       - action: sync+restart
+        path: ../shell/shared/community.css
+        target: /srv/shell/shared/community.css
+      - action: sync+restart
+        path: ../shell/shared/competition.css
+        target: /srv/shell/shared/competition.css
+      - action: sync+restart
+        path: ../shell/shared/editing.css
+        target: /srv/shell/shared/editing.css
+      - action: sync+restart
         path: ../shell/shared/games.css
         target: /srv/shell/shared/games.css
+      - action: sync+restart
+        path: ../shell/shared/match-context.css
+        target: /srv/shell/shared/match-context.css
+      - action: sync+restart
+        path: ../shell/shared/match-probability.css
+        target: /srv/shell/shared/match-probability.css
       - action: sync+restart
         path: ../shell/shared/team.css
         target: /srv/shell/shared/team.css

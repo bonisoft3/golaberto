@@ -147,7 +147,8 @@ pipeline:
               let goals = this.goals.filter(q -> q.team == $team)
               let named = this.apps.concat(this.goals).filter(x -> x.team == $team)
               let on = $apps.filter(a -> !a.bench)
-              let minutes = $on.map_each(a -> a.off_minute.or([a.on_minute, 90].max()) - a.on_minute).sum().or(0)
+              # An archive line off before on counts no minutes, as read parity's duration does.
+              let minutes = $on.map_each(a -> [a.off_minute.or([a.on_minute, 90].max()) - a.on_minute, 0].max()).sum().or(0)
               let goal_count = $goals.filter(q -> !q.own_goal).length()
               root.id = this.championship + ":" + $team + ":" + this.player
               root.championship_id = this.championship

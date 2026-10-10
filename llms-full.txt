@@ -6,6 +6,14 @@
 Publicly accessible web application.
 
 ## Screens Specification
+### Screen: Game archive
+- Route: `/arquivo`
+- Reads: Category, GameArchive
+
+### Screen: Players
+- Route: `/jogadores`
+- Reads: GeographyRegion, PlayerDirectory
+
 ### Screen: Principal
 - Route: `/`
 - Reads: HomeGameCard, Championship, Phase, Group, Standing, PositionChance, TeamChance, HomeChampionship
@@ -29,6 +37,42 @@ Publicly accessible web application.
 ### Screen: Árbitros
 - Route: `/arbitros`
 - Reads: Referee
+
+### Screen: gerenciar
+- Route: `/gerenciar`
+- Reads: Team, PlayerDirectory, Stadium, Referee, GameArchive
+
+### Screen: Manage championships
+- Route: `/gerenciar-competicoes`
+- Reads: Championship
+
+### Screen: New championship
+- Route: `/nova-competicao`
+- Reads: Category
+
+### Screen: novo-arbitro
+- Route: `/novo-arbitro`
+- Reads: none
+
+### Screen: novo-equipe
+- Route: `/novo-equipe`
+- Reads: Stadium
+
+### Screen: novo-estadio
+- Route: `/novo-estadio`
+- Reads: none
+
+### Screen: novo-jogador
+- Route: `/novo-jogador`
+- Reads: none
+
+### Screen: novo-jogo
+- Route: `/novo-jogo`
+- Reads: PhaseDirectory, Team, Stadium, Referee
+
+### Screen: usuarios
+- Route: `/usuarios`
+- Reads: UserDirectory
 
 ## Data Models Schema
 ### Entity: AppUser
@@ -61,6 +105,8 @@ Fields:
   - `search_name` (string)
   - `search_key` (string)
   - `slug` (string)
+  - `created_by` (uuid)
+  - `updated_by` (uuid)
 
 ### Entity: HomeChampionship
 Fields:
@@ -79,6 +125,8 @@ Fields:
   - `sort` (string)
   - `bonus_points` (int32)
   - `bonus_points_threshold` (int32)
+  - `created_by` (uuid)
+  - `updated_by` (uuid)
 
 ### Entity: Group
 Fields:
@@ -87,6 +135,8 @@ Fields:
   - `name` (string)
   - `position` (int32)
   - `slug` (string)
+  - `created_by` (uuid)
+  - `updated_by` (uuid)
 
 ### Entity: Zone
 Fields:
@@ -96,6 +146,9 @@ Fields:
   - `color` (string)
   - `first` (int32)
   - `last` (int32)
+  - `positions` (string)
+  - `created_by` (uuid)
+  - `updated_by` (uuid)
 
 ### Entity: Stadium
 Fields:
@@ -107,6 +160,8 @@ Fields:
   - `search_name` (string)
   - `search_key` (string)
   - `slug` (string)
+  - `created_by` (uuid)
+  - `updated_by` (uuid)
 
 ### Entity: Team
 Fields:
@@ -124,6 +179,9 @@ Fields:
   - `latitude` (double)
   - `longitude` (double)
   - `slug` (string)
+  - `created_by` (uuid)
+  - `updated_by` (uuid)
+  - `logo_key` (string)
 
 ### Entity: TeamChampionship
 Fields:
@@ -143,6 +201,8 @@ Fields:
   - `add_sub` (int32)
   - `bias` (int32)
   - `comment` (string)
+  - `created_by` (uuid)
+  - `updated_by` (uuid)
 
 ### Entity: Referee
 Fields:
@@ -152,6 +212,8 @@ Fields:
   - `search_name` (string)
   - `search_key` (string)
   - `slug` (string)
+  - `created_by` (uuid)
+  - `updated_by` (uuid)
 
 ### Entity: GeographyRegion
 Fields:
@@ -199,6 +261,8 @@ Fields:
   - `height` (int32)
   - `position` (string)
   - `slug` (string)
+  - `created_by` (uuid)
+  - `updated_by` (uuid)
 
 ### Entity: TeamPlayer
 Fields:
@@ -206,6 +270,8 @@ Fields:
   - `championship_id` (uuid)
   - `team_id` (uuid)
   - `player_id` (uuid)
+  - `created_by` (uuid)
+  - `updated_by` (uuid)
 
 ### Entity: TeamRoster
 Fields:
@@ -267,6 +333,8 @@ Fields:
   - `day_display` (string)
   - `kickoff_local` (string)
   - `slug` (string)
+  - `created_by` (uuid)
+  - `updated_by` (uuid)
 
 ### Entity: Goal
 Fields:
@@ -278,6 +346,8 @@ Fields:
   - `penalty` (bool)
   - `own_goal` (bool)
   - `aet` (bool)
+  - `created_by` (uuid)
+  - `updated_by` (uuid)
 
 ### Entity: PlayerGame
 Fields:
@@ -294,6 +364,8 @@ Fields:
   - `day_display` (string)
   - `off_rating` (double)
   - `def_rating` (double)
+  - `created_by` (uuid)
+  - `updated_by` (uuid)
 
 ### Entity: Standing
 Fields:
@@ -370,6 +442,8 @@ Fields:
 Fields:
   - `id` (uuid)
   - `rating` (double)
+  - `off_rating` (double)
+  - `def_rating` (double)
 
 ### Entity: RatingEval
 Fields:
@@ -531,6 +605,7 @@ Fields:
   - `contribution` (double)
   - `contribution_per90` (double)
   - `goals_per90` (double)
+  - `search_key` (string)
 
 ### Entity: PhaseRound
 Fields:
@@ -606,3 +681,318 @@ Fields:
   - `contribution` (double)
   - `contribution_per90` (double)
   - `goals_per90` (double)
+
+### Entity: CommunityAccess
+Fields:
+  - `id` (string)
+  - `record_id` (uuid)
+  - `kind` (string)
+  - `biography_id` (uuid)
+  - `avatar_id` (uuid)
+
+### Entity: MatchProbability
+Fields:
+  - `id` (uuid)
+  - `game_id` (uuid)
+  - `home_name` (string)
+  - `away_name` (string)
+  - `rating_status` (string)
+  - `timeline_status` (string)
+  - `payload_json` (string)
+
+### Entity: MatchRecentResult
+Fields:
+  - `id` (string)
+  - `target_game_id` (uuid)
+  - `team_id` (uuid)
+  - `side` (string)
+  - `game_id` (uuid)
+  - `game_slug` (string)
+  - `day` (date)
+  - `day_display` (string)
+  - `kickoff` (timestamp)
+  - `kickoff_local` (string)
+  - `championship_id` (uuid)
+  - `championship_name` (string)
+  - `championship_slug` (string)
+  - `show_country` (bool)
+  - `home_id` (uuid)
+  - `home_name` (string)
+  - `home_country` (string)
+  - `home_slug` (string)
+  - `away_id` (uuid)
+  - `away_name` (string)
+  - `away_country` (string)
+  - `away_slug` (string)
+  - `home_score` (int32)
+  - `away_score` (int32)
+  - `home_aet` (int32)
+  - `away_aet` (int32)
+  - `home_pen` (int32)
+  - `away_pen` (int32)
+  - `result` (string)
+
+### Entity: UserBiography
+Fields:
+  - `id` (uuid)
+  - `app_user_id` (uuid)
+  - `display_name` (string)
+  - `location` (string)
+  - `about_me` (string)
+  - `updated_at` (timestamp)
+
+### Entity: GameChange
+Fields:
+  - `id` (uuid)
+  - `game_id` (uuid)
+  - `version` (int32)
+  - `actor_id` (uuid)
+  - `actor_handle` (string)
+  - `game_slug` (string)
+  - `game_day` (date)
+  - `home_name` (string)
+  - `away_name` (string)
+  - `championship_name` (string)
+  - `changes_json` (string)
+  - `created_at` (timestamp)
+
+### Entity: UserDirectory
+Fields:
+  - `id` (uuid)
+  - `handle` (string)
+  - `display_name` (string)
+  - `location` (string)
+  - `about_me` (string)
+  - `joined_at` (timestamp)
+  - `biography_id` (uuid)
+  - `comment_count` (int64)
+  - `edit_count` (int64)
+  - `last_edit_at` (timestamp)
+  - `search_key` (string)
+  - `joined_on` (string)
+  - `avatar_key` (string)
+
+### Entity: MatchHeadToHead
+Fields:
+  - `id` (string)
+  - `target_game_id` (uuid)
+  - `game_id` (uuid)
+  - `game_slug` (string)
+  - `day` (date)
+  - `day_display` (string)
+  - `kickoff` (timestamp)
+  - `kickoff_local` (string)
+  - `championship_id` (uuid)
+  - `championship_name` (string)
+  - `championship_slug` (string)
+  - `category_id` (uuid)
+  - `show_country` (bool)
+  - `home_id` (uuid)
+  - `home_name` (string)
+  - `home_country` (string)
+  - `home_slug` (string)
+  - `away_id` (uuid)
+  - `away_name` (string)
+  - `away_country` (string)
+  - `away_slug` (string)
+  - `home_score` (int32)
+  - `away_score` (int32)
+  - `home_aet` (int32)
+  - `away_aet` (int32)
+  - `home_pen` (int32)
+  - `away_pen` (int32)
+  - `home_logo_key` (string)
+  - `away_logo_key` (string)
+
+### Entity: MatchLineup
+Fields:
+  - `id` (uuid)
+  - `game_id` (uuid)
+  - `player_id` (uuid)
+  - `side` (string)
+  - `on_minute` (int32)
+  - `off_minute` (int32)
+  - `yellow` (bool)
+  - `red` (bool)
+  - `bench` (bool)
+  - `player_name` (string)
+  - `position` (string)
+  - `player_slug` (string)
+  - `off_rating` (double)
+  - `def_rating` (double)
+  - `contribution` (double)
+
+### Entity: MatchLocation
+Fields:
+  - `id` (uuid)
+  - `home_id` (uuid)
+  - `home_name` (string)
+  - `home_latitude` (double)
+  - `home_longitude` (double)
+  - `away_id` (uuid)
+  - `away_name` (string)
+  - `away_latitude` (double)
+  - `away_longitude` (double)
+  - `distance_km` (double)
+  - `map_embed_url` (string)
+
+### Entity: UserAvatar
+Fields:
+  - `id` (uuid)
+  - `avatar_key` (string)
+
+### Entity: TeamOddsProgress
+Fields:
+  - `id` (string)
+  - `group_id` (uuid)
+  - `team_id` (uuid)
+  - `series_json` (string)
+
+### Entity: PhaseDirectory
+Fields:
+  - `id` (uuid)
+  - `name` (string)
+  - `championship_id` (uuid)
+  - `championship_name` (string)
+  - `search_key` (string)
+
+### Entity: PlayerDirectory
+Fields:
+  - `id` (uuid)
+  - `name` (string)
+  - `full_name` (string)
+  - `birth` (date)
+  - `country` (string)
+  - `height` (int32)
+  - `position` (string)
+  - `slug` (string)
+  - `rating` (double)
+  - `off_rating` (double)
+  - `def_rating` (double)
+  - `position_key` (string)
+  - `country_id` (string)
+  - `region_id` (string)
+  - `search_key` (string)
+  - `country_search_key` (string)
+  - `region_search_key` (string)
+  - `latest_team_id` (uuid)
+  - `latest_team_name` (string)
+  - `latest_team_slug` (string)
+  - `latest_team_logo_key` (string)
+
+### Entity: GameArchive
+Fields:
+  - `id` (uuid)
+  - `phase_id` (uuid)
+  - `round` (int32)
+  - `day` (date)
+  - `kickoff` (timestamp)
+  - `home_id` (uuid)
+  - `away_id` (uuid)
+  - `home_field` (string)
+  - `played` (bool)
+  - `home_score` (int32)
+  - `away_score` (int32)
+  - `home_aet` (int32)
+  - `away_aet` (int32)
+  - `home_pen` (int32)
+  - `away_pen` (int32)
+  - `stadium_id` (uuid)
+  - `referee_id` (uuid)
+  - `attendance` (int32)
+  - `day_display` (string)
+  - `kickoff_local` (string)
+  - `slug` (string)
+  - `championship_id` (uuid)
+  - `championship_name` (string)
+  - `championship_slug` (string)
+  - `phase_name` (string)
+  - `category_id` (uuid)
+  - `category_key` (string)
+  - `phase_key` (string)
+  - `round_key` (string)
+  - `week` (date)
+  - `week_key` (string)
+  - `show_country` (bool)
+  - `home_name` (string)
+  - `away_name` (string)
+  - `home_country` (string)
+  - `away_country` (string)
+  - `home_slug` (string)
+  - `away_slug` (string)
+  - `stadium_name` (string)
+  - `referee_name` (string)
+  - `home_logo_key` (string)
+  - `away_logo_key` (string)
+
+### Entity: PlayerAppearance
+Fields:
+  - `id` (uuid)
+  - `player_id` (uuid)
+  - `game_id` (uuid)
+  - `side` (string)
+  - `on_minute` (int32)
+  - `off_minute` (int32)
+  - `yellow` (bool)
+  - `red` (bool)
+  - `bench` (bool)
+  - `day` (date)
+  - `day_display` (string)
+  - `kickoff` (timestamp)
+  - `kickoff_local` (string)
+  - `played` (bool)
+  - `played_key` (string)
+  - `game_slug` (string)
+  - `phase_id` (uuid)
+  - `phase_name` (string)
+  - `championship_id` (uuid)
+  - `championship_name` (string)
+  - `championship_slug` (string)
+  - `category_id` (uuid)
+  - `category_key` (string)
+  - `round` (int32)
+  - `round_key` (string)
+  - `week` (date)
+  - `week_key` (string)
+  - `team_id` (uuid)
+  - `team_name` (string)
+  - `team_slug` (string)
+  - `home_id` (uuid)
+  - `away_id` (uuid)
+  - `home_name` (string)
+  - `away_name` (string)
+  - `home_country` (string)
+  - `away_country` (string)
+  - `show_country` (bool)
+  - `home_score` (int32)
+  - `away_score` (int32)
+  - `home_aet` (int32)
+  - `away_aet` (int32)
+  - `home_pen` (int32)
+  - `away_pen` (int32)
+  - `minutes` (int32)
+  - `off_rating` (double)
+  - `def_rating` (double)
+  - `contribution` (double)
+  - `contribution_per90` (double)
+  - `goals` (int32)
+  - `penalties` (int32)
+  - `own_goals` (int32)
+  - `goals_per90` (double)
+  - `home_logo_key` (string)
+  - `away_logo_key` (string)
+
+### Entity: ChampionshipAttendance
+Fields:
+  - `id` (string)
+  - `championship_id` (uuid)
+  - `team_id` (uuid)
+  - `team_name` (string)
+  - `team_slug` (string)
+  - `games` (int32)
+  - `attendance_count` (int32)
+  - `total` (int64)
+  - `average` (double)
+  - `minimum` (int32)
+  - `maximum` (int32)
+  - `team_logo_key` (string)

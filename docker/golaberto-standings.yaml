@@ -88,7 +88,7 @@ pipeline:
         - branch:
             processors:
               - http:
-                  url: ${CRUD_URL}/zone?select=group_id,color,first,last&group_id=eq.${! this.group.id }
+                  url: ${CRUD_URL}/zone?select=group_id,color,first,last,positions&group_id=eq.${! this.group.id }
                   verb: GET
                   headers:
                     Authorization: Bearer ${SERVICE_JWT}
@@ -217,7 +217,7 @@ pipeline:
                 "form3": e.value.form.index(-3).catch(""),
                 "form4": e.value.form.index(-2).catch(""),
                 "form5": e.value.form.index(-1).catch(""),
-                "zone": $zones.filter(z -> z.first <= e.index + 1 && e.index + 1 <= z.last).map_each(z -> z.color).index(0).catch(""),
+                "zone": $zones.filter(z -> if z.positions.or("") != "" { z.positions.split(",").contains((e.index + 1).string()) } else { z.first <= e.index + 1 && e.index + 1 <= z.last }).map_each(z -> z.color).index(0).catch(""),
               })
             }
 

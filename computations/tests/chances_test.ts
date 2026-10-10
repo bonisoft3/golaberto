@@ -124,6 +124,84 @@ test("the request is Rails' Group#odds", async () => {
   assert(request.games.every((g) => g.home_power === null && g.away_power === null));
 });
 
+test("sparse zones aggregate only their exact positions", async () => {
+  const teams = [1, 2, 3, 4].map((n) => uid(1, n));
+  const given = {
+    groups: [{ id: "g", live: true, sort: "pt", bonus_points: 0, bonus_points_threshold: 0, win: 3, draw: 1, loss: 0 }],
+    members: teams.map((team, index) => ({
+      group_id: "g", team_id: team, name: team, add_sub: 0, bias: 0, position: index + 1, points: 0, played: 0,
+    })),
+    games: [],
+    zones: [{ group_id: "g", id: "sparse", first: 1, last: 3, positions: "1,3", color: "qualify" }],
+  };
+  const [{ input: { request } }] = plan(given);
+  assertEquals(request.zones, [{ position: [1, 3] }]);
+  const percentages = [[45, 30, 20, 5], [25, 35, 25, 15], [20, 20, 30, 30], [10, 15, 25, 50]];
+  const response = {
+    team_odds: Object.fromEntries(percentages.map((row, index) => [index + 1, { Pos: row }])),
+    game_importance: {},
+    rare_position_estimates: Object.fromEntries(teams.map((_, index) => [
+      index + 1,
+      Object.fromEntries([0, 1, 2, 3].map((position) => [position, { reachability: "reachable" }])),
+    ])),
+  };
+  const out = chances.finish(given, [response]) as Out;
+  const zones = of(out.zone_chance, "g");
+  assertEquals(zones.map((row) => row.percent), percentages.map((row) => row[0] + row[2]));
+  assertEquals(zones.reduce((sum, row) => sum + (row.percent as number), 0), 200);
+});
+
+test("zones beyond current membership stay impossible without stopping other groups", async () => {
+  const teams = [1, 2, 3, 4].map((n) => uid(1, n));
+  for (const live of [false, true]) {
+    const given = {
+      groups: [{ id: "g", live, sort: "pt", bonus_points: 0, bonus_points_threshold: 0, win: 3, draw: 1, loss: 0 }, { id: "h", live: false }],
+      members: teams.map((team, index) => ({
+        group_id: index < 3 ? "g" : "h", team_id: team, name: team, add_sub: 0, bias: 0,
+        position: index < 3 ? index + 1 : 1, points: 0, played: 0,
+      })),
+      games: [],
+      zones: [
+        { group_id: "g", id: "range", first: 1, last: 4, positions: "", color: "qualify" },
+        { group_id: "g", id: "sparse", first: 1, last: 4, positions: "1,4", color: "promotion" },
+        { group_id: "g", id: "outside", first: 4, last: 5, positions: "4,5", color: "relegation" },
+        { group_id: "g", id: "outside-range", first: 4, last: 5, positions: "", color: "relegation" },
+        // Two or more past the membership: an inverted range once threw instead of being empty.
+        { group_id: "g", id: "far-range", first: 6, last: 7, positions: "", color: "relegation" },
+      ],
+    };
+    const percentages = [[100, 0, 0], [0, 100, 0], [0, 0, 100]];
+    const response = {
+      team_odds: Object.fromEntries(percentages.map((row, index) => [index + 1, { Pos: row }])),
+      game_importance: {},
+      rare_position_estimates: Object.fromEntries(percentages.map((row, index) => [index + 1,
+        Object.fromEntries(row.map((value, position) => [position, { reachability: value ? "reachable" : "impossible" }])),
+      ])),
+    };
+    if (live) {
+      const [{ input: { request } }] = plan(given);
+      assertEquals(request.zones, [{ position: [1, 2, 3] }, { position: [1] }, { position: [] }, { position: [] }, { position: [] }]);
+    }
+    const out = chances.finish(given, live ? [response] : []) as Out;
+    assertEquals(out.team_chance.length, 4);
+    assertEquals(of(out.position_chance, "h").map((row) => row.percent), [100]);
+    assertEquals(of(out.zone_chance, "g").map((row) => [row.percent, row.reach]), [
+      [100, ""], [100, ""], [0, "impossible"], [0, "impossible"], [0, "impossible"],
+      [100, ""], [0, "impossible"], [0, "impossible"], [0, "impossible"], [0, "impossible"],
+      [100, ""], [0, "impossible"], [0, "impossible"], [0, "impossible"], [0, "impossible"],
+    ]);
+    if (live) {
+      response.team_odds[1].Pos.pop();
+      assertThrows(() => chances.finish(given, [response]), RangeError, "position 3 is missing");
+    }
+  }
+  const partial = new World();
+  partial.rows.zone = partial.rows.zone.map((zone) => ({ ...zone, positions: "7,8" }));
+  const out = await compute("chances", await partial.lake());
+  assert(out.zone_chance.length > 0);
+  assert(out.zone_chance.every((row) => row.percent === 0 && row.reach === "impossible"));
+});
+
 test("powers read the latest rating before the game, in f32", async () => {
   const lake = await rated();
   const [{ input: { request } }] = plan(await inputs(chances.queries, lake));

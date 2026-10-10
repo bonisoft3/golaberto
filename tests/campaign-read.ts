@@ -89,18 +89,21 @@ Deno.test("campaign requests rank the whole group and observe source edits immed
     END $$;
     UPDATE phase SET sort='pt,head,bias,name' WHERE id='${phase}';
     UPDATE team_group SET bias=0 WHERE group_id='${group}' AND team_id='${b}';
-    CREATE TEMP TABLE campaign_plans(plan jsonb);
-    GRANT INSERT ON campaign_plans TO app_user;
+    -- A setting, not a temp table: pgroll records DDL in its ledger, and
+    -- concurrent checks recording against one parent collide.
+    SET LOCAL golaberto.campaign_plans = '[]';
     SET LOCAL ROLE app_user;
     DO $$ DECLARE result jsonb; BEGIN
       EXECUTE 'EXPLAIN (ANALYZE, FORMAT JSON) ${
     query.replaceAll("'", "''")
   }' INTO result;
-      INSERT INTO campaign_plans VALUES (result->0->'Plan');
+      PERFORM set_config('golaberto.campaign_plans',
+        (current_setting('golaberto.campaign_plans')::jsonb || jsonb_build_array(result->0->'Plan'))::text,true);
       EXECUTE 'EXPLAIN (ANALYZE, FORMAT JSON) ${
     paged.replaceAll("'", "''")
   }' INTO result;
-      INSERT INTO campaign_plans VALUES (result->0->'Plan');
+      PERFORM set_config('golaberto.campaign_plans',
+        (current_setting('golaberto.campaign_plans')::jsonb || jsonb_build_array(result->0->'Plan'))::text,true);
     END $$;
     RESET ROLE;
     UPDATE game SET phase_id='${otherPhase}' WHERE id='${ab}';
@@ -121,7 +124,7 @@ Deno.test("campaign requests rank the whole group and observe source edits immed
         OR to_regprocedure('replace_team_campaign_points(uuid,jsonb)') IS NOT NULL
         THEN RAISE EXCEPTION 'campaign reads must have no stored rows or background writer'; END IF;
     END $$;
-    SELECT jsonb_agg(plan) FROM campaign_plans;
+    SELECT current_setting('golaberto.campaign_plans');
     ROLLBACK;`);
   const plans: Plan[] = JSON.parse(output);
   assertEquals(plans.length, 2);

@@ -1,0 +1,55 @@
+.match-probability-shell { margin: 1.4rem 0; }
+.match-probability-controls { border: var(--border-size-1) solid var(--border); margin: 0 0 var(--size-3); padding: var(--sp-lg); }
+.match-probability-controls legend { font-weight: 800; padding: 0 .35rem; }
+.match-probability-control-grid { display: grid; grid-template-columns: repeat(2, minmax(8rem, 1fr)); gap: .65rem; }
+.match-probability-control-grid label { display: grid; gap: .2rem; font-size: .86rem; }
+.match-probability-control-grid input { box-sizing: border-box; min-height: 2.4rem; width: 100%; }
+.match-probability-event-actions { display: flex; flex-wrap: wrap; gap: var(--sp-md); margin: var(--sp-lg) 0; }
+.match-probability-event-actions button,
+.match-probability-event__remove { min-height: 2.4rem; }
+.match-probability-events { display: grid; gap: var(--sp-md); }
+.match-probability-event { align-items: end; border-top: var(--border-size-1) solid var(--border); display: grid; gap: var(--sp-md); grid-template-columns: minmax(6.5rem, .7fr) minmax(8rem, 1fr) minmax(6rem, .7fr) auto; padding-top: var(--sp-md); }
+.match-probability-event label { display: grid; font-size: .82rem; gap: .2rem; }
+.match-probability-event input,
+.match-probability-event select { box-sizing: border-box; min-height: 2.4rem; width: 100%; }
+.match-probability-event__kind { align-self: center; font-weight: 800; }
+.match-probability-event--goal .match-probability-event__kind--red-card,
+.match-probability-event--red_card .match-probability-event__kind--goal { display: none; }
+.match-probability { border-top: .25rem solid var(--masthead); padding-top: var(--sp-lg); }
+.match-probability > h2 { margin-top: 0; }
+.match-probability > h3 { font-size: var(--base-text-size-md); margin-bottom: .35rem; }
+.match-probability__prematch { display: grid; grid-template-columns: repeat(3, 1fr); list-style: none; margin: 0; padding: 0; }
+.match-probability__prematch li { display: grid; gap: .2rem; padding: .65rem; text-align: center; }
+.match-probability__prematch strong { font-size: 1.15rem; }
+.match-probability__home { background: color-mix(in srgb, #47c5f7 24%, transparent); }
+.match-probability__draw { background: color-mix(in srgb, #edc240 24%, transparent); }
+.match-probability__away { background: color-mix(in srgb, #f398b2 24%, transparent); }
+.match-probability__rating-dates { color: var(--secondary); font-size: .82rem; }
+.match-probability__snapshot { font-weight: 700; margin-bottom: .3rem; }
+.match-probability__chart { margin: var(--sp-md) 0 0; }
+.match-probability__line { fill: none; stroke-width: 3; }
+.match-probability__line--home { stroke: #167aa1; }
+.match-probability__line--draw { stroke: #9a7410; }
+.match-probability__line--away { stroke: #b14365; }
+.match-probability__event { stroke: #873b1a; stroke-dasharray: 4 3; stroke-width: 1.5; }
+.match-probability__point { fill: #167aa1; stroke: var(--surface); stroke-width: 1.5; }
+.match-probability__point:focus { outline: none; stroke: #20210f; stroke-width: 3; }
+.match-probability__timeline-unavailable,
+.match-probability__scenario-error,
+.match-probability--unavailable p { background: color-mix(in srgb, #edc240 18%, transparent); border-left: .25rem solid #9a7410; padding: .65rem; }
+
+@media (max-width: 680px) {
+  .match-probability-control-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .match-probability-event { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .match-probability-event__kind,
+  .match-probability-event__remove { grid-column: 1 / -1; }
+  .match-probability__prematch { grid-template-columns: 1fr; }
+  .match-probability__prematch li { grid-template-columns: 1fr auto; text-align: left; }
+}
+
+@media (prefers-color-scheme: dark) {
+  .match-probability__line--home { stroke: #70d3fa; }
+  .match-probability__line--draw { stroke: #f2cb54; }
+  .match-probability__line--away { stroke: #f5a9bf; }
+  .match-probability__point { fill: #70d3fa; stroke: #17190e; }
+}

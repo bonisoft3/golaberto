@@ -2,6 +2,7 @@
 <section class="screen" data-screen="principal">
 <header class="masthead">
   <a class="wordmark" data-route="principal" aria-label="{msg.brand}"><b data-text="{msg.brand_gol}"></b><span data-text="{msg.brand_aberto}"></span></a>
+  <a class="editing-management-link" data-route="gerenciar" data-text="{msg.manage_home}"></a>
   <nav class="langs" aria-label="{msg.lang_label}">
     <a data-route="principal" data-locale="pt-BR" data-locale-current="page" lang="pt-BR"><span class="long" data-text="{msg.lang_pt}"></span><span class="short" data-text="{msg.lang_pt_short}"></span></a>
     <a data-route="principal" data-locale="es-AR" data-locale-current="page" lang="es-AR"><span class="long" data-text="{msg.lang_es}"></span><span class="short" data-text="{msg.lang_es_short}"></span></a>
@@ -17,26 +18,26 @@
     <div class="home-games">
       <section class="home-upcoming" aria-labelledby="home-upcoming-heading">
         <h2 id="home-upcoming-heading" class="home-games-title" data-text="{msg.games_upcoming}"></h2>
-<ol class="games home-championships" data-live="home_game_card" data-select="*,game:id(slug),championship(show_country,slug),home:home_id(country,slug),away:away_id(country,slug)" data-filter="played=is.false&home_upcoming_rank=gt.0&limit=20" data-order="home_upcoming_rank.asc" data-empty="{msg.home_no_upcoming}" data-project='{"day_first":{"first":"day"},"previous":"prev"}' data-exit-motion="none">
+<ol class="games home-championships" data-live="home_game_card" data-select="*,game:id(slug),championship(show_country,slug),home:home_id(country,slug,logo_key),away:away_id(country,slug,logo_key)" data-filter="played=is.false&home_upcoming_rank=gt.0&limit=20" data-order="home_upcoming_rank.asc" data-empty="{msg.home_no_upcoming}" data-project='{"day_first":{"first":"day"},"previous":"prev"}' data-exit-motion="none">
   <template data-item>
     <li class="home-championship" data-championship="{championship_id}" data-phase="{phase_id}">      <h3 class="home-day" data-live="home_game_card" data-filter="id=eq.{day_first}&amp;id=eq.{id}" data-empty="" data-exit-motion="none"><template data-item><span class="home-day-label" data-text="{day}|{msg.home_weekdays}" data-text-format="home-date"></span></template></h3>      <h4 class="home-phase"><span hidden data-live="home_game_card" data-filter="id=eq.{previous}" data-empty="" data-exit-motion="none" data-project='{"same_day":{"eq":["day","{day}"]},"same_phase":{"eq":["phase_id","{phase_id}"]},"is_first":{"eq":["id","{id}"]}}'><template data-item><span class="home-phase-context" data-same-day="{same_day}" data-same-phase="{same_phase}" data-first="{is_first}"></span></template></span><a class="home-phase-label" data-route="campeonato" data-param-slug="{championship.slug}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span> <small data-text="{phase_name}"></small></a></h4><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-slug="{game.slug}" data-played="{played}" data-highlighted="{home_highlighted}">
       <span class="when"><span class="day visually-hidden" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
-      <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></span>
-      <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-      <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>
+      <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}|{home.logo_key}" data-text-format="team-badge"></span></span></span>
+      <span class="score"><b data-text="{home_score}|{home_aet}|{msg.game_aet}" data-text-format="match-final-score"></b><i>x</i><b data-text="{away_score}|{away_aet}|{msg.game_aet}" data-text-format="match-final-score"></b><span class="score-decider" data-text="{home_pen}|{away_pen}|{msg.game_pen}" data-text-format="match-shootout"></span></span>
+      <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}|{away.logo_key}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>
     </a></li>
   </template>
 </ol>
       </section>
       <section class="home-results" aria-labelledby="home-results-heading">
         <h2 id="home-results-heading" class="home-games-title" data-text="{msg.games_results}"></h2>
-<ol class="games home-championships" data-live="home_game_card" data-select="*,game:id(slug),championship(show_country,slug),home:home_id(country,slug),away:away_id(country,slug)" data-filter="played=is.true&home_recent_rank=gt.0&limit=20" data-order="home_recent_rank.asc" data-empty="{msg.home_no_results}" data-project='{"day_first":{"first":"day"},"previous":"prev"}' data-exit-motion="none">
+<ol class="games home-championships" data-live="home_game_card" data-select="*,game:id(slug),championship(show_country,slug),home:home_id(country,slug,logo_key),away:away_id(country,slug,logo_key)" data-filter="played=is.true&home_recent_rank=gt.0&limit=20" data-order="home_recent_rank.asc" data-empty="{msg.home_no_results}" data-project='{"day_first":{"first":"day"},"previous":"prev"}' data-exit-motion="none">
   <template data-item>
     <li class="home-championship" data-championship="{championship_id}" data-phase="{phase_id}">      <h3 class="home-day" data-live="home_game_card" data-filter="id=eq.{day_first}&amp;id=eq.{id}" data-empty="" data-exit-motion="none"><template data-item><span class="home-day-label" data-text="{day}|{msg.home_weekdays}" data-text-format="home-date"></span></template></h3>      <h4 class="home-phase"><span hidden data-live="home_game_card" data-filter="id=eq.{previous}" data-empty="" data-exit-motion="none" data-project='{"same_day":{"eq":["day","{day}"]},"same_phase":{"eq":["phase_id","{phase_id}"]},"is_first":{"eq":["id","{id}"]}}'><template data-item><span class="home-phase-context" data-same-day="{same_day}" data-same-phase="{same_phase}" data-first="{is_first}"></span></template></span><a class="home-phase-label" data-route="campeonato" data-param-slug="{championship.slug}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span> <small data-text="{phase_name}"></small></a></h4><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-slug="{game.slug}" data-played="{played}" data-highlighted="{home_highlighted}">
       <span class="when"><span class="day visually-hidden" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
-      <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}" data-text-format="team-badge"></span></span></span>
-      <span class="score"><b data-text="{home_score}"></b><i>x</i><b data-text="{away_score}"></b></span>
-      <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>
+      <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}|{home.logo_key}" data-text-format="team-badge"></span></span></span>
+      <span class="score"><b data-text="{home_score}|{home_aet}|{msg.game_aet}" data-text-format="match-final-score"></b><i>x</i><b data-text="{away_score}|{away_aet}|{msg.game_aet}" data-text-format="match-final-score"></b><span class="score-decider" data-text="{home_pen}|{away_pen}|{msg.game_pen}" data-text-format="match-shootout"></span></span>
+      <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}|{away.logo_key}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>
     </a></li>
   </template>
 </ol>
@@ -73,11 +74,11 @@
 	                            <th scope="col" class="form wide" data-text="{msg.col_form}"></th>
                             <th scope="col" class="odds"><abbr title="{msg.col_title_chance_long}" data-text="{msg.col_title_chance}"></abbr></th>
                           </tr></thead>
-                          <tbody data-live="standing" data-select="*,team(slug)" data-filter="group_id=eq.{id}&position=lte.6" data-order="position.asc" data-empty="{msg.no_teams}">
+                          <tbody data-live="standing" data-select="*,team(slug,logo_key)" data-filter="group_id=eq.{id}&position=lte.6" data-order="position.asc" data-empty="{msg.no_teams}">
                             <template data-item>
                               <tr data-zone="{zone}" style="--zone-source: {zone}">
 	                                <td class="pos" data-text="{position}"></td>
-	                                <td class="name"><a data-route="equipe" data-param-slug="{team.slug}"><span class="archive-icon" data-text="{team_id}|{team_name}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></td>
+	                                <td class="name"><a data-route="equipe" data-param-slug="{team.slug}"><span class="archive-icon" data-text="{team_id}|{team_name}|{team.logo_key}" data-text-format="team-badge"></span><span data-text="{team_name}"></span></a></td>
 	                                <td class="num pts" data-text="{points}"></td>
 	                                <td class="num" data-text="{played}"></td>
 	                                <td class="num wide" data-text="{wins}"></td>
@@ -93,7 +94,7 @@
                           </tbody>
                         </table>
                       </div>
-                      <div class="top-foot" data-live="team_chance" data-select="*,team(slug),group:group_id(slug)" data-filter="group_id=eq.{id}&rank=eq.1" data-empty=""><template data-item><a class="btn-quiet chances-link" data-route="chances" data-param-slug="{group.slug}" data-text="{msg.chances_link}"></a></template></div>
+                      <div class="top-foot" data-live="team_chance" data-select="*,team(slug,logo_key),group:group_id(slug)" data-filter="group_id=eq.{id}&rank=eq.1" data-empty=""><template data-item><a class="btn-quiet chances-link" data-route="chances" data-param-slug="{group.slug}" data-text="{msg.chances_link}"></a></template></div>
                     </section>
                   </template>
                 </div>

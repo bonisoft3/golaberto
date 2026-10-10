@@ -32,6 +32,8 @@ access:
     scope: public
   player:
     scope: public
+  team_player:
+    scope: public
   team_roster:
     scope: public
   team_player_history:
@@ -53,8 +55,6 @@ access:
   game_importance:
     scope: public
   team_rating:
-    scope: public
-  player_rating:
     scope: public
   game_card:
     scope: public
@@ -79,15 +79,56 @@ access:
     scope: public
   team_rating_chart:
     scope: public
-  team_odds_chart:
-    scope: public
   team_roster_total:
+    scope: public
+  community_access:
+    scope: public
+  match_probability:
+    scope: public
+  match_recent_result:
+    scope: public
+  phase_clone:
+    owner: app_user_id
+    scope: private
+  player_merge:
+    owner: app_user_id
+    scope: private
+  user_biography:
+    scope: public
+  game_change:
+    scope: public
+  user_directory:
+    scope: public
+  match_head_to_head:
+    scope: public
+  match_lineup:
+    scope: public
+  match_location:
+    scope: public
+  user_avatar:
+    scope: public
+  user_pending_upload:
+    owner: app_user_id
+    scope: private
+  team_odds_progress:
+    scope: public
+  phase_directory:
+    scope: public
+  player_directory:
+    scope: public
+  game_archive:
+    scope: public
+  player_appearance:
+    scope: public
+  championship_attendance:
     scope: public
 app: golaberto
 auth:
   required: false
   service: /auth
   mode: passkey
+  self:
+    route: usuario
   promote: true
 floors:
   touch: 24
@@ -107,14 +148,18 @@ i18n:
     fr-FR:
       path: fr
 local:
+  archive_page: tab
   catalog_filter: tab
   games_view: tab
+  match_probability_scenario: tab
+  match_probability_scenario_event: tab
   comment_draft: tab
-  archive_page: tab
   game_edit: tab
   directory_filter: tab
   team_comment_draft: tab
   team_chart_state: tab
+  team_odds_progress_state: tab
+  editing_choice: tab
 optional:
   game_edit:
     - name: played
@@ -139,6 +184,17 @@ optional:
       type: string
   archive_page:
     - name: championship_id
+      type: uuid
+    - name: team_id
+      type: uuid
+  editing_choice:
+    - name: selected_id
+      type: uuid
+    - name: home_score
+      type: int32
+    - name: away_score
+      type: int32
+    - name: excluded_id
       type: uuid
 seed:
   games_view:
@@ -198,6 +254,222 @@ seed:
       state: browsing
 server: true
 routes:
+  - keep: 0
+    path: /arquivo
+    screen: arquivo
+    nav:
+      label: Game archive
+      strip: false
+    files:
+      html: shell/screens/arquivo.html
+      css: shell/screens/arquivo.css
+      handlers:
+        - shell/handlers/archive-round.js
+        - shell/handlers/archive-week.js
+        - shell/handlers/page-value.js
+      adapters: []
+      renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
+        - shell/renderers/geography-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+    ssr: ssr
+    states:
+      - loading
+      - populated
+      - gone
+      - populated-dark
+  - keep: 0
+    path: '/campeonato/:slug/arquivo'
+    screen: arquivo-campeonato
+    nav:
+      label: Championship archive
+      strip: false
+    files:
+      html: shell/screens/arquivo-campeonato.html
+      css: shell/screens/arquivo-campeonato.css
+      handlers:
+        - shell/handlers/archive-round.js
+        - shell/handlers/archive-week.js
+        - shell/handlers/page-value.js
+      adapters: []
+      renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
+        - shell/renderers/geography-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+    ssr: ssr
+    states:
+      - loading
+      - populated
+      - gone
+      - populated-dark
+  - keep: 0
+    path: '/campeonato/:slug/publico'
+    screen: publico
+    nav:
+      label: Attendance
+      strip: false
+    files:
+      html: shell/screens/publico.html
+      css: shell/screens/publico.css
+      handlers:
+        - shell/handlers/page-value.js
+      adapters: []
+      renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
+        - shell/renderers/geography-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+    ssr: ssr
+    states:
+      - loading
+      - populated
+      - gone
+      - populated-dark
+  - keep: 0
+    path: /jogadores
+    screen: jogadores
+    nav:
+      key: players_title
+      label: Players
+    files:
+      html: shell/screens/jogadores.html
+      css: shell/screens/jogadores.css
+      handlers:
+        - shell/handlers/page-value.js
+        - shell/handlers/search-key.js
+      adapters: []
+      renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
+        - shell/renderers/geography-label.js
+        - shell/renderers/player-csv.js
+        - shell/renderers/player-rate-per90.js
+        - shell/renderers/player-position.js
+        - shell/renderers/player-event-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/catalog.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+    slug: route_players
+    paths:
+      pt-BR: /jogadores
+      es-AR: /jugadores
+      en-GB: /players
+      it-IT: /giocatori
+      de-DE: /spieler
+      fr-FR: /joueurs
+    ssr: ssr
+    states:
+      - loading
+      - populated
+      - gone
+      - populated-dark
+  - keep: 0
+    path: '/campeonato-jogadores/:slug'
+    screen: campeonato-jogadores
+    nav:
+      label: Championship players
+      strip: false
+    files:
+      html: shell/screens/campeonato-jogadores.html
+      css: shell/screens/campeonato-jogadores.css
+      handlers:
+        - shell/handlers/page-value.js
+        - shell/handlers/parity-minutes.js
+        - shell/handlers/player-csv-fold.js
+        - shell/handlers/player-csv-seed.js
+        - shell/handlers/search-key.js
+      adapters: []
+      renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
+        - shell/renderers/geography-label.js
+        - shell/renderers/player-csv.js
+        - shell/renderers/player-rate-per90.js
+        - shell/renderers/player-position.js
+        - shell/renderers/player-event-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/catalog.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+    slug: route_championship_players
+    paths:
+      pt-BR: '/campeonato-jogadores/:slug'
+      es-AR: '/campeonato-jugadores/:slug'
+      en-GB: '/championship-players/:slug'
+      it-IT: '/campionato-giocatori/:slug'
+      de-DE: '/meisterschaft-spieler/:slug'
+      fr-FR: '/championnat-joueurs/:slug'
+    ssr: ssr
+    states:
+      - loading
+      - populated
+      - gone
+      - populated-dark
+  - keep: 0
+    path: '/jogador-campeonato/:slug/:team/:championship'
+    screen: jogador-campeonato
+    nav:
+      label: Player season
+      strip: false
+    files:
+      html: shell/screens/jogador-campeonato.html
+      css: shell/screens/jogador-campeonato.css
+      handlers:
+        - shell/handlers/page-value.js
+      adapters: []
+      renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
+        - shell/renderers/geography-label.js
+        - shell/renderers/player-csv.js
+        - shell/renderers/player-rate-per90.js
+        - shell/renderers/player-position.js
+        - shell/renderers/player-event-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/catalog.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+    slug: route_scoped_player
+    paths:
+      pt-BR: '/jogador-campeonato/:slug/:team/:championship'
+      es-AR: '/jugador-campeonato/:slug/:team/:championship'
+      en-GB: '/player-championship/:slug/:team/:championship'
+      it-IT: '/giocatore-campionato/:slug/:team/:championship'
+      de-DE: '/spieler-meisterschaft/:slug/:team/:championship'
+      fr-FR: '/joueur-championnat/:slug/:team/:championship'
+    ssr: ssr
+    states:
+      - loading
+      - populated
+      - gone
+      - populated-dark
   - path: /
     screen: principal
     nav:
@@ -209,6 +481,8 @@ routes:
       handlers: []
       adapters: []
       renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/home-date.js
@@ -236,6 +510,8 @@ routes:
         - shell/handlers/search-key.js
       adapters: []
       renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
@@ -268,6 +544,8 @@ routes:
       handlers: []
       adapters: []
       renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
@@ -298,15 +576,27 @@ routes:
       html: shell/screens/jogo.html
       css: shell/screens/jogo.css
       handlers:
+        - shell/handlers/match-probability-event-control.js
+        - shell/handlers/match-probability-event-edit.js
+        - shell/handlers/match-probability-event-fold.js
+        - shell/handlers/match-probability-seed.js
         - shell/handlers/page-value.js
       adapters: []
       renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
+        - shell/renderers/match-context-map.js
+        - shell/renderers/match-probability.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
+        - shell/shared/match-context.css
+        - shell/shared/match-probability.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
     slug: route_game
     paths:
       pt-BR: '/jogo/:slug'
@@ -324,6 +614,10 @@ routes:
       - sending
       - refused
       - populated-dark
+      - validation-error
+      - network-error
+      - form-submit
+      - success
   - keep: 3
     path: '/chances/:slug'
     screen: chances
@@ -336,9 +630,12 @@ routes:
       handlers: []
       adapters: []
       renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
+        - shell/renderers/position-odds.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
@@ -373,6 +670,8 @@ routes:
         - shell/handlers/search-key.js
       adapters: []
       renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
@@ -411,6 +710,8 @@ routes:
         - shell/handlers/search-key.js
       adapters: []
       renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
@@ -446,6 +747,8 @@ routes:
         - shell/handlers/search-key.js
       adapters: []
       renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
@@ -480,6 +783,8 @@ routes:
         - shell/handlers/page-value.js
       adapters: []
       renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
@@ -514,6 +819,8 @@ routes:
         - shell/handlers/search-key.js
       adapters: []
       renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
@@ -548,6 +855,8 @@ routes:
         - shell/handlers/page-value.js
       adapters: []
       renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
@@ -580,17 +889,23 @@ routes:
       handlers:
         - shell/handlers/page-value.js
         - shell/handlers/search-key.js
+        - shell/handlers/team-rating-series.js
       adapters: []
       renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
         - shell/renderers/team-chart.js
         - shell/renderers/team-location.js
+        - shell/renderers/media-image.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
         - shell/shared/team.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
     slug: route_team
     paths:
       pt-BR: '/equipe/:slug'
@@ -605,6 +920,10 @@ routes:
       - populated
       - gone
       - populated-dark
+      - validation-error
+      - network-error
+      - form-submit
+      - success
   - keep: 3
     path: '/equipe-campeonato/:slug/:championship'
     screen: equipe-campeonato
@@ -616,18 +935,27 @@ routes:
       css: shell/screens/equipe-campeonato.css
       handlers:
         - shell/handlers/chart-compare.js
-        - shell/handlers/chart-metric.js
+        - shell/handlers/chart-position-bound.js
+        - shell/handlers/odds-progress-point.js
+        - shell/handlers/odds-progress-snapshot.js
+        - shell/handlers/odds-progress-zone.js
         - shell/handlers/page-value.js
+        - shell/handlers/position-odds-control.js
+        - shell/handlers/position-odds-fold.js
         - shell/handlers/search-key.js
         - shell/handlers/team-chart-fold.js
         - shell/handlers/team-chart-seed.js
       adapters: []
       renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
         - shell/renderers/team-chart.js
         - shell/renderers/team-location.js
+        - shell/renderers/odds-progress.js
+        - shell/renderers/position-odds.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
@@ -657,14 +985,26 @@ routes:
       css: shell/screens/jogador.css
       handlers:
         - shell/handlers/page-value.js
+        - shell/handlers/parity-minutes.js
+        - shell/handlers/player-csv-fold.js
+        - shell/handlers/player-csv-seed.js
+        - shell/handlers/search-key.js
       adapters: []
       renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
+        - shell/renderers/player-csv.js
+        - shell/renderers/player-rate-per90.js
+        - shell/renderers/player-position.js
+        - shell/renderers/player-height.js
+        - shell/renderers/player-event-label.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
+        - shell/shared/team.css
     slug: route_player
     paths:
       pt-BR: '/jogador/:slug'
@@ -691,6 +1031,8 @@ routes:
       handlers: []
       adapters: []
       renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
@@ -712,6 +1054,640 @@ routes:
       - no-groups
       - gone
       - populated-dark
+  - keep: 0
+    path: '/editar-arbitro/:slug'
+    screen: editar-arbitro
+    nav:
+      label: editar-arbitro
+      strip: false
+    files:
+      html: shell/screens/editar-arbitro.html
+      css: shell/screens/editar-arbitro.css
+      handlers: []
+      adapters:
+        - shell/handlers/editing-text.js
+      renderers:
+        - shell/renderers/media-image.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: '/editar-competicao/:slug'
+    screen: editar-competicao
+    nav:
+      label: Edit championship
+      strip: false
+    files:
+      html: shell/screens/editar-competicao.html
+      css: shell/screens/editar-competicao.css
+      handlers:
+        - shell/handlers/blank-null.js
+        - shell/handlers/editing-choice-event.js
+        - shell/handlers/search-key.js
+      adapters:
+        - shell/handlers/editing-integer.js
+        - shell/handlers/editing-text.js
+        - shell/handlers/editing-uuid.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/editing.css
+        - shell/shared/competition.css
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: '/editar-equipe/:slug'
+    screen: editar-equipe
+    nav:
+      label: editar-equipe
+      strip: false
+    files:
+      html: shell/screens/editar-equipe.html
+      css: shell/screens/editar-equipe.css
+      handlers:
+        - shell/handlers/blank-null.js
+        - shell/handlers/editing-choice-event.js
+        - shell/handlers/search-key.js
+      adapters:
+        - shell/handlers/editing-text.js
+        - shell/handlers/editing-uuid.js
+      renderers:
+        - shell/renderers/media-image.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: '/editar-estadio/:slug'
+    screen: editar-estadio
+    nav:
+      label: editar-estadio
+      strip: false
+    files:
+      html: shell/screens/editar-estadio.html
+      css: shell/screens/editar-estadio.css
+      handlers: []
+      adapters:
+        - shell/handlers/editing-text.js
+      renderers:
+        - shell/renderers/media-image.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: '/editar-jogador/:slug'
+    screen: editar-jogador
+    nav:
+      label: editar-jogador
+      strip: false
+    files:
+      html: shell/screens/editar-jogador.html
+      css: shell/screens/editar-jogador.css
+      handlers:
+        - shell/handlers/blank-null.js
+        - shell/handlers/editing-choice-event.js
+        - shell/handlers/search-key.js
+      adapters:
+        - shell/handlers/editing-integer.js
+        - shell/handlers/editing-text.js
+        - shell/handlers/editing-uuid.js
+      renderers:
+        - shell/renderers/media-image.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: '/editar-jogo/:slug'
+    screen: editar-jogo
+    nav:
+      label: editar-jogo
+      strip: false
+    files:
+      html: shell/screens/editar-jogo.html
+      css: shell/screens/editar-jogo.css
+      handlers:
+        - shell/handlers/blank-null.js
+        - shell/handlers/count-or-null.js
+        - shell/handlers/editing-choice-event.js
+        - shell/handlers/editing-played.js
+        - shell/handlers/search-key.js
+      adapters:
+        - shell/handlers/editing-integer.js
+        - shell/handlers/editing-text.js
+        - shell/handlers/editing-timestamp.js
+        - shell/handlers/editing-uuid.js
+      renderers:
+        - shell/renderers/media-image.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: '/escalacao-jogo/:slug'
+    screen: escalacao-jogo
+    nav:
+      label: escalacao-jogo
+      strip: false
+    files:
+      html: shell/screens/escalacao-jogo.html
+      css: shell/screens/escalacao-jogo.css
+      handlers:
+        - shell/handlers/blank-null.js
+        - shell/handlers/editing-choice-event.js
+        - shell/handlers/page-value.js
+        - shell/handlers/search-key.js
+      adapters:
+        - shell/handlers/editing-integer.js
+        - shell/handlers/editing-text.js
+        - shell/handlers/editing-uuid.js
+      renderers:
+        - shell/renderers/media-image.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: /gerenciar
+    screen: gerenciar
+    nav:
+      label: gerenciar
+      strip: false
+    files:
+      html: shell/screens/gerenciar.html
+      css: shell/screens/gerenciar.css
+      handlers:
+        - shell/handlers/page-value.js
+        - shell/handlers/search-key.js
+      adapters: []
+      renderers:
+        - shell/renderers/media-image.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: /gerenciar-competicoes
+    screen: gerenciar-competicoes
+    nav:
+      label: Manage championships
+      strip: false
+    files:
+      html: shell/screens/gerenciar-competicoes.html
+      css: shell/screens/gerenciar-competicoes.css
+      handlers:
+        - shell/handlers/page-value.js
+        - shell/handlers/search-key.js
+      adapters: []
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/editing.css
+        - shell/shared/competition.css
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: '/gols-jogo/:slug'
+    screen: gols-jogo
+    nav:
+      label: gols-jogo
+      strip: false
+    files:
+      html: shell/screens/gols-jogo.html
+      css: shell/screens/gols-jogo.css
+      handlers:
+        - shell/handlers/blank-null.js
+        - shell/handlers/editing-choice-event.js
+        - shell/handlers/page-value.js
+        - shell/handlers/search-key.js
+      adapters:
+        - shell/handlers/editing-integer.js
+        - shell/handlers/editing-text.js
+        - shell/handlers/editing-uuid.js
+      renderers:
+        - shell/renderers/media-image.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: '/historico-jogo/:slug'
+    screen: historico-jogo
+    nav:
+      label: historico-jogo
+      strip: false
+    files:
+      html: shell/screens/historico-jogo.html
+      css: shell/screens/historico-jogo.css
+      handlers:
+        - shell/handlers/page-value.js
+      adapters: []
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+      renderers:
+        - shell/renderers/community-history.js
+        - shell/renderers/media-image.js
+    ssr: ssr
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: '/inscricoes-jogador/:slug'
+    screen: inscricoes-jogador
+    nav:
+      label: inscricoes-jogador
+      strip: false
+    files:
+      html: shell/screens/inscricoes-jogador.html
+      css: shell/screens/inscricoes-jogador.css
+      handlers:
+        - shell/handlers/blank-null.js
+        - shell/handlers/editing-choice-event.js
+        - shell/handlers/page-value.js
+        - shell/handlers/search-key.js
+      adapters:
+        - shell/handlers/editing-uuid.js
+      renderers:
+        - shell/renderers/media-image.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: /nova-competicao
+    screen: nova-competicao
+    nav:
+      label: New championship
+      strip: false
+    files:
+      html: shell/screens/nova-competicao.html
+      css: shell/screens/nova-competicao.css
+      handlers:
+        - shell/handlers/blank-null.js
+        - shell/handlers/editing-choice-event.js
+        - shell/handlers/search-key.js
+      adapters:
+        - shell/handlers/editing-integer.js
+        - shell/handlers/editing-text.js
+        - shell/handlers/editing-uuid.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/editing.css
+        - shell/shared/competition.css
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: /novo-arbitro
+    screen: novo-arbitro
+    nav:
+      label: novo-arbitro
+      strip: false
+    files:
+      html: shell/screens/novo-arbitro.html
+      css: shell/screens/novo-arbitro.css
+      handlers: []
+      adapters:
+        - shell/handlers/editing-text.js
+      renderers:
+        - shell/renderers/media-image.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: /novo-equipe
+    screen: novo-equipe
+    nav:
+      label: novo-equipe
+      strip: false
+    files:
+      html: shell/screens/novo-equipe.html
+      css: shell/screens/novo-equipe.css
+      handlers:
+        - shell/handlers/blank-null.js
+        - shell/handlers/editing-choice-event.js
+        - shell/handlers/search-key.js
+      adapters:
+        - shell/handlers/editing-text.js
+        - shell/handlers/editing-uuid.js
+      renderers:
+        - shell/renderers/media-image.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: /novo-estadio
+    screen: novo-estadio
+    nav:
+      label: novo-estadio
+      strip: false
+    files:
+      html: shell/screens/novo-estadio.html
+      css: shell/screens/novo-estadio.css
+      handlers: []
+      adapters:
+        - shell/handlers/editing-text.js
+      renderers:
+        - shell/renderers/media-image.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: /novo-jogador
+    screen: novo-jogador
+    nav:
+      label: novo-jogador
+      strip: false
+    files:
+      html: shell/screens/novo-jogador.html
+      css: shell/screens/novo-jogador.css
+      handlers: []
+      adapters:
+        - shell/handlers/editing-integer.js
+        - shell/handlers/editing-text.js
+      renderers:
+        - shell/renderers/media-image.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: /novo-jogo
+    screen: novo-jogo
+    nav:
+      label: novo-jogo
+      strip: false
+    files:
+      html: shell/screens/novo-jogo.html
+      css: shell/screens/novo-jogo.css
+      handlers:
+        - shell/handlers/blank-null.js
+        - shell/handlers/count-or-null.js
+        - shell/handlers/editing-choice-event.js
+        - shell/handlers/editing-played.js
+        - shell/handlers/search-key.js
+      adapters:
+        - shell/handlers/editing-integer.js
+        - shell/handlers/editing-text.js
+        - shell/handlers/editing-timestamp.js
+        - shell/handlers/editing-uuid.js
+      renderers:
+        - shell/renderers/media-image.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: '/usuario/:id'
+    screen: usuario
+    nav:
+      label: usuario
+      strip: false
+    files:
+      html: shell/screens/usuario.html
+      css: shell/screens/usuario.css
+      handlers:
+        - shell/handlers/page-value.js
+      adapters:
+        - shell/handlers/editing-text.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+      renderers:
+        - shell/renderers/community-history.js
+        - shell/renderers/media-image.js
+    ssr: ssr
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - keep: 0
+    path: /usuarios
+    screen: usuarios
+    nav:
+      key: community_title
+      label: usuarios
+    files:
+      html: shell/screens/usuarios.html
+      css: shell/screens/usuarios.css
+      handlers:
+        - shell/handlers/page-value.js
+        - shell/handlers/search-key.js
+      adapters: []
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+      renderers:
+        - shell/renderers/community-history.js
+        - shell/renderers/media-image.js
+    ssr: ssr
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
 sync:
   app_user: on-demand
   category: on-demand
@@ -729,6 +1705,7 @@ sync:
   geography_country: on-demand
   team_directory: on-demand
   player: on-demand
+  team_player: on-demand
   team_roster: on-demand
   team_player_history: on-demand
   game: on-demand
@@ -740,7 +1717,6 @@ sync:
   position_chance: on-demand
   game_importance: on-demand
   team_rating: on-demand
-  player_rating: on-demand
   game_card: on-demand
   home_game_card: on-demand
   matches_game_card: on-demand
@@ -751,28 +1727,56 @@ sync:
   team_comment: on-demand
   team_campaign_point: on-demand
   team_rating_chart: on-demand
-  team_odds_chart: on-demand
   team_roster_total: on-demand
+  community_access: on-demand
+  match_probability: on-demand
+  match_recent_result: on-demand
+  user_biography: on-demand
+  game_change: on-demand
+  user_directory: on-demand
+  match_head_to_head: on-demand
+  match_lineup: on-demand
+  match_location: on-demand
+  user_avatar: on-demand
+  team_odds_progress: on-demand
+  phase_directory: on-demand
+  player_directory: on-demand
+  game_archive: on-demand
+  player_appearance: on-demand
+  championship_attendance: on-demand
 tables:
   - app_user
   - category
   - championship
+  - championship_attendance
   - comment
+  - community_access
   - editor
   - game
+  - game_archive
   - game_card
+  - game_change
   - game_importance
   - geography_country
   - geography_region
   - goal
   - home_championship
   - home_game_card
+  - match_head_to_head
+  - match_lineup
+  - match_location
+  - match_probability
+  - match_recent_result
   - matches_game_card
   - phase
+  - phase_clone
+  - phase_directory
   - phase_round
   - player
+  - player_appearance
+  - player_directory
   - player_game
-  - player_rating
+  - player_merge
   - player_stat
   - position_chance
   - referee
@@ -787,12 +1791,17 @@ tables:
   - team_directory
   - team_game
   - team_group
-  - team_odds_chart
+  - team_odds_progress
+  - team_player
   - team_player_history
   - team_rating
   - team_rating_chart
   - team_roster
   - team_roster_total
+  - user_avatar
+  - user_biography
+  - user_directory
+  - user_pending_upload
   - zone
   - zone_chance
 schema:
@@ -914,6 +1923,14 @@ schema:
         type: string
         required: true
         unique: true
+      - name: created_by
+        ref: app_user
+        type: uuid
+        required: false
+      - name: updated_by
+        ref: app_user
+        type: uuid
+        required: false
   home_championship:
     durability: live
     fields:
@@ -978,6 +1995,14 @@ schema:
         name: bonus_points_threshold
         type: int32
         required: true
+      - name: created_by
+        ref: app_user
+        type: uuid
+        required: false
+      - name: updated_by
+        ref: app_user
+        type: uuid
+        required: false
   stage_group:
     durability: server
     fields:
@@ -1009,6 +2034,14 @@ schema:
         type: string
         required: true
         unique: true
+      - name: created_by
+        ref: app_user
+        type: uuid
+        required: false
+      - name: updated_by
+        ref: app_user
+        type: uuid
+        required: false
   zone:
     durability: server
     fields:
@@ -1040,6 +2073,18 @@ schema:
         name: last
         type: int32
         required: true
+      - default: ''''''
+        name: positions
+        type: string
+        required: true
+      - name: created_by
+        ref: app_user
+        type: uuid
+        required: false
+      - name: updated_by
+        ref: app_user
+        type: uuid
+        required: false
   stadium:
     durability: server
     fields:
@@ -1082,6 +2127,14 @@ schema:
         type: string
         required: true
         unique: true
+      - name: created_by
+        ref: app_user
+        type: uuid
+        required: false
+      - name: updated_by
+        ref: app_user
+        type: uuid
+        required: false
   team:
     durability: server
     fields:
@@ -1154,6 +2207,17 @@ schema:
         type: string
         required: true
         unique: true
+      - name: created_by
+        ref: app_user
+        type: uuid
+        required: false
+      - name: updated_by
+        ref: app_user
+        type: uuid
+        required: false
+      - name: logo_key
+        type: string
+        required: false
   team_championship:
     durability: live
     fields:
@@ -1220,6 +2284,14 @@ schema:
         name: comment
         type: string
         required: false
+      - name: created_by
+        ref: app_user
+        type: uuid
+        required: false
+      - name: updated_by
+        ref: app_user
+        type: uuid
+        required: false
     uniques:
       - name: uq_team_group
         cols:
@@ -1257,6 +2329,14 @@ schema:
         type: string
         required: true
         unique: true
+      - name: created_by
+        ref: app_user
+        type: uuid
+        required: false
+      - name: updated_by
+        ref: app_user
+        type: uuid
+        required: false
   geography_region:
     durability: live
     fields:
@@ -1411,6 +2491,48 @@ schema:
         type: string
         required: true
         unique: true
+      - name: created_by
+        ref: app_user
+        type: uuid
+        required: false
+      - name: updated_by
+        ref: app_user
+        type: uuid
+        required: false
+  team_player:
+    durability: server
+    fields:
+      - default: gen_random_uuid()
+        name: id
+        pk: true
+        type: uuid
+        required: true
+      - name: championship_id
+        ref: championship
+        type: uuid
+        required: true
+      - name: team_id
+        ref: team
+        type: uuid
+        required: true
+      - name: player_id
+        ref: player
+        type: uuid
+        required: true
+      - name: created_by
+        ref: app_user
+        type: uuid
+        required: false
+      - name: updated_by
+        ref: app_user
+        type: uuid
+        required: false
+    uniques:
+      - name: uq_team_player
+        cols:
+          - championship_id
+          - team_id
+          - player_id
   team_roster:
     durability: live
     fields:
@@ -1663,6 +2785,14 @@ schema:
         type: string
         required: true
         unique: true
+      - name: created_by
+        ref: app_user
+        type: uuid
+        required: false
+      - name: updated_by
+        ref: app_user
+        type: uuid
+        required: false
   goal:
     durability: live
     fields:
@@ -1703,6 +2833,14 @@ schema:
         name: aet
         type: bool
         required: true
+      - name: created_by
+        ref: app_user
+        type: uuid
+        required: false
+      - name: updated_by
+        ref: app_user
+        type: uuid
+        required: false
   player_game:
     durability: server
     fields:
@@ -1761,6 +2899,14 @@ schema:
         required: false
       - name: def_rating
         type: double
+        required: false
+      - name: created_by
+        ref: app_user
+        type: uuid
+        required: false
+      - name: updated_by
+        ref: app_user
+        type: uuid
         required: false
     uniques:
       - name: uq_player_game
@@ -2035,17 +3181,6 @@ schema:
           intMin: 0
           intMax: 100
         name: rating
-        type: double
-        required: true
-  player_rating:
-    durability: live
-    fields:
-      - name: id
-        pk: true
-        ref: player
-        type: uuid
-        required: true
-      - name: rating
         type: double
         required: true
   game_card:
@@ -2770,6 +3905,10 @@ schema:
       - name: goals_per90
         type: double
         required: false
+      - default: ''''''
+        name: search_key
+        type: string
+        required: true
   phase_round:
     durability: live
     fields:
@@ -3066,28 +4205,6 @@ schema:
       - name: series_json
         type: string
         required: true
-  team_odds_chart:
-    durability: live
-    fields:
-      - name: id
-        pk: true
-        type: string
-        required: true
-      - name: group_id
-        ref: stage_group
-        type: uuid
-        required: true
-      - name: team_id
-        ref: team
-        type: uuid
-        required: true
-      - name: zone_id
-        ref: zone
-        type: uuid
-        required: true
-      - name: series_json
-        type: string
-        required: true
   team_roster_total:
     durability: live
     fields:
@@ -3190,8 +4307,6 @@ schema:
       - default: '''points'''
         enum:
           - points
-          - position
-          - percent
         name: metric
         type: string
         required: true
@@ -3258,6 +4373,7 @@ schema:
           - goals_per90
           - contribution
           - contribution_per90
+          - rating
         name: sort
         type: string
         required: true
@@ -3290,6 +4406,1300 @@ schema:
         required: true
       - name: championship_id
         type: uuid
+        required: false
+      - default: ''''''
+        name: country
+        type: string
+        required: true
+      - default: ''''''
+        name: country_key
+        type: string
+        required: true
+      - default: '''*'''
+        name: region
+        type: string
+        required: true
+      - default: '''*'''
+        name: position
+        type: string
+        required: true
+      - bounds:
+          intMin: 0
+          intMax: 1000000
+        default: '0'
+        name: minimum_minutes
+        type: int32
+        required: true
+      - default: '''true'''
+        enum:
+          - '*'
+          - 'true'
+          - 'false'
+        name: played
+        type: string
+        required: true
+      - name: team_id
+        type: uuid
+        required: false
+      - default: '''*'''
+        name: week
+        type: string
+        required: true
+      - default: ''''''
+        name: week_day
+        type: string
+        required: true
+      - default: '''*'''
+        name: round
+        type: string
+        required: true
+      - default: ''''''
+        name: round_value
+        type: string
+        required: true
+      - default: '''[]'''
+        name: csv_rows
+        type: string
+        required: true
+      - bounds:
+          sizeMax: 10
+        default: ''''''
+        name: date_from
+        type: string
+        required: true
+      - bounds:
+          sizeMax: 10
+        default: ''''''
+        name: date_to
+        type: string
+        required: true
+      - default: '''{}'''
+        name: series_json
+        type: string
+        required: true
+  community_access:
+    durability: server
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: record_id
+        type: uuid
+        required: true
+      - enum:
+          - profile
+          - comment
+          - team_comment
+        name: kind
+        type: string
+        required: true
+      - name: biography_id
+        type: uuid
+        required: false
+      - name: avatar_id
+        type: uuid
+        required: false
+  editing_choice:
+    durability: tab
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - default: '''choosing'''
+        enum:
+          - choosing
+        name: state
+        type: string
+        required: true
+      - bounds:
+          sizeMax: 80
+        default: ''''''
+        name: q
+        type: string
+        required: true
+      - bounds:
+          sizeMax: 160
+        default: ''''''
+        name: q_key
+        type: string
+        required: true
+      - name: selected_id
+        type: uuid
+        required: false
+      - bounds:
+          intMin: 0
+          intMax: 99
+        name: home_score
+        type: int32
+        required: false
+      - bounds:
+          intMin: 0
+          intMax: 99
+        name: away_score
+        type: int32
+        required: false
+      - default: 'false'
+        name: played
+        type: bool
+        required: true
+      - name: excluded_id
+        type: uuid
+        required: false
+  match_probability:
+    durability: server
+    fields:
+      - name: id
+        pk: true
+        ref: game
+        type: uuid
+        required: true
+      - name: game_id
+        ref: game
+        type: uuid
+        required: true
+      - name: home_name
+        type: string
+        required: true
+      - name: away_name
+        type: string
+        required: true
+      - enum:
+          - available
+          - missing-rating
+          - ambiguous-rating
+        name: rating_status
+        type: string
+        required: true
+      - enum:
+          - available
+          - missing-rating
+          - ambiguous-rating
+          - unknown-event-minute
+          - event-limit
+        name: timeline_status
+        type: string
+        required: true
+      - name: payload_json
+        type: string
+        required: true
+  match_probability_scenario:
+    durability: tab
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - default: '''ready'''
+        enum:
+          - ready
+        name: state
+        type: string
+        required: true
+      - default: '''0'''
+        name: minute
+        type: string
+        required: true
+      - default: '''5'''
+        name: added_time
+        type: string
+        required: true
+      - bounds:
+          intMin: 0
+        default: '0'
+        name: event_sequence
+        type: int32
+        required: true
+      - bounds:
+          sizeMax: 80
+        default: ''''''
+        name: next_event_id
+        type: string
+        required: true
+      - bounds:
+          intMin: 0
+          intMax: 20
+        default: '0'
+        name: event_count
+        type: int32
+        required: true
+      - bounds:
+          sizeMax: 4000
+        default: '''[]'''
+        name: events_json
+        type: string
+        required: true
+      - default: ''''''
+        name: payload_json
+        type: string
+        required: true
+      - default: ''''''
+        name: home_name
+        type: string
+        required: true
+      - default: ''''''
+        name: away_name
+        type: string
+        required: true
+  match_probability_scenario_event:
+    durability: tab
+    fields:
+      - bounds:
+          sizeMin: 1
+          sizeMax: 80
+        name: id
+        pk: true
+        type: string
+        required: true
+      - name: game_id
+        type: uuid
+        required: true
+      - default: '''ready'''
+        enum:
+          - ready
+        name: state
+        type: string
+        required: true
+      - bounds:
+          intMin: 1
+        name: sequence
+        type: int32
+        required: true
+      - enum:
+          - goal
+          - red_card
+        name: kind
+        type: string
+        required: true
+      - default: '''home'''
+        enum:
+          - home
+          - away
+        name: side
+        type: string
+        required: true
+      - bounds:
+          intMin: 0
+          intMax: 130
+        default: '0'
+        name: minute
+        type: int32
+        required: true
+  match_recent_result:
+    durability: server
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: target_game_id
+        type: uuid
+        required: true
+      - name: team_id
+        type: uuid
+        required: true
+      - name: side
+        type: string
+        required: true
+      - name: game_id
+        type: uuid
+        required: true
+      - name: game_slug
+        type: string
+        required: true
+      - name: day
+        type: date
+        required: true
+      - name: day_display
+        type: string
+        required: true
+      - name: kickoff
+        type: timestamp
+        required: false
+      - name: kickoff_local
+        type: string
+        required: true
+      - name: championship_id
+        type: uuid
+        required: true
+      - name: championship_name
+        type: string
+        required: true
+      - name: championship_slug
+        type: string
+        required: true
+      - name: show_country
+        type: bool
+        required: true
+      - name: home_id
+        type: uuid
+        required: true
+      - name: home_name
+        type: string
+        required: true
+      - name: home_country
+        type: string
+        required: true
+      - name: home_slug
+        type: string
+        required: true
+      - name: away_id
+        type: uuid
+        required: true
+      - name: away_name
+        type: string
+        required: true
+      - name: away_country
+        type: string
+        required: true
+      - name: away_slug
+        type: string
+        required: true
+      - name: home_score
+        type: int32
+        required: true
+      - name: away_score
+        type: int32
+        required: true
+      - name: home_aet
+        type: int32
+        required: false
+      - name: away_aet
+        type: int32
+        required: false
+      - name: home_pen
+        type: int32
+        required: false
+      - name: away_pen
+        type: int32
+        required: false
+      - enum:
+          - w
+          - d
+          - l
+        name: result
+        type: string
+        required: true
+  phase_clone:
+    durability: server
+    fields:
+      - default: gen_random_uuid()
+        name: id
+        pk: true
+        type: uuid
+        required: true
+      - default: auth_uid()
+        name: app_user_id
+        ref: app_user
+        type: uuid
+        required: true
+      - name: source_phase_id
+        type: uuid
+        required: true
+      - default: gen_random_uuid()
+        name: target_championship_id
+        type: uuid
+        required: true
+      - default: gen_random_uuid()
+        name: target_phase_id
+        type: uuid
+        required: true
+      - bounds:
+          sizeMin: 1
+          sizeMax: 120
+        name: name
+        type: string
+        required: true
+      - name: begins
+        type: date
+        required: true
+      - name: ends
+        type: date
+        required: true
+      - default: now()
+        name: created_at
+        type: timestamp
+        required: true
+  player_merge:
+    durability: server
+    fields:
+      - default: gen_random_uuid()
+        name: id
+        pk: true
+        type: uuid
+        required: true
+      - default: auth_uid()
+        name: app_user_id
+        ref: app_user
+        type: uuid
+        required: true
+      - name: target_player_id
+        type: uuid
+        required: true
+      - name: source_player_id
+        type: uuid
+        required: true
+      - default: now()
+        name: created_at
+        type: timestamp
+        required: true
+  team_odds_progress_state:
+    durability: tab
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: group_id
+        type: uuid
+        required: true
+      - name: team_id
+        type: uuid
+        required: true
+      - default: '''viewing'''
+        enum:
+          - viewing
+        name: state
+        type: string
+        required: true
+      - default: '''*'''
+        name: zone_id
+        type: string
+        required: true
+      - bounds:
+          intMin: -1
+          intMax: 359
+        default: '-1'
+        name: snapshot_index
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+          intMax: 359
+        default: '0'
+        name: snapshot_last
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+          intMax: 1000
+        default: '1000'
+        name: pointer_x
+        type: int32
+        required: true
+      - default: '''{}'''
+        name: series_json
+        type: string
+        required: true
+      - default: '''{}'''
+        name: current_json
+        type: string
+        required: true
+      - bounds:
+          intMin: -1
+          intMax: 10000
+        default: '-1'
+        name: position_number
+        type: int32
+        required: true
+      - bounds:
+          intMin: 0
+          intMax: 10000
+        default: '0'
+        name: position_last
+        type: int32
+        required: true
+      - default: '''current'''
+        enum:
+          - current
+          - history
+        name: table_mode
+        type: string
+        required: true
+      - bounds:
+          sizeMax: 12
+        default: ''''''
+        name: range_from
+        type: string
+        required: true
+      - bounds:
+          sizeMax: 12
+        default: ''''''
+        name: range_to
+        type: string
+        required: true
+  user_biography:
+    durability: server
+    fields:
+      - default: gen_random_uuid()
+        name: id
+        pk: true
+        type: uuid
+        required: true
+      - default: auth_uid()
+        name: app_user_id
+        ref: app_user
+        type: uuid
+        required: true
+        unique: true
+      - bounds:
+          sizeMax: 100
+        name: display_name
+        type: string
+        required: false
+      - bounds:
+          sizeMax: 100
+        name: location
+        type: string
+        required: false
+      - bounds:
+          sizeMax: 2000
+        name: about_me
+        type: string
+        required: false
+      - default: now()
+        name: updated_at
+        type: timestamp
+        required: true
+  game_change:
+    durability: server
+    fields:
+      - default: gen_random_uuid()
+        name: id
+        pk: true
+        type: uuid
+        required: true
+      - name: game_id
+        type: uuid
+        required: true
+      - bounds:
+          intMin: 1
+        name: version
+        type: int32
+        required: true
+      - name: actor_id
+        type: uuid
+        required: false
+      - name: actor_handle
+        type: string
+        required: false
+      - name: game_slug
+        type: string
+        required: false
+      - name: game_day
+        type: date
+        required: false
+      - name: home_name
+        type: string
+        required: true
+      - name: away_name
+        type: string
+        required: true
+      - name: championship_name
+        type: string
+        required: true
+      - name: changes_json
+        type: string
+        required: true
+      - default: now()
+        name: created_at
+        type: timestamp
+        required: true
+  user_directory:
+    durability: server
+    fields:
+      - name: id
+        pk: true
+        type: uuid
+        required: true
+      - name: handle
+        type: string
+        required: true
+      - name: display_name
+        type: string
+        required: true
+      - name: location
+        type: string
+        required: false
+      - name: about_me
+        type: string
+        required: false
+      - name: joined_at
+        type: timestamp
+        required: true
+      - name: biography_id
+        ref: user_biography
+        type: uuid
+        required: false
+      - name: comment_count
+        type: int64
+        required: true
+      - name: edit_count
+        type: int64
+        required: true
+      - name: last_edit_at
+        type: timestamp
+        required: false
+      - name: search_key
+        type: string
+        required: true
+      - name: joined_on
+        type: string
+        required: true
+      - name: avatar_key
+        type: string
+        required: false
+  match_head_to_head:
+    durability: server
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: target_game_id
+        type: uuid
+        required: true
+      - name: game_id
+        type: uuid
+        required: true
+      - name: game_slug
+        type: string
+        required: true
+      - name: day
+        type: date
+        required: true
+      - name: day_display
+        type: string
+        required: true
+      - name: kickoff
+        type: timestamp
+        required: false
+      - name: kickoff_local
+        type: string
+        required: true
+      - name: championship_id
+        type: uuid
+        required: true
+      - name: championship_name
+        type: string
+        required: true
+      - name: championship_slug
+        type: string
+        required: true
+      - name: category_id
+        type: uuid
+        required: false
+      - name: show_country
+        type: bool
+        required: true
+      - name: home_id
+        type: uuid
+        required: true
+      - name: home_name
+        type: string
+        required: true
+      - name: home_country
+        type: string
+        required: true
+      - name: home_slug
+        type: string
+        required: true
+      - name: away_id
+        type: uuid
+        required: true
+      - name: away_name
+        type: string
+        required: true
+      - name: away_country
+        type: string
+        required: true
+      - name: away_slug
+        type: string
+        required: true
+      - name: home_score
+        type: int32
+        required: true
+      - name: away_score
+        type: int32
+        required: true
+      - name: home_aet
+        type: int32
+        required: false
+      - name: away_aet
+        type: int32
+        required: false
+      - name: home_pen
+        type: int32
+        required: false
+      - name: away_pen
+        type: int32
+        required: false
+      - name: home_logo_key
+        type: string
+        required: false
+      - name: away_logo_key
+        type: string
+        required: false
+  match_lineup:
+    durability: server
+    fields:
+      - name: id
+        pk: true
+        type: uuid
+        required: true
+      - name: game_id
+        type: uuid
+        required: true
+      - name: player_id
+        type: uuid
+        required: true
+      - name: side
+        type: string
+        required: true
+      - name: on_minute
+        type: int32
+        required: true
+      - name: off_minute
+        type: int32
+        required: false
+      - name: yellow
+        type: bool
+        required: true
+      - name: red
+        type: bool
+        required: true
+      - name: bench
+        type: bool
+        required: true
+      - name: player_name
+        type: string
+        required: true
+      - name: position
+        type: string
+        required: false
+      - name: player_slug
+        type: string
+        required: true
+      - name: off_rating
+        type: double
+        required: false
+      - name: def_rating
+        type: double
+        required: false
+      - name: contribution
+        type: double
+        required: true
+  match_location:
+    durability: server
+    fields:
+      - name: id
+        pk: true
+        type: uuid
+        required: true
+      - name: home_id
+        type: uuid
+        required: true
+      - name: home_name
+        type: string
+        required: true
+      - name: home_latitude
+        type: double
+        required: false
+      - name: home_longitude
+        type: double
+        required: false
+      - name: away_id
+        type: uuid
+        required: true
+      - name: away_name
+        type: string
+        required: true
+      - name: away_latitude
+        type: double
+        required: false
+      - name: away_longitude
+        type: double
+        required: false
+      - name: distance_km
+        type: double
+        required: false
+      - name: map_embed_url
+        type: string
+        required: false
+  user_avatar:
+    durability: server
+    fields:
+      - default: auth_uid()
+        name: id
+        pk: true
+        ref: app_user
+        type: uuid
+        required: true
+      - name: avatar_key
+        type: string
+        required: false
+  user_pending_upload:
+    durability: server
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: app_user_id
+        ref: app_user
+        type: uuid
+        required: true
+      - name: created_at
+        type: timestamp
+        required: true
+      - name: expires_at
+        type: timestamp
+        required: true
+  team_odds_progress:
+    durability: live
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: group_id
+        ref: stage_group
+        type: uuid
+        required: true
+      - name: team_id
+        ref: team
+        type: uuid
+        required: true
+      - name: series_json
+        type: string
+        required: true
+    uniques:
+      - name: uq_team_odds_progress_group_team
+        cols:
+          - group_id
+          - team_id
+  phase_directory:
+    durability: server
+    fields:
+      - name: id
+        pk: true
+        type: uuid
+        required: true
+      - name: name
+        type: string
+        required: true
+      - name: championship_id
+        type: uuid
+        required: true
+      - name: championship_name
+        type: string
+        required: true
+      - name: search_key
+        type: string
+        required: true
+  player_directory:
+    durability: server
+    fields:
+      - name: id
+        pk: true
+        type: uuid
+        required: true
+      - name: name
+        type: string
+        required: false
+      - name: full_name
+        type: string
+        required: false
+      - name: birth
+        type: date
+        required: false
+      - name: country
+        type: string
+        required: false
+      - name: height
+        type: int32
+        required: false
+      - name: position
+        type: string
+        required: false
+      - name: slug
+        type: string
+        required: false
+      - name: rating
+        type: double
+        required: false
+      - name: off_rating
+        type: double
+        required: false
+      - name: def_rating
+        type: double
+        required: false
+      - name: position_key
+        type: string
+        required: false
+      - name: country_id
+        type: string
+        required: false
+      - name: region_id
+        type: string
+        required: false
+      - name: search_key
+        type: string
+        required: false
+      - name: country_search_key
+        type: string
+        required: false
+      - name: region_search_key
+        type: string
+        required: false
+      - name: latest_team_id
+        type: uuid
+        required: false
+      - name: latest_team_name
+        type: string
+        required: false
+      - name: latest_team_slug
+        type: string
+        required: false
+      - name: latest_team_logo_key
+        type: string
+        required: false
+  game_archive:
+    durability: server
+    fields:
+      - name: id
+        pk: true
+        type: uuid
+        required: true
+      - name: phase_id
+        type: uuid
+        required: false
+      - name: round
+        type: int32
+        required: false
+      - name: day
+        type: date
+        required: false
+      - name: kickoff
+        type: timestamp
+        required: false
+      - name: home_id
+        type: uuid
+        required: false
+      - name: away_id
+        type: uuid
+        required: false
+      - name: home_field
+        type: string
+        required: false
+      - name: played
+        type: bool
+        required: false
+      - name: home_score
+        type: int32
+        required: false
+      - name: away_score
+        type: int32
+        required: false
+      - name: home_aet
+        type: int32
+        required: false
+      - name: away_aet
+        type: int32
+        required: false
+      - name: home_pen
+        type: int32
+        required: false
+      - name: away_pen
+        type: int32
+        required: false
+      - name: stadium_id
+        type: uuid
+        required: false
+      - name: referee_id
+        type: uuid
+        required: false
+      - name: attendance
+        type: int32
+        required: false
+      - name: day_display
+        type: string
+        required: false
+      - name: kickoff_local
+        type: string
+        required: false
+      - name: slug
+        type: string
+        required: false
+      - name: championship_id
+        type: uuid
+        required: false
+      - name: championship_name
+        type: string
+        required: false
+      - name: championship_slug
+        type: string
+        required: false
+      - name: phase_name
+        type: string
+        required: false
+      - name: category_id
+        type: uuid
+        required: false
+      - name: category_key
+        type: string
+        required: false
+      - name: phase_key
+        type: string
+        required: false
+      - name: round_key
+        type: string
+        required: false
+      - name: week
+        type: date
+        required: false
+      - name: week_key
+        type: string
+        required: false
+      - name: show_country
+        type: bool
+        required: false
+      - name: home_name
+        type: string
+        required: false
+      - name: away_name
+        type: string
+        required: false
+      - name: home_country
+        type: string
+        required: false
+      - name: away_country
+        type: string
+        required: false
+      - name: home_slug
+        type: string
+        required: false
+      - name: away_slug
+        type: string
+        required: false
+      - name: stadium_name
+        type: string
+        required: false
+      - name: referee_name
+        type: string
+        required: false
+      - name: home_logo_key
+        type: string
+        required: false
+      - name: away_logo_key
+        type: string
+        required: false
+  player_appearance:
+    durability: server
+    fields:
+      - name: id
+        pk: true
+        type: uuid
+        required: true
+      - name: player_id
+        type: uuid
+        required: false
+      - name: game_id
+        type: uuid
+        required: false
+      - name: side
+        type: string
+        required: false
+      - name: on_minute
+        type: int32
+        required: false
+      - name: off_minute
+        type: int32
+        required: false
+      - name: yellow
+        type: bool
+        required: false
+      - name: red
+        type: bool
+        required: false
+      - name: bench
+        type: bool
+        required: false
+      - name: day
+        type: date
+        required: false
+      - name: day_display
+        type: string
+        required: false
+      - name: kickoff
+        type: timestamp
+        required: false
+      - name: kickoff_local
+        type: string
+        required: false
+      - name: played
+        type: bool
+        required: false
+      - name: played_key
+        type: string
+        required: false
+      - name: game_slug
+        type: string
+        required: false
+      - name: phase_id
+        type: uuid
+        required: false
+      - name: phase_name
+        type: string
+        required: false
+      - name: championship_id
+        type: uuid
+        required: false
+      - name: championship_name
+        type: string
+        required: false
+      - name: championship_slug
+        type: string
+        required: false
+      - name: category_id
+        type: uuid
+        required: false
+      - name: category_key
+        type: string
+        required: false
+      - name: round
+        type: int32
+        required: false
+      - name: round_key
+        type: string
+        required: false
+      - name: week
+        type: date
+        required: false
+      - name: week_key
+        type: string
+        required: false
+      - name: team_id
+        type: uuid
+        required: false
+      - name: team_name
+        type: string
+        required: false
+      - name: team_slug
+        type: string
+        required: false
+      - name: home_id
+        type: uuid
+        required: false
+      - name: away_id
+        type: uuid
+        required: false
+      - name: home_name
+        type: string
+        required: false
+      - name: away_name
+        type: string
+        required: false
+      - name: home_country
+        type: string
+        required: false
+      - name: away_country
+        type: string
+        required: false
+      - name: show_country
+        type: bool
+        required: false
+      - name: home_score
+        type: int32
+        required: false
+      - name: away_score
+        type: int32
+        required: false
+      - name: home_aet
+        type: int32
+        required: false
+      - name: away_aet
+        type: int32
+        required: false
+      - name: home_pen
+        type: int32
+        required: false
+      - name: away_pen
+        type: int32
+        required: false
+      - name: minutes
+        type: int32
+        required: false
+      - name: off_rating
+        type: double
+        required: false
+      - name: def_rating
+        type: double
+        required: false
+      - name: contribution
+        type: double
+        required: false
+      - name: contribution_per90
+        type: double
+        required: false
+      - name: goals
+        type: int32
+        required: false
+      - name: penalties
+        type: int32
+        required: false
+      - name: own_goals
+        type: int32
+        required: false
+      - name: goals_per90
+        type: double
+        required: false
+      - name: home_logo_key
+        type: string
+        required: false
+      - name: away_logo_key
+        type: string
+        required: false
+  championship_attendance:
+    durability: server
+    fields:
+      - name: id
+        pk: true
+        type: string
+        required: true
+      - name: championship_id
+        type: uuid
+        required: false
+      - name: team_id
+        type: uuid
+        required: false
+      - name: team_name
+        type: string
+        required: false
+      - name: team_slug
+        type: string
+        required: false
+      - name: games
+        type: int32
+        required: false
+      - name: attendance_count
+        type: int32
+        required: false
+      - name: total
+        type: int64
+        required: false
+      - name: average
+        type: double
+        required: false
+      - name: minimum
+        type: int32
+        required: false
+      - name: maximum
+        type: int32
+        required: false
+      - name: team_logo_key
+        type: string
         required: false
 types:
   types:
@@ -3704,6 +6114,15 @@ migrations:
   - services/database/migrations/031_readable_addresses.sql
   - services/database/migrations/032_archive_compatibility.sql
   - services/database/migrations/034_idempotent_odds_capture.sql
+  - services/database/migrations/035_read_parity.sql
+  - services/database/migrations/036_editing_parity.sql
+  - services/database/migrations/037_competition_admin.sql
+  - services/database/migrations/038_match_context.sql
+  - services/database/migrations/039_match_probability.sql
+  - services/database/migrations/040_community.sql
+  - services/database/migrations/041_native_media.sql
+  - services/database/migrations/042_team_odds_progress.sql
+  - services/database/migrations/043_queued_odds_refresh.sql
   - services/database/migrations/900_seed.sql
 pipelines:
   - name: standings
@@ -3747,3 +6166,6 @@ uniques:
   player_game:
     - - game_id
       - player_id
+  team_odds_progress:
+    - - group_id
+      - team_id

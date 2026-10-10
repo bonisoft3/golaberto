@@ -1,11 +1,13 @@
 # generated from bayt.cue — do not edit
 FROM libraries_mecha-compute-image AS compute
 WORKDIR /monorepo/.
+COPY --chmod=755 --from=tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa /bin/portcheck /usr/local/bin/portcheck
 COPY computations/ratings.js /app/computations/golaberto-ratings.js
 COPY computations/chances.js /app/computations/golaberto-chances.js
 COPY computations/golaberto-odds.wasm /app/computations/golaberto-odds.wasm
 COPY --parents computations/ratings.js computations/chances.js computations/golaberto-odds.wasm ./
 COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.compute.json ./.bayt/
+HEALTHCHECK --interval=5s --timeout=5s --retries=30 --start-period=15m CMD ["portcheck","--port","9997"]
 
 FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS compute_ctxs
 WORKDIR /monorepo/.

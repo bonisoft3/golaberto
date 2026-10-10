@@ -16,9 +16,12 @@ const setup = `
     FROM (SELECT home_id AS team_id FROM game_card UNION SELECT away_id FROM game_card) t;
 `;
 
+// The script's temp tables and probe triggers are its own scaffolding: pgroll's
+// event trigger would record each as an inferred migration, and two checks
+// recording against one parent fail on its history_is_linear index.
 async function query(sql: string) {
   const out = await new Deno.Command("docker", {
-    args: ["compose", "-p", project, "exec", "-T", "golaberto-database", "psql", "-U", "postgres", "-d", "golaberto", "-v", "ON_ERROR_STOP=1", "-Atqc", `BEGIN; ${setup} ${sql} ROLLBACK;`],
+    args: ["compose", "-p", project, "exec", "-T", "golaberto-database", "psql", "-U", "postgres", "-d", "golaberto", "-v", "ON_ERROR_STOP=1", "-Atqc", `BEGIN; SET LOCAL pgroll.no_inferred_migrations = 'TRUE'; ${setup} ${sql} ROLLBACK;`],
   }).output();
   if (!out.success) throw new Error(new TextDecoder().decode(out.stderr));
   return JSON.parse(new TextDecoder().decode(out.stdout).trim());

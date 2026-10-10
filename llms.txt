@@ -6,12 +6,23 @@
 Publicly accessible web application.
 
 ## Screens
+- [Game archive](/arquivo): arquivo screen
+- [Players](/jogadores): jogadores screen
 - [Principal](/): principal screen
 - [Campeonatos](/campeonatos): campeonatos screen
 - [Jogos](/jogos): jogos screen
 - [Equipes](/equipes): equipes screen
 - [Estádios](/estadios): estadios screen
 - [Árbitros](/arbitros): arbitros screen
+- [gerenciar](/gerenciar): gerenciar screen
+- [Manage championships](/gerenciar-competicoes): gerenciar-competicoes screen
+- [New championship](/nova-competicao): nova-competicao screen
+- [novo-arbitro](/novo-arbitro): novo-arbitro screen
+- [novo-equipe](/novo-equipe): novo-equipe screen
+- [novo-estadio](/novo-estadio): novo-estadio screen
+- [novo-jogador](/novo-jogador): novo-jogador screen
+- [novo-jogo](/novo-jogo): novo-jogo screen
+- [usuarios](/usuarios): usuarios screen
 
 ## Data Models
 - `AppUser`: domain entity
@@ -57,3 +68,19 @@ Publicly accessible web application.
 - `TeamRatingChart`: domain entity
 - `TeamOddsChart`: domain entity
 - `TeamRosterTotal`: domain entity
+- `CommunityAccess`: domain entity
+- `MatchProbability`: domain entity
+- `MatchRecentResult`: domain entity
+- `UserBiography`: domain entity
+- `GameChange`: domain entity
+- `UserDirectory`: domain entity
+- `MatchHeadToHead`: domain entity
+- `MatchLineup`: domain entity
+- `MatchLocation`: domain entity
+- `UserAvatar`: domain entity
+- `TeamOddsProgress`: domain entity
+- `PhaseDirectory`: domain entity
+- `PlayerDirectory`: domain entity
+- `GameArchive`: domain entity
+- `PlayerAppearance`: domain entity
+- `ChampionshipAttendance`: domain entity

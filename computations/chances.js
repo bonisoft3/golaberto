@@ -91,7 +91,7 @@ export const queries = {
   zones: `
     WITH ${RANKED}
     SELECT z.group_id::VARCHAR AS group_id, z.id::VARCHAR AS id, z.first::INTEGER AS first,
-           z.last::INTEGER AS last, z.color
+           z.last::INTEGER AS last, z.positions, z.color
     FROM zone z JOIN ranked USING (group_id) ORDER BY 1, 3, 4, 2`,
 };
 
@@ -198,7 +198,18 @@ const byGroup = (rows) => {
   return out;
 };
 
-const range = (first, last) => Array.from({ length: last - first + 1 }, (_, i) => first + i);
+// A zone starting past the current membership holds no position yet.
+const range = (first, last) => Array.from({ length: Math.max(0, last - first + 1) }, (_, i) => first + i);
+
+const zonePositions = (zone, memberCount) => {
+  if (zone.positions === undefined || zone.positions === null || zone.positions === "") return range(zone.first, Math.min(zone.last, memberCount));
+  const positions = zone.positions.split(",").map(Number);
+  if (
+    positions.some((position, index) => !Number.isInteger(position) || position < 1 || position > 1000 ||
+      (index > 0 && position <= positions[index - 1]))
+  ) throw new RangeError(`zone ${zone.id}: positions are not a canonical positive set`);
+  return positions.filter((position) => position <= memberCount);
+};
 
 // The /odds request of a live group, and the request's team and game
 // numbers' ids: odds-rust keys both by integers.
@@ -207,7 +218,7 @@ const request = (index, group, members, games, zones) => {
   const number = Object.fromEntries(teams.map((t, i) => [t, i + 1]));
   return {
     id: index + 1,
-    zones: zones.map((z) => ({ position: range(z.first, z.last) })),
+    zones: zones.map((z) => ({ position: zonePositions(z, members.length) })),
     phase: {
       sort: group.sort,
       bonus_points: group.bonus_points,
@@ -306,7 +317,12 @@ export const finish = (inputs, outputs) => {
         });
       });
       for (const z of zones) {
-        const p = rounded(pct[t].slice(z.first - 1, z.last).reduce((s, x) => s + x, 0), 2);
+        const selected = zonePositions(z, n);
+        const p = rounded(selected.reduce((sum, position) => {
+          const value = pct[t][position - 1];
+          if (value === undefined) throw new RangeError(`zone ${z.id}: position ${position} is missing from group ${group.id}`);
+          return sum + value;
+        }, 0), 2);
         zoneChance.push({
           id: uuid5(NS, `${group.id}:${m.team_id}:${z.id}`),
           group_id: group.id,
@@ -317,7 +333,7 @@ export const finish = (inputs, outputs) => {
           color: z.color,
           percent: p,
           band: band(p),
-          reach: reach(p, pct[t], statuses[t], range(z.first, z.last)),
+          reach: reach(p, pct[t], statuses[t], selected),
         });
       }
     });

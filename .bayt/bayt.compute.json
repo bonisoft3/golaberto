@@ -42,6 +42,19 @@
       }
     },
     "restart": "on-failure",
+    "healthcheck": {
+      "test": [
+        "CMD",
+        "portcheck",
+        "--port",
+        "9997"
+      ],
+      "interval": "5s",
+      "timeout": "5s",
+      "retries": 30,
+      "start_period": "15m",
+      "start_interval": "1s"
+    },
     "develop": {
       "watch": [
         {
@@ -75,6 +88,19 @@
     "epilogue": [],
     "copy": [
       {
+        "from": {
+          "name": "tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa"
+        },
+        "srcs": [
+          "/bin/portcheck"
+        ],
+        "dst": "/usr/local/bin/portcheck",
+        "chmod": "755",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
         "from": null,
         "srcs": [
           "computations/ratings.js"
@@ -105,7 +131,18 @@
         "exclude": []
       }
     ],
-    "healthcheck": null,
+    "healthcheck": {
+      "test": [
+        "CMD",
+        "portcheck",
+        "--port",
+        "9997"
+      ],
+      "interval": "5s",
+      "timeout": "5s",
+      "retries": 30,
+      "start_period": "15m"
+    },
     "expose": [],
     "entrypoint": null,
     "incremental": false,

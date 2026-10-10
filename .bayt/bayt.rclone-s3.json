@@ -1,0 +1,252 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "compose": {
+    "up": false,
+    "manual": false,
+    "environment": {
+      "DATABASE_URL": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
+      "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}"
+    },
+    "ports": [],
+    "volumes": [],
+    "depends_on": {
+      "golaberto-database": {
+        "condition": "service_healthy"
+      },
+      "golaberto-migrate": {
+        "condition": "service_completed_successfully"
+      }
+    },
+    "networks": {
+      "default": {
+        "aliases": [
+          "rclone-s3"
+        ]
+      }
+    },
+    "healthcheck": {
+      "test": [
+        "CMD",
+        "deno",
+        "eval",
+        "const r=await fetch('http://127.0.0.1:3900/health'); if(!r.ok) Deno.exit(1)"
+      ],
+      "interval": "5s",
+      "timeout": "3s",
+      "retries": 5
+    }
+  },
+  "dockerfile": {
+    "preamble": [],
+    "preambleCopyContexts": [],
+    "from": {
+      "name": "denoland/deno:debian-2.9.7@sha256:fa335acdf6b72106eda2cb6a8cb5f4187e7630e357467489db4b2e7352d5e432"
+    },
+    "workdir": "/app",
+    "add": [],
+    "mounts": [],
+    "secrets": {},
+    "extra_hosts": [],
+    "copy": [
+      {
+        "from": null,
+        "srcs": [
+          "services/media/*.ts",
+          "services/media/deno.json",
+          "services/media/deno.lock"
+        ],
+        "dst": "/app/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      }
+    ],
+    "epilogue": [
+      "RUN deno cache --frozen main.ts"
+    ],
+    "healthcheck": null,
+    "expose": [],
+    "entrypoint": null,
+    "incremental": false,
+    "cmd": [
+      "run",
+      "--frozen",
+      "--cached-only",
+      "--allow-env",
+      "--allow-read",
+      "--allow-ffi",
+      "--allow-net=database:5432,0.0.0.0:3900",
+      "main.ts"
+    ]
+  },
+  "name": "rclone-s3",
+  "project": "golaberto",
+  "dir": ".",
+  "activate": "",
+  "srcs": {
+    "globs": [
+      "services/media/*.ts",
+      "services/media/deno.json",
+      "services/media/deno.lock"
+    ],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {},
+  "synthetics": {
+    "bayt": {
+      "name": "rclone-s3_bayt",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.rclone-s3.yaml",
+          ".bayt/Dockerfile.rclone-s3",
+          ".bayt/bayt.rclone-s3.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "public",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.rclone-s3.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml"
+      ]
+    },
+    "outs": {
+      "name": "rclone-s3_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "public",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.rclone-s3.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml"
+      ]
+    },
+    "srcs": {
+      "name": "rclone-s3_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          "services/media/*.ts",
+          "services/media/deno.json",
+          "services/media/deno.lock"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "public",
+      "deps": [],
+      "transitiveDeps": [
+        "database_outs_srcs",
+        "migrate_outs_srcs"
+      ],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.rclone-s3.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml"
+      ]
+    }
+  },
+  "visibility": "public",
+  "emitsSrcs": true,
+  "deps": [
+    "database_outs",
+    "migrate_outs"
+  ],
+  "sameProjectDeps": [
+    "database_outs",
+    "migrate_outs"
+  ],
+  "transitiveDeps": [
+    "database_outs",
+    "migrate_outs"
+  ],
+  "transitiveCrossDeps": [],
+  "upClosure": [
+    "./.bayt/compose.rclone-s3.yaml",
+    "./.bayt/compose.database.yaml",
+    "./.bayt/compose.migrate.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "database_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "migrate_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

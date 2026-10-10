@@ -318,4 +318,155 @@ CREATE POLICY team_roster_total_app_user_select ON team_roster_total FOR SELECT 
 DROP POLICY IF EXISTS team_roster_total_service_all ON team_roster_total;
 CREATE POLICY team_roster_total_service_all ON team_roster_total FOR ALL TO service USING (true) WITH CHECK (true);
 
+CALL rls_protect('community_access');
+ALTER TABLE community_access ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS community_access_app_user_select ON community_access;
+CREATE POLICY community_access_app_user_select ON community_access FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS community_access_service_all ON community_access;
+CREATE POLICY community_access_service_all ON community_access FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('match_probability');
+ALTER TABLE match_probability ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS match_probability_app_user_select ON match_probability;
+CREATE POLICY match_probability_app_user_select ON match_probability FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS match_probability_service_all ON match_probability;
+CREATE POLICY match_probability_service_all ON match_probability FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('match_recent_result');
+ALTER TABLE match_recent_result ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS match_recent_result_app_user_select ON match_recent_result;
+CREATE POLICY match_recent_result_app_user_select ON match_recent_result FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS match_recent_result_service_all ON match_recent_result;
+CREATE POLICY match_recent_result_service_all ON match_recent_result FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('phase_clone');
+ALTER TABLE phase_clone ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS phase_clone_app_user_select ON phase_clone;
+CREATE POLICY phase_clone_app_user_select ON phase_clone FOR SELECT TO app_user USING (phase_clone.app_user_id = auth_uid());
+DROP POLICY IF EXISTS phase_clone_app_user_insert ON phase_clone;
+CREATE POLICY phase_clone_app_user_insert ON phase_clone FOR INSERT TO app_user WITH CHECK (phase_clone.app_user_id = auth_uid());
+DROP POLICY IF EXISTS phase_clone_app_user_update ON phase_clone;
+CREATE POLICY phase_clone_app_user_update ON phase_clone FOR UPDATE TO app_user USING (phase_clone.app_user_id = auth_uid());
+DROP POLICY IF EXISTS phase_clone_app_user_delete ON phase_clone;
+CREATE POLICY phase_clone_app_user_delete ON phase_clone FOR DELETE TO app_user USING (phase_clone.app_user_id = auth_uid());
+DROP POLICY IF EXISTS phase_clone_service_all ON phase_clone;
+CREATE POLICY phase_clone_service_all ON phase_clone FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('player_merge');
+ALTER TABLE player_merge ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS player_merge_app_user_select ON player_merge;
+CREATE POLICY player_merge_app_user_select ON player_merge FOR SELECT TO app_user USING (player_merge.app_user_id = auth_uid());
+DROP POLICY IF EXISTS player_merge_app_user_insert ON player_merge;
+CREATE POLICY player_merge_app_user_insert ON player_merge FOR INSERT TO app_user WITH CHECK (player_merge.app_user_id = auth_uid());
+DROP POLICY IF EXISTS player_merge_app_user_update ON player_merge;
+CREATE POLICY player_merge_app_user_update ON player_merge FOR UPDATE TO app_user USING (player_merge.app_user_id = auth_uid());
+DROP POLICY IF EXISTS player_merge_app_user_delete ON player_merge;
+CREATE POLICY player_merge_app_user_delete ON player_merge FOR DELETE TO app_user USING (player_merge.app_user_id = auth_uid());
+DROP POLICY IF EXISTS player_merge_service_all ON player_merge;
+CREATE POLICY player_merge_service_all ON player_merge FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('user_biography');
+ALTER TABLE user_biography ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS user_biography_app_user_select ON user_biography;
+CREATE POLICY user_biography_app_user_select ON user_biography FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS user_biography_service_all ON user_biography;
+CREATE POLICY user_biography_service_all ON user_biography FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('game_change');
+ALTER TABLE game_change ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS game_change_app_user_select ON game_change;
+CREATE POLICY game_change_app_user_select ON game_change FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS game_change_service_all ON game_change;
+CREATE POLICY game_change_service_all ON game_change FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('user_directory');
+ALTER TABLE user_directory ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS user_directory_app_user_select ON user_directory;
+CREATE POLICY user_directory_app_user_select ON user_directory FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS user_directory_service_all ON user_directory;
+CREATE POLICY user_directory_service_all ON user_directory FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('match_head_to_head');
+ALTER TABLE match_head_to_head ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS match_head_to_head_app_user_select ON match_head_to_head;
+CREATE POLICY match_head_to_head_app_user_select ON match_head_to_head FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS match_head_to_head_service_all ON match_head_to_head;
+CREATE POLICY match_head_to_head_service_all ON match_head_to_head FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('match_lineup');
+ALTER TABLE match_lineup ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS match_lineup_app_user_select ON match_lineup;
+CREATE POLICY match_lineup_app_user_select ON match_lineup FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS match_lineup_service_all ON match_lineup;
+CREATE POLICY match_lineup_service_all ON match_lineup FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('match_location');
+ALTER TABLE match_location ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS match_location_app_user_select ON match_location;
+CREATE POLICY match_location_app_user_select ON match_location FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS match_location_service_all ON match_location;
+CREATE POLICY match_location_service_all ON match_location FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('user_avatar');
+ALTER TABLE user_avatar ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS user_avatar_app_user_select ON user_avatar;
+CREATE POLICY user_avatar_app_user_select ON user_avatar FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS user_avatar_service_all ON user_avatar;
+CREATE POLICY user_avatar_service_all ON user_avatar FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('user_pending_upload');
+ALTER TABLE user_pending_upload ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS user_pending_upload_app_user_select ON user_pending_upload;
+CREATE POLICY user_pending_upload_app_user_select ON user_pending_upload FOR SELECT TO app_user USING (user_pending_upload.app_user_id = auth_uid());
+DROP POLICY IF EXISTS user_pending_upload_app_user_insert ON user_pending_upload;
+CREATE POLICY user_pending_upload_app_user_insert ON user_pending_upload FOR INSERT TO app_user WITH CHECK (user_pending_upload.app_user_id = auth_uid());
+DROP POLICY IF EXISTS user_pending_upload_app_user_update ON user_pending_upload;
+CREATE POLICY user_pending_upload_app_user_update ON user_pending_upload FOR UPDATE TO app_user USING (user_pending_upload.app_user_id = auth_uid());
+DROP POLICY IF EXISTS user_pending_upload_app_user_delete ON user_pending_upload;
+CREATE POLICY user_pending_upload_app_user_delete ON user_pending_upload FOR DELETE TO app_user USING (user_pending_upload.app_user_id = auth_uid());
+DROP POLICY IF EXISTS user_pending_upload_service_all ON user_pending_upload;
+CREATE POLICY user_pending_upload_service_all ON user_pending_upload FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('team_odds_progress');
+ALTER TABLE team_odds_progress ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS team_odds_progress_app_user_select ON team_odds_progress;
+CREATE POLICY team_odds_progress_app_user_select ON team_odds_progress FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS team_odds_progress_service_all ON team_odds_progress;
+CREATE POLICY team_odds_progress_service_all ON team_odds_progress FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('phase_directory');
+ALTER TABLE phase_directory ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS phase_directory_app_user_select ON phase_directory;
+CREATE POLICY phase_directory_app_user_select ON phase_directory FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS phase_directory_service_all ON phase_directory;
+CREATE POLICY phase_directory_service_all ON phase_directory FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('player_directory');
+ALTER TABLE player_directory ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS player_directory_app_user_select ON player_directory;
+CREATE POLICY player_directory_app_user_select ON player_directory FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS player_directory_service_all ON player_directory;
+CREATE POLICY player_directory_service_all ON player_directory FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('game_archive');
+ALTER TABLE game_archive ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS game_archive_app_user_select ON game_archive;
+CREATE POLICY game_archive_app_user_select ON game_archive FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS game_archive_service_all ON game_archive;
+CREATE POLICY game_archive_service_all ON game_archive FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('player_appearance');
+ALTER TABLE player_appearance ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS player_appearance_app_user_select ON player_appearance;
+CREATE POLICY player_appearance_app_user_select ON player_appearance FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS player_appearance_service_all ON player_appearance;
+CREATE POLICY player_appearance_service_all ON player_appearance FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('championship_attendance');
+ALTER TABLE championship_attendance ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS championship_attendance_app_user_select ON championship_attendance;
+CREATE POLICY championship_attendance_app_user_select ON championship_attendance FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS championship_attendance_service_all ON championship_attendance;
+CREATE POLICY championship_attendance_service_all ON championship_attendance FOR ALL TO service USING (true) WITH CHECK (true);
+
 COMMIT;

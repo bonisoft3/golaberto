@@ -1,0 +1,59 @@
+# generated from bayt.cue — do not edit
+services:
+  golaberto-check-odds-progress:
+    build:
+      additional_contexts:
+        golaberto-setup: service:golaberto-setup
+        golaberto-launch: service:golaberto-launch
+        plugins_omnishell-runtime-image: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.4@sha256:ee911caa20b37f4b7c6ad3e8d7e8ffeef15bc1523cbe772137d34de443b489df}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}
+      context: ..
+      dockerfile: .bayt/Dockerfile.check-odds-progress
+      target: check-odds-progress
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    command:
+    - mise
+    - x
+    - --
+    - sh
+    - -c
+    - >-
+      deno test --config tests/deno.json --no-lock --allow-env --allow-net
+      --allow-read --allow-sys tests/odds-progress.ts
+    depends_on:
+      golaberto-launch:
+        condition: service_healthy
+        restart: true
+    environment:
+      APP_URL: https://caddy:8443
+      DATABASE_URL: >-
+        postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}
+      ORIGIN: ${ORIGIN:-https://localhost:8443}
+      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
+    image: bayt-golaberto-check-odds-progress:${BAYT_IMAGE_TAG:-latest}
+    scale: 0
+  golaberto-check-odds-progress_bayt:
+    build:
+      additional_contexts:
+        golaberto-setup_bayt: service:golaberto-setup_bayt
+        golaberto-launch_bayt: service:golaberto-launch_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.check-odds-progress
+      target: check-odds-progress_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-check-odds-progress_bayt:latest
+    scale: 0
+  golaberto-check-odds-progress_srcs:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.check-odds-progress
+      target: check-odds-progress_srcs
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-check-odds-progress_srcs:latest
+    scale: 0

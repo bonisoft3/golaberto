@@ -2,6 +2,22 @@
 {
  "tests": [
   {
+   "name": "sparse zones paint only their selected positions",
+   "target_processors": "/pipeline/processors/1/try/7",
+   "input_batch": [
+    {
+     "content": "{\"group\":{\"id\":\"g\",\"phase_id\":\"p\"},\"members\":[{\"group_id\":\"g\",\"team_id\":\"t1\",\"add_sub\":0,\"bias\":0,\"team\":{\"name\":\"A\"}},{\"group_id\":\"g\",\"team_id\":\"t2\",\"add_sub\":0,\"bias\":0,\"team\":{\"name\":\"B\"}},{\"group_id\":\"g\",\"team_id\":\"t3\",\"add_sub\":0,\"bias\":0,\"team\":{\"name\":\"C\"}},{\"group_id\":\"g\",\"team_id\":\"t4\",\"add_sub\":0,\"bias\":0,\"team\":{\"name\":\"D\"}}],\"games\":[],\"zones\":[{\"group_id\":\"g\",\"color\":\"qualify\",\"first\":1,\"last\":3,\"positions\":\"1,3\"}],\"phases\":[{\"id\":\"p\",\"sort\":\"name\",\"bonus_points\":0,\"bonus_points_threshold\":0,\"championship\":{\"point_win\":3,\"point_draw\":1,\"point_loss\":0}}]}"
+    }
+   ],
+   "output_batches": [
+    [
+     {
+      "bloblang": "this.map_each(r -> r.zone) == [\"qualify\", \"\", \"qualify\", \"\"]"
+     }
+    ]
+   ]
+  },
+  {
    "name": "the 2026 Serie A recounts to the table golaberto.com.br shows",
    "target_processors": "/pipeline/processors/1/try/7",
    "input_batch": [

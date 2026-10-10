@@ -252,7 +252,7 @@ const normalized = (totals, people) => {
     const per90 = [off, deff].map((x) => f32(f32(x / minutes) * 90));
     const rating = f32(f32(f32(f32(off + deff) / minutes) * 90) * squash);
     if (![...per90, rating].every(Number.isFinite)) throw new RangeError(`player ${people.id(p)}: a non-finite rating`);
-    return { id: people.id(p), rating };
+    return { id: people.id(p), rating, off_rating: per90[0], def_rating: per90[1] };
   });
 };
 

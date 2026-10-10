@@ -5354,6 +5354,22 @@
    ]
   },
   {
+   "name": "an archive line off before on counts no minutes and takes none from the season",
+   "target_processors": "/pipeline/processors/1/try/7",
+   "input_batch": [
+    {
+     "content": "{\"championship\": \"c\", \"championship_name\": \"C\", \"player\": \"p\", \"player_row\": {\"name\": \"X\"}, \"apps\": [{\"side\": \"home\", \"on_minute\": 0, \"off_minute\": 90, \"yellow\": false, \"red\": false, \"bench\": false, \"game\": {\"home_id\": \"h\", \"away_id\": \"a\", \"home\": {\"name\": \"H\"}, \"away\": {\"name\": \"A\"}}}, {\"side\": \"home\", \"on_minute\": 105, \"off_minute\": 90, \"yellow\": false, \"red\": false, \"bench\": false, \"game\": {\"home_id\": \"h\", \"away_id\": \"a\", \"home\": {\"name\": \"H\"}, \"away\": {\"name\": \"A\"}}}], \"goals\": []}"
+    }
+   ],
+   "output_batches": [
+    [
+     {
+      "bloblang": "this.index(0).rows.index(0).minutes == 90 && this.index(0).rows.index(0).played == 2"
+     }
+    ]
+   ]
+  },
+  {
    "name": "startup emits string championship events accepted by the CDC router",
    "target_processors": "/input/broker/inputs/1/processors",
    "mocks": {

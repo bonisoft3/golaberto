@@ -1,7 +1,7 @@
 /// <reference lib="dom" />
 // Browser acceptance for the split team profile and championship pages. All
 // committed fixture rows are removed in finally from an explicitly disposable stack.
-import { assert, assertEquals } from "jsr:@std/assert@1";
+import { assert, assertEquals } from "jsr:@std/assert@1.0.11";
 import { address as fixtureAddress, fixturePath } from "./addresses.ts";
 import { baseUrl } from "../../../plugins/omnishell/base-url.ts";
 
@@ -233,6 +233,22 @@ Deno.test("team profile and championship pages keep memberships, players, and se
     await screen().locator('.team-rating-history svg').waitFor();
     assertEquals(await screen().locator('.team-location a').getAttribute('href'), 'https://www.openstreetmap.org/?mlat=-25.43&mlon=-49.27#map=14/-25.43/-49.27');
     await screen().locator('#team-rating-period').selectOption('all');
+    const today = new Date();
+    const isoDaysAgo = (days: number) => new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() - days)).toISOString().slice(0, 10);
+    await screen().locator('#team-rating-from').fill(isoDaysAgo(7));
+    await screen().locator('#team-rating-from').press('Tab');
+    await screen().locator('#team-rating-to').fill(isoDaysAgo(1));
+    await screen().locator('#team-rating-to').press('Tab');
+    await page.waitForFunction(() => document.querySelectorAll('.shell-screen:not([hidden]) .team-rating-history svg circle').length === 1);
+    assertEquals(await screen().locator('#team-rating-period').inputValue(), 'all', 'custom dates read the bounded all-history projection');
+    await screen().locator('#team-rating-from').fill(isoDaysAgo(0));
+    await screen().locator('#team-rating-from').press('Tab');
+    await screen().locator('.team-rating-history [role="alert"]').waitFor();
+    await screen().locator('#team-rating-reset').click();
+    await page.waitForFunction(() => document.querySelectorAll('.shell-screen:not([hidden]) .team-rating-history svg circle').length === 2);
+    assertEquals(await screen().locator('#team-rating-period').inputValue(), '1y');
+    assertEquals(await screen().locator('#team-rating-from').inputValue(), '');
+    assertEquals(await screen().locator('#team-rating-to').inputValue(), '');
     await screen().locator('#team-current-players-q').fill('atletico');
     await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-current-players .team-player-list')?.textContent?.includes('A Zero Átlético'));
     assertEquals(await screen().locator('.team-current-players a[data-route="jogador"]').count(),1,'accent-insensitive search resets the page and finds the matching player');
@@ -293,6 +309,25 @@ Deno.test("team profile and championship pages keep memberships, players, and se
     await screen().locator('.team-campaign svg').waitFor();
     await screen().locator('.team-odds svg').first().waitFor();
     await screen().locator('.team-odds-evolution svg').waitFor();
+    const positionFrom = screen().locator('.team-odds input[id$="-from"]').first();
+    const positionTo = screen().locator('.team-odds input[id$="-to"]').first();
+    await positionFrom.fill('1');
+    await positionFrom.press('Tab');
+    await positionTo.fill('1');
+    await positionTo.press('Tab');
+    await screen().locator('.team-odds .team-chart__selection[role="status"]').waitFor();
+    assert(/62[,.]5%/.test(await screen().locator('.team-odds .team-chart__selection').first().innerText()), 'a keyboard-entered final-position range totals its inclusive probability');
+    await positionFrom.fill('2');
+    await positionFrom.press('Tab');
+    await screen().locator('.team-odds .team-chart__selection[role="alert"]').waitFor();
+    await screen().locator('.team-odds button[id$="-reset"]').first().click();
+    assertEquals(await positionFrom.inputValue(), '');
+    assertEquals(await positionTo.inputValue(), '');
+    const zoneHistory = screen().locator('.team-odds-evolution details.team-zone-history').first();
+    await zoneHistory.locator('summary').click();
+    assertEquals(await zoneHistory.getAttribute('open'), null, 'zone histories remain selectable with the native disclosure control');
+    await zoneHistory.locator('summary').click();
+    assertEquals(await zoneHistory.getAttribute('open'), '', 'the selected probability history can be restored without another read');
     await screen().locator('#team-roster-q').fill('atletico');
     await page.waitForFunction(() => document.querySelector('.shell-screen:not([hidden]) .team-roster tbody')?.querySelectorAll('tr').length === 1);
     await screen().locator('#team-roster-sort').selectOption('goals');

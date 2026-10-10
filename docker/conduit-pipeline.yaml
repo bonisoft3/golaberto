@@ -9,7 +9,7 @@ pipelines:
         plugin: 'builtin:postgres'
         settings:
           url: '${DATABASE_URL}'
-          tables: 'app_user,category,championship,home_championship,phase,stage_group,zone,stadium,team,team_championship,team_group,referee,geography_region,geography_country,team_directory,player,team_player,team_roster,team_player_history,game,goal,player_game,standing,team_chance,zone_chance,position_chance,game_importance,team_rating,player_rating,rating_eval,game_card,home_game_card,matches_game_card,team_game,comment,editor,player_stat,phase_round,team_comment,team_campaign_point,team_odds_history,team_rating_chart,team_odds_chart,team_roster_total'
+          tables: 'app_user,category,championship,home_championship,phase,stage_group,zone,stadium,team,team_championship,team_group,referee,geography_region,geography_country,team_directory,player,team_player,team_roster,team_player_history,game,goal,player_game,standing,team_chance,zone_chance,position_chance,game_importance,team_rating,player_rating,rating_eval,game_card,home_game_card,matches_game_card,team_game,comment,editor,player_stat,phase_round,team_comment,team_campaign_point,team_odds_history,team_rating_chart,team_odds_chart,team_roster_total,community_access,match_probability,match_recent_result,phase_clone,player_merge,user_biography,game_change,user_directory,match_head_to_head,match_lineup,match_location,user_avatar,user_pending_upload,team_odds_progress,phase_directory,player_directory,game_archive,player_appearance,championship_attendance'
           cdcMode: logrepl
           snapshotMode: never
           logrepl.publicationName: golaberto_cdc

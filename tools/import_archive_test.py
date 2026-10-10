@@ -1,17 +1,28 @@
 from pathlib import Path
 import json
 import os
+import re
 import sqlite3
 import subprocess
 import tempfile
 import unittest
 
-from import_archive import (DEFERRED_TRIGGERS, KINDS, MAPS, RATING_NAMESPACE, Database, apply_script,corrected_views,csv_row,
+from import_archive import (DEFERRED_TRIGGERS, KINDS, MAPS, PUBLIC_TABLES, RATING_NAMESPACE, UID_SQL, Database, apply_script,corrected_views,csv_row,
                             game_day, legacy_uuid, literal, odds, paired_score, promotion_sql,
                             source_type,target_guard, validate_corrections, zones)
 
 
 class ArchiveMappingTest(unittest.TestCase):
+    def planned_promotion(self):
+        columns = {source:[('id','bigint')] for _,source,_,_ in MAPS}
+        counts = {source:1 for source in columns}
+        counts.update(current_goals=1,unique_team_players=1)
+        with tempfile.TemporaryDirectory() as temporary:
+            paths = {key:Path(temporary)/(key+'.csv') for key in ('zones','odds','geocodes')}
+            for path in paths.values():
+                path.write_text('header\n')
+            return promotion_sql(columns,{},counts,'isolated','123',paths,True)
+
     def test_apply_artifact_can_move_without_changing_destination(self):
         with tempfile.TemporaryDirectory() as temporary:
             original = Path(temporary)/'original';original.mkdir()
@@ -146,20 +157,59 @@ class ArchiveMappingTest(unittest.TestCase):
         self.assertIn("system_identifier::text", guard)
         self.assertIn('existing data is never reset', guard)
         self.assertIn('public."team_rating"', guard)
+        self.assertIn('public."player_rating"', guard)
+        self.assertIn('player_rating', PUBLIC_TABLES)
         self.assertNotIn('TRUNCATE', guard)
+
+    def test_rated_players_are_guarded_and_counted_in_the_promotion_artifact(self):
+        sql = self.planned_promotion()
+        self.assertIn('public."player_rating"',next(line for line in sql.splitlines() if line.startswith('LOCK TABLE ')))
+        self.assertIn('promotion count mismatch: player_rating', sql)
+        self.assertLess(sql.index('archive destination must be empty'),sql.index('INSERT INTO public.player_rating'))
+        self.assertNotIn('ON CONFLICT', sql.split('INSERT INTO public.player_rating',1)[1].split(';',1)[0])
+
+    @unittest.skipUnless(os.environ.get('ARCHIVE_IMPORT_TEST_TARGET_CONTAINER'), 'scratch PostgreSQL destination not specified')
+    def test_player_rating_promotion_preserves_identity_null_components_and_unrated_players(self):
+        db = Database('', '', os.environ['ARCHIVE_IMPORT_TEST_TARGET_CONTAINER'], 'golaberto')
+        system_id = db.pg('SELECT system_identifier::text FROM pg_control_system();')
+        artifact = self.planned_promotion()
+        insert = re.search(r'INSERT INTO public\.player_rating\([^;]+;',artifact)
+        self.assertIsNotNone(insert)
+        numbers = [4000000101,4000000102,4000000103,4000000104]
+        guard = target_guard('golaberto',system_id)
+        sql = f"""BEGIN;
+{UID_SQL}
+CREATE TEMP TABLE players(id bigint,rating double precision,off_rating double precision,def_rating double precision);
+INSERT INTO pg_temp.players VALUES
+({numbers[0]},0,0,NULL),({numbers[1]},7.25,NULL,-3.5),({numbers[2]},NULL,8.5,4.5),({numbers[3]},2.25,NULL,NULL);
+INSERT INTO public.player(id,name) SELECT pg_temp.uid(11,id),'Rating import fixture '||id FROM pg_temp.players;
+{insert.group(0)}
+DO $fixture$ BEGIN
+  BEGIN
+    {guard}
+    RAISE EXCEPTION 'an existing rated destination was accepted';
+  EXCEPTION WHEN raise_exception THEN
+    IF SQLERRM <> 'archive destination must be empty; existing data is never reset' THEN RAISE; END IF;
+  END;
+END $fixture$;
+SELECT json_agg(json_build_object('source_id',s.id,'player_id',p.id,'rating_id',r.id,
+  'rating',r.rating,'off_rating',r.off_rating,'def_rating',r.def_rating) ORDER BY s.id)
+FROM pg_temp.players s JOIN public.player p ON p.id=pg_temp.uid(11,s.id)
+LEFT JOIN public.player_rating r ON r.id=p.id;
+ROLLBACK;"""
+        rows = json.loads(db.pg(sql))
+        expected = []
+        for number,rating,off,deff in zip(numbers,[0,7.25,None,2.25],[0,None,None,None],[None,-3.5,None,None]):
+            expected.append({'source_id':number,'player_id':legacy_uuid(11,number),
+                             'rating_id':legacy_uuid(11,number) if rating is not None else None,
+                             'rating':rating,'off_rating':off,'def_rating':deff})
+        self.assertEqual(rows,expected)
+        self.assertEqual(db.pg('SELECT count(*) FROM public.player WHERE id IN('+','.join(literal(legacy_uuid(11,n))+'::uuid' for n in numbers)+');'),'0')
 
     def test_bulk_deferral_only_names_known_projection_triggers(self):
         self.assertNotIn('stamp_readable_address', str(DEFERRED_TRIGGERS))
         self.assertNotIn('player_game_day', str(DEFERRED_TRIGGERS))
-        columns = {source:[('id','bigint')] for _,source,_,_ in MAPS}
-        counts = {source:1 for source in columns}
-        counts['current_goals'] = 1
-        counts['unique_team_players'] = 1
-        with tempfile.TemporaryDirectory() as temporary:
-            paths = {key:Path(temporary)/(key+'.csv') for key in ('zones','odds','geocodes')}
-            for path in paths.values():
-                path.write_text('header\n')
-            sql = promotion_sql(columns,{},counts,'isolated','123',paths,True)
+        sql = self.planned_promotion()
         self.assertIn('NOT t.tgisinternal', sql)
         self.assertIn("WHEN 'A' THEN 'ENABLE ALWAYS'", sql)
         self.assertIn('player_metric_dirty', sql)

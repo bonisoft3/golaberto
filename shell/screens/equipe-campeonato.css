@@ -1,3 +1,52 @@
 @import url("shared/chrome.css");
 @import url("shared/games.css");
 @import url("shared/team.css");
+/* Current finishing odds: zone bands behind one bar per final position. */
+.position-odds-graph { container-type: inline-size; }
+.position-odds { margin: var(--sp-md) 0 var(--sp-sm); color: var(--primary); }
+.position-odds__title { font-size: var(--type-label); font-weight: 700; }
+.position-odds__svg { display: block; width: 100%; height: auto; overflow: visible; }
+.position-odds__band { --paint-opacity: .35; fill-opacity: var(--paint-opacity); }
+.position-odds__grid { stroke: var(--border); stroke-width: .7; }
+.position-odds__axis-value { fill: var(--secondary); font-size: 11px; }
+.position-odds__bar { fill: var(--chart-bar); stroke: var(--secondary); stroke-width: 1; }
+.position-odds__bar--selected { stroke: var(--primary); stroke-width: 2; }
+.team-odds-progress__area { --paint-opacity: .65; fill-opacity: var(--paint-opacity); stroke: var(--secondary); stroke-width: .4; stroke-opacity: .38; stroke-linejoin: round; }
+.team-odds-progress__area--unassigned { fill: var(--chart-bar); fill-opacity: .85; stroke: var(--secondary); stroke-width: .5; stroke-opacity: .55; }
+.position-odds__current { stroke: var(--primary); stroke-width: 1; stroke-dasharray: 3 2; pointer-events: none; }
+.position-odds__current-label { margin: 0; font-size: var(--type-label); color: var(--secondary); }
+.position-odds__selection { margin: var(--sp-sm) 0 0; font-weight: 700; }
+.position-odds__selection--invalid { color: var(--danger); }
+.position-odds-controls { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-sm) var(--sp-lg); margin-bottom: var(--sp-md); }
+.position-odds-inspection { flex: 1 1 20rem; }
+.position-odds__inspector { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--sp-sm) var(--sp-md); font-size: var(--type-label); font-variant-numeric: tabular-nums; }
+.position-odds__zone-name { color: var(--secondary); }
+.position-odds-slider { display: flex; flex: 1 1 14rem; align-items: center; gap: var(--sp-sm); font-size: var(--type-label); }
+.position-odds-slider[data-last="0"] { display: none; }
+.position-odds-slider input { width: 100%; min-width: 0; accent-color: var(--secondary); }
+.team-odds-evolution h4 { margin-block: var(--sp-lg) var(--sp-sm); }
+.odds-position-data { margin-top: var(--sp-md); border-top: var(--border-size-1) solid var(--border); padding-top: var(--sp-md); }
+.odds-position-data summary { cursor: pointer; font-size: var(--type-label); font-weight: 700; }
+.odds-values-select { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-sm) var(--sp-md); margin-block: var(--sp-md); font-size: var(--type-label); }
+.odds-values-select select { max-width: 100%; }
+.position-odds__table { width: 100%; border-collapse: collapse; font-size: var(--type-label); font-variant-numeric: tabular-nums; }
+.position-odds__table caption { text-align: start; padding-bottom: var(--sp-sm); font-weight: 700; }
+.position-odds__table th, .position-odds__table td { padding: var(--sp-sm) var(--sp-md); border-bottom: var(--border-size-1) solid var(--border); text-align: end; }
+.position-odds__table th:first-child { text-align: start; }
+.position-odds__table thead th { position: sticky; top: 0; background: var(--surface); }
+.position-odds__compact-percent { display: inline-flex; white-space: nowrap; text-decoration: none; font-variant-numeric: tabular-nums; }
+.position-odds__compact-percent > span, .position-odds__prefix { display: inline-flex; align-items: center; line-height: 1; }
+.position-odds__decimal { width: .5ch; text-align: center; }
+/* The count is centered over all three dots, including the decimal separator. */
+.position-odds__repeat { display: inline-block; position: relative; width: 1ch; height: 1em; line-height: 1; }
+.position-odds__repeat sup { position: absolute; top: 0; left: 25%; font-size: inherit; font-weight: 400; line-height: 1; transform: translateX(-50%) scale(.75); transform-origin: center top; }
+.position-odds__repeat sup.position-odds__count--two-digits { top: .08em; transform: translateX(-50%) scale(.6); }
+.position-odds__repeat > span { position: absolute; bottom: 0; left: 0; font-size: inherit; line-height: 1; }
+@container (max-width: 520px) {
+  .position-odds__axis-value { font-size: var(--type-subtitle); }
+  .position-odds__tick--dense { visibility: hidden; }
+}
+@container (max-width: 360px) {
+  .position-odds__axis-value { font-size: var(--type-title); }
+  .position-odds__axis-value:not(.position-odds__tick) { transform: translateX(var(--sp-md)); }
+}

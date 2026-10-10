@@ -75,6 +75,13 @@ with open("pipelines/player-stats_benthos_test.yaml", "w") as f:
                       "game": {"home_id": "h", "away_id": "a", "home": {"name": "H"}, "away": {"name": "A"}}}], "goals": []})}],
         "output_batches": [[{"bloblang": 'this.index(0).rows.index(0).minutes == 0 && this.index(0).rows.index(0).team_name == "H"'}]],
     }, {
+        "name": "an archive line off before on counts no minutes and takes none from the season",
+        "target_processors": TRANSFORM,
+        "input_batch": [{"content": json.dumps({"championship": "c", "championship_name": "C", "player": "p", "player_row": {"name": "X"},
+            "apps": [{"side": "home", "on_minute": on, "off_minute": off, "yellow": False, "red": False, "bench": False,
+                      "game": {"home_id": "h", "away_id": "a", "home": {"name": "H"}, "away": {"name": "A"}}} for on, off in [(0, 90), (105, 90)]], "goals": []})}],
+        "output_batches": [[{"bloblang": 'this.index(0).rows.index(0).minutes == 90 && this.index(0).rows.index(0).played == 2'}]],
+    }, {
         "name": "startup emits string championship events accepted by the CDC router",
         "target_processors": "/input/broker/inputs/1/processors",
         "mocks": {"/input/broker/inputs/1/processors/0/try/0/branch/processors/0": {"mapping": 'root = [{"id": "c1"}, {"id": "c2"}]'}},

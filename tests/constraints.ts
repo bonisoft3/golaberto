@@ -191,8 +191,9 @@ Deno.test("archive round identifiers retain knockout codes", async () => {
 
 Deno.test("archive zones preserve labels and RGB while refusing CSS injection", async () => {
   const group = `${fixtures}\nINSERT INTO stage_group (id,phase_id,name) VALUES ('${GROUP}','${PHASE}','Archive');`;
+  // The RGB survives in the canonical lowercase a native colour control submits.
   assertEquals(await kept(`${group}\nINSERT INTO zone (group_id,name,color,first,last)
-    VALUES ('${GROUP}',repeat('n',108),'#90EE90',1,4) RETURNING char_length(name)||':'||color;`), '108:#90EE90');
+    VALUES ('${GROUP}',repeat('n',108),'#90EE90',1,4) RETURNING char_length(name)||':'||color;`), '108:#90ee90');
   await refused(`${group}\nINSERT INTO zone (group_id,name,color,first,last)
     VALUES ('${GROUP}','Injection','#90ee90; background:url(https://example.org)',1,4);`, 'zone_color_check');
 });

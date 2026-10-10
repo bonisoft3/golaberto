@@ -17,6 +17,7 @@ COPY --from=golaberto-conduit_bayt /monorepo /monorepo
 COPY --from=golaberto-transform_bayt /monorepo /monorepo
 COPY --from=golaberto-compute_bayt /monorepo /monorepo
 COPY --from=golaberto-auth_bayt /monorepo /monorepo
+COPY --from=golaberto-rclone-s3_bayt /monorepo /monorepo
 COPY --from=golaberto-render_bayt /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1

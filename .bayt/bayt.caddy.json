@@ -6,7 +6,7 @@
     "build": {
       "additional_contexts": {
         "root": "..",
-        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.2@sha256:7b7e454701f9f383b9359b935631369d4c03520b7bee82d100ed8c2b4836171d}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.7.4@sha256:ee911caa20b37f4b7c6ad3e8d7e8ffeef15bc1523cbe772137d34de443b489df}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
       },
       "secrets": [],
       "args": {}
@@ -90,6 +90,66 @@
           "action": "sync+restart",
           "path": "../shell/design.css",
           "target": "/srv/shell/design.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/arquivo.html",
+          "target": "/srv/shell/screens/arquivo.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/arquivo.css",
+          "target": "/srv/shell/screens/arquivo.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/arquivo-campeonato.html",
+          "target": "/srv/shell/screens/arquivo-campeonato.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/arquivo-campeonato.css",
+          "target": "/srv/shell/screens/arquivo-campeonato.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/publico.html",
+          "target": "/srv/shell/screens/publico.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/publico.css",
+          "target": "/srv/shell/screens/publico.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/jogadores.html",
+          "target": "/srv/shell/screens/jogadores.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/jogadores.css",
+          "target": "/srv/shell/screens/jogadores.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/campeonato-jogadores.html",
+          "target": "/srv/shell/screens/campeonato-jogadores.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/campeonato-jogadores.css",
+          "target": "/srv/shell/screens/campeonato-jogadores.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/jogador-campeonato.html",
+          "target": "/srv/shell/screens/jogador-campeonato.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/jogador-campeonato.css",
+          "target": "/srv/shell/screens/jogador-campeonato.css"
         },
         {
           "action": "sync+restart",
@@ -243,6 +303,216 @@
         },
         {
           "action": "sync+restart",
+          "path": "../shell/screens/editar-arbitro.html",
+          "target": "/srv/shell/screens/editar-arbitro.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/editar-arbitro.css",
+          "target": "/srv/shell/screens/editar-arbitro.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/editar-competicao.html",
+          "target": "/srv/shell/screens/editar-competicao.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/editar-competicao.css",
+          "target": "/srv/shell/screens/editar-competicao.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/editar-equipe.html",
+          "target": "/srv/shell/screens/editar-equipe.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/editar-equipe.css",
+          "target": "/srv/shell/screens/editar-equipe.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/editar-estadio.html",
+          "target": "/srv/shell/screens/editar-estadio.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/editar-estadio.css",
+          "target": "/srv/shell/screens/editar-estadio.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/editar-jogador.html",
+          "target": "/srv/shell/screens/editar-jogador.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/editar-jogador.css",
+          "target": "/srv/shell/screens/editar-jogador.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/editar-jogo.html",
+          "target": "/srv/shell/screens/editar-jogo.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/editar-jogo.css",
+          "target": "/srv/shell/screens/editar-jogo.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/escalacao-jogo.html",
+          "target": "/srv/shell/screens/escalacao-jogo.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/escalacao-jogo.css",
+          "target": "/srv/shell/screens/escalacao-jogo.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/gerenciar.html",
+          "target": "/srv/shell/screens/gerenciar.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/gerenciar.css",
+          "target": "/srv/shell/screens/gerenciar.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/gerenciar-competicoes.html",
+          "target": "/srv/shell/screens/gerenciar-competicoes.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/gerenciar-competicoes.css",
+          "target": "/srv/shell/screens/gerenciar-competicoes.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/gols-jogo.html",
+          "target": "/srv/shell/screens/gols-jogo.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/gols-jogo.css",
+          "target": "/srv/shell/screens/gols-jogo.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/historico-jogo.html",
+          "target": "/srv/shell/screens/historico-jogo.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/historico-jogo.css",
+          "target": "/srv/shell/screens/historico-jogo.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/inscricoes-jogador.html",
+          "target": "/srv/shell/screens/inscricoes-jogador.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/inscricoes-jogador.css",
+          "target": "/srv/shell/screens/inscricoes-jogador.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/nova-competicao.html",
+          "target": "/srv/shell/screens/nova-competicao.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/nova-competicao.css",
+          "target": "/srv/shell/screens/nova-competicao.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/novo-arbitro.html",
+          "target": "/srv/shell/screens/novo-arbitro.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/novo-arbitro.css",
+          "target": "/srv/shell/screens/novo-arbitro.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/novo-equipe.html",
+          "target": "/srv/shell/screens/novo-equipe.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/novo-equipe.css",
+          "target": "/srv/shell/screens/novo-equipe.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/novo-estadio.html",
+          "target": "/srv/shell/screens/novo-estadio.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/novo-estadio.css",
+          "target": "/srv/shell/screens/novo-estadio.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/novo-jogador.html",
+          "target": "/srv/shell/screens/novo-jogador.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/novo-jogador.css",
+          "target": "/srv/shell/screens/novo-jogador.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/novo-jogo.html",
+          "target": "/srv/shell/screens/novo-jogo.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/novo-jogo.css",
+          "target": "/srv/shell/screens/novo-jogo.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/usuario.html",
+          "target": "/srv/shell/screens/usuario.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/usuario.css",
+          "target": "/srv/shell/screens/usuario.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/usuarios.html",
+          "target": "/srv/shell/screens/usuarios.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/usuarios.css",
+          "target": "/srv/shell/screens/usuarios.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/archive-round.js",
+          "target": "/srv/shell/handlers/archive-round.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/archive-week.js",
+          "target": "/srv/shell/handlers/archive-week.js"
+        },
+        {
+          "action": "sync+restart",
           "path": "../shell/handlers/blank-null.js",
           "target": "/srv/shell/handlers/blank-null.js"
         },
@@ -258,8 +528,8 @@
         },
         {
           "action": "sync+restart",
-          "path": "../shell/handlers/chart-metric.js",
-          "target": "/srv/shell/handlers/chart-metric.js"
+          "path": "../shell/handlers/chart-position-bound.js",
+          "target": "/srv/shell/handlers/chart-position-bound.js"
         },
         {
           "action": "sync+restart",
@@ -273,13 +543,103 @@
         },
         {
           "action": "sync+restart",
+          "path": "../shell/handlers/editing-choice-event.js",
+          "target": "/srv/shell/handlers/editing-choice-event.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/editing-integer.js",
+          "target": "/srv/shell/handlers/editing-integer.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/editing-played.js",
+          "target": "/srv/shell/handlers/editing-played.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/editing-text.js",
+          "target": "/srv/shell/handlers/editing-text.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/editing-timestamp.js",
+          "target": "/srv/shell/handlers/editing-timestamp.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/editing-uuid.js",
+          "target": "/srv/shell/handlers/editing-uuid.js"
+        },
+        {
+          "action": "sync+restart",
           "path": "../shell/handlers/geography-selection.js",
           "target": "/srv/shell/handlers/geography-selection.js"
         },
         {
           "action": "sync+restart",
+          "path": "../shell/handlers/match-probability-event-control.js",
+          "target": "/srv/shell/handlers/match-probability-event-control.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/match-probability-event-edit.js",
+          "target": "/srv/shell/handlers/match-probability-event-edit.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/match-probability-event-fold.js",
+          "target": "/srv/shell/handlers/match-probability-event-fold.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/match-probability-seed.js",
+          "target": "/srv/shell/handlers/match-probability-seed.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/odds-progress-point.js",
+          "target": "/srv/shell/handlers/odds-progress-point.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/odds-progress-snapshot.js",
+          "target": "/srv/shell/handlers/odds-progress-snapshot.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/odds-progress-zone.js",
+          "target": "/srv/shell/handlers/odds-progress-zone.js"
+        },
+        {
+          "action": "sync+restart",
           "path": "../shell/handlers/page-value.js",
           "target": "/srv/shell/handlers/page-value.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/parity-minutes.js",
+          "target": "/srv/shell/handlers/parity-minutes.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/player-csv-fold.js",
+          "target": "/srv/shell/handlers/player-csv-fold.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/player-csv-seed.js",
+          "target": "/srv/shell/handlers/player-csv-seed.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/position-odds-control.js",
+          "target": "/srv/shell/handlers/position-odds-control.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/handlers/position-odds-fold.js",
+          "target": "/srv/shell/handlers/position-odds-fold.js"
         },
         {
           "action": "sync+restart",
@@ -303,6 +663,16 @@
         },
         {
           "action": "sync+restart",
+          "path": "../shell/handlers/team-rating-series.js",
+          "target": "/srv/shell/handlers/team-rating-series.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/community-history.js",
+          "target": "/srv/shell/renderers/community-history.js"
+        },
+        {
+          "action": "sync+restart",
           "path": "../shell/renderers/country-flag.js",
           "target": "/srv/shell/renderers/country-flag.js"
         },
@@ -315,6 +685,66 @@
           "action": "sync+restart",
           "path": "../shell/renderers/home-date.js",
           "target": "/srv/shell/renderers/home-date.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/match-context-map.js",
+          "target": "/srv/shell/renderers/match-context-map.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/match-final-score.js",
+          "target": "/srv/shell/renderers/match-final-score.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/match-probability.js",
+          "target": "/srv/shell/renderers/match-probability.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/match-shootout.js",
+          "target": "/srv/shell/renderers/match-shootout.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/media-image.js",
+          "target": "/srv/shell/renderers/media-image.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/odds-progress.js",
+          "target": "/srv/shell/renderers/odds-progress.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/player-csv.js",
+          "target": "/srv/shell/renderers/player-csv.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/player-event-label.js",
+          "target": "/srv/shell/renderers/player-event-label.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/player-height.js",
+          "target": "/srv/shell/renderers/player-height.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/player-position.js",
+          "target": "/srv/shell/renderers/player-position.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/player-rate-per90.js",
+          "target": "/srv/shell/renderers/player-rate-per90.js"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/renderers/position-odds.js",
+          "target": "/srv/shell/renderers/position-odds.js"
         },
         {
           "action": "sync+restart",
@@ -343,8 +773,33 @@
         },
         {
           "action": "sync+restart",
+          "path": "../shell/shared/community.css",
+          "target": "/srv/shell/shared/community.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/shared/competition.css",
+          "target": "/srv/shell/shared/competition.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/shared/editing.css",
+          "target": "/srv/shell/shared/editing.css"
+        },
+        {
+          "action": "sync+restart",
           "path": "../shell/shared/games.css",
           "target": "/srv/shell/shared/games.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/shared/match-context.css",
+          "target": "/srv/shell/shared/match-context.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/shared/match-probability.css",
+          "target": "/srv/shell/shared/match-probability.css"
         },
         {
           "action": "sync+restart",
@@ -761,651 +1216,166 @@
       {
         "from": null,
         "srcs": [
-          "shell/index.html"
-        ],
-        "dst": "/srv/shell/index.html",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/shell.css"
-        ],
-        "dst": "/srv/shell/shell.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/boot.js"
-        ],
-        "dst": "/srv/shell/boot.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "offline-first-sw.js"
-        ],
-        "dst": "/srv/offline-first-sw.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/shell.yaml"
-        ],
-        "dst": "/srv/shell/shell.yaml",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/shell.json"
-        ],
-        "dst": "/srv/shell/shell.json",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/design.css"
-        ],
-        "dst": "/srv/shell/design.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/principal.html"
-        ],
-        "dst": "/srv/shell/screens/principal.html",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/principal.css"
-        ],
-        "dst": "/srv/shell/screens/principal.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/campeonatos.html"
-        ],
-        "dst": "/srv/shell/screens/campeonatos.html",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/campeonatos.css"
-        ],
-        "dst": "/srv/shell/screens/campeonatos.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/jogos.html"
-        ],
-        "dst": "/srv/shell/screens/jogos.html",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/jogos.css"
-        ],
-        "dst": "/srv/shell/screens/jogos.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/jogo.html"
-        ],
-        "dst": "/srv/shell/screens/jogo.html",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/jogo.css"
-        ],
-        "dst": "/srv/shell/screens/jogo.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/chances.html"
-        ],
-        "dst": "/srv/shell/screens/chances.html",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/chances.css"
-        ],
-        "dst": "/srv/shell/screens/chances.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/editar.html"
-        ],
-        "dst": "/srv/shell/screens/editar.html",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/editar.css"
-        ],
-        "dst": "/srv/shell/screens/editar.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/equipes.html"
-        ],
-        "dst": "/srv/shell/screens/equipes.html",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/equipes.css"
-        ],
-        "dst": "/srv/shell/screens/equipes.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/estadios.html"
-        ],
-        "dst": "/srv/shell/screens/estadios.html",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/estadios.css"
-        ],
-        "dst": "/srv/shell/screens/estadios.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/estadio.html"
-        ],
-        "dst": "/srv/shell/screens/estadio.html",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/estadio.css"
-        ],
-        "dst": "/srv/shell/screens/estadio.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/arbitros.html"
-        ],
-        "dst": "/srv/shell/screens/arbitros.html",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/arbitros.css"
-        ],
-        "dst": "/srv/shell/screens/arbitros.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/arbitro.html"
-        ],
-        "dst": "/srv/shell/screens/arbitro.html",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/arbitro.css"
-        ],
-        "dst": "/srv/shell/screens/arbitro.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/equipe.html"
-        ],
-        "dst": "/srv/shell/screens/equipe.html",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/equipe.css"
-        ],
-        "dst": "/srv/shell/screens/equipe.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/equipe-campeonato.html"
-        ],
-        "dst": "/srv/shell/screens/equipe-campeonato.html",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/equipe-campeonato.css"
-        ],
-        "dst": "/srv/shell/screens/equipe-campeonato.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/jogador.html"
-        ],
-        "dst": "/srv/shell/screens/jogador.html",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/jogador.css"
-        ],
-        "dst": "/srv/shell/screens/jogador.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/campeonato.html"
-        ],
-        "dst": "/srv/shell/screens/campeonato.html",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/screens/campeonato.css"
-        ],
-        "dst": "/srv/shell/screens/campeonato.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/handlers/blank-null.js"
-        ],
-        "dst": "/srv/shell/handlers/blank-null.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/handlers/both-scored.js"
-        ],
-        "dst": "/srv/shell/handlers/both-scored.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/handlers/chart-compare.js"
-        ],
-        "dst": "/srv/shell/handlers/chart-compare.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/handlers/chart-metric.js"
-        ],
-        "dst": "/srv/shell/handlers/chart-metric.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/handlers/count-or-null.js"
-        ],
-        "dst": "/srv/shell/handlers/count-or-null.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/handlers/country-option.js"
-        ],
-        "dst": "/srv/shell/handlers/country-option.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/handlers/geography-selection.js"
-        ],
-        "dst": "/srv/shell/handlers/geography-selection.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/handlers/page-value.js"
-        ],
-        "dst": "/srv/shell/handlers/page-value.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/handlers/row-id.js"
-        ],
-        "dst": "/srv/shell/handlers/row-id.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/handlers/search-key.js"
-        ],
-        "dst": "/srv/shell/handlers/search-key.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/handlers/team-chart-fold.js"
-        ],
-        "dst": "/srv/shell/handlers/team-chart-fold.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/handlers/team-chart-seed.js"
-        ],
-        "dst": "/srv/shell/handlers/team-chart-seed.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/renderers/country-flag.js"
-        ],
-        "dst": "/srv/shell/renderers/country-flag.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/renderers/geography-label.js"
-        ],
-        "dst": "/srv/shell/renderers/geography-label.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/renderers/home-date.js"
-        ],
-        "dst": "/srv/shell/renderers/home-date.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/renderers/team-badge.js"
-        ],
-        "dst": "/srv/shell/renderers/team-badge.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/renderers/team-chart.js"
-        ],
-        "dst": "/srv/shell/renderers/team-chart.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/renderers/team-location.js"
-        ],
-        "dst": "/srv/shell/renderers/team-location.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/shared/catalog.css"
-        ],
-        "dst": "/srv/shell/shared/catalog.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/shared/chrome.css"
-        ],
-        "dst": "/srv/shell/shared/chrome.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/shared/games.css"
-        ],
-        "dst": "/srv/shell/shared/games.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/shared/team.css"
-        ],
-        "dst": "/srv/shell/shared/team.css",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "messages/pt-BR.json"
-        ],
-        "dst": "/srv/messages/pt-BR.json",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "messages/es-AR.json"
-        ],
-        "dst": "/srv/messages/es-AR.json",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "messages/en-GB.json"
-        ],
-        "dst": "/srv/messages/en-GB.json",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "messages/it-IT.json"
-        ],
-        "dst": "/srv/messages/it-IT.json",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "messages/de-DE.json"
-        ],
-        "dst": "/srv/messages/de-DE.json",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
+          "shell/index.html",
+          "shell/shell.css",
+          "shell/boot.js",
+          "offline-first-sw.js",
+          "shell/shell.yaml",
+          "shell/shell.json",
+          "shell/design.css",
+          "shell/screens/arquivo.html",
+          "shell/screens/arquivo.css",
+          "shell/screens/arquivo-campeonato.html",
+          "shell/screens/arquivo-campeonato.css",
+          "shell/screens/publico.html",
+          "shell/screens/publico.css",
+          "shell/screens/jogadores.html",
+          "shell/screens/jogadores.css",
+          "shell/screens/campeonato-jogadores.html",
+          "shell/screens/campeonato-jogadores.css",
+          "shell/screens/jogador-campeonato.html",
+          "shell/screens/jogador-campeonato.css",
+          "shell/screens/principal.html",
+          "shell/screens/principal.css",
+          "shell/screens/campeonatos.html",
+          "shell/screens/campeonatos.css",
+          "shell/screens/jogos.html",
+          "shell/screens/jogos.css",
+          "shell/screens/jogo.html",
+          "shell/screens/jogo.css",
+          "shell/screens/chances.html",
+          "shell/screens/chances.css",
+          "shell/screens/editar.html",
+          "shell/screens/editar.css",
+          "shell/screens/equipes.html",
+          "shell/screens/equipes.css",
+          "shell/screens/estadios.html",
+          "shell/screens/estadios.css",
+          "shell/screens/estadio.html",
+          "shell/screens/estadio.css",
+          "shell/screens/arbitros.html",
+          "shell/screens/arbitros.css",
+          "shell/screens/arbitro.html",
+          "shell/screens/arbitro.css",
+          "shell/screens/equipe.html",
+          "shell/screens/equipe.css",
+          "shell/screens/equipe-campeonato.html",
+          "shell/screens/equipe-campeonato.css",
+          "shell/screens/jogador.html",
+          "shell/screens/jogador.css",
+          "shell/screens/campeonato.html",
+          "shell/screens/campeonato.css",
+          "shell/screens/editar-arbitro.html",
+          "shell/screens/editar-arbitro.css",
+          "shell/screens/editar-competicao.html",
+          "shell/screens/editar-competicao.css",
+          "shell/screens/editar-equipe.html",
+          "shell/screens/editar-equipe.css",
+          "shell/screens/editar-estadio.html",
+          "shell/screens/editar-estadio.css",
+          "shell/screens/editar-jogador.html",
+          "shell/screens/editar-jogador.css",
+          "shell/screens/editar-jogo.html",
+          "shell/screens/editar-jogo.css",
+          "shell/screens/escalacao-jogo.html",
+          "shell/screens/escalacao-jogo.css",
+          "shell/screens/gerenciar.html",
+          "shell/screens/gerenciar.css",
+          "shell/screens/gerenciar-competicoes.html",
+          "shell/screens/gerenciar-competicoes.css",
+          "shell/screens/gols-jogo.html",
+          "shell/screens/gols-jogo.css",
+          "shell/screens/historico-jogo.html",
+          "shell/screens/historico-jogo.css",
+          "shell/screens/inscricoes-jogador.html",
+          "shell/screens/inscricoes-jogador.css",
+          "shell/screens/nova-competicao.html",
+          "shell/screens/nova-competicao.css",
+          "shell/screens/novo-arbitro.html",
+          "shell/screens/novo-arbitro.css",
+          "shell/screens/novo-equipe.html",
+          "shell/screens/novo-equipe.css",
+          "shell/screens/novo-estadio.html",
+          "shell/screens/novo-estadio.css",
+          "shell/screens/novo-jogador.html",
+          "shell/screens/novo-jogador.css",
+          "shell/screens/novo-jogo.html",
+          "shell/screens/novo-jogo.css",
+          "shell/screens/usuario.html",
+          "shell/screens/usuario.css",
+          "shell/screens/usuarios.html",
+          "shell/screens/usuarios.css",
+          "shell/handlers/archive-round.js",
+          "shell/handlers/archive-week.js",
+          "shell/handlers/blank-null.js",
+          "shell/handlers/both-scored.js",
+          "shell/handlers/chart-compare.js",
+          "shell/handlers/chart-position-bound.js",
+          "shell/handlers/count-or-null.js",
+          "shell/handlers/country-option.js",
+          "shell/handlers/editing-choice-event.js",
+          "shell/handlers/editing-integer.js",
+          "shell/handlers/editing-played.js",
+          "shell/handlers/editing-text.js",
+          "shell/handlers/editing-timestamp.js",
+          "shell/handlers/editing-uuid.js",
+          "shell/handlers/geography-selection.js",
+          "shell/handlers/match-probability-event-control.js",
+          "shell/handlers/match-probability-event-edit.js",
+          "shell/handlers/match-probability-event-fold.js",
+          "shell/handlers/match-probability-seed.js",
+          "shell/handlers/odds-progress-point.js",
+          "shell/handlers/odds-progress-snapshot.js",
+          "shell/handlers/odds-progress-zone.js",
+          "shell/handlers/page-value.js",
+          "shell/handlers/parity-minutes.js",
+          "shell/handlers/player-csv-fold.js",
+          "shell/handlers/player-csv-seed.js",
+          "shell/handlers/position-odds-control.js",
+          "shell/handlers/position-odds-fold.js",
+          "shell/handlers/row-id.js",
+          "shell/handlers/search-key.js",
+          "shell/handlers/team-chart-fold.js",
+          "shell/handlers/team-chart-seed.js",
+          "shell/handlers/team-rating-series.js",
+          "shell/renderers/community-history.js",
+          "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js",
+          "shell/renderers/home-date.js",
+          "shell/renderers/match-context-map.js",
+          "shell/renderers/match-final-score.js",
+          "shell/renderers/match-probability.js",
+          "shell/renderers/match-shootout.js",
+          "shell/renderers/media-image.js",
+          "shell/renderers/odds-progress.js",
+          "shell/renderers/player-csv.js",
+          "shell/renderers/player-event-label.js",
+          "shell/renderers/player-height.js",
+          "shell/renderers/player-position.js",
+          "shell/renderers/player-rate-per90.js",
+          "shell/renderers/position-odds.js",
+          "shell/renderers/team-badge.js",
+          "shell/renderers/team-chart.js",
+          "shell/renderers/team-location.js",
+          "shell/shared/catalog.css",
+          "shell/shared/chrome.css",
+          "shell/shared/community.css",
+          "shell/shared/competition.css",
+          "shell/shared/editing.css",
+          "shell/shared/games.css",
+          "shell/shared/match-context.css",
+          "shell/shared/match-probability.css",
+          "shell/shared/team.css",
+          "messages/pt-BR.json",
+          "messages/es-AR.json",
+          "messages/en-GB.json",
+          "messages/it-IT.json",
+          "messages/de-DE.json",
           "messages/fr-FR.json"
         ],
-        "dst": "/srv/messages/fr-FR.json",
+        "dst": "/srv/",
         "link": true,
-        "parents": false,
+        "parents": true,
         "exclude": []
       },
       {
@@ -1431,81 +1401,27 @@
       {
         "from": null,
         "srcs": [
-          "brief.html"
-        ],
-        "dst": "/srv/docs/brief.html",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "ir.html"
-        ],
-        "dst": "/srv/docs/ir.html",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "acceptance.md"
-        ],
-        "dst": "/srv/docs/acceptance.md",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
+          "brief.html",
+          "ir.html",
+          "acceptance.md",
           "DESIGN.md"
         ],
-        "dst": "/srv/docs/DESIGN.md",
+        "dst": "/srv/docs/",
         "link": true,
-        "parents": false,
+        "parents": true,
         "exclude": []
       },
       {
         "from": null,
         "srcs": [
-          "robots.txt"
-        ],
-        "dst": "/srv/robots.txt",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "sitemap.xml"
-        ],
-        "dst": "/srv/sitemap.xml",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/favicon.ico"
-        ],
-        "dst": "/srv/shell/favicon.ico",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
+          "robots.txt",
+          "sitemap.xml",
+          "shell/favicon.ico",
           "shell/manifest.webmanifest"
         ],
-        "dst": "/srv/shell/manifest.webmanifest",
+        "dst": "/srv/",
         "link": true,
-        "parents": false,
+        "parents": true,
         "exclude": []
       },
       {
@@ -1521,21 +1437,12 @@
       {
         "from": null,
         "srcs": [
-          "llms.txt"
-        ],
-        "dst": "/srv/llms.txt",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
+          "llms.txt",
           "llms-full.txt"
         ],
-        "dst": "/srv/llms-full.txt",
+        "dst": "/srv/",
         "link": true,
-        "parents": false,
+        "parents": true,
         "exclude": []
       }
     ],
@@ -1569,6 +1476,18 @@
       "shell/shell.yaml",
       "shell/shell.json",
       "shell/design.css",
+      "shell/screens/arquivo.html",
+      "shell/screens/arquivo.css",
+      "shell/screens/arquivo-campeonato.html",
+      "shell/screens/arquivo-campeonato.css",
+      "shell/screens/publico.html",
+      "shell/screens/publico.css",
+      "shell/screens/jogadores.html",
+      "shell/screens/jogadores.css",
+      "shell/screens/campeonato-jogadores.html",
+      "shell/screens/campeonato-jogadores.css",
+      "shell/screens/jogador-campeonato.html",
+      "shell/screens/jogador-campeonato.css",
       "shell/screens/principal.html",
       "shell/screens/principal.css",
       "shell/screens/campeonatos.html",
@@ -1599,27 +1518,106 @@
       "shell/screens/jogador.css",
       "shell/screens/campeonato.html",
       "shell/screens/campeonato.css",
+      "shell/screens/editar-arbitro.html",
+      "shell/screens/editar-arbitro.css",
+      "shell/screens/editar-competicao.html",
+      "shell/screens/editar-competicao.css",
+      "shell/screens/editar-equipe.html",
+      "shell/screens/editar-equipe.css",
+      "shell/screens/editar-estadio.html",
+      "shell/screens/editar-estadio.css",
+      "shell/screens/editar-jogador.html",
+      "shell/screens/editar-jogador.css",
+      "shell/screens/editar-jogo.html",
+      "shell/screens/editar-jogo.css",
+      "shell/screens/escalacao-jogo.html",
+      "shell/screens/escalacao-jogo.css",
+      "shell/screens/gerenciar.html",
+      "shell/screens/gerenciar.css",
+      "shell/screens/gerenciar-competicoes.html",
+      "shell/screens/gerenciar-competicoes.css",
+      "shell/screens/gols-jogo.html",
+      "shell/screens/gols-jogo.css",
+      "shell/screens/historico-jogo.html",
+      "shell/screens/historico-jogo.css",
+      "shell/screens/inscricoes-jogador.html",
+      "shell/screens/inscricoes-jogador.css",
+      "shell/screens/nova-competicao.html",
+      "shell/screens/nova-competicao.css",
+      "shell/screens/novo-arbitro.html",
+      "shell/screens/novo-arbitro.css",
+      "shell/screens/novo-equipe.html",
+      "shell/screens/novo-equipe.css",
+      "shell/screens/novo-estadio.html",
+      "shell/screens/novo-estadio.css",
+      "shell/screens/novo-jogador.html",
+      "shell/screens/novo-jogador.css",
+      "shell/screens/novo-jogo.html",
+      "shell/screens/novo-jogo.css",
+      "shell/screens/usuario.html",
+      "shell/screens/usuario.css",
+      "shell/screens/usuarios.html",
+      "shell/screens/usuarios.css",
+      "shell/handlers/archive-round.js",
+      "shell/handlers/archive-week.js",
       "shell/handlers/blank-null.js",
       "shell/handlers/both-scored.js",
       "shell/handlers/chart-compare.js",
-      "shell/handlers/chart-metric.js",
+      "shell/handlers/chart-position-bound.js",
       "shell/handlers/count-or-null.js",
       "shell/handlers/country-option.js",
+      "shell/handlers/editing-choice-event.js",
+      "shell/handlers/editing-integer.js",
+      "shell/handlers/editing-played.js",
+      "shell/handlers/editing-text.js",
+      "shell/handlers/editing-timestamp.js",
+      "shell/handlers/editing-uuid.js",
       "shell/handlers/geography-selection.js",
+      "shell/handlers/match-probability-event-control.js",
+      "shell/handlers/match-probability-event-edit.js",
+      "shell/handlers/match-probability-event-fold.js",
+      "shell/handlers/match-probability-seed.js",
+      "shell/handlers/odds-progress-point.js",
+      "shell/handlers/odds-progress-snapshot.js",
+      "shell/handlers/odds-progress-zone.js",
       "shell/handlers/page-value.js",
+      "shell/handlers/parity-minutes.js",
+      "shell/handlers/player-csv-fold.js",
+      "shell/handlers/player-csv-seed.js",
+      "shell/handlers/position-odds-control.js",
+      "shell/handlers/position-odds-fold.js",
       "shell/handlers/row-id.js",
       "shell/handlers/search-key.js",
       "shell/handlers/team-chart-fold.js",
       "shell/handlers/team-chart-seed.js",
+      "shell/handlers/team-rating-series.js",
+      "shell/renderers/community-history.js",
       "shell/renderers/country-flag.js",
       "shell/renderers/geography-label.js",
       "shell/renderers/home-date.js",
+      "shell/renderers/match-context-map.js",
+      "shell/renderers/match-final-score.js",
+      "shell/renderers/match-probability.js",
+      "shell/renderers/match-shootout.js",
+      "shell/renderers/media-image.js",
+      "shell/renderers/odds-progress.js",
+      "shell/renderers/player-csv.js",
+      "shell/renderers/player-event-label.js",
+      "shell/renderers/player-height.js",
+      "shell/renderers/player-position.js",
+      "shell/renderers/player-rate-per90.js",
+      "shell/renderers/position-odds.js",
       "shell/renderers/team-badge.js",
       "shell/renderers/team-chart.js",
       "shell/renderers/team-location.js",
       "shell/shared/catalog.css",
       "shell/shared/chrome.css",
+      "shell/shared/community.css",
+      "shell/shared/competition.css",
+      "shell/shared/editing.css",
       "shell/shared/games.css",
+      "shell/shared/match-context.css",
+      "shell/shared/match-probability.css",
       "shell/shared/team.css",
       "messages/pt-BR.json",
       "messages/es-AR.json",
@@ -1733,6 +1731,18 @@
           "shell/shell.yaml",
           "shell/shell.json",
           "shell/design.css",
+          "shell/screens/arquivo.html",
+          "shell/screens/arquivo.css",
+          "shell/screens/arquivo-campeonato.html",
+          "shell/screens/arquivo-campeonato.css",
+          "shell/screens/publico.html",
+          "shell/screens/publico.css",
+          "shell/screens/jogadores.html",
+          "shell/screens/jogadores.css",
+          "shell/screens/campeonato-jogadores.html",
+          "shell/screens/campeonato-jogadores.css",
+          "shell/screens/jogador-campeonato.html",
+          "shell/screens/jogador-campeonato.css",
           "shell/screens/principal.html",
           "shell/screens/principal.css",
           "shell/screens/campeonatos.html",
@@ -1763,27 +1773,106 @@
           "shell/screens/jogador.css",
           "shell/screens/campeonato.html",
           "shell/screens/campeonato.css",
+          "shell/screens/editar-arbitro.html",
+          "shell/screens/editar-arbitro.css",
+          "shell/screens/editar-competicao.html",
+          "shell/screens/editar-competicao.css",
+          "shell/screens/editar-equipe.html",
+          "shell/screens/editar-equipe.css",
+          "shell/screens/editar-estadio.html",
+          "shell/screens/editar-estadio.css",
+          "shell/screens/editar-jogador.html",
+          "shell/screens/editar-jogador.css",
+          "shell/screens/editar-jogo.html",
+          "shell/screens/editar-jogo.css",
+          "shell/screens/escalacao-jogo.html",
+          "shell/screens/escalacao-jogo.css",
+          "shell/screens/gerenciar.html",
+          "shell/screens/gerenciar.css",
+          "shell/screens/gerenciar-competicoes.html",
+          "shell/screens/gerenciar-competicoes.css",
+          "shell/screens/gols-jogo.html",
+          "shell/screens/gols-jogo.css",
+          "shell/screens/historico-jogo.html",
+          "shell/screens/historico-jogo.css",
+          "shell/screens/inscricoes-jogador.html",
+          "shell/screens/inscricoes-jogador.css",
+          "shell/screens/nova-competicao.html",
+          "shell/screens/nova-competicao.css",
+          "shell/screens/novo-arbitro.html",
+          "shell/screens/novo-arbitro.css",
+          "shell/screens/novo-equipe.html",
+          "shell/screens/novo-equipe.css",
+          "shell/screens/novo-estadio.html",
+          "shell/screens/novo-estadio.css",
+          "shell/screens/novo-jogador.html",
+          "shell/screens/novo-jogador.css",
+          "shell/screens/novo-jogo.html",
+          "shell/screens/novo-jogo.css",
+          "shell/screens/usuario.html",
+          "shell/screens/usuario.css",
+          "shell/screens/usuarios.html",
+          "shell/screens/usuarios.css",
+          "shell/handlers/archive-round.js",
+          "shell/handlers/archive-week.js",
           "shell/handlers/blank-null.js",
           "shell/handlers/both-scored.js",
           "shell/handlers/chart-compare.js",
-          "shell/handlers/chart-metric.js",
+          "shell/handlers/chart-position-bound.js",
           "shell/handlers/count-or-null.js",
           "shell/handlers/country-option.js",
+          "shell/handlers/editing-choice-event.js",
+          "shell/handlers/editing-integer.js",
+          "shell/handlers/editing-played.js",
+          "shell/handlers/editing-text.js",
+          "shell/handlers/editing-timestamp.js",
+          "shell/handlers/editing-uuid.js",
           "shell/handlers/geography-selection.js",
+          "shell/handlers/match-probability-event-control.js",
+          "shell/handlers/match-probability-event-edit.js",
+          "shell/handlers/match-probability-event-fold.js",
+          "shell/handlers/match-probability-seed.js",
+          "shell/handlers/odds-progress-point.js",
+          "shell/handlers/odds-progress-snapshot.js",
+          "shell/handlers/odds-progress-zone.js",
           "shell/handlers/page-value.js",
+          "shell/handlers/parity-minutes.js",
+          "shell/handlers/player-csv-fold.js",
+          "shell/handlers/player-csv-seed.js",
+          "shell/handlers/position-odds-control.js",
+          "shell/handlers/position-odds-fold.js",
           "shell/handlers/row-id.js",
           "shell/handlers/search-key.js",
           "shell/handlers/team-chart-fold.js",
           "shell/handlers/team-chart-seed.js",
+          "shell/handlers/team-rating-series.js",
+          "shell/renderers/community-history.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js",
           "shell/renderers/home-date.js",
+          "shell/renderers/match-context-map.js",
+          "shell/renderers/match-final-score.js",
+          "shell/renderers/match-probability.js",
+          "shell/renderers/match-shootout.js",
+          "shell/renderers/media-image.js",
+          "shell/renderers/odds-progress.js",
+          "shell/renderers/player-csv.js",
+          "shell/renderers/player-event-label.js",
+          "shell/renderers/player-height.js",
+          "shell/renderers/player-position.js",
+          "shell/renderers/player-rate-per90.js",
+          "shell/renderers/position-odds.js",
           "shell/renderers/team-badge.js",
           "shell/renderers/team-chart.js",
           "shell/renderers/team-location.js",
           "shell/shared/catalog.css",
           "shell/shared/chrome.css",
+          "shell/shared/community.css",
+          "shell/shared/competition.css",
+          "shell/shared/editing.css",
           "shell/shared/games.css",
+          "shell/shared/match-context.css",
+          "shell/shared/match-probability.css",
           "shell/shared/team.css",
           "messages/pt-BR.json",
           "messages/es-AR.json",

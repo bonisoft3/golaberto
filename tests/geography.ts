@@ -36,7 +36,11 @@ Deno.test("all six locale catalogs translate every fixed geography label", async
 
 Deno.test("fixed geography catalog, joins, and read-only access", async () => {
   const unknownId = crypto.randomUUID();
+  // The temp table and probe trigger below are this script's scaffolding:
+  // pgroll's event trigger would record each as an inferred migration, and two
+  // checks recording against one parent fail on its history_is_linear index.
   const output = await psql(`BEGIN;
+    SET LOCAL pgroll.no_inferred_migrations = 'TRUE';
     DO $$ BEGIN
       IF (SELECT count(*) FROM geography_region) <> 6 THEN RAISE EXCEPTION 'expected six football regions'; END IF;
       IF (SELECT count(*) FROM geography_country) <> 225 THEN RAISE EXCEPTION 'expected 225 fixed countries'; END IF;

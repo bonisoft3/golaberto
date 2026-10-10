@@ -22,6 +22,22 @@ include:
   required: false
 - path: ./compose.check-request-reads.yaml
   required: false
+- path: ./compose.check-community-parity.yaml
+  required: false
+- path: ./compose.check-community-access.yaml
+  required: false
+- path: ./compose.check-competition-admin.yaml
+  required: false
+- path: ./compose.check-editing-parity.yaml
+  required: false
+- path: ./compose.check-match-context.yaml
+  required: false
+- path: ./compose.check-match-probability.yaml
+  required: false
+- path: ./compose.check-native-media.yaml
+  required: false
+- path: ./compose.check-odds-progress.yaml
+  required: false
 - path: ./compose.database.yaml
   required: false
 - path: ./compose.crud.yaml
@@ -35,6 +51,8 @@ include:
 - path: ./compose.mesh-events.yaml
   required: false
 - path: ./compose.conduit.yaml
+  required: false
+- path: ./compose.rclone-s3.yaml
   required: false
 - path: ./compose.transform.yaml
   required: false

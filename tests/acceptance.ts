@@ -3,7 +3,7 @@
 // archive in a real browser, with the cluster up. Declared in program.cue as an
 // integrate check. Each case names the test pair it realizes.
 
-import { assert, assertEquals } from "jsr:@std/assert@1";
+import { assert, assertEquals } from "jsr:@std/assert@1.0.11";
 import { baseUrl } from "omnishell/base-url.ts";
 import { query } from "./db.ts";
 import { address, fixturePath } from "./addresses.ts";
@@ -200,10 +200,10 @@ const championship = async (id: string) => {
 // Keep the probability round trip ahead of other mutating fixtures: their
 // cleanup commits before downstream calculations necessarily finish.
 const SERIE_A_2026 = "04000000-0000-4000-8000-000000000001";
-// A chance as the page prints it, in the reader's own numerals.
+// A chance's exact value as the page says it, in the reader's own numerals.
 const percent = (text: string) => Number(text.replace(/\./g, "").replace(",", "."));
 // The first zone of the first line: the leader's title chance.
-const titleOf = (page: Page) => page.$eval(".zone-odds .rows .row:first-child .pct", (e: Element) => e.textContent ?? "");
+const titleOf = (page: Page) => page.$eval(".zone-odds .rows .row:first-child .pct .exact", (e: Element) => e.textContent ?? "");
 
 test("test-chances: the 2026 Série A's chances lead with Flamengo, near golaberto's own figure, and each team's positions sum to whole seasons", async () => {
   const page = await open(`/chances/${SERIE_A_2026}`);
@@ -215,7 +215,7 @@ test("test-chances: the 2026 Série A's chances lead with Flamengo, near golaber
   // draws, so near is the claim and not equal.
   assert(title >= 60 && title <= 90, `Flamengo's title chance ${title} is far from golaberto's 73.4`);
   const positions: string[][] = await page.$$eval(".heat .rows .row", (rows: Element[]) =>
-    rows.map(row => [...row.querySelectorAll(".heat-cell [data-text-format]")].map(e => e.textContent ?? "")));
+    rows.map(row => [...row.querySelectorAll(".heat-cell .exact")].map(e => e.textContent ?? "")));
   assertEquals(positions.length, 20);
   for (const cells of positions) {
     assertEquals(cells.length, 20);
@@ -230,7 +230,7 @@ test("test-chances: the 2026 Série A's chances lead with Flamengo, near golaber
       const expected = JSON.parse(await query(`SELECT json_agg(json_build_array(t.team_name, c.percent) ORDER BY t.rank, ${order})
         FROM ${table} c JOIN team_chance t USING (group_id, team_id) WHERE c.group_id = '${SERIE_A_2026}'`));
       const shown: string[][] = await page.$$eval(`${selector} .rows .row`, (rows: Element[]) =>
-        rows.flatMap(row => [...row.querySelectorAll(".cells [data-text-format]")].map(cell => [
+        rows.flatMap(row => [...row.querySelectorAll(".cells .exact")].map(cell => [
           row.querySelector(".name")?.textContent?.trim() ?? "", cell.textContent ?? "",
         ])));
       const actual = shown.map(([name, value]) => [name, percent(value)]);
@@ -239,6 +239,14 @@ test("test-chances: the 2026 Série A's chances lead with Flamengo, near golaber
       await page.waitForTimeout(100);
     }
   }
+  // A compact figure such as 99,3..9% once reached screen readers, and a
+  // check parsing it read a near-certain chance as 99.39.
+  const spoken: [string | null, boolean][] = await page.$$eval(".zone-odds .rows .pct", (cells: Element[]) =>
+    cells.map((cell) => [
+      cell.querySelector('[data-text-format="position-odds"]')?.getAttribute("aria-hidden") ?? null,
+      cell.querySelector(".visually-hidden .exact") !== null,
+    ]));
+  assert(spoken.length > 0 && spoken.every(([hidden, exact]) => hidden === "true" && exact), "every compact chance is drawn only, its exact value said");
 });
 
 test("test-chances-reach: in the 2026 Série A every chance that shows 0 says whether it can still happen, marked * when it can and unmarked when the points rule it out", async () => {
@@ -249,7 +257,7 @@ test("test-chances-reach: in the 2026 Série A every chance that shows 0 says wh
     els.map((e) => {
       const mark = e.querySelector(".reach")!;
       return [
-        e.querySelector("[data-text-format]")?.textContent ?? "",
+        e.querySelector(".exact")?.textContent ?? "",
         mark.getAttribute("data-reach") ?? "",
         mark.nextElementSibling?.textContent ?? "",
         getComputedStyle(mark).display === "none" ? "" : getComputedStyle(mark, "::after").content,
@@ -277,13 +285,13 @@ test("test-chances-live: a result recorded for a game still to play moves the ch
   try {
     await query(`UPDATE game SET played = true, home_score = 0, away_score = 5 WHERE id = '${game}'`);
     await page.waitForFunction((before: string) =>
-      document.querySelector(".zone-odds .rows .row:first-child .pct")?.textContent !== before, before, { timeout: STREAM_MS });
+      document.querySelector(".zone-odds .rows .row:first-child .pct .exact")?.textContent !== before, before, { timeout: STREAM_MS });
     assert(percent(await titleOf(page)) < percent(before), "a heavy home defeat lowered the leader's title chance");
   } finally {
     await query(`UPDATE game SET played = false, home_score = NULL, away_score = NULL WHERE id = '${game}'`);
   }
   await page.waitForFunction((before: string) =>
-    document.querySelector(".zone-odds .rows .row:first-child .pct")?.textContent === before, before, { timeout: CHANCES_SETTLE_MS });
+    document.querySelector(".zone-odds .rows .row:first-child .pct .exact")?.textContent === before, before, { timeout: CHANCES_SETTLE_MS });
 });
 
 test("test-home-featured: the front page keeps the featured season and its top six below the game feeds", async () => {
@@ -493,8 +501,27 @@ test("test-game-page: a game's page shows its score, facts, goals and line-ups",
     ["home", "away"].every((s) => document.querySelectorAll(`.lineup[data-side="${s}"] tbody tr`).length >= 11));
   assert((await page.$$('.lineup tr[data-yellow="true"]')).length > 0);
   assertEquals(await texts(page, ".lineup caption"), ["Athletico-PR", "Bahia-BA"]);
+  await page.waitForSelector(".match-context-form li");
+  const formLengths = await page.$$eval(".match-context-form ol", (lists: Element[]) => lists.map((list) => list.querySelectorAll("li").length));
+  assertEquals(formLengths.length, 2);
+  assert(formLengths.every((length) => length > 0 && length <= 5));
+  assertEquals(await page.$eval(".match-context-location", (location: Element) =>
+    location.querySelectorAll(".match-context-map-shell, .match-context-location-empty").length), 1);
+  await page.waitForSelector("#match-probability-add-goal");
+  await page.click("#match-probability-add-goal");
+  await page.waitForSelector(".match-probability-event--goal");
+  await page.selectOption(".match-probability-event--goal select", "away");
+  await page.fill(".match-probability-event--goal input", "37");
+  assertEquals(await page.$eval(".match-probability-event--goal select", (control: Element) =>
+    (control as HTMLSelectElement).value), "away");
+  assertEquals(await page.$eval(".match-probability-event--goal input", (control: Element) =>
+    (control as HTMLInputElement).value), "37");
+  await page.click("#match-probability-add-red-card");
+  await page.waitForSelector(".match-probability-event--red_card");
+  await page.click(".match-probability-event--goal .match-probability-event__remove");
+  await page.waitForFunction(() => document.querySelectorAll(".match-probability-event").length === 1);
   // A match's lineup must not load the archive just to notice deletions.
-  const lineups = requests.filter(url => url.pathname === "/crud/player_game");
+  const lineups = requests.filter(url => url.pathname === "/crud/match_lineup");
   assert(lineups.length > 0);
   assert(lineups.every(url => url.searchParams.get("game_id") === `eq.${WIN}`));
   assert(!requests.some(url => url.pathname.endsWith("/shape") && url.searchParams.get("table") === "player_game"));
@@ -562,21 +589,26 @@ test("test-team-page: a team's profile shows facts, championships and deduplicat
 test("test-player-page: a player's page shows their season and their games", async () => {
   const page = await open(`/jogador/${VIVEROS}`);
   await page.waitForSelector(".season-table tbody tr");
-  assertEquals(await said(page, ".season-table tbody tr"), ["Brasil - Campeonato Brasileiro 2026 Athletico-PR 26 26 0 2286 18 4 6 0"]);
+  const row = page.locator(".season-table tbody tr").first();
+  assert((await row.innerText()).includes("Campeonato Brasileiro 2026"));
+  assert((await row.innerText()).includes("Athletico-PR"));
+  for (const [field, expected] of Object.entries({played: "26", started: "26", came_on: "0", minutes: "2.286", goals: "18", penalties: "4", yellow: "6", red: "0"})) {
+    assertEquals(await row.locator(`td[data-text="{${field}}"]`).innerText(), expected);
+  }
   await page.waitForFunction(() => document.querySelectorAll(".player-games .game-row").length === 26);
   await newestFirst(page, ".player-games .day");
 });
 
 // A column of a player's first season line reaching a value, as a stream
 // recounts it.
-const season = (page: Page, column: number, want: string) =>
+const season = (page: Page, column: string, want: string) =>
   page.waitForFunction(
-    ([column, want]: [number, string]) =>
-      document.querySelector(`.season-table tbody tr td:nth-child(${column})`)?.textContent?.trim() === want,
+    ([column, want]: [string, string]) =>
+      document.querySelector(`.season-table tbody tr td[data-text="{${column}}"]`)?.textContent?.trim() === want,
     [column, want],
     { timeout: STREAM_MS },
   );
-const GOALS = 7, PLAYED = 3;
+const GOALS = "goals", PLAYED = "played";
 
 test("test-player-stats-live: a goal recorded after the fact moves the season with no reload", async () => {
   const page = await open(`/jogador/${VIVEROS}`);
@@ -730,7 +762,7 @@ test("test-edit-goal: a goal an editor adds and then removes moves the game's go
     const scorer = await open(`/jogador/${player}`);
     await page.waitForSelector('.edit[data-state="editing"]');
     await scorer.waitForSelector(".season-table tbody tr");
-    const before = Number(await scorer.$eval(`.season-table tbody tr td:nth-child(${GOALS})`, (e: Element) => e.textContent?.trim()));
+    const before = Number(await scorer.$eval(`.season-table tbody tr td[data-text="{${GOALS}}"]`, (e: Element) => e.textContent?.trim()));
     const goals = (await said(reader, ".goals li")).length;
     await page.waitForSelector(`#goal-player option[value="${player}"]`, { state: "attached" });
     await page.fill("#goal-minute", "90");
@@ -966,9 +998,9 @@ test("door: team statistics and derived charts arrive before JavaScript and surv
     const doc = html === null ? document : new DOMParser().parseFromString(html, "text/html");
     const text = (selector: string) => [...doc.querySelectorAll(selector)].map((e) => e.textContent?.trim());
     return {
-      positions: text('.team-odds-table tbody tr [data-text="{percent}"]'),
+      positions: text('.odds-progress-table .position-odds__table tbody tr'),
       zones: text('.team-zone-odds [data-text="{percent}"]'),
-      positionCharts: doc.querySelectorAll('.team-chance-detail [data-text-format="team-chart"] svg').length,
+      positionCharts: doc.querySelectorAll('.position-odds-graph svg').length,
       campaignCharts: doc.querySelectorAll('.team-campaign [data-text-format="team-chart"] svg').length,
     };
   };
@@ -978,7 +1010,7 @@ test("door: team statistics and derived charts arrive before JavaScript and surv
   assertEquals(before.positionCharts, 1, "the server serialized before the position-chart fold finished");
   assertEquals(before.campaignCharts, 1);
   await visit(page, path);
-  await page.waitForSelector('.team-chance-detail [data-text-format="team-chart"] svg');
+  await page.waitForSelector('.position-odds-graph svg');
   assertEquals(await page.evaluate(statistics, null), before, "hydration changed the served statistics");
 });
 

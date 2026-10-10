@@ -1,0 +1,24 @@
+.community-list, .community-history { list-style: none; padding: 0; margin: var(--sp-lg) 0; }
+.community-list > li, .community-history > li { padding: var(--sp-md); border-block-end: var(--border-size-1) solid var(--border); }
+.community-list > li:nth-child(odd), .community-history > li:nth-child(odd) { background: var(--surface-muted); }
+.community-counts, .community-facts { display: flex; flex-wrap: wrap; gap: var(--sp-lg); }
+.community-counts { color: var(--secondary); font-size: var(--type-caption); }
+.community-facts { margin-block: var(--sp-lg); }
+.community-facts dt { color: var(--secondary); }
+.community-facts dd { margin: 0; font-weight: 700; }
+.community-about { white-space: pre-wrap; overflow-wrap: anywhere; }
+.community-edit { margin-block: var(--sp-xl); }
+.community-edit > summary, .community-comment-delete > summary { cursor: pointer; }
+.community-edit form { margin-block-start: var(--sp-lg); }
+.community-edit textarea { box-sizing: border-box; inline-size: 100%; font: inherit; color: var(--primary); background: var(--surface); }
+.community-diff { margin-block: var(--sp-md); }
+.community-diff > div { display: grid; grid-template-columns: minmax(8em,1fr) minmax(0,3fr); gap: var(--sp-md); padding-block: var(--sp-sm); }
+.community-diff__field { font-weight: 700; }
+.community-diff__values { display: flex; flex-wrap: wrap; gap: var(--sp-md); overflow-wrap: anywhere; }
+.community-before { color: var(--secondary); }
+.community-after { font-weight: 700; }
+.community-comment-delete { margin-block: var(--sp-sm); font-size: var(--type-caption); }
+.community-comment-delete form { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-md); }
+@media (max-width:720px) { .community-diff > div { grid-template-columns: 1fr; gap: var(--sp-sm); } }
+
+.community-avatar{padding:var(--size-3)}.community-avatar img,.community-media img{object-fit:contain;background:transparent}.community-media{margin-block:var(--size-3)}.community-media input[type=file]{max-width:100%}.community-media small{display:block}.community-media ul{padding-inline-start:var(--size-3)}.community-media li{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-md)}.community-media form{margin-block:var(--sp-md)}

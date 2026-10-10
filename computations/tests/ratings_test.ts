@@ -69,7 +69,9 @@ test("player ratings cover who played and only them", async () => {
     new Set(rows.map((r) => r.id)),
     new Set(world.rows.player_game.filter((a) => recent.has(a.game_id)).map((a) => a.player_id)),
   );
-  assert(rows.every((r) => Number.isFinite(r.rating) && Math.fround(r.rating) === r.rating));
+  assert(rows.every((r) => [r.rating, r.off_rating, r.def_rating].every(
+    (value) => Number.isFinite(value) && Math.fround(value) === value,
+  )));
   assert(new Set(rows.map((r) => r.rating)).size > rows.length / 2);
 });
 

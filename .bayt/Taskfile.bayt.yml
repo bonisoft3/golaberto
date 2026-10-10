@@ -36,4 +36,36 @@ includes:
     taskfile: ./Taskfile.check-request-reads.yaml
     dir: ../
     optional: true
+  check-community-parity:
+    taskfile: ./Taskfile.check-community-parity.yaml
+    dir: ../
+    optional: true
+  check-community-access:
+    taskfile: ./Taskfile.check-community-access.yaml
+    dir: ../
+    optional: true
+  check-competition-admin:
+    taskfile: ./Taskfile.check-competition-admin.yaml
+    dir: ../
+    optional: true
+  check-editing-parity:
+    taskfile: ./Taskfile.check-editing-parity.yaml
+    dir: ../
+    optional: true
+  check-match-context:
+    taskfile: ./Taskfile.check-match-context.yaml
+    dir: ../
+    optional: true
+  check-match-probability:
+    taskfile: ./Taskfile.check-match-probability.yaml
+    dir: ../
+    optional: true
+  check-native-media:
+    taskfile: ./Taskfile.check-native-media.yaml
+    dir: ../
+    optional: true
+  check-odds-progress:
+    taskfile: ./Taskfile.check-odds-progress.yaml
+    dir: ../
+    optional: true
 version: "3"

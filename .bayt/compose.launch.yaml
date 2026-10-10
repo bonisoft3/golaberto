@@ -13,6 +13,7 @@ services:
         golaberto-transform: service:golaberto-transform
         golaberto-compute: service:golaberto-compute
         golaberto-auth: service:golaberto-auth
+        golaberto-rclone-s3: service:golaberto-rclone-s3
         golaberto-render: service:golaberto-render
       context: ..
       dockerfile: .bayt/Dockerfile.launch
@@ -45,9 +46,13 @@ services:
       golaberto-transform:
         condition: service_started
       golaberto-compute:
-        condition: service_started
+        condition: service_healthy
+        restart: true
       golaberto-auth:
         condition: service_started
+      golaberto-rclone-s3:
+        condition: service_healthy
+        restart: true
       golaberto-render:
         condition: service_healthy
         restart: true
@@ -77,6 +82,7 @@ services:
         golaberto-transform_bayt: service:golaberto-transform_bayt
         golaberto-compute_bayt: service:golaberto-compute_bayt
         golaberto-auth_bayt: service:golaberto-auth_bayt
+        golaberto-rclone-s3_bayt: service:golaberto-rclone-s3_bayt
         golaberto-render_bayt: service:golaberto-render_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.launch

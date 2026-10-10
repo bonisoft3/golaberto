@@ -1,5 +1,7 @@
 @import url("shared/chrome.css");
 @import url("shared/games.css");
+@import url("shared/match-context.css");
+@import url("shared/match-probability.css");
 /* The game's head: its phase, and an editor's way in. */
 .game-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-md); flex-wrap: wrap; min-height: var(--control-h); }
 .game-head .phase-name { margin: 0; }

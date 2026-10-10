@@ -20,7 +20,8 @@ services:
         condition: service_healthy
         restart: true
       golaberto-compute:
-        condition: service_started
+        condition: service_healthy
+        restart: true
     develop:
       watch:
       - action: sync+restart

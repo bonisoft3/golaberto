@@ -156,6 +156,7 @@
   --danger: light-dark(#b30000, #ff7a6b);
   --attention: light-dark(#a34d00, #f0a860);
   --neutral: light-dark(#3b3008, #141103);
+  --chart-bar: light-dark(#fff8dc, #626343);
   --surface: light-dark(#e3efca, #23260f);
   --border: light-dark(#abb561, #5c6230);
   --surface-muted: light-dark(#cee3a3, #2e3314);

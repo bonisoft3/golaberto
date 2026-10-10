@@ -24,8 +24,11 @@ async function patch(data = snapshot) {
   return new TextDecoder().decode(result.stdout).replace("\\set ON_ERROR_STOP on", "").replace("BEGIN;", "").replace("COMMIT;", "");
 }
 
+// The script's temp tables and probe triggers are its own scaffolding: pgroll's
+// event trigger would record each as an inferred migration, and two checks
+// recording against one parent fail on its history_is_linear index.
 async function query(sql: string) {
-  const result = await new Deno.Command("docker", { args: ["compose", "-p", project, "exec", "-T", "golaberto-database", "psql", "-U", "postgres", "-d", "golaberto", "-v", "ON_ERROR_STOP=1", "-Atqc", `BEGIN; ${sql} ROLLBACK;`] }).output();
+  const result = await new Deno.Command("docker", { args: ["compose", "-p", project, "exec", "-T", "golaberto-database", "psql", "-U", "postgres", "-d", "golaberto", "-v", "ON_ERROR_STOP=1", "-Atqc", `BEGIN; SET LOCAL pgroll.no_inferred_migrations = 'TRUE'; ${sql} ROLLBACK;`] }).output();
   if (!result.success) throw new Error(new TextDecoder().decode(result.stderr));
   return new TextDecoder().decode(result.stdout).trim().split("\n").filter(Boolean).at(-1);
 }

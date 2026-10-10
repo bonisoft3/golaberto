@@ -3,7 +3,7 @@
 
 The private legacy schema retains original domain records, including detached
 goals and comments whose subjects have no public comment entity. Source users
-are exported only as public bylines; credentials and sessions never leave MySQL.
+are exported only as public bylines, biographies and attachment metadata; credentials and sessions never leave MySQL.
 PyYAML 6.0.3 is required for safe, lossless legacy zone and odds parsing.
 Preserving imported originals requires a worker profile that disables the
 ratings replacement job and the chances job's computed snapshot capture hook.
@@ -24,8 +24,9 @@ import subprocess
 TABLES = ('categories', 'championships', 'phases', 'groups', 'stadia', 'teams',
           'team_groups', 'referees', 'players', 'team_players', 'games', 'goals',
           'player_games', 'historical_ratings', 'team_group_odds_histories',
-          'team_geocodes', 'comments')
-USER_COLUMNS = ('id', 'login', 'name', 'created_at')
+          'team_geocodes', 'comments', 'game_versions')
+USER_COLUMNS = ('id', 'login', 'name', 'created_at', 'location', 'about_me', 'updated_at',
+                'avatar_file_name', 'avatar_content_type', 'avatar_file_size', 'avatar_updated_at')
 RATING_NAMESPACE = '0b7e1c2a-4d5f-4e6a-9b8c-7d6e5f4a3b2c'
 PUBLIC_HANDLE_SQL = "CASE WHEN byline_rank=1 THEN byline ELSE byline||' (legacy '||id||')' END"
 USER_SOURCE = "(SELECT *,row_number() OVER(PARTITION BY byline ORDER BY id) AS byline_rank FROM (SELECT *,coalesce(nullif(name,''),CASE WHEN position('@' IN login)=0 THEN nullif(login,'') END,'Legacy user '||id) AS byline FROM pg_temp.users) labels) bylines"
@@ -33,7 +34,7 @@ UID_SQL = "CREATE FUNCTION pg_temp.uid(kind integer,n bigint) RETURNS uuid LANGU
 KINDS = {'category': 1, 'championship': 2, 'phase': 3, 'stage_group': 4,
          'zone': 5, 'stadium': 6, 'team': 7, 'team_group': 8, 'game': 9,
          'referee': 10, 'player': 11, 'team_player': 12, 'player_game': 13,
-         'goal': 14, 'app_user': 18, 'comment': 19}
+         'goal': 14, 'app_user': 18, 'comment': 19, 'game_change': 20}
 
 
 def ident(value: str) -> str:
@@ -248,7 +249,7 @@ MAPS = (
  ('team_rating','historical_ratings','team_id,measure_date,offense,defense,rating','pg_temp.uid(7,team_id),measure_date::date,off_rating,def_rating,rating'),
  ('app_user','users','handle,created_at',PUBLIC_HANDLE_SQL+",created_at::timestamp AT TIME ZONE 'UTC'"),
 )
-PUBLIC_TABLES = tuple(row[0] for row in MAPS) + ('zone', 'comment', 'team_comment', 'team_odds_history')
+PUBLIC_TABLES = tuple(row[0] for row in MAPS) + ('zone', 'comment', 'team_comment', 'team_odds_history', 'player_rating', 'user_biography', 'game_change')
 DEFERRED_TRIGGERS = {
  'team_player': ('team_profile_dirty_team_player',),
  'game': ('team_profile_dirty_game',),
@@ -302,6 +303,74 @@ def enrichment_preflight_sql(columns: dict, corrections: dict, files: dict[str,P
     return '\n'.join(sql)
 
 
+def community_source_preflight_sql() -> str:
+    return """SELECT 'invalid biography length or timestamp' AS reason FROM pg_temp.users
+WHERE char_length(name)>100 OR char_length(location)>100 OR char_length(about_me)>2000
+  OR ((nullif(name,'') IS NOT NULL OR nullif(location,'') IS NOT NULL OR nullif(about_me,'') IS NOT NULL) AND coalesce(updated_at,created_at) IS NULL)
+UNION SELECT 'invalid legacy version identity or timestamp' FROM pg_temp.game_versions WHERE game_id IS NULL OR game_id<=0 OR version IS NULL OR version<=0 OR updated_at IS NULL
+UNION SELECT 'duplicate legacy game/version' FROM pg_temp.game_versions GROUP BY game_id,version HAVING count(*)>1
+UNION SELECT 'missing legacy version author' FROM pg_temp.game_versions v LEFT JOIN pg_temp.users u ON u.id=v.updater_id WHERE v.updater_id<>0 AND u.id IS NULL
+UNION SELECT 'missing legacy version context' FROM pg_temp.game_versions v LEFT JOIN pg_temp.teams h ON h.id=v.home_id
+ LEFT JOIN pg_temp.teams a ON a.id=v.away_id LEFT JOIN pg_temp.phases p ON p.id=v.phase_id WHERE h.id IS NULL OR a.id IS NULL OR p.id IS NULL"""
+
+
+def community_promotion_sql() -> str:
+    _, _, fields, values = next(mapping for mapping in MAPS if mapping[0] == 'game')
+    approved = {'phase_id','round','day','kickoff','home_id','away_id','home_field','played',
+                'home_score','away_score','home_aet','away_aet','home_pen','away_pen','stadium_id','referee_id','attendance'}
+    if set(fields.split(',')) != approved:
+        raise ValueError('community history projection must match its approved field allowlist')
+    # Historical diffs must not invent the missing half of an AET or shootout pair.
+    for first, second in [('home_aet','away_aet'),('away_aet','home_aet'),('home_pen','away_pen'),('away_pen','home_pen')]:
+        values = values.replace(paired_score(first,second), first)
+    return f"""
+INSERT INTO public.user_biography(id,app_user_id,display_name,location,about_me,updated_at)
+SELECT pg_temp.uid(18,id),pg_temp.uid(18,id),nullif(name,''),nullif(location,''),nullif(about_me,''),
+  coalesce(updated_at,created_at)::timestamp AT TIME ZONE 'UTC'
+FROM pg_temp.users WHERE nullif(name,'') IS NOT NULL OR nullif(location,'') IS NOT NULL OR nullif(about_me,'') IS NOT NULL;
+CREATE TEMP VIEW _community_snapshots(id,game_id,version,updater_id,updated_at,{fields}) AS
+SELECT id,game_id,version,updater_id,updated_at,{values} FROM pg_temp.game_versions;
+DO $$ BEGIN
+  IF EXISTS(SELECT 1 FROM _community_snapshots WHERE game_id IS NULL OR game_id<=0 OR version IS NULL OR version<=0 OR updated_at IS NULL)
+    OR EXISTS(SELECT game_id,version FROM _community_snapshots GROUP BY game_id,version HAVING count(*)>1)
+    THEN RAISE EXCEPTION 'legacy game versions require positive unique game/version identities and timestamps'; END IF;
+  IF EXISTS(SELECT 1 FROM _community_snapshots v LEFT JOIN public.app_user u ON u.id=pg_temp.uid(18,nullif(v.updater_id,0))
+    WHERE v.updater_id<>0 AND u.id IS NULL)
+    THEN RAISE EXCEPTION 'legacy version author is absent from the public byline export'; END IF;
+END $$;
+INSERT INTO golaberto_history.version_floor(game_id,version)
+SELECT pg_temp.uid(9,game_id),max(version) FROM _community_snapshots GROUP BY game_id;
+CREATE TEMP TABLE _community_changes ON COMMIT DROP AS
+WITH snapshots AS (
+  SELECT v.*,to_jsonb(v)-ARRAY['id','game_id','version','updater_id','updated_at'] AS snapshot FROM _community_snapshots v
+), revisions AS (
+  SELECT s.*,lag(snapshot) OVER(PARTITION BY game_id ORDER BY version) AS previous FROM snapshots s
+)
+SELECT v.id,v.game_id,v.version,v.updater_id,v.updated_at,v.day,v.home_id,v.away_id,v.phase_id,d.changes
+FROM revisions v CROSS JOIN LATERAL (
+  SELECT jsonb_object_agg(e.key,jsonb_build_object('before',coalesce(v.previous->e.key,'null'::jsonb),'after',e.value)) AS changes
+  FROM jsonb_each(v.snapshot) e WHERE coalesce(v.previous->e.key,'null'::jsonb) IS DISTINCT FROM e.value
+) d WHERE d.changes IS NOT NULL;
+DO $$ BEGIN
+  IF EXISTS(SELECT 1 FROM _community_changes v LEFT JOIN public.team h ON h.id=v.home_id
+    LEFT JOIN public.team a ON a.id=v.away_id LEFT JOIN public.phase p ON p.id=v.phase_id
+    WHERE h.id IS NULL OR a.id IS NULL OR p.id IS NULL)
+    THEN RAISE EXCEPTION 'legacy version context is missing; review source corrections before promotion'; END IF;
+END $$;
+INSERT INTO public.game_change(id,game_id,version,actor_id,actor_handle,game_slug,game_day,home_name,away_name,championship_name,changes_json,created_at)
+SELECT pg_temp.uid(20,v.id),pg_temp.uid(9,v.game_id),v.version,u.id,u.handle,g.slug,v.day,h.name,a.name,c.full_name,
+  public.community_change_display(v.changes)::text,
+  v.updated_at::timestamp AT TIME ZONE 'UTC'
+FROM _community_changes v JOIN public.team h ON h.id=v.home_id JOIN public.team a ON a.id=v.away_id
+JOIN public.phase p ON p.id=v.phase_id JOIN public.championship c ON c.id=p.championship_id
+LEFT JOIN public.game g ON g.id=pg_temp.uid(9,v.game_id) LEFT JOIN public.app_user u ON u.id=pg_temp.uid(18,nullif(v.updater_id,0));
+DO $$ BEGIN
+  IF (SELECT count(*) FROM public.game_change)<>(SELECT count(*) FROM _community_changes)
+    THEN RAISE EXCEPTION 'legacy field-history promotion count mismatch'; END IF;
+END $$;
+"""
+
+
 def promotion_sql(columns: dict, corrections: dict, counts: dict, database: str, system_id: str,
                   files: dict[str, Path], defer: bool) -> str:
     sql = ["\\set ON_ERROR_STOP on", 'BEGIN;', "SET LOCAL TIME ZONE 'UTC';",
@@ -343,6 +412,8 @@ def promotion_sql(columns: dict, corrections: dict, counts: dict, database: str,
         if target == 'team_player':
             expected = counts['unique_team_players']
         sql.append(f"DO $$ BEGIN IF (SELECT count(*) FROM public.{ident(target)})<>{expected} THEN RAISE EXCEPTION 'promotion count mismatch: {target}'; END IF; END $$;")
+    sql.append("INSERT INTO public.player_rating(id,rating,off_rating,def_rating) SELECT pg_temp.uid(11,id),rating,off_rating,def_rating FROM pg_temp.players WHERE rating IS NOT NULL ORDER BY id;")
+    sql.append("DO $$ BEGIN IF (SELECT count(*) FROM public.player_rating)<>(SELECT count(*) FROM pg_temp.players WHERE rating IS NOT NULL) THEN RAISE EXCEPTION 'promotion count mismatch: player_rating'; END IF; END $$;")
     sql.extend(["CREATE TEMP TABLE _zones(id uuid,group_id uuid,name text,color text,first integer,last integer) ON COMMIT DROP;",
                 copy_csv('_zones',files['zones']),
                 'INSERT INTO public.zone(id,group_id,name,color,first,last) SELECT * FROM _zones;',
@@ -362,6 +433,7 @@ def promotion_sql(columns: dict, corrections: dict, counts: dict, database: str,
                     "INSERT INTO public.player_metric_dirty(player_id,championship_id,revision) SELECT player_id,championship_id,nextval('public.player_metric_revision_seq') FROM (SELECT DISTINCT a.player_id,p.championship_id FROM public.player_game a JOIN public.game g ON g.id=a.game_id JOIN public.phase p ON p.id=g.phase_id) seasons ON CONFLICT(player_id,championship_id) DO UPDATE SET revision=EXCLUDED.revision;",
                     "INSERT INTO public.team_rating_chart_dirty(team_id,revision) SELECT id,nextval('public.team_rating_chart_revision_seq') FROM public.team ON CONFLICT(team_id) DO UPDATE SET revision=EXCLUDED.revision;",
                     "INSERT INTO public.team_odds_chart_dirty(group_id,revision) SELECT id,nextval('public.team_odds_chart_revision_seq') FROM public.stage_group ON CONFLICT(group_id) DO UPDATE SET revision=EXCLUDED.revision;"])
+    sql.append(community_promotion_sql())
     sql.extend(['COMMIT;', ''])
     return '\n'.join(sql)
 
@@ -439,6 +511,8 @@ def build(args) -> dict:
         db.pg('CREATE SCHEMA legacy; REVOKE ALL ON SCHEMA legacy FROM PUBLIC;')
         for table, fields in columns.items():
             db.stage(table, fields, counts[table])
+        # The mark --reuse-staging is offered on: every table staged in full.
+        db.pg("COMMENT ON SCHEMA legacy IS 'staged';")
     else:
         for table, fields in columns.items():
             if table == 'users' and db.pg("SELECT to_regclass('legacy.users') IS NULL;") == 't':
@@ -454,6 +528,9 @@ def build(args) -> dict:
     prefix = 'BEGIN;\n' + corrected_views(columns, corrections) + '\n'
     def query(sql):
         return json.loads(db.pg(prefix + "SELECT coalesce(json_agg(row_to_json(s)),'[]') FROM (" + sql + ') s; ROLLBACK;'))
+    community_errors = query(community_source_preflight_sql())
+    if community_errors:
+        raise ValueError('community source requires reviewed corrections: ' + json.dumps(community_errors))
     zone_rows = []
     for row in query('SELECT id,zones FROM pg_temp.groups ORDER BY id'):
         for index, (name, color, first, last) in enumerate(zones(row['zones']), 1):
@@ -516,6 +593,9 @@ def build(args) -> dict:
                     'Repeated identical roster memberships map to the lowest source ID for the complete mapped triple(championship,team,player); all redundant legacy rows remain privately archived',
                     'Public bylines prefer name then non-email login; absent bylines receive Legacy user ID; duplicates receive legacy ID suffix'],
                 'team_rating_identity':{'algorithm':'UUIDv5','namespace':RATING_NAMESPACE,'name':'teamUUID:YYYY-MM-DD','runtime':'computations/ratings.js'},
+                'community_history':{'source_rows':counts['game_versions'],'projection':'Nonempty diffs of approved game fields between ordered retained versions; the first snapshot records known values against unknown. Goals-only revisions remain private legacy rows. Original version numbers, UTC timestamps and numeric author IDs are preserved.'},
+                'historical_avatar_assets':query("SELECT id AS legacy_user_id,avatar_file_name,avatar_content_type,avatar_file_size,avatar_updated_at FROM pg_temp.users WHERE avatar_file_name IS NOT NULL AND avatar_file_name<>'' ORDER BY id"),
+                'historical_avatar_requirement':'Source SQL stores attachment metadata only. Supply reviewed local users/avatars/<legacy_user_id>/medium.png and thumb.png assets for a separate guarded immutable-object promotion; never claim accounts by handle.',
                 'runtime_preservation_requirement':'Disable ratings replacement and omit chances onComplete snapshot capture when serving imported original ratings and odds; the default computation sink prunes outputs absent from recalculation.',
                 'staging_assumption':'Restored source is immutable; reused typed legacy schema must originate from this exact source export. Counts, column types and positive unique source IDs are checked.',
                 'files_sha256':{path.name:hashlib.sha256(path.read_bytes()).hexdigest() for path in (*files.values(),args.output/'apply.sql')}}

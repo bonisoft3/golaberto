@@ -103,7 +103,8 @@ main#app { max-width: var(--measure-page); margin-inline: auto; background: var(
 }
 :is(.masthead, .masthead-backdrop) .langs { display: flex; flex-wrap: nowrap; gap: var(--sp-md); font-size: var(--type-label); font-weight: 700; }
 :is(.masthead, .masthead-backdrop) .langs .short { display: none; }
-:is(.masthead, .masthead-backdrop) .langs a { color: var(--masthead-ink); text-decoration: none; padding: var(--sp-sm) 0; min-height: var(--min-touch); display: inline-flex; align-items: center; }
+:is(.masthead, .masthead-backdrop) .editing-management-link { font-size: var(--type-label); font-weight: 700; }
+:is(.masthead, .masthead-backdrop) :is(.editing-management-link, .langs a) { color: var(--masthead-ink); text-decoration: none; padding: var(--sp-sm) 0; min-height: var(--min-touch); display: inline-flex; align-items: center; }
 :is(.masthead, .masthead-backdrop) .langs a[aria-current] { text-decoration: underline; text-underline-offset: 3px; }
 
 /* The title band every page opens with. */

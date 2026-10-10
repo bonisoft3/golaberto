@@ -47,6 +47,17 @@ services:
       COMPUTATIONS: "[{\"name\":\"golaberto-ratings\",\"file\":\"/app/computations/golaberto-ratings.js\",\"to\":[\"team_rating\",\"player_rating\",\"rating_eval\"],\"wasm\":[\"/app/computations/golaberto-odds.wasm\"]},{\"name\":\"golaberto-chances\",\"file\":\"/app/computations/golaberto-chances.js\",\"onComplete\":\"capture_team_odds_history\",\"to\":[\"team_chance\",\"zone_chance\",\"position_chance\",\"game_importance\"],\"wasm\":[\"/app/computations/golaberto-odds.wasm\"]}]"
       SERVICE_JWT: >-
         ${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
+    healthcheck:
+      test:
+      - CMD
+      - portcheck
+      - --port
+      - "9997"
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 15m
+      start_interval: 1s
     image: bayt-golaberto-compute:${BAYT_IMAGE_TAG:-latest}
     networks:
       default:

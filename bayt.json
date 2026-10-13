@@ -281,7 +281,7 @@
           }
         },
         "self": {
-          "version": "v0.42.2"
+          "version": "v0.43.0"
         },
         "doctor": {
           "do": "use tools.nu [run-mise]; run-mise exec -- cue version; run-mise exec -- deno --version; run-mise where github:bonisoft3/pronto"

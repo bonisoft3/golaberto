@@ -131,11 +131,11 @@ _championshipStandingsCells: (#StandingsCells & {championship_param: "{param.cha
 	scope:    *"" | string
 	content:  string
 	controls: *"" | string
-	context: *{} | {[string]: _}
+	emptyRow: *{} | {[string]: _}
 	events: *{} | {[string]: _}
 	_seed: [if P.seed {#" data-on-mutation="player-csv-seed" data-read-stored="archive_page?id=eq.{id}""#}, ""][0]
-	_empty: json.Marshal({id: "\(P.key)-\(P.owner)\(P.scope)", owner_id: P.owner, offset: 0, next_offset: 40, page: 1, state: "browsing"} & P.context)
-	_machine: json.Marshal({field: "state", initial: "browsing", context: {owner_id: P.owner, offset: 0, next_offset: 40, page: 1} & P.context, states: browsing: on: (#PageActions & {key: P.key}).out & P.events})
+	_empty: json.Marshal({id: "\(P.key)-\(P.owner)\(P.scope)", owner_id: P.owner, offset: 0, next_offset: 40, page: 1, state: "browsing"} & P.emptyRow)
+	_machine: json.Marshal({field: "state", initial: "browsing", states: browsing: on: (#PageActions & {key: P.key}).out & P.events})
 	out: """
 	<div class="paged-read" data-live="archive_page" data-filter="id=eq.\(P.key)-\(P.owner)\(P.scope)" data-machine='\(P._machine)' data-empty-row='\(P._empty)'\(P._seed)>
 	  <div class="page-window">
@@ -151,7 +151,6 @@ _championshipStandingsCells: (#StandingsCells & {championship_param: "{param.cha
 _catalogMachine: json.Marshal({
 	field:   "state"
 	initial: "browsing"
-	context: {q: "", q_key: "", region: "", offset: 0, next_offset: 40, page: 1}
 	states: browsing: on: (#PageActions & {key: "catalog"}).out & {
 		"input@catalog-q": assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}
 		"change@catalog-region": assign: {region: {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}
@@ -171,19 +170,18 @@ _catalogMachine: json.Marshal({
 	where:    *true | bool
 	homeFeed: *"" | "upcoming" | "recent"
 	_where: [if G.where {"\n      <span class=\"where\" data-text=\"{championship_name}|{msg.geography_names}\" data-text-format=\"geography-label\"></span>"}, ""][0]
-	_project: [if G.homeFeed != "" {#" data-project='{"day_first":{"first":"day"},"previous":"prev"}'"#}, ""][0]
 	_exitMotion: [if G.homeFeed != "" {#" data-exit-motion="none""#}, ""][0]
 	_dayClass: [if G.homeFeed != "" {"day visually-hidden"}, "day"][0]
 	_dayHeading: [if G.homeFeed != "" {"""
-	      <h3 class="home-day" data-live="\(G.table)" data-filter="id=eq.{day_first}&amp;id=eq.{id}" data-empty="" data-exit-motion="none"><template data-item><span class="home-day-label" data-text="{day}|{msg.home_weekdays}" data-text-format="home-date"></span></template></h3>
+	      <h3 class="home-day" data-new-day="{home_new_day}"><span class="home-day-label" data-text="{day}|{msg.home_weekdays}" data-text-format="home-date"></span></h3>
 	"""}, ""][0]
 	_phaseHeading: [if G.homeFeed != "" {"""
-		      <h4 class="home-phase"><span hidden data-live="home_game_card" data-filter="id=eq.{previous}" data-empty="" data-exit-motion="none" data-project='{"same_day":{"eq":["day","{day}"]},"same_phase":{"eq":["phase_id","{phase_id}"]},"is_first":{"eq":["id","{id}"]}}'><template data-item><span class="home-phase-context" data-same-day="{same_day}" data-same-phase="{same_phase}" data-first="{is_first}"></span></template></span><a class="home-phase-label" data-route="campeonato" data-param-slug="{championship.slug}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span> <small data-text="{phase_name}"></small></a></h4>
+		      <h4 class="home-phase" data-new-group="{home_\(G.homeFeed)_group}"><a class="home-phase-label" data-route="campeonato" data-param-slug="{championship.slug}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span> <small data-text="{phase_name}"></small></a></h4>
 		"""}, ""][0]
 	_itemAttributes: [if G.homeFeed != "" {#" class="home-championship" data-championship="{championship_id}" data-phase="{phase_id}""#}, ""][0]
 	_highlightAttribute: [if G.homeFeed != "" {#" data-highlighted="{home_highlighted}""#}, ""][0]
 	out: """
-		<ol class="\(G.cls)" data-live="\(G.table)" data-select="*,game:id(slug),championship(show_country,slug),home:home_id(country,slug,logo_key),away:away_id(country,slug,logo_key)" data-filter="\(G.filter)" data-order="\(G.order)" data-empty="\(G.empty)"\(G._project)\(G._exitMotion)>
+		<ol class="\(G.cls)" data-live="\(G.table)" data-select="*,game:id(slug),championship(show_country,slug),home:home_id(country,slug,logo_key),away:away_id(country,slug,logo_key)" data-filter="\(G.filter)" data-order="\(G.order)" data-empty="\(G.empty)"\(G._exitMotion)>
 		  <template data-item>
 		    <li\(G._itemAttributes)>\(G._dayHeading)\(G._phaseHeading)<a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-slug="{game.slug}" data-played="{played}"\(G._highlightAttribute)>
 		      <span class="when"><span class="\(G._dayClass)" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>\(G._where)
@@ -196,13 +194,14 @@ _catalogMachine: json.Marshal({
 		"""
 }
 
-// Preserve global rank order; date and phase headings precede their first row.
+// Preserve global rank order; date and phase headings precede their first
+// row, where the read marks a new day or a new day-and-phase group.
 #HomeGameFeed: H={
 	feed:   "upcoming" | "recent"
 	played: string
 	empty:  string
 	out: (#GameList & {
-		table:    "home_game_card"
+		table:    "home_feed"
 		filter:   "played=is.\(H.played)&home_\(H.feed)_rank=gt.0&limit=20"
 		order:    "home_\(H.feed)_rank.asc"
 		empty:    H.empty
@@ -247,12 +246,12 @@ _jogosMarkup: """
 // The comment composer: a machine over the tab's draft for this game. Posting
 // is a create the store sends; an acknowledged one clears the draft, a refused
 // one keeps it and says why (ir decision-comments).
-_post: {target: "sending", effect: {level: "replicated", op: "create", entity: "comment", values: {game_id: "{id}", body: "{body}"}}}
+_post: {target: "sending", effect: {op: "create", entity: "comment", values: {game_id: "{id}", body: "{body}"}}}
 _type: {assign: body: {type: "event", params: field: "value"}}
+_commentDraftEmpty: json.Marshal({id: "{id}", body: "", state: "writing"})
 _composerMachine: json.Marshal({
 	field:   "state"
 	initial: "writing"
-	context: {body: ""}
 	on: refused: target: "refused"
 	states: {
 		writing: on: {"input@comment-body": _type, "click@comment-post": _post}
@@ -276,20 +275,20 @@ _editKeys: {
 	"input@edit-referee-q": {assign: {referee_q: {type: "event", params: field: "value"}, referee_q_key: {type: "search-key"}}}
 	"input@goal-minute": {assign: goal_minute: "count-or-null"}
 	"change@goal-player": {assign: goal_player_id: "blank-null"}
-	"click@edit-save": {target: "saving", effect: {level: "replicated", op: "update", entity: "game", values: {
+	"click@edit-save": {target: "saving", effect: {op: "update", entity: "game", values: {
 		id:         "{id}", played:             "{played}", home_score:     "{home_score}", away_score: "{away_score}"
 		attendance: "{attendance}", stadium_id: "{stadium_id}", referee_id: "{referee_id}"
 	}}}
 	for s in ["home", "away"] {
 		"click@goal-add-\(s)": {
-			effect: {level: "replicated", op: "create", entity: "goal", values: {
+			effect: {op: "create", entity: "goal", values: {
 				game_id: "{id}", side: s, minute: "{goal_minute}", player_id: "{goal_player_id}"
 			}}
 		}
 	}
 
 	// A goal's remove button carries the goal's id as its value.
-	click: {guard: "row-id", effect: {level: "replicated", op: "delete", entity: "goal", values: id: {type: "event", params: field: "value"}}}
+	click: {guard: "row-id", effect: {op: "delete", entity: "goal", values: id: {type: "event", params: field: "value"}}}
 }
 _editMachine: json.Marshal({
 	field:   "state"
@@ -531,7 +530,7 @@ _jogoMarkup: """
 	      </div>
 	  <section class="comments page-tail">
 	    <h2 data-text="{msg.comments_title}"></h2>
-	    <div class="composer" data-live="comment_draft" data-filter="id=eq.{id}" data-machine='\(_composerMachine)' data-state="{state}">
+	    <div class="composer" data-live="comment_draft" data-filter="id=eq.{id}" data-machine='\(_composerMachine)' data-empty-row='\(_commentDraftEmpty)' data-state="{state}">
 	      <label class="field" for="comment-body"><span data-text="{msg.comment_label}"></span>
 	        <textarea id="comment-body" data-value="{body}" maxlength="1000" rows="3" placeholder="{msg.comment_placeholder}"></textarea>
 	      </label>
@@ -785,7 +784,6 @@ _campeonatoMarkup: """
 	_machine: json.Marshal({
 		field:   "state"
 		initial: "browsing"
-		context: {q: "", q_key: "", country: "", country_key: "", region_selection: "*", country_selection: "*", team_type: "club", offset: 0, next_offset: 40, page: 1}
 		states: browsing: on: (#PageActions & {key: D.row}).out & {"input@\(D._input)": assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}}
 		if D.withTeamType {states: browsing: on: {
 			"change@teams-type": assign: {team_type: {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}
@@ -956,7 +954,7 @@ _arbitrosMarkup: (#Directory & {screen: "arbitros", row: "referees", table: "ref
 	  <template data-item><li><a data-route="jogador" data-param-slug="{player.slug}"><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{player_name}"></span> <small data-text="{position}"></small></a></li></template>
 	</ul>
 	"""
-	out: (#PagedRead & {key: P.key, owner: "{id}", table: "team_player_history", filter: P.filter + "&search_key=like.*{q_key}*", order: P.order, content: P._content, context: {q: "", q_key: ""}, events: {("input@\(P.key)-q"): assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}}, controls: "<label class=\"team-filter\"><span data-text=\"{msg.team_player_search}\"></span><input id=\"\(P.key)-q\" type=\"search\" value=\"{q}\" maxlength=\"80\"></label>"}).out
+	out: (#PagedRead & {key: P.key, owner: "{id}", table: "team_player_history", filter: P.filter + "&search_key=like.*{q_key}*", order: P.order, content: P._content, emptyRow: {q: "", q_key: ""}, events: {("input@\(P.key)-q"): assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}}, controls: "<label class=\"team-filter\"><span data-text=\"{msg.team_player_search}\"></span><input id=\"\(P.key)-q\" type=\"search\" value=\"{q}\" maxlength=\"80\"></label>"}).out
 }
 
 _teamRosterColumns: [
@@ -1024,13 +1022,13 @@ _teamRosterTotalCells: strings.Join([for c in _teamRosterColumns {[
  """}, ""][0])
  </div>
  """
-	out: (#PagedRead & {key: G.key, owner: [if G.scoped {"{team_id}"}, "{id}"][0], scope: [if G.scoped {"-championship-{championship_id}"}, ""][0], table: "team_game", filter: G._filter, order: G._order, context: {category: "*", side: "*", phase: "*", if G.scoped {championship_id: "{championship_id}"}}, events: {for f in [if !G.scoped {"category"}, "side", "phase"] {("change@\(G.key)-\(f)"): assign: {(f): {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}}}, controls: G._controls, content: [if G.scoped {(#TeamChampionshipGames & {filter: G._filter + "&offset={offset}&limit=40", order: G._order, empty: [if G.played {"{msg.games_none_results}"}, "{msg.games_none_upcoming}"][0], played: G.played}).out}, (#TeamGames & {filter: G._filter + "&offset={offset}&limit=40", order: G._order, empty: [if G.played {"{msg.games_none_results}"}, "{msg.games_none_upcoming}"][0], played: G.played}).out][0]}).out
+	out: (#PagedRead & {key: G.key, owner: [if G.scoped {"{team_id}"}, "{id}"][0], scope: [if G.scoped {"-championship-{championship_id}"}, ""][0], table: "team_game", filter: G._filter, order: G._order, emptyRow: {category: "*", side: "*", phase: "*", if G.scoped {championship_id: "{championship_id}"}}, events: {for f in [if !G.scoped {"category"}, "side", "phase"] {("change@\(G.key)-\(f)"): assign: {(f): {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}}}, controls: G._controls, content: [if G.scoped {(#TeamChampionshipGames & {filter: G._filter + "&offset={offset}&limit=40", order: G._order, empty: [if G.played {"{msg.games_none_results}"}, "{msg.games_none_upcoming}"][0], played: G.played}).out}, (#TeamGames & {filter: G._filter + "&offset={offset}&limit=40", order: G._order, empty: [if G.played {"{msg.games_none_results}"}, "{msg.games_none_upcoming}"][0], played: G.played}).out][0]}).out
 }
 
-_teamCommentMachine: json.Marshal({field: "state", initial: "writing", context: {body: ""}, on: refused: target: "refused", states: {writing: on: {"input@team-comment-body": _type, "click@team-comment-post": {target: "sending", effect: {level: "replicated", op: "create", entity: "team_comment", values: {team_id: "{id}", body: "{body}"}}}}, sending: on: sync_ack: {target: "writing", assign: body: ""}, refused: on: {"input@team-comment-body": _type & {target: "writing"}, "click@team-comment-post": {target: "sending", effect: {level: "replicated", op: "create", entity: "team_comment", values: {team_id: "{id}", body: "{body}"}}}}}})
+_teamCommentMachine: json.Marshal({field: "state", initial: "writing", on: refused: target: "refused", states: {writing: on: {"input@team-comment-body": _type, "click@team-comment-post": {target: "sending", effect: {op: "create", entity: "team_comment", values: {team_id: "{id}", body: "{body}"}}}}, sending: on: sync_ack: {target: "writing", assign: body: ""}, refused: on: {"input@team-comment-body": _type & {target: "writing"}, "click@team-comment-post": {target: "sending", effect: {op: "create", entity: "team_comment", values: {team_id: "{id}", body: "{body}"}}}}}})
 _teamComments:      """
  <section class="comments"><h2 data-text="{msg.comments_title}"></h2>
- <div class="composer" data-live="team_comment_draft" data-filter="id=eq.{id}" data-machine='\(_teamCommentMachine)' data-state="{state}"><label class="field" for="team-comment-body"><span data-text="{msg.comment_label}"></span><textarea id="team-comment-body" data-value="{body}" maxlength="1000" rows="3" placeholder="{msg.team_comment_placeholder}"></textarea></label><p class="refusal" role="alert" data-text="{msg.comment_refused}"></p><button id="team-comment-post" type="button" class="btn post"><span class="idle" data-text="{msg.comment_post}"></span><span class="busy" data-text="{msg.comment_posting}"></span></button></div>
+ <div class="composer" data-live="team_comment_draft" data-filter="id=eq.{id}" data-machine='\(_teamCommentMachine)' data-empty-row='\(_commentDraftEmpty)' data-state="{state}"><label class="field" for="team-comment-body"><span data-text="{msg.comment_label}"></span><textarea id="team-comment-body" data-value="{body}" maxlength="1000" rows="3" placeholder="{msg.team_comment_placeholder}"></textarea></label><p class="refusal" role="alert" data-text="{msg.comment_refused}"></p><button id="team-comment-post" type="button" class="btn post"><span class="idle" data-text="{msg.comment_post}"></span><span class="busy" data-text="{msg.comment_posting}"></span></button></div>
  \((#PagedRead & {key: "team-comments", owner: "{id}", table: "team_comment", filter: "team_id=eq.{owner_id}", order: "created_at.desc,id.asc", content: """
 	<ol class="comment-list" data-live="team_comment" data-select="*,app_user(handle)" data-filter="team_id=eq.{owner_id}&offset={offset}&limit=40" data-order="created_at.desc,id.asc" data-empty="{msg.team_comment_empty}"><template data-item><li><p class="byline"><a data-route="usuario" data-param-id="{app_user_id}" data-text="{app_user.handle}"></a> <time data-text="{created_at}" data-text-format="datetime"></time></p><p class="body" data-text="{body}"></p>\((#CommunityCommentDelete & {table: "team_comment"}).out)</li></template></ol>
 	"""}).out)
@@ -1038,7 +1036,7 @@ _teamComments:      """
  """
 _teamRatingHistory: """
  <section class="team-rating-history"><h2 data-text="{msg.team_rating_history}"></h2>
- \((#PagedRead & {key: "team-rating-history", owner: "{id}", table: "team_rating", filter: "team_id=eq.{owner_id}", order: "measure_date.desc,id.asc", context: {period: "1y", date_from: "", date_to: "", series_json: "{}"}, events: {"change@team-rating-period": assign: {period: {type: "event", params: field: "value"}, date_from: "", date_to: ""}, "change@team-rating-from": assign: {date_from: {type: "event", params: field: "value"}, period: "all"}, "change@team-rating-to": assign: {date_to: {type: "event", params: field: "value"}, period: "all"}, "click@team-rating-reset": assign: {period: "1y", date_from: "", date_to: ""}}, controls: """
+ \((#PagedRead & {key: "team-rating-history", owner: "{id}", table: "team_rating", filter: "team_id=eq.{owner_id}", order: "measure_date.desc,id.asc", emptyRow: {period: "1y", date_from: "", date_to: "", series_json: "{}"}, events: {"change@team-rating-period": assign: {period: {type: "event", params: field: "value"}, date_from: "", date_to: ""}, "change@team-rating-from": assign: {date_from: {type: "event", params: field: "value"}, period: "all"}, "change@team-rating-to": assign: {date_to: {type: "event", params: field: "value"}, period: "all"}, "click@team-rating-reset": assign: {period: "1y", date_from: "", date_to: ""}}, controls: """
 	<div class="team-filters"><label><span data-text="{msg.team_period}"></span><select id="team-rating-period" data-value="{period}"><option value="1m" data-text="{msg.period_1m}"></option><option value="3m" data-text="{msg.period_3m}"></option><option value="6m" data-text="{msg.period_6m}"></option><option value="1y" data-text="{msg.period_1y}"></option><option value="5y" data-text="{msg.period_5y}"></option><option value="all" data-text="{msg.all}"></option></select></label><label><span data-text="{msg.team_date_from}"></span><input id="team-rating-from" type="date" value="{date_from}"></label><label><span data-text="{msg.team_date_to}"></span><input id="team-rating-to" type="date" value="{date_to}"></label><button id="team-rating-reset" class="btn-quiet" type="button" data-text="{msg.team_chart_reset}"></button></div>
 	""", content: """
 	<div class="team-chart-source" data-live="team_rating_chart" data-filter="team_id=eq.{owner_id}&period=eq.{period}" data-on-mutation="team-rating-series" data-read-view="archive_page?id=eq.team-rating-history-{owner_id}"><template data-item><span hidden></span></template></div>
@@ -1052,7 +1050,7 @@ _teamRatingHistory: """
 _teamRosterOrder: #"{"by":"{sort}","of":{"name":"player_name.asc,player_id.asc","played":"played.desc.nullslast,player_name.asc,player_id.asc","minutes":"minutes.desc.nullslast,player_name.asc,player_id.asc","goals":"goals.desc.nullslast,player_name.asc,player_id.asc","goals_per90":"goals_per90.desc.nullslast,player_name.asc,player_id.asc","contribution":"contribution.desc.nullslast,player_name.asc,player_id.asc","contribution_per90":"contribution_per90.desc.nullslast,player_name.asc,player_id.asc"}}"#
 
 _teamRosterArchive: """
- \((#PagedRead & {key: "team-roster", owner: "{team_id}", scope: "-championship-{championship_id}", table: "team_roster", filter: "team_id=eq.{owner_id}&championship_id=eq.{championship_id}&search_key=like.*{q_key}*", order: _teamRosterOrder, context: {q: "", q_key: "", sort: "name", championship_id: "{championship_id}"}, events: {"input@team-roster-q": assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}, "change@team-roster-sort": assign: {sort: {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}}, controls: """
+ \((#PagedRead & {key: "team-roster", owner: "{team_id}", scope: "-championship-{championship_id}", table: "team_roster", filter: "team_id=eq.{owner_id}&championship_id=eq.{championship_id}&search_key=like.*{q_key}*", order: _teamRosterOrder, emptyRow: {q: "", q_key: "", sort: "name", championship_id: "{championship_id}"}, events: {"input@team-roster-q": assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}, "change@team-roster-sort": assign: {sort: {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}}, controls: """
 	<div class="team-filters"><label><span data-text="{msg.team_player_search}"></span><input id="team-roster-q" type="search" value="{q}" maxlength="80"></label><label><span data-text="{msg.team_sort}"></span><select id="team-roster-sort" data-value="{sort}"><option value="name" data-text="{msg.col_player}"></option><option value="played" data-text="{msg.col_played_long}"></option><option value="minutes" data-text="{msg.col_minutes_long}"></option><option value="goals" data-text="{msg.col_goals_long}"></option><option value="goals_per90" data-text="{msg.col_goals_per90_long}"></option><option value="contribution" data-text="{msg.col_contribution_long}"></option><option value="contribution_per90" data-text="{msg.col_contribution_per90_long}"></option></select></label></div>
 	""", content: (#TeamRosterPage & {filter: "team_id=eq.{owner_id}&championship_id=eq.{championship_id}&search_key=like.*{q_key}*&offset={offset}&limit=40", order: _teamRosterOrder, empty: "{msg.team_no_roster}"}).out}).out)
  <p class="team-chart-note" data-text="{msg.team_contribution_note}"></p>
@@ -1062,20 +1060,20 @@ _teamRosterArchive: """
 _teamCampaign: """
  <section class="team-campaign"><h2 data-text="{msg.team_progress}"></h2><p class="team-chart-note" data-text="{msg.team_progress_note}"></p>
  <div data-live="team_group" data-select="*,group:stage_group!inner(name,slug,phase!inner(name,championship_id))" data-filter="team_id=eq.{team_id}&group.phase.championship_id=eq.{championship_id}" data-order="group_id.asc" data-empty="{msg.team_no_table}"><template data-item><section class="team-group-card"><h3><span data-text="{group.phase.name}"></span> · <span data-text="{group.name}"></span></h3>
- <div data-live="team_chart_state" data-filter="id=eq.{group_id}:{team_id}" data-machine='{"field":"metric","initial":"points","context":{"group_id":"{group_id}","team_id":"{team_id}","compare_id":"{team_id}","series_json":"{}","game_prefix":"{msg.chart_game_prefix}"},"on":{"change":{"assign":{"compare_id":{"type":"chart-compare"}}}},"states":{"points":{}}}' data-empty-row='{"id":"{group_id}:{team_id}","group_id":"{group_id}","team_id":"{team_id}","compare_id":"{team_id}","metric":"points","series_json":"{}","game_prefix":"{msg.chart_game_prefix}"}' data-on-mutation="team-chart-seed" data-read-stored="team_chart_state?id=eq.{id}">
+ <div data-live="team_chart_state" data-filter="id=eq.{group_id}:{team_id}" data-machine='{"field":"metric","initial":"points","on":{"change":{"assign":{"compare_id":{"type":"chart-compare"}}}},"states":{"points":{}}}' data-empty-row='{"id":"{group_id}:{team_id}","group_id":"{group_id}","team_id":"{team_id}","compare_id":"{team_id}","metric":"points","series_json":"{}","game_prefix":"{msg.chart_game_prefix}"}' data-on-mutation="team-chart-seed" data-read-stored="team_chart_state?id=eq.{id}">
  <div class="team-filters"><label><span data-text="{msg.team_compare}"></span><select data-value="{compare_id}"><optgroup data-live="standing" data-select="*,team(slug,logo_key)" data-filter="group_id=eq.{group_id}&limit=250" data-order="team_name.asc,team_id.asc" data-empty=""><template data-item><option value="{team_id}" data-text="{team_name}"></option></template></optgroup></select></label></div>
  <div data-text="{series_json}\u001f{msg.team_progress}\u001f{msg.chart_locale}\u001f{msg.team_history_none}\u001fcombined\u001f\u001f\u001f\u001f{msg.col_points_long}\u001f{msg.col_position_long}" data-text-format="team-chart"></div>
  <div class="team-chart-source" data-live="team_campaign_point" data-select="*,team(name),game(slug)" data-filter="group_id=eq.{group_id}&team_id=in.({team_id},{compare_id})&limit=800" data-order="sequence.asc,team_id.asc" data-on-mutation="team-chart-fold" data-read-view="team_chart_state?id=eq.{id}" data-read-memberships="team_group?group_id=eq.{group_id}&limit=250"><template data-item><span hidden></span></template></div>
- \((#PagedRead & {key: "team-campaign-history", owner: "{team_id}", scope: "-{group_id}", context: {phase: "{group_id}"}, table: "team_campaign_point", filter: "group_id=eq.{phase}&team_id=eq.{owner_id}", order: "sequence.asc", content: """
+ \((#PagedRead & {key: "team-campaign-history", owner: "{team_id}", scope: "-{group_id}", emptyRow: {phase: "{group_id}"}, table: "team_campaign_point", filter: "group_id=eq.{phase}&team_id=eq.{owner_id}", order: "sequence.asc", content: """
 	<details><summary data-text="{msg.team_history_table}"></summary><table class="grid"><thead><tr><th data-text="{msg.team_date}"></th><th data-text="{msg.col_points}"></th><th data-text="{msg.col_position}"></th><th data-text="{msg.team_fixtures}"></th></tr></thead><tbody data-live="team_campaign_point" data-select="*,game(slug)" data-filter="group_id=eq.{phase}&team_id=eq.{owner_id}&offset={offset}&limit=40" data-order="sequence.asc" data-empty="{msg.team_history_none}"><template data-item><tr><th scope="row" data-text="{day}"></th><td data-text="{points}"></td><td data-text="{position}"></td><td><a data-route="jogo" data-param-slug="{game.slug}" data-text="{sequence}"></a></td></tr></template></tbody></table></details>
 	"""}).out)
  </div></section></template></div></section>
  """
 
-// One tab row joins a team's current position odds with its recorded history.
-// Each source region re-folds it; the machine keeps the reader's selections.
+// Inspection writes must not invalidate the source reads they inspect.
 _teamOddsEvolution: """
-	<div class="team-odds-current" data-live="team_odds_progress_state" data-filter="id=eq.{group_id}:{team_id}" data-empty-row='{"id":"{group_id}:{team_id}","group_id":"{group_id}","team_id":"{team_id}","state":"viewing","zone_id":"*","snapshot_index":-1,"snapshot_last":0,"pointer_x":1000,"series_json":"{}","current_json":"{}","position_number":-1,"position_last":0,"table_mode":"current","range_from":"","range_to":""}' data-machine='{"field":"state","initial":"viewing","context":{"group_id":"{group_id}","team_id":"{team_id}","zone_id":"*","snapshot_index":-1,"snapshot_last":0,"pointer_x":1000,"series_json":"{}","current_json":"{}","position_number":-1,"position_last":0,"table_mode":"current","range_from":"","range_to":""},"on":{"input":{"assign":{"snapshot_index":{"type":"odds-progress-snapshot"},"position_number":{"type":"position-odds-control","params":{"field":"position_number"}}}},"click":[{"guard":{"type":"chart-position-bound","params":{"operation":"matches","suffix":"-reset"}},"assign":{"range_from":"","range_to":""}},{"assign":{"zone_id":{"type":"odds-progress-zone"}}}],"change":{"assign":{"zone_id":{"type":"odds-progress-zone"},"table_mode":{"type":"position-odds-control","params":{"field":"table_mode"}},"range_from":{"type":"chart-position-bound","params":{"field":"range_from","suffix":"-from"}},"range_to":{"type":"chart-position-bound","params":{"field":"range_to","suffix":"-to"}}}},"pointermove":{"guard":{"type":"position-odds-control","params":{"field":"guard-pointer"}},"assign":{"snapshot_index":{"type":"odds-progress-point"},"position_number":{"type":"position-odds-control","params":{"field":"position_number"}},"pointer_x":{"type":"event","params":{"field":"pointerX"}}}},"pointerdown":{"guard":{"type":"position-odds-control","params":{"field":"guard-pointer"}},"assign":{"snapshot_index":{"type":"odds-progress-point"},"position_number":{"type":"position-odds-control","params":{"field":"position_number"}},"pointer_x":{"type":"event","params":{"field":"pointerX"}}}}},"states":{"viewing":{}}}' data-on-mutation="position-odds-fold" data-read-view="team_odds_progress_state?id=eq.{id}" data-read-positions="position_chance?group_id=eq.{group_id}&team_id=eq.{team_id}&order=position.asc&limit=250" data-read-zones="zone?group_id=eq.{group_id}&order=first.asc,last.asc,id.asc&limit=250" data-read-history="team_odds_progress?group_id=eq.{group_id}&team_id=eq.{team_id}&order=group_id.asc,team_id.asc&limit=1">
+	<div class="team-odds-source" data-live="team_odds_progress_source" data-filter="id=eq.{group_id}:{team_id}" data-empty-row='{"id":"{group_id}:{team_id}","group_id":"{group_id}","team_id":"{team_id}","current_json":"{}","series_json":"{}"}' data-on-mutation="position-odds-source" data-read-view="team_odds_progress_source?id=eq.{id}" data-read-positions="position_chance?group_id=eq.{group_id}&team_id=eq.{team_id}&order=position.asc&limit=250" data-read-zones="zone?group_id=eq.{group_id}&order=first.asc,last.asc,id.asc&limit=250" data-read-history="team_odds_progress?group_id=eq.{group_id}&team_id=eq.{team_id}&order=group_id.asc,team_id.asc&limit=1">
+	<div class="team-odds-current" data-live="team_odds_progress_state" data-filter="id=eq.{group_id}:{team_id}" data-empty-row='{"id":"{group_id}:{team_id}","group_id":"{group_id}","team_id":"{team_id}","state":"viewing","zone_id":"*","snapshot_index":-1,"snapshot_last":0,"pointer_x":1000,"series_json":"{}","current_json":"{}","position_number":-1,"position_last":0,"table_mode":"current","range_from":"","range_to":""}' data-machine='{"field":"state","initial":"viewing","on":{"input":{"assign":{"snapshot_index":{"type":"odds-progress-snapshot"},"position_number":{"type":"position-odds-control","params":{"field":"position_number"}}}},"click":[{"guard":{"type":"chart-position-bound","params":{"operation":"matches","suffix":"-reset"}},"assign":{"range_from":"","range_to":""}},{"assign":{"zone_id":{"type":"odds-progress-zone"}}}],"change":{"assign":{"zone_id":{"type":"odds-progress-zone"},"table_mode":{"type":"position-odds-control","params":{"field":"table_mode"}},"range_from":{"type":"chart-position-bound","params":{"field":"range_from","suffix":"-from"}},"range_to":{"type":"chart-position-bound","params":{"field":"range_to","suffix":"-to"}}}},"pointermove":{"guard":{"type":"position-odds-control","params":{"field":"guard-pointer"}},"assign":{"snapshot_index":{"type":"odds-progress-point"},"position_number":{"type":"position-odds-control","params":{"field":"position_number"}},"pointer_x":{"type":"event","params":{"field":"pointerX"}}}},"pointerdown":{"guard":{"type":"position-odds-control","params":{"field":"guard-pointer"}},"assign":{"snapshot_index":{"type":"odds-progress-point"},"position_number":{"type":"position-odds-control","params":{"field":"position_number"}},"pointer_x":{"type":"event","params":{"field":"pointerX"}}}}},"states":{"viewing":{}}}' data-on-mutation="position-odds-fold" data-read-view="team_odds_progress_state?id=eq.{id}" data-read-source="team_odds_progress_source?id=eq.{id}">
 	<div class="position-odds-graph" id="position-graph-{group_id}-{team_id}" data-text="{current_json}\u001f{series_json}\u001f{msg.team_position_odds}\u001f{msg.chart_locale}\u001f{msg.team_no_odds}\u001f{position_number}\u001f{snapshot_index}\u001f{table_mode}\u001fgraph\u001f{msg.col_position_long}\u001f{msg.col_probability}\u001f{msg.team_odds_current_position}\u001f{msg.team_date}\u001f{msg.team_odds_current}\u001f{msg.team_odds_recorded}\u001f{msg.impossible}\u001f{msg.reachable}\u001f{msg.undecided}\u001f{msg.team_history_none}\u001f{range_from}\u001f{range_to}\u001f{msg.team_selected_probability}\u001f{msg.team_chart_invalid_range}" data-text-format="position-odds"></div>
 	<div class="position-odds-controls"><div class="position-odds-inspection" data-text="{current_json}\u001f{series_json}\u001f{msg.team_position_odds}\u001f{msg.chart_locale}\u001f{msg.team_no_odds}\u001f{position_number}\u001f{snapshot_index}\u001f{table_mode}\u001finspector\u001f{msg.col_position_long}\u001f{msg.col_probability}\u001f{msg.team_odds_current_position}\u001f{msg.team_date}\u001f{msg.team_odds_current}\u001f{msg.team_odds_recorded}\u001f{msg.impossible}\u001f{msg.reachable}\u001f{msg.undecided}\u001f{msg.team_history_none}\u001f{range_from}\u001f{range_to}\u001f{msg.team_selected_probability}\u001f{msg.team_chart_invalid_range}" data-text-format="position-odds"></div><label class="position-odds-slider" data-last="{position_last}"><span data-text="{msg.col_position_long}"></span><input id="position-slider-{group_id}-{team_id}" type="range" min="1" max="{position_last}" step="1" data-value="{position_number}" aria-label="{msg.col_position_long}"></label></div>
 	<div class="team-filters"><label><span data-text="{msg.team_position_from}"></span><input id="{id}-from" type="number" inputmode="numeric" min="1" max="250" step="1" data-value="{range_from}"></label><label><span data-text="{msg.team_position_to}"></span><input id="{id}-to" type="number" inputmode="numeric" min="1" max="250" step="1" data-value="{range_to}"></label><button id="{id}-reset" class="btn-quiet" type="button" data-text="{msg.team_chart_reset}"></button></div>
@@ -1086,12 +1084,13 @@ _teamOddsEvolution: """
 	<div class="odds-progress-controls"><div class="odds-progress-zones" role="group" aria-label="{msg.chances_zones}"><label class="odds-progress-zone"><input type="radio" name="odds-zone-{group_id}" value="*" data-value="{zone_id}"><span data-text="{msg.team_odds_all}"></span></label><div data-live="zone" data-filter="group_id=eq.{group_id}&limit=50" data-order="first.asc,last.asc,id.asc" data-project='{"selected_zone":{"eq":["id","{zone_id}"]}}' data-empty=""><template data-item><label class="odds-progress-zone"><input type="radio" name="odds-zone-{group_id}" value="{id}" checked="{selected_zone}"><i class="odds-progress-swatch" data-zone="{color}" style="--zone-source: {color}" aria-hidden="true"></i><span data-text="{name}"></span></label></template></div></div><label class="odds-progress-date"><span data-text="{msg.team_odds_snapshot}"></span><input id="odds-date-{group_id}-{team_id}" type="range" min="0" max="{snapshot_last}" step="1" data-value="{snapshot_index}" aria-label="{msg.team_odds_snapshot}"></label></div>
 	<div class="odds-progress-inspection" data-text="{series_json}\u001f{msg.team_odds_history}\u001f{msg.chart_locale}\u001f{msg.team_history_none}\u001f{zone_id}\u001f{snapshot_index}\u001f{msg.chart_game_prefix}\u001f{msg.team_history_table}\u001f{msg.col_position_long}\u001f{msg.team_odds_sampled}\u001f{msg.team_odds_omitted}\u001finspector\u001f{msg.team_date}\u001f{msg.team_odds_last_game}\u001f{msg.team_odds_no_game}" data-text-format="odds-progress"></div>
 	</section>
-	<div class="team-chart-source" data-live="team_odds_progress" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}&limit=1" data-order="group_id.asc,team_id.asc" data-on-mutation="position-odds-fold" data-read-view="team_odds_progress_state?id=eq.{id}" data-read-positions="position_chance?group_id=eq.{group_id}&team_id=eq.{team_id}&order=position.asc&limit=250" data-read-zones="zone?group_id=eq.{group_id}&order=first.asc,last.asc,id.asc&limit=250" data-read-history="team_odds_progress?group_id=eq.{group_id}&team_id=eq.{team_id}&order=group_id.asc,team_id.asc&limit=1"><template data-item><span hidden></span></template></div>
-	<div class="team-chart-source" data-live="position_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}&limit=250" data-order="position.asc" data-on-mutation="position-odds-fold" data-read-view="team_odds_progress_state?id=eq.{id}" data-read-positions="position_chance?group_id=eq.{group_id}&team_id=eq.{team_id}&order=position.asc&limit=250" data-read-zones="zone?group_id=eq.{group_id}&order=first.asc,last.asc,id.asc&limit=250" data-read-history="team_odds_progress?group_id=eq.{group_id}&team_id=eq.{team_id}&order=group_id.asc,team_id.asc&limit=1"><template data-item><span hidden></span></template></div>
-	<div class="team-chart-source" data-live="zone" data-filter="group_id=eq.{group_id}&limit=250" data-order="first.asc,last.asc,id.asc" data-on-mutation="position-odds-fold" data-read-view="team_odds_progress_state?id=eq.{id}" data-read-positions="position_chance?group_id=eq.{group_id}&team_id=eq.{team_id}&order=position.asc&limit=250" data-read-zones="zone?group_id=eq.{group_id}&order=first.asc,last.asc,id.asc&limit=250" data-read-history="team_odds_progress?group_id=eq.{group_id}&team_id=eq.{team_id}&order=group_id.asc,team_id.asc&limit=1"><template data-item><span hidden></span></template></div>
+	</div>
+	<div class="team-chart-source" data-live="team_odds_progress_source" data-filter="id=eq.{group_id}:{team_id}" data-on-mutation="position-odds-fold" data-read-view="team_odds_progress_state?id=eq.{id}" data-read-source="team_odds_progress_source?id=eq.{id}"><template data-item><span hidden></span></template></div>
+	<div class="team-chart-source" data-live="team_odds_progress" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}&limit=1" data-order="group_id.asc,team_id.asc" data-on-mutation="position-odds-source" data-read-view="team_odds_progress_source?id=eq.{id}" data-read-positions="position_chance?group_id=eq.{group_id}&team_id=eq.{team_id}&order=position.asc&limit=250" data-read-zones="zone?group_id=eq.{group_id}&order=first.asc,last.asc,id.asc&limit=250" data-read-history="team_odds_progress?group_id=eq.{group_id}&team_id=eq.{team_id}&order=group_id.asc,team_id.asc&limit=1"><template data-item><span hidden></span></template></div>
+	<div class="team-chart-source" data-live="position_chance" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}&limit=250" data-order="position.asc" data-on-mutation="position-odds-source" data-read-view="team_odds_progress_source?id=eq.{id}" data-read-positions="position_chance?group_id=eq.{group_id}&team_id=eq.{team_id}&order=position.asc&limit=250" data-read-zones="zone?group_id=eq.{group_id}&order=first.asc,last.asc,id.asc&limit=250" data-read-history="team_odds_progress?group_id=eq.{group_id}&team_id=eq.{team_id}&order=group_id.asc,team_id.asc&limit=1"><template data-item><span hidden></span></template></div>
+	<div class="team-chart-source" data-live="zone" data-filter="group_id=eq.{group_id}&limit=250" data-order="first.asc,last.asc,id.asc" data-on-mutation="position-odds-source" data-read-view="team_odds_progress_source?id=eq.{id}" data-read-positions="position_chance?group_id=eq.{group_id}&team_id=eq.{team_id}&order=position.asc&limit=250" data-read-zones="zone?group_id=eq.{group_id}&order=first.asc,last.asc,id.asc&limit=250" data-read-history="team_odds_progress?group_id=eq.{group_id}&team_id=eq.{team_id}&order=group_id.asc,team_id.asc&limit=1"><template data-item><span hidden></span></template></div>
 	</div>
 	"""
-
 _equipeMarkup: """
 	<section class="screen" data-screen="equipe">
 	\((#Masthead & {route: "equipe", params: " data-param-slug=\"{param.slug}\""}).out)

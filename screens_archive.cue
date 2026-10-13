@@ -32,7 +32,7 @@ _archiveGameOrder: #"{"by":"{played}","of":{"true":"day.desc,kickoff.desc.nullsl
 		table:  "game_archive"
 		filter: A._filter
 		order:  _archiveGameOrder
-		context: {category: "*", played: "true", week: "*", week_day: "", round: "*", round_value: "", phase: "*"}
+		emptyRow: {category: "*", played: "true", week: "*", week_day: "", round: "*", round_value: "", phase: "*"}
 		events: {
 			for field in ["category", "played", if A.scoped {"phase"}] {
 				("change@\(A.key)-\(field)"): assign: {(field): {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}

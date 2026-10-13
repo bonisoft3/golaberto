@@ -68,11 +68,11 @@ Publicly accessible web application.
 - `TeamRatingChart`: domain entity
 - `TeamOddsChart`: domain entity
 - `TeamRosterTotal`: domain entity
-- `CommunityAccess`: domain entity
-- `MatchProbability`: domain entity
-- `MatchRecentResult`: domain entity
 - `UserBiography`: domain entity
 - `GameChange`: domain entity
+- `CommunityAccess`: domain entity
+- `MatchRecentResult`: domain entity
+- `MatchProbability`: domain entity
 - `UserDirectory`: domain entity
 - `MatchHeadToHead`: domain entity
 - `MatchLineup`: domain entity

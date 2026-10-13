@@ -10,6 +10,9 @@ code: surface: screens: {
 			{table: "game_card", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["day","kickoff"]},
 		]
 		writes: []
+		charts: [
+			{table: "archive_page", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
 	}
 	arbitros: {
@@ -19,6 +22,9 @@ code: surface: screens: {
 			{table: "referee", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["name"]},
 		]
 		writes: []
+		charts: [
+			{table: "directory_filter", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
 	}
 	arquivo: {
@@ -29,6 +35,9 @@ code: surface: screens: {
 			{table: "game_archive", kind: "live", nested: true, lists: [], route: "server", embeds: [], limit: 1, orders: ["day","kickoff","id"]},
 		]
 		writes: []
+		charts: [
+			{table: "archive_page", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/archive-round.js", "shell/handlers/archive-week.js", "shell/handlers/page-value.js"], adapters: []}
 	}
 	"arquivo-campeonato": {
@@ -41,6 +50,9 @@ code: surface: screens: {
 			{table: "game_archive", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["day","kickoff","id"]},
 		]
 		writes: []
+		charts: [
+			{table: "archive_page", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/archive-round.js", "shell/handlers/archive-week.js", "shell/handlers/page-value.js"], adapters: []}
 	}
 	campeonato: {
@@ -59,6 +71,7 @@ code: surface: screens: {
 			{table: "game_card", kind: "live", nested: true, lists: [0,3,8,10], route: "view", clauses: [{"col":"phase_id","op":"eq"},{"col":"round","op":"eq"}], embeds: ["id","championship","home_id","away_id"], orders: ["day","kickoff"]},
 		]
 		writes: []
+		charts: []
 		files: {handlers: [], adapters: []}
 	}
 	"campeonato-jogadores": {
@@ -75,6 +88,9 @@ code: surface: screens: {
 			{table: "archive_page", op: "reduce"},
 			{table: "player_stat", op: "reduce"},
 		]
+		charts: [
+			{table: "archive_page", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/parity-minutes.js", "shell/handlers/player-csv-fold.js", "shell/handlers/player-csv-seed.js", "shell/handlers/search-key.js"], adapters: []}
 	}
 	campeonatos: {
@@ -85,6 +101,9 @@ code: surface: screens: {
 			{table: "championship", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["region_name","name","begins"]},
 		]
 		writes: []
+		charts: [
+			{table: "catalog_filter", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
 	}
 	chances: {
@@ -100,6 +119,7 @@ code: surface: screens: {
 			{table: "position_chance", kind: "live", nested: true, lists: [0,2,7], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], orders: ["position"]},
 		]
 		writes: []
+		charts: []
 		files: {handlers: [], adapters: []}
 	}
 	editar: {
@@ -125,6 +145,9 @@ code: surface: screens: {
 			{table: "game", op: "update"},
 			{table: "goal", op: "delete"},
 		]
+		charts: [
+			{table: "game_edit", field: "state", writes: [{"table":"goal","op":"create"},{"table":"goal","op":"create"},{"table":"game","op":"update"},{"table":"goal","op":"delete"},{"table":"goal","op":"create"},{"table":"goal","op":"create"},{"table":"game","op":"update"},{"table":"goal","op":"delete"}]},
+		]
 		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/both-scored.js", "shell/handlers/count-or-null.js", "shell/handlers/row-id.js", "shell/handlers/search-key.js"], adapters: []}
 	}
 	"editar-arbitro": {
@@ -136,6 +159,7 @@ code: surface: screens: {
 			{table: "referee", op: "update"},
 			{table: "referee", op: "delete"},
 		]
+		charts: []
 		files: {handlers: [], adapters: ["shell/handlers/editing-text.js"]}
 	}
 	"editar-competicao": {
@@ -172,6 +196,10 @@ code: surface: screens: {
 			{table: "phase", op: "delete"},
 			{table: "championship", op: "delete"},
 		]
+		charts: [
+			{table: "editing_choice", field: "state", writes: []},
+			{table: "editing_choice", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-integer.js", "shell/handlers/editing-text.js", "shell/handlers/editing-uuid.js"]}
 	}
 	"editar-equipe": {
@@ -190,6 +218,9 @@ code: surface: screens: {
 			{table: "stadium", op: "create"},
 			{table: "team", op: "delete"},
 		]
+		charts: [
+			{table: "editing_choice", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-text.js", "shell/handlers/editing-uuid.js"]}
 	}
 	"editar-estadio": {
@@ -201,6 +232,7 @@ code: surface: screens: {
 			{table: "stadium", op: "update"},
 			{table: "stadium", op: "delete"},
 		]
+		charts: []
 		files: {handlers: [], adapters: ["shell/handlers/editing-text.js"]}
 	}
 	"editar-jogador": {
@@ -215,6 +247,9 @@ code: surface: screens: {
 			{table: "player", op: "update"},
 			{table: "player_merge", op: "create"},
 			{table: "player", op: "delete"},
+		]
+		charts: [
+			{table: "editing_choice", field: "state", writes: []},
 		]
 		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-integer.js", "shell/handlers/editing-text.js", "shell/handlers/editing-uuid.js"]}
 	}
@@ -244,6 +279,14 @@ code: surface: screens: {
 			{table: "stadium", op: "create"},
 			{table: "referee", op: "create"},
 			{table: "game", op: "delete"},
+		]
+		charts: [
+			{table: "editing_choice", field: "state", writes: []},
+			{table: "editing_choice", field: "state", writes: []},
+			{table: "editing_choice", field: "state", writes: []},
+			{table: "editing_choice", field: "state", writes: []},
+			{table: "editing_choice", field: "state", writes: []},
+			{table: "editing_choice", field: "state", writes: []},
 		]
 		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/count-or-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/editing-played.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-integer.js", "shell/handlers/editing-text.js", "shell/handlers/editing-timestamp.js", "shell/handlers/editing-uuid.js"]}
 	}
@@ -289,6 +332,17 @@ code: surface: screens: {
 			{table: "team_comment", op: "create"},
 			{table: "team_comment", op: "create"},
 		]
+		charts: [
+			{table: "archive_page", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+			{table: "team_comment_draft", field: "state", writes: [{"table":"team_comment","op":"create"},{"table":"team_comment","op":"create"}]},
+			{table: "archive_page", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/search-key.js", "shell/handlers/team-rating-series.js"], adapters: []}
 	}
 	"equipe-campeonato": {
@@ -322,24 +376,30 @@ code: surface: screens: {
 			{table: "team_group", kind: "live", nested: true, lists: [0], route: "server", embeds: ["stage_group","phase"], orders: ["group_id"]},
 			{table: "team_chance", kind: "live", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: ["team","group_id"], limit: 1, orders: ["rank","id"]},
 			{table: "zone_chance", kind: "live", nested: true, lists: [0,26,27], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: ["zone_id"], orders: ["first","last"]},
-			{table: "team_odds_progress_state", kind: "live", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
-			{table: "team_odds_progress_state", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team_odds_progress_source", kind: "live", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team_odds_progress_source", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
 			{table: "position_chance", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 250, orders: ["position"]},
 			{table: "zone", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], limit: 250, orders: ["first","last","id"]},
 			{table: "team_odds_progress", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 1, orders: ["group_id","team_id"]},
-			{table: "zone", kind: "live", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], limit: 50, orders: ["first","last","id"]},
-			{table: "team_odds_progress", kind: "live", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 1, orders: ["group_id","team_id"]},
+			{table: "team_odds_progress_state", kind: "live", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
 			{table: "team_odds_progress_state", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team_odds_progress_source", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "zone", kind: "live", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], limit: 50, orders: ["first","last","id"]},
+			{table: "team_odds_progress_source", kind: "live", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team_odds_progress_state", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team_odds_progress_source", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team_odds_progress", kind: "live", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 1, orders: ["group_id","team_id"]},
+			{table: "team_odds_progress_source", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
 			{table: "position_chance", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 250, orders: ["position"]},
 			{table: "zone", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], limit: 250, orders: ["first","last","id"]},
 			{table: "team_odds_progress", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 1, orders: ["group_id","team_id"]},
 			{table: "position_chance", kind: "live", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 250, orders: ["position"]},
-			{table: "team_odds_progress_state", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team_odds_progress_source", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
 			{table: "position_chance", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 250, orders: ["position"]},
 			{table: "zone", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], limit: 250, orders: ["first","last","id"]},
 			{table: "team_odds_progress", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 1, orders: ["group_id","team_id"]},
 			{table: "zone", kind: "live", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], limit: 250, orders: ["first","last","id"]},
-			{table: "team_odds_progress_state", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "team_odds_progress_source", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
 			{table: "position_chance", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 250, orders: ["position"]},
 			{table: "zone", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"}], embeds: [], limit: 250, orders: ["first","last","id"]},
 			{table: "team_odds_progress", kind: "named", nested: true, lists: [0,26], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"}], embeds: [], limit: 1, orders: ["group_id","team_id"]},
@@ -347,12 +407,21 @@ code: surface: screens: {
 		writes: [
 			{table: "team_chart_state", op: "reduce"},
 			{table: "team_campaign_point", op: "reduce"},
+			{table: "team_odds_progress_source", op: "reduce"},
 			{table: "team_odds_progress_state", op: "reduce"},
 			{table: "team_odds_progress", op: "reduce"},
 			{table: "position_chance", op: "reduce"},
 			{table: "zone", op: "reduce"},
 		]
-		files: {handlers: ["shell/handlers/chart-compare.js", "shell/handlers/chart-position-bound.js", "shell/handlers/odds-progress-point.js", "shell/handlers/odds-progress-snapshot.js", "shell/handlers/odds-progress-zone.js", "shell/handlers/page-value.js", "shell/handlers/position-odds-control.js", "shell/handlers/position-odds-fold.js", "shell/handlers/search-key.js", "shell/handlers/team-chart-fold.js", "shell/handlers/team-chart-seed.js"], adapters: []}
+		charts: [
+			{table: "archive_page", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+			{table: "team_chart_state", field: "metric", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+			{table: "team_odds_progress_state", field: "state", writes: []},
+		]
+		files: {handlers: ["shell/handlers/chart-compare.js", "shell/handlers/chart-position-bound.js", "shell/handlers/odds-progress-point.js", "shell/handlers/odds-progress-snapshot.js", "shell/handlers/odds-progress-zone.js", "shell/handlers/page-value.js", "shell/handlers/position-odds-control.js", "shell/handlers/position-odds-fold.js", "shell/handlers/position-odds-source.js", "shell/handlers/search-key.js", "shell/handlers/team-chart-fold.js", "shell/handlers/team-chart-seed.js"], adapters: []}
 	}
 	equipes: {
 		reads: [
@@ -365,6 +434,9 @@ code: surface: screens: {
 		]
 		writes: [
 			{table: "geography_country", op: "reduce"},
+		]
+		charts: [
+			{table: "directory_filter", field: "state", writes: []},
 		]
 		files: {handlers: ["shell/handlers/country-option.js", "shell/handlers/geography-selection.js", "shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
 	}
@@ -388,6 +460,11 @@ code: surface: screens: {
 			{table: "player_game", op: "update"},
 			{table: "player_game", op: "delete"},
 		]
+		charts: [
+			{table: "editing_choice", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+			{table: "editing_choice", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-integer.js", "shell/handlers/editing-text.js", "shell/handlers/editing-uuid.js"]}
 	}
 	estadio: {
@@ -399,6 +476,9 @@ code: surface: screens: {
 			{table: "game_card", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["day","kickoff"]},
 		]
 		writes: []
+		charts: [
+			{table: "archive_page", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
 	}
 	estadios: {
@@ -408,6 +488,9 @@ code: surface: screens: {
 			{table: "stadium", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["name"]},
 		]
 		writes: []
+		charts: [
+			{table: "directory_filter", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
 	}
 	gerenciar: {
@@ -430,6 +513,13 @@ code: surface: screens: {
 			{table: "game_archive", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["day","id"]},
 		]
 		writes: []
+		charts: [
+			{table: "archive_page", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
 	}
 	"gerenciar-competicoes": {
@@ -440,6 +530,9 @@ code: surface: screens: {
 			{table: "championship", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["region_name","name","begins","id"]},
 		]
 		writes: []
+		charts: [
+			{table: "archive_page", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
 	}
 	"gols-jogo": {
@@ -462,6 +555,11 @@ code: surface: screens: {
 			{table: "goal", op: "update"},
 			{table: "goal", op: "delete"},
 		]
+		charts: [
+			{table: "editing_choice", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+			{table: "editing_choice", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-integer.js", "shell/handlers/editing-text.js", "shell/handlers/editing-uuid.js"]}
 	}
 	"historico-jogo": {
@@ -472,6 +570,9 @@ code: surface: screens: {
 			{table: "game_change", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["created_at","id"]},
 		]
 		writes: []
+		charts: [
+			{table: "archive_page", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
 	}
 	"inscricoes-jogador": {
@@ -498,6 +599,13 @@ code: surface: screens: {
 			{table: "team_player", op: "create"},
 			{table: "team_player", op: "update"},
 			{table: "team_player", op: "delete"},
+		]
+		charts: [
+			{table: "editing_choice", field: "state", writes: []},
+			{table: "editing_choice", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+			{table: "editing_choice", field: "state", writes: []},
+			{table: "editing_choice", field: "state", writes: []},
 		]
 		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-uuid.js"]}
 	}
@@ -531,6 +639,12 @@ code: surface: screens: {
 			{table: "archive_page", op: "reduce"},
 			{table: "player_stat", op: "reduce"},
 		]
+		charts: [
+			{table: "archive_page", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/parity-minutes.js", "shell/handlers/player-csv-fold.js", "shell/handlers/player-csv-seed.js", "shell/handlers/search-key.js"], adapters: []}
 	}
 	"jogador-campeonato": {
@@ -543,6 +657,9 @@ code: surface: screens: {
 			{table: "player_appearance", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["day","kickoff","id"]},
 		]
 		writes: []
+		charts: [
+			{table: "archive_page", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
 	}
 	jogadores: {
@@ -553,6 +670,9 @@ code: surface: screens: {
 			{table: "player_directory", kind: "live", nested: true, lists: [], route: "server", embeds: [], limit: 1, orders: ["name","id","rating"]},
 		]
 		writes: []
+		charts: [
+			{table: "archive_page", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
 	}
 	jogo: {
@@ -590,6 +710,12 @@ code: surface: screens: {
 			{table: "comment", op: "create"},
 			{table: "comment", op: "create"},
 		]
+		charts: [
+			{table: "match_probability_scenario", field: "state", writes: [{"table":"match_probability_scenario_event","op":"create"},{"table":"match_probability_scenario_event","op":"create"}]},
+			{table: "match_probability_scenario_event", field: "state", writes: [{"table":"match_probability_scenario_event","op":"delete"}]},
+			{table: "comment_draft", field: "state", writes: [{"table":"comment","op":"create"},{"table":"comment","op":"create"}]},
+			{table: "archive_page", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/match-probability-event-control.js", "shell/handlers/match-probability-event-edit.js", "shell/handlers/match-probability-event-fold.js", "shell/handlers/match-probability-seed.js", "shell/handlers/page-value.js"], adapters: []}
 	}
 	jogos: {
@@ -599,6 +725,9 @@ code: surface: screens: {
 			{table: "matches_game_card", kind: "live", nested: true, lists: [0], route: "snapshot", clauses: [{"col":"played","op":"true"}], embeds: ["id","championship","home_id","away_id"], limit: 40, orders: ["day","kickoff","id"]},
 		]
 		writes: []
+		charts: [
+			{table: "games_view", field: "state", writes: []},
+		]
 		files: {handlers: [], adapters: []}
 	}
 	"nova-competicao": {
@@ -611,6 +740,9 @@ code: surface: screens: {
 		writes: [
 			{table: "championship", op: "create"},
 		]
+		charts: [
+			{table: "editing_choice", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-integer.js", "shell/handlers/editing-text.js", "shell/handlers/editing-uuid.js"]}
 	}
 	"novo-arbitro": {
@@ -620,6 +752,7 @@ code: surface: screens: {
 		writes: [
 			{table: "referee", op: "create"},
 		]
+		charts: []
 		files: {handlers: [], adapters: ["shell/handlers/editing-text.js"]}
 	}
 	"novo-equipe": {
@@ -635,6 +768,9 @@ code: surface: screens: {
 			{table: "user_pending_upload", op: "delete"},
 			{table: "stadium", op: "create"},
 		]
+		charts: [
+			{table: "editing_choice", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-text.js", "shell/handlers/editing-uuid.js"]}
 	}
 	"novo-estadio": {
@@ -644,6 +780,7 @@ code: surface: screens: {
 		writes: [
 			{table: "stadium", op: "create"},
 		]
+		charts: []
 		files: {handlers: [], adapters: ["shell/handlers/editing-text.js"]}
 	}
 	"novo-jogador": {
@@ -653,6 +790,7 @@ code: surface: screens: {
 		writes: [
 			{table: "player", op: "create"},
 		]
+		charts: []
 		files: {handlers: [], adapters: ["shell/handlers/editing-integer.js", "shell/handlers/editing-text.js"]}
 	}
 	"novo-jogo": {
@@ -680,27 +818,32 @@ code: surface: screens: {
 			{table: "stadium", op: "create"},
 			{table: "referee", op: "create"},
 		]
+		charts: [
+			{table: "editing_choice", field: "state", writes: []},
+			{table: "editing_choice", field: "state", writes: []},
+			{table: "editing_choice", field: "state", writes: []},
+			{table: "editing_choice", field: "state", writes: []},
+			{table: "editing_choice", field: "state", writes: []},
+			{table: "editing_choice", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/blank-null.js", "shell/handlers/count-or-null.js", "shell/handlers/editing-choice-event.js", "shell/handlers/editing-played.js", "shell/handlers/search-key.js"], adapters: ["shell/handlers/editing-integer.js", "shell/handlers/editing-text.js", "shell/handlers/editing-timestamp.js", "shell/handlers/editing-uuid.js"]}
 	}
 	principal: {
 		reads: [
-			{table: "home_game_card", kind: "live", nested: false, lists: [], route: "snapshot", clauses: [{"col":"played","op":"false"},{"col":"home_upcoming_rank","op":"gt"}], embeds: ["id","championship","home_id","away_id"], limit: 20, orders: ["home_upcoming_rank"]},
-			{table: "home_game_card", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"},{"col":"id","op":"eq"}], embeds: [], orders: []},
-			{table: "home_game_card", kind: "live", nested: true, lists: [0], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
-			{table: "home_game_card", kind: "live", nested: false, lists: [], route: "snapshot", clauses: [{"col":"played","op":"true"},{"col":"home_recent_rank","op":"gt"}], embeds: ["id","championship","home_id","away_id"], limit: 20, orders: ["home_recent_rank"]},
-			{table: "home_game_card", kind: "live", nested: true, lists: [3], route: "view", clauses: [{"col":"id","op":"eq"},{"col":"id","op":"eq"}], embeds: [], orders: []},
-			{table: "home_game_card", kind: "live", nested: true, lists: [3], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
+			{table: "home_feed", kind: "live", nested: false, lists: [], route: "snapshot", clauses: [{"col":"played","op":"false"},{"col":"home_upcoming_rank","op":"gt"}], embeds: ["id","championship","home_id","away_id"], limit: 20, orders: ["home_upcoming_rank"]},
+			{table: "home_feed", kind: "live", nested: false, lists: [], route: "snapshot", clauses: [{"col":"played","op":"true"},{"col":"home_recent_rank","op":"gt"}], embeds: ["id","championship","home_id","away_id"], limit: 20, orders: ["home_recent_rank"]},
 			{table: "championship", kind: "live", nested: false, lists: [], route: "snapshot", clauses: [{"col":"featured","op":"true"}], embeds: [], limit: 1, orders: ["begins"]},
-			{table: "phase", kind: "live", nested: true, lists: [6], route: "view", clauses: [{"col":"championship_id","op":"eq"}], embeds: [], limit: 1, orders: ["position"]},
-			{table: "stage_group", kind: "live", nested: true, lists: [6,7], route: "view", clauses: [{"col":"phase_id","op":"eq"}], embeds: [], limit: 1, orders: ["position","name"]},
-			{table: "standing", kind: "live", nested: true, lists: [6,7,8], route: "snapshot", clauses: [{"col":"group_id","op":"eq"},{"col":"position","op":"lte"}], embeds: ["team"], orders: ["position"]},
-			{table: "position_chance", kind: "live", nested: true, lists: [6,7,8,9], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"},{"col":"position","op":"eq"}], embeds: [], orders: []},
-			{table: "team_chance", kind: "live", nested: true, lists: [6,7,8], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"rank","op":"eq"}], embeds: ["team","group_id"], orders: []},
+			{table: "phase", kind: "live", nested: true, lists: [2], route: "view", clauses: [{"col":"championship_id","op":"eq"}], embeds: [], limit: 1, orders: ["position"]},
+			{table: "stage_group", kind: "live", nested: true, lists: [2,3], route: "view", clauses: [{"col":"phase_id","op":"eq"}], embeds: [], limit: 1, orders: ["position","name"]},
+			{table: "standing", kind: "live", nested: true, lists: [2,3,4], route: "snapshot", clauses: [{"col":"group_id","op":"eq"},{"col":"position","op":"lte"}], embeds: ["team"], orders: ["position"]},
+			{table: "position_chance", kind: "live", nested: true, lists: [2,3,4,5], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"team_id","op":"eq"},{"col":"position","op":"eq"}], embeds: [], orders: []},
+			{table: "team_chance", kind: "live", nested: true, lists: [2,3,4], route: "view", clauses: [{"col":"group_id","op":"eq"},{"col":"rank","op":"eq"}], embeds: ["team","group_id"], orders: []},
 			{table: "home_championship", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"region","op":"eq"}], embeds: ["id"], orders: ["strength","full_name","id"]},
 			{table: "home_championship", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"region","op":"eq"}], embeds: ["id"], orders: ["strength","full_name","id"]},
 			{table: "home_championship", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"region","op":"eq"}], embeds: ["id"], orders: ["strength","full_name","id"]},
 		]
 		writes: []
+		charts: []
 		files: {handlers: [], adapters: []}
 	}
 	publico: {
@@ -714,6 +857,10 @@ code: surface: screens: {
 			{table: "game_archive", kind: "live", nested: true, lists: [0], route: "server", embeds: [], limit: 1, orders: ["attendance","day","id"]},
 		]
 		writes: []
+		charts: [
+			{table: "archive_page", field: "state", writes: []},
+			{table: "archive_page", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/page-value.js"], adapters: []}
 	}
 	usuario: {
@@ -739,6 +886,9 @@ code: surface: screens: {
 			{table: "user_avatar", op: "delete"},
 			{table: "user_pending_upload", op: "delete"},
 		]
+		charts: [
+			{table: "archive_page", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/page-value.js"], adapters: ["shell/handlers/editing-text.js"]}
 	}
 	usuarios: {
@@ -748,6 +898,9 @@ code: surface: screens: {
 			{table: "user_directory", kind: "live", nested: true, lists: [], route: "server", embeds: [], limit: 1, orders: ["display_name","id"]},
 		]
 		writes: []
+		charts: [
+			{table: "archive_page", field: "state", writes: []},
+		]
 		files: {handlers: ["shell/handlers/page-value.js", "shell/handlers/search-key.js"], adapters: []}
 	}
 }
@@ -772,7 +925,7 @@ _irNotes: {
 	"decision-guest-reading": "Every reader is a guest the moment they arrive. A public row is readable by the signed-in role, and the terminal, with the auth plane on and sign-in not required, mints a guest for every reader silently: no gate, no ceremony, no screen. So the archive reads like a website to someone who never signs in, and the accounts the comments turn needs are the same identity, promoted by a passkey, rather than a second system. The cost is a row per reader: every new tab mints a guest, nothing reaps them, and a crawler that runs scripts mints one per visit. The alternative — public readable by the anonymous role, a guest minted only at the first write — would need the platform to grant anon, which it does not; the comments turn, which gives a guest something to keep, owns reaping the ones that never wrote"
 	"decision-hatches": "Escape hatches: authenticated native media. The app media container adapts the existing blob upstream with authenticated immutable uploads and SQL-owned attachments (hatch-native-media). Public reads expose only attached normalized image styles. The existing Wasm odds module remains upstream's odds-rust (decision-chances)"
 	"decision-head-to-head": "Head to head is the mini-league's points. Upstream's head key builds a sub-table among the teams level on points and compares them within it. Here the key is the points each earned in games against the others level with it plus its add_sub, which is that sub-table's first criterion, and, as upstream, it separates no one in a group of two or when every team is level; two teams level on it fall through to the next key of the ladder, where upstream would continue within the sub-table. No 2026 table in the archive's sample needs the difference"
-	"decision-home": "The front page follows upstream's quality selection and date/phase presentation. Following the referenced controller, each feed selects the strongest twenty games with known kickoffs before arranging them for display. The requested upcoming window runs strictly after the actual clock minus three hours and strictly before the actual clock plus fourteen days. Results mirror upstream's two-sided played-game window, extended to fourteen days on either side of the clock minus three hours. Played games with future kickoffs are eligible as in that controller. The quality clock is the actual clock minus three hours: the harmonic mean of the latest known team ratings, multiplied by one plus mean match importance, is halved for each day's absolute distance from that clock. Missing ratings and importance contribute zero. Weighted quality chooses the top twenty per feed; equal qualities retain raw-quality descending, kickoff descending order, with id as a deterministic final tie break. Presentation sorts Brasília dates ascending for upcoming and descending for results, then the phase/date's strongest candidate quality descending, kickoff ascending or descending respectively, quality descending and id. Equal phase strengths therefore retain kickoff order across phases, as upstream does. Highlighting mirrors the controller independently for each feed: the union of the five displayed games with greatest raw quality and one game with greatest weighted quality for each phase/Brasília date among all eligible candidates. Overall raw-quality ties retain display order. A tied phase/date maximum chooses the last candidate in the raw-quality descending, kickoff descending, id ascending input order, reproducing upstream's greater-than-or-equal replacement with a deterministic id tie break. The phase/date winner is chosen before the twenty-game cap; if it is not selected, another displayed row is not promoted in its place. The selected games use semibold primary-color team names and bold theme-accent scores and separators against normal-weight secondary-color ordinary names and scores, following the accepted Stitch refinement. Kickoff times and backgrounds keep their existing styles. The screen reads one flat list in server rank order. Each date appears once across competitions in its feed, followed by a linked championship and named phase heading on the first row and each date/phase transition. A phase may appear again on another day or when tied phase strengths interleave. The terminal's first-row-per-day projection and exact-key nested reads place date headings. Its previous-row projection and a hidden exact-key comparison of that row's date and phase derive visible phase transitions. Headings therefore transfer immediately after removal or restoration without another SQL refresh; the stored group flags retain the server's transition state. Row links retain accessible dates while showing only kickoff time, full team names, badges and score. HomeGameCard's day derives from its kickoff in Brasília so headings match the ranking date even when the archive's date differs. The thirty-second service-only refresh updates the ranks, phase markers, highlights and bounded forty-row projection atomically, suppresses unchanged writes, and skips overlapping calls. Removing a selected kickoff immediately removes its projected row; restoring a known kickoff copies it again while its rank remains selected. Screens own no timer or fetch. The featured season and archive follow the feeds; empty windows remove old rows and show the translated message"
+	"decision-home": "The front page follows upstream's quality selection and date/phase presentation. Following the referenced controller, each feed selects the strongest twenty games with known kickoffs before arranging them for display. The requested upcoming window runs strictly after the actual clock minus three hours and strictly before the actual clock plus fourteen days. Results mirror upstream's two-sided played-game window, extended to fourteen days on either side of the clock minus three hours. Played games with future kickoffs are eligible as in that controller. The quality clock is the actual clock minus three hours: the harmonic mean of the latest known team ratings, multiplied by one plus mean match importance, is halved for each day's absolute distance from that clock. Missing ratings and importance contribute zero. Weighted quality chooses the top twenty per feed; equal qualities retain raw-quality descending, kickoff descending order, with id as a deterministic final tie break. Presentation sorts Brasília dates ascending for upcoming and descending for results, then the phase/date's strongest candidate quality descending, kickoff ascending or descending respectively, quality descending and id. Equal phase strengths therefore retain kickoff order across phases, as upstream does. Highlighting mirrors the controller independently for each feed: the union of the five displayed games with greatest raw quality and one game with greatest weighted quality for each phase/Brasília date among all eligible candidates. Overall raw-quality ties retain display order. A tied phase/date maximum chooses the last candidate in the raw-quality descending, kickoff descending, id ascending input order, reproducing upstream's greater-than-or-equal replacement with a deterministic id tie break. The phase/date winner is chosen before the twenty-game cap; if it is not selected, another displayed row is not promoted in its place. The selected games use semibold primary-color team names and bold theme-accent scores and separators against normal-weight secondary-color ordinary names and scores, following the accepted Stitch refinement. Kickoff times and backgrounds keep their existing styles. The screen reads one flat list in server rank order. Each date appears once across competitions in its feed, followed by a linked championship and named phase heading on the first row and each date/phase transition. A phase may appear again on another day or when tied phase strengths interleave. The read carries each row's markers: a date heading where the Brasília date differs from the previous row of its feed, and a phase heading where the date or the phase does. Row links retain accessible dates while showing only kickoff time, full team names, badges and score. HomeGameCard's day derives from its kickoff in Brasília so headings match the ranking date even when the archive's date differs. Ranks, markers and highlights are the read's, so an edit, a removed or restored kickoff and the clock's passage all show on the next read. Screens own no timer or fetch. The featured season and archive follow the feeds; empty windows remove old rows and show the translated message"
 	"decision-increments": "The archive's shape first, one page family per turn after. This compile has entities and invariants only. Comments and the people who write them, crests, the edit history and the chances each arrive with the turn that shows them, so no entity exists that nothing reads. The standings turn inherits a dependency set, not a trigger: a table is a function of the group's games, its team_group rows, its phase's sort and bonus, and its championship's points, so a change to any of them recomputes it, and its sink is not server, or it would feed its own input"
 	"decision-languages": "Six football traditions: pt-BR, es-AR, en-GB, then it-IT, de-DE, fr-FR. An explicit Portuguese choice carries ?lang=pt-BR on the unprefixed address and subsequent navigation, including the menu, row links and navigate forms. The terminal retains that query on translated routes so browser language preferences cannot override it on reload. Canonical and alternate metadata keep their query-free addresses. The switcher keeps the current route and its row ID at desktop and phone widths; the existing masthead layout is the accepted oracle. Brazil's is the archive's own language and served unprefixed. Argentina's Spanish is the River Plate's and South America's, and it takes the bare es a reader's browser sends. England's English is the game's codifying tradition. Italy's, Germany's and France's follow, each at its own address (/it, /de, /fr), in its own football vocabulary. Six names do not fit beside the wordmark on a phone, so below 720px each language shows its code. Rows are not translated: a championship is named as its own country names it, and the level of play is a catalogue word chosen by the row's own value ({msg[region]})"
 	"decision-local-reads": "Every screen reads synced tables, filtered on the reader's side. A region the terminal cannot decide on its own — a nested embed, a home-or-away filter — becomes a read only the server can answer: not there offline, re-read on any change to its tables. So what a list needs from several tables is written into one by a stream: a game's names into its GameCard, a team's view of it into a TeamGame, and the day a player's games sort by onto the appearance, by a trigger in the database (services/database/sql/010_game_days.sql), since a day that moves must move every appearance with it in one transaction. A materialized view would hold the same join, but the change publication does not carry one, so it could not be synced. The cost is one more row per game and two per team, and a list that shows a name a moment after it changes rather than at once"

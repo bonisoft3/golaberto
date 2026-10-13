@@ -1,6 +1,8 @@
 # generated from bayt.cue — do not edit
 include:
-- path: ./compose.bayt.yaml
+- path:
+  - ./compose.bayt.yaml
+  - ./compose.bayt.ports.yaml
   required: false
 services:
   browser:
@@ -16,6 +18,13 @@ services:
     profiles:
     - caddy
     scale: 1
+  release-docker:
+    extends:
+      file: ./compose.release-docker.yaml
+      service: golaberto-release-docker
+    profiles:
+    - release-docker
+    scale: 1
   setup:
     extends:
       file: ./compose.setup.yaml
@@ -28,6 +37,12 @@ services:
       service: golaberto-lint
     profiles:
     - lint
+  generate:
+    extends:
+      file: ./compose.generate.yaml
+      service: golaberto-generate
+    profiles:
+    - generate
   build:
     extends:
       file: ./compose.build.yaml
@@ -54,6 +69,25 @@ services:
     profiles:
     - integrate
     scale: 1
+  ci-visual:
+    extends:
+      file: ./compose.ci-visual.yaml
+      service: golaberto-ci-visual
+    profiles:
+    - ci-visual
+  check-drains:
+    extends:
+      file: ./compose.check-drains.yaml
+      service: golaberto-check-drains
+    profiles:
+    - check-drains
+    scale: 1
+  ci-drains:
+    extends:
+      file: ./compose.ci-drains.yaml
+      service: golaberto-ci-drains
+    profiles:
+    - ci-drains
   check-constraints:
     extends:
       file: ./compose.check-constraints.yaml
@@ -61,6 +95,12 @@ services:
     profiles:
     - check-constraints
     scale: 1
+  ci-constraints:
+    extends:
+      file: ./compose.ci-constraints.yaml
+      service: golaberto-ci-constraints
+    profiles:
+    - ci-constraints
   check-acceptance:
     extends:
       file: ./compose.check-acceptance.yaml
@@ -68,6 +108,12 @@ services:
     profiles:
     - check-acceptance
     scale: 1
+  ci-acceptance:
+    extends:
+      file: ./compose.ci-acceptance.yaml
+      service: golaberto-ci-acceptance
+    profiles:
+    - ci-acceptance
   check-request-reads:
     extends:
       file: ./compose.check-request-reads.yaml
@@ -75,6 +121,12 @@ services:
     profiles:
     - check-request-reads
     scale: 1
+  ci-request-reads:
+    extends:
+      file: ./compose.ci-request-reads.yaml
+      service: golaberto-ci-request-reads
+    profiles:
+    - ci-request-reads
   check-community-parity:
     extends:
       file: ./compose.check-community-parity.yaml
@@ -82,6 +134,12 @@ services:
     profiles:
     - check-community-parity
     scale: 1
+  ci-community-parity:
+    extends:
+      file: ./compose.ci-community-parity.yaml
+      service: golaberto-ci-community-parity
+    profiles:
+    - ci-community-parity
   check-community-access:
     extends:
       file: ./compose.check-community-access.yaml
@@ -89,6 +147,12 @@ services:
     profiles:
     - check-community-access
     scale: 1
+  ci-community-access:
+    extends:
+      file: ./compose.ci-community-access.yaml
+      service: golaberto-ci-community-access
+    profiles:
+    - ci-community-access
   check-competition-admin:
     extends:
       file: ./compose.check-competition-admin.yaml
@@ -96,6 +160,12 @@ services:
     profiles:
     - check-competition-admin
     scale: 1
+  ci-competition-admin:
+    extends:
+      file: ./compose.ci-competition-admin.yaml
+      service: golaberto-ci-competition-admin
+    profiles:
+    - ci-competition-admin
   check-editing-parity:
     extends:
       file: ./compose.check-editing-parity.yaml
@@ -103,6 +173,12 @@ services:
     profiles:
     - check-editing-parity
     scale: 1
+  ci-editing-parity:
+    extends:
+      file: ./compose.ci-editing-parity.yaml
+      service: golaberto-ci-editing-parity
+    profiles:
+    - ci-editing-parity
   check-match-context:
     extends:
       file: ./compose.check-match-context.yaml
@@ -110,6 +186,12 @@ services:
     profiles:
     - check-match-context
     scale: 1
+  ci-match-context:
+    extends:
+      file: ./compose.ci-match-context.yaml
+      service: golaberto-ci-match-context
+    profiles:
+    - ci-match-context
   check-match-probability:
     extends:
       file: ./compose.check-match-probability.yaml
@@ -117,6 +199,12 @@ services:
     profiles:
     - check-match-probability
     scale: 1
+  ci-match-probability:
+    extends:
+      file: ./compose.ci-match-probability.yaml
+      service: golaberto-ci-match-probability
+    profiles:
+    - ci-match-probability
   check-native-media:
     extends:
       file: ./compose.check-native-media.yaml
@@ -124,6 +212,12 @@ services:
     profiles:
     - check-native-media
     scale: 1
+  ci-native-media:
+    extends:
+      file: ./compose.ci-native-media.yaml
+      service: golaberto-ci-native-media
+    profiles:
+    - ci-native-media
   check-odds-progress:
     extends:
       file: ./compose.check-odds-progress.yaml
@@ -131,6 +225,12 @@ services:
     profiles:
     - check-odds-progress
     scale: 1
+  ci-odds-progress:
+    extends:
+      file: ./compose.ci-odds-progress.yaml
+      service: golaberto-ci-odds-progress
+    profiles:
+    - ci-odds-progress
   database:
     extends:
       file: ./compose.database.yaml
@@ -200,6 +300,20 @@ services:
       service: golaberto-compute
     profiles:
     - compute
+    scale: 1
+  ticker:
+    extends:
+      file: ./compose.ticker.yaml
+      service: golaberto-ticker
+    profiles:
+    - ticker
+    scale: 1
+  clock:
+    extends:
+      file: ./compose.clock.yaml
+      service: golaberto-clock
+    profiles:
+    - clock
     scale: 1
   render:
     extends:

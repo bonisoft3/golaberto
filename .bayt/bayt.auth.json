@@ -5,7 +5,7 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "libraries_mecha-auth-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.8.0@sha256:3fad007c2863cfae4ff19ecda019714c640c4171563fa5ba3b0bd029d31d3108}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}"
+        "libraries_mecha-auth-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.9.0@sha256:2b350c032df7afd3bfda54aa9f62baacd715257a749a4dfa271d2ef8af04bf9b}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}"
       },
       "secrets": [],
       "args": {}
@@ -45,13 +45,34 @@
     "mounts": [],
     "secrets": {},
     "extra_hosts": [],
-    "epilogue": [],
+    "epilogue": [
+      "RUN mkdir -p /monorepo"
+    ],
     "copy": [],
     "healthcheck": null,
     "expose": [],
     "entrypoint": null,
     "incremental": false,
     "cmd": null
+  },
+  "entrypoint": {
+    "do": "deno run --allow-net --allow-env main.ts",
+    "shell": "exec",
+    "env": {
+      "DATABASE_URL": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
+      "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}",
+      "WEBAUTHN_RP_ID": "${WEBAUTHN_RP_ID:-localhost}",
+      "WEBAUTHN_ORIGIN": "${WEBAUTHN_ORIGIN:-https://localhost:*}"
+    },
+    "after": {
+      "database": "healthy"
+    },
+    "host": true
+  },
+  "expose": {
+    "http": {
+      "port": 9999
+    }
   },
   "name": "auth",
   "project": "golaberto",
@@ -85,7 +106,8 @@
           ".bayt/Dockerfile.auth",
           ".bayt/bayt.auth.json",
           ".bayt/Taskfile.yml",
-          ".bayt/Taskfile.bayt.yml"
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/process-compose.yaml"
         ],
         "exclude": []
       },

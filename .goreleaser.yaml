@@ -7,3 +7,5 @@ builds:
     skip: true
 release:
   disable: true
+changelog:
+  disable: true

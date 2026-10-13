@@ -14,10 +14,14 @@ services:
         golaberto-compute: service:golaberto-compute
         golaberto-auth: service:golaberto-auth
         golaberto-rclone-s3: service:golaberto-rclone-s3
+        golaberto-clock: service:golaberto-clock
         golaberto-render: service:golaberto-render
       context: ..
       dockerfile: .bayt/Dockerfile.launch
       target: launch
+      tags:
+      - bayt-golaberto-launch:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-golaberto-launch:latest
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
@@ -53,6 +57,8 @@ services:
       golaberto-rclone-s3:
         condition: service_healthy
         restart: true
+      golaberto-clock:
+        condition: service_started
       golaberto-render:
         condition: service_healthy
         restart: true
@@ -64,7 +70,7 @@ services:
       interval: 5s
       timeout: 2s
       retries: 3
-    image: bayt-golaberto-launch:${BAYT_IMAGE_TAG:-latest}
+    image: bayt-golaberto-launch:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
     networks:
       default:
         aliases:
@@ -83,6 +89,7 @@ services:
         golaberto-compute_bayt: service:golaberto-compute_bayt
         golaberto-auth_bayt: service:golaberto-auth_bayt
         golaberto-rclone-s3_bayt: service:golaberto-rclone-s3_bayt
+        golaberto-clock_bayt: service:golaberto-clock_bayt
         golaberto-render_bayt: service:golaberto-render_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.launch

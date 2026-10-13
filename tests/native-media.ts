@@ -1,5 +1,4 @@
 import postgres from "npm:postgres@3.4.9";
-import { replayLock } from "./db.ts";
 import { SignJWT } from "npm:jose@6.0.11";
 import sharp from "npm:sharp@0.34.5";
 import { normalize } from "../services/media/normalize.ts";
@@ -93,12 +92,12 @@ Deno.test("native object upload and ordinary field attachment enforce ownership,
   }
   try {
     // The checked database is migrated. Replaying 041 twice in a transaction
-    // that rolls back proves it idempotent without committing DDL, which every
-    // concurrent check would race for pgroll's linear ledger.
+    // that rolls back proves it idempotent without committing DDL to pgroll's
+    // linear ledger.
     const migration = (await Deno.readTextFile(
       new URL("../services/database/sql/041_native_media.sql", import.meta.url),
     )).replace(/^(BEGIN|COMMIT);$/gm, "");
-    await sql.unsafe(`BEGIN;${replayLock}${migration}${migration}ROLLBACK;`);
+    await sql.unsafe(`BEGIN;${migration}${migration}ROLLBACK;`);
     await sql`INSERT INTO app_user(id,handle) VALUES(${owner},${owner}),(${other},${other}),(${editor},${editor})`;
     await sql`INSERT INTO editor(id,app_user_id) VALUES(${crypto.randomUUID()},${editor})`;
     await sql`INSERT INTO team(id,name,country) VALUES(${team},'Native media','Brasil')`;

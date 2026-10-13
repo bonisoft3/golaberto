@@ -9,12 +9,23 @@ _teamOddsProgressUpgrade: strings.Replace(strings.Replace(_teamOddsProgressSql, 
 _queuedOddsRefreshSql:    string @embed(file="services/database/sql/043_queued_odds_refresh.sql", type=text)
 
 code: state: entities: {
+	TeamOddsProgressSource: {
+		id: "0xe29b0989914ccf9b"
+		table: "team_odds_progress_source"
+		durability: "tab"
+		fields: [
+			{ordinal: 1, name: "id", type: "string", pk: true},
+			{ordinal: 2, name: "group_id", type: "uuid"},
+			{ordinal: 3, name: "team_id", type: "uuid"},
+			{ordinal: 4, name: "current_json", type: "string", default: "'{}'"},
+			{ordinal: 5, name: "series_json", type: "string", default: "'{}'"},
+		]
+	}
 	TeamOddsProgress: {
 		id: "0x830e6584120a43e0"
 		table:      "team_odds_progress"
 		durability: "live"
 		access: {scope: "public"}
-		writers: "pipeline"
 		uniques: [{name: "uq_team_odds_progress_group_team", cols: ["group_id", "team_id"]}]
 		fields: [
 			{ordinal: 1, name: "id", type: "string", pk: true},
@@ -50,11 +61,12 @@ code: state: entities: {
 }
 
 code: surface: handlers: {
+	"position-odds-source": {ir: "handler-position-odds-source", of: "equipe-campeonato", src: "shell/handlers/position-odds-source.js", note: "source reads update a tab snapshot independently of the reader's inspection state"}
 	"odds-progress-snapshot": {ir: "handler-odds-progress-snapshot", of: "equipe-campeonato", src: "shell/handlers/odds-progress-snapshot.js", note: "only the history's own date slider selects a recorded snapshot"}
 	"odds-progress-point": {ir: "handler-odds-progress-point", of: "equipe-campeonato", src: "shell/handlers/odds-progress-point.js", note: "a pointer over the history graph selects the nearest recorded snapshot"}
 	"odds-progress-zone": {ir: "handler-odds-progress-zone", of: "equipe-campeonato", src: "shell/handlers/odds-progress-zone.js", note: "a zone filter accepts only a zone the history carries, or all positions"}
 	"position-odds-control": {ir: "handler-position-odds-control", of: "equipe-campeonato", src: "shell/handlers/position-odds-control.js", note: "current-position inspection and exact-value mode stay separate from recorded date selection"}
-	"position-odds-fold": {ir: "handler-position-odds-fold", of: "equipe-campeonato", src: "shell/handlers/position-odds-fold.js", note: "current position odds, the group's zones and the recorded history fold into one inspection row"}
+	"position-odds-fold": {ir: "handler-position-odds-fold", of: "equipe-campeonato", src: "shell/handlers/position-odds-fold.js", note: "the local source snapshot updates inspection while preserving the reader's selections"}
 }
 
 code: state: migrations: "042_team_odds_progress": {operations: [{sql: {up: _teamOddsProgressUpgrade, onComplete: true}}]}
@@ -70,7 +82,7 @@ build: checks: "odds-progress": {
 
 loop: surface: checks: "odds-progress-renderer": {
 	verb: "test"
-	cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/odds-progress-renderer.ts tests/odds-progress-controls.ts tests/position-odds-renderer.ts tests/position-odds-controls.ts"]
+	cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/odds-progress-renderer.ts tests/odds-progress-controls.ts tests/position-odds-renderer.ts tests/position-odds-controls.ts tests/position-odds-hover.ts"]
 	note: "shared-date stacks, zone paint by role or source hex, compact locale-aware odds, range totals and isolated chart controls"
 }
 

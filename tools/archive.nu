@@ -44,7 +44,8 @@ def settings []: nothing -> record {
 
 def --wrapped archive-compose [s: record, ...args] {
   with-env $s.env {
-    run-docker-compose -p $s.project -f .bayt/compose.launch.closure.yaml -f tools/archive/compose.preserve.yaml ...$args
+    # The ports overlay publishes the door: a closure alone keeps it private.
+    run-docker-compose -p $s.project -f .bayt/compose.launch.closure.yaml -f .bayt/compose.bayt.ports.yaml -f tools/archive/compose.preserve.yaml ...$args
   }
 }
 

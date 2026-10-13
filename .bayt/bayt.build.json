@@ -4,8 +4,8 @@
     "preamble": [],
     "preambleCopyContexts": [],
     "from": {
-      "ref": ":setup",
-      "name": "golaberto-setup"
+      "ref": ":generate",
+      "name": "golaberto-generate"
     },
     "add": [],
     "mounts": [],
@@ -25,10 +25,11 @@
   "activate": "mise x --",
   "srcs": {
     "globs": [
-      "**"
+      "**",
+      ".bayt/checks.yaml"
     ],
     "exclude": [
-      ".bayt/**",
+      ".pronto/proto-baseline.json",
       "**/node_modules/**",
       ".task/**",
       "tests/**"
@@ -59,7 +60,8 @@
           ".bayt/bayt.build.json",
           ".bayt/Taskfile.yml",
           ".bayt/Taskfile.bayt.yml",
-          ".bayt/Taskfile.build.yaml"
+          ".bayt/Taskfile.build.yaml",
+          ".bayt/process-compose.yaml"
         ],
         "exclude": []
       },
@@ -76,6 +78,7 @@
       },
       "upClosure": [
         "./.bayt/compose.build.yaml",
+        "./.bayt/compose.generate.yaml",
         "./.bayt/compose.setup.yaml"
       ]
     },
@@ -105,6 +108,7 @@
       },
       "upClosure": [
         "./.bayt/compose.build.yaml",
+        "./.bayt/compose.generate.yaml",
         "./.bayt/compose.setup.yaml"
       ]
     },
@@ -119,10 +123,15 @@
       },
       "outs": {
         "globs": [
-          "**"
+          "**",
+          ".bayt/checks.yaml",
+          "[m]ise.toml",
+          "[.]mise.toml",
+          "[m]ise.lock",
+          "[.]tool-versions"
         ],
         "exclude": [
-          ".bayt/**",
+          ".pronto/proto-baseline.json",
           "**/node_modules/**",
           ".task/**",
           "tests/**"
@@ -132,9 +141,42 @@
       "visibility": "internal",
       "deps": [],
       "transitiveDeps": [
+        "generate_srcs",
         "setup_srcs"
       ],
-      "transitiveCrossDeps": [],
+      "transitiveCrossDeps": [
+        {
+          "project": "golaberto",
+          "name": "generate_srcs",
+          "dir": ".",
+          "outs": {
+            "globs": [
+              "**"
+            ],
+            "exclude": [
+              ".bayt/**",
+              ".pronto/proto-baseline.json",
+              "**/node_modules/**",
+              ".task/**",
+              "tests/**"
+            ]
+          }
+        },
+        {
+          "project": "golaberto",
+          "name": "setup_srcs",
+          "dir": ".",
+          "outs": {
+            "globs": [
+              "[m]ise.toml",
+              "[.]mise.toml",
+              "[m]ise.lock",
+              "[.]tool-versions"
+            ],
+            "exclude": []
+          }
+        }
+      ],
       "chainedDeps": [],
       "cmds": [],
       "cache": {
@@ -143,6 +185,7 @@
       },
       "upClosure": [
         "./.bayt/compose.build.yaml",
+        "./.bayt/compose.generate.yaml",
         "./.bayt/compose.setup.yaml"
       ]
     }
@@ -155,20 +198,31 @@
   "visibility": "internal",
   "emitsSrcs": true,
   "deps": [
-    "setup"
+    "generate"
   ],
   "sameProjectDeps": [
-    "setup"
+    "generate"
   ],
   "transitiveDeps": [
+    "generate",
     "setup"
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
     "./.bayt/compose.build.yaml",
+    "./.bayt/compose.generate.yaml",
     "./.bayt/compose.setup.yaml"
   ],
   "chainedDeps": [
+    {
+      "name": "generate",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
     {
       "name": "setup",
       "project": "golaberto",
@@ -183,10 +237,11 @@
     {
       "srcs": {
         "globs": [
-          "**"
+          "**",
+          ".bayt/checks.yaml"
         ],
         "exclude": [
-          ".bayt/**",
+          ".pronto/proto-baseline.json",
           "**/node_modules/**",
           ".task/**",
           "tests/**"
@@ -194,9 +249,9 @@
         "defaultGlobs": null,
         "defaultExclude": null
       },
-      "do": "./saytw build",
+      "do": "^nu -I (^mise where github:bonisoft3/sayt | str trim) -c 'use task-leaf.nu; task-leaf build'",
+      "shell": "nu",
       "name": "builtin",
-      "shell": "exec",
       "stop": false
     }
   ],

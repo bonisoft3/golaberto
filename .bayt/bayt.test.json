@@ -24,8 +24,16 @@
   "dir": ".",
   "activate": "mise x --",
   "srcs": {
-    "globs": [],
-    "exclude": []
+    "globs": [
+      "**",
+      ".bayt/checks.yaml",
+      ".pronto/facts.json"
+    ],
+    "exclude": [
+      ".pronto/proto-baseline.json",
+      "**/node_modules/**",
+      ".task/**"
+    ]
   },
   "outs": {
     "globs": [],
@@ -52,7 +60,8 @@
           ".bayt/bayt.test.json",
           ".bayt/Taskfile.yml",
           ".bayt/Taskfile.bayt.yml",
-          ".bayt/Taskfile.test.yaml"
+          ".bayt/Taskfile.test.yaml",
+          ".bayt/process-compose.yaml"
         ],
         "exclude": []
       },
@@ -70,6 +79,7 @@
       "upClosure": [
         "./.bayt/compose.test.yaml",
         "./.bayt/compose.build.yaml",
+        "./.bayt/compose.generate.yaml",
         "./.bayt/compose.setup.yaml"
       ]
     },
@@ -100,6 +110,7 @@
       "upClosure": [
         "./.bayt/compose.test.yaml",
         "./.bayt/compose.build.yaml",
+        "./.bayt/compose.generate.yaml",
         "./.bayt/compose.setup.yaml"
       ]
     },
@@ -114,15 +125,26 @@
       },
       "outs": {
         "globs": [
-          "**"
+          "**",
+          ".bayt/checks.yaml",
+          ".pronto/facts.json",
+          "[m]ise.toml",
+          "[.]mise.toml",
+          "[m]ise.lock",
+          "[.]tool-versions"
         ],
-        "exclude": []
+        "exclude": [
+          ".pronto/proto-baseline.json",
+          "**/node_modules/**",
+          ".task/**"
+        ]
       },
       "env": {},
       "visibility": "internal",
       "deps": [],
       "transitiveDeps": [
         "build_srcs",
+        "generate_srcs",
         "setup_srcs"
       ],
       "transitiveCrossDeps": [
@@ -132,14 +154,46 @@
           "dir": ".",
           "outs": {
             "globs": [
-              "**"
+              "**",
+              ".bayt/checks.yaml"
             ],
             "exclude": [
-              ".bayt/**",
+              ".pronto/proto-baseline.json",
               "**/node_modules/**",
               ".task/**",
               "tests/**"
             ]
+          }
+        },
+        {
+          "project": "golaberto",
+          "name": "generate_srcs",
+          "dir": ".",
+          "outs": {
+            "globs": [
+              "**"
+            ],
+            "exclude": [
+              ".bayt/**",
+              ".pronto/proto-baseline.json",
+              "**/node_modules/**",
+              ".task/**",
+              "tests/**"
+            ]
+          }
+        },
+        {
+          "project": "golaberto",
+          "name": "setup_srcs",
+          "dir": ".",
+          "outs": {
+            "globs": [
+              "[m]ise.toml",
+              "[.]mise.toml",
+              "[m]ise.lock",
+              "[.]tool-versions"
+            ],
+            "exclude": []
           }
         }
       ],
@@ -152,6 +206,7 @@
       "upClosure": [
         "./.bayt/compose.test.yaml",
         "./.bayt/compose.build.yaml",
+        "./.bayt/compose.generate.yaml",
         "./.bayt/compose.setup.yaml"
       ]
     }
@@ -171,17 +226,28 @@
   ],
   "transitiveDeps": [
     "build",
+    "generate",
     "setup"
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
     "./.bayt/compose.test.yaml",
     "./.bayt/compose.build.yaml",
+    "./.bayt/compose.generate.yaml",
     "./.bayt/compose.setup.yaml"
   ],
   "chainedDeps": [
     {
       "name": "build",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "generate",
       "project": "golaberto",
       "dir": ".",
       "outs": {
@@ -202,14 +268,25 @@
   "cmds": [
     {
       "srcs": {
-        "globs": [],
-        "exclude": [],
+        "globs": [
+          "**",
+          ".bayt/checks.yaml",
+          ".pronto/facts.json"
+        ],
+        "exclude": [
+          ".pronto/proto-baseline.json",
+          "**/node_modules/**",
+          ".task/**"
+        ],
         "defaultGlobs": null,
         "defaultExclude": null
       },
-      "do": "cue vet -c ./...",
+      "do": "^nu -I (^mise where github:bonisoft3/sayt | str trim) -c 'use task-leaf.nu; task-leaf test'",
+      "shell": "nu",
+      "dockerfile": {
+        "do": "cue vet -c ./..."
+      },
       "name": "builtin",
-      "shell": "exec",
       "stop": false
     }
   ],

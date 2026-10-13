@@ -5,7 +5,6 @@ code: state: entities: {
 		id: "0xa8ed30eedb435a14"
 		table:      "phase_directory"
 		durability: "server"
-		writers:    "pipeline"
 		access: {scope: "public"}
 		fields: [
 			{ordinal: 1, name: "id", type: "uuid", pk: true},
@@ -20,7 +19,6 @@ code: state: entities: {
 		id: "0xe0b08154b2af5782"
 		table: "player_directory"
 		durability: "server"
-		writers: "pipeline"
 		access: {scope: "public"}
 		fields: [
 			{ordinal: 1, name: "id", type: "uuid", pk: true},
@@ -50,7 +48,6 @@ code: state: entities: {
 		id: "0x853b9ec68d8b90d2"
 		table: "game_archive"
 		durability: "server"
-		writers: "pipeline"
 		access: {scope: "public"}
 		fields: [
 			{ordinal: 1, name: "id", type: "uuid", pk: true},
@@ -101,7 +98,6 @@ code: state: entities: {
 		id: "0x8d885bdc70946da0"
 		table: "player_appearance"
 		durability: "server"
-		writers: "pipeline"
 		access: {scope: "public"}
 		fields: [
 			{ordinal: 1, name: "id", type: "uuid", pk: true},
@@ -164,7 +160,6 @@ code: state: entities: {
 		id: "0xe66ae0649c6349c7"
 		table: "championship_attendance"
 		durability: "server"
-		writers: "pipeline"
 		access: {scope: "public"}
 		fields: [
 			{ordinal: 1, name: "id", type: "string", pk: true},

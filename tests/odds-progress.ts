@@ -1,6 +1,6 @@
 // Odds progress against the cluster's Postgres: every fixture is rolled back.
 import { assertEquals } from "jsr:@std/assert@1";
-import { query, replayLock } from "./db.ts";
+import { query, replay } from "./db.ts";
 
 const id = () => crypto.randomUUID();
 const migration = (await Deno.readTextFile(new URL("../services/database/sql/042_team_odds_progress.sql", import.meta.url)))
@@ -8,7 +8,7 @@ const migration = (await Deno.readTextFile(new URL("../services/database/sql/042
 
 Deno.test("042 replays over itself without touching recorded history", async () => {
   const fingerprint = `(SELECT md5(coalesce(string_agg(md5(to_jsonb(h)::text),'' ORDER BY id),'')) FROM team_odds_history h)`;
-  assertEquals(await query(`BEGIN;${replayLock}
+  assertEquals(await replay(`BEGIN;
     SELECT set_config('golaberto.odds_history_before',${fingerprint},true) IS NOT NULL AS taken;
     ${migration}
     ${migration}

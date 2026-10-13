@@ -19,7 +19,6 @@ code: state: entities: {
 		id: "0xf8705353de87b210"
 		table:      "user_directory"
 		durability: "server"
-		writers:    "pipeline"
 		access: {scope: "public"}
 		fields: [
 			{ordinal: 1, name: "id", type: "uuid", pk: true},
@@ -41,7 +40,6 @@ code: state: entities: {
 		id: "0x903a8709bf4643da"
 		table:      "game_change"
 		durability: "server"
-		writers:    "pipeline"
 		access: {scope: "public"}
 		fields: [
 			{ordinal: 1, name: "id", type: "uuid", pk: true, default: "gen_random_uuid()"},

@@ -5,7 +5,7 @@
     "manual": true,
     "build": {
       "additional_contexts": {
-        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.8.0@sha256:f51c51cb45151e671fde4268ba499dd6353d9d6362798d771951daa73d127ea0}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.9.0@sha256:275dddfe0afce4358da916fc3cde9da49516139850d440eb1f4f7d87e56b1fb4}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
       },
       "secrets": [],
       "args": {}
@@ -26,7 +26,7 @@
     "environment": {
       "APP_URL": "https://caddy:8443",
       "DATABASE_URL": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
-      "ORIGIN": "${ORIGIN:-https://localhost:8443}",
+      "ORIGIN": "${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT}}",
       "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}"
     },
     "ports": [],
@@ -103,6 +103,7 @@
           ".bayt/Taskfile.bayt.yml",
           ".bayt/Taskfile.check-odds-progress.yaml",
           ".bayt/compose.check-odds-progress.closure.yaml",
+          ".bayt/process-compose.yaml",
           ".bayt/compose.*.yaml",
           ".bayt/Dockerfile.*",
           ".bayt/bayt.*.json",
@@ -128,8 +129,8 @@
         "./.bayt/compose.setup.yaml",
         "./.bayt/compose.launch.yaml",
         "./.bayt/compose.caddy.yaml",
-        "./.bayt/compose.database.yaml",
         "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
         "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.redis.yaml",
@@ -139,6 +140,8 @@
         "./.bayt/compose.compute.yaml",
         "./.bayt/compose.auth.yaml",
         "./.bayt/compose.rclone-s3.yaml",
+        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.ticker.yaml",
         "./.bayt/compose.render.yaml"
       ]
     },
@@ -171,8 +174,8 @@
         "./.bayt/compose.setup.yaml",
         "./.bayt/compose.launch.yaml",
         "./.bayt/compose.caddy.yaml",
-        "./.bayt/compose.database.yaml",
         "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
         "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.redis.yaml",
@@ -182,6 +185,8 @@
         "./.bayt/compose.compute.yaml",
         "./.bayt/compose.auth.yaml",
         "./.bayt/compose.rclone-s3.yaml",
+        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.ticker.yaml",
         "./.bayt/compose.render.yaml"
       ]
     },
@@ -198,7 +203,11 @@
         "globs": [
           "tests/**",
           "services/database/sql/042_team_odds_progress.sql",
-          "services/database/sql/043_queued_odds_refresh.sql"
+          "services/database/sql/043_queued_odds_refresh.sql",
+          "[m]ise.toml",
+          "[.]mise.toml",
+          "[m]ise.lock",
+          "[.]tool-versions"
         ],
         "exclude": []
       },
@@ -209,7 +218,22 @@
         "setup_srcs",
         "launch_outs_srcs"
       ],
-      "transitiveCrossDeps": [],
+      "transitiveCrossDeps": [
+        {
+          "project": "golaberto",
+          "name": "setup_srcs",
+          "dir": ".",
+          "outs": {
+            "globs": [
+              "[m]ise.toml",
+              "[.]mise.toml",
+              "[m]ise.lock",
+              "[.]tool-versions"
+            ],
+            "exclude": []
+          }
+        }
+      ],
       "chainedDeps": [],
       "cmds": [],
       "cache": {
@@ -221,8 +245,8 @@
         "./.bayt/compose.setup.yaml",
         "./.bayt/compose.launch.yaml",
         "./.bayt/compose.caddy.yaml",
-        "./.bayt/compose.database.yaml",
         "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
         "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.redis.yaml",
@@ -232,6 +256,8 @@
         "./.bayt/compose.compute.yaml",
         "./.bayt/compose.auth.yaml",
         "./.bayt/compose.rclone-s3.yaml",
+        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.ticker.yaml",
         "./.bayt/compose.render.yaml"
       ]
     }
@@ -261,8 +287,8 @@
     "./.bayt/compose.setup.yaml",
     "./.bayt/compose.launch.yaml",
     "./.bayt/compose.caddy.yaml",
-    "./.bayt/compose.database.yaml",
     "./.bayt/compose.crud.yaml",
+    "./.bayt/compose.database.yaml",
     "./.bayt/compose.migrate.yaml",
     "./.bayt/compose.electric.yaml",
     "./.bayt/compose.redis.yaml",
@@ -272,6 +298,8 @@
     "./.bayt/compose.compute.yaml",
     "./.bayt/compose.auth.yaml",
     "./.bayt/compose.rclone-s3.yaml",
+    "./.bayt/compose.clock.yaml",
+    "./.bayt/compose.ticker.yaml",
     "./.bayt/compose.render.yaml"
   ],
   "chainedDeps": [

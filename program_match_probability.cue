@@ -12,7 +12,6 @@ code: state: entities: {
 		id: "0xde64479fbf5382c5"
 		table:      "match_probability"
 		durability: "server"
-		writers:    "pipeline"
 		access: {scope: "public"}
 		fields: [
 			{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "game"},

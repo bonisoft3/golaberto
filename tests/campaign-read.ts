@@ -8,13 +8,17 @@ type Plan = {
   "Actual Loops": number;
   "Actual Rows": number;
   "Index Cond"?: string;
+  "Index Name"?: string;
   Plans?: Plan[];
 };
 const nodes = (
   plan: Plan,
 ): Plan[] => [plan, ...(plan.Plans ?? []).flatMap(nodes)];
 
-Deno.test("campaign requests rank the whole group and observe source edits immediately", async () => {
+// Campaign history was computed on every read, ranking each round of the whole
+// group: a full archive's league page spent 1.4 s per read at the edge. It is
+// now stored per group and refreshed by the team-chart queue's drain.
+Deno.test("campaign history ranks the whole group, follows source edits through the queue, and reads by index", async () => {
   const [a, b, c, d, champ, phase, group, otherPhase, otherGroup] = Array.from({
     length: 9,
   }, () => crypto.randomUUID());
@@ -24,11 +28,20 @@ Deno.test("campaign requests rank the whole group and observe source edits immed
   ).sort();
   const query =
     `SELECT p.*,t.name,source.day AS game_day FROM team_campaign_point p
-    JOIN team t ON t.id=p.team_id CROSS JOIN LATERAL game(p) source
+    JOIN team t ON t.id=p.team_id JOIN game source ON source.id=p.game_id
     WHERE p.group_id='${group}' AND p.team_id IN ('${a}','${b}')
     ORDER BY p.sequence,p.team_id LIMIT 800`;
   const paged = `SELECT * FROM team_campaign_point WHERE group_id='${group}'
     AND team_id='${b}' ORDER BY sequence OFFSET 1 LIMIT 1`;
+  // What the drain does for a queued group; asserting the queue first keeps a
+  // source edit that enqueues nothing from passing.
+  const drain = `DO $$ BEGIN
+      IF NOT EXISTS (SELECT 1 FROM team_odds_chart_dirty WHERE group_id='${group}')
+        THEN RAISE EXCEPTION 'a source edit did not queue its group'; END IF;
+      PERFORM refresh_team_odds_charts(group_id) FROM team_odds_chart_dirty
+        WHERE group_id IN ('${group}','${otherGroup}');
+      DELETE FROM team_odds_chart_dirty WHERE group_id IN ('${group}','${otherGroup}');
+    END $$;`;
   const output = await psql(`BEGIN;
     INSERT INTO team(id,name,country) VALUES ('${a}','Campaign A','Brasil'),
       ('${b}','Campaign B','Brasil'),('${c}','Campaign C','Brasil'),('${d}','Campaign D','Brasil');
@@ -51,6 +64,7 @@ Deno.test("campaign requests rank the whole group and observe source edits immed
       ('${bc}','${phase}',1,'2026-01-01','${b}','${c}',true,1,0),
       ('${bd}','${phase}',1,'2026-01-01','${b}','${d}',true,1,0),
       ('${dc}','${phase}',1,'2026-01-01','${d}','${c}',true,1,0);
+    ${drain}
     SET LOCAL app.scopes='public:';
     SET LOCAL ROLE app_user;
     DO $$ BEGIN
@@ -63,29 +77,33 @@ Deno.test("campaign requests rank the whole group and observe source edits immed
     END $$;
     RESET ROLE;
     UPDATE game SET home_score=0,away_score=1 WHERE id='${ab}';
+    ${drain}
     DO $$ BEGIN
       IF (SELECT points FROM team_campaign_point WHERE group_id='${group}' AND team_id='${b}' AND game_id='${ab}') IS DISTINCT FROM 9
-        THEN RAISE EXCEPTION 'score correction must be visible on the next read'; END IF;
+        THEN RAISE EXCEPTION 'a score correction must reach the stored campaign'; END IF;
     END $$;
     UPDATE game SET home_score=1,away_score=0 WHERE id='${ab}';
     UPDATE championship SET point_win=4 WHERE id='${champ}';
+    ${drain}
     DO $$ BEGIN
       IF (SELECT points FROM team_campaign_point WHERE group_id='${group}' AND team_id='${b}' AND game_id='${ab}') IS DISTINCT FROM 8
-        THEN RAISE EXCEPTION 'points rule correction must be visible on the next read'; END IF;
+        THEN RAISE EXCEPTION 'a points rule correction must reach the stored campaign'; END IF;
     END $$;
     UPDATE championship SET point_win=3 WHERE id='${champ}';
     UPDATE team_group SET add_sub=2 WHERE group_id='${group}' AND team_id='${b}';
+    ${drain}
     DO $$ BEGIN
       IF (SELECT points FROM team_campaign_point WHERE group_id='${group}' AND team_id='${b}' AND game_id='${ab}') IS DISTINCT FROM 8
         OR (SELECT position FROM team_campaign_point WHERE group_id='${group}' AND team_id='${b}' AND game_id='${ab}') IS DISTINCT FROM 1
-        THEN RAISE EXCEPTION 'membership points correction must rerank the group immediately'; END IF;
+        THEN RAISE EXCEPTION 'a membership points correction must rerank the stored group'; END IF;
     END $$;
     UPDATE team_group SET add_sub=0 WHERE group_id='${group}' AND team_id='${b}';
     UPDATE phase SET sort='pt,bias,name' WHERE id='${phase}';
     UPDATE team_group SET bias=10 WHERE group_id='${group}' AND team_id='${b}';
+    ${drain}
     DO $$ BEGIN
       IF (SELECT position FROM team_campaign_point WHERE group_id='${group}' AND team_id='${b}' AND game_id='${ab}') IS DISTINCT FROM 1
-        THEN RAISE EXCEPTION 'sort and bias correction must rerank the group immediately'; END IF;
+        THEN RAISE EXCEPTION 'a sort and bias correction must rerank the stored group'; END IF;
     END $$;
     UPDATE phase SET sort='pt,head,bias,name' WHERE id='${phase}';
     UPDATE team_group SET bias=0 WHERE group_id='${group}' AND team_id='${b}';
@@ -107,22 +125,19 @@ Deno.test("campaign requests rank the whole group and observe source edits immed
     END $$;
     RESET ROLE;
     UPDATE game SET phase_id='${otherPhase}' WHERE id='${ab}';
+    ${drain}
     DO $$ BEGIN
       IF EXISTS (SELECT 1 FROM team_campaign_point WHERE group_id='${group}' AND game_id='${ab}')
         OR NOT EXISTS (SELECT 1 FROM team_campaign_point WHERE group_id='${otherGroup}' AND game_id='${ab}')
-        THEN RAISE EXCEPTION 'moved games must immediately leave and enter their campaigns'; END IF;
+        THEN RAISE EXCEPTION 'a moved game must leave and enter its campaigns'; END IF;
     END $$;
     UPDATE game SET phase_id='${phase}' WHERE id='${ab}';
     DELETE FROM game WHERE id='${dc}';
     DELETE FROM team_group WHERE group_id='${group}' AND team_id='${b}';
+    ${drain}
     DO $$ BEGIN
       IF EXISTS (SELECT 1 FROM team_campaign_point WHERE group_id='${group}' AND (game_id='${dc}' OR team_id='${b}'))
-        THEN RAISE EXCEPTION 'deleted games and memberships must disappear on the next read'; END IF;
-      IF (SELECT relkind FROM pg_class WHERE oid='team_campaign_point'::regclass) <> 'v'
-        OR EXISTS (SELECT 1 FROM pg_publication_tables WHERE tablename='team_campaign_point')
-        OR to_regprocedure('refresh_team_campaign_group(uuid)') IS NOT NULL
-        OR to_regprocedure('replace_team_campaign_points(uuid,jsonb)') IS NOT NULL
-        THEN RAISE EXCEPTION 'campaign reads must have no stored rows or background writer'; END IF;
+        THEN RAISE EXCEPTION 'deleted games and memberships must leave the stored campaign'; END IF;
     END $$;
     SELECT current_setting('golaberto.campaign_plans');
     ROLLBACK;`);
@@ -130,15 +145,10 @@ Deno.test("campaign requests rank the whole group and observe source edits immed
   assertEquals(plans.length, 2);
   for (const plan of plans) {
     const all = nodes(plan);
-    const scans = all.filter((node) =>
-      node["Function Name"] === "jsonb_to_recordset"
-    );
-    assertEquals(scans.length, 1);
-    assertEquals(scans[0]["Actual Loops"], 1);
-    assert(scans[0]["Actual Rows"] > 0);
+    assertEquals(all.filter((node) => node["Function Name"] === "jsonb_to_recordset").length, 0, "a read computes no campaign");
     assert(
-      all.some((node) => node["Index Cond"]?.includes(group)),
-      "request group must constrain the source scan",
+      all.some((node) => node["Index Name"] === "team_campaign_point_group_team_sequence_idx" && node["Index Cond"]?.includes(group)),
+      "a read finds its group and team by index",
     );
   }
 });

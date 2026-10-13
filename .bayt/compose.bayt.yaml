@@ -4,9 +4,13 @@ include:
   required: false
 - path: ./compose.caddy.yaml
   required: false
+- path: ./compose.release-docker.yaml
+  required: false
 - path: ./compose.setup.yaml
   required: false
 - path: ./compose.lint.yaml
+  required: false
+- path: ./compose.generate.yaml
   required: false
 - path: ./compose.build.yaml
   required: false
@@ -16,27 +20,55 @@ include:
   required: false
 - path: ./compose.integrate.yaml
   required: false
+- path: ./compose.ci-visual.yaml
+  required: false
+- path: ./compose.check-drains.yaml
+  required: false
+- path: ./compose.ci-drains.yaml
+  required: false
 - path: ./compose.check-constraints.yaml
+  required: false
+- path: ./compose.ci-constraints.yaml
   required: false
 - path: ./compose.check-acceptance.yaml
   required: false
+- path: ./compose.ci-acceptance.yaml
+  required: false
 - path: ./compose.check-request-reads.yaml
+  required: false
+- path: ./compose.ci-request-reads.yaml
   required: false
 - path: ./compose.check-community-parity.yaml
   required: false
+- path: ./compose.ci-community-parity.yaml
+  required: false
 - path: ./compose.check-community-access.yaml
+  required: false
+- path: ./compose.ci-community-access.yaml
   required: false
 - path: ./compose.check-competition-admin.yaml
   required: false
+- path: ./compose.ci-competition-admin.yaml
+  required: false
 - path: ./compose.check-editing-parity.yaml
+  required: false
+- path: ./compose.ci-editing-parity.yaml
   required: false
 - path: ./compose.check-match-context.yaml
   required: false
+- path: ./compose.ci-match-context.yaml
+  required: false
 - path: ./compose.check-match-probability.yaml
+  required: false
+- path: ./compose.ci-match-probability.yaml
   required: false
 - path: ./compose.check-native-media.yaml
   required: false
+- path: ./compose.ci-native-media.yaml
+  required: false
 - path: ./compose.check-odds-progress.yaml
+  required: false
+- path: ./compose.ci-odds-progress.yaml
   required: false
 - path: ./compose.database.yaml
   required: false
@@ -57,6 +89,10 @@ include:
 - path: ./compose.transform.yaml
   required: false
 - path: ./compose.compute.yaml
+  required: false
+- path: ./compose.ticker.yaml
+  required: false
+- path: ./compose.clock.yaml
   required: false
 - path: ./compose.render.yaml
   required: false

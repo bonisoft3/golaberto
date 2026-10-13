@@ -141,13 +141,14 @@ Deno.test("accept-community-profile", async () => {
 		await page.locator(`${active} h1`).filter({
 			hasText: `${f.prefix} Revised`,
 		}).waitFor({ timeout });
+		// A fresh guest's eligibility is read with the page, carried in the
+		// document it is served.
 		const guest = await f.open();
-		const guestEligibility = profileEligibility(guest);
 		await visit(guest, `usuario/${f.other}`);
-		assertEquals(await (await guestEligibility).json(), []);
 		await guest.locator(`${active} h1`).filter({
 			hasText: `${f.prefix} Revised`,
 		}).waitFor({ timeout });
+		assertEquals(await guest.locator(`${active} .community-edit`).count(), 0);
 		assertEquals(
 			await guest.locator(`${active} .community-about img`).count(),
 			0,
@@ -404,10 +405,13 @@ Deno.test("accept-community-media", async () => {
 			)).status(),
 			404,
 		);
-		for (const viewer of [await f.open(), await f.open(f.owner)]) {
-			const eligibility = profileEligibility(viewer);
+		for (const id of [undefined, f.owner]) {
+			const viewer = await f.open(id);
+			// A fresh guest's eligibility is carried in the document it is
+			// served; a reader signed in asks the door.
+			const eligibility = id === undefined ? null : profileEligibility(viewer);
 			await visit(viewer, `usuario/${f.other}`);
-			assertEquals(await (await eligibility).json(), []);
+			if (eligibility !== null) assertEquals(await (await eligibility).json(), []);
 			await publicImage(viewer, replacement);
 			assertEquals(
 				await viewer.locator(`${active} form[data-entity="user_avatar"]`)

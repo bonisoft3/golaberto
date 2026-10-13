@@ -9,6 +9,9 @@ services:
       context: ..
       dockerfile: .bayt/Dockerfile.transform
       target: transform
+      tags:
+      - bayt-golaberto-transform:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-golaberto-transform:latest
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
@@ -28,23 +31,8 @@ services:
         path: ../docker/golaberto-standings.yaml
         target: /pipelines/golaberto-standings.yaml
       - action: sync+restart
-        path: ../docker/golaberto-team-directory.yaml
-        target: /pipelines/golaberto-team-directory.yaml
-      - action: sync+restart
-        path: ../docker/golaberto-team-profiles.yaml
-        target: /pipelines/golaberto-team-profiles.yaml
-      - action: sync+restart
         path: ../docker/golaberto-game-cards.yaml
         target: /pipelines/golaberto-game-cards.yaml
-      - action: sync+restart
-        path: ../docker/golaberto-home-games.yaml
-        target: /pipelines/golaberto-home-games.yaml
-      - action: sync+restart
-        path: ../docker/golaberto-recent-championships.yaml
-        target: /pipelines/golaberto-recent-championships.yaml
-      - action: sync+restart
-        path: ../docker/golaberto-matches-games.yaml
-        target: /pipelines/golaberto-matches-games.yaml
       - action: sync+restart
         path: ../docker/golaberto-player-stats.yaml
         target: /pipelines/golaberto-player-stats.yaml
@@ -54,13 +42,25 @@ services:
       - action: sync+restart
         path: ../docker/golaberto-team-enrichment.yaml
         target: /pipelines/golaberto-team-enrichment.yaml
+      - action: sync+restart
+        path: ../docker/golaberto-team-profiles.yaml
+        target: /pipelines/golaberto-team-profiles.yaml
+      - action: sync+restart
+        path: ../docker/golaberto-team-directory.yaml
+        target: /pipelines/golaberto-team-directory.yaml
+      - action: sync+restart
+        path: ../docker/golaberto-matches-games.yaml
+        target: /pipelines/golaberto-matches-games.yaml
+      - action: sync+restart
+        path: ../docker/golaberto-recent-championships.yaml
+        target: /pipelines/golaberto-recent-championships.yaml
     environment:
       COMPUTE_GROUP: golaberto-compute
       CRUD_URL: http://crud:3000
       REDIS_URL: redis://redis:6379
       SERVICE_JWT: >-
         ${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
-    image: bayt-golaberto-transform:${BAYT_IMAGE_TAG:-latest}
+    image: bayt-golaberto-transform:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
     networks:
       default:
         aliases:

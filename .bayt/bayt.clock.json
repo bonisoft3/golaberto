@@ -1,0 +1,177 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "compose": {
+    "up": false,
+    "manual": false,
+    "build": {
+      "additional_contexts": {
+        "libraries_mecha-clock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-clock:0.9.0@sha256:185d23538507ff041799c6408846643205080c80a0f56c7e2d7637278876dd1b}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-clock-image}"
+      },
+      "secrets": [],
+      "args": {}
+    },
+    "environment": {
+      "POKE_URL": "http://ticker:9998",
+      "POKE_INTERVAL": "${POKE_INTERVAL:-60s}",
+      "POKE_CALLER": "compose",
+      "SERVICE_JWT": "${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}"
+    },
+    "ports": [],
+    "volumes": [],
+    "depends_on": {
+      "golaberto-ticker": {
+        "condition": "service_started"
+      }
+    },
+    "networks": {
+      "default": {
+        "aliases": [
+          "clock"
+        ]
+      }
+    },
+    "restart": "on-failure"
+  },
+  "dockerfile": {
+    "preamble": [],
+    "preambleCopyContexts": [],
+    "from": {
+      "name": "libraries_mecha-clock-image"
+    },
+    "add": [],
+    "mounts": [],
+    "secrets": {},
+    "extra_hosts": [],
+    "epilogue": [],
+    "copy": [],
+    "healthcheck": null,
+    "expose": [],
+    "entrypoint": null,
+    "incremental": false,
+    "cmd": null
+  },
+  "name": "clock",
+  "project": "golaberto",
+  "dir": ".",
+  "activate": "",
+  "srcs": {
+    "globs": [],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {},
+  "synthetics": {
+    "bayt": {
+      "name": "clock_bayt",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.clock.yaml",
+          ".bayt/Dockerfile.clock",
+          ".bayt/bayt.clock.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/process-compose.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.ticker.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml"
+      ]
+    },
+    "outs": {
+      "name": "clock_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.ticker.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml"
+      ]
+    }
+  },
+  "visibility": "internal",
+  "emitsSrcs": false,
+  "deps": [
+    "ticker_outs"
+  ],
+  "sameProjectDeps": [
+    "ticker_outs"
+  ],
+  "transitiveDeps": [
+    "ticker_outs"
+  ],
+  "transitiveCrossDeps": [],
+  "upClosure": [
+    "./.bayt/compose.clock.yaml",
+    "./.bayt/compose.ticker.yaml",
+    "./.bayt/compose.crud.yaml",
+    "./.bayt/compose.database.yaml",
+    "./.bayt/compose.migrate.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "ticker_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

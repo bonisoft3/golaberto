@@ -27,7 +27,7 @@ _playerDirectoryMarkup: """
 	table:  "player_directory"
 	filter: _playerDirectoryFilter
 	order:  _playerDirectoryOrder
-	context: {q: "", q_key: "", country: "", country_key: "", region: "*", position: "*", sort: "rating"}
+	emptyRow: {q: "", q_key: "", country: "", country_key: "", region: "*", position: "*", sort: "rating"}
 	events: {
 		"input@players-directory-q": assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}
 		"input@players-directory-country": assign: {country: {type: "event", params: field: "value"}, country_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}
@@ -130,7 +130,7 @@ _playerCareerMarkup: (#PagedRead & {
 	filter: _playerCareerFilter
 	order:  _playerSeasonOrder
 	seed:   true
-	context: {q: "", q_key: "", minimum_minutes: 0, sort: "minutes", csv_rows: "[]"}
+	emptyRow: {q: "", q_key: "", minimum_minutes: 0, sort: "minutes", csv_rows: "[]"}
 	events: (#PlayerSeasonEvents & {key: "player-career"}).out
 	controls: (#PlayerSeasonControls & {key: "player-career"}).out
 	content: (#PlayerSeasonTable & {filter: _playerCareerFilter, order: _playerSeasonOrder, career: true, total: _playerCareerTotalMarkup}).out
@@ -148,7 +148,7 @@ _playerCareerMarkup: (#PagedRead & {
 		table:  "player_appearance"
 		filter: A._filter
 		order:  A._order
-		context: {category: "*", played: "true", if A.scoped {championship_id: "{championship_id}", team_id: "{team_id}"}}
+		emptyRow: {category: "*", played: "true", if A.scoped {championship_id: "{championship_id}", team_id: "{team_id}"}}
 		events: {for field in ["category", "played"] {
 			("change@\(A.key)-\(field)"): assign: {(field): {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}
 		}}
@@ -224,7 +224,7 @@ _championshipPlayersMarkup: """
 	filter: _championshipPlayersFilter
 	order:  _playerSeasonOrder
 	seed:   true
-	context: {q: "", q_key: "", minimum_minutes: 0, sort: "goals", csv_rows: "[]"}
+	emptyRow: {q: "", q_key: "", minimum_minutes: 0, sort: "goals", csv_rows: "[]"}
 	events: (#PlayerSeasonEvents & {key: "championship-players"}).out
 	controls: (#PlayerSeasonControls & {key: "championship-players"}).out
 	content: (#PlayerSeasonTable & {filter: _championshipPlayersFilter, order: _playerSeasonOrder, total: _championshipPlayersTotalMarkup}).out

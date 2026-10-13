@@ -28,14 +28,21 @@ function numberText(value, locale) {
   return /^(pt|es|it|de|fr)/i.test(locale) ? text.replace(".", ",") : text;
 }
 
+// The UTC midnight of a y-m-d, in ms, as the chart's x axis carries dates; NaN
+// for a spelling that is no calendar day. Calendar arithmetic (Hinnant's
+// days_from_civil), since the cage denies `Date` with the clock it carries.
 function isoDate(value) {
   if (value === "") return null;
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return NaN;
-  const time = Date.parse(`${value}T00:00:00Z`);
-  return Number.isFinite(time) &&
-      new Date(time).toISOString().slice(0, 10) === value
-    ? time
-    : NaN;
+  const [y0, m, d] = value.split("-").map(Number);
+  const leap = y0 % 4 === 0 && (y0 % 100 !== 0 || y0 % 400 === 0);
+  const last = [31, leap ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][m - 1];
+  if (!(m >= 1 && m <= 12 && d >= 1 && d <= last)) return NaN;
+  const y = m <= 2 ? y0 - 1 : y0;
+  const era = Math.floor(y / 400);
+  const yoe = y - era * 400;
+  const doy = Math.floor((153 * (m + (m > 2 ? -3 : 9)) + 2) / 5) + d - 1;
+  return (era * 146097 + yoe * 365 + Math.floor(yoe / 4) - Math.floor(yoe / 100) + doy - 719468) * 86400000;
 }
 
 function element(tag, attrs = {}, children = []) {

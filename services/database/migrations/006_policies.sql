@@ -4,6 +4,11 @@ SET statement_timeout = '60s';
 
 BEGIN;
 
+INSERT INTO mecha.rls_exempt VALUES ('public.day_tick', 'internal: no app_user reaches it') ON CONFLICT DO NOTHING;
+ALTER TABLE day_tick ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS day_tick_service_all ON day_tick;
+CREATE POLICY day_tick_service_all ON day_tick FOR ALL TO service USING (true) WITH CHECK (true);
+
 CALL rls_protect('app_user');
 ALTER TABLE app_user ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS app_user_app_user_select ON app_user;
@@ -221,12 +226,12 @@ CREATE POLICY game_card_app_user_select ON game_card FOR SELECT TO app_user USIN
 DROP POLICY IF EXISTS game_card_service_all ON game_card;
 CREATE POLICY game_card_service_all ON game_card FOR ALL TO service USING (true) WITH CHECK (true);
 
-CALL rls_protect('home_game_card');
-ALTER TABLE home_game_card ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS home_game_card_app_user_select ON home_game_card;
-CREATE POLICY home_game_card_app_user_select ON home_game_card FOR SELECT TO app_user USING (true);
-DROP POLICY IF EXISTS home_game_card_service_all ON home_game_card;
-CREATE POLICY home_game_card_service_all ON home_game_card FOR ALL TO service USING (true) WITH CHECK (true);
+CALL rls_protect('home_feed');
+ALTER TABLE home_feed ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS home_feed_app_user_select ON home_feed;
+CREATE POLICY home_feed_app_user_select ON home_feed FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS home_feed_service_all ON home_feed;
+CREATE POLICY home_feed_service_all ON home_feed FOR ALL TO service USING (true) WITH CHECK (true);
 
 CALL rls_protect('matches_game_card');
 ALTER TABLE matches_game_card ENABLE ROW LEVEL SECURITY;
@@ -318,26 +323,26 @@ CREATE POLICY team_roster_total_app_user_select ON team_roster_total FOR SELECT 
 DROP POLICY IF EXISTS team_roster_total_service_all ON team_roster_total;
 CREATE POLICY team_roster_total_service_all ON team_roster_total FOR ALL TO service USING (true) WITH CHECK (true);
 
+CALL rls_protect('user_biography');
+ALTER TABLE user_biography ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS user_biography_app_user_select ON user_biography;
+CREATE POLICY user_biography_app_user_select ON user_biography FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS user_biography_service_all ON user_biography;
+CREATE POLICY user_biography_service_all ON user_biography FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('game_change');
+ALTER TABLE game_change ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS game_change_app_user_select ON game_change;
+CREATE POLICY game_change_app_user_select ON game_change FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS game_change_service_all ON game_change;
+CREATE POLICY game_change_service_all ON game_change FOR ALL TO service USING (true) WITH CHECK (true);
+
 CALL rls_protect('community_access');
 ALTER TABLE community_access ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS community_access_app_user_select ON community_access;
 CREATE POLICY community_access_app_user_select ON community_access FOR SELECT TO app_user USING (true);
 DROP POLICY IF EXISTS community_access_service_all ON community_access;
 CREATE POLICY community_access_service_all ON community_access FOR ALL TO service USING (true) WITH CHECK (true);
-
-CALL rls_protect('match_probability');
-ALTER TABLE match_probability ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS match_probability_app_user_select ON match_probability;
-CREATE POLICY match_probability_app_user_select ON match_probability FOR SELECT TO app_user USING (true);
-DROP POLICY IF EXISTS match_probability_service_all ON match_probability;
-CREATE POLICY match_probability_service_all ON match_probability FOR ALL TO service USING (true) WITH CHECK (true);
-
-CALL rls_protect('match_recent_result');
-ALTER TABLE match_recent_result ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS match_recent_result_app_user_select ON match_recent_result;
-CREATE POLICY match_recent_result_app_user_select ON match_recent_result FOR SELECT TO app_user USING (true);
-DROP POLICY IF EXISTS match_recent_result_service_all ON match_recent_result;
-CREATE POLICY match_recent_result_service_all ON match_recent_result FOR ALL TO service USING (true) WITH CHECK (true);
 
 CALL rls_protect('phase_clone');
 ALTER TABLE phase_clone ENABLE ROW LEVEL SECURITY;
@@ -365,19 +370,19 @@ CREATE POLICY player_merge_app_user_delete ON player_merge FOR DELETE TO app_use
 DROP POLICY IF EXISTS player_merge_service_all ON player_merge;
 CREATE POLICY player_merge_service_all ON player_merge FOR ALL TO service USING (true) WITH CHECK (true);
 
-CALL rls_protect('user_biography');
-ALTER TABLE user_biography ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS user_biography_app_user_select ON user_biography;
-CREATE POLICY user_biography_app_user_select ON user_biography FOR SELECT TO app_user USING (true);
-DROP POLICY IF EXISTS user_biography_service_all ON user_biography;
-CREATE POLICY user_biography_service_all ON user_biography FOR ALL TO service USING (true) WITH CHECK (true);
+CALL rls_protect('match_recent_result');
+ALTER TABLE match_recent_result ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS match_recent_result_app_user_select ON match_recent_result;
+CREATE POLICY match_recent_result_app_user_select ON match_recent_result FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS match_recent_result_service_all ON match_recent_result;
+CREATE POLICY match_recent_result_service_all ON match_recent_result FOR ALL TO service USING (true) WITH CHECK (true);
 
-CALL rls_protect('game_change');
-ALTER TABLE game_change ENABLE ROW LEVEL SECURITY;
-DROP POLICY IF EXISTS game_change_app_user_select ON game_change;
-CREATE POLICY game_change_app_user_select ON game_change FOR SELECT TO app_user USING (true);
-DROP POLICY IF EXISTS game_change_service_all ON game_change;
-CREATE POLICY game_change_service_all ON game_change FOR ALL TO service USING (true) WITH CHECK (true);
+CALL rls_protect('match_probability');
+ALTER TABLE match_probability ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS match_probability_app_user_select ON match_probability;
+CREATE POLICY match_probability_app_user_select ON match_probability FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS match_probability_service_all ON match_probability;
+CREATE POLICY match_probability_service_all ON match_probability FOR ALL TO service USING (true) WITH CHECK (true);
 
 CALL rls_protect('user_directory');
 ALTER TABLE user_directory ENABLE ROW LEVEL SECURITY;

@@ -40,6 +40,9 @@
       "golaberto-rclone-s3": {
         "condition": "service_healthy"
       },
+      "golaberto-clock": {
+        "condition": "service_started"
+      },
       "golaberto-render": {
         "condition": "service_healthy"
       }
@@ -157,6 +160,7 @@
           ".bayt/Taskfile.yml",
           ".bayt/Taskfile.bayt.yml",
           ".bayt/compose.launch.closure.yaml",
+          ".bayt/process-compose.yaml",
           ".bayt/compose.*.yaml",
           ".bayt/Dockerfile.*",
           ".bayt/bayt.*.json",
@@ -180,8 +184,8 @@
       "upClosure": [
         "./.bayt/compose.launch.yaml",
         "./.bayt/compose.caddy.yaml",
-        "./.bayt/compose.database.yaml",
         "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
         "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.redis.yaml",
@@ -191,6 +195,8 @@
         "./.bayt/compose.compute.yaml",
         "./.bayt/compose.auth.yaml",
         "./.bayt/compose.rclone-s3.yaml",
+        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.ticker.yaml",
         "./.bayt/compose.render.yaml"
       ]
     },
@@ -221,8 +227,8 @@
       "upClosure": [
         "./.bayt/compose.launch.yaml",
         "./.bayt/compose.caddy.yaml",
-        "./.bayt/compose.database.yaml",
         "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
         "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.redis.yaml",
@@ -232,6 +238,8 @@
         "./.bayt/compose.compute.yaml",
         "./.bayt/compose.auth.yaml",
         "./.bayt/compose.rclone-s3.yaml",
+        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.ticker.yaml",
         "./.bayt/compose.render.yaml"
       ]
     }
@@ -250,6 +258,7 @@
     "compute_outs",
     "auth_outs",
     "rclone-s3_outs",
+    "clock_outs",
     "render_outs"
   ],
   "sameProjectDeps": [
@@ -264,6 +273,7 @@
     "compute_outs",
     "auth_outs",
     "rclone-s3_outs",
+    "clock_outs",
     "render_outs"
   ],
   "transitiveDeps": [
@@ -278,14 +288,15 @@
     "compute_outs",
     "auth_outs",
     "rclone-s3_outs",
+    "clock_outs",
     "render_outs"
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
     "./.bayt/compose.launch.yaml",
     "./.bayt/compose.caddy.yaml",
-    "./.bayt/compose.database.yaml",
     "./.bayt/compose.crud.yaml",
+    "./.bayt/compose.database.yaml",
     "./.bayt/compose.migrate.yaml",
     "./.bayt/compose.electric.yaml",
     "./.bayt/compose.redis.yaml",
@@ -295,6 +306,8 @@
     "./.bayt/compose.compute.yaml",
     "./.bayt/compose.auth.yaml",
     "./.bayt/compose.rclone-s3.yaml",
+    "./.bayt/compose.clock.yaml",
+    "./.bayt/compose.ticker.yaml",
     "./.bayt/compose.render.yaml"
   ],
   "chainedDeps": [
@@ -390,6 +403,15 @@
     },
     {
       "name": "rclone-s3_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "clock_outs",
       "project": "golaberto",
       "dir": ".",
       "outs": {

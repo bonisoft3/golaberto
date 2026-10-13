@@ -8,10 +8,13 @@ services:
         golaberto-database: service:golaberto-database
         golaberto-migrate: service:golaberto-migrate
         libraries_mecha-compute-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.8.0@sha256:79588fbc372089c4f2386f4da2f880309b9c1927d81d4d5d989327458a30aeae}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.9.0@sha256:580054fee3cdcd82db36b313c51cbda977ef342844fdd49341484de535563a27}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}
       context: ..
       dockerfile: .bayt/Dockerfile.compute
       target: compute
+      tags:
+      - bayt-golaberto-compute:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-golaberto-compute:latest
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
@@ -44,7 +47,7 @@ services:
         postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}
       LAKE_DIR: /lake
       CDC_SLOT: golaberto_conduit_slot
-      COMPUTATIONS: "[{\"name\":\"golaberto-ratings\",\"file\":\"/app/computations/golaberto-ratings.js\",\"to\":[\"team_rating\",\"player_rating\",\"rating_eval\"],\"wasm\":[\"/app/computations/golaberto-odds.wasm\"]},{\"name\":\"golaberto-chances\",\"file\":\"/app/computations/golaberto-chances.js\",\"onComplete\":\"capture_team_odds_history\",\"to\":[\"team_chance\",\"zone_chance\",\"position_chance\",\"game_importance\"],\"wasm\":[\"/app/computations/golaberto-odds.wasm\"]}]"
+      COMPUTATIONS: "[{\"name\":\"golaberto-ratings\",\"file\":\"/app/computations/golaberto-ratings.js\",\"to\":[\"team_rating\",\"player_rating\",\"rating_eval\"],\"wasm\":[\"/app/computations/golaberto-odds.wasm\"],\"endowments\":[]},{\"name\":\"golaberto-chances\",\"file\":\"/app/computations/golaberto-chances.js\",\"onComplete\":\"capture_team_odds_history\",\"to\":[\"team_chance\",\"zone_chance\",\"position_chance\",\"game_importance\"],\"wasm\":[\"/app/computations/golaberto-odds.wasm\"],\"endowments\":[]}]"
       SERVICE_JWT: >-
         ${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
     healthcheck:
@@ -58,7 +61,7 @@ services:
       retries: 30
       start_period: 15m
       start_interval: 1s
-    image: bayt-golaberto-compute:${BAYT_IMAGE_TAG:-latest}
+    image: bayt-golaberto-compute:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
     networks:
       default:
         aliases:

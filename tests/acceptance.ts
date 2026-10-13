@@ -7,6 +7,7 @@ import { assert, assertEquals } from "jsr:@std/assert@1.0.11";
 import { baseUrl } from "omnishell/base-url.ts";
 import { query } from "./db.ts";
 import { address, fixturePath } from "./addresses.ts";
+import { crudReads } from "./reads.ts";
 
 const { chromium } = await import("npm:playwright@1.61.1");
 const { SignJWT } = await import("npm:jose@6.0.11");
@@ -490,6 +491,7 @@ test("test-game-page: a game's page shows its score, facts, goals and line-ups",
   const page = await (await context()).newPage();
   const requests: URL[] = [];
   page.on("request", (request: { url(): string }) => requests.push(new URL(request.url())));
+  const reads = crudReads(page);
   await visit(page, `/jogo/${WIN}`);
   await page.waitForSelector(".goals li");
   assertEquals(await texts(page, ".game h1.band"), ["Brasil - Campeonato Brasileiro 2026"]);
@@ -521,7 +523,7 @@ test("test-game-page: a game's page shows its score, facts, goals and line-ups",
   await page.click(".match-probability-event--goal .match-probability-event__remove");
   await page.waitForFunction(() => document.querySelectorAll(".match-probability-event").length === 1);
   // A match's lineup must not load the archive just to notice deletions.
-  const lineups = requests.filter(url => url.pathname === "/crud/match_lineup");
+  const lineups = (await reads.settled()).filter(url => url.pathname === "/crud/match_lineup");
   assert(lineups.length > 0);
   assert(lineups.every(url => url.searchParams.get("game_id") === `eq.${WIN}`));
   assert(!requests.some(url => url.pathname.endsWith("/shape") && url.searchParams.get("table") === "player_game"));

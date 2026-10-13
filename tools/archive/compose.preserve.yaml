@@ -3,6 +3,7 @@ services:
     image: golaberto-archive-database:${BAYT_IMAGE_TAG:?set a dedicated archive image tag}
     ports: !reset []
     build:
+      tags: !reset []
       dockerfile: tools/archive/Dockerfile.database
       target: database
       args:

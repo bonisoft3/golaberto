@@ -1,4 +1,5 @@
 import { createShell } from "/omnishell/interpreter/shell.js";
+import { scriptURL } from "/omnishell/interpreter/script-url.js";
 const mount = document.getElementById("app");
 if (!mount) throw new Error("boot: #app mount missing");
 
@@ -16,8 +17,10 @@ function initPersistentMasthead() {
   function sync() {
     const active = document.querySelector(".shell-screen:not([hidden]) .masthead");
     if (!active) return;
-    if (!backdrop.firstElementChild || backdrop.innerHTML !== active.innerHTML) {
-      backdrop.innerHTML = active.innerHTML;
+    const desired = [...active.childNodes];
+    const held = [...backdrop.childNodes];
+    if (held.length !== desired.length || held.some((node, i) => !node.isEqualNode(desired[i]))) {
+      backdrop.replaceChildren(...desired.map(node => node.cloneNode(true)));
     }
   }
 
@@ -31,5 +34,5 @@ initPersistentMasthead();
 createShell({ config: "./shell.json", mount, liveUpdates: false });
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/offline-first-sw.js");
+  navigator.serviceWorker.register(scriptURL("/offline-first-sw.js"));
 }

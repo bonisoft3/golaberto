@@ -1,0 +1,19 @@
+[
+  {
+    "name": "home-feed-view",
+    "omitInitdb": ["047_home_games_at_read.sql"],
+    "through": "046_team_projection_turn",
+    "seed": "tests/replay/home-feed-before.sql",
+    "verify": "tests/replay/home-feed-after.sql",
+    "replacements": {
+      "home_game_card": {
+        "kind": "absent",
+        "note": "The stored homepage selection is disposable; game_card retains the source rows and home_feed computes the selection at read time."
+      },
+      "home_feed": {
+        "kind": "view",
+        "note": "The empty generated placeholder becomes an invoker view with the same reader columns. Source rows, public reads and denied writes are checked by the fixture."
+      }
+    }
+  }
+]

@@ -57,7 +57,8 @@
           ".bayt/bayt.browser.json",
           ".bayt/Taskfile.yml",
           ".bayt/Taskfile.bayt.yml",
-          ".bayt/Taskfile.browser.yaml"
+          ".bayt/Taskfile.browser.yaml",
+          ".bayt/process-compose.yaml"
         ],
         "exclude": []
       },
@@ -103,6 +104,39 @@
       "upClosure": [
         "./.bayt/compose.browser.yaml"
       ]
+    },
+    "srcs": {
+      "name": "browser_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          "[m]ise.toml",
+          "[.]mise.toml",
+          "[m]ise.lock",
+          "[.]tool-versions"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.browser.yaml"
+      ]
     }
   },
   "taskfile": {
@@ -111,7 +145,7 @@
     "preconditions": []
   },
   "visibility": "internal",
-  "emitsSrcs": false,
+  "emitsSrcs": true,
   "deps": [],
   "sameProjectDeps": [],
   "transitiveDeps": [],

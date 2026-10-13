@@ -164,6 +164,36 @@
       }
     }
   },
+  "0x971fa2cdb49661fa": {
+    "name": "day_tick",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "uuid",
+        "retired": false
+      },
+      "2": {
+        "name": "schedule",
+        "type": "text",
+        "retired": false
+      },
+      "3": {
+        "name": "tick_at",
+        "type": "timestamptz",
+        "retired": false
+      },
+      "4": {
+        "name": "late",
+        "type": "bool",
+        "retired": false
+      },
+      "5": {
+        "name": "caller",
+        "type": "text",
+        "retired": false
+      }
+    }
+  },
   "0xbec870d131152065": {
     "name": "editing_choice",
     "fields": {
@@ -3460,22 +3490,22 @@
       "27": {
         "name": "home_upcoming_rank",
         "type": "int32",
-        "retired": false
+        "retired": true
       },
       "28": {
         "name": "home_recent_rank",
         "type": "int32",
-        "retired": false
+        "retired": true
       },
       "29": {
         "name": "home_upcoming_group",
         "type": "bool",
-        "retired": false
+        "retired": true
       },
       "30": {
         "name": "home_recent_group",
         "type": "bool",
-        "retired": false
+        "retired": true
       },
       "31": {
         "name": "show_country",
@@ -3495,7 +3525,7 @@
     }
   },
   "0x86cf93d86b91d654": {
-    "name": "home_game_card",
+    "name": "home_feed",
     "fields": {
       "1": {
         "name": "id",
@@ -3666,6 +3696,11 @@
         "name": "home_highlighted",
         "type": "bool",
         "retired": false
+      },
+      "35": {
+        "name": "home_new_day",
+        "type": "bool",
+        "retired": false
       }
     }
   },
@@ -3805,22 +3840,22 @@
       "27": {
         "name": "home_upcoming_rank",
         "type": "int32",
-        "retired": false
+        "retired": true
       },
       "28": {
         "name": "home_recent_rank",
         "type": "int32",
-        "retired": false
+        "retired": true
       },
       "29": {
         "name": "home_upcoming_group",
         "type": "bool",
-        "retired": false
+        "retired": true
       },
       "30": {
         "name": "home_recent_group",
         "type": "bool",
-        "retired": false
+        "retired": true
       },
       "31": {
         "name": "show_country",
@@ -4878,6 +4913,36 @@
         "retired": false
       },
       "29": {
+        "name": "series_json",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0xe29b0989914ccf9b": {
+    "name": "team_odds_progress_source",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "group_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "team_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "4": {
+        "name": "current_json",
+        "type": "string",
+        "retired": false
+      },
+      "5": {
         "name": "series_json",
         "type": "string",
         "retired": false

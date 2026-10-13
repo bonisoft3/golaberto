@@ -7,7 +7,6 @@ code: state: entities: {
 		id: "0xc35aa4f75ed38d69"
 		table:      "community_access"
 		durability: "server"
-		writers:    "pipeline"
 		access: {scope: "public"}
 		fields: [
 			{ordinal: 1, name: "id", type: "string", pk: true},

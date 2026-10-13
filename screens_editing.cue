@@ -24,7 +24,7 @@ _editingManagementLinkMarkup: """
 	required:      *false | bool
 	filter:        *"" | string
 	out:           """
-  <div class="field wide editing-choice" data-live="editing_choice" data-filter="id=eq.\(C.key)" data-machine='\(json.Marshal({field: "state", initial: "choosing", context: {q: "", q_key: "", selected_id: C.selected, excluded_id: C.excluded}, states: choosing: on: {
+  <div class="field wide editing-choice" data-live="editing_choice" data-filter="id=eq.\(C.key)" data-machine='\(json.Marshal({field: "state", initial: "choosing", states: choosing: on: {
 		input: {guard: {type: "editing-choice-event", params: suffix: "-q"}, assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}}}
 		change: {guard: {type: "editing-choice-event", params: suffix: "-pick"}, assign: selected_id: {type: "blank-null"}}
 		if C.selected == null {
@@ -163,7 +163,7 @@ _editingInlinePlayer: (#EditingInlineCreate & {
 	_away: [if S.current {"{away_score}"}, null][0]
 	_played: [if S.current {"{played}"}, false][0]
 	_row: {id: "\(S.key)-scores-\([if S.current {"{id}"}, "new"][0])", state: "choosing", home_score: S._home, away_score: S._away, played: S._played}
-	_machine: {field: "state", initial: "choosing", context: {home_score: S._home, away_score: S._away, played: S._played}, states: choosing: on: {
+	_machine: {field: "state", initial: "choosing", states: choosing: on: {
 		("input@\(S.key)-home-score"): assign: {home_score: "count-or-null", played: {type: "editing-played", params: other: "away_score"}}
 		("input@\(S.key)-away-score"): assign: {away_score: "count-or-null", played: {type: "editing-played", params: other: "home_score"}}
 		if !S.current {
@@ -296,7 +296,7 @@ _editingRegistrationsMarkup: (#EditingRelated & {
 	out:     """
  <section class="edit-sec"><h2 data-text="{msg.\(D.label)}"></h2>
  <a class="btn-quiet" data-route="novo-\(D.key)" data-text="{msg.manage_add}"></a>
- \((#PagedRead & {key: "manage-\(D.key)", owner: "{id}", table: D.table, filter: "\(D.search)=like.*{q_key}*", order: D.order, context: {q: "", q_key: ""}, events: {("input@manage-\(D.key)-q"): assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}}, controls: "<label class=\"field\"><span data-text=\"{msg.choice_search}\"></span><input id=\"manage-\(D.key)-q\" type=\"search\" value=\"{q}\" maxlength=\"80\"></label>", content: """
+ \((#PagedRead & {key: "manage-\(D.key)", owner: "{id}", table: D.table, filter: "\(D.search)=like.*{q_key}*", order: D.order, emptyRow: {q: "", q_key: ""}, events: {("input@manage-\(D.key)-q"): assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}}, controls: "<label class=\"field\"><span data-text=\"{msg.choice_search}\"></span><input id=\"manage-\(D.key)-q\" type=\"search\" value=\"{q}\" maxlength=\"80\"></label>", content: """
  <ul class="editing-records" data-live="\(D.table)" data-select="\(D.read)" data-filter="\(D.search)=like.*{q_key}*&offset={offset}&limit=40" data-order="\(D.order)" data-empty="{msg.manage_related_empty}"><template data-item><li><a data-route="editar-\(D.key)" data-param-slug="{slug}" data-text="\(D.display)"></a></li></template></ul>
  """}).out)
  </section>

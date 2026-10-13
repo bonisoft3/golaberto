@@ -346,8 +346,10 @@ Deno.test("team enrichment imports, aggregates, samples and refreshes transactio
     DO $$ BEGIN
       IF (SELECT count(*) FROM team_comment WHERE team_id='${teamA}' AND app_user_id='${user}') <> 1
         THEN RAISE EXCEPTION 'signed-in author should be able to create a team comment'; END IF;
-      DELETE FROM team_comment WHERE team_id='${teamA}' AND app_user_id<>'${user}';
-      IF FOUND THEN RAISE EXCEPTION 'authors must not delete another user’s comment'; END IF;
+      BEGIN DELETE FROM team_comment WHERE team_id='${teamA}' AND app_user_id<>'${user}';
+        RAISE EXCEPTION 'authors must not delete another user’s comment';
+      EXCEPTION WHEN insufficient_privilege THEN NULL;
+      END;
       IF NOT EXISTS (SELECT 1 FROM team_comment WHERE team_id='${teamA}' AND app_user_id='${otherUser}')
         THEN RAISE EXCEPTION 'other author comment must remain after attempted deletion'; END IF;
       DELETE FROM team_comment WHERE team_id='${teamA}' AND app_user_id='${user}';

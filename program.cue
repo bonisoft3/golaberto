@@ -74,6 +74,8 @@ _teamTypeUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamTyp
 
 _homeHighlightsSql:     string @embed(file="services/database/sql/021_home_highlights.sql", type=text)
 _homeHighlightsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeHighlightsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_homeGamesAtReadSql:     string @embed(file="services/database/sql/047_home_games_at_read.sql", type=text)
+_homeGamesAtReadUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeGamesAtReadSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 
 _routePerformanceSql:     string @embed(file="services/database/sql/018_route_performance.sql", type=text)
 _routePerformanceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_routePerformanceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
@@ -156,7 +158,6 @@ code: pronto.#App & {
 			id:         "0x9f7e16021a981047"
 			table:      "home_championship"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "championship"},
@@ -268,7 +269,6 @@ code: pronto.#App & {
 			id:         "0xfaf8931af57f6e66"
 			table:      "team_championship"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "string", pk: true},
@@ -319,7 +319,6 @@ code: pronto.#App & {
 			id:         "0xbd185e5ceb027f7d"
 			table:      "geography_region"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "string", pk: true},
@@ -332,7 +331,6 @@ code: pronto.#App & {
 			id:         "0xb37475df2e5b43d6"
 			table:      "geography_country"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "string", pk: true},
@@ -348,7 +346,6 @@ code: pronto.#App & {
 			id:         "0x93d75c8ddada8190"
 			table:      "team_directory"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "team"},
@@ -408,7 +405,6 @@ code: pronto.#App & {
 			id:         "0xbf8641dc49e18232"
 			table:      "team_roster"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "string", pk: true},
@@ -441,7 +437,6 @@ code: pronto.#App & {
 			id:         "0x8fdba800739aa0f7"
 			table:      "team_player_history"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "string", pk: true},
@@ -548,7 +543,6 @@ code: pronto.#App & {
 			id:         "0x926e5bdae6121306"
 			table:      "standing"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				// <group id>:<team id>
@@ -584,7 +578,6 @@ code: pronto.#App & {
 			id:         "0xd113a24abf038541"
 			table:      "team_chance"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "uuid", pk: true},
@@ -601,7 +594,6 @@ code: pronto.#App & {
 			id:         "0xdb4e4660787b8728"
 			table:      "zone_chance"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "uuid", pk: true},
@@ -626,7 +618,6 @@ code: pronto.#App & {
 			id:         "0xdf842a9ab21d8ec3"
 			table:      "position_chance"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "uuid", pk: true},
@@ -650,7 +641,6 @@ code: pronto.#App & {
 			id:         "0xd6038ae1ca7e0e64"
 			table:      "game_importance"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "game"},
@@ -665,7 +655,6 @@ code: pronto.#App & {
 			id:         "0xe0bdc3160f737f46"
 			table:      "team_rating"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "uuid", pk: true},
@@ -683,7 +672,6 @@ code: pronto.#App & {
 			id:         "0xd7098e87ab67f7eb"
 			table:      "player_rating"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "player"},
@@ -698,7 +686,6 @@ code: pronto.#App & {
 			id:         "0xf8a29784e425c143"
 			table:      "rating_eval"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "phase"},
@@ -712,7 +699,6 @@ code: pronto.#App & {
 			id:         "0xc922f963c8b2479d"
 			table:      "game_card"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "game"},
@@ -741,22 +727,22 @@ code: pronto.#App & {
 				{ordinal: 24, name: "kickoff_local", type: "string", generated: _hm},
 				{ordinal: 25, name: "stadium_id", type: "uuid", required: false, ref: "stadium"},
 				{ordinal: 26, name: "referee_id", type: "uuid", required: false, ref: "referee"},
-				{ordinal: 27, name: "home_upcoming_rank", type: "int32", default: "0", cel: "this >= 0 && this <= 20"},
-				{ordinal: 28, name: "home_recent_rank", type: "int32", default: "0", cel: "this >= 0 && this <= 20"},
-				{ordinal: 29, name: "home_upcoming_group", type: "bool", default: "false"},
-				{ordinal: 30, name: "home_recent_group", type: "bool", default: "false"},
+				{ordinal: 27, name: "home_upcoming_rank", type: "int32", default: "0", retired: true},
+				{ordinal: 28, name: "home_recent_rank", type: "int32", default: "0", retired: true},
+				{ordinal: 29, name: "home_upcoming_group", type: "bool", default: "false", retired: true},
+				{ordinal: 30, name: "home_recent_group", type: "bool", default: "false", retired: true},
 				{ordinal: 31, name: "show_country", type: "bool", default: "false", retired: true},
 				{ordinal: 32, name: "home_country", type: "string", default: "''", retired: true},
 				{ordinal: 33, name: "away_country", type: "string", default: "''", retired: true},
 			]
 			indexes: [{on: "phase_id"}, {on: "day"}, {on: "stadium_id"}, {on: "referee_id"}]
 		}
-		// The selected forty cards only: the home page never syncs the archive.
+		// The homepage's two twenty-card feeds, selected when read: a request-time
+		// view over GameCard (047_home_games_at_read.sql), never stored.
 		HomeGameCard: {
 			id:         "0x86cf93d86b91d654"
-			table:      "home_game_card"
-			durability: "live"
-			writers:    "pipeline"
+			table:      "home_feed"
+			durability: "server"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "game"},
@@ -793,15 +779,14 @@ code: pronto.#App & {
 				{ordinal: 32, name: "home_country", type: "string", default: "''", retired: true},
 				{ordinal: 33, name: "away_country", type: "string", default: "''", retired: true},
 				{ordinal: 34, name: "home_highlighted", type: "bool", default: "false"},
+				{ordinal: 35, name: "home_new_day", type: "bool", default: "false"},
 			]
-			indexes: [{on: "championship_id"}]
 		}
 		// The matches page syncs only its two chronological forty-card feeds.
 		MatchesGameCard: {
 			id:         "0x87ef7c2b79e4b4e4"
 			table:      "matches_game_card"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "game"},
@@ -830,10 +815,10 @@ code: pronto.#App & {
 				{ordinal: 24, name: "kickoff_local", type: "string", generated: _hm},
 				{ordinal: 25, name: "stadium_id", type: "uuid", required: false, ref: "stadium"},
 				{ordinal: 26, name: "referee_id", type: "uuid", required: false, ref: "referee"},
-				{ordinal: 27, name: "home_upcoming_rank", type: "int32", default: "0", cel: "this >= 0 && this <= 20"},
-				{ordinal: 28, name: "home_recent_rank", type: "int32", default: "0", cel: "this >= 0 && this <= 20"},
-				{ordinal: 29, name: "home_upcoming_group", type: "bool", default: "false"},
-				{ordinal: 30, name: "home_recent_group", type: "bool", default: "false"},
+				{ordinal: 27, name: "home_upcoming_rank", type: "int32", default: "0", retired: true},
+				{ordinal: 28, name: "home_recent_rank", type: "int32", default: "0", retired: true},
+				{ordinal: 29, name: "home_upcoming_group", type: "bool", default: "false", retired: true},
+				{ordinal: 30, name: "home_recent_group", type: "bool", default: "false", retired: true},
 				{ordinal: 31, name: "show_country", type: "bool", default: "false", retired: true},
 				{ordinal: 32, name: "home_country", type: "string", default: "''", retired: true},
 				{ordinal: 33, name: "away_country", type: "string", default: "''", retired: true},
@@ -846,7 +831,6 @@ code: pronto.#App & {
 			id:         "0x91f9338be221f43d"
 			table:      "team_game"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				// <team id>:<game id>
@@ -951,7 +935,6 @@ code: pronto.#App & {
 			id:         "0xb51a5cb741600107"
 			table:      "player_stat"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				// <championship id>:<team id>:<player id>
@@ -988,7 +971,6 @@ code: pronto.#App & {
 			id:         "0xe326676ae2b1bd9a"
 			table:      "phase_round"
 			durability: "live"
-			writers:    "pipeline"
 			access: {scope: "public"}
 			fields: [
 				// The phase's id, as text: one row per phase.
@@ -1083,7 +1065,6 @@ code: pronto.#App & {
 			table:      "team_campaign_point"
 			durability: "server"
 			access: {scope: "public"}
-			writers: "pipeline"
 			fields: [
 				{ordinal: 1, name: "id", type: "string", pk: true},
 				{ordinal: 2, name: "group_id", type: "uuid", ref: "stage_group"},
@@ -1101,7 +1082,6 @@ code: pronto.#App & {
 			table:      "team_odds_history"
 			durability: "live"
 			access: {scope: "public"}
-			writers: "pipeline"
 			fields: [
 				{ordinal: 1, name: "id", type: "string", pk: true},
 				{ordinal: 2, name: "group_id", type: "uuid", ref: "stage_group"},
@@ -1119,7 +1099,6 @@ code: pronto.#App & {
 			table:      "team_rating_chart"
 			durability: "live"
 			access: {scope: "public"}
-			writers: "pipeline"
 			fields: [
 				{ordinal: 1, name: "id", type: "string", pk: true},
 				{ordinal: 2, name: "team_id", type: "uuid", ref: "team"},
@@ -1133,7 +1112,6 @@ code: pronto.#App & {
 			table:      "team_odds_chart"
 			durability: "live"
 			access: {scope: "public"}
-			writers: "pipeline"
 			fields: [
 				{ordinal: 1, name: "id", type: "string", pk: true},
 				{ordinal: 2, name: "group_id", type: "uuid", ref: "stage_group"},
@@ -1148,7 +1126,6 @@ code: pronto.#App & {
 			table:      "team_roster_total"
 			durability: "live"
 			access: {scope: "public"}
-			writers: "pipeline"
 			fields: [
 				{ordinal: 1, name: "id", type: "string", pk: true},
 				{ordinal: 2, name: "team_id", type: "uuid", ref: "team"},
@@ -1228,12 +1205,25 @@ code: pronto.#App & {
 
 	// A reader is a silent guest: the archive is read without a sign-in, and
 	// public rows are the signed-in role's to read (ir decision-guest-reading).
+	capabilities: resources: map: {
+		kind: "frame"
+		source: "https://www.openstreetmap.org"
+		note: "the sandboxed match map presents the two clubs' declared locations"
+	}
+
+	capabilities: resources: footballImages: {
+		kind: "img"
+		source: "https://d24oxbyqb2c11t.cloudfront.net"
+		note: "the archive serves club logos, player photos and country flags from its image CDN"
+	}
+
 	capabilities: auth: {required: false, service: "/auth", promote: true}
 
 	surface: design: (pronto.#DesignMd & {text: _designMd}).design
 
 	state: pipelines: standings: {
 		raw:   true
+		note: "Authored recounts upsert absolute group/team standings; retries reread current rows and rejected writes are redelivered."
 		from:  "Game"
 		to:    "Standing"
 		group: "golaberto-standings"
@@ -1272,6 +1262,10 @@ code: pronto.#App & {
 		{name: "041_native_media.sql", src: "services/database/sql/041_native_media.sql"},
 		{name: "042_team_odds_progress.sql", src: "services/database/sql/042_team_odds_progress.sql"},
 		{name: "043_queued_odds_refresh.sql", src: "services/database/sql/043_queued_odds_refresh.sql"},
+		{name: "044_heavy_reads.sql", src: "services/database/sql/044_heavy_reads.sql"},
+		{name: "045_drain_feed.sql", src: "services/database/sql/045_drain_feed.sql"},
+		{name: "046_team_projection_turn.sql", src: "services/database/sql/046_team_projection_turn.sql"},
+		{name: "047_home_games_at_read.sql", src: "services/database/sql/047_home_games_at_read.sql"},
 		// Large archive fixtures are copied at build, never expanded through CUE.
 		{name: "900_seed.sql", src: "services/database/sql/900_seed.sql"},
 	]
@@ -1290,16 +1284,15 @@ code: pronto.#App & {
 	state: migrations: "022_recent_championships": {operations: [{sql: {up: _recentChampionshipsUpgrade, onComplete: true}}]}
 	state: migrations: "023_search_collation": {operations: [{sql: {up: _searchCollationUpgrade, onComplete: true}}]}
 	state: migrations: "024_team_directory": {operations: [{sql: {up: _teamDirectoryUpgrade, onComplete: true}}]}
-	state: pipelines: "team-directory": {raw: true, from: "Team", to: "TeamDirectory", group: "golaberto-team-directory"}
 	state: migrations: "025_search_letter_equivalences": {operations: [{sql: {up: _extendedSearchCollationUpgrade, onComplete: true}}]}
 	state: migrations: "026_team_geography": {operations: [{sql: {up: _teamGeographyUpgrade, onComplete: true}}]}
 	state: migrations: "027_team_directory_type": {operations: [{sql: {up: _teamTypeUpgrade, onComplete: true}}]}
 	state: migrations: "029_team_enrichment": {operations: [{sql: {up: _teamEnrichmentUpgrade, onComplete: true}}]}
 	state: migrations: "028_team_profiles": {operations: [{sql: {up: _teamProfilesUpgrade, onComplete: true}}]}
-	state: pipelines: "team-profiles": {raw: true, from: "Team", to: "TeamChampionship", group: "golaberto-team-profiles"}
 	state: migrations: "030_campaign_read": {operations: [{sql: {up: _campaignReadUpgrade, onComplete: true}}]}
 	state: migrations: "032_archive_compatibility": {operations: [{sql: {up: _archiveCompatibilityUpgrade, onComplete: true}}]}
 	state: migrations: "033_cdc_outputs": {operations: [{sql: {up: _cdcOutputsSql, onComplete: true}}]}
+	state: migrations: "047_home_games_at_read": {operations: [{sql: {up: _homeGamesAtReadUpgrade, onComplete: true}}]}
 	state: migrations: "035_read_parity": {operations: [{sql: {up: _readParityUpgrade, onComplete: true}}]}
 	state: migrations: "034_idempotent_odds_capture": {operations: [{sql: {up: _oddsCaptureSql, onComplete: true}}]}
 	state: migrations: "031_readable_addresses": {operations: [{sql: {up: _readableAddressesUpgrade, onComplete: true}}]}
@@ -1317,36 +1310,21 @@ code: pronto.#App & {
 	}
 	state: pipelines: "game-cards": {
 		raw:   true
+		note: "Authored fanout upserts each game card and team line, removes obsolete lines, and retries failed reads or writes."
 		from:  "Game"
 		to:    "GameCard"
 		group: "golaberto-game-cards"
 	}
-	state: pipelines: "home-games": {
-		raw:   true
-		from:  "Game"
-		to:    "HomeGameCard"
-		group: "golaberto-home-games"
-	}
-	state: pipelines: "recent-championships": {
-		raw:   true
-		from:  "Championship"
-		to:    "HomeChampionship"
-		group: "golaberto-recent-championships"
-	}
-	state: pipelines: "matches-games": {
-		raw:   true
-		from:  "Game"
-		to:    "MatchesGameCard"
-		group: "golaberto-matches-games"
-	}
 	state: pipelines: "player-stats": {
 		raw:   true
+		note: "Authored recounts upsert each championship/team/player total and delete obsolete teams; rejected writes are redelivered."
 		from:  "PlayerGame"
 		to:    "PlayerStat"
 		group: "golaberto-player-stats"
 	}
 	state: pipelines: rounds: {
 		raw:   true
+		note: "Authored recounts upsert the current and next round per phase or delete empty phases; retries reread current games."
 		from:  "Game"
 		to:    "PhaseRound"
 		group: "golaberto-rounds"
@@ -1689,7 +1667,7 @@ code: pronto.#App & {
 			catalogues: _catalogues
 		}
 		ir: sha256: "25a5a02d5aa396d41d48c7b5489df04383e636934baf919d82853876a5723a32"
-		targets: ["pages"]
+		targets: ["pages", "cloudflare", "docker"]
 		decisions: {
 			"decision-team-page-split": {}
 			"decision-favicon": {}
@@ -2362,16 +2340,15 @@ loop: surface: checks: "image-renderers": {
 
 loop: surface: checks: "team-chart-renderer": {verb: "test", cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/team-chart-renderer.ts"], note: "pure chart geometry, accessible links and safe SVG node output"}
 
-code: state: pipelines: "team-enrichment": {raw: true, from: "TeamRating", to: "TeamRatingChart", group: "golaberto-team-enrichment"}
 
 loop: surface: checks: "team-enrichment-import": {verb: "test", cmds: ["python3 -m unittest discover -s tools -p team_enrichment_import_test.py"], note: "legacy snapshot parsing, stable identity and validation are deterministic"}
 
 build: checks: "request-reads": {
 	priority: 1
 	database: true
-	srcs: ["services/database/sql/035_read_parity.sql"]
-	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-net --allow-read --allow-sys tests/campaign-read.ts tests/readable-addresses.ts tests/read-parity.ts"]
-	note: "request-time historical rankings and readable address uniqueness"
+	srcs: ["services/database/sql/035_read_parity.sql", "services/database/sql/044_heavy_reads.sql"]
+	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-net --allow-read --allow-sys tests/campaign-read.ts tests/readable-addresses.ts tests/read-parity.ts tests/heavy-reads.ts"]
+	note: "stored campaign rankings, maintained user activity, custom-planned reads and readable address uniqueness"
 }
 
 out: pronto.#emit & {"code": code, "cluster": cluster, "terminal": terminal, "loop": loop, "build": build}

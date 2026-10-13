@@ -118,6 +118,14 @@ message CommunityAccess {
   optional string avatar_id = 5 [json_name = "avatar_id"];
 }
 
+message DayTick {
+  optional string id = 1 [json_name = "id"];
+  optional string schedule = 2 [json_name = "schedule"];
+  google.protobuf.Timestamp tick_at = 3 [json_name = "tick_at"];
+  optional bool late = 4 [json_name = "late"];
+  optional string caller = 5 [json_name = "caller"];
+}
+
 message DirectoryFilter {
   optional string id = 1 [json_name = "id"];
   optional string q = 2 [json_name = "q"];
@@ -250,10 +258,14 @@ message GameCard {
   optional string kickoff_local = 24 [json_name = "kickoff_local"];
   optional string stadium_id = 25 [json_name = "stadium_id"];
   optional string referee_id = 26 [json_name = "referee_id"];
-  optional int32 home_upcoming_rank = 27 [json_name = "home_upcoming_rank"];
-  optional int32 home_recent_rank = 28 [json_name = "home_recent_rank"];
-  optional bool home_upcoming_group = 29 [json_name = "home_upcoming_group"];
-  optional bool home_recent_group = 30 [json_name = "home_recent_group"];
+  reserved 27;
+  reserved "home_upcoming_rank";
+  reserved 28;
+  reserved "home_recent_rank";
+  reserved 29;
+  reserved "home_upcoming_group";
+  reserved 30;
+  reserved "home_recent_group";
   reserved 31;
   reserved "show_country";
   reserved 32;
@@ -393,6 +405,7 @@ message HomeGameCard {
   reserved 33;
   reserved "away_country";
   optional bool home_highlighted = 34 [json_name = "home_highlighted"];
+  optional bool home_new_day = 35 [json_name = "home_new_day"];
 }
 
 message MatchesGameCard {
@@ -422,10 +435,14 @@ message MatchesGameCard {
   optional string kickoff_local = 24 [json_name = "kickoff_local"];
   optional string stadium_id = 25 [json_name = "stadium_id"];
   optional string referee_id = 26 [json_name = "referee_id"];
-  optional int32 home_upcoming_rank = 27 [json_name = "home_upcoming_rank"];
-  optional int32 home_recent_rank = 28 [json_name = "home_recent_rank"];
-  optional bool home_upcoming_group = 29 [json_name = "home_upcoming_group"];
-  optional bool home_recent_group = 30 [json_name = "home_recent_group"];
+  reserved 27;
+  reserved "home_upcoming_rank";
+  reserved 28;
+  reserved "home_recent_rank";
+  reserved 29;
+  reserved "home_upcoming_group";
+  reserved 30;
+  reserved "home_recent_group";
   reserved 31;
   reserved "show_country";
   reserved 32;
@@ -979,6 +996,14 @@ message TeamOddsProgress {
   optional string group_id = 2 [json_name = "group_id"];
   optional string team_id = 3 [json_name = "team_id"];
   optional string series_json = 4 [json_name = "series_json"];
+}
+
+message TeamOddsProgressSource {
+  optional string id = 1 [json_name = "id"];
+  optional string group_id = 2 [json_name = "group_id"];
+  optional string team_id = 3 [json_name = "team_id"];
+  optional string current_json = 4 [json_name = "current_json"];
+  optional string series_json = 5 [json_name = "series_json"];
 }
 
 message TeamOddsProgressState {

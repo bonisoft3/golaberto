@@ -3,18 +3,22 @@ services:
   golaberto-build:
     build:
       additional_contexts:
-        golaberto-setup: service:golaberto-setup
+        golaberto-generate: service:golaberto-generate
       context: ..
       dockerfile: .bayt/Dockerfile.build
       target: build
+      tags:
+      - bayt-golaberto-build:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-golaberto-build:latest
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-golaberto-build:${BAYT_IMAGE_TAG:-latest}
+    image: bayt-golaberto-build:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
     scale: 0
   golaberto-build_bayt:
     build:
       additional_contexts:
+        golaberto-generate_bayt: service:golaberto-generate_bayt
         golaberto-setup_bayt: service:golaberto-setup_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.build
@@ -26,6 +30,9 @@ services:
     scale: 0
   golaberto-build_srcs:
     build:
+      additional_contexts:
+        golaberto-generate_srcs: service:golaberto-generate_srcs
+        golaberto-setup_srcs: service:golaberto-setup_srcs
       context: ..
       dockerfile: .bayt/Dockerfile.build
       target: build_srcs

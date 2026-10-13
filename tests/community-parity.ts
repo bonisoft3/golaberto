@@ -1,10 +1,10 @@
 import { assertEquals, assertRejects } from "jsr:@std/assert@1.0.11";
 
-import { query, replayLock } from "./db.ts";
+import { query, replay } from "./db.ts";
 import { fixture, identity } from "./community-fixture.ts";
 
-async function refused(script: string, code = "42501") {
-	const error = await assertRejects(() => query(`BEGIN;${script}`));
+async function refused(script: string, code = "42501", run = query) {
+	const error = await assertRejects(() => run(`BEGIN;${script}`));
 	assertEquals((error as Error & { code: string }).code, code);
 }
 
@@ -234,7 +234,7 @@ Deno.test("community migration replays without changing biography or history and
 	).replaceAll("\nCOMMIT;\n", "\n");
 	const f = fixture();
 	assertEquals(
-		await query(`BEGIN;${replayLock}${f.setup}${identity(f.actor)}
+		await replay(`BEGIN;${f.setup}${identity(f.actor)}
     UPDATE game SET home_score=1 WHERE id='${f.game}';RESET ROLE;
     -- A setting, not a temp table: pgroll records DDL in its ledger, and
     -- concurrent checks recording against one parent collide.
@@ -253,8 +253,9 @@ Deno.test("community migration replays without changing biography or history and
 		"1",
 	);
 	await refused(
-		`${replayLock}${f.setup}DROP VIEW user_directory CASCADE;CREATE TABLE user_directory(id uuid PRIMARY KEY);
+		`${f.setup}DROP VIEW user_directory CASCADE;CREATE TABLE user_directory(id uuid PRIMARY KEY);
     INSERT INTO user_directory VALUES (gen_random_uuid());${migration}`,
 		"P0001",
+		replay,
 	);
 });

@@ -478,10 +478,6 @@ Fields:
   - `kickoff_local` (string)
   - `stadium_id` (uuid)
   - `referee_id` (uuid)
-  - `home_upcoming_rank` (int32)
-  - `home_recent_rank` (int32)
-  - `home_upcoming_group` (bool)
-  - `home_recent_group` (bool)
 
 ### Entity: HomeGameCard
 Fields:
@@ -516,6 +512,7 @@ Fields:
   - `home_upcoming_group` (bool)
   - `home_recent_group` (bool)
   - `home_highlighted` (bool)
+  - `home_new_day` (bool)
 
 ### Entity: MatchesGameCard
 Fields:
@@ -545,10 +542,6 @@ Fields:
   - `kickoff_local` (string)
   - `stadium_id` (uuid)
   - `referee_id` (uuid)
-  - `home_upcoming_rank` (int32)
-  - `home_recent_rank` (int32)
-  - `home_upcoming_group` (bool)
-  - `home_recent_group` (bool)
 
 ### Entity: TeamGame
 Fields:
@@ -682,6 +675,30 @@ Fields:
   - `contribution_per90` (double)
   - `goals_per90` (double)
 
+### Entity: UserBiography
+Fields:
+  - `id` (uuid)
+  - `app_user_id` (uuid)
+  - `display_name` (string)
+  - `location` (string)
+  - `about_me` (string)
+  - `updated_at` (timestamp)
+
+### Entity: GameChange
+Fields:
+  - `id` (uuid)
+  - `game_id` (uuid)
+  - `version` (int32)
+  - `actor_id` (uuid)
+  - `actor_handle` (string)
+  - `game_slug` (string)
+  - `game_day` (date)
+  - `home_name` (string)
+  - `away_name` (string)
+  - `championship_name` (string)
+  - `changes_json` (string)
+  - `created_at` (timestamp)
+
 ### Entity: CommunityAccess
 Fields:
   - `id` (string)
@@ -689,16 +706,6 @@ Fields:
   - `kind` (string)
   - `biography_id` (uuid)
   - `avatar_id` (uuid)
-
-### Entity: MatchProbability
-Fields:
-  - `id` (uuid)
-  - `game_id` (uuid)
-  - `home_name` (string)
-  - `away_name` (string)
-  - `rating_status` (string)
-  - `timeline_status` (string)
-  - `payload_json` (string)
 
 ### Entity: MatchRecentResult
 Fields:
@@ -732,29 +739,15 @@ Fields:
   - `away_pen` (int32)
   - `result` (string)
 
-### Entity: UserBiography
-Fields:
-  - `id` (uuid)
-  - `app_user_id` (uuid)
-  - `display_name` (string)
-  - `location` (string)
-  - `about_me` (string)
-  - `updated_at` (timestamp)
-
-### Entity: GameChange
+### Entity: MatchProbability
 Fields:
   - `id` (uuid)
   - `game_id` (uuid)
-  - `version` (int32)
-  - `actor_id` (uuid)
-  - `actor_handle` (string)
-  - `game_slug` (string)
-  - `game_day` (date)
   - `home_name` (string)
   - `away_name` (string)
-  - `championship_name` (string)
-  - `changes_json` (string)
-  - `created_at` (timestamp)
+  - `rating_status` (string)
+  - `timeline_status` (string)
+  - `payload_json` (string)
 
 ### Entity: UserDirectory
 Fields:

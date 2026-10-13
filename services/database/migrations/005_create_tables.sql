@@ -4,6 +4,15 @@ SET statement_timeout = '60s';
 
 BEGIN;
 
+CREATE TABLE IF NOT EXISTS day_tick (
+  "id" uuid PRIMARY KEY,
+  "schedule" TEXT NOT NULL,
+  "tick_at" TIMESTAMPTZ NOT NULL,
+  "late" boolean NOT NULL,
+  "caller" TEXT,
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint
+);
+
 CREATE TABLE IF NOT EXISTS app_user (
   "id" uuid PRIMARY KEY,
   "handle" text NOT NULL UNIQUE CHECK (char_length(handle) > 0),
@@ -471,10 +480,10 @@ CREATE TABLE IF NOT EXISTS game_card (
   "kickoff_local" text GENERATED ALWAYS AS (CASE WHEN kickoff IS NULL THEN '' ELSE lpad(extract(hour from (kickoff AT TIME ZONE 'America/Sao_Paulo'))::int::text, 2, '0') || ':' || lpad(extract(minute from (kickoff AT TIME ZONE 'America/Sao_Paulo'))::int::text, 2, '0') END) STORED,
   "stadium_id" uuid REFERENCES stadium(id) ON DELETE CASCADE,
   "referee_id" uuid REFERENCES referee(id) ON DELETE CASCADE,
-  "home_upcoming_rank" integer DEFAULT 0 NOT NULL CHECK (home_upcoming_rank >= 0 AND home_upcoming_rank <= 20),
-  "home_recent_rank" integer DEFAULT 0 NOT NULL CHECK (home_recent_rank >= 0 AND home_recent_rank <= 20),
-  "home_upcoming_group" boolean DEFAULT false NOT NULL,
-  "home_recent_group" boolean DEFAULT false NOT NULL,
+  "home_upcoming_rank" integer DEFAULT 0,
+  "home_recent_rank" integer DEFAULT 0,
+  "home_upcoming_group" boolean DEFAULT false,
+  "home_recent_group" boolean DEFAULT false,
   "show_country" boolean DEFAULT false,
   "home_country" text DEFAULT '',
   "away_country" text DEFAULT '',
@@ -482,12 +491,12 @@ CREATE TABLE IF NOT EXISTS game_card (
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS home_game_card (
+CREATE TABLE IF NOT EXISTS home_feed (
   "id" uuid PRIMARY KEY REFERENCES game(id) ON DELETE CASCADE,
   "phase_id" uuid NOT NULL REFERENCES phase(id) ON DELETE CASCADE,
   "championship_id" uuid NOT NULL REFERENCES championship(id) ON DELETE CASCADE,
   "round" integer CHECK (round >= 1),
-  "day" date NOT NULL CONSTRAINT "home_game_card_day_type" CHECK ("day" IS NULL OR public.portable_date_valid("day") IS TRUE),
+  "day" date NOT NULL CONSTRAINT "home_feed_day_type" CHECK ("day" IS NULL OR public.portable_date_valid("day") IS TRUE),
   "kickoff" portable_timestamp,
   "played" boolean NOT NULL,
   "home_id" uuid NOT NULL REFERENCES team(id) ON DELETE CASCADE,
@@ -517,6 +526,7 @@ CREATE TABLE IF NOT EXISTS home_game_card (
   "home_country" text DEFAULT '',
   "away_country" text DEFAULT '',
   "home_highlighted" boolean DEFAULT false NOT NULL,
+  "home_new_day" boolean DEFAULT false NOT NULL,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -548,10 +558,10 @@ CREATE TABLE IF NOT EXISTS matches_game_card (
   "kickoff_local" text GENERATED ALWAYS AS (CASE WHEN kickoff IS NULL THEN '' ELSE lpad(extract(hour from (kickoff AT TIME ZONE 'America/Sao_Paulo'))::int::text, 2, '0') || ':' || lpad(extract(minute from (kickoff AT TIME ZONE 'America/Sao_Paulo'))::int::text, 2, '0') END) STORED,
   "stadium_id" uuid REFERENCES stadium(id) ON DELETE CASCADE,
   "referee_id" uuid REFERENCES referee(id) ON DELETE CASCADE,
-  "home_upcoming_rank" integer DEFAULT 0 NOT NULL CHECK (home_upcoming_rank >= 0 AND home_upcoming_rank <= 20),
-  "home_recent_rank" integer DEFAULT 0 NOT NULL CHECK (home_recent_rank >= 0 AND home_recent_rank <= 20),
-  "home_upcoming_group" boolean DEFAULT false NOT NULL,
-  "home_recent_group" boolean DEFAULT false NOT NULL,
+  "home_upcoming_rank" integer DEFAULT 0,
+  "home_recent_rank" integer DEFAULT 0,
+  "home_upcoming_group" boolean DEFAULT false,
+  "home_recent_group" boolean DEFAULT false,
   "show_country" boolean DEFAULT false,
   "home_country" text DEFAULT '',
   "away_country" text DEFAULT '',
@@ -720,6 +730,34 @@ CREATE TABLE IF NOT EXISTS team_roster_total (
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS user_biography (
+  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  "app_user_id" uuid DEFAULT auth_uid() NOT NULL UNIQUE REFERENCES app_user(id) ON DELETE CASCADE,
+  "display_name" text CHECK (char_length(display_name) <= 100),
+  "location" text CHECK (char_length(location) <= 100),
+  "about_me" text CHECK (char_length(about_me) <= 2000),
+  "updated_at" portable_timestamp DEFAULT now() NOT NULL,
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS game_change (
+  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  "game_id" uuid NOT NULL,
+  "version" integer NOT NULL CHECK (version > 0),
+  "actor_id" uuid,
+  "actor_handle" text,
+  "game_slug" text,
+  "game_day" date CONSTRAINT "game_change_game_day_type" CHECK ("game_day" IS NULL OR public.portable_date_valid("game_day") IS TRUE),
+  "home_name" text NOT NULL,
+  "away_name" text NOT NULL,
+  "championship_name" text NOT NULL,
+  "changes_json" text NOT NULL,
+  "created_at" portable_timestamp DEFAULT now() NOT NULL,
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS community_access (
   "id" text PRIMARY KEY,
   "record_id" uuid NOT NULL,
@@ -730,16 +768,30 @@ CREATE TABLE IF NOT EXISTS community_access (
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS match_probability (
-  "id" uuid PRIMARY KEY REFERENCES game(id) ON DELETE CASCADE,
-  "game_id" uuid NOT NULL REFERENCES game(id) ON DELETE CASCADE,
-  "home_name" text NOT NULL,
-  "away_name" text NOT NULL,
-  "rating_status" text NOT NULL CHECK (rating_status IN ('available', 'missing-rating', 'ambiguous-rating')),
-  "timeline_status" text NOT NULL CHECK (timeline_status IN ('available', 'missing-rating', 'ambiguous-rating', 'unknown-event-minute', 'event-limit')),
-  "payload_json" text NOT NULL,
+CREATE TABLE IF NOT EXISTS phase_clone (
+  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  "app_user_id" uuid DEFAULT auth_uid() NOT NULL REFERENCES app_user(id) ON DELETE CASCADE,
+  "source_phase_id" uuid NOT NULL,
+  "target_championship_id" uuid DEFAULT gen_random_uuid() NOT NULL,
+  "target_phase_id" uuid DEFAULT gen_random_uuid() NOT NULL,
+  "name" text NOT NULL CHECK (char_length(name) > 0 AND char_length(name) <= 120),
+  "begins" date NOT NULL CONSTRAINT "phase_clone_begins_type" CHECK ("begins" IS NULL OR public.portable_date_valid("begins") IS TRUE),
+  "ends" date NOT NULL CONSTRAINT "phase_clone_ends_type" CHECK ("ends" IS NULL OR public.portable_date_valid("ends") IS TRUE),
+  "created_at" portable_timestamp DEFAULT now() NOT NULL,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
-  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+  "scope_id" TEXT GENERATED ALWAYS AS ('user:' || "app_user_id") STORED NOT NULL,
+  CHECK (ends >= begins)
+);
+
+CREATE TABLE IF NOT EXISTS player_merge (
+  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  "app_user_id" uuid DEFAULT auth_uid() NOT NULL REFERENCES app_user(id) ON DELETE CASCADE,
+  "target_player_id" uuid NOT NULL,
+  "source_player_id" uuid NOT NULL,
+  "created_at" portable_timestamp DEFAULT now() NOT NULL,
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('user:' || "app_user_id") STORED NOT NULL,
+  CHECK (target_player_id <> source_player_id)
 );
 
 CREATE TABLE IF NOT EXISTS match_recent_result (
@@ -776,56 +828,14 @@ CREATE TABLE IF NOT EXISTS match_recent_result (
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS phase_clone (
-  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  "app_user_id" uuid DEFAULT auth_uid() NOT NULL REFERENCES app_user(id) ON DELETE CASCADE,
-  "source_phase_id" uuid NOT NULL,
-  "target_championship_id" uuid DEFAULT gen_random_uuid() NOT NULL,
-  "target_phase_id" uuid DEFAULT gen_random_uuid() NOT NULL,
-  "name" text NOT NULL CHECK (char_length(name) > 0 AND char_length(name) <= 120),
-  "begins" date NOT NULL CONSTRAINT "phase_clone_begins_type" CHECK ("begins" IS NULL OR public.portable_date_valid("begins") IS TRUE),
-  "ends" date NOT NULL CONSTRAINT "phase_clone_ends_type" CHECK ("ends" IS NULL OR public.portable_date_valid("ends") IS TRUE),
-  "created_at" portable_timestamp DEFAULT now() NOT NULL,
-  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
-  "scope_id" TEXT GENERATED ALWAYS AS ('user:' || "app_user_id") STORED NOT NULL,
-  CHECK (ends >= begins)
-);
-
-CREATE TABLE IF NOT EXISTS player_merge (
-  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  "app_user_id" uuid DEFAULT auth_uid() NOT NULL REFERENCES app_user(id) ON DELETE CASCADE,
-  "target_player_id" uuid NOT NULL,
-  "source_player_id" uuid NOT NULL,
-  "created_at" portable_timestamp DEFAULT now() NOT NULL,
-  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
-  "scope_id" TEXT GENERATED ALWAYS AS ('user:' || "app_user_id") STORED NOT NULL,
-  CHECK (target_player_id <> source_player_id)
-);
-
-CREATE TABLE IF NOT EXISTS user_biography (
-  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  "app_user_id" uuid DEFAULT auth_uid() NOT NULL UNIQUE REFERENCES app_user(id) ON DELETE CASCADE,
-  "display_name" text CHECK (char_length(display_name) <= 100),
-  "location" text CHECK (char_length(location) <= 100),
-  "about_me" text CHECK (char_length(about_me) <= 2000),
-  "updated_at" portable_timestamp DEFAULT now() NOT NULL,
-  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
-  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS game_change (
-  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  "game_id" uuid NOT NULL,
-  "version" integer NOT NULL CHECK (version > 0),
-  "actor_id" uuid,
-  "actor_handle" text,
-  "game_slug" text,
-  "game_day" date CONSTRAINT "game_change_game_day_type" CHECK ("game_day" IS NULL OR public.portable_date_valid("game_day") IS TRUE),
+CREATE TABLE IF NOT EXISTS match_probability (
+  "id" uuid PRIMARY KEY REFERENCES game(id) ON DELETE CASCADE,
+  "game_id" uuid NOT NULL REFERENCES game(id) ON DELETE CASCADE,
   "home_name" text NOT NULL,
   "away_name" text NOT NULL,
-  "championship_name" text NOT NULL,
-  "changes_json" text NOT NULL,
-  "created_at" portable_timestamp DEFAULT now() NOT NULL,
+  "rating_status" text NOT NULL CHECK (rating_status IN ('available', 'missing-rating', 'ambiguous-rating')),
+  "timeline_status" text NOT NULL CHECK (timeline_status IN ('available', 'missing-rating', 'ambiguous-rating', 'unknown-event-minute', 'event-limit')),
+  "payload_json" text NOT NULL,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -1133,7 +1143,6 @@ CREATE INDEX IF NOT EXISTS idx_game_card_phase_id ON game_card USING btree (phas
 CREATE INDEX IF NOT EXISTS idx_game_card_day ON game_card USING btree (day);
 CREATE INDEX IF NOT EXISTS idx_game_card_stadium_id ON game_card USING btree (stadium_id);
 CREATE INDEX IF NOT EXISTS idx_game_card_referee_id ON game_card USING btree (referee_id);
-CREATE INDEX IF NOT EXISTS idx_home_game_card_championship_id ON home_game_card USING btree (championship_id);
 CREATE INDEX IF NOT EXISTS idx_matches_game_card_championship_id ON matches_game_card USING btree (championship_id);
 CREATE INDEX IF NOT EXISTS idx_team_game_team_id ON team_game USING btree (team_id);
 CREATE INDEX IF NOT EXISTS idx_team_game_game_id ON team_game USING btree (game_id);

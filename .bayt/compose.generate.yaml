@@ -1,0 +1,41 @@
+# generated from bayt.cue — do not edit
+services:
+  golaberto-generate:
+    build:
+      additional_contexts:
+        golaberto-setup: service:golaberto-setup
+      context: ..
+      dockerfile: .bayt/Dockerfile.generate
+      target: generate
+      tags:
+      - bayt-golaberto-generate:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-golaberto-generate:latest
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-generate:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    scale: 0
+  golaberto-generate_bayt:
+    build:
+      additional_contexts:
+        golaberto-setup_bayt: service:golaberto-setup_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.generate
+      target: generate_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-generate_bayt:latest
+    scale: 0
+  golaberto-generate_srcs:
+    build:
+      additional_contexts:
+        golaberto-setup_srcs: service:golaberto-setup_srcs
+      context: ..
+      dockerfile: .bayt/Dockerfile.generate
+      target: generate_srcs
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-generate_srcs:latest
+    scale: 0

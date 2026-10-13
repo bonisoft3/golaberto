@@ -87,7 +87,7 @@
     "game_card": {
       "scope": "public"
     },
-    "home_game_card": {
+    "home_feed": {
       "scope": "public"
     },
     "matches_game_card": {
@@ -121,13 +121,13 @@
     "team_roster_total": {
       "scope": "public"
     },
+    "user_biography": {
+      "scope": "public"
+    },
+    "game_change": {
+      "scope": "public"
+    },
     "community_access": {
-      "scope": "public"
-    },
-    "match_probability": {
-      "scope": "public"
-    },
-    "match_recent_result": {
       "scope": "public"
     },
     "phase_clone": {
@@ -138,10 +138,10 @@
       "owner": "app_user_id",
       "scope": "private"
     },
-    "user_biography": {
+    "match_recent_result": {
       "scope": "public"
     },
-    "game_change": {
+    "match_probability": {
       "scope": "public"
     },
     "user_directory": {
@@ -229,6 +229,7 @@
     "directory_filter": "tab",
     "team_comment_draft": "tab",
     "team_chart_state": "tab",
+    "team_odds_progress_source": "tab",
     "team_odds_progress_state": "tab",
     "editing_choice": "tab"
   },
@@ -303,6 +304,63 @@
         "type": "uuid"
       }
     ]
+  },
+  "read": {
+    "app_user": "lazy",
+    "category": "lazy",
+    "championship": "lazy",
+    "home_championship": "lazy",
+    "phase": "lazy",
+    "stage_group": "lazy",
+    "zone": "lazy",
+    "stadium": "lazy",
+    "team": "lazy",
+    "team_championship": "lazy",
+    "team_group": "lazy",
+    "referee": "lazy",
+    "geography_region": "lazy",
+    "geography_country": "lazy",
+    "team_directory": "lazy",
+    "player": "lazy",
+    "team_player": "lazy",
+    "team_roster": "lazy",
+    "team_player_history": "lazy",
+    "game": "lazy",
+    "goal": "lazy",
+    "player_game": "lazy",
+    "standing": "lazy",
+    "team_chance": "lazy",
+    "zone_chance": "lazy",
+    "position_chance": "lazy",
+    "game_importance": "lazy",
+    "team_rating": "lazy",
+    "game_card": "lazy",
+    "home_feed": "lazy",
+    "matches_game_card": "lazy",
+    "team_game": "lazy",
+    "comment": "lazy",
+    "player_stat": "lazy",
+    "phase_round": "lazy",
+    "team_comment": "lazy",
+    "team_campaign_point": "lazy",
+    "team_rating_chart": "lazy",
+    "team_roster_total": "lazy",
+    "user_biography": "lazy",
+    "game_change": "lazy",
+    "community_access": "lazy",
+    "match_recent_result": "lazy",
+    "match_probability": "lazy",
+    "user_directory": "lazy",
+    "match_head_to_head": "lazy",
+    "match_lineup": "lazy",
+    "match_location": "lazy",
+    "user_avatar": "lazy",
+    "team_odds_progress": "lazy",
+    "phase_directory": "lazy",
+    "player_directory": "lazy",
+    "game_archive": "lazy",
+    "player_appearance": "lazy",
+    "championship_attendance": "lazy"
   },
   "seed": {
     "games_view": [
@@ -393,17 +451,17 @@
           "shell/handlers/page-value.js"
         ],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/games.css",
+          "shell/shared/team.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/games.css",
-          "shell/shared/team.css"
         ]
       },
       "ssr": "ssr",
@@ -431,17 +489,17 @@
           "shell/handlers/page-value.js"
         ],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/games.css",
+          "shell/shared/team.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/games.css",
-          "shell/shared/team.css"
         ]
       },
       "ssr": "ssr",
@@ -467,17 +525,17 @@
           "shell/handlers/page-value.js"
         ],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/games.css",
+          "shell/shared/team.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/games.css",
-          "shell/shared/team.css"
         ]
       },
       "ssr": "ssr",
@@ -504,6 +562,12 @@
           "shell/handlers/search-key.js"
         ],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/catalog.css",
+          "shell/shared/games.css",
+          "shell/shared/team.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
@@ -514,12 +578,6 @@
           "shell/renderers/player-rate-per90.js",
           "shell/renderers/player-position.js",
           "shell/renderers/player-event-label.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/catalog.css",
-          "shell/shared/games.css",
-          "shell/shared/team.css"
         ]
       },
       "slug": "route_players",
@@ -558,6 +616,12 @@
           "shell/handlers/search-key.js"
         ],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/catalog.css",
+          "shell/shared/games.css",
+          "shell/shared/team.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
@@ -568,12 +632,6 @@
           "shell/renderers/player-rate-per90.js",
           "shell/renderers/player-position.js",
           "shell/renderers/player-event-label.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/catalog.css",
-          "shell/shared/games.css",
-          "shell/shared/team.css"
         ]
       },
       "slug": "route_championship_players",
@@ -608,6 +666,12 @@
           "shell/handlers/page-value.js"
         ],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/catalog.css",
+          "shell/shared/games.css",
+          "shell/shared/team.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
@@ -618,12 +682,6 @@
           "shell/renderers/player-rate-per90.js",
           "shell/renderers/player-position.js",
           "shell/renderers/player-event-label.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/catalog.css",
-          "shell/shared/games.css",
-          "shell/shared/team.css"
         ]
       },
       "slug": "route_scoped_player",
@@ -655,6 +713,10 @@
         "css": "shell/screens/principal.css",
         "handlers": [],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/games.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
@@ -662,10 +724,6 @@
           "shell/renderers/country-flag.js",
           "shell/renderers/home-date.js",
           "shell/renderers/geography-label.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/games.css"
         ]
       },
       "ssr": "ssr",
@@ -692,16 +750,16 @@
           "shell/handlers/search-key.js"
         ],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/catalog.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/catalog.css"
         ]
       },
       "slug": "route_championships",
@@ -734,16 +792,16 @@
         "css": "shell/screens/jogos.css",
         "handlers": [],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/games.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/games.css"
         ]
       },
       "slug": "route_games",
@@ -782,6 +840,14 @@
           "shell/handlers/page-value.js"
         ],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/games.css",
+          "shell/shared/match-context.css",
+          "shell/shared/match-probability.css",
+          "shell/shared/editing.css",
+          "shell/shared/community.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
@@ -790,14 +856,6 @@
           "shell/renderers/geography-label.js",
           "shell/renderers/match-context-map.js",
           "shell/renderers/match-probability.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/games.css",
-          "shell/shared/match-context.css",
-          "shell/shared/match-probability.css",
-          "shell/shared/editing.css",
-          "shell/shared/community.css"
         ]
       },
       "slug": "route_game",
@@ -837,6 +895,10 @@
         "css": "shell/screens/chances.css",
         "handlers": [],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/games.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
@@ -844,10 +906,6 @@
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js",
           "shell/renderers/position-odds.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/games.css"
         ]
       },
       "slug": "route_chances",
@@ -886,16 +944,16 @@
           "shell/handlers/search-key.js"
         ],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/games.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/games.css"
         ]
       },
       "slug": "route_edit",
@@ -935,16 +993,16 @@
           "shell/handlers/search-key.js"
         ],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/catalog.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/catalog.css"
         ]
       },
       "slug": "route_teams",
@@ -981,16 +1039,16 @@
           "shell/handlers/search-key.js"
         ],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/catalog.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/catalog.css"
         ]
       },
       "slug": "route_stadiums",
@@ -1026,16 +1084,16 @@
           "shell/handlers/page-value.js"
         ],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/games.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/games.css"
         ]
       },
       "slug": "route_stadium",
@@ -1071,16 +1129,16 @@
           "shell/handlers/search-key.js"
         ],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/catalog.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/catalog.css"
         ]
       },
       "slug": "route_referees",
@@ -1116,16 +1174,16 @@
           "shell/handlers/page-value.js"
         ],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/games.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/games.css"
         ]
       },
       "slug": "route_referee",
@@ -1162,6 +1220,13 @@
           "shell/handlers/team-rating-series.js"
         ],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/games.css",
+          "shell/shared/team.css",
+          "shell/shared/editing.css",
+          "shell/shared/community.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
@@ -1171,13 +1236,6 @@
           "shell/renderers/team-chart.js",
           "shell/renderers/team-location.js",
           "shell/renderers/media-image.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/games.css",
-          "shell/shared/team.css",
-          "shell/shared/editing.css",
-          "shell/shared/community.css"
         ]
       },
       "slug": "route_team",
@@ -1221,11 +1279,17 @@
           "shell/handlers/page-value.js",
           "shell/handlers/position-odds-control.js",
           "shell/handlers/position-odds-fold.js",
+          "shell/handlers/position-odds-source.js",
           "shell/handlers/search-key.js",
           "shell/handlers/team-chart-fold.js",
           "shell/handlers/team-chart-seed.js"
         ],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/games.css",
+          "shell/shared/team.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
@@ -1236,11 +1300,6 @@
           "shell/renderers/team-location.js",
           "shell/renderers/odds-progress.js",
           "shell/renderers/position-odds.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/games.css",
-          "shell/shared/team.css"
         ]
       },
       "slug": "route_team_championship",
@@ -1279,6 +1338,11 @@
           "shell/handlers/search-key.js"
         ],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/games.css",
+          "shell/shared/team.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
@@ -1290,11 +1354,6 @@
           "shell/renderers/player-position.js",
           "shell/renderers/player-height.js",
           "shell/renderers/player-event-label.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/games.css",
-          "shell/shared/team.css"
         ]
       },
       "slug": "route_player",
@@ -1327,16 +1386,16 @@
         "css": "shell/screens/campeonato.css",
         "handlers": [],
         "adapters": [],
+        "shared": [
+          "shell/shared/chrome.css",
+          "shell/shared/games.css"
+        ],
         "renderers": [
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-shootout.js",
           "shell/renderers/team-badge.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js"
-        ],
-        "shared": [
-          "shell/shared/chrome.css",
-          "shell/shared/games.css"
         ]
       },
       "slug": "route_championship",
@@ -2160,63 +2219,6 @@
       ]
     }
   ],
-  "sync": {
-    "app_user": "on-demand",
-    "category": "on-demand",
-    "championship": "on-demand",
-    "home_championship": "on-demand",
-    "phase": "on-demand",
-    "stage_group": "on-demand",
-    "zone": "on-demand",
-    "stadium": "on-demand",
-    "team": "on-demand",
-    "team_championship": "on-demand",
-    "team_group": "on-demand",
-    "referee": "on-demand",
-    "geography_region": "on-demand",
-    "geography_country": "on-demand",
-    "team_directory": "on-demand",
-    "player": "on-demand",
-    "team_player": "on-demand",
-    "team_roster": "on-demand",
-    "team_player_history": "on-demand",
-    "game": "on-demand",
-    "goal": "on-demand",
-    "player_game": "on-demand",
-    "standing": "on-demand",
-    "team_chance": "on-demand",
-    "zone_chance": "on-demand",
-    "position_chance": "on-demand",
-    "game_importance": "on-demand",
-    "team_rating": "on-demand",
-    "game_card": "on-demand",
-    "home_game_card": "on-demand",
-    "matches_game_card": "on-demand",
-    "team_game": "on-demand",
-    "comment": "on-demand",
-    "player_stat": "on-demand",
-    "phase_round": "on-demand",
-    "team_comment": "on-demand",
-    "team_campaign_point": "on-demand",
-    "team_rating_chart": "on-demand",
-    "team_roster_total": "on-demand",
-    "community_access": "on-demand",
-    "match_probability": "on-demand",
-    "match_recent_result": "on-demand",
-    "user_biography": "on-demand",
-    "game_change": "on-demand",
-    "user_directory": "on-demand",
-    "match_head_to_head": "on-demand",
-    "match_lineup": "on-demand",
-    "match_location": "on-demand",
-    "user_avatar": "on-demand",
-    "team_odds_progress": "on-demand",
-    "phase_directory": "on-demand",
-    "player_directory": "on-demand",
-    "game_archive": "on-demand",
-    "player_appearance": "on-demand",
-    "championship_attendance": "on-demand"
-  },
   "tables": [
     "app_user",
     "category",
@@ -2234,7 +2236,7 @@
     "geography_region",
     "goal",
     "home_championship",
-    "home_game_card",
+    "home_feed",
     "match_head_to_head",
     "match_lineup",
     "match_location",
@@ -2298,7 +2300,7 @@
           "unique": true
         },
         {
-          "default": "now()",
+          "defaulted": true,
           "name": "created_at",
           "type": "timestamp",
           "required": true
@@ -2309,7 +2311,7 @@
       "durability": "server",
       "fields": [
         {
-          "default": "gen_random_uuid()",
+          "defaulted": true,
           "name": "id",
           "pk": true,
           "type": "uuid",
@@ -2331,7 +2333,7 @@
       "durability": "server",
       "fields": [
         {
-          "default": "gen_random_uuid()",
+          "defaulted": true,
           "name": "id",
           "pk": true,
           "type": "uuid",
@@ -2353,7 +2355,8 @@
           "required": false
         },
         {
-          "default": "'national'",
+          "default": "national",
+          "defaulted": true,
           "enum": [
             "world",
             "continental",
@@ -2387,7 +2390,8 @@
             "intMin": 0,
             "intMax": 9
           },
-          "default": "3",
+          "default": 3,
+          "defaulted": true,
           "name": "point_win",
           "type": "int32",
           "required": true
@@ -2397,7 +2401,8 @@
             "intMin": 0,
             "intMax": 9
           },
-          "default": "1",
+          "default": 1,
+          "defaulted": true,
           "name": "point_draw",
           "type": "int32",
           "required": true
@@ -2407,13 +2412,15 @@
             "intMin": 0,
             "intMax": 9
           },
-          "default": "0",
+          "default": 0,
+          "defaulted": true,
           "name": "point_loss",
           "type": "int32",
           "required": true
         },
         {
-          "default": "false",
+          "default": false,
+          "defaulted": true,
           "name": "show_country",
           "type": "bool",
           "required": true
@@ -2429,7 +2436,8 @@
           "required": true
         },
         {
-          "default": "false",
+          "default": false,
+          "defaulted": true,
           "name": "featured",
           "type": "bool",
           "required": true
@@ -2448,7 +2456,8 @@
           "bounds": {
             "regex": "^[a-z0-9]+(-[a-z0-9]+)*$"
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "slug",
           "type": "string",
           "required": true,
@@ -2504,7 +2513,7 @@
       "durability": "server",
       "fields": [
         {
-          "default": "gen_random_uuid()",
+          "defaulted": true,
           "name": "id",
           "pk": true,
           "type": "uuid",
@@ -2529,7 +2538,8 @@
           "bounds": {
             "intMin": 0
           },
-          "default": "0",
+          "default": 0,
+          "defaulted": true,
           "name": "position",
           "type": "int32",
           "required": true
@@ -2538,7 +2548,8 @@
           "bounds": {
             "regex": "^(pt|w|gd|gf|name|g_average|gp|g_aet|head|g_away|bias)(,(pt|w|gd|gf|name|g_average|gp|g_aet|head|g_away|bias))*$"
           },
-          "default": "'pt,w,gd,gf,gp,g_away,name'",
+          "default": "pt,w,gd,gf,gp,g_away,name",
+          "defaulted": true,
           "name": "sort",
           "type": "string",
           "required": true
@@ -2548,7 +2559,8 @@
             "intMin": 0,
             "intMax": 9
           },
-          "default": "0",
+          "default": 0,
+          "defaulted": true,
           "name": "bonus_points",
           "type": "int32",
           "required": true
@@ -2558,7 +2570,8 @@
             "intMin": 0,
             "intMax": 99
           },
-          "default": "0",
+          "default": 0,
+          "defaulted": true,
           "name": "bonus_points_threshold",
           "type": "int32",
           "required": true
@@ -2581,7 +2594,7 @@
       "durability": "server",
       "fields": [
         {
-          "default": "gen_random_uuid()",
+          "defaulted": true,
           "name": "id",
           "pk": true,
           "type": "uuid",
@@ -2606,7 +2619,8 @@
           "bounds": {
             "intMin": 0
           },
-          "default": "0",
+          "default": 0,
+          "defaulted": true,
           "name": "position",
           "type": "int32",
           "required": true
@@ -2615,7 +2629,8 @@
           "bounds": {
             "regex": "^[a-z0-9]+(-[a-z0-9]+)*$"
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "slug",
           "type": "string",
           "required": true,
@@ -2639,7 +2654,7 @@
       "durability": "server",
       "fields": [
         {
-          "default": "gen_random_uuid()",
+          "defaulted": true,
           "name": "id",
           "pk": true,
           "type": "uuid",
@@ -2682,7 +2697,8 @@
           "required": true
         },
         {
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "positions",
           "type": "string",
           "required": true
@@ -2705,7 +2721,7 @@
       "durability": "server",
       "fields": [
         {
-          "default": "gen_random_uuid()",
+          "defaulted": true,
           "name": "id",
           "pk": true,
           "type": "uuid",
@@ -2758,7 +2774,8 @@
           "bounds": {
             "regex": "^[a-z0-9]+(-[a-z0-9]+)*$"
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "slug",
           "type": "string",
           "required": true,
@@ -2782,7 +2799,7 @@
       "durability": "server",
       "fields": [
         {
-          "default": "gen_random_uuid()",
+          "defaulted": true,
           "name": "id",
           "pk": true,
           "type": "uuid",
@@ -2834,7 +2851,8 @@
           "required": false
         },
         {
-          "default": "'club'",
+          "default": "club",
+          "defaulted": true,
           "enum": [
             "club",
             "national"
@@ -2880,7 +2898,8 @@
           "bounds": {
             "regex": "^[a-z0-9]+(-[a-z0-9]+)*$"
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "slug",
           "type": "string",
           "required": true,
@@ -2957,7 +2976,7 @@
       "durability": "server",
       "fields": [
         {
-          "default": "gen_random_uuid()",
+          "defaulted": true,
           "name": "id",
           "pk": true,
           "type": "uuid",
@@ -2980,7 +2999,8 @@
             "intMin": -99,
             "intMax": 99
           },
-          "default": "0",
+          "default": 0,
+          "defaulted": true,
           "name": "add_sub",
           "type": "int32",
           "required": true
@@ -2990,7 +3010,8 @@
             "intMin": -99,
             "intMax": 99
           },
-          "default": "0",
+          "default": 0,
+          "defaulted": true,
           "name": "bias",
           "type": "int32",
           "required": true
@@ -3030,7 +3051,7 @@
       "durability": "server",
       "fields": [
         {
-          "default": "gen_random_uuid()",
+          "defaulted": true,
           "name": "id",
           "pk": true,
           "type": "uuid",
@@ -3067,7 +3088,8 @@
           "bounds": {
             "regex": "^[a-z0-9]+(-[a-z0-9]+)*$"
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "slug",
           "type": "string",
           "required": true,
@@ -3215,31 +3237,36 @@
           "required": true
         },
         {
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "country_id",
           "type": "string",
           "required": true
         },
         {
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "region_id",
           "type": "string",
           "required": true
         },
         {
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "country_search_key",
           "type": "string",
           "required": true
         },
         {
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "region_search_key",
           "type": "string",
           "required": true
         },
         {
-          "default": "'club'",
+          "default": "club",
+          "defaulted": true,
           "enum": [
             "club",
             "national"
@@ -3254,7 +3281,7 @@
       "durability": "server",
       "fields": [
         {
-          "default": "gen_random_uuid()",
+          "defaulted": true,
           "name": "id",
           "pk": true,
           "type": "uuid",
@@ -3318,7 +3345,8 @@
           "bounds": {
             "regex": "^[a-z0-9]+(-[a-z0-9]+)*$"
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "slug",
           "type": "string",
           "required": true,
@@ -3342,7 +3370,7 @@
       "durability": "server",
       "fields": [
         {
-          "default": "gen_random_uuid()",
+          "defaulted": true,
           "name": "id",
           "pk": true,
           "type": "uuid",
@@ -3618,7 +3646,7 @@
       "durability": "server",
       "fields": [
         {
-          "default": "gen_random_uuid()",
+          "defaulted": true,
           "name": "id",
           "pk": true,
           "type": "uuid",
@@ -3661,7 +3689,8 @@
           "required": true
         },
         {
-          "default": "'left'",
+          "default": "left",
+          "defaulted": true,
           "enum": [
             "left",
             "neutral",
@@ -3672,7 +3701,8 @@
           "required": true
         },
         {
-          "default": "false",
+          "default": false,
+          "defaulted": true,
           "name": "played",
           "type": "bool",
           "required": true
@@ -3766,7 +3796,8 @@
           "bounds": {
             "regex": "^[a-z0-9]+(-[a-z0-9]+)*$"
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "slug",
           "type": "string",
           "required": true,
@@ -3790,7 +3821,7 @@
       "durability": "live",
       "fields": [
         {
-          "default": "gen_random_uuid()",
+          "defaulted": true,
           "name": "id",
           "pk": true,
           "type": "uuid",
@@ -3827,19 +3858,22 @@
           "required": false
         },
         {
-          "default": "false",
+          "default": false,
+          "defaulted": true,
           "name": "penalty",
           "type": "bool",
           "required": true
         },
         {
-          "default": "false",
+          "default": false,
+          "defaulted": true,
           "name": "own_goal",
           "type": "bool",
           "required": true
         },
         {
-          "default": "false",
+          "default": false,
+          "defaulted": true,
           "name": "aet",
           "type": "bool",
           "required": true
@@ -3862,7 +3896,7 @@
       "durability": "server",
       "fields": [
         {
-          "default": "gen_random_uuid()",
+          "defaulted": true,
           "name": "id",
           "pk": true,
           "type": "uuid",
@@ -3894,7 +3928,8 @@
             "intMin": 0,
             "intMax": 130
           },
-          "default": "0",
+          "default": 0,
+          "defaulted": true,
           "name": "on_minute",
           "type": "int32",
           "required": true
@@ -3909,19 +3944,22 @@
           "required": false
         },
         {
-          "default": "false",
+          "default": false,
+          "defaulted": true,
           "name": "yellow",
           "type": "bool",
           "required": true
         },
         {
-          "default": "false",
+          "default": false,
+          "defaulted": true,
           "name": "red",
           "type": "bool",
           "required": true
         },
         {
-          "default": "false",
+          "default": false,
+          "defaulted": true,
           "name": "bench",
           "type": "bool",
           "required": true
@@ -4554,43 +4592,11 @@
           "ref": "referee",
           "type": "uuid",
           "required": false
-        },
-        {
-          "bounds": {
-            "intMin": 0,
-            "intMax": 20
-          },
-          "default": "0",
-          "name": "home_upcoming_rank",
-          "type": "int32",
-          "required": true
-        },
-        {
-          "bounds": {
-            "intMin": 0,
-            "intMax": 20
-          },
-          "default": "0",
-          "name": "home_recent_rank",
-          "type": "int32",
-          "required": true
-        },
-        {
-          "default": "false",
-          "name": "home_upcoming_group",
-          "type": "bool",
-          "required": true
-        },
-        {
-          "default": "false",
-          "name": "home_recent_group",
-          "type": "bool",
-          "required": true
         }
       ]
     },
-    "home_game_card": {
-      "durability": "live",
+    "home_feed": {
+      "durability": "server",
       "fields": [
         {
           "name": "id",
@@ -4766,7 +4772,8 @@
             "intMin": 0,
             "intMax": 20
           },
-          "default": "0",
+          "default": 0,
+          "defaulted": true,
           "name": "home_upcoming_rank",
           "type": "int32",
           "required": true
@@ -4776,26 +4783,37 @@
             "intMin": 0,
             "intMax": 20
           },
-          "default": "0",
+          "default": 0,
+          "defaulted": true,
           "name": "home_recent_rank",
           "type": "int32",
           "required": true
         },
         {
-          "default": "false",
+          "default": false,
+          "defaulted": true,
           "name": "home_upcoming_group",
           "type": "bool",
           "required": true
         },
         {
-          "default": "false",
+          "default": false,
+          "defaulted": true,
           "name": "home_recent_group",
           "type": "bool",
           "required": true
         },
         {
-          "default": "false",
+          "default": false,
+          "defaulted": true,
           "name": "home_highlighted",
+          "type": "bool",
+          "required": true
+        },
+        {
+          "default": false,
+          "defaulted": true,
+          "name": "home_new_day",
           "type": "bool",
           "required": true
         }
@@ -4972,38 +4990,6 @@
           "ref": "referee",
           "type": "uuid",
           "required": false
-        },
-        {
-          "bounds": {
-            "intMin": 0,
-            "intMax": 20
-          },
-          "default": "0",
-          "name": "home_upcoming_rank",
-          "type": "int32",
-          "required": true
-        },
-        {
-          "bounds": {
-            "intMin": 0,
-            "intMax": 20
-          },
-          "default": "0",
-          "name": "home_recent_rank",
-          "type": "int32",
-          "required": true
-        },
-        {
-          "default": "false",
-          "name": "home_upcoming_group",
-          "type": "bool",
-          "required": true
-        },
-        {
-          "default": "false",
-          "name": "home_recent_group",
-          "type": "bool",
-          "required": true
         }
       ]
     },
@@ -5135,7 +5121,7 @@
       "durability": "live",
       "fields": [
         {
-          "default": "gen_random_uuid()",
+          "defaulted": true,
           "name": "id",
           "pk": true,
           "type": "uuid",
@@ -5148,7 +5134,7 @@
           "required": true
         },
         {
-          "default": "auth_uid()",
+          "defaulted": true,
           "name": "app_user_id",
           "ref": "app_user",
           "type": "uuid",
@@ -5164,7 +5150,7 @@
           "required": true
         },
         {
-          "default": "now()",
+          "defaulted": true,
           "name": "created_at",
           "type": "timestamp",
           "required": true
@@ -5184,13 +5170,15 @@
           "bounds": {
             "sizeMax": 1000
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "body",
           "type": "string",
           "required": true
         },
         {
-          "default": "'writing'",
+          "default": "writing",
+          "defaulted": true,
           "enum": [
             "writing",
             "sending",
@@ -5206,7 +5194,7 @@
       "durability": "server",
       "fields": [
         {
-          "default": "gen_random_uuid()",
+          "defaulted": true,
           "name": "id",
           "pk": true,
           "type": "uuid",
@@ -5231,7 +5219,8 @@
           "required": true
         },
         {
-          "default": "'editing'",
+          "default": "editing",
+          "defaulted": true,
           "enum": [
             "editing",
             "saving",
@@ -5295,7 +5284,8 @@
           "bounds": {
             "sizeMax": 80
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "stadium_q",
           "type": "string",
           "required": true
@@ -5304,7 +5294,8 @@
           "bounds": {
             "sizeMax": 80
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "referee_q",
           "type": "string",
           "required": true
@@ -5313,7 +5304,8 @@
           "bounds": {
             "sizeMax": 160
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "stadium_q_key",
           "type": "string",
           "required": true
@@ -5322,7 +5314,8 @@
           "bounds": {
             "sizeMax": 160
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "referee_q_key",
           "type": "string",
           "required": true
@@ -5493,7 +5486,8 @@
           "required": false
         },
         {
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "search_key",
           "type": "string",
           "required": true
@@ -5547,7 +5541,8 @@
           "required": true
         },
         {
-          "default": "'upcoming'",
+          "default": "upcoming",
+          "defaulted": true,
           "enum": [
             "upcoming",
             "results"
@@ -5575,13 +5570,15 @@
           "bounds": {
             "sizeMax": 80
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "q",
           "type": "string",
           "required": true
         },
         {
-          "default": "'browsing'",
+          "default": "browsing",
+          "defaulted": true,
           "enum": [
             "browsing"
           ],
@@ -5593,7 +5590,8 @@
           "bounds": {
             "intMin": 0
           },
-          "default": "0",
+          "default": 0,
+          "defaulted": true,
           "name": "offset",
           "type": "int32",
           "required": true
@@ -5602,7 +5600,8 @@
           "bounds": {
             "intMin": 40
           },
-          "default": "40",
+          "default": 40,
+          "defaulted": true,
           "name": "next_offset",
           "type": "int32",
           "required": true
@@ -5611,7 +5610,8 @@
           "bounds": {
             "intMin": 1
           },
-          "default": "1",
+          "default": 1,
+          "defaulted": true,
           "name": "page",
           "type": "int32",
           "required": true
@@ -5620,7 +5620,8 @@
           "bounds": {
             "sizeMax": 60
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "country",
           "type": "string",
           "required": true
@@ -5629,7 +5630,8 @@
           "bounds": {
             "sizeMax": 160
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "q_key",
           "type": "string",
           "required": true
@@ -5638,7 +5640,8 @@
           "bounds": {
             "sizeMax": 120
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "country_key",
           "type": "string",
           "required": true
@@ -5647,7 +5650,8 @@
           "bounds": {
             "sizeMax": 80
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "region_q",
           "type": "string",
           "required": true
@@ -5656,7 +5660,8 @@
           "bounds": {
             "sizeMax": 160
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "region_key",
           "type": "string",
           "required": true
@@ -5665,7 +5670,8 @@
           "bounds": {
             "sizeMax": 60
           },
-          "default": "'*'",
+          "default": "*",
+          "defaulted": true,
           "name": "region_selection",
           "type": "string",
           "required": true
@@ -5674,13 +5680,15 @@
           "bounds": {
             "sizeMax": 60
           },
-          "default": "'*'",
+          "default": "*",
+          "defaulted": true,
           "name": "country_selection",
           "type": "string",
           "required": true
         },
         {
-          "default": "'club'",
+          "default": "club",
+          "defaulted": true,
           "enum": [
             "club",
             "national"
@@ -5708,13 +5716,15 @@
           "bounds": {
             "sizeMax": 80
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "q",
           "type": "string",
           "required": true
         },
         {
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "enum": [
             "",
             "world",
@@ -5726,7 +5736,8 @@
           "required": true
         },
         {
-          "default": "'browsing'",
+          "default": "browsing",
+          "defaulted": true,
           "enum": [
             "browsing"
           ],
@@ -5738,7 +5749,8 @@
           "bounds": {
             "intMin": 0
           },
-          "default": "0",
+          "default": 0,
+          "defaulted": true,
           "name": "offset",
           "type": "int32",
           "required": true
@@ -5747,7 +5759,8 @@
           "bounds": {
             "intMin": 40
           },
-          "default": "40",
+          "default": 40,
+          "defaulted": true,
           "name": "next_offset",
           "type": "int32",
           "required": true
@@ -5756,7 +5769,8 @@
           "bounds": {
             "intMin": 1
           },
-          "default": "1",
+          "default": 1,
+          "defaulted": true,
           "name": "page",
           "type": "int32",
           "required": true
@@ -5765,7 +5779,8 @@
           "bounds": {
             "sizeMax": 160
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "q_key",
           "type": "string",
           "required": true
@@ -5776,7 +5791,7 @@
       "durability": "live",
       "fields": [
         {
-          "default": "gen_random_uuid()",
+          "defaulted": true,
           "name": "id",
           "pk": true,
           "type": "uuid",
@@ -5789,7 +5804,7 @@
           "required": true
         },
         {
-          "default": "auth_uid()",
+          "defaulted": true,
           "name": "app_user_id",
           "ref": "app_user",
           "type": "uuid",
@@ -5805,7 +5820,7 @@
           "required": true
         },
         {
-          "default": "now()",
+          "defaulted": true,
           "name": "created_at",
           "type": "timestamp",
           "required": true
@@ -5825,13 +5840,15 @@
           "bounds": {
             "sizeMax": 1000
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "body",
           "type": "string",
           "required": true
         },
         {
-          "default": "'writing'",
+          "default": "writing",
+          "defaulted": true,
           "enum": [
             "writing",
             "sending",
@@ -6101,7 +6118,8 @@
           "required": true
         },
         {
-          "default": "'points'",
+          "default": "points",
+          "defaulted": true,
           "enum": [
             "points"
           ],
@@ -6110,13 +6128,15 @@
           "required": true
         },
         {
-          "default": "'{}'",
+          "default": "{}",
+          "defaulted": true,
           "name": "series_json",
           "type": "string",
           "required": true
         },
         {
-          "default": "'/jogo/'",
+          "default": "/jogo/",
+          "defaulted": true,
           "name": "game_prefix",
           "type": "string",
           "required": true
@@ -6141,7 +6161,8 @@
           "bounds": {
             "intMin": 0
           },
-          "default": "0",
+          "default": 0,
+          "defaulted": true,
           "name": "offset",
           "type": "int32",
           "required": true
@@ -6150,7 +6171,8 @@
           "bounds": {
             "intMin": 40
           },
-          "default": "40",
+          "default": 40,
+          "defaulted": true,
           "name": "next_offset",
           "type": "int32",
           "required": true
@@ -6159,13 +6181,15 @@
           "bounds": {
             "intMin": 1
           },
-          "default": "1",
+          "default": 1,
+          "defaulted": true,
           "name": "page",
           "type": "int32",
           "required": true
         },
         {
-          "default": "'browsing'",
+          "default": "browsing",
+          "defaulted": true,
           "enum": [
             "browsing"
           ],
@@ -6177,7 +6201,8 @@
           "bounds": {
             "sizeMax": 80
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "q",
           "type": "string",
           "required": true
@@ -6186,13 +6211,15 @@
           "bounds": {
             "sizeMax": 160
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "q_key",
           "type": "string",
           "required": true
         },
         {
-          "default": "'name'",
+          "default": "name",
+          "defaulted": true,
           "enum": [
             "name",
             "played",
@@ -6208,7 +6235,8 @@
           "required": true
         },
         {
-          "default": "'1y'",
+          "default": "1y",
+          "defaulted": true,
           "enum": [
             "1m",
             "3m",
@@ -6222,7 +6250,8 @@
           "required": true
         },
         {
-          "default": "'*'",
+          "default": "*",
+          "defaulted": true,
           "enum": [
             "*",
             "home",
@@ -6233,13 +6262,15 @@
           "required": true
         },
         {
-          "default": "'*'",
+          "default": "*",
+          "defaulted": true,
           "name": "phase",
           "type": "string",
           "required": true
         },
         {
-          "default": "'*'",
+          "default": "*",
+          "defaulted": true,
           "name": "category",
           "type": "string",
           "required": true
@@ -6250,25 +6281,29 @@
           "required": false
         },
         {
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "country",
           "type": "string",
           "required": true
         },
         {
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "country_key",
           "type": "string",
           "required": true
         },
         {
-          "default": "'*'",
+          "default": "*",
+          "defaulted": true,
           "name": "region",
           "type": "string",
           "required": true
         },
         {
-          "default": "'*'",
+          "default": "*",
+          "defaulted": true,
           "name": "position",
           "type": "string",
           "required": true
@@ -6278,13 +6313,15 @@
             "intMin": 0,
             "intMax": 1000000
           },
-          "default": "0",
+          "default": 0,
+          "defaulted": true,
           "name": "minimum_minutes",
           "type": "int32",
           "required": true
         },
         {
-          "default": "'true'",
+          "default": "true",
+          "defaulted": true,
           "enum": [
             "*",
             "true",
@@ -6300,31 +6337,36 @@
           "required": false
         },
         {
-          "default": "'*'",
+          "default": "*",
+          "defaulted": true,
           "name": "week",
           "type": "string",
           "required": true
         },
         {
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "week_day",
           "type": "string",
           "required": true
         },
         {
-          "default": "'*'",
+          "default": "*",
+          "defaulted": true,
           "name": "round",
           "type": "string",
           "required": true
         },
         {
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "round_value",
           "type": "string",
           "required": true
         },
         {
-          "default": "'[]'",
+          "default": "[]",
+          "defaulted": true,
           "name": "csv_rows",
           "type": "string",
           "required": true
@@ -6333,7 +6375,8 @@
           "bounds": {
             "sizeMax": 10
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "date_from",
           "type": "string",
           "required": true
@@ -6342,15 +6385,138 @@
           "bounds": {
             "sizeMax": 10
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "date_to",
           "type": "string",
           "required": true
         },
         {
-          "default": "'{}'",
+          "default": "{}",
+          "defaulted": true,
           "name": "series_json",
           "type": "string",
+          "required": true
+        }
+      ]
+    },
+    "user_biography": {
+      "durability": "server",
+      "fields": [
+        {
+          "defaulted": true,
+          "name": "id",
+          "pk": true,
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "defaulted": true,
+          "name": "app_user_id",
+          "ref": "app_user",
+          "type": "uuid",
+          "required": true,
+          "unique": true
+        },
+        {
+          "bounds": {
+            "sizeMax": 100
+          },
+          "name": "display_name",
+          "type": "string",
+          "required": false
+        },
+        {
+          "bounds": {
+            "sizeMax": 100
+          },
+          "name": "location",
+          "type": "string",
+          "required": false
+        },
+        {
+          "bounds": {
+            "sizeMax": 2000
+          },
+          "name": "about_me",
+          "type": "string",
+          "required": false
+        },
+        {
+          "defaulted": true,
+          "name": "updated_at",
+          "type": "timestamp",
+          "required": true
+        }
+      ]
+    },
+    "game_change": {
+      "durability": "server",
+      "fields": [
+        {
+          "defaulted": true,
+          "name": "id",
+          "pk": true,
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "game_id",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 1
+          },
+          "name": "version",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "name": "actor_id",
+          "type": "uuid",
+          "required": false
+        },
+        {
+          "name": "actor_handle",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "game_slug",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "game_day",
+          "type": "date",
+          "required": false
+        },
+        {
+          "name": "home_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "away_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "championship_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "changes_json",
+          "type": "string",
+          "required": true
+        },
+        {
+          "defaulted": true,
+          "name": "created_at",
+          "type": "timestamp",
           "required": true
         }
       ]
@@ -6391,6 +6557,102 @@
         }
       ]
     },
+    "phase_clone": {
+      "durability": "server",
+      "fields": [
+        {
+          "defaulted": true,
+          "name": "id",
+          "pk": true,
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "defaulted": true,
+          "name": "app_user_id",
+          "ref": "app_user",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "source_phase_id",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "defaulted": true,
+          "name": "target_championship_id",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "defaulted": true,
+          "name": "target_phase_id",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "bounds": {
+            "sizeMin": 1,
+            "sizeMax": 120
+          },
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "begins",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "ends",
+          "type": "date",
+          "required": true
+        },
+        {
+          "defaulted": true,
+          "name": "created_at",
+          "type": "timestamp",
+          "required": true
+        }
+      ]
+    },
+    "player_merge": {
+      "durability": "server",
+      "fields": [
+        {
+          "defaulted": true,
+          "name": "id",
+          "pk": true,
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "defaulted": true,
+          "name": "app_user_id",
+          "ref": "app_user",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "target_player_id",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "source_player_id",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "defaulted": true,
+          "name": "created_at",
+          "type": "timestamp",
+          "required": true
+        }
+      ]
+    },
     "editing_choice": {
       "durability": "tab",
       "fields": [
@@ -6401,7 +6663,8 @@
           "required": true
         },
         {
-          "default": "'choosing'",
+          "default": "choosing",
+          "defaulted": true,
           "enum": [
             "choosing"
           ],
@@ -6413,7 +6676,8 @@
           "bounds": {
             "sizeMax": 80
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "q",
           "type": "string",
           "required": true
@@ -6422,7 +6686,8 @@
           "bounds": {
             "sizeMax": 160
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "q_key",
           "type": "string",
           "required": true
@@ -6451,7 +6716,8 @@
           "required": false
         },
         {
-          "default": "false",
+          "default": false,
+          "defaulted": true,
           "name": "played",
           "type": "bool",
           "required": true
@@ -6460,214 +6726,6 @@
           "name": "excluded_id",
           "type": "uuid",
           "required": false
-        }
-      ]
-    },
-    "match_probability": {
-      "durability": "server",
-      "fields": [
-        {
-          "name": "id",
-          "pk": true,
-          "ref": "game",
-          "type": "uuid",
-          "required": true
-        },
-        {
-          "name": "game_id",
-          "ref": "game",
-          "type": "uuid",
-          "required": true
-        },
-        {
-          "name": "home_name",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "away_name",
-          "type": "string",
-          "required": true
-        },
-        {
-          "enum": [
-            "available",
-            "missing-rating",
-            "ambiguous-rating"
-          ],
-          "name": "rating_status",
-          "type": "string",
-          "required": true
-        },
-        {
-          "enum": [
-            "available",
-            "missing-rating",
-            "ambiguous-rating",
-            "unknown-event-minute",
-            "event-limit"
-          ],
-          "name": "timeline_status",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "payload_json",
-          "type": "string",
-          "required": true
-        }
-      ]
-    },
-    "match_probability_scenario": {
-      "durability": "tab",
-      "fields": [
-        {
-          "name": "id",
-          "pk": true,
-          "type": "string",
-          "required": true
-        },
-        {
-          "default": "'ready'",
-          "enum": [
-            "ready"
-          ],
-          "name": "state",
-          "type": "string",
-          "required": true
-        },
-        {
-          "default": "'0'",
-          "name": "minute",
-          "type": "string",
-          "required": true
-        },
-        {
-          "default": "'5'",
-          "name": "added_time",
-          "type": "string",
-          "required": true
-        },
-        {
-          "bounds": {
-            "intMin": 0
-          },
-          "default": "0",
-          "name": "event_sequence",
-          "type": "int32",
-          "required": true
-        },
-        {
-          "bounds": {
-            "sizeMax": 80
-          },
-          "default": "''",
-          "name": "next_event_id",
-          "type": "string",
-          "required": true
-        },
-        {
-          "bounds": {
-            "intMin": 0,
-            "intMax": 20
-          },
-          "default": "0",
-          "name": "event_count",
-          "type": "int32",
-          "required": true
-        },
-        {
-          "bounds": {
-            "sizeMax": 4000
-          },
-          "default": "'[]'",
-          "name": "events_json",
-          "type": "string",
-          "required": true
-        },
-        {
-          "default": "''",
-          "name": "payload_json",
-          "type": "string",
-          "required": true
-        },
-        {
-          "default": "''",
-          "name": "home_name",
-          "type": "string",
-          "required": true
-        },
-        {
-          "default": "''",
-          "name": "away_name",
-          "type": "string",
-          "required": true
-        }
-      ]
-    },
-    "match_probability_scenario_event": {
-      "durability": "tab",
-      "fields": [
-        {
-          "bounds": {
-            "sizeMin": 1,
-            "sizeMax": 80
-          },
-          "name": "id",
-          "pk": true,
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "game_id",
-          "type": "uuid",
-          "required": true
-        },
-        {
-          "default": "'ready'",
-          "enum": [
-            "ready"
-          ],
-          "name": "state",
-          "type": "string",
-          "required": true
-        },
-        {
-          "bounds": {
-            "intMin": 1
-          },
-          "name": "sequence",
-          "type": "int32",
-          "required": true
-        },
-        {
-          "enum": [
-            "goal",
-            "red_card"
-          ],
-          "name": "kind",
-          "type": "string",
-          "required": true
-        },
-        {
-          "default": "'home'",
-          "enum": [
-            "home",
-            "away"
-          ],
-          "name": "side",
-          "type": "string",
-          "required": true
-        },
-        {
-          "bounds": {
-            "intMin": 0,
-            "intMax": 130
-          },
-          "default": "0",
-          "name": "minute",
-          "type": "int32",
-          "required": true
         }
       ]
     },
@@ -6827,98 +6885,223 @@
         }
       ]
     },
-    "phase_clone": {
+    "match_probability": {
       "durability": "server",
       "fields": [
         {
-          "default": "gen_random_uuid()",
           "name": "id",
           "pk": true,
+          "ref": "game",
           "type": "uuid",
           "required": true
         },
         {
-          "default": "auth_uid()",
-          "name": "app_user_id",
-          "ref": "app_user",
+          "name": "game_id",
+          "ref": "game",
           "type": "uuid",
           "required": true
         },
         {
-          "name": "source_phase_id",
-          "type": "uuid",
-          "required": true
-        },
-        {
-          "default": "gen_random_uuid()",
-          "name": "target_championship_id",
-          "type": "uuid",
-          "required": true
-        },
-        {
-          "default": "gen_random_uuid()",
-          "name": "target_phase_id",
-          "type": "uuid",
-          "required": true
-        },
-        {
-          "bounds": {
-            "sizeMin": 1,
-            "sizeMax": 120
-          },
-          "name": "name",
+          "name": "home_name",
           "type": "string",
           "required": true
         },
         {
-          "name": "begins",
-          "type": "date",
+          "name": "away_name",
+          "type": "string",
           "required": true
         },
         {
-          "name": "ends",
-          "type": "date",
+          "enum": [
+            "available",
+            "missing-rating",
+            "ambiguous-rating"
+          ],
+          "name": "rating_status",
+          "type": "string",
           "required": true
         },
         {
-          "default": "now()",
-          "name": "created_at",
-          "type": "timestamp",
+          "enum": [
+            "available",
+            "missing-rating",
+            "ambiguous-rating",
+            "unknown-event-minute",
+            "event-limit"
+          ],
+          "name": "timeline_status",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "payload_json",
+          "type": "string",
           "required": true
         }
       ]
     },
-    "player_merge": {
-      "durability": "server",
+    "match_probability_scenario": {
+      "durability": "tab",
       "fields": [
         {
-          "default": "gen_random_uuid()",
           "name": "id",
           "pk": true,
+          "type": "string",
+          "required": true
+        },
+        {
+          "default": "ready",
+          "defaulted": true,
+          "enum": [
+            "ready"
+          ],
+          "name": "state",
+          "type": "string",
+          "required": true
+        },
+        {
+          "default": "0",
+          "defaulted": true,
+          "name": "minute",
+          "type": "string",
+          "required": true
+        },
+        {
+          "default": "5",
+          "defaulted": true,
+          "name": "added_time",
+          "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0
+          },
+          "default": 0,
+          "defaulted": true,
+          "name": "event_sequence",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "bounds": {
+            "sizeMax": 80
+          },
+          "default": "",
+          "defaulted": true,
+          "name": "next_event_id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 20
+          },
+          "default": 0,
+          "defaulted": true,
+          "name": "event_count",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "bounds": {
+            "sizeMax": 4000
+          },
+          "default": "[]",
+          "defaulted": true,
+          "name": "events_json",
+          "type": "string",
+          "required": true
+        },
+        {
+          "default": "",
+          "defaulted": true,
+          "name": "payload_json",
+          "type": "string",
+          "required": true
+        },
+        {
+          "default": "",
+          "defaulted": true,
+          "name": "home_name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "default": "",
+          "defaulted": true,
+          "name": "away_name",
+          "type": "string",
+          "required": true
+        }
+      ]
+    },
+    "match_probability_scenario_event": {
+      "durability": "tab",
+      "fields": [
+        {
+          "bounds": {
+            "sizeMin": 1,
+            "sizeMax": 80
+          },
+          "name": "id",
+          "pk": true,
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "game_id",
           "type": "uuid",
           "required": true
         },
         {
-          "default": "auth_uid()",
-          "name": "app_user_id",
-          "ref": "app_user",
-          "type": "uuid",
+          "default": "ready",
+          "defaulted": true,
+          "enum": [
+            "ready"
+          ],
+          "name": "state",
+          "type": "string",
           "required": true
         },
         {
-          "name": "target_player_id",
-          "type": "uuid",
+          "bounds": {
+            "intMin": 1
+          },
+          "name": "sequence",
+          "type": "int32",
           "required": true
         },
         {
-          "name": "source_player_id",
-          "type": "uuid",
+          "enum": [
+            "goal",
+            "red_card"
+          ],
+          "name": "kind",
+          "type": "string",
           "required": true
         },
         {
-          "default": "now()",
-          "name": "created_at",
-          "type": "timestamp",
+          "default": "home",
+          "defaulted": true,
+          "enum": [
+            "home",
+            "away"
+          ],
+          "name": "side",
+          "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 0,
+            "intMax": 130
+          },
+          "default": 0,
+          "defaulted": true,
+          "name": "minute",
+          "type": "int32",
           "required": true
         }
       ]
@@ -6943,7 +7126,8 @@
           "required": true
         },
         {
-          "default": "'viewing'",
+          "default": "viewing",
+          "defaulted": true,
           "enum": [
             "viewing"
           ],
@@ -6952,7 +7136,8 @@
           "required": true
         },
         {
-          "default": "'*'",
+          "default": "*",
+          "defaulted": true,
           "name": "zone_id",
           "type": "string",
           "required": true
@@ -6962,7 +7147,8 @@
             "intMin": -1,
             "intMax": 359
           },
-          "default": "-1",
+          "default": -1,
+          "defaulted": true,
           "name": "snapshot_index",
           "type": "int32",
           "required": true
@@ -6972,7 +7158,8 @@
             "intMin": 0,
             "intMax": 359
           },
-          "default": "0",
+          "default": 0,
+          "defaulted": true,
           "name": "snapshot_last",
           "type": "int32",
           "required": true
@@ -6982,19 +7169,22 @@
             "intMin": 0,
             "intMax": 1000
           },
-          "default": "1000",
+          "default": 1000,
+          "defaulted": true,
           "name": "pointer_x",
           "type": "int32",
           "required": true
         },
         {
-          "default": "'{}'",
+          "default": "{}",
+          "defaulted": true,
           "name": "series_json",
           "type": "string",
           "required": true
         },
         {
-          "default": "'{}'",
+          "default": "{}",
+          "defaulted": true,
           "name": "current_json",
           "type": "string",
           "required": true
@@ -7004,7 +7194,8 @@
             "intMin": -1,
             "intMax": 10000
           },
-          "default": "-1",
+          "default": -1,
+          "defaulted": true,
           "name": "position_number",
           "type": "int32",
           "required": true
@@ -7014,13 +7205,15 @@
             "intMin": 0,
             "intMax": 10000
           },
-          "default": "0",
+          "default": 0,
+          "defaulted": true,
           "name": "position_last",
           "type": "int32",
           "required": true
         },
         {
-          "default": "'current'",
+          "default": "current",
+          "defaulted": true,
           "enum": [
             "current",
             "history"
@@ -7033,7 +7226,8 @@
           "bounds": {
             "sizeMax": 12
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "range_from",
           "type": "string",
           "required": true
@@ -7042,130 +7236,10 @@
           "bounds": {
             "sizeMax": 12
           },
-          "default": "''",
+          "default": "",
+          "defaulted": true,
           "name": "range_to",
           "type": "string",
-          "required": true
-        }
-      ]
-    },
-    "user_biography": {
-      "durability": "server",
-      "fields": [
-        {
-          "default": "gen_random_uuid()",
-          "name": "id",
-          "pk": true,
-          "type": "uuid",
-          "required": true
-        },
-        {
-          "default": "auth_uid()",
-          "name": "app_user_id",
-          "ref": "app_user",
-          "type": "uuid",
-          "required": true,
-          "unique": true
-        },
-        {
-          "bounds": {
-            "sizeMax": 100
-          },
-          "name": "display_name",
-          "type": "string",
-          "required": false
-        },
-        {
-          "bounds": {
-            "sizeMax": 100
-          },
-          "name": "location",
-          "type": "string",
-          "required": false
-        },
-        {
-          "bounds": {
-            "sizeMax": 2000
-          },
-          "name": "about_me",
-          "type": "string",
-          "required": false
-        },
-        {
-          "default": "now()",
-          "name": "updated_at",
-          "type": "timestamp",
-          "required": true
-        }
-      ]
-    },
-    "game_change": {
-      "durability": "server",
-      "fields": [
-        {
-          "default": "gen_random_uuid()",
-          "name": "id",
-          "pk": true,
-          "type": "uuid",
-          "required": true
-        },
-        {
-          "name": "game_id",
-          "type": "uuid",
-          "required": true
-        },
-        {
-          "bounds": {
-            "intMin": 1
-          },
-          "name": "version",
-          "type": "int32",
-          "required": true
-        },
-        {
-          "name": "actor_id",
-          "type": "uuid",
-          "required": false
-        },
-        {
-          "name": "actor_handle",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "game_slug",
-          "type": "string",
-          "required": false
-        },
-        {
-          "name": "game_day",
-          "type": "date",
-          "required": false
-        },
-        {
-          "name": "home_name",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "away_name",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "championship_name",
-          "type": "string",
-          "required": true
-        },
-        {
-          "name": "changes_json",
-          "type": "string",
-          "required": true
-        },
-        {
-          "default": "now()",
-          "name": "created_at",
-          "type": "timestamp",
           "required": true
         }
       ]
@@ -7539,7 +7613,7 @@
       "durability": "server",
       "fields": [
         {
-          "default": "auth_uid()",
+          "defaulted": true,
           "name": "id",
           "pk": true,
           "ref": "app_user",
@@ -7576,6 +7650,41 @@
         {
           "name": "expires_at",
           "type": "timestamp",
+          "required": true
+        }
+      ]
+    },
+    "team_odds_progress_source": {
+      "durability": "tab",
+      "fields": [
+        {
+          "name": "id",
+          "pk": true,
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "group_id",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "name": "team_id",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "default": "{}",
+          "defaulted": true,
+          "name": "current_json",
+          "type": "string",
+          "required": true
+        },
+        {
+          "default": "{}",
+          "defaulted": true,
+          "name": "series_json",
+          "type": "string",
           "required": true
         }
       ]
@@ -8824,7 +8933,12 @@
     "services/database/migrations/041_native_media.sql",
     "services/database/migrations/042_team_odds_progress.sql",
     "services/database/migrations/043_queued_odds_refresh.sql",
-    "services/database/migrations/900_seed.sql"
+    "services/database/migrations/044_heavy_reads.sql",
+    "services/database/migrations/045_drain_feed.sql",
+    "services/database/migrations/046_team_projection_turn.sql",
+    "services/database/migrations/047_home_games_at_read.sql",
+    "services/database/migrations/900_seed.sql",
+    "services/database/migrations/801_schedule_seed.sql"
   ],
   "pipelines": [
     {
@@ -8833,33 +8947,8 @@
       "raw": true
     },
     {
-      "name": "team-directory",
-      "to": "team_directory",
-      "raw": true
-    },
-    {
-      "name": "team-profiles",
-      "to": "team_championship",
-      "raw": true
-    },
-    {
       "name": "game-cards",
       "to": "game_card",
-      "raw": true
-    },
-    {
-      "name": "home-games",
-      "to": "home_game_card",
-      "raw": true
-    },
-    {
-      "name": "recent-championships",
-      "to": "home_championship",
-      "raw": true
-    },
-    {
-      "name": "matches-games",
-      "to": "matches_game_card",
       "raw": true
     },
     {
@@ -8870,11 +8959,6 @@
     {
       "name": "rounds",
       "to": "phase_round",
-      "raw": true
-    },
-    {
-      "name": "team-enrichment",
-      "to": "team_rating_chart",
       "raw": true
     }
   ],

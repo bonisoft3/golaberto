@@ -10,6 +10,9 @@ BEGIN
   NEW.txid := pg_current_xact_id()::text::bigint;
   RETURN NEW;
 END $$;
+DROP TRIGGER IF EXISTS restamp_txid ON day_tick;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON day_tick
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON app_user;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON app_user
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
@@ -103,8 +106,8 @@ CREATE TRIGGER restamp_txid BEFORE UPDATE ON rating_eval
 DROP TRIGGER IF EXISTS restamp_txid ON game_card;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON game_card
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
-DROP TRIGGER IF EXISTS restamp_txid ON home_game_card;
-CREATE TRIGGER restamp_txid BEFORE UPDATE ON home_game_card
+DROP TRIGGER IF EXISTS restamp_txid ON home_feed;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON home_feed
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON matches_game_card;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON matches_game_card
@@ -142,14 +145,14 @@ CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_odds_chart
 DROP TRIGGER IF EXISTS restamp_txid ON team_roster_total;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON team_roster_total
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+DROP TRIGGER IF EXISTS restamp_txid ON user_biography;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON user_biography
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+DROP TRIGGER IF EXISTS restamp_txid ON game_change;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON game_change
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON community_access;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON community_access
-  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
-DROP TRIGGER IF EXISTS restamp_txid ON match_probability;
-CREATE TRIGGER restamp_txid BEFORE UPDATE ON match_probability
-  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
-DROP TRIGGER IF EXISTS restamp_txid ON match_recent_result;
-CREATE TRIGGER restamp_txid BEFORE UPDATE ON match_recent_result
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON phase_clone;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON phase_clone
@@ -157,11 +160,11 @@ CREATE TRIGGER restamp_txid BEFORE UPDATE ON phase_clone
 DROP TRIGGER IF EXISTS restamp_txid ON player_merge;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON player_merge
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
-DROP TRIGGER IF EXISTS restamp_txid ON user_biography;
-CREATE TRIGGER restamp_txid BEFORE UPDATE ON user_biography
+DROP TRIGGER IF EXISTS restamp_txid ON match_recent_result;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON match_recent_result
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
-DROP TRIGGER IF EXISTS restamp_txid ON game_change;
-CREATE TRIGGER restamp_txid BEFORE UPDATE ON game_change
+DROP TRIGGER IF EXISTS restamp_txid ON match_probability;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON match_probability
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON user_directory;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON user_directory

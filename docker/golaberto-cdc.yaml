@@ -46,7 +46,7 @@ pipelines:
           logrepl.publicationName: golaberto_cdc
           logrepl.slotName: golaberto_conduit_slot
           logrepl.withAvroSchema: 'false'
-          tables: 'championship,phase,game,team,player,player_game,goal,stage_group,team_group,zone,team_rating,standing,stadium,referee'
+          tables: 'championship,phase,game,team,player,player_game,goal,stage_group,team_group,zone,team_rating,standing,stadium,referee,day_tick,game_card,geography_country,player_metric_dirty,team_odds_chart_dirty,team_profile_dirty,team_rating_chart_dirty,team_roster_total_dirty'
       - id: bus-destination
         type: destination
         plugin: 'standalone:http'

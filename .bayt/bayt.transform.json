@@ -39,33 +39,8 @@
         },
         {
           "action": "sync+restart",
-          "path": "../docker/golaberto-team-directory.yaml",
-          "target": "/pipelines/golaberto-team-directory.yaml"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../docker/golaberto-team-profiles.yaml",
-          "target": "/pipelines/golaberto-team-profiles.yaml"
-        },
-        {
-          "action": "sync+restart",
           "path": "../docker/golaberto-game-cards.yaml",
           "target": "/pipelines/golaberto-game-cards.yaml"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../docker/golaberto-home-games.yaml",
-          "target": "/pipelines/golaberto-home-games.yaml"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../docker/golaberto-recent-championships.yaml",
-          "target": "/pipelines/golaberto-recent-championships.yaml"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../docker/golaberto-matches-games.yaml",
-          "target": "/pipelines/golaberto-matches-games.yaml"
         },
         {
           "action": "sync+restart",
@@ -81,6 +56,26 @@
           "action": "sync+restart",
           "path": "../docker/golaberto-team-enrichment.yaml",
           "target": "/pipelines/golaberto-team-enrichment.yaml"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../docker/golaberto-team-profiles.yaml",
+          "target": "/pipelines/golaberto-team-profiles.yaml"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../docker/golaberto-team-directory.yaml",
+          "target": "/pipelines/golaberto-team-directory.yaml"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../docker/golaberto-matches-games.yaml",
+          "target": "/pipelines/golaberto-matches-games.yaml"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../docker/golaberto-recent-championships.yaml",
+          "target": "/pipelines/golaberto-recent-championships.yaml"
         }
       ]
     }
@@ -112,59 +107,9 @@
       {
         "from": null,
         "srcs": [
-          "docker/golaberto-team-directory.yaml"
-        ],
-        "dst": "/pipelines/golaberto-team-directory.yaml",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "docker/golaberto-team-profiles.yaml"
-        ],
-        "dst": "/pipelines/golaberto-team-profiles.yaml",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
           "docker/golaberto-game-cards.yaml"
         ],
         "dst": "/pipelines/golaberto-game-cards.yaml",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "docker/golaberto-home-games.yaml"
-        ],
-        "dst": "/pipelines/golaberto-home-games.yaml",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "docker/golaberto-recent-championships.yaml"
-        ],
-        "dst": "/pipelines/golaberto-recent-championships.yaml",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "docker/golaberto-matches-games.yaml"
-        ],
-        "dst": "/pipelines/golaberto-matches-games.yaml",
         "link": true,
         "parents": false,
         "exclude": []
@@ -198,6 +143,46 @@
         "link": true,
         "parents": false,
         "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "docker/golaberto-team-profiles.yaml"
+        ],
+        "dst": "/pipelines/golaberto-team-profiles.yaml",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "docker/golaberto-team-directory.yaml"
+        ],
+        "dst": "/pipelines/golaberto-team-directory.yaml",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "docker/golaberto-matches-games.yaml"
+        ],
+        "dst": "/pipelines/golaberto-matches-games.yaml",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "docker/golaberto-recent-championships.yaml"
+        ],
+        "dst": "/pipelines/golaberto-recent-championships.yaml",
+        "link": true,
+        "parents": false,
+        "exclude": []
       }
     ],
     "healthcheck": null,
@@ -208,15 +193,14 @@
       "streams",
       "--no-api",
       "/pipelines/golaberto-standings.yaml",
-      "/pipelines/golaberto-team-directory.yaml",
-      "/pipelines/golaberto-team-profiles.yaml",
       "/pipelines/golaberto-game-cards.yaml",
-      "/pipelines/golaberto-home-games.yaml",
-      "/pipelines/golaberto-recent-championships.yaml",
-      "/pipelines/golaberto-matches-games.yaml",
       "/pipelines/golaberto-player-stats.yaml",
       "/pipelines/golaberto-rounds.yaml",
       "/pipelines/golaberto-team-enrichment.yaml",
+      "/pipelines/golaberto-team-profiles.yaml",
+      "/pipelines/golaberto-team-directory.yaml",
+      "/pipelines/golaberto-matches-games.yaml",
+      "/pipelines/golaberto-recent-championships.yaml",
       "/compute-events.yaml"
     ]
   },
@@ -227,15 +211,14 @@
   "srcs": {
     "globs": [
       "docker/golaberto-standings.yaml",
-      "docker/golaberto-team-directory.yaml",
-      "docker/golaberto-team-profiles.yaml",
       "docker/golaberto-game-cards.yaml",
-      "docker/golaberto-home-games.yaml",
-      "docker/golaberto-recent-championships.yaml",
-      "docker/golaberto-matches-games.yaml",
       "docker/golaberto-player-stats.yaml",
       "docker/golaberto-rounds.yaml",
-      "docker/golaberto-team-enrichment.yaml"
+      "docker/golaberto-team-enrichment.yaml",
+      "docker/golaberto-team-profiles.yaml",
+      "docker/golaberto-team-directory.yaml",
+      "docker/golaberto-matches-games.yaml",
+      "docker/golaberto-recent-championships.yaml"
     ],
     "exclude": []
   },
@@ -263,7 +246,8 @@
           ".bayt/Dockerfile.transform",
           ".bayt/bayt.transform.json",
           ".bayt/Taskfile.yml",
-          ".bayt/Taskfile.bayt.yml"
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/process-compose.yaml"
         ],
         "exclude": []
       },
@@ -338,15 +322,14 @@
       "outs": {
         "globs": [
           "docker/golaberto-standings.yaml",
-          "docker/golaberto-team-directory.yaml",
-          "docker/golaberto-team-profiles.yaml",
           "docker/golaberto-game-cards.yaml",
-          "docker/golaberto-home-games.yaml",
-          "docker/golaberto-recent-championships.yaml",
-          "docker/golaberto-matches-games.yaml",
           "docker/golaberto-player-stats.yaml",
           "docker/golaberto-rounds.yaml",
-          "docker/golaberto-team-enrichment.yaml"
+          "docker/golaberto-team-enrichment.yaml",
+          "docker/golaberto-team-profiles.yaml",
+          "docker/golaberto-team-directory.yaml",
+          "docker/golaberto-matches-games.yaml",
+          "docker/golaberto-recent-championships.yaml"
         ],
         "exclude": []
       },

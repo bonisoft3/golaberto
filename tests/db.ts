@@ -27,12 +27,21 @@ export async function query(script: string): Promise<string> {
 }
 
 /**
- * Taken first by a transaction that replays a migration. The checks run at
- * once against one database, and replays rewrite views over tables other
- * replays rewrite too; two holding locks in opposite orders deadlock. A DO
- * block, so it adds no row to what `query` answers.
+ * Runs a script that is one transaction replaying a migration. A replay
+ * rewrites views the stack's own services read and write through, and a check
+ * runs while a fresh stack's pipelines still sync; Postgres breaks such a lock
+ * cycle by rolling one transaction back whole (40P01), so the replay it chose
+ * runs again as it was.
  */
-export const replayLock = "DO $$ BEGIN PERFORM pg_advisory_xact_lock(hashtext('golaberto-migration-replay')); END $$;";
+export async function replay(script: string): Promise<string> {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await query(script);
+    } catch (e) {
+      if (!(e instanceof postgres.PostgresError && e.code === "40P01") || attempt === 5) throw e;
+    }
+  }
+}
 
 /**
  * A refusal is the database's answer, not a failure of the query: an integrity

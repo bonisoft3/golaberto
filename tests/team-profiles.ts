@@ -328,10 +328,11 @@ Deno.test("team profile refresh preserves a newer revision queued during an olde
     assert(workerResult.success, workerError);
     workerSession = undefined;
 
-    const retained = await psql(`SELECT count(*) FROM team_profile_dirty WHERE team_id=${teamRow};`);
-    assertEquals(retained, "1");
+    // The live drain may take the retained revision before this call does;
+    // either way the newer name lands, which a deleted revision would lose.
     await psql(`DO $$ BEGIN PERFORM refresh_team_profiles(50); END $$;`);
     assertEquals(await psql(`SELECT count(*) FROM team_profile_dirty WHERE team_id=${teamRow};`), "0");
+    assertEquals(await psql(`SELECT player_name FROM team_roster WHERE team_id=${teamRow} AND player_id=${playerRow};`), "Revision Player Updated");
   } finally {
     if (lockSession) {
       try {
@@ -461,7 +462,7 @@ Deno.test("reversed game updates queue team profiles in one order and both trans
     assert(resultB.success, `second reversed game update failed: ${new TextDecoder().decode(resultB.stderr)}`);
     updateA = undefined;
     updateB = undefined;
-    assertEquals(await psql(`SELECT count(*) FROM team_profile_dirty WHERE team_id IN (${teamRows});`), "2");
+    // Both queued; the live drain may already have taken them.
     await psql(`DO $$ BEGIN PERFORM refresh_team_profiles(50); END $$;`);
     assertEquals(await psql(`SELECT count(*) FROM team_profile_dirty WHERE team_id IN (${teamRows});`), "0");
     assertEquals(

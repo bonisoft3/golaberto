@@ -1,5 +1,5 @@
 import { assert, assertEquals, assertRejects } from "jsr:@std/assert@1.0.19";
-import { query, replayLock } from "./db.ts";
+import { query, replay } from "./db.ts";
 
 type Plan = {
   "Node Type": string;
@@ -207,6 +207,12 @@ Deno.test("parity reads preserve scoped goals, bench rows, filters and missing a
     -- A setting, not a temp table: pgroll records DDL in its ledger, and
     -- concurrent checks recording against one parent collide.
     SET LOCAL golaberto.parity_plans = '{}';
+    -- The plans must show an index serving each lookup. On a fresh stack's
+    -- handful of rows the planner prefers a sequential or bitmap scan, so
+    -- which plan came back depended on what earlier checks had left in the
+    -- tables; a bitmap heap scan names its index only on a child node.
+    SET LOCAL enable_seqscan = off;
+    SET LOCAL enable_bitmapscan = off;
     SET LOCAL ROLE app_user;
     DO $$ DECLARE plan jsonb; BEGIN
       ${
@@ -351,7 +357,7 @@ Deno.test("generated read placeholders become invoker views and replay without s
     "championship_attendance",
   ];
   assertEquals(
-    await query(`BEGIN;${replayLock}
+    await replay(`BEGIN;
     ${
       // CASCADE rebuilds the world 035 ran in: later migrations' views read
       // these, and they did not exist yet.
@@ -380,7 +386,7 @@ Deno.test("generated read placeholders become invoker views and replay without s
   );
   await assertRejects(
     () =>
-      query(`BEGIN;${replayLock}
+      replay(`BEGIN;
     DROP VIEW player_directory;
     CREATE TABLE player_directory(id uuid PRIMARY KEY);
     INSERT INTO player_directory VALUES (gen_random_uuid());

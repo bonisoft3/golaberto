@@ -1,0 +1,44 @@
+# generated from bayt.cue — do not edit
+services:
+  golaberto-clock:
+    build:
+      additional_contexts:
+        golaberto-ticker: service:golaberto-ticker
+        libraries_mecha-clock-image: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-clock:0.9.0@sha256:185d23538507ff041799c6408846643205080c80a0f56c7e2d7637278876dd1b}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-clock-image}
+      context: ..
+      dockerfile: .bayt/Dockerfile.clock
+      target: clock
+      tags:
+      - bayt-golaberto-clock:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-golaberto-clock:latest
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    depends_on:
+      golaberto-ticker:
+        condition: service_started
+    environment:
+      POKE_URL: http://ticker:9998
+      POKE_INTERVAL: ${POKE_INTERVAL:-60s}
+      POKE_CALLER: compose
+      SERVICE_JWT: >-
+        ${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
+    image: bayt-golaberto-clock:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    networks:
+      default:
+        aliases:
+        - clock
+    restart: on-failure
+  golaberto-clock_bayt:
+    build:
+      additional_contexts:
+        golaberto-ticker_bayt: service:golaberto-ticker_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.clock
+      target: clock_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-clock_bayt:latest
+    scale: 0

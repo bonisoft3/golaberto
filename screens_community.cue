@@ -63,7 +63,7 @@ _communityDirectoryMarkup: """
  <div class="page"><div class="content">
  \((#PagedRead & {
 	key: "community-users", owner: "00000000-0000-0000-0000-000000000000", table: "user_directory", filter: "search_key=like.*{q_key}*", order: "display_name.asc,id.asc"
-	context: {q: "", q_key: ""}
+	emptyRow: {q: "", q_key: ""}
 	events: {"input@community-users-q": assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}}
 	controls: "<label class=\"field\"><span data-text=\"{msg.community_search}\"></span><input id=\"community-users-q\" type=\"search\" value=\"{q}\" maxlength=\"80\"></label>"
 	content: """

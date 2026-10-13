@@ -6,7 +6,7 @@ const clock = "'2026-10-02 12:00:00+00'::timestamptz";
 const setup = `
   CREATE TEMP TABLE fixture AS SELECT id, row_number() OVER (ORDER BY id)::int AS n
     FROM game_card ORDER BY id LIMIT 30;
-  UPDATE game_card SET kickoff = NULL, home_upcoming_rank = 0, home_recent_rank = 0, home_upcoming_group = false, home_recent_group = false;
+  UPDATE game_card SET kickoff = NULL;
   DELETE FROM game_importance;
   DELETE FROM team_rating;
   UPDATE game_card g SET home_id = p.home_id, away_id = p.away_id, phase_id = p.phase_id
@@ -126,27 +126,18 @@ Deno.test("missing or zero ratings remain finite and ties are stable", async () 
   `), Array.from({ length: 20 }, (_, n) => n + 1));
 });
 
-Deno.test("refresh clears expired ranks, switches feeds, and replay avoids rewriting unchanged rows", async () => {
+Deno.test("the feeds are read, not refreshed: a result switches feeds and an expired game leaves at once", async () => {
   assertEquals(await query(`
     UPDATE game_card g SET played = false, kickoff = now() + interval '1 hour' FROM fixture f WHERE f.id = g.id AND f.n = 1;
-    SELECT refresh_home_games();
-    CREATE TEMP TABLE version AS SELECT id, ctid::text AS version FROM game_card;
-    SELECT refresh_home_games();
-    DO $$ BEGIN IF EXISTS (SELECT 1 FROM game_card g JOIN version v USING (id) WHERE g.ctid::text <> v.version) THEN RAISE EXCEPTION 'replay rewrote unchanged rows'; END IF; END $$;
+    DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM home_feed h JOIN fixture f USING (id) WHERE n = 1 AND home_upcoming_rank = 1 AND home_recent_rank = 0) THEN RAISE EXCEPTION 'fixture was not upcoming'; END IF; END $$;
     UPDATE game_card g SET played = true, kickoff = now() - interval '1 hour' FROM fixture f WHERE f.id = g.id AND f.n = 1;
-    SELECT refresh_home_games();
-    DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM game_card g JOIN fixture f USING (id) WHERE n = 1 AND home_upcoming_rank = 0 AND home_recent_rank = 1) THEN RAISE EXCEPTION 'result did not switch feeds'; END IF; END $$;
+    DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM home_feed h JOIN fixture f USING (id) WHERE n = 1 AND home_upcoming_rank = 0 AND home_recent_rank = 1) THEN RAISE EXCEPTION 'result did not switch feeds'; END IF; END $$;
     UPDATE game_card SET kickoff = now() - interval '15 days';
-    SELECT refresh_home_games();
-    SELECT json_build_object('remaining', count(*)) FROM game_card WHERE home_upcoming_rank > 0 OR home_recent_rank > 0;
+    SELECT json_build_object('remaining', count(*)) FROM home_feed;
   `), { remaining: 0 });
 });
 
-Deno.test("anonymous readers cannot run the service refresh", async () => {
-  assertEquals(await query(`SELECT json_build_object('anon', has_function_privilege('anon', 'refresh_home_games()', 'EXECUTE'), 'reader', has_function_privilege('app_user', 'refresh_home_games()', 'EXECUTE'), 'service', has_function_privilege('service', 'refresh_home_games()', 'EXECUTE'));`), { anon: false, reader: false, service: true });
-});
-
-Deno.test("group markers follow phase and local-day transitions in feed order, including interleaved phases", async () => {
+Deno.test("group and day markers follow phase and local-day transitions in feed order, including interleaved phases", async () => {
   assertEquals(await query(`
     DELETE FROM team_rating;
     UPDATE game_card g SET played = false,
@@ -157,32 +148,12 @@ Deno.test("group markers follow phase and local-day transitions in feed order, i
         WHEN 3 THEN now() + interval '3 minutes'
         WHEN 4 THEN now() + interval '1 day 1 minute' END
       FROM fixture f WHERE f.id = g.id;
-    SELECT refresh_home_games();
-    DO $$ BEGIN
-      IF (SELECT json_agg(f.n ORDER BY g.home_upcoming_rank)::jsonb FROM game_card g JOIN fixture f USING(id)
-          WHERE g.home_upcoming_rank > 0) <> '[1,2,3,4]'::jsonb THEN RAISE EXCEPTION 'unexpected feed order'; END IF;
-      IF EXISTS (
-        WITH ordered AS (
-          SELECT g.id, g.phase_id, (g.kickoff AT TIME ZONE 'America/Sao_Paulo')::date AS local_day,
-            g.home_upcoming_group AS actual,
-            lag(g.phase_id) OVER (ORDER BY g.home_upcoming_rank) AS previous_phase,
-            lag((g.kickoff AT TIME ZONE 'America/Sao_Paulo')::date) OVER (ORDER BY g.home_upcoming_rank) AS previous_day
-          FROM game_card g WHERE g.home_upcoming_rank > 0
-        )
-        SELECT 1 FROM ordered WHERE actual IS DISTINCT FROM
-          (previous_phase IS DISTINCT FROM phase_id OR previous_day IS DISTINCT FROM local_day)
-      ) THEN RAISE EXCEPTION 'group marker did not follow a phase or local-day transition'; END IF;
-      IF (SELECT count(*) FROM game_card WHERE home_upcoming_rank > 0 AND home_upcoming_group) <> 4
-        THEN RAISE EXCEPTION 'interleaved phases or new local day did not start a group'; END IF;
-    END $$;
-    CREATE TEMP TABLE grouped_version AS SELECT id, ctid::text AS version FROM game_card;
-    SELECT refresh_home_games();
-    DO $$ BEGIN IF EXISTS (SELECT 1 FROM game_card g JOIN grouped_version v USING (id) WHERE g.ctid::text <> v.version)
-      THEN RAISE EXCEPTION 'group replay rewrote unchanged rows'; END IF; END $$;
-    UPDATE game_card SET kickoff = NULL;
-    SELECT refresh_home_games();
-    SELECT json_build_object('markers', count(*)) FROM game_card WHERE home_upcoming_group OR home_recent_group;
-  `), { markers: 0 });
+    SELECT json_build_object(
+      'order', (SELECT json_agg(f.n ORDER BY h.home_upcoming_rank) FROM home_feed h JOIN fixture f USING (id)),
+      'groups', (SELECT json_agg(h.home_upcoming_group ORDER BY h.home_upcoming_rank) FROM home_feed h),
+      'days', (SELECT json_agg(h.home_new_day ORDER BY h.home_upcoming_rank) FROM home_feed h),
+      'recentGroups', (SELECT count(*) FROM home_feed WHERE home_recent_group));
+  `), { order: [1, 2, 3, 4], groups: [true, true, true, true], days: [true, false, false, true], recentGroups: 0 });
 });
 
 Deno.test("tied phase quality preserves kickoff order across interleaved phases", async () => {
@@ -199,7 +170,7 @@ Deno.test("tied phase quality preserves kickoff order across interleaved phases"
   `), [1, 2, 3]);
 });
 
-Deno.test("the homepage projection contains only both selected feeds and replay never rewrites it", async () => {
+Deno.test("the homepage holds only both selected feeds, each a GameCard read on its local day", async () => {
   assertEquals(await query(`
     INSERT INTO fixture SELECT id, 30 + row_number() OVER (ORDER BY id)::int
       FROM game_card WHERE id NOT IN (SELECT id FROM fixture) ORDER BY id LIMIT 30;
@@ -207,54 +178,31 @@ Deno.test("the homepage projection contains only both selected feeds and replay 
       kickoff = now() + interval '1 minute' * CASE WHEN f.n <= 30 THEN f.n ELSE -f.n END,
       day = date '2000-01-01'
       FROM fixture f WHERE f.id = g.id;
-    CREATE TEMP TABLE unselected_versions AS SELECT id,ctid::text AS version FROM game_card WHERE kickoff IS NULL;
-    SELECT refresh_home_games();
-    CREATE TEMP TABLE home_versions AS SELECT id,ctid::text AS version FROM home_game_card;
-    SELECT refresh_home_games();
-    SELECT json_build_object('upcoming', (SELECT count(*) FROM home_game_card WHERE home_upcoming_rank > 0),
-      'recent', (SELECT count(*) FROM home_game_card WHERE home_recent_rank > 0),
-      'mismatch', (SELECT count(*) FROM home_game_card h JOIN game_card g USING(id)
-        WHERE (to_jsonb(h)-ARRAY['txid', 'day', 'day_display', 'show_country', 'home_country', 'away_country', 'home_highlighted'])
-          IS DISTINCT FROM (to_jsonb(g)-ARRAY['txid', 'day', 'day_display', 'show_country', 'home_country', 'away_country'])),
-      'badDays', (SELECT count(*) FROM home_game_card h WHERE h.day IS DISTINCT FROM (h.kickoff AT TIME ZONE 'America/Sao_Paulo')::date),
-      'replayWrites', (SELECT count(*) FROM home_game_card h JOIN home_versions v USING(id) WHERE h.ctid::text<>v.version),
-      'unselectedWrites', (SELECT count(*) FROM game_card g JOIN unselected_versions v USING(id) WHERE g.ctid::text<>v.version));
-  `), { upcoming: 20, recent: 20, mismatch: 0, badDays: 0, replayWrites: 0, unselectedWrites: 0 });
+    UPDATE game_card SET home_name = 'Corrected home name' WHERE id = (SELECT id FROM fixture WHERE n = 1);
+    SELECT json_build_object('upcoming', (SELECT count(*) FROM home_feed WHERE home_upcoming_rank > 0),
+      'recent', (SELECT count(*) FROM home_feed WHERE home_recent_rank > 0),
+      'mismatch', (SELECT count(*) FROM home_feed h JOIN game_card g USING(id)
+        WHERE (h.phase_id, h.championship_id, h.kickoff, h.played, h.home_id, h.away_id, h.home_name, h.away_name, h.home_score, h.away_score, h.attendance)
+          IS DISTINCT FROM (g.phase_id, g.championship_id, g.kickoff, g.played, g.home_id, g.away_id, g.home_name, g.away_name, g.home_score, g.away_score, g.attendance)),
+      'badDays', (SELECT count(*) FROM home_feed h WHERE h.day IS DISTINCT FROM (h.kickoff AT TIME ZONE 'America/Sao_Paulo')::date),
+      'edited', (SELECT home_name FROM home_feed WHERE id = (SELECT id FROM fixture WHERE n = 1)));
+  `), { upcoming: 20, recent: 20, mismatch: 0, badDays: 0, edited: "Corrected home name" });
 });
 
-Deno.test("selected display edits and deletions reach the homepage immediately, with no-op edits suppressed", async () => {
+Deno.test("the homepage is public to scoped readers, written by nobody, and a security-invoker read", async () => {
   assertEquals(await query(`
     UPDATE game_card g SET played=false,kickoff=now()+interval '1 hour'
       FROM fixture f WHERE f.id=g.id AND f.n=1;
-    SELECT refresh_home_games();
-    UPDATE game_card SET home_name='Corrected home name',attendance=1234
-      WHERE id=(SELECT id FROM fixture WHERE n=1);
-    DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM home_game_card WHERE home_name='Corrected home name' AND attendance=1234)
-      THEN RAISE EXCEPTION 'selected display edit was not copied'; END IF; END $$;
-    CREATE TEMP TABLE edit_version AS SELECT id,ctid::text AS version FROM home_game_card;
-    UPDATE game_card SET home_name=home_name WHERE id=(SELECT id FROM fixture WHERE n=1);
-    DO $$ BEGIN IF EXISTS (SELECT 1 FROM home_game_card h JOIN edit_version v USING(id) WHERE h.ctid::text<>v.version)
-      THEN RAISE EXCEPTION 'unchanged display rewrote the projection'; END IF; END $$;
-    UPDATE game_card SET kickoff=NULL WHERE id=(SELECT id FROM fixture WHERE n=1);
-    DO $$ BEGIN IF EXISTS (SELECT 1 FROM home_game_card) THEN RAISE EXCEPTION 'removed kickoff remained on home'; END IF; END $$;
-    UPDATE game_card SET kickoff=now()+interval '1 hour' WHERE id=(SELECT id FROM fixture WHERE n=1);
-    DO $$ BEGIN IF (SELECT count(*) FROM home_game_card)<>1 THEN RAISE EXCEPTION 'restored kickoff was not copied'; END IF; END $$;
-    DELETE FROM game_card WHERE id=(SELECT id FROM fixture WHERE n=1);
-    SELECT json_build_object('remaining',count(*)) FROM home_game_card;
-  `), { remaining: 0 });
-});
-
-Deno.test("expiry clears the homepage projection and its heading markers in the same refresh", async () => {
-  assertEquals(await query(`
-    UPDATE game_card g SET played=false,kickoff=now()+interval '1 hour'
-      FROM fixture f WHERE f.id=g.id AND f.n<=2;
-    SELECT refresh_home_games();
-    UPDATE game_card SET kickoff=now()-interval '15 days';
-    SELECT refresh_home_games();
-    SELECT json_build_object('feed',(SELECT count(*) FROM home_game_card),
-      'ranks',(SELECT count(*) FROM game_card WHERE home_upcoming_rank>0 OR home_recent_rank>0),
-      'headings',(SELECT count(*) FROM game_card WHERE home_upcoming_group OR home_recent_group));
-  `), { feed: 0, ranks: 0, headings: 0 });
+    SET LOCAL app.scopes='public:';
+    SET LOCAL ROLE app_user;
+    DO $$ BEGIN IF (SELECT count(*) FROM home_feed)<>1 THEN RAISE EXCEPTION 'public reader cannot read the homepage'; END IF; END $$;
+    RESET ROLE;
+    SELECT json_build_object(
+      'readerWrites', has_table_privilege('app_user','home_feed','INSERT,UPDATE,DELETE'),
+      'serviceWrites', has_table_privilege('service','home_feed','INSERT,UPDATE,DELETE'),
+      'invoker', (SELECT reloptions @> ARRAY['security_invoker=true'] FROM pg_class WHERE oid='home_feed'::regclass),
+      'unscoped', (SELECT count(*) FROM home_feed) = 1);
+  `), { readerWrites: false, serviceWrites: false, invoker: true, unscoped: true });
 });
 
 Deno.test("candidate ratings use the latest eligible date and deterministic same-day ID tie break", async () => {
@@ -274,62 +222,6 @@ Deno.test("candidate ratings use the latest eligible date and deterministic same
       WHERE id=(SELECT id FROM fixture WHERE n=30);
     SELECT json_agg(f.n ORDER BY h.feed_rank) FROM home_game_order(${clock}) h JOIN fixture f ON f.id=h.game_id;
   `), [30, ...Array.from({ length: 19 }, (_, n) => n + 1)]);
-});
-
-Deno.test("the bounded homepage is public to scoped readers and writable only by its service", async () => {
-  assertEquals(await query(`
-    UPDATE game_card g SET played=false,kickoff=now()+interval '1 hour'
-      FROM fixture f WHERE f.id=g.id AND f.n=1;
-    SET LOCAL ROLE service;
-    SELECT refresh_home_games();
-    RESET ROLE;
-    SET LOCAL app.scopes='public:';
-    SET LOCAL ROLE app_user;
-    DO $$ DECLARE changed integer; BEGIN
-      IF (SELECT count(*) FROM home_game_card)<>1 THEN RAISE EXCEPTION 'public reader cannot read the homepage'; END IF;
-      DELETE FROM home_game_card;
-      GET DIAGNOSTICS changed = ROW_COUNT;
-      IF changed<>0 THEN RAISE EXCEPTION 'reader deleted a homepage card'; END IF;
-    END $$;
-    RESET ROLE;
-    SELECT json_build_object('rows',(SELECT count(*) FROM home_game_card),
-      'readerCopy',has_function_privilege('app_user','copy_home_game_cards(uuid[])','EXECUTE'),
-      'anonCopy',has_function_privilege('anon','copy_home_game_cards(uuid[])','EXECUTE'));
-  `), { rows: 1, readerCopy: false, anonCopy: false });
-});
-
-Deno.test("an overlapping clock refresh skips work while the first transaction owns the lock", async () => {
-  const holder = new Deno.Command("docker", {
-    args: ["compose", "-p", project, "exec", "-T", "golaberto-database", "psql", "-U", "postgres", "-d", "golaberto", "-v", "ON_ERROR_STOP=1", "-Atq"],
-    stdin: "piped", stdout: "piped", stderr: "piped",
-  }).spawn();
-  const writer = holder.stdin.getWriter();
-  const reader = holder.stdout.getReader();
-  const errors = new Response(holder.stderr).text();
-  try {
-    await writer.write(new TextEncoder().encode("BEGIN;\nSELECT pg_advisory_xact_lock(715015,1);\nSELECT 'lock-ready';\n"));
-    let output = "";
-    while (!output.includes("lock-ready")) {
-      const chunk = await reader.read();
-      if (chunk.done) throw new Error(`lock holder stopped: ${await errors}`);
-      output += new TextDecoder().decode(chunk.value);
-    }
-    assertEquals(await query(`
-      UPDATE game_card g SET played=false,kickoff=now()+interval '1 hour'
-        FROM fixture f WHERE f.id=g.id AND f.n=1;
-      SELECT refresh_home_games();
-      SELECT json_build_object('rows',(SELECT count(*) FROM home_game_card),
-        'ranks',(SELECT count(*) FROM game_card WHERE home_upcoming_rank>0 OR home_recent_rank>0),
-        'timeout',(SELECT 'statement_timeout=20s'=ANY(proconfig) FROM pg_proc WHERE oid='refresh_home_games()'::regprocedure));
-    `), { rows: 0, ranks: 0, timeout: true });
-  } finally {
-    await writer.write(new TextEncoder().encode("ROLLBACK;\n"));
-    await writer.close();
-    await reader.cancel();
-    const status = await holder.status;
-    if (!status.success) throw new Error(await errors);
-    await errors;
-  }
 });
 
 Deno.test("highlights use raw top five within selected games plus one weighted phase-day winner", async () => {
@@ -412,34 +304,18 @@ Deno.test("live importance changes highlights without changing selected membersh
   `), { sameOrder: true, beforeSix: false, afterSix: true, beforeFive: true, afterFive: false });
 });
 
-Deno.test("refresh writes only highlight changes, replay is a no-op, and display copying preserves the destination highlight", async () => {
+Deno.test("the homepage's highlights are the selection's at the read", async () => {
   assertEquals(await query(`
     UPDATE game_card g SET played=false,phase_id=(SELECT id FROM phase ORDER BY id LIMIT 1),
       kickoff=now()+interval '1 hour' * f.n FROM fixture f WHERE f.n<=6 AND f.id=g.id;
     UPDATE game_card g SET kickoff=NULL FROM fixture f WHERE f.n>6 AND f.id=g.id;
-    SELECT refresh_home_games();
-    UPDATE home_game_card SET home_highlighted=false WHERE id=(SELECT id FROM fixture WHERE n=1);
-    CREATE TEMP TABLE home_versions AS SELECT id,ctid::text version FROM home_game_card;
-    SELECT refresh_home_games();
-    DO $$ BEGIN IF (SELECT home_highlighted FROM home_game_card WHERE id=(SELECT id FROM fixture WHERE n=1)) IS DISTINCT FROM true
-      THEN RAISE EXCEPTION 'refresh did not repair a highlight'; END IF; END $$;
-    CREATE TEMP TABLE refreshed_versions AS SELECT id,ctid::text version FROM home_game_card;
-    SELECT refresh_home_games();
-    DO $$ BEGIN IF EXISTS (SELECT 1 FROM home_game_card h JOIN refreshed_versions v USING(id) WHERE h.ctid::text<>v.version)
-      THEN RAISE EXCEPTION 'unchanged refresh rewrote home cards'; END IF; END $$;
-    CREATE TEMP TABLE refresh_write_counts AS SELECT
-      (SELECT count(*) FROM home_game_card h JOIN home_versions v USING(id) WHERE h.ctid::text<>v.version) AS old_writes,
-      (SELECT count(*) FROM home_game_card h JOIN refreshed_versions v USING(id) WHERE h.ctid::text<>v.version) AS replay_writes;
-    UPDATE home_game_card SET home_highlighted=false WHERE id=(SELECT id FROM fixture WHERE n=2);
-    UPDATE game_card SET home_name='Preserve home highlight edit' WHERE id=(SELECT id FROM fixture WHERE n=2);
-    SELECT json_build_object('preserved', (SELECT home_highlighted FROM home_game_card WHERE id=(SELECT id FROM fixture WHERE n=2)),
-      'selection', (SELECT highlighted FROM home_game_selection(now()) WHERE game_id=(SELECT id FROM fixture WHERE n=2)),
-      'oldWrites', (SELECT old_writes FROM refresh_write_counts),
-      'replayWrites', (SELECT replay_writes FROM refresh_write_counts));
-  `), { preserved: false, selection: true, oldWrites: 1, replayWrites: 0 });
+    SELECT json_build_object('mismatch', (SELECT count(*) FROM home_feed h
+      JOIN home_game_selection(now()) s ON s.game_id = h.id WHERE h.home_highlighted IS DISTINCT FROM s.highlighted),
+      'rows', (SELECT count(*) FROM home_feed));
+  `), { mismatch: 0, rows: 6 });
 });
 
-Deno.test("selection is service-only while legacy order keeps its original result and permissions", async () => {
+Deno.test("selection is a public read, as the homepage invokes it, while legacy order keeps its original result", async () => {
   assertEquals(await query(`
     SELECT json_build_object(
       'selectionAnon',has_function_privilege('anon','home_game_selection(timestamptz)','EXECUTE'),
@@ -450,5 +326,26 @@ Deno.test("selection is service-only while legacy order keeps its original resul
         UNION ALL
         (SELECT game_id,is_played,feed_rank FROM home_game_order(${clock}) EXCEPT SELECT game_id,is_played,feed_rank FROM home_game_selection(${clock}))),
       'legacyArity', (SELECT pronargs FROM pg_proc WHERE oid='home_game_order(timestamptz)'::regprocedure));
-  `), { selectionAnon: false, selectionReader: false, selectionService: true, sameRows: true, legacyArity: 1 });
+  `), { selectionAnon: true, selectionReader: true, selectionService: true, sameRows: true, legacyArity: 1 });
 });
+
+// The selection reads each team's newest rating from team_latest_rating, one
+// row per team, so a cold read does not walk team_rating's index per team; the
+// triggers keep it in step within the writing transaction.
+Deno.test("team_latest_rating follows every write to team_rating, including a delete back to an older rating", async () => {
+  assertEquals(await query(`
+    CREATE TEMP TABLE probe AS SELECT home_id AS team_id FROM game_card ORDER BY id LIMIT 1;
+    INSERT INTO team_rating (id, team_id, measure_date, offense, defense, rating)
+      SELECT 'f3000000-0000-4000-8000-000000000001', team_id, '2026-10-05', 1, 1, 70 FROM probe;
+    CREATE TEMP TABLE after_insert AS SELECT rating FROM team_latest_rating WHERE team_id = (SELECT team_id FROM probe);
+    UPDATE team_rating SET rating = 71 WHERE id = 'f3000000-0000-4000-8000-000000000001';
+    CREATE TEMP TABLE after_update AS SELECT rating FROM team_latest_rating WHERE team_id = (SELECT team_id FROM probe);
+    DELETE FROM team_rating WHERE id = 'f3000000-0000-4000-8000-000000000001';
+    SELECT json_build_object('inserted', (SELECT rating FROM after_insert), 'updated', (SELECT rating FROM after_update),
+      'deleted', (SELECT rating FROM team_latest_rating WHERE team_id = (SELECT team_id FROM probe)),
+      'mismatch', (SELECT count(*) FROM team t LEFT JOIN team_latest_rating l ON l.team_id = t.id
+        LEFT JOIN LATERAL (SELECT rating, measure_date FROM team_rating WHERE team_id = t.id ORDER BY measure_date DESC, id LIMIT 1) r ON true
+        WHERE (l.rating, l.measure_date) IS DISTINCT FROM (r.rating, r.measure_date)));
+  `), { inserted: 70, updated: 71, deleted: 50, mismatch: 0 });
+});
+

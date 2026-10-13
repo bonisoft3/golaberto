@@ -59,7 +59,7 @@ async function consumed(table: string, id: string, txid: string) {
 }
 async function gameVersions() {
   return await sql(`SELECT jsonb_object_agg(name, versions) FROM (
-    ${["game", "game_card", "team_game", "home_game_card", "matches_game_card"].map(table =>
+    ${["game", "game_card", "team_game", "home_feed", "matches_game_card"].map(table =>
       `SELECT '${table}' AS name, md5(string_agg(id::text || ':' || txid::text || ':' || ctid::text, ',' ORDER BY id)) AS versions FROM ${table}`
     ).join(" UNION ALL ")}) snapshots`);
 }
@@ -82,7 +82,7 @@ async function alignment(page: Page) {
 Deno.test("live country joins update open screens without rewriting games; badges align on phones", async () => {
   const fixture = JSON.parse(await sql(`SELECT row_to_json(f) FROM (
     SELECT g.id, g.championship_id, g.home_id, g.away_id, c.show_country, a.country, h.name
-    FROM home_game_card g JOIN championship c ON c.id=g.championship_id
+    FROM home_feed g JOIN championship c ON c.id=g.championship_id
     JOIN team a ON a.id=g.away_id JOIN team h ON h.id=g.home_id
     ORDER BY g.home_upcoming_rank DESC, g.id LIMIT 1) f`));
   const { id, championship_id: championship, away_id: away } = fixture;

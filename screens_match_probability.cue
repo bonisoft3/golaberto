@@ -10,7 +10,6 @@ _matchProbabilityAddGoal: {
 		event_count: {type: "match-probability-event-control", params: operation: "next-count"}
 	}
 	effect: {
-		level:  "ephemeral"
 		op:     "create"
 		entity: "match_probability_scenario_event"
 		values: {
@@ -28,7 +27,6 @@ _matchProbabilityAddRedCard: {
 		event_count: {type: "match-probability-event-control", params: operation: "next-count"}
 	}
 	effect: {
-		level:  "ephemeral"
 		op:     "create"
 		entity: "match_probability_scenario_event"
 		values: {
@@ -41,10 +39,6 @@ _matchProbabilityAddRedCard: {
 _matchProbabilityMachine: json.Marshal({
 	field:   "state"
 	initial: "ready"
-	context: {
-		minute:      "0", added_time: "5", event_sequence: 0, next_event_id: ""
-		event_count: 0, events_json:  "[]", payload_json: "", home_name: "", away_name: ""
-	}
 	states: ready: on: {
 		"input@match-probability-minute": {assign: minute: {type: "event", params: field: "value"}}
 		"input@match-probability-added": {assign: added_time: {type: "event", params: field: "value"}}
@@ -56,7 +50,6 @@ _matchProbabilityMachine: json.Marshal({
 _matchProbabilityEventMachine: json.Marshal({
 	field:   "state"
 	initial: "ready"
-	context: {side: "home", minute: 0}
 	states: ready: on: {
 		input: assign: {
 			side: {type: "match-probability-event-edit", params: field: "side"}
@@ -65,7 +58,7 @@ _matchProbabilityEventMachine: json.Marshal({
 		click: {
 			guard: {type: "match-probability-event-edit", params: field: "remove"}
 			effect: {
-				level: "ephemeral", op: "delete", entity: "match_probability_scenario_event"
+				op: "delete", entity: "match_probability_scenario_event"
 				values: id: "{id}"
 			}
 		}

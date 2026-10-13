@@ -1,0 +1,50 @@
+# generated from bayt.cue — do not edit
+services:
+  golaberto-release-docker:
+    build:
+      additional_contexts:
+        golaberto-database: service:golaberto-database
+        golaberto-crud: service:golaberto-crud
+        golaberto-caddy: service:golaberto-caddy
+        golaberto-auth: service:golaberto-auth
+      context: ..
+      dockerfile: .bayt/Dockerfile.release-docker
+      target: release-docker
+      tags:
+      - ${BAYT_DOCKER_REPOSITORY:-ghcr.io/bonisoft3/golaberto}:${BAYT_IMAGE_TAG:-latest}
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: ${BAYT_DOCKER_REPOSITORY:-ghcr.io/bonisoft3/golaberto}:${BAYT_IMAGE_TAG:-latest}
+    ports:
+    - 8080:8080
+    scale: 0
+  golaberto-release-docker_bayt:
+    build:
+      additional_contexts:
+        golaberto-database_bayt: service:golaberto-database_bayt
+        golaberto-crud_bayt: service:golaberto-crud_bayt
+        golaberto-caddy_bayt: service:golaberto-caddy_bayt
+        golaberto-auth_bayt: service:golaberto-auth_bayt
+        golaberto-migrate_bayt: service:golaberto-migrate_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.release-docker
+      target: release-docker_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-release-docker_bayt:latest
+    scale: 0
+  golaberto-release-docker_srcs:
+    build:
+      additional_contexts:
+        golaberto-database_srcs: service:golaberto-database_srcs
+        golaberto-caddy_srcs: service:golaberto-caddy_srcs
+      context: ..
+      dockerfile: .bayt/Dockerfile.release-docker
+      target: release-docker_srcs
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-release-docker_srcs:latest
+    scale: 0

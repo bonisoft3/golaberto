@@ -7,7 +7,7 @@
 .home-phase { margin: 0; padding: var(--sp-sm) var(--sp-md); font-size: var(--type-caption); border-bottom: var(--border-size-1) solid var(--border); }
 .home-phase a { color: var(--accent); }
 .home-day { margin: 0; padding: var(--sp-sm) var(--sp-md); font-size: var(--type-label); color: var(--secondary); background: var(--surface); border-bottom: var(--border-size-1) solid var(--border); }
-.home-day:not(:has(.home-day-label)), .home-phase:not(:has(.home-phase-context)), .home-phase:has(.home-phase-context[data-same-day="true"][data-same-phase="true"][data-first="false"]) { display: none; }
+.home-day[data-new-day="false"], .home-phase[data-new-group="false"] { display: none; }
 .home-phase small { margin-inline-start: var(--sp-sm); font-size: var(--type-label); color: var(--secondary); }
 .home-championship .game-row { grid-template-columns: 3.5em minmax(0, 1fr) 4.5em minmax(0, 1fr); grid-template-areas: "when home score away"; }
 .home-championship .home, .home-championship .away { overflow-wrap: anywhere; }

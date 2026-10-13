@@ -1,0 +1,44 @@
+# generated from bayt.cue — do not edit
+services:
+  golaberto-ticker:
+    build:
+      additional_contexts:
+        golaberto-crud: service:golaberto-crud
+        libraries_mecha-ticker-image: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-ticker:0.9.0@sha256:6143c63265738c34055546fbb2eb6ace9c14f03c6bc769eb362b155354f061ea}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image}
+      context: ..
+      dockerfile: .bayt/Dockerfile.ticker
+      target: ticker
+      tags:
+      - bayt-golaberto-ticker:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-golaberto-ticker:latest
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    depends_on:
+      golaberto-crud:
+        condition: service_healthy
+        restart: true
+    environment:
+      CRUD_URL: http://crud:3000
+      WAKE_URLS: http://mesh-events:3500/v1.0/healthz/outbound
+      SERVICE_JWT: >-
+        ${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
+    image: bayt-golaberto-ticker:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    networks:
+      default:
+        aliases:
+        - ticker
+    restart: on-failure
+  golaberto-ticker_bayt:
+    build:
+      additional_contexts:
+        golaberto-crud_bayt: service:golaberto-crud_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.ticker
+      target: ticker_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-golaberto-ticker_bayt:latest
+    scale: 0

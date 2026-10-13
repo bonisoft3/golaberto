@@ -1,6 +1,13 @@
 import {assertEquals} from 'jsr:@std/assert@1';
 import {evaluateRole} from '../../../plugins/omnishell/interpreter/jessie.js';
 const handler = async (name:string) => evaluateRole(await Deno.readTextFile(new URL(`../shell/handlers/${name}.js`,import.meta.url)), 'handler');
+const inspection = async () => {
+ const reduce=await handler('position-odds-fold');
+ return (state:any) => reduce({...state,rows:{view:state.rows.view,source:[{
+  current_json:JSON.stringify({positions:state.rows.positions || [],zones:state.rows.zones || []}),
+  series_json:state.rows.history?.[0]?.series_json || '{}',
+ }]}});
+};
 const positions = [{position:1,percent:62.5,current:true,reach:''},{position:2,percent:37.5,current:false,reach:''}];
 const view = () => ({id:'group:team',group_id:'group',team_id:'team',current_json:JSON.stringify({positions,zones:[]}),position_number:1,position_last:2,table_mode:'history',snapshot_index:3,snapshot_last:9});
 Deno.test('current inspection and historical dates use isolated controls',async()=>{
@@ -21,7 +28,7 @@ Deno.test('current inspection and historical dates use isolated controls',async(
  assertEquals(control(state,{from:'unrelated',pointerX:1000},{field:'guard-pointer'}),false);
 });
 Deno.test('current source folding retains historical state and reacts to metadata and removals',async()=>{
- const fold=await handler('position-odds-fold');
+ const fold=await inspection();
  const seed=view();
  const zone={id:'z',name:'Zone',color:'#8a2be2',first:1,last:2,positions:''};
  const initial=fold({items:[seed],rows:{view:[],positions,zones:[zone]}}).updates[0];
@@ -45,13 +52,15 @@ Deno.test('current source folding retains historical state and reacts to metadat
 });
 
 Deno.test('one initializer writes both distributions regardless of which source triggers it',async()=>{
- const fold=await handler('position-odds-fold');
+ const fold=await inspection();
  const seed={...view(),snapshot_index:-1};
  const history={...seed,series_json:JSON.stringify({snapshots:[{},{}],zones:[]})};
  const rows={view:[],positions,zones:[],history:[history]};
  const first=fold({items:[seed],rows}).updates[0].row;
  const second=fold({items:[history],rows}).updates[0].row;
  assertEquals(first,second);
+ const source={id:seed.id,group_id:seed.group_id,team_id:seed.team_id};
+ assertEquals(fold({items:[source],rows}).updates[0].row.snapshot_index,1);
  assertEquals(first.series_json,history.series_json);
  assertEquals(JSON.parse(first.current_json).positions,positions);
  assertEquals(first.snapshot_index,1);
@@ -60,7 +69,7 @@ Deno.test('one initializer writes both distributions regardless of which source 
 });
 
 Deno.test('a reader on the latest recorded day follows a new capture; an earlier day stays put',async()=>{
- const fold=await handler('position-odds-fold');
+ const fold=await inspection();
  const days=(n:number)=>({series_json:JSON.stringify({snapshots:Array.from({length:n},()=>({})),zones:[]})});
  const latest={...view(),snapshot_index:1,snapshot_last:1,series_json:days(2).series_json};
  // The first fold fixed the latest day's index, so a new day left the chart behind.

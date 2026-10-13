@@ -12,7 +12,6 @@ code: state: entities: {
 		id: "0xeb1383964ad67b15"
 		table:      "match_recent_result"
 		durability: "server"
-		writers:    "pipeline"
 		access: {scope: "public"}
 		fields: [
 			{ordinal: 1, name: "id", type: "string", pk: true},
@@ -50,7 +49,6 @@ code: state: entities: {
 		id: "0x837a27b1bc209bc3"
 		table:      "match_head_to_head"
 		durability: "server"
-		writers:    "pipeline"
 		access: {scope: "public"}
 		fields: [
 			{ordinal: 1, name: "id", type: "string", pk: true},
@@ -88,7 +86,6 @@ code: state: entities: {
 		id: "0xbe3f72462ba09382"
 		table:      "match_lineup"
 		durability: "server"
-		writers:    "pipeline"
 		access: {scope: "public"}
 		fields: [
 			{ordinal: 1, name: "id", type: "uuid", pk: true},
@@ -112,7 +109,6 @@ code: state: entities: {
 		id: "0xfc4c633a94f59b86"
 		table:      "match_location"
 		durability: "server"
-		writers:    "pipeline"
 		access: {scope: "public"}
 		fields: [
 			{ordinal: 1, name: "id", type: "uuid", pk: true},

@@ -11,8 +11,7 @@ const setup = `
   CREATE TEMP TABLE fixture AS SELECT id, row_number() OVER (ORDER BY id)::int AS n
     FROM game_card ORDER BY id LIMIT 120;
   DO $$ BEGIN IF (SELECT count(*) FROM fixture)<>120 THEN RAISE EXCEPTION 'requires at least 120 seeded cards'; END IF; END $$;
-  UPDATE game_card SET played=false, kickoff=NULL, home_upcoming_rank=0,
-    home_recent_rank=0, home_upcoming_group=false, home_recent_group=false;
+  UPDATE game_card SET played=false, kickoff=NULL;
   DELETE FROM matches_game_card;
   UPDATE game_card g SET played=f.n>60, day='2026-10-02',
     kickoff='2026-10-02 12:00:00+00'::timestamptz + interval '1 minute' *

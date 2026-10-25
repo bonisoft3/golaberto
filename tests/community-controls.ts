@@ -2,12 +2,8 @@
 /// <reference lib="dom.iterable" />
 import { assert, assertEquals, assertThrows } from "jsr:@std/assert@1.0.11";
 import { parseHTML } from "npm:linkedom@0.18.4";
-import { evaluateRole } from "omnishell/interpreter/jessie.js";
-import { interpretScreen } from "omnishell/interpreter/screen.js";
-import { batched } from "omnishell/interpreter/batched-store.js";
-import { compileCatalog } from "omnishell/interpreter/vendor/messages.js";
+import { evaluateRole, interpretScreen, batched, compileCatalog, parseFilter, parseLimit } from "./platform.ts";
 import { built } from "./terminal-nodes.ts";
-import { parseFilter, parseLimit } from "omnishell/interpreter/fragment.js";
 const app = new URL(
   Deno.env.get("COMMUNITY_APP_URL") ?? "../",
   import.meta.url,
@@ -222,7 +218,7 @@ Deno.test("community history renders zero and unknown values as text and rejects
   // Compiled as render and the shell compile them: a label catalog the reader
   // accepted as JSON once crashed the render service at boot.
   const catalogs = await Promise.all(
-    ["de-DE", "en-GB", "es-AR", "fr-FR", "it-IT", "pt-BR"].map(async (locale) =>
+    ["de-DE", "en-US", "es-AR", "fr-FR", "it-IT", "pt-BR"].map(async (locale) =>
       compileCatalog(
         JSON.parse(await Deno.readTextFile(asset(`messages-${locale}.json`))),
       ) as Record<string, unknown>

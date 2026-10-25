@@ -193,6 +193,9 @@ CREATE TRIGGER restamp_txid BEFORE UPDATE ON phase_directory
 DROP TRIGGER IF EXISTS restamp_txid ON player_directory;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON player_directory
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+DROP TRIGGER IF EXISTS restamp_txid ON matches_start;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON matches_start
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON game_archive;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON game_archive
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();

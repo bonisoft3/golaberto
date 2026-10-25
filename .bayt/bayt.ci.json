@@ -1,0 +1,1077 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "compose": {
+    "up": false,
+    "manual": false,
+    "build": {
+      "additional_contexts": {
+        "workspaceroot-pronto-sources_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:workspaceroot-pronto-sources_srcs}",
+        "libraries_mecha-airlock-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image_bayt}",
+        "libraries_mecha-auth-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image_bayt}",
+        "libraries_mecha-clock-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-clock-image_bayt}",
+        "libraries_mecha-compute-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image_bayt}",
+        "libraries_mecha-conduit-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image_bayt}",
+        "libraries_mecha-database-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image_bayt}",
+        "libraries_mecha-mesh-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image_bayt}",
+        "libraries_mecha-ticker-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image_bayt}",
+        "libraries_mecha-database-image_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image_srcs}",
+        "libraries_mecha-mesh-image_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image_srcs}",
+        "libraries_mecha-auth-image_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image_srcs}",
+        "libraries_mecha-ticker-image_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image_srcs}",
+        "libraries_mecha-clock-image_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-clock-image_srcs}",
+        "libraries_mecha-compute-image_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image_srcs}",
+        "libraries_mecha-airlock-image_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image_srcs}",
+        "plugins_omnishell-runtime-image_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image_srcs}",
+        "plugins_omnishell-runtime-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image_bayt}",
+        "workspaceroot-pronto-sources_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:workspaceroot-pronto-sources_bayt}"
+      },
+      "secrets": [],
+      "args": {
+        "MONOREPO_COMPOSE_MODE": "${MONOREPO_COMPOSE_MODE:-}",
+        "BAYT_RUNTIME": "${BAYT_RUNTIME:-}"
+      }
+    },
+    "environment": {},
+    "ports": [],
+    "volumes": [],
+    "depends_on": {}
+  },
+  "dockerfile": {
+    "preamble": [
+      "COPY --from=bonitao/lazybox:0.8.5@sha256:091a3b63ba222777000acc3bf8327faebfea4870e23ee07c6eb42431dadb2ac6 /lazybox/ /root/.local/share/lazybox/",
+      "COPY --from=alpine/socat:1.8.0.0@sha256:a6be4c0262b339c53ddad723cdd178a1a13271e1137c65e27f90a08c16de02b8 /usr/bin/socat1 /usr/local/bin/socat",
+      "COPY --from=alpine/socat:1.8.0.0@sha256:a6be4c0262b339c53ddad723cdd178a1a13271e1137c65e27f90a08c16de02b8 /usr/lib/libreadline.so.8 /usr/lib/libncursesw.so.6 /usr/lib/",
+      "ENV PATH=$PATH:/root/.local/bin:/root/.local/share/lazybox/bin",
+      "COPY <<'BKID_MISE' /opt/bkid/mise.toml\n[settings]\nexperimental = true\ngithub_attestations = false\nlocked = true\nlockfile = true\nslsa = false\n\n[settings.github]\ngithub_attestations = false\nslsa = false\n\n[tools]\n'github:depot/cli' = '2.102.25'\n'github:go-task/task' = 'v3.54.0'\nBKID_MISE\nCOPY <<'BKID_LOCK' /opt/bkid/mise.lock\n[tools]\n[[tools.'github:depot/cli']]\nbackend = 'github:depot/cli'\nversion = '2.102.25'\n\n[tools.'github:depot/cli'.platforms]\n[tools.'github:depot/cli'.platforms.linux-arm64]\nchecksum = 'sha256:52abe04ef24cd06f2ed37e15dbaa1d52d282db26ead04ff2493faf181347d6eb'\nurl = 'https://github.com/depot/cli/releases/download/v2.102.25/depot_2.102.25_linux_arm64.tar.gz'\nurl_api = 'https://api.github.com/repos/depot/cli/releases/assets/660782767'\n\n[tools.'github:depot/cli'.platforms.linux-arm64-musl]\nchecksum = 'sha256:52abe04ef24cd06f2ed37e15dbaa1d52d282db26ead04ff2493faf181347d6eb'\nurl = 'https://github.com/depot/cli/releases/download/v2.102.25/depot_2.102.25_linux_arm64.tar.gz'\nurl_api = 'https://api.github.com/repos/depot/cli/releases/assets/660782767'\n\n[tools.'github:depot/cli'.platforms.linux-x64]\nchecksum = 'sha256:b62952f5951a0bcd4f48597b59fe29a4b7d84cac4e82710ee19d79262bf271af'\nurl = 'https://github.com/depot/cli/releases/download/v2.102.25/depot_2.102.25_linux_amd64.tar.gz'\nurl_api = 'https://api.github.com/repos/depot/cli/releases/assets/660782770'\n\n[tools.'github:depot/cli'.platforms.linux-x64-musl]\nchecksum = 'sha256:b62952f5951a0bcd4f48597b59fe29a4b7d84cac4e82710ee19d79262bf271af'\nurl = 'https://github.com/depot/cli/releases/download/v2.102.25/depot_2.102.25_linux_amd64.tar.gz'\nurl_api = 'https://api.github.com/repos/depot/cli/releases/assets/660782770'\n\n[[tools.'github:go-task/task']]\nbackend = 'github:go-task/task'\nversion = 'v3.54.0'\n\n[tools.'github:go-task/task'.platforms]\n[tools.'github:go-task/task'.platforms.linux-arm64]\nchecksum = 'sha256:d7189d439d4a6058e39e1b2acd7c8b27acd4856691b408f23b242e4294e1df5b'\nurl = 'https://github.com/go-task/task/releases/download/v3.54.0/task_linux_arm64.tar.gz'\nurl_api = 'https://api.github.com/repos/go-task/task/releases/assets/604090041'\n\n[tools.'github:go-task/task'.platforms.linux-arm64-musl]\nchecksum = 'sha256:d7189d439d4a6058e39e1b2acd7c8b27acd4856691b408f23b242e4294e1df5b'\nurl = 'https://github.com/go-task/task/releases/download/v3.54.0/task_linux_arm64.tar.gz'\nurl_api = 'https://api.github.com/repos/go-task/task/releases/assets/604090041'\n\n[tools.'github:go-task/task'.platforms.linux-x64]\nchecksum = 'sha256:680859dbb4d881a9c72d4d9a8f510825450849af8567deacd7302c01124416fb'\nurl = 'https://github.com/go-task/task/releases/download/v3.54.0/task_linux_amd64.tar.gz'\nurl_api = 'https://api.github.com/repos/go-task/task/releases/assets/604090073'\n\n[tools.'github:go-task/task'.platforms.linux-x64-musl]\nchecksum = 'sha256:680859dbb4d881a9c72d4d9a8f510825450849af8567deacd7302c01124416fb'\nurl = 'https://github.com/go-task/task/releases/download/v3.54.0/task_linux_amd64.tar.gz'\nurl_api = 'https://api.github.com/repos/go-task/task/releases/assets/604090073'\nBKID_LOCK",
+      "COPY --from=bayt . /monorepo/plugins/bayt/runtime",
+      "RUN cd /opt/bkid && mise trust -y && mise install && mise exec -- sh -c 'cp \"$(mise which task)\" /usr/local/bin/task && cp \"$(mise which depot)\" /usr/local/bin/depot'",
+      "ENV PATH=/monorepo/plugins/bayt/runtime:${PATH}",
+      "ARG MONOREPO_COMPOSE_MODE",
+      "ENV MONOREPO_COMPOSE_MODE=$MONOREPO_COMPOSE_MODE",
+      "ARG BAYT_RUNTIME",
+      "ENV BAYT_RUNTIME=$BAYT_RUNTIME"
+    ],
+    "preambleCopyContexts": [
+      {
+        "name": "bayt",
+        "image": "bonitao/bayt-runtime:1.2.2@sha256:a2e08b0fd123349e30e28843665ab2a2fde9fe25fddf82919fe499f3f01f1b8f"
+      },
+      {
+        "name": "alpine/socat:1.8.0.0@sha256:a6be4c0262b339c53ddad723cdd178a1a13271e1137c65e27f90a08c16de02b8"
+      },
+      {
+        "name": "alpine/socat:1.8.0.0@sha256:a6be4c0262b339c53ddad723cdd178a1a13271e1137c65e27f90a08c16de02b8"
+      }
+    ],
+    "from": {
+      "name": "docker:29.9.1-cli@sha256:6fae2214c3121a28d5aa639d09032f61310b7c9c75ffbad1025f261a1b621800"
+    },
+    "add": [],
+    "mounts": [],
+    "secrets": {
+      "docker_host": {
+        "environment": "DOCKER_HOST_TCP"
+      },
+      "buildx_builder": {
+        "environment": "BUILDX_BUILDER"
+      },
+      "buildx_instance": {
+        "environment": "BUILDX_INSTANCE"
+      },
+      "docker_config": {
+        "environment": "DOCKER_AUTH_CONFIG"
+      },
+      "testcontainers_host": {
+        "environment": "TESTCONTAINERS_HOST_OVERRIDE"
+      },
+      "cache_scope": {
+        "environment": "CACHE_SCOPE"
+      },
+      "cache_scope_fallback": {
+        "environment": "CACHE_SCOPE_FALLBACK"
+      },
+      "sayt_buildkit_syntax": {
+        "environment": "BUILDKIT_SYNTAX"
+      },
+      "sayt_no_cache": {
+        "environment": "SAYT_NO_CACHE"
+      },
+      "bayt_image_tag": {
+        "environment": "BAYT_IMAGE_TAG"
+      },
+      "bayt_pull_policy": {
+        "environment": "BAYT_PULL_POLICY"
+      },
+      "sayt_no_cache_from": {
+        "environment": "SAYT_NO_CACHE_FROM"
+      },
+      "sayt_no_cache_to": {
+        "environment": "SAYT_NO_CACHE_TO"
+      },
+      "depot_token": {
+        "environment": "DEPOT_TOKEN"
+      },
+      "depot_project_id": {
+        "environment": "DEPOT_PROJECT_ID"
+      },
+      "depot_org_id": {
+        "environment": "DEPOT_ORG_ID"
+      },
+      "depot_disable_otel": {
+        "environment": "DEPOT_DISABLE_OTEL"
+      },
+      "actions_results_url": {
+        "environment": "ACTIONS_RESULTS_URL"
+      },
+      "actions_runtime_token": {
+        "environment": "ACTIONS_RUNTIME_TOKEN"
+      },
+      "bkid_project": {
+        "environment": "BKID_PROJECT"
+      }
+    },
+    "extra_hosts": [],
+    "epilogue": [],
+    "copy": [
+      {
+        "from": {
+          "name": "libraries_mecha-airlock-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-airlock-image_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-auth-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-auth-image_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-clock-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-clock-image_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-compute-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-compute-image_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-conduit-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-database-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-database-image_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-mesh-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-mesh-image_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-ticker-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-ticker-image_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "workspaceroot-pronto-sources_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "workspaceroot-pronto-sources_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "monorepo/*.yaml"
+        ],
+        "dst": "./",
+        "link": true,
+        "parents": true,
+        "exclude": []
+      }
+    ],
+    "healthcheck": null,
+    "expose": [],
+    "entrypoint": null,
+    "incremental": true,
+    "cmd": null
+  },
+  "name": "ci",
+  "project": "golaberto",
+  "dir": ".",
+  "activate": "",
+  "srcs": {
+    "globs": [
+      ".bayt/**"
+    ],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {
+    "BUILDX_BAKE_ENTITLEMENTS_FS": "0",
+    "COMPOSE_BAKE": "true"
+  },
+  "synthetics": {
+    "bayt": {
+      "name": "ci_bayt",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.ci.yaml",
+          ".bayt/Dockerfile.ci",
+          ".bayt/bayt.ci.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/Taskfile.ci.yaml",
+          ".bayt/process-compose.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.ci.yaml",
+        "./.bayt/compose.ci-visual.yaml",
+        "./.bayt/compose.integrate.yaml",
+        "./.bayt/compose.launch.yaml",
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.served.yaml",
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.mesh-events.yaml",
+        "./.bayt/compose.conduit.yaml",
+        "./.bayt/compose.transform.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.rclone-s3.yaml",
+        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.ticker.yaml",
+        "./.bayt/compose.render.yaml",
+        "./.bayt/compose.served-release.yaml",
+        "./.bayt/compose.ci-replay.yaml",
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.ci-constraints.yaml",
+        "./.bayt/compose.check-constraints.yaml",
+        "./.bayt/compose.ci-acceptance.yaml",
+        "./.bayt/compose.check-acceptance.yaml",
+        "./.bayt/compose.browser.yaml"
+      ]
+    },
+    "outs": {
+      "name": "ci_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.ci.yaml",
+        "./.bayt/compose.ci-visual.yaml",
+        "./.bayt/compose.integrate.yaml",
+        "./.bayt/compose.launch.yaml",
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.served.yaml",
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.mesh-events.yaml",
+        "./.bayt/compose.conduit.yaml",
+        "./.bayt/compose.transform.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.rclone-s3.yaml",
+        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.ticker.yaml",
+        "./.bayt/compose.render.yaml",
+        "./.bayt/compose.served-release.yaml",
+        "./.bayt/compose.ci-replay.yaml",
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.ci-constraints.yaml",
+        "./.bayt/compose.check-constraints.yaml",
+        "./.bayt/compose.ci-acceptance.yaml",
+        "./.bayt/compose.check-acceptance.yaml",
+        "./.bayt/compose.browser.yaml"
+      ]
+    },
+    "srcs": {
+      "name": "ci_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/**"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [
+        "ci-visual_srcs_srcs",
+        "ci-visual_bayt_srcs",
+        "ci-replay_srcs_srcs",
+        "ci-replay_bayt_srcs",
+        "ci-constraints_srcs_srcs",
+        "ci-constraints_bayt_srcs",
+        "ci-acceptance_srcs_srcs",
+        "ci-acceptance_bayt_srcs",
+        "integrate_srcs_srcs_srcs",
+        "integrate_bayt_srcs_srcs",
+        "database_srcs_srcs_srcs",
+        "caddy_srcs_srcs_srcs",
+        "conduit_srcs_srcs_srcs",
+        "rclone-s3_srcs_srcs_srcs",
+        "transform_srcs_srcs_srcs",
+        "compute_srcs_srcs_srcs",
+        "served_srcs_srcs_srcs",
+        "render_srcs_srcs_srcs",
+        "served-release_srcs_srcs_srcs",
+        "launch_outs_srcs_srcs_srcs",
+        "crud_outs_srcs_srcs_srcs",
+        "served_outs_srcs_srcs_srcs",
+        "database_outs_srcs_srcs_srcs",
+        "mesh-events_outs_srcs_srcs_srcs",
+        "migrate_outs_srcs_srcs_srcs",
+        "redis_outs_srcs_srcs_srcs",
+        "compute_outs_srcs_srcs_srcs",
+        "conduit_outs_srcs_srcs_srcs",
+        "caddy_outs_srcs_srcs_srcs",
+        "electric_outs_srcs_srcs_srcs",
+        "auth_outs_srcs_srcs_srcs",
+        "database_srcs_srcs",
+        "setup_srcs_srcs",
+        "migrate_srcs_srcs",
+        "database_outs_srcs_srcs",
+        "check-constraints_srcs_srcs_srcs",
+        "check-constraints_bayt_srcs_srcs",
+        "setup_srcs_srcs_srcs",
+        "check-acceptance_srcs_srcs_srcs",
+        "check-acceptance_bayt_srcs_srcs",
+        "browser_srcs_srcs_srcs"
+      ],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.ci.yaml",
+        "./.bayt/compose.ci-visual.yaml",
+        "./.bayt/compose.integrate.yaml",
+        "./.bayt/compose.launch.yaml",
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.served.yaml",
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.mesh-events.yaml",
+        "./.bayt/compose.conduit.yaml",
+        "./.bayt/compose.transform.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.rclone-s3.yaml",
+        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.ticker.yaml",
+        "./.bayt/compose.render.yaml",
+        "./.bayt/compose.served-release.yaml",
+        "./.bayt/compose.ci-replay.yaml",
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.ci-constraints.yaml",
+        "./.bayt/compose.check-constraints.yaml",
+        "./.bayt/compose.ci-acceptance.yaml",
+        "./.bayt/compose.check-acceptance.yaml",
+        "./.bayt/compose.browser.yaml"
+      ]
+    }
+  },
+  "taskfile": {
+    "run": "once",
+    "incremental": false,
+    "preconditions": []
+  },
+  "visibility": "internal",
+  "emitsSrcs": true,
+  "deps": [
+    "ci-visual_srcs",
+    "ci-visual_bayt",
+    "ci-replay_srcs",
+    "ci-replay_bayt",
+    "ci-constraints_srcs",
+    "ci-constraints_bayt",
+    "ci-acceptance_srcs",
+    "ci-acceptance_bayt"
+  ],
+  "sameProjectDeps": [
+    "ci-visual_srcs",
+    "ci-visual_bayt",
+    "ci-replay_srcs",
+    "ci-replay_bayt",
+    "ci-constraints_srcs",
+    "ci-constraints_bayt",
+    "ci-acceptance_srcs",
+    "ci-acceptance_bayt"
+  ],
+  "transitiveDeps": [
+    "ci-visual_srcs",
+    "ci-visual_bayt",
+    "ci-replay_srcs",
+    "ci-replay_bayt",
+    "ci-constraints_srcs",
+    "ci-constraints_bayt",
+    "ci-acceptance_srcs",
+    "ci-acceptance_bayt",
+    "integrate_srcs_srcs",
+    "integrate_bayt_srcs",
+    "database_srcs_srcs",
+    "caddy_srcs_srcs",
+    "conduit_srcs_srcs",
+    "rclone-s3_srcs_srcs",
+    "transform_srcs_srcs",
+    "compute_srcs_srcs",
+    "served_srcs_srcs",
+    "render_srcs_srcs",
+    "served-release_srcs_srcs",
+    "launch_outs_srcs_srcs",
+    "crud_outs_srcs_srcs",
+    "served_outs_srcs_srcs",
+    "database_outs_srcs_srcs",
+    "mesh-events_outs_srcs_srcs",
+    "migrate_outs_srcs_srcs",
+    "redis_outs_srcs_srcs",
+    "compute_outs_srcs_srcs",
+    "conduit_outs_srcs_srcs",
+    "caddy_outs_srcs_srcs",
+    "electric_outs_srcs_srcs",
+    "auth_outs_srcs_srcs",
+    "database_srcs",
+    "setup_srcs",
+    "migrate_srcs",
+    "database_outs_srcs",
+    "check-constraints_srcs_srcs",
+    "check-constraints_bayt_srcs",
+    "setup_srcs_srcs",
+    "check-acceptance_srcs_srcs",
+    "check-acceptance_bayt_srcs",
+    "browser_srcs_srcs"
+  ],
+  "transitiveCrossDeps": [],
+  "upClosure": [
+    "./.bayt/compose.ci.yaml",
+    "./.bayt/compose.ci-visual.yaml",
+    "./.bayt/compose.integrate.yaml",
+    "./.bayt/compose.launch.yaml",
+    "./.bayt/compose.caddy.yaml",
+    "./.bayt/compose.crud.yaml",
+    "./.bayt/compose.database.yaml",
+    "./.bayt/compose.migrate.yaml",
+    "./.bayt/compose.served.yaml",
+    "./.bayt/compose.electric.yaml",
+    "./.bayt/compose.redis.yaml",
+    "./.bayt/compose.mesh-events.yaml",
+    "./.bayt/compose.conduit.yaml",
+    "./.bayt/compose.transform.yaml",
+    "./.bayt/compose.compute.yaml",
+    "./.bayt/compose.auth.yaml",
+    "./.bayt/compose.rclone-s3.yaml",
+    "./.bayt/compose.clock.yaml",
+    "./.bayt/compose.ticker.yaml",
+    "./.bayt/compose.render.yaml",
+    "./.bayt/compose.served-release.yaml",
+    "./.bayt/compose.ci-replay.yaml",
+    "./.bayt/compose.setup.yaml",
+    "./.bayt/compose.ci-constraints.yaml",
+    "./.bayt/compose.check-constraints.yaml",
+    "./.bayt/compose.ci-acceptance.yaml",
+    "./.bayt/compose.check-acceptance.yaml",
+    "./.bayt/compose.browser.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "ci-visual_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "ci-visual_bayt",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          ".bayt/compose.ci-visual.yaml",
+          ".bayt/Dockerfile.ci-visual",
+          ".bayt/bayt.ci-visual.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/Taskfile.ci-visual.yaml",
+          ".bayt/process-compose.yaml"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "ci-replay_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          ".bayt/process-compose.yaml",
+          ".pronto/cluster.json",
+          "services/database/migrations/**",
+          "tests/[r]eplay.json",
+          "tests/[r]eplay/**"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "ci-replay_bayt",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          ".bayt/compose.ci-replay.yaml",
+          ".bayt/Dockerfile.ci-replay",
+          ".bayt/bayt.ci-replay.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/Taskfile.ci-replay.yaml",
+          ".bayt/process-compose.yaml"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "ci-constraints_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "ci-constraints_bayt",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          ".bayt/compose.ci-constraints.yaml",
+          ".bayt/Dockerfile.ci-constraints",
+          ".bayt/bayt.ci-constraints.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/Taskfile.ci-constraints.yaml",
+          ".bayt/process-compose.yaml"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "ci-acceptance_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "ci-acceptance_bayt",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          ".bayt/compose.ci-acceptance.yaml",
+          ".bayt/Dockerfile.ci-acceptance",
+          ".bayt/bayt.ci-acceptance.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/Taskfile.ci-acceptance.yaml",
+          ".bayt/process-compose.yaml"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "database_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "services/database/migrations/000_extensions.sql",
+          "services/database/migrations/001_roles.sql",
+          "services/database/migrations/002_grants.sql",
+          "services/database/migrations/004_types.sql",
+          "services/database/migrations/005_create_tables.sql",
+          "services/database/migrations/006_policies.sql",
+          "services/database/migrations/007_txid.sql",
+          "services/database/migrations/008_publication.sql",
+          "services/database/migrations/010_game_days.sql",
+          "services/database/migrations/011_comment_writes.sql",
+          "services/database/migrations/012_editor_writes.sql",
+          "services/database/migrations/013_home_games.sql",
+          "services/database/migrations/014_home_championships.sql",
+          "services/database/migrations/015_home_performance.sql",
+          "services/database/migrations/016_matches_performance.sql",
+          "services/database/migrations/017_game_countries.sql",
+          "services/database/migrations/018_route_performance.sql",
+          "services/database/migrations/019_normalized_game_flags.sql",
+          "services/database/migrations/020_home_reference_order.sql",
+          "services/database/migrations/021_home_highlights.sql",
+          "services/database/migrations/022_recent_championships.sql",
+          "services/database/migrations/023_search_collation.sql",
+          "services/database/migrations/024_team_directory.sql",
+          "services/database/migrations/025_search_letter_equivalences.sql",
+          "services/database/migrations/026_team_geography.sql",
+          "services/database/migrations/027_team_directory_type.sql",
+          "services/database/migrations/028_team_profiles.sql",
+          "services/database/migrations/029_team_enrichment.sql",
+          "services/database/migrations/030_campaign_read.sql",
+          "services/database/migrations/031_readable_addresses.sql",
+          "services/database/migrations/032_archive_compatibility.sql",
+          "services/database/migrations/034_idempotent_odds_capture.sql",
+          "services/database/migrations/035_read_parity.sql",
+          "services/database/migrations/036_editing_parity.sql",
+          "services/database/migrations/037_competition_admin.sql",
+          "services/database/migrations/038_match_context.sql",
+          "services/database/migrations/039_match_probability.sql",
+          "services/database/migrations/040_community.sql",
+          "services/database/migrations/041_native_media.sql",
+          "services/database/migrations/042_team_odds_progress.sql",
+          "services/database/migrations/043_queued_odds_refresh.sql",
+          "services/database/migrations/044_heavy_reads.sql",
+          "services/database/migrations/045_drain_feed.sql",
+          "services/database/migrations/046_team_projection_turn.sql",
+          "services/database/migrations/047_home_games_at_read.sql",
+          "services/database/migrations/048_matches_start.sql",
+          "services/database/migrations/049_match_rating_history_bound.sql",
+          "services/database/migrations/900_seed.sql",
+          "services/database/migrations/801_schedule_seed.sql"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "setup_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "[m]ise.toml",
+          "[.]mise.toml",
+          "[m]ise.lock",
+          "[.]tool-versions"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "migrate_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [
+    {
+      "srcs": {
+        "globs": [
+          ".bayt/**"
+        ],
+        "exclude": [],
+        "defaultGlobs": null,
+        "defaultExclude": null
+      },
+      "do": "set -eu\nexport DOCKER_HOST_TCP=\"$DOCKER_HOST\"\nexport DEPOT_DISABLE_OTEL=1\ndocker compose --profile '*' config -o /tmp/ci-compose.yaml\ndocker buildx bake --allow=fs.read=/ -f /tmp/ci-compose.yaml --print ci-visual ci-replay ci-constraints ci-acceptance > /tmp/ci-bake.json\nfor target in ci-visual ci-replay ci-constraints ci-acceptance; do\n docker buildx bake -f /tmp/ci-bake.json --progress plain --set '*.output=type=cacheonly' ${SAYT_NO_CACHE:+--no-cache --set \"*.cache-from=\" --set \"*.cache-to=\"} ${SAYT_NO_CACHE_FROM:+--set \"*.cache-from=\"} ${SAYT_NO_CACHE_TO:+--set \"*.cache-to=\"} \"$target\"\ndone",
+      "shell": "sh",
+      "dockerfile": {
+        "inject": {
+          "secrets": [
+            {
+              "id": "docker_host",
+              "var": {
+                "contents": "DOCKER_HOST"
+              }
+            },
+            {
+              "id": "buildx_builder",
+              "var": {
+                "contents": "BUILDX_BUILDER"
+              }
+            },
+            {
+              "id": "testcontainers_host",
+              "var": {
+                "contents": "TESTCONTAINERS_HOST_OVERRIDE"
+              }
+            },
+            {
+              "id": "cache_scope",
+              "var": {
+                "contents": "CACHE_SCOPE"
+              }
+            },
+            {
+              "id": "cache_scope_fallback",
+              "var": {
+                "contents": "CACHE_SCOPE_FALLBACK"
+              }
+            },
+            {
+              "id": "sayt_buildkit_syntax",
+              "var": {
+                "contents": "BUILDKIT_SYNTAX"
+              }
+            },
+            {
+              "id": "sayt_no_cache",
+              "var": {
+                "contents": "SAYT_NO_CACHE"
+              }
+            },
+            {
+              "id": "bayt_image_tag",
+              "var": {
+                "contents": "BAYT_IMAGE_TAG"
+              }
+            },
+            {
+              "id": "bayt_pull_policy",
+              "var": {
+                "contents": "BAYT_PULL_POLICY"
+              }
+            },
+            {
+              "id": "sayt_no_cache_from",
+              "var": {
+                "contents": "SAYT_NO_CACHE_FROM"
+              }
+            },
+            {
+              "id": "sayt_no_cache_to",
+              "var": {
+                "contents": "SAYT_NO_CACHE_TO"
+              }
+            },
+            {
+              "id": "depot_token",
+              "var": {
+                "contents": "DEPOT_TOKEN"
+              }
+            },
+            {
+              "id": "depot_project_id",
+              "var": {
+                "contents": "DEPOT_PROJECT_ID"
+              }
+            },
+            {
+              "id": "depot_org_id",
+              "var": {
+                "contents": "DEPOT_ORG_ID"
+              }
+            },
+            {
+              "id": "depot_disable_otel",
+              "var": {
+                "contents": "DEPOT_DISABLE_OTEL"
+              }
+            },
+            {
+              "id": "actions_results_url",
+              "var": {
+                "contents": "ACTIONS_RESULTS_URL"
+              }
+            },
+            {
+              "id": "actions_runtime_token",
+              "var": {
+                "contents": "ACTIONS_RUNTIME_TOKEN"
+              }
+            },
+            {
+              "id": "bkid_project",
+              "var": {
+                "contents": "BKID_PROJECT"
+              }
+            },
+            {
+              "id": "buildx_instance",
+              "var": {
+                "contents": "BUILDX_INSTANCE"
+              }
+            },
+            {
+              "id": "docker_config",
+              "var": {
+                "contents": "DOCKER_AUTH_CONFIG",
+                "path": "/root/.docker/config.json"
+              },
+              "mode": "0600"
+            }
+          ],
+          "defaultSteps": {
+            "buildx-instance": {
+              "name": "buildx-instance",
+              "priority": 11,
+              "pre": "if [ -n \"$BUILDX_BUILDER\" ] && [ -n \"$BUILDX_INSTANCE\" ]; then\n  install -d -m 0700 /root/.docker/buildx/instances\n  printf '%s' \"$BUILDX_INSTANCE\" > \"/root/.docker/buildx/instances/$BUILDX_BUILDER\"\n  chmod 0600 \"/root/.docker/buildx/instances/$BUILDX_BUILDER\"\nfi"
+            },
+            "unix-socket-forward": {
+              "name": "unix-socket-forward",
+              "priority": 10,
+              "pre": "if [ -n \"$DOCKER_HOST\" ] && [ ! -e /var/run/docker.sock ]; then\n  ulimit -n 1048576 2>/dev/null || true\n  addr=${DOCKER_HOST#tcp://}\n  [ -n \"$addr\" ] || { echo \"bkid: DOCKER_HOST=$DOCKER_HOST has no tcp:// address\" >&2; exit 1; }\n  socat -d0 -t 86400 UNIX-LISTEN:/var/run/docker.sock,fork,backlog=1024,reuseaddr \"TCP:$addr,keepalive,keepidle=30,keepintvl=15,keepcnt=4\" &\n  SOCAT_PID=$!\n  trap 'kill $SOCAT_PID 2>/dev/null || true' EXIT INT TERM\n  socat -u OPEN:/dev/null UNIX-CONNECT:/var/run/docker.sock,retry=20,interval=0.2 >/dev/null 2>&1 \\\n    || { echo \"bkid: socat bridge to /var/run/docker.sock not ready\" >&2; exit 1; }\nfi"
+            }
+          },
+          "steps": []
+        }
+      },
+      "name": "builtin",
+      "stop": false
+    }
+  ],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

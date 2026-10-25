@@ -1,4 +1,4 @@
-import { assertEquals, assertRejects } from "jsr:@std/assert@1.0.19";
+import { assertEquals, assertRejects } from "jsr:@std/assert@1";
 import { query } from "./db.ts";
 
 const identity = (user: string, guest = false) =>

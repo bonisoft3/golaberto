@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "jsr:@std/assert@1.0.11";
-import { evaluateRole } from "../../../plugins/omnishell/interpreter/jessie.js";
+import { evaluateRole } from "./platform.ts";
 
 const handler = async (name: string) =>
   await evaluateRole(

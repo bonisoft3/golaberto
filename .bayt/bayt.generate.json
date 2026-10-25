@@ -30,6 +30,7 @@
     "exclude": [
       ".bayt/**",
       ".pronto/proto-baseline.json",
+      "mise.local.lock",
       "**/node_modules/**",
       ".task/**",
       "tests/**"
@@ -44,7 +45,8 @@
       ".bayt/checks.yaml",
       ".bayt/say.yaml",
       ".bayt/Taskfile.yml",
-      ".bayt/Taskfile.bayt.yml"
+      ".bayt/Taskfile.bayt.yml",
+      ".pronto/check-inputs.json"
     ]
   },
   "env": {},
@@ -135,6 +137,7 @@
         "exclude": [
           ".bayt/**",
           ".pronto/proto-baseline.json",
+          "mise.local.lock",
           "**/node_modules/**",
           ".task/**",
           "tests/**"
@@ -215,6 +218,7 @@
         "exclude": [
           ".bayt/**",
           ".pronto/proto-baseline.json",
+          "mise.local.lock",
           "**/node_modules/**",
           ".task/**",
           "tests/**"

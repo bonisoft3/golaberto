@@ -26,14 +26,31 @@
 .match-probability__away { background: color-mix(in srgb, #f398b2 24%, transparent); }
 .match-probability__rating-dates { color: var(--secondary); font-size: .82rem; }
 .match-probability__snapshot { font-weight: 700; margin-bottom: .3rem; }
-.match-probability__chart { margin: var(--sp-md) 0 0; }
+.match-probability__chart { --probability-home: #167aa1; --probability-draw: #9a7410; --probability-away: #b14365; margin: var(--sp-md) 0 0; }
+.match-probability__chart .team-chart__svg { height: auto; min-height: 0; max-height: none; }
+.match-probability__area { stroke: none; fill-opacity: .35; }
+.match-probability__area--home, .match-probability__swatch--home { fill: var(--probability-home); }
+.match-probability__area--draw, .match-probability__swatch--draw { fill: var(--probability-draw); }
+.match-probability__area--away, .match-probability__swatch--away { fill: var(--probability-away); }
 .match-probability__line { fill: none; stroke-width: 3; }
-.match-probability__line--home { stroke: #167aa1; }
-.match-probability__line--draw { stroke: #9a7410; }
-.match-probability__line--away { stroke: #b14365; }
-.match-probability__event { stroke: #873b1a; stroke-dasharray: 4 3; stroke-width: 1.5; }
-.match-probability__point { fill: #167aa1; stroke: var(--surface); stroke-width: 1.5; }
-.match-probability__point:focus { outline: none; stroke: #20210f; stroke-width: 3; }
+.match-probability__line--home { stroke: var(--probability-home); }
+.match-probability__line--draw { stroke: var(--probability-draw); }
+.match-probability__line--away { stroke: var(--probability-away); }
+.match-probability__event { stroke: var(--accent); stroke-dasharray: 4 3; stroke-width: 1.5; }
+.match-probability__event-leader { stroke: var(--secondary); stroke-width: 1; }
+.match-probability__event-label { fill: var(--primary); font-size: 12px; font-weight: 700; }
+.match-probability__minute-label { font-size: 12px; }
+.match-probability__point { fill: var(--probability-home); stroke: var(--surface); stroke-width: 1.5; opacity: 0; }
+.match-probability__point:focus { outline: none; stroke: var(--primary); stroke-width: 3; opacity: 1; }
+.match-probability__chart:has(.match-probability__sample:hover) .match-probability__sample:not(:hover) .match-probability__point { opacity: 0; }
+.match-probability__hit { fill: transparent; pointer-events: all; cursor: crosshair; }
+.match-probability__crosshair { stroke: var(--primary); stroke-width: 1; stroke-dasharray: 3 2; }
+.match-probability__crosshair, .match-probability__tooltip { display: none; pointer-events: none; }
+.match-probability__sample:hover :is(.match-probability__crosshair, .match-probability__tooltip),
+.match-probability__chart:not(:has(.match-probability__sample:hover)) .match-probability__sample:focus-within :is(.match-probability__crosshair, .match-probability__tooltip) { display: inline; }
+.match-probability__tooltip-box { fill: var(--surface); stroke: var(--secondary); stroke-width: 1; }
+.match-probability__tooltip text { fill: var(--primary); font-size: 14px; }
+.match-probability__tooltip-minute, .match-probability__tooltip-value { font-weight: 700; }
 .match-probability__timeline-unavailable,
 .match-probability__scenario-error,
 .match-probability--unavailable p { background: color-mix(in srgb, #edc240 18%, transparent); border-left: .25rem solid #9a7410; padding: .65rem; }
@@ -48,8 +65,5 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  .match-probability__line--home { stroke: #70d3fa; }
-  .match-probability__line--draw { stroke: #f2cb54; }
-  .match-probability__line--away { stroke: #f5a9bf; }
-  .match-probability__point { fill: #70d3fa; stroke: #17190e; }
+  .match-probability__chart { --probability-home: #70d3fa; --probability-draw: #f2cb54; --probability-away: #f5a9bf; }
 }

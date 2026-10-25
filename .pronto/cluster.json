@@ -1,0 +1,77 @@
+{
+  "schema": {
+    "pgroll": {
+      "target": "migrate",
+      "dir": "/pgroll",
+      "baseline": "00_initdb"
+    },
+    "target": "database",
+    "initdb": "/docker-entrypoint-initdb.d"
+  },
+  "server": true,
+  "tokenRoles": [
+    "anon",
+    "app_user",
+    "service"
+  ],
+  "drains": [
+    {
+      "name": "team-enrichment",
+      "on": [
+        "player_metric_dirty",
+        "team_roster_total_dirty",
+        "team_rating_chart_dirty",
+        "team_odds_chart_dirty",
+        "day_tick"
+      ],
+      "call": "refresh_team_enrichment",
+      "body": {
+        "roster_batch": 50,
+        "rating_batch": 10,
+        "odds_batch": 5
+      }
+    },
+    {
+      "name": "team-profiles",
+      "on": [
+        "team_profile_dirty",
+        "day_tick"
+      ],
+      "call": "refresh_team_profiles",
+      "body": {
+        "batch_size": 50
+      }
+    },
+    {
+      "name": "team-directory",
+      "on": [
+        "team",
+        "team_rating",
+        "geography_country"
+      ],
+      "call": "refresh_team_directory",
+      "body": {}
+    },
+    {
+      "name": "matches-games",
+      "on": [
+        "game_card"
+      ],
+      "call": "refresh_matches_games",
+      "body": {}
+    },
+    {
+      "name": "recent-championships",
+      "on": [
+        "championship",
+        "phase",
+        "stage_group",
+        "team_group",
+        "team_rating",
+        "day_tick"
+      ],
+      "call": "refresh_recent_championships",
+      "body": {}
+    }
+  ]
+}

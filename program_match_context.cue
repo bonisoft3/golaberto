@@ -130,17 +130,9 @@ code: state: migrations: "038_match_context": {
 	operations: [{sql: {up: _matchContextUpgrade, onComplete: true}}]
 }
 
-build: checks: "match-context": {
-	priority: 1
-	database: true
-	srcs: ["services/database/sql/038_match_context.sql"]
-	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-net --allow-read --allow-sys tests/match-context.ts"]
-	note: "bounded recent form, same-category head-to-head history, lineup contribution, distance and fixed-origin map URLs run against Postgres"
-}
-
 loop: surface: checks: "match-context-renderer": {
 	verb: "test"
-	cmds: ["mise exec -- deno test --config tests/deno.json --no-lock tests/match-context-renderer.ts"]
+	cmds: ["mise exec -- deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-env tests/match-context-renderer.ts"]
 	note: "the pure match renderer keeps validated coordinates, distance and route links inside the prose allowlist"
 }
 

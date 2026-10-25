@@ -13,7 +13,12 @@ type Rows = (Uint8Array | null)[][];
 /** Runs a script of one statement or many, and answers every row any of them returned. */
 export async function query(script: string): Promise<string> {
   // No type fetch: every value is read raw, so its round trip buys nothing.
-  const sql = postgres(url!, { max: 1, onnotice: () => {}, fetch_types: false });
+  const sql = postgres(url!, {
+    max: 1,
+    onnotice: () => {},
+    fetch_types: false,
+    connection: { "pgroll.no_inferred_migrations": "TRUE" },
+  });
   try {
     // Simple protocol: a script, and values in their text form rather than parsed.
     const r = await sql.unsafe(script).simple().raw() as unknown as Rows & { command?: string };
@@ -30,15 +35,16 @@ export async function query(script: string): Promise<string> {
  * Runs a script that is one transaction replaying a migration. A replay
  * rewrites views the stack's own services read and write through, and a check
  * runs while a fresh stack's pipelines still sync; Postgres breaks such a lock
- * cycle by rolling one transaction back whole (40P01), so the replay it chose
- * runs again as it was.
+ * cycle by rolling one transaction back whole (40P01), and a replay held to
+ * one snapshot is rolled back the same way when a pipeline commits to a row it
+ * writes (40001); either way the replay runs again as it was.
  */
 export async function replay(script: string): Promise<string> {
   for (let attempt = 1; ; attempt++) {
     try {
       return await query(script);
     } catch (e) {
-      if (!(e instanceof postgres.PostgresError && e.code === "40P01") || attempt === 5) throw e;
+      if (!(e instanceof postgres.PostgresError && ["40P01", "40001"].includes(e.code)) || attempt === 5) throw e;
     }
   }
 }

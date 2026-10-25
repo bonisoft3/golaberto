@@ -16,6 +16,11 @@ input:
             - cdc-events
           body_key: data
           consumer_group: golaberto-game-cards
+        processors:
+          # The change feed's transaction markers become each row's
+          # @traceparent (mecha's cdc-trace.yaml, loaded by -r).
+          - mutation: meta cdc_consumer = "golaberto-game-cards"
+          - resource: cdc_trace_join
       - generate:
           count: 1
           interval: ""
@@ -32,6 +37,8 @@ input:
                         retry_period: 2s
                         headers:
                           Authorization: Bearer ${SERVICE_JWT}
+                        metadata:
+                          include_patterns: ["^traceparent$"]
                   result_map: root.championships = this
               - mapping: |
                   root = this.championships.map_each(c -> {"data": {"__table": "championship", "id": c.id}.format_json().string()})
@@ -74,6 +81,8 @@ pipeline:
                   retry_period: 2s
                   headers:
                     Authorization: Bearer ${SERVICE_JWT}
+                  metadata:
+                    include_patterns: ["^traceparent$"]
             result_map: root.games = this
         # One message per game; a game gone before its pass ran took its rows
         # with it.
@@ -145,6 +154,8 @@ output:
               successful_on:
                 - 200
                 - 201
+              metadata:
+                include_patterns: ["^traceparent$"]
         - check: '@sink == "team_game"'
           output:
             http_client:
@@ -158,6 +169,8 @@ output:
               successful_on:
                 - 200
                 - 201
+              metadata:
+                include_patterns: ["^traceparent$"]
         - check: '@sink == "delete"'
           output:
             http_client:
@@ -169,3 +182,6 @@ output:
               successful_on:
                 - 200
                 - 204
+
+              metadata:
+                include_patterns: ["^traceparent$"]

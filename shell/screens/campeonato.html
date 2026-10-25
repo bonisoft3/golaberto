@@ -6,7 +6,7 @@
   <nav class="langs" aria-label="{msg.lang_label}">
     <a data-route="campeonato" data-param-slug="{param.slug}" data-locale="pt-BR" data-locale-current="page" lang="pt-BR"><span class="long" data-text="{msg.lang_pt}"></span><span class="short" data-text="{msg.lang_pt_short}"></span></a>
     <a data-route="campeonato" data-param-slug="{param.slug}" data-locale="es-AR" data-locale-current="page" lang="es-AR"><span class="long" data-text="{msg.lang_es}"></span><span class="short" data-text="{msg.lang_es_short}"></span></a>
-    <a data-route="campeonato" data-param-slug="{param.slug}" data-locale="en-GB" data-locale-current="page" lang="en-GB"><span class="long" data-text="{msg.lang_en}"></span><span class="short" data-text="{msg.lang_en_short}"></span></a>
+    <a data-route="campeonato" data-param-slug="{param.slug}" data-locale="en-US" data-locale-current="page" lang="en-US"><span class="long" data-text="{msg.lang_en}"></span><span class="short" data-text="{msg.lang_en_short}"></span></a>
     <a data-route="campeonato" data-param-slug="{param.slug}" data-locale="it-IT" data-locale-current="page" lang="it-IT"><span class="long" data-text="{msg.lang_it}"></span><span class="short" data-text="{msg.lang_it_short}"></span></a>
     <a data-route="campeonato" data-param-slug="{param.slug}" data-locale="de-DE" data-locale-current="page" lang="de-DE"><span class="long" data-text="{msg.lang_de}"></span><span class="short" data-text="{msg.lang_de_short}"></span></a>
     <a data-route="campeonato" data-param-slug="{param.slug}" data-locale="fr-FR" data-locale-current="page" lang="fr-FR"><span class="long" data-text="{msg.lang_fr}"></span><span class="short" data-text="{msg.lang_fr_short}"></span></a>
@@ -85,10 +85,10 @@
                     <div class="round-pair">
                       <section class="round">
                         <h3><span data-text="{msg.round}"></span> <span data-text="{current}"></span></h3>
-<ol class="games" data-live="game_card" data-select="*,game:id(slug),championship(show_country,slug),home:home_id(country,slug,logo_key),away:away_id(country,slug,logo_key)" data-filter="phase_id=eq.{phase_id}&round=eq.{current}" data-order="day.asc,kickoff.asc" data-empty="{msg.round_empty}">
+<ol class="games" data-live="game_card" data-select="*,game:id(slug),championship(show_country,slug),home:home_id(country,slug,logo_key),away:away_id(country,slug,logo_key)" data-filter="phase_id=eq.{phase_id}&round=eq.{current}" data-order="day.asc,kickoff.asc" data-empty="{msg.round_empty}" data-project='{"reader_day":{"date":["kickoff","day"]}}'>
   <template data-item>
     <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-slug="{game.slug}" data-played="{played}">
-      <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
+      <span class="when"><span class="day" data-text="{reader_day}" data-text-format="date"></span> <span class="hour" data-text="{kickoff}" data-text-format="time"></span></span>
       <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}|{home.logo_key}" data-text-format="team-badge"></span></span></span>
       <span class="score"><b data-text="{home_score}|{home_aet}|{msg.game_aet}" data-text-format="match-final-score"></b><i>x</i><b data-text="{away_score}|{away_aet}|{msg.game_aet}" data-text-format="match-final-score"></b><span class="score-decider" data-text="{home_pen}|{away_pen}|{msg.game_pen}" data-text-format="match-shootout"></span></span>
       <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}|{away.logo_key}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>
@@ -100,10 +100,10 @@
                         <template data-item>
                           <section class="round">
                             <h3><span data-text="{msg.round}"></span> <span data-text="{next}"></span></h3>
-<ol class="games" data-live="game_card" data-select="*,game:id(slug),championship(show_country,slug),home:home_id(country,slug,logo_key),away:away_id(country,slug,logo_key)" data-filter="phase_id=eq.{phase_id}&round=eq.{next}" data-order="day.asc,kickoff.asc" data-empty="{msg.round_empty}">
+<ol class="games" data-live="game_card" data-select="*,game:id(slug),championship(show_country,slug),home:home_id(country,slug,logo_key),away:away_id(country,slug,logo_key)" data-filter="phase_id=eq.{phase_id}&round=eq.{next}" data-order="day.asc,kickoff.asc" data-empty="{msg.round_empty}" data-project='{"reader_day":{"date":["kickoff","day"]}}'>
   <template data-item>
     <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-slug="{game.slug}" data-played="{played}">
-      <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
+      <span class="when"><span class="day" data-text="{reader_day}" data-text-format="date"></span> <span class="hour" data-text="{kickoff}" data-text-format="time"></span></span>
       <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{championship.show_country}|{home.country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}|{home.logo_key}" data-text-format="team-badge"></span></span></span>
       <span class="score"><b data-text="{home_score}|{home_aet}|{msg.game_aet}" data-text-format="match-final-score"></b><i>x</i><b data-text="{away_score}|{away_aet}|{msg.game_aet}" data-text-format="match-final-score"></b><span class="score-decider" data-text="{home_pen}|{away_pen}|{msg.game_pen}" data-text-format="match-shootout"></span></span>
       <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}|{away.logo_key}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{championship.show_country}|{away.country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>

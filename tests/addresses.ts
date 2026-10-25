@@ -28,11 +28,16 @@ export async function fixturePath(path: string, read = query): Promise<string> {
   return parts.join("/");
 }
 
+const slugs = new Map<string, string>();
+
 export async function address(table: string, id: string, read = query): Promise<string> {
   if (!Object.values(tables).flat().includes(table) || id.length !== 36 || !uuid.test(id)) {
     throw new Error(`Invalid address fixture: ${table}/${id}`);
   }
+  const key = `${table}/${id}`;
+  if (read === query && slugs.has(key)) return slugs.get(key)!;
   const slug = await read(`SELECT slug FROM ${table} WHERE id='${id}'`);
   if (!slug || slug.includes("\n")) throw new Error(`Missing or ambiguous address fixture: ${table}/${id}`);
+  if (read === query) slugs.set(key, slug);
   return slug;
 }

@@ -159,11 +159,11 @@ _playerCareerMarkup: (#PagedRead & {
 		</div>
 		"""
 		content:  """
-		<ol class="games player-games" data-live="player_appearance" data-filter="\(A._filter)&offset={offset}&limit=40" data-order='\(A._order)' data-empty="{msg.player_no_games}"><template data-item>
+		<ol class="games player-games" data-project='{"reader_day":{"date":["kickoff","day"]}}' data-live="player_appearance" data-filter="\(A._filter)&offset={offset}&limit=40" data-order='\(A._order)' data-empty="{msg.player_no_games}"><template data-item>
 		  <li data-bench="{bench}" data-yellow="{yellow}" data-red="{red}">
 		    <a data-route="equipe-campeonato" data-param-slug="{team_slug}" data-param-championship="{championship_slug}"><span data-text="{team_name}"></span> · <span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span></a>
 		    <a class="game-row" data-route="jogo" data-param-slug="{game_slug}" data-show-country="{show_country}" data-played="{played}">
-		      <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span><span class="where" data-text="{phase_name}"></span>
+		      <span class="when"><span class="day" data-text="{reader_day}" data-text-format="date"></span> <span class="hour" data-text="{kickoff}" data-text-format="time"></span></span><span class="where" data-text="{phase_name}"></span>
 		      <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{show_country}|{home_country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}|{home_logo_key}" data-text-format="team-badge"></span></span></span>
 		      \(_matchScoreMarkup)
 		      <span class="away"><span class="team-icons"><span class="archive-icon team-badge" data-text="{away_id}|{away_name}|{away_logo_key}" data-text-format="team-badge"></span><span class="archive-icon team-flag" data-text="{show_country}|{away_country}" data-text-format="country-flag"></span></span><span class="team-name" data-text="{away_name}"></span></span>

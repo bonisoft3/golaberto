@@ -8,7 +8,7 @@ services:
         golaberto-database: service:golaberto-database
         golaberto-migrate: service:golaberto-migrate
         libraries_mecha-compute-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.9.0@sha256:580054fee3cdcd82db36b313c51cbda977ef342844fdd49341484de535563a27}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.17.0@sha256:388a05d41fa088526eed86cc480f48e4625b474f7c44cb1a4c90797ca589fe81}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}
       context: ..
       dockerfile: .bayt/Dockerfile.compute
       target: compute
@@ -16,8 +16,9 @@ services:
       - bayt-golaberto-compute:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
       - bayt-golaberto-compute:latest
       args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
         BUILDKIT_SYNTAX: >-
-          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
     depends_on:
       golaberto-crud:
         condition: service_healthy
@@ -78,8 +79,9 @@ services:
       dockerfile: .bayt/Dockerfile.compute
       target: compute_bayt
       args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
         BUILDKIT_SYNTAX: >-
-          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
     image: bayt-golaberto-compute_bayt:latest
     scale: 0
   golaberto-compute_srcs:
@@ -88,7 +90,8 @@ services:
       dockerfile: .bayt/Dockerfile.compute
       target: compute_srcs
       args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
         BUILDKIT_SYNTAX: >-
-          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
     image: bayt-golaberto-compute_srcs:latest
     scale: 0

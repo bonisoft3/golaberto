@@ -222,7 +222,7 @@ function timelineChart(timeline, selected, labels, locale, eventMinutes) {
   const duration = timeline.length - 1;
   const xAt = (minute) => LEFT + minute / duration * PLOT_W;
   const yAt = (probability) => TOP + (1 - probability) * PLOT_H;
-  const children = [element("title", {}, [labels.timeline])];
+  const children = [];
   for (let tick = 0; tick <= 4; tick++) {
     const probability = 1 - tick / 4;
     const y = TOP + tick / 4 * PLOT_H;
@@ -254,73 +254,145 @@ function timelineChart(timeline, selected, labels, locale, eventMinutes) {
       y2: TOP + PLOT_H,
     }),
   );
-  children.push(
-    element("text", {
-      class: "team-chart__axis-value",
-      x: LEFT,
-      y: SVG_H - 9,
-      "text-anchor": "start",
-    }, ["0"]),
-  );
-  children.push(
-    element("text", {
-      class: "team-chart__axis-value",
-      x: SVG_W - RIGHT,
-      y: SVG_H - 9,
-      "text-anchor": "end",
-    }, [String(duration)]),
-  );
-  for (
-    const [key, label] of [["home", labels.home], ["draw", labels.draw], [
-      "away",
-      labels.away,
-    ]]
-  ) {
-    children.push(element("polyline", {
-      class:
-        `team-chart__line match-probability__line match-probability__line--${key}`,
-      points: timeline.map((point) =>
-        `${xAt(point.minute)},${yAt(point.odds[key])}`
-      ).join(" "),
+  const ticks = [];
+  for (let minute = 0; minute <= duration; minute += 10) {
+    if (duration - minute >= 5 || minute === duration) ticks.push(minute);
+  }
+  if (ticks[ticks.length - 1] !== duration) ticks.push(duration);
+  for (const minute of ticks) {
+    children.push(element("line", {
+      class: "team-chart__axis match-probability__minute-tick",
+      x1: xAt(minute), y1: TOP + PLOT_H,
+      x2: xAt(minute), y2: TOP + PLOT_H + 5,
+    }), element("text", {
+      class: "team-chart__axis-value match-probability__minute-label",
+      x: xAt(minute), y: SVG_H - 9,
+      "text-anchor": minute === 0 ? "start" : minute === duration ? "end" : "middle",
+    }, [String(minute)]));
+  }
+  const areas = [];
+  let lower = timeline.map(() => 0);
+  for (const [key, label] of [["home", labels.home], ["draw", labels.draw], ["away", labels.away]]) {
+    const upper = timeline.map((point, index) => lower[index] + point.odds[key]);
+    const boundary = upper.map((value, index) => `${xAt(index)},${yAt(value)}`);
+    areas.push(element("polygon", {
+      class: `match-probability__area match-probability__area--${key}`,
+      points: boundary.concat(lower.map((value, index) => `${xAt(index)},${yAt(value)}`).reverse()).join(" "),
       "aria-label": label,
     }));
+    children.push(element("polyline", {
+      class: `match-probability__line match-probability__line--${key}`,
+      points: boundary.join(" "),
+      "aria-label": label,
+    }));
+    lower = upper;
   }
+  children.unshift(...areas);
+  const lanes = [];
   for (const minute of eventMinutes) {
-    if (minute <= duration) {
-      children.push(element("line", {
-        class: "match-probability__event",
-        x1: xAt(minute),
-        y1: TOP,
-        x2: xAt(minute),
-        y2: TOP + PLOT_H,
-      }));
-    }
+    if (minute > duration) continue;
+    const point = timeline[minute];
+    const previous = minute === 0
+      ? { score: { home: 0, away: 0 }, redCards: { home: 0, away: 0 } }
+      : timeline[minute - 1];
+    const scored = point.score.home !== previous.score.home || point.score.away !== previous.score.away;
+    const cards = ["home", "away"].filter((side) => point.redCards[side] !== previous.redCards[side]);
+    const cardLabels = cards.map((side) => {
+      const count = point.redCards[side] - previous.redCards[side];
+      return `🟥${count > 1 ? "×" + count : ""}`;
+    });
+    const text = [
+      ...(scored ? [`${point.score.home}–${point.score.away}`] : []),
+      ...cardLabels,
+    ].join(" ");
+    const width = text.length * 8 + 8;
+    const x = Math.max(LEFT + width / 2, Math.min(xAt(minute), SVG_W - RIGHT - width / 2));
+    let lane = lanes.findIndex((right) => x - width / 2 >= right + 6);
+    if (lane === -1) lane = lanes.length;
+    lanes[lane] = x + width / 2;
+    const y = TOP - 8 - lane * 18;
+    children.push(element("line", {
+      class: "match-probability__event",
+      x1: xAt(minute), y1: TOP,
+      x2: xAt(minute), y2: TOP + PLOT_H,
+    }), element("line", {
+      class: "match-probability__event-leader",
+      x1: x, y1: y + 3, x2: xAt(minute), y2: TOP,
+    }), element("text", {
+      class: "match-probability__event-label",
+      x, y, "text-anchor": "middle",
+      "aria-label": `${labels.minute} ${minute}: ${labels.home} ${point.score.home}–${point.score.away} ${labels.away}${cards.map((side, index) => ` · ${labels[side]} ${cardLabels[index]}`).join("")}`,
+    }, [text]));
   }
+  const headerHeight = lanes.length === 0 ? 0 : 8 + (lanes.length - 1) * 18;
   const described = new Set([0, duration, selected.minute, ...eventMinutes]);
   for (let minute = 0; minute <= duration; minute += 5) described.add(minute);
-  for (const minute of [...described].sort((a, b) => a - b)) {
-    if (minute < 0 || minute > duration) continue;
-    const point = timeline[minute];
-    const description = `${labels.minute} ${minute}: ${labels.home} ${
+  for (const point of timeline) {
+    const minute = point.minute;
+    const heading = `${labels.minute} ${minute} · ${point.score.home}–${point.score.away}`;
+    const description = `${heading}: ${labels.home} ${
       percentage(point.odds.home, locale)
     }, ${labels.draw} ${percentage(point.odds.draw, locale)}, ${labels.away} ${
       percentage(point.odds.away, locale)
     }`;
-    children.push(element("circle", {
+    const x = xAt(minute);
+    const left = xAt(Math.max(0, minute - .5));
+    const right = xAt(Math.min(duration, minute + .5));
+    const tooltipX = Math.max(LEFT, Math.min(x + 10, SVG_W - RIGHT - 300));
+    const tooltipY = TOP + 12;
+    const sample = [
+      element("rect", {
+        class: "match-probability__hit",
+        x: left, y: TOP, width: right - left, height: PLOT_H,
+        "aria-label": description,
+      }),
+      element("line", {
+        class: "match-probability__crosshair",
+        x1: x, y1: TOP, x2: x, y2: TOP + PLOT_H,
+      }),
+    ];
+    if (described.has(minute)) sample.push(element("circle", {
       class: "match-probability__point",
-      cx: xAt(minute),
-      cy: yAt(point.odds.home),
+      cx: x, cy: yAt(point.odds.home),
       r: minute === selected.minute ? 5 : 3,
       tabindex: 0,
       "aria-label": description,
-      title: description,
-    }, [element("title", {}, [description])]));
+    }));
+    const tooltip = [
+      element("rect", {
+        class: "match-probability__tooltip-box",
+        x: tooltipX, y: tooltipY, width: 300, height: 100, rx: 4,
+      }),
+      element("text", {
+        class: "match-probability__tooltip-minute",
+        x: tooltipX + 12, y: tooltipY + 20,
+      }, [heading]),
+    ];
+    for (const [index, key, label] of [[0, "away", labels.away], [1, "draw", labels.draw], [2, "home", labels.home]]) {
+      const y = tooltipY + 42 + index * 22;
+      tooltip.push(
+        element("rect", {
+          class: `match-probability__swatch match-probability__swatch--${key}`,
+          x: tooltipX + 12, y: y - 10, width: 10, height: 10,
+        }),
+        element("text", {
+          class: "match-probability__tooltip-name",
+          x: tooltipX + 30, y,
+        }, [label.length > 23 ? label.slice(0, 22) + "…" : label]),
+        element("text", {
+          class: "match-probability__tooltip-value",
+          x: tooltipX + 288, y, "text-anchor": "end",
+        }, [percentage(point.odds[key], locale)]),
+      );
+    }
+    sample.push(element("g", { class: "match-probability__tooltip", role: "tooltip" }, tooltip));
+    children.push(element("g", { class: "match-probability__sample" }, sample));
   }
   return element("figure", { class: "team-chart match-probability__chart" }, [
     element("figcaption", { class: "team-chart__title" }, [labels.timeline]),
     element("svg", {
       class: "team-chart__svg",
-      viewBox: `0 0 ${SVG_W} ${SVG_H}`,
+      viewBox: `0 ${-headerHeight} ${SVG_W} ${SVG_H + headerHeight}`,
       role: "img",
       lang: locale,
       "aria-label": labels.timeline,

@@ -1,0 +1,436 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "dockerfile": {
+    "preamble": [
+      "ENV PATH=/root/.local/bin:/root/.local/share/lazybox/bin:$PATH",
+      "ENV MISE_TRUSTED_CONFIG_PATHS=/monorepo",
+      "ENV CADDY_TLS_HOST_PORT=8443"
+    ],
+    "preambleCopyContexts": [],
+    "from": {
+      "ref": ":database",
+      "name": "golaberto-database"
+    },
+    "add": [
+      {
+        "platforms": {
+          "amd64": {
+            "url": "https://github.com/F1bonacc1/process-compose/releases/download/v1.122.0/process-compose_linux_amd64.tar.gz",
+            "checksum": "sha256:9b6dbc38324c0b0481f1cd1dd828ffdc78117129ec797678f4bf8c4023311281"
+          },
+          "arm64": {
+            "url": "https://github.com/F1bonacc1/process-compose/releases/download/v1.122.0/process-compose_linux_arm64.tar.gz",
+            "checksum": "sha256:52fa7d5a2d5e0db470faec5976204fc215ed7e3d13689e930cf522becfb63778"
+          }
+        },
+        "dest": "/usr/local/bin/process-compose",
+        "unpack": true
+      }
+    ],
+    "copy": [
+      {
+        "from": {
+          "ref": ":setup",
+          "name": "golaberto-setup"
+        },
+        "srcs": [
+          "/root/.local"
+        ],
+        "dst": "/root/.local",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "ref": ":setup",
+          "name": "golaberto-setup"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "ref": ":migrate",
+          "name": "golaberto-migrate"
+        },
+        "srcs": [
+          "/pgroll"
+        ],
+        "dst": "/pgroll",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      }
+    ],
+    "epilogue": [],
+    "extra_hosts": [],
+    "mounts": [],
+    "secrets": {},
+    "healthcheck": null,
+    "expose": [],
+    "entrypoint": null,
+    "incremental": false,
+    "cmd": null
+  },
+  "name": "ci-replay",
+  "project": "golaberto",
+  "dir": ".",
+  "activate": "",
+  "srcs": {
+    "globs": [
+      ".bayt/process-compose.yaml",
+      ".pronto/cluster.json",
+      "services/database/migrations/**",
+      "tests/[r]eplay.json",
+      "tests/[r]eplay/**"
+    ],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {},
+  "synthetics": {
+    "bayt": {
+      "name": "ci-replay_bayt",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.ci-replay.yaml",
+          ".bayt/Dockerfile.ci-replay",
+          ".bayt/bayt.ci-replay.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/Taskfile.ci-replay.yaml",
+          ".bayt/process-compose.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.ci-replay.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.migrate.yaml"
+      ]
+    },
+    "outs": {
+      "name": "ci-replay_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.ci-replay.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.migrate.yaml"
+      ]
+    },
+    "srcs": {
+      "name": "ci-replay_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/process-compose.yaml",
+          ".pronto/cluster.json",
+          "services/database/migrations/**",
+          "tests/[r]eplay.json",
+          "tests/[r]eplay/**",
+          "services/database/migrations/000_extensions.sql",
+          "services/database/migrations/001_roles.sql",
+          "services/database/migrations/002_grants.sql",
+          "services/database/migrations/004_types.sql",
+          "services/database/migrations/005_create_tables.sql",
+          "services/database/migrations/006_policies.sql",
+          "services/database/migrations/007_txid.sql",
+          "services/database/migrations/008_publication.sql",
+          "services/database/migrations/010_game_days.sql",
+          "services/database/migrations/011_comment_writes.sql",
+          "services/database/migrations/012_editor_writes.sql",
+          "services/database/migrations/013_home_games.sql",
+          "services/database/migrations/014_home_championships.sql",
+          "services/database/migrations/015_home_performance.sql",
+          "services/database/migrations/016_matches_performance.sql",
+          "services/database/migrations/017_game_countries.sql",
+          "services/database/migrations/018_route_performance.sql",
+          "services/database/migrations/019_normalized_game_flags.sql",
+          "services/database/migrations/020_home_reference_order.sql",
+          "services/database/migrations/021_home_highlights.sql",
+          "services/database/migrations/022_recent_championships.sql",
+          "services/database/migrations/023_search_collation.sql",
+          "services/database/migrations/024_team_directory.sql",
+          "services/database/migrations/025_search_letter_equivalences.sql",
+          "services/database/migrations/026_team_geography.sql",
+          "services/database/migrations/027_team_directory_type.sql",
+          "services/database/migrations/028_team_profiles.sql",
+          "services/database/migrations/029_team_enrichment.sql",
+          "services/database/migrations/030_campaign_read.sql",
+          "services/database/migrations/031_readable_addresses.sql",
+          "services/database/migrations/032_archive_compatibility.sql",
+          "services/database/migrations/034_idempotent_odds_capture.sql",
+          "services/database/migrations/035_read_parity.sql",
+          "services/database/migrations/036_editing_parity.sql",
+          "services/database/migrations/037_competition_admin.sql",
+          "services/database/migrations/038_match_context.sql",
+          "services/database/migrations/039_match_probability.sql",
+          "services/database/migrations/040_community.sql",
+          "services/database/migrations/041_native_media.sql",
+          "services/database/migrations/042_team_odds_progress.sql",
+          "services/database/migrations/043_queued_odds_refresh.sql",
+          "services/database/migrations/044_heavy_reads.sql",
+          "services/database/migrations/045_drain_feed.sql",
+          "services/database/migrations/046_team_projection_turn.sql",
+          "services/database/migrations/047_home_games_at_read.sql",
+          "services/database/migrations/048_matches_start.sql",
+          "services/database/migrations/049_match_rating_history_bound.sql",
+          "services/database/migrations/900_seed.sql",
+          "services/database/migrations/801_schedule_seed.sql",
+          "[m]ise.toml",
+          "[.]mise.toml",
+          "[m]ise.lock",
+          "[.]tool-versions"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [
+        "database_srcs",
+        "setup_srcs",
+        "migrate_srcs",
+        "database_outs_srcs"
+      ],
+      "transitiveCrossDeps": [
+        {
+          "project": "golaberto",
+          "name": "database_srcs",
+          "dir": ".",
+          "outs": {
+            "globs": [
+              "services/database/migrations/000_extensions.sql",
+              "services/database/migrations/001_roles.sql",
+              "services/database/migrations/002_grants.sql",
+              "services/database/migrations/004_types.sql",
+              "services/database/migrations/005_create_tables.sql",
+              "services/database/migrations/006_policies.sql",
+              "services/database/migrations/007_txid.sql",
+              "services/database/migrations/008_publication.sql",
+              "services/database/migrations/010_game_days.sql",
+              "services/database/migrations/011_comment_writes.sql",
+              "services/database/migrations/012_editor_writes.sql",
+              "services/database/migrations/013_home_games.sql",
+              "services/database/migrations/014_home_championships.sql",
+              "services/database/migrations/015_home_performance.sql",
+              "services/database/migrations/016_matches_performance.sql",
+              "services/database/migrations/017_game_countries.sql",
+              "services/database/migrations/018_route_performance.sql",
+              "services/database/migrations/019_normalized_game_flags.sql",
+              "services/database/migrations/020_home_reference_order.sql",
+              "services/database/migrations/021_home_highlights.sql",
+              "services/database/migrations/022_recent_championships.sql",
+              "services/database/migrations/023_search_collation.sql",
+              "services/database/migrations/024_team_directory.sql",
+              "services/database/migrations/025_search_letter_equivalences.sql",
+              "services/database/migrations/026_team_geography.sql",
+              "services/database/migrations/027_team_directory_type.sql",
+              "services/database/migrations/028_team_profiles.sql",
+              "services/database/migrations/029_team_enrichment.sql",
+              "services/database/migrations/030_campaign_read.sql",
+              "services/database/migrations/031_readable_addresses.sql",
+              "services/database/migrations/032_archive_compatibility.sql",
+              "services/database/migrations/034_idempotent_odds_capture.sql",
+              "services/database/migrations/035_read_parity.sql",
+              "services/database/migrations/036_editing_parity.sql",
+              "services/database/migrations/037_competition_admin.sql",
+              "services/database/migrations/038_match_context.sql",
+              "services/database/migrations/039_match_probability.sql",
+              "services/database/migrations/040_community.sql",
+              "services/database/migrations/041_native_media.sql",
+              "services/database/migrations/042_team_odds_progress.sql",
+              "services/database/migrations/043_queued_odds_refresh.sql",
+              "services/database/migrations/044_heavy_reads.sql",
+              "services/database/migrations/045_drain_feed.sql",
+              "services/database/migrations/046_team_projection_turn.sql",
+              "services/database/migrations/047_home_games_at_read.sql",
+              "services/database/migrations/048_matches_start.sql",
+              "services/database/migrations/049_match_rating_history_bound.sql",
+              "services/database/migrations/900_seed.sql",
+              "services/database/migrations/801_schedule_seed.sql"
+            ],
+            "exclude": []
+          }
+        },
+        {
+          "project": "golaberto",
+          "name": "setup_srcs",
+          "dir": ".",
+          "outs": {
+            "globs": [
+              "[m]ise.toml",
+              "[.]mise.toml",
+              "[m]ise.lock",
+              "[.]tool-versions"
+            ],
+            "exclude": []
+          }
+        }
+      ],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.ci-replay.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.migrate.yaml"
+      ]
+    }
+  },
+  "taskfile": {
+    "run": "once",
+    "incremental": false,
+    "preconditions": []
+  },
+  "visibility": "internal",
+  "emitsSrcs": true,
+  "deps": [
+    "database",
+    "setup",
+    "migrate"
+  ],
+  "sameProjectDeps": [
+    "database",
+    "setup",
+    "migrate"
+  ],
+  "transitiveDeps": [
+    "database",
+    "setup",
+    "migrate",
+    "database_outs"
+  ],
+  "transitiveCrossDeps": [],
+  "upClosure": [
+    "./.bayt/compose.ci-replay.yaml",
+    "./.bayt/compose.database.yaml",
+    "./.bayt/compose.setup.yaml",
+    "./.bayt/compose.migrate.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "setup",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "database",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "migrate",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "database_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [
+    {
+      "srcs": {
+        "globs": [
+          ".bayt/process-compose.yaml",
+          ".pronto/cluster.json",
+          "services/database/migrations/**",
+          "tests/[r]eplay.json",
+          "tests/[r]eplay/**"
+        ],
+        "exclude": [],
+        "defaultGlobs": null,
+        "defaultExclude": null
+      },
+      "shell": "sh",
+      "do": "process-compose --no-server -f .bayt/process-compose.yaml run replay",
+      "name": "builtin",
+      "stop": false
+    }
+  ],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

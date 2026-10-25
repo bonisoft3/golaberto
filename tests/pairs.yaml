@@ -397,7 +397,7 @@ pairs:
     says: every page reads in three languages at its own address
     given: {}
     when: view
-    then: 'output.title["en-GB"] == "Championships"'
+    then: 'output.title["en-US"] == "Championships"'
   - id: test-dark
     ir: test-dark
     of: principal
@@ -462,7 +462,7 @@ pairs:
     of: jogos
     accepts:
       - accept-games-upcoming
-    says: 'the games page opens on the upcoming games, soonest first'
+    says: 'upcoming games share day and championship headings, with times ordered within each group'
     given: {}
     when: view
     then: output.rows.size() > 0
@@ -475,6 +475,27 @@ pairs:
     given: {}
     when: view
     then: output.view == "results"
+  - id: test-games-pagination
+    ir: test-games-pagination
+    of: jogos
+    accepts:
+      - accept-games-upcoming
+      - accept-games-results
+    says: both match tabs page through the archive and remember their positions
+    given: {}
+    when: next
+    then: output.page >= 2
+  - id: test-games-timezone
+    ir: test-games-timezone
+    of: jogos
+    accepts:
+      - accept-games-upcoming
+      - accept-games-results
+      - accept-game-page
+    says: 'kickoff dates, times and grouping follow the reader''s timezone'
+    given: {}
+    when: view
+    then: output.localized
   - id: test-game-page
     ir: test-game-page
     of: jogo

@@ -1,14 +1,7 @@
 /// <reference lib="dom" />
 import { assert, assertEquals, assertThrows } from "jsr:@std/assert@1.0.8";
 import { parseHTML } from "npm:linkedom@0.18.4";
-import { evaluateRole } from "omnishell/interpreter/jessie.js";
-import { batched } from "omnishell/interpreter/batched-store.js";
-import { interpretScreen } from "omnishell/interpreter/screen.js";
-import {
-  parseFilter,
-  parseLimit,
-} from "omnishell/interpreter/fragment.js";
-import { compileCatalog } from "omnishell/src/messages.ts";
+import { evaluateRole, batched, interpretScreen, parseFilter, parseLimit, compileCatalog } from "./platform.ts";
 
 const app = new URL("../", import.meta.url);
 const playerId = "00000000-0000-4000-8000-000000000001";
@@ -327,7 +320,7 @@ Deno.test("CSV uses native download links with faithful numbers and escaped text
   const encoded =
     fold({ items, rows: { view: [{ id: "page", csv_rows: "[]" }] } }).updates[0]
       .row.csv_rows;
-  for (const locale of ["pt-BR", "en-GB", "es-AR", "fr-FR", "de-DE", "it-IT"]) {
+  for (const locale of ["pt-BR", "en-US", "es-AR", "fr-FR", "de-DE", "it-IT"]) {
     const messages = compileCatalog(
       JSON.parse(
         await Deno.readTextFile(

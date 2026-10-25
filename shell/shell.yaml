@@ -60,8 +60,6 @@ access:
     scope: public
   home_feed:
     scope: public
-  matches_game_card:
-    scope: public
   team_game:
     scope: public
   comment:
@@ -116,6 +114,8 @@ access:
     scope: public
   player_directory:
     scope: public
+  matches_start:
+    scope: public
   game_archive:
     scope: public
   player_appearance:
@@ -126,10 +126,10 @@ app: golaberto
 auth:
   required: false
   service: /auth
-  mode: passkey
+  promote: true
   self:
     route: usuario
-  promote: true
+  mode: passkey
 floors:
   touch: 24
 i18n:
@@ -139,7 +139,7 @@ i18n:
       path: pt-br
     es-AR:
       path: es
-    en-GB:
+    en-US:
       path: en
     it-IT:
       path: it
@@ -228,7 +228,6 @@ read:
   team_rating: lazy
   game_card: lazy
   home_feed: lazy
-  matches_game_card: lazy
   team_game: lazy
   comment: lazy
   player_stat: lazy
@@ -250,6 +249,7 @@ read:
   team_odds_progress: lazy
   phase_directory: lazy
   player_directory: lazy
+  matches_start: lazy
   game_archive: lazy
   player_appearance: lazy
   championship_attendance: lazy
@@ -400,48 +400,6 @@ routes:
       - gone
       - populated-dark
   - keep: 0
-    path: /jogadores
-    screen: jogadores
-    nav:
-      key: players_title
-      label: Players
-    files:
-      html: shell/screens/jogadores.html
-      css: shell/screens/jogadores.css
-      handlers:
-        - shell/handlers/page-value.js
-        - shell/handlers/search-key.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/catalog.css
-        - shell/shared/games.css
-        - shell/shared/team.css
-      renderers:
-        - shell/renderers/match-final-score.js
-        - shell/renderers/match-shootout.js
-        - shell/renderers/team-badge.js
-        - shell/renderers/country-flag.js
-        - shell/renderers/geography-label.js
-        - shell/renderers/player-csv.js
-        - shell/renderers/player-rate-per90.js
-        - shell/renderers/player-position.js
-        - shell/renderers/player-event-label.js
-    slug: route_players
-    paths:
-      pt-BR: /jogadores
-      es-AR: /jugadores
-      en-GB: /players
-      it-IT: /giocatori
-      de-DE: /spieler
-      fr-FR: /joueurs
-    ssr: ssr
-    states:
-      - loading
-      - populated
-      - gone
-      - populated-dark
-  - keep: 0
     path: '/campeonato-jogadores/:slug'
     screen: campeonato-jogadores
     nav:
@@ -476,7 +434,7 @@ routes:
     paths:
       pt-BR: '/campeonato-jogadores/:slug'
       es-AR: '/campeonato-jugadores/:slug'
-      en-GB: '/championship-players/:slug'
+      en-US: '/championship-players/:slug'
       it-IT: '/campionato-giocatori/:slug'
       de-DE: '/meisterschaft-spieler/:slug'
       fr-FR: '/championnat-joueurs/:slug'
@@ -517,7 +475,7 @@ routes:
     paths:
       pt-BR: '/jogador-campeonato/:slug/:team/:championship'
       es-AR: '/jugador-campeonato/:slug/:team/:championship'
-      en-GB: '/player-championship/:slug/:team/:championship'
+      en-US: '/player-championship/:slug/:team/:championship'
       it-IT: '/giocatore-campionato/:slug/:team/:championship'
       de-DE: '/spieler-meisterschaft/:slug/:team/:championship'
       fr-FR: '/joueur-championnat/:slug/:team/:championship'
@@ -545,7 +503,7 @@ routes:
         - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
-        - shell/renderers/home-date.js
+        - shell/renderers/weekday.js
         - shell/renderers/geography-label.js
     ssr: ssr
     states:
@@ -579,7 +537,7 @@ routes:
     paths:
       pt-BR: /campeonatos
       es-AR: /campeonatos
-      en-GB: /championships
+      en-US: /championships
       it-IT: /campionati
       de-DE: /wettbewerbe
       fr-FR: /championnats
@@ -598,7 +556,8 @@ routes:
     files:
       html: shell/screens/jogos.html
       css: shell/screens/jogos.css
-      handlers: []
+      handlers:
+        - shell/handlers/page-value.js
       adapters: []
       shared:
         - shell/shared/chrome.css
@@ -608,12 +567,13 @@ routes:
         - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
+        - shell/renderers/weekday.js
         - shell/renderers/geography-label.js
     slug: route_games
     paths:
       pt-BR: /jogos
       es-AR: /partidos
-      en-GB: /matches
+      en-US: /matches
       it-IT: /partite
       de-DE: /spiele
       fr-FR: /matchs
@@ -642,6 +602,7 @@ routes:
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
+        - shell/shared/team.css
         - shell/shared/match-context.css
         - shell/shared/match-probability.css
         - shell/shared/editing.css
@@ -658,7 +619,7 @@ routes:
     paths:
       pt-BR: '/jogo/:slug'
       es-AR: '/partido/:slug'
-      en-GB: '/match/:slug'
+      en-US: '/match/:slug'
       it-IT: '/partita/:slug'
       de-DE: '/spiel/:slug'
       fr-FR: '/match/:slug'
@@ -700,7 +661,7 @@ routes:
     paths:
       pt-BR: '/chances/:slug'
       es-AR: '/chances/:slug'
-      en-GB: '/chances/:slug'
+      en-US: '/chances/:slug'
       it-IT: '/probabilita/:slug'
       de-DE: '/chancen/:slug'
       fr-FR: '/chances/:slug'
@@ -710,7 +671,8 @@ routes:
       - populated
       - gone
       - populated-dark
-  - keep: 0
+  - access: private
+    keep: 0
     path: '/editar/:slug'
     screen: editar
     nav:
@@ -739,7 +701,7 @@ routes:
     paths:
       pt-BR: '/editar/:slug'
       es-AR: '/editar/:slug'
-      en-GB: '/edit/:slug'
+      en-US: '/edit/:slug'
       it-IT: '/modifica/:slug'
       de-DE: '/bearbeiten/:slug'
       fr-FR: '/modifier/:slug'
@@ -779,7 +741,7 @@ routes:
     paths:
       pt-BR: /equipes
       es-AR: /equipos
-      en-GB: /teams
+      en-US: /teams
       it-IT: /squadre
       de-DE: /mannschaften
       fr-FR: /equipes
@@ -789,6 +751,48 @@ routes:
       - populated
       - filtered
       - no-match
+      - populated-dark
+  - keep: 0
+    path: /jogadores
+    screen: jogadores
+    nav:
+      key: players_title
+      label: Players
+    files:
+      html: shell/screens/jogadores.html
+      css: shell/screens/jogadores.css
+      handlers:
+        - shell/handlers/page-value.js
+        - shell/handlers/search-key.js
+      adapters: []
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/catalog.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+      renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
+        - shell/renderers/geography-label.js
+        - shell/renderers/player-csv.js
+        - shell/renderers/player-rate-per90.js
+        - shell/renderers/player-position.js
+        - shell/renderers/player-event-label.js
+    slug: route_players
+    paths:
+      pt-BR: /jogadores
+      es-AR: /jugadores
+      en-US: /players
+      it-IT: /giocatori
+      de-DE: /spieler
+      fr-FR: /joueurs
+    ssr: ssr
+    states:
+      - loading
+      - populated
+      - gone
       - populated-dark
   - keep: 0
     path: /estadios
@@ -816,7 +820,7 @@ routes:
     paths:
       pt-BR: /estadios
       es-AR: /estadios
-      en-GB: /stadiums
+      en-US: /stadiums
       it-IT: /stadi
       de-DE: /stadien
       fr-FR: /stades
@@ -852,7 +856,7 @@ routes:
     paths:
       pt-BR: '/estadio/:slug'
       es-AR: '/estadio/:slug'
-      en-GB: '/stadium/:slug'
+      en-US: '/stadium/:slug'
       it-IT: '/stadio/:slug'
       de-DE: '/stadion/:slug'
       fr-FR: '/stade/:slug'
@@ -888,7 +892,7 @@ routes:
     paths:
       pt-BR: /arbitros
       es-AR: /arbitros
-      en-GB: /referees
+      en-US: /referees
       it-IT: /arbitri
       de-DE: /unparteiische
       fr-FR: /arbitres
@@ -924,7 +928,7 @@ routes:
     paths:
       pt-BR: '/arbitro/:slug'
       es-AR: '/arbitro/:slug'
-      en-GB: '/referee/:slug'
+      en-US: '/referee/:slug'
       it-IT: '/arbitro/:slug'
       de-DE: '/schiedsrichter/:slug'
       fr-FR: '/arbitre/:slug'
@@ -967,7 +971,7 @@ routes:
     paths:
       pt-BR: '/equipe/:slug'
       es-AR: '/equipo/:slug'
-      en-GB: '/team/:slug'
+      en-US: '/team/:slug'
       it-IT: '/squadra/:slug'
       de-DE: '/mannschaft/:slug'
       fr-FR: '/equipe/:slug'
@@ -1022,7 +1026,7 @@ routes:
     paths:
       pt-BR: '/equipe-campeonato/:slug/:championship'
       es-AR: '/equipo-campeonato/:slug/:championship'
-      en-GB: '/team-championship/:slug/:championship'
+      en-US: '/team-championship/:slug/:championship'
       it-IT: '/squadra-campionato/:slug/:championship'
       de-DE: '/mannschaft-meisterschaft/:slug/:championship'
       fr-FR: '/equipe-championnat/:slug/:championship'
@@ -1067,7 +1071,7 @@ routes:
     paths:
       pt-BR: '/jogador/:slug'
       es-AR: '/jugador/:slug'
-      en-GB: '/player/:slug'
+      en-US: '/player/:slug'
       it-IT: '/giocatore/:slug'
       de-DE: '/spieler/:slug'
       fr-FR: '/joueur/:slug'
@@ -1101,7 +1105,7 @@ routes:
     paths:
       pt-BR: '/campeonato/:slug'
       es-AR: '/campeonato/:slug'
-      en-GB: '/championship/:slug'
+      en-US: '/championship/:slug'
       it-IT: '/campionato/:slug'
       de-DE: '/wettbewerb/:slug'
       fr-FR: '/championnat/:slug'
@@ -1112,7 +1116,8 @@ routes:
       - no-groups
       - gone
       - populated-dark
-  - keep: 0
+  - access: private
+    keep: 0
     path: '/editar-arbitro/:slug'
     screen: editar-arbitro
     nav:
@@ -1141,7 +1146,8 @@ routes:
       - form-submit
       - success
       - populated-dark
-  - keep: 0
+  - access: private
+    keep: 0
     path: '/editar-competicao/:slug'
     screen: editar-competicao
     nav:
@@ -1172,7 +1178,8 @@ routes:
       - form-submit
       - success
       - populated-dark
-  - keep: 0
+  - access: private
+    keep: 0
     path: '/editar-equipe/:slug'
     screen: editar-equipe
     nav:
@@ -1205,7 +1212,8 @@ routes:
       - form-submit
       - success
       - populated-dark
-  - keep: 0
+  - access: private
+    keep: 0
     path: '/editar-estadio/:slug'
     screen: editar-estadio
     nav:
@@ -1234,7 +1242,8 @@ routes:
       - form-submit
       - success
       - populated-dark
-  - keep: 0
+  - access: private
+    keep: 0
     path: '/editar-jogador/:slug'
     screen: editar-jogador
     nav:
@@ -1268,7 +1277,8 @@ routes:
       - form-submit
       - success
       - populated-dark
-  - keep: 0
+  - access: private
+    keep: 0
     path: '/editar-jogo/:slug'
     screen: editar-jogo
     nav:
@@ -1305,7 +1315,8 @@ routes:
       - form-submit
       - success
       - populated-dark
-  - keep: 0
+  - access: private
+    keep: 0
     path: '/escalacao-jogo/:slug'
     screen: escalacao-jogo
     nav:
@@ -1340,7 +1351,8 @@ routes:
       - form-submit
       - success
       - populated-dark
-  - keep: 0
+  - access: private
+    keep: 0
     path: /gerenciar
     screen: gerenciar
     nav:
@@ -1370,7 +1382,8 @@ routes:
       - form-submit
       - success
       - populated-dark
-  - keep: 0
+  - access: private
+    keep: 0
     path: /gerenciar-competicoes
     screen: gerenciar-competicoes
     nav:
@@ -1397,7 +1410,8 @@ routes:
       - form-submit
       - success
       - populated-dark
-  - keep: 0
+  - access: private
+    keep: 0
     path: '/gols-jogo/:slug'
     screen: gols-jogo
     nav:
@@ -1462,7 +1476,8 @@ routes:
       - form-submit
       - success
       - populated-dark
-  - keep: 0
+  - access: private
+    keep: 0
     path: '/inscricoes-jogador/:slug'
     screen: inscricoes-jogador
     nav:
@@ -1495,7 +1510,8 @@ routes:
       - form-submit
       - success
       - populated-dark
-  - keep: 0
+  - access: private
+    keep: 0
     path: /nova-competicao
     screen: nova-competicao
     nav:
@@ -1526,7 +1542,8 @@ routes:
       - form-submit
       - success
       - populated-dark
-  - keep: 0
+  - access: private
+    keep: 0
     path: /novo-arbitro
     screen: novo-arbitro
     nav:
@@ -1555,7 +1572,8 @@ routes:
       - form-submit
       - success
       - populated-dark
-  - keep: 0
+  - access: private
+    keep: 0
     path: /novo-equipe
     screen: novo-equipe
     nav:
@@ -1588,7 +1606,8 @@ routes:
       - form-submit
       - success
       - populated-dark
-  - keep: 0
+  - access: private
+    keep: 0
     path: /novo-estadio
     screen: novo-estadio
     nav:
@@ -1617,7 +1636,8 @@ routes:
       - form-submit
       - success
       - populated-dark
-  - keep: 0
+  - access: private
+    keep: 0
     path: /novo-jogador
     screen: novo-jogador
     nav:
@@ -1647,7 +1667,8 @@ routes:
       - form-submit
       - success
       - populated-dark
-  - keep: 0
+  - access: private
+    keep: 0
     path: /novo-jogo
     screen: novo-jogo
     nav:
@@ -1769,7 +1790,7 @@ tables:
   - match_location
   - match_probability
   - match_recent_result
-  - matches_game_card
+  - matches_start
   - phase
   - phase_clone
   - phase_directory
@@ -3481,118 +3502,6 @@ schema:
         name: home_new_day
         type: bool
         required: true
-  matches_game_card:
-    durability: live
-    fields:
-      - name: id
-        pk: true
-        ref: game
-        type: uuid
-        required: true
-      - name: phase_id
-        ref: phase
-        type: uuid
-        required: true
-      - name: championship_id
-        ref: championship
-        type: uuid
-        required: true
-      - bounds:
-          intMin: 1
-        name: round
-        type: int32
-        required: false
-      - name: day
-        type: date
-        required: true
-      - name: kickoff
-        type: timestamp
-        required: false
-      - name: played
-        type: bool
-        required: true
-      - name: home_id
-        ref: team
-        type: uuid
-        required: true
-      - name: away_id
-        ref: team
-        type: uuid
-        required: true
-      - name: home_name
-        type: string
-        required: true
-      - name: away_name
-        type: string
-        required: true
-      - bounds:
-          intMin: 0
-          intMax: 99
-        name: home_score
-        type: int32
-        required: false
-      - bounds:
-          intMin: 0
-          intMax: 99
-        name: away_score
-        type: int32
-        required: false
-      - bounds:
-          intMin: 0
-          intMax: 99
-        name: home_aet
-        type: int32
-        required: false
-      - bounds:
-          intMin: 0
-          intMax: 99
-        name: away_aet
-        type: int32
-        required: false
-      - bounds:
-          intMin: 0
-          intMax: 99
-        name: home_pen
-        type: int32
-        required: false
-      - bounds:
-          intMin: 0
-          intMax: 99
-        name: away_pen
-        type: int32
-        required: false
-      - name: championship_name
-        type: string
-        required: true
-      - name: phase_name
-        type: string
-        required: true
-      - name: stadium_name
-        type: string
-        required: false
-      - name: referee_name
-        type: string
-        required: false
-      - bounds:
-          intMin: 0
-          intMax: 250000
-        name: attendance
-        type: int32
-        required: false
-      - name: day_display
-        type: string
-        required: true
-      - name: kickoff_local
-        type: string
-        required: true
-      - name: stadium_id
-        ref: stadium
-        type: uuid
-        required: false
-      - name: referee_id
-        ref: referee
-        type: uuid
-        required: false
   team_game:
     durability: live
     fields:
@@ -3992,7 +3901,7 @@ schema:
         type: int32
         required: true
       - bounds:
-          intMin: 40
+          intMin: 1
         default: 40
         defaulted: true
         name: next_offset
@@ -4104,7 +4013,7 @@ schema:
         type: int32
         required: true
       - bounds:
-          intMin: 40
+          intMin: 1
         default: 40
         defaulted: true
         name: next_offset
@@ -4374,7 +4283,7 @@ schema:
         type: int32
         required: true
       - bounds:
-          intMin: 40
+          intMin: 1
         default: 40
         defaulted: true
         name: next_offset
@@ -4539,6 +4448,21 @@ schema:
         defaulted: true
         name: series_json
         type: string
+        required: true
+      - bounds:
+          intMin: 0
+        default: 0
+        defaulted: true
+        name: page_origin
+        type: int32
+        required: true
+      - bounds:
+          intMin: 1
+          intMax: 40
+        default: 40
+        defaulted: true
+        name: page_size
+        type: int32
         required: true
   user_biography:
     durability: server
@@ -5480,6 +5404,22 @@ schema:
       - name: latest_team_logo_key
         type: string
         required: false
+  matches_start:
+    durability: server
+    fields:
+      - name: id
+        pk: true
+        type: uuid
+        required: true
+      - name: start_offset
+        type: int32
+        required: true
+      - name: start_next_offset
+        type: int32
+        required: true
+      - name: start_page
+        type: int32
+        required: true
   game_archive:
     durability: server
     fields:
@@ -6242,6 +6182,8 @@ migrations:
   - services/database/migrations/045_drain_feed.sql
   - services/database/migrations/046_team_projection_turn.sql
   - services/database/migrations/047_home_games_at_read.sql
+  - services/database/migrations/048_matches_start.sql
+  - services/database/migrations/049_match_rating_history_bound.sql
   - services/database/migrations/900_seed.sql
   - services/database/migrations/801_schedule_seed.sql
 pipelines:

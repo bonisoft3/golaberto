@@ -2,11 +2,8 @@ SET lock_timeout = '5s';
 SET statement_timeout = '60s';
 BEGIN;
 
-ALTER TABLE team ADD COLUMN IF NOT EXISTS logo_key text;
-
-ALTER TABLE player_rating ADD COLUMN IF NOT EXISTS off_rating double precision;
-ALTER TABLE player_rating ADD COLUMN IF NOT EXISTS def_rating double precision;
-
+-- Lock player_stat before team so DDL and concurrent player_stat upserts
+-- (whose BEFORE trigger reads team) acquire both relations in the same order.
 -- squawk-ignore adding-field-with-default
 ALTER TABLE player_stat ADD COLUMN IF NOT EXISTS search_key text COLLATE golaberto_search NOT NULL DEFAULT '';
 DO $$ BEGIN
@@ -15,6 +12,11 @@ DO $$ BEGIN
     ALTER TABLE player_stat ALTER COLUMN search_key TYPE text COLLATE golaberto_search;
   END IF;
 END $$;
+
+ALTER TABLE team ADD COLUMN IF NOT EXISTS logo_key text;
+
+ALTER TABLE player_rating ADD COLUMN IF NOT EXISTS off_rating double precision;
+ALTER TABLE player_rating ADD COLUMN IF NOT EXISTS def_rating double precision;
 
 CREATE OR REPLACE FUNCTION player_stat_search_key(player_name text,team_name text,championship_name text,
   player_position text,full_name text) RETURNS text LANGUAGE sql IMMUTABLE SET search_path=public,pg_temp AS $$
@@ -210,7 +212,8 @@ REVOKE ALL ON phase_directory,player_directory,game_archive,player_appearance,ch
 GRANT SELECT ON phase_directory,player_directory,game_archive,player_appearance,championship_attendance
   TO app_user,service;
 
-ALTER ROLE CURRENT_USER SET pgrst.db_aggregates_enabled TO 'true';
+-- PostgREST reads its in-database configuration from the role it logs in as.
+ALTER ROLE authenticator SET pgrst.db_aggregates_enabled TO 'true';
 NOTIFY pgrst,'reload config';
 NOTIFY pgrst,'reload schema';
 COMMIT;

@@ -165,8 +165,7 @@
           ".bayt/Dockerfile.*",
           ".bayt/bayt.*.json",
           ".bayt/Taskfile.*.yaml",
-          "mecha/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml",
-          "omnishell/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml"
+          "monorepo/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml"
         ],
         "exclude": []
       },
@@ -187,6 +186,7 @@
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
         "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.served.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.mesh-events.yaml",
@@ -230,6 +230,7 @@
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
         "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.served.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.mesh-events.yaml",
@@ -298,6 +299,7 @@
     "./.bayt/compose.crud.yaml",
     "./.bayt/compose.database.yaml",
     "./.bayt/compose.migrate.yaml",
+    "./.bayt/compose.served.yaml",
     "./.bayt/compose.electric.yaml",
     "./.bayt/compose.redis.yaml",
     "./.bayt/compose.mesh-events.yaml",

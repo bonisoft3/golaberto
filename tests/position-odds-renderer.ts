@@ -1,7 +1,6 @@
 import { assert, assertEquals, assertStringIncludes, assertThrows } from "jsr:@std/assert@1";
 import render from "../shell/renderers/position-odds.js";
-import { buildNodes } from "../../../plugins/omnishell/interpreter/render.js";
-import { evaluateRole } from "../../../plugins/omnishell/interpreter/jessie.js";
+import { buildNodes, evaluateRole } from "./platform.ts";
 
 const chart = () => ({
   positions: [

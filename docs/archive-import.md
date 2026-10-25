@@ -59,14 +59,27 @@ Desktop on Apple Silicon the restore took about three minutes and the import,
 apply and launch about nine; the derived projections then take longer to catch
 up.
 
+## Read a local MySQL database
+
+`tools/import_archive.py --source-local` reads `mysql -uroot` through its local
+socket. All source schema, counts and rows share one read-only repeatable-read
+transaction; a lost connection fails the export instead of reconnecting with a
+new snapshot. Supply `--source-database`, an explicit empty PostgreSQL target,
+reviewed `--expected-counts` and, when required, exact-before guarded
+`--corrections`. The output directory must be private and outside the repository.
+Only the public user-column allowlist is exported; credentials and sessions stay
+in MySQL. The normal target guards, constraint checks and preservation overlay
+still apply. The dump-based `archive.nu` workflow remains unchanged.
+
 ## What it does
 
 **Checks and images.** For a new project, the one with no target volume yet,
 the archive tests run, the project check refuses any existing containers or
 volumes, and an existing `ARCHIVE_OUTPUT` is refused: the workflow never deletes
 or resets data. The images are built on every run; a cached build costs
-seconds. An empty `MONOREPO_COMPOSE_MODE` selects pinned published platform
-images rather than building the monorepo. The archive database image derives
+seconds. The platform images follow the checkout's `MONOREPO_COMPOSE_MODE`:
+built from the monorepo's trees inside it, the pinned releases where it is
+unset. The archive database image derives
 from the generated one and removes only the baked `900_seed.sql` before
 PostgreSQL initialization; all schema migrations, constraints, foreign keys and
 readable-address triggers remain.

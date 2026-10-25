@@ -6,7 +6,7 @@ services:
         golaberto-setup: service:golaberto-setup
         golaberto-launch: service:golaberto-launch
         plugins_omnishell-runtime-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.9.0@sha256:275dddfe0afce4358da916fc3cde9da49516139850d440eb1f4f7d87e56b1fb4}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.19.0@sha256:c29f0e6ba82bcf2872ede2b21c871adfe1106f6d02d3bbaf6f421b0614e0d071}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}
       context: ..
       dockerfile: .bayt/Dockerfile.check-constraints
       target: check-constraints
@@ -14,8 +14,9 @@ services:
       - bayt-golaberto-check-constraints:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
       - bayt-golaberto-check-constraints:latest
       args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
         BUILDKIT_SYNTAX: >-
-          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
     command:
     - mise
     - x
@@ -23,8 +24,15 @@ services:
     - sh
     - -c
     - >-
-      deno test --config tests/deno.json --no-lock --allow-env --allow-net
-      --allow-read --allow-sys tests/constraints.ts
+      deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-env
+      --allow-net --allow-read --allow-sys tests/constraints.ts tests/campaign-read.ts
+      tests/read-parity.ts tests/heavy-reads.ts tests/community-parity.ts
+      tests/community-access-tests.ts tests/competition-admin.ts tests/editing-parity.ts
+      tests/match-context.ts tests/match-probability.ts tests/odds-progress.ts && deno test
+      --config services/media/deno.json --frozen --allow-read --allow-env --allow-net
+      --allow-ffi tests/media-normalize.ts tests/native-media.ts && deno test --config
+      tests/deno.json --lock tests/deno.lock --frozen --allow-env --allow-net --allow-read
+      --allow-sys tests/readable-addresses.ts tests/drains.ts
     depends_on:
       golaberto-launch:
         condition: service_healthy
@@ -46,8 +54,9 @@ services:
       dockerfile: .bayt/Dockerfile.check-constraints
       target: check-constraints_bayt
       args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
         BUILDKIT_SYNTAX: >-
-          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
     image: bayt-golaberto-check-constraints_bayt:latest
     scale: 0
   golaberto-check-constraints_srcs:
@@ -58,7 +67,8 @@ services:
       dockerfile: .bayt/Dockerfile.check-constraints
       target: check-constraints_srcs
       args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
         BUILDKIT_SYNTAX: >-
-          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
     image: bayt-golaberto-check-constraints_srcs:latest
     scale: 0

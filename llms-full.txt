@@ -10,10 +10,6 @@ Publicly accessible web application.
 - Route: `/arquivo`
 - Reads: Category, GameArchive
 
-### Screen: Players
-- Route: `/jogadores`
-- Reads: GeographyRegion, PlayerDirectory
-
 ### Screen: Principal
 - Route: `/`
 - Reads: HomeGameCard, Championship, Phase, Group, Standing, PositionChance, TeamChance, HomeChampionship
@@ -24,11 +20,15 @@ Publicly accessible web application.
 
 ### Screen: Jogos
 - Route: `/jogos`
-- Reads: MatchesGameCard
+- Reads: MatchesStart, GameArchive
 
 ### Screen: Equipes
 - Route: `/equipes`
 - Reads: GeographyCountry, GeographyRegion, TeamDirectory
+
+### Screen: Players
+- Route: `/jogadores`
+- Reads: GeographyRegion, PlayerDirectory
 
 ### Screen: Estádios
 - Route: `/estadios`
@@ -872,6 +872,13 @@ Fields:
   - `latest_team_name` (string)
   - `latest_team_slug` (string)
   - `latest_team_logo_key` (string)
+
+### Entity: MatchesStart
+Fields:
+  - `id` (uuid)
+  - `start_offset` (int32)
+  - `start_next_offset` (int32)
+  - `start_page` (int32)
 
 ### Entity: GameArchive
 Fields:

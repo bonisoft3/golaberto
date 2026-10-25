@@ -30,6 +30,7 @@
       ".pronto/facts.json"
     ],
     "exclude": [
+      "mise.local.lock",
       "**/node_modules/**",
       ".task/**"
     ]
@@ -131,6 +132,7 @@
           "[.]tool-versions"
         ],
         "exclude": [
+          "mise.local.lock",
           "**/node_modules/**",
           ".task/**"
         ]
@@ -155,6 +157,7 @@
             "exclude": [
               ".bayt/**",
               ".pronto/proto-baseline.json",
+              "mise.local.lock",
               "**/node_modules/**",
               ".task/**",
               "tests/**"
@@ -253,6 +256,7 @@
           ".pronto/facts.json"
         ],
         "exclude": [
+          "mise.local.lock",
           "**/node_modules/**",
           ".task/**"
         ],
@@ -262,7 +266,7 @@
       "do": "^nu -I (^mise where github:bonisoft3/sayt | str trim) -c 'use task-leaf.nu; with-env {PRONTO_PROTO_BASELINE: (open --raw .pronto/proto-baseline.json)} { task-leaf lint }'",
       "shell": "nu",
       "dockerfile": {
-        "do": "cue vet ./..."
+        "do": "cue vet -c ./..."
       },
       "name": "builtin",
       "stop": false

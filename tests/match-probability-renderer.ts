@@ -4,11 +4,20 @@ import {
   assertEquals,
   assertThrows,
 } from "jsr:@std/assert@1.0.11";
-import { evaluateRole } from "../../../plugins/omnishell/interpreter/jessie.js";
+import { evaluateRole } from "./platform.ts";
 import renderNodes from "../shell/renderers/match-probability.js";
 import { built } from "./terminal-nodes.ts";
 
 const render = (value: string) => built(renderNodes(value));
+
+const hasClass = (node: any, name: string) =>
+  String(node?.attrs?.class ?? "").split(" ").includes(name);
+const childWithClass = (node: any, name: string) =>
+  node.children.find((child: any) => hasClass(child, name));
+const coordinates = (node: any): Array<[number, number]> =>
+  node.attrs.points.split(" ").map((pair: string) =>
+    pair.split(",").map(Number) as [number, number]
+  );
 
 const math = renderNodes as typeof renderNodes & {
   prematchOdds: (powers: { home: number; away: number }) => {
@@ -205,13 +214,14 @@ const labels = [
 const input = (
   payload: Record<string, unknown>,
   scenario: [string, string, Array<Record<string, unknown>>] = ["30", "5", []],
+  words = labels,
 ) =>
   [
     JSON.stringify(payload),
     scenario[0],
     scenario[1],
     JSON.stringify(scenario[2]),
-    ...labels,
+    ...words,
   ].join(SEP);
 const available = {
   home_power: powers.home,
@@ -224,7 +234,7 @@ const available = {
   red_cards: [{ side: "away", minute: 20 }],
 };
 
-Deno.test("the Jessie renderer produces prematch odds, accessible minute points and scenario changes", async () => {
+Deno.test("the Jessie renderer produces prematch odds, accessible minute samples and scenario changes", async () => {
   const baseline = render(input(available))[0] as any;
   assertEquals(baseline.tag, "div");
   assertEquals(baseline.attrs.class, "match-probability");
@@ -238,8 +248,23 @@ Deno.test("the Jessie renderer produces prematch odds, accessible minute points 
     svg.children.filter((node: any) => node.tag === "polyline").length,
     3,
   );
-  const points = svg.children.filter((node: any) => node.tag === "circle");
+  assertEquals(
+    svg.children.filter((node: any) => node.tag === "polygon").map((node: any) => node.attrs.class),
+    [
+      "match-probability__area match-probability__area--home",
+      "match-probability__area match-probability__area--draw",
+      "match-probability__area match-probability__area--away",
+    ],
+  );
+  const samples = svg.children.filter((node: any) =>
+    hasClass(node, "match-probability__sample")
+  );
+  assertEquals(samples.length, 96);
+  const points = samples.flatMap((node: any) =>
+    node.children.filter((child: any) => hasClass(child, "match-probability__point"))
+  );
   assert(points.length > 10);
+  assert(points.length < samples.length);
   assert(points.every((node: any) => node.attrs.tabindex === 0));
   const changed = render(
     input(available, ["30", "8", [{
@@ -264,6 +289,262 @@ Deno.test("the Jessie renderer produces prematch odds, accessible minute points 
     "renderer",
   );
   assertEquals(caged(input(available)), render(input(available)));
+});
+
+Deno.test("stacked areas keep raw cumulative boundaries and minute-wide inspectors", () => {
+  const rawPowers = { home: 10, away: 10 };
+  const payload = {
+    ...available,
+    home_power: rawPowers.home,
+    away_power: rawPowers.away,
+    goals: [],
+    red_cards: [],
+  };
+  const root = render(input(payload))[0] as any;
+  const svg = root.children.at(-1).children[1];
+  assertEquals(svg.attrs.viewBox, "0 0 640 300");
+  assertEquals(
+    svg.children.filter((node: any) =>
+      hasClass(node, "match-probability__minute-label")
+    ).map((node: any) => node.children[0]),
+    ["0", "10", "20", "30", "40", "50", "60", "70", "80", "90", "95"],
+  );
+  assertEquals(
+    svg.children.filter((node: any) =>
+      hasClass(node, "match-probability__minute-tick")
+    ).length,
+    11,
+  );
+  const earlyWhistle = (render(input(payload, ["30", "2", []]))[0] as any)
+    .children.at(-1).children[1];
+  assertEquals(
+    earlyWhistle.children.filter((node: any) =>
+      hasClass(node, "match-probability__minute-label")
+    ).map((node: any) => node.children[0]),
+    ["0", "10", "20", "30", "40", "50", "60", "70", "80", "92"],
+  );
+  const areas = ["home", "draw", "away"].map((key) =>
+    svg.children.find((node: any) =>
+      hasClass(node, `match-probability__area--${key}`)
+    )
+  );
+  const lines = ["home", "draw", "away"].map((key) =>
+    svg.children.find((node: any) =>
+      hasClass(node, `match-probability__line--${key}`)
+    )
+  );
+  const timeline = math.scenarioTimeline(rawPowers);
+  const count = timeline.length;
+  const yAt = (probability: number) => 18 + (1 - probability) * 248;
+  const cumulative = timeline.map((point) => [
+    point.odds.home,
+    point.odds.home + point.odds.draw,
+    point.odds.home + point.odds.draw + point.odds.away,
+  ]);
+
+  for (let layer = 0; layer < areas.length; layer++) {
+    const polygon = coordinates(areas[layer]);
+    const upper = coordinates(lines[layer]);
+    assertEquals(polygon.length, count * 2);
+    assertEquals(polygon.slice(0, count), upper);
+    for (const minute of [0, 30, count - 1]) {
+      assertAlmostEquals(upper[minute][1], yAt(cumulative[minute][layer]), 1e-9);
+    }
+    const lower = polygon.slice(count).reverse();
+    if (layer === 0) {
+      assert(lower.every(([, y]) => y === 266));
+    } else {
+      assertEquals(lower, coordinates(lines[layer - 1]));
+    }
+  }
+  assert(
+    coordinates(lines[2])[0][1] > 18,
+    "the finite Poisson tail remains visible instead of being normalized",
+  );
+
+  const samples = svg.children.filter((node: any) =>
+    hasClass(node, "match-probability__sample")
+  );
+  assertEquals(samples.length, count);
+  const hits = samples.map((sample: any) =>
+    childWithClass(sample, "match-probability__hit")
+  );
+  assert(hits.every((hit: any) => hit.tag === "rect"));
+  assert(hits.every((hit: any) => hit.attrs.y === 18 && hit.attrs.height === 248));
+  assertEquals(hits[0].attrs.x, 48);
+  assertAlmostEquals(
+    hits.at(-1).attrs.x + hits.at(-1).attrs.width,
+    624,
+  );
+  for (let minute = 1; minute < hits.length; minute++) {
+    assertAlmostEquals(
+      hits[minute - 1].attrs.x + hits[minute - 1].attrs.width,
+      hits[minute].attrs.x,
+    );
+  }
+  for (const sample of samples) {
+    assertEquals(
+      childWithClass(sample, "match-probability__crosshair").tag,
+      "line",
+    );
+    const tooltip = childWithClass(sample, "match-probability__tooltip");
+    assertEquals([tooltip.tag, tooltip.attrs.role], ["g", "tooltip"]);
+  }
+
+  const tooltip = childWithClass(samples[30], "match-probability__tooltip");
+  assertEquals(
+    childWithClass(tooltip, "match-probability__tooltip-minute").children,
+    ["Minute 30 · 0–0"],
+  );
+  assertEquals(
+    tooltip.children.filter((node: any) =>
+      hasClass(node, "match-probability__tooltip-name")
+    ).map((node: any) => node.children[0]),
+    ["Away", "Draw", "Home"],
+  );
+  const snapshot = root.children.find((node: any) =>
+    hasClass(node, "match-probability__snapshot")
+  ).children[0];
+  assertEquals(
+    tooltip.children.filter((node: any) =>
+      hasClass(node, "match-probability__tooltip-value")
+    ).map((node: any) => node.children[0]),
+    snapshot.match(/[0-9.]+%/g)!.reverse(),
+  );
+  const firstBox = childWithClass(
+    childWithClass(samples[0], "match-probability__tooltip"),
+    "match-probability__tooltip-box",
+  );
+  const lastBox = childWithClass(
+    childWithClass(samples.at(-1), "match-probability__tooltip"),
+    "match-probability__tooltip-box",
+  );
+  assert(firstBox.attrs.x >= 48);
+  assertEquals(lastBox.attrs.x + lastBox.attrs.width, 624);
+});
+
+Deno.test("event labels combine simultaneous changes and separate nearby minutes", () => {
+  const payload = {
+    ...available,
+    goals: [
+      { side: "home", minute: 10 },
+      { side: "away", minute: 10 },
+      { side: "home", minute: 11 },
+    ],
+    red_cards: [
+      { side: "home", minute: 10 },
+      { side: "home", minute: 10 },
+      { side: "away", minute: 11 },
+    ],
+  };
+  const svg = (render(input(payload))[0] as any).children.at(-1).children[1];
+  const eventLabels = svg.children.filter((node: any) =>
+    hasClass(node, "match-probability__event-label")
+  );
+  assertEquals(eventLabels.map((node: any) => node.children[0]), [
+    "1–1 🟥×2",
+    "2–1 🟥",
+  ]);
+  assertEquals(eventLabels.map((node: any) => node.attrs["aria-label"]), [
+    "Minute 10: Home 1–1 Away · Home 🟥×2",
+    "Minute 11: Home 2–1 Away · Away 🟥",
+  ]);
+  assertEquals(new Set(eventLabels.map((node: any) => node.attrs.y)).size, 2);
+  assertEquals(
+    svg.children.filter((node: any) =>
+      hasClass(node, "match-probability__event-leader")
+    ).length,
+    eventLabels.length,
+  );
+  const [, top, , height] = svg.attrs.viewBox.split(" ").map(Number);
+  assert(top < 0);
+  assertEquals(top + height, 300);
+  assert(eventLabels.every((node: any) => node.attrs.y >= top));
+});
+
+Deno.test("dense event labels all fit in nonoverlapping lanes above the plot", () => {
+  const goals = Array.from({ length: 40 }, (_, index) => ({
+    side: index % 2 === 0 ? "home" : "away",
+    minute: index + 1,
+  }));
+  const payload = { ...available, goals, red_cards: [] };
+  const svg = (render(input(payload))[0] as any).children.at(-1).children[1];
+  const eventLabels = svg.children.filter((node: any) =>
+    hasClass(node, "match-probability__event-label")
+  );
+  assertEquals(eventLabels.length, goals.length);
+  assertEquals(eventLabels[0].attrs["aria-label"], "Minute 1: Home 1–0 Away");
+  assertEquals(eventLabels.at(-1).attrs["aria-label"], "Minute 40: Home 20–20 Away");
+
+  const lanes = Map.groupBy(eventLabels, (node: any) => node.attrs.y);
+  assert(lanes.size > 1);
+  for (const labels of lanes.values()) {
+    const ranges = labels.map((node: any) => {
+      const width = String(node.children[0]).length * 8 + 8;
+      return [node.attrs.x - width / 2, node.attrs.x + width / 2];
+    }).sort((left: number[], right: number[]) => left[0] - right[0]);
+    for (let index = 1; index < ranges.length; index++) {
+      assert(ranges[index][0] >= ranges[index - 1][1] + 6);
+    }
+  }
+  const [, top, , height] = svg.attrs.viewBox.split(" ").map(Number);
+  assert(top < 0);
+  assertEquals(top + height, 300);
+  assert(eventLabels.every((node: any) => node.attrs.y >= top && node.attrs.y < 18));
+});
+
+Deno.test("tooltip scores include recorded and hypothetical goals at their minute", () => {
+  const payload = {
+    ...available,
+    goals: [{ side: "home", minute: 10 }, { side: "away", minute: 31 }],
+    red_cards: [],
+  };
+  const hypothetical = [{
+    id: "game:hyp:1",
+    sequence: 1,
+    kind: "goal",
+    side: "home",
+    minute: 31,
+  }];
+  const scenario: [string, string, Array<Record<string, unknown>>] = [
+    "30",
+    "5",
+    hypothetical,
+  ];
+  const root = render(input(payload, scenario))[0] as any;
+  const samples = root.children.at(-1).children[1].children.filter((node: any) =>
+    hasClass(node, "match-probability__sample")
+  );
+  const heading = (minute: number) =>
+    childWithClass(
+      childWithClass(samples[minute], "match-probability__tooltip"),
+      "match-probability__tooltip-minute",
+    ).children[0];
+  assertEquals(
+    [heading(30), heading(31), heading(32)],
+    ["Minute 30 · 1–0", "Minute 31 · 2–1", "Minute 32 · 2–1"],
+  );
+  for (const minute of [30, 31, 32]) {
+    const expected = `${heading(minute)}:`;
+    assert(String(childWithClass(samples[minute], "match-probability__hit").attrs["aria-label"]).startsWith(expected));
+    const point = childWithClass(samples[minute], "match-probability__point");
+    if (point) assert(String(point.attrs["aria-label"]).startsWith(expected));
+  }
+
+  const portuguese = [...labels];
+  portuguese[11] = "pt-BR";
+  portuguese[12] = "Minuto";
+  const localized = render(input(payload, scenario, portuguese))[0] as any;
+  const localizedSamples = localized.children.at(-1).children[1].children.filter((node: any) =>
+    hasClass(node, "match-probability__sample")
+  );
+  assertEquals(
+    childWithClass(
+      childWithClass(localizedSamples[30], "match-probability__tooltip"),
+      "match-probability__tooltip-minute",
+    ).children,
+    ["Minuto 30 · 1–0"],
+  );
 });
 
 Deno.test("individual hypothetical events can be retimed, reassigned and removed", () => {

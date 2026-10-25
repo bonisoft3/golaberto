@@ -1,5 +1,6 @@
 @import url("shared/chrome.css");
 @import url("shared/games.css");
+@import url("shared/team.css");
 @import url("shared/match-context.css");
 @import url("shared/match-probability.css");
 /* The game's head: its phase, and an editor's way in. */

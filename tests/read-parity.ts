@@ -1,4 +1,4 @@
-import { assert, assertEquals, assertRejects } from "jsr:@std/assert@1.0.19";
+import { assert, assertEquals, assertRejects } from "jsr:@std/assert@1";
 import { query, replay } from "./db.ts";
 
 type Plan = {
@@ -372,9 +372,11 @@ Deno.test("generated read placeholders become invoker views and replay without s
     })
       AND relkind='v' AND reloptions @> ARRAY['security_invoker=true'];
     DO $$ BEGIN
-      IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname=session_user
+      -- On PostgREST's login, whose in-database configuration it reads: set on
+      -- the bootstrap role, every aggregate read answered PGRST123.
+      IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname='authenticator'
         AND rolconfig @> ARRAY['pgrst.db_aggregates_enabled=true'])
-        THEN RAISE EXCEPTION 'native aggregate reads must be enabled for the bootstrap database role'; END IF;
+        THEN RAISE EXCEPTION 'native aggregate reads must be enabled for PostgREST''s login role'; END IF;
       IF NOT EXISTS (SELECT 1 FROM pg_attribute a JOIN pg_attrdef d ON d.adrelid=a.attrelid AND d.adnum=a.attnum
         WHERE a.attrelid='player_stat'::regclass AND a.attname='search_key' AND a.attgenerated=''
           AND a.attnotnull AND a.attcollation='golaberto_search'::regcollation

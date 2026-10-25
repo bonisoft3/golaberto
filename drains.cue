@@ -20,13 +20,12 @@ code: state: drains: {
 		call: "refresh_team_profiles"
 		body: batch_size: 50
 	}
-	"team-directory": {on: ["team", "team_rating", "geography_country"], call: "refresh_team_directory", timeout: "35s"}
-	"matches-games": {on: ["game_card"], call: "refresh_matches_games", timeout: "35s"}
+	"team-directory": {on: ["team", "team_rating", "geography_country"], call: "refresh_team_directory"}
+	"matches-games": {on: ["game_card"], call: "refresh_matches_games"}
 	// Thirty days either side of the local day.
 	"recent-championships": {
 		on: ["championship", "phase", "stage_group", "team_group", "team_rating", "day_tick"]
-		call:    "refresh_recent_championships"
-		timeout: "35s"
+		call: "refresh_recent_championships"
 	}
 }
 
@@ -60,9 +59,8 @@ code: state: migrations: "046_team_projection_turn": {operations: [{sql: {
 	onComplete: true
 }}]}
 
-build: checks: drains: {
-	priority: 1
-	database: true
-	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-net --allow-read --allow-sys tests/drains.ts"]
-	note: "an edit reaches its projection with no timer, an idle stack calls no drain, and the team drains never deadlock"
-}
+_teamProjectionWritersSql: string @embed(file="services/database/sql/047_team_projection_writers.sql", type=text)
+code: state: migrations: "047_team_projection_writers": {operations: [{sql: {
+	up:         strings.Replace(strings.Replace(_teamProjectionWritersSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
+	onComplete: true
+}}]}

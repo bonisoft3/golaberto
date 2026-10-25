@@ -20,6 +20,8 @@ from pathlib import Path
 import re
 import shlex
 import subprocess
+import tempfile
+import uuid
 
 TABLES = ('categories', 'championships', 'phases', 'groups', 'stadia', 'teams',
           'team_groups', 'referees', 'players', 'team_players', 'games', 'goals',
@@ -182,11 +184,38 @@ def corrected_views(columns: dict, corrections: dict) -> str:
 
 
 class Database:
-    def __init__(self, source_container: str, source_database: str, target_container: str, target_database: str):
-        self.source = ['docker', 'exec', source_container, 'mysql', '-uroot', '-D', source_database,
-                       '--quick', '--default-character-set=utf8mb4', '--batch', '--raw', '--skip-column-names']
+    def __init__(self, source_container: str | None, source_database: str, target_container: str, target_database: str, *, source_local: bool = False):
+        self.source = ([] if source_local else ['docker', 'exec', source_container]) + [
+            'mysql', '-uroot', '-D', source_database, '--quick', '--default-character-set=utf8mb4',
+            '--batch', '--raw', '--skip-column-names']
+        self.snapshot = source_local
+        self.process = None
+        self.errors = None
         self.target = ['docker', 'exec', '-i', target_container, 'psql', '-X', '-q', '-A', '-t',
                        '-v', 'ON_ERROR_STOP=1', '-U', 'postgres', '-d', target_database]
+
+    def __enter__(self):
+        if self.snapshot:
+            self.errors = tempfile.TemporaryFile(mode='w+t')
+            self.process = subprocess.Popen(self.source + ['--unbuffered', '--skip-reconnect'],
+                                            stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                            stderr=self.errors, text=True, bufsize=0)
+            self.process.stdin.write('SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ; START TRANSACTION WITH CONSISTENT SNAPSHOT, READ ONLY;\n')
+            self.process.stdin.flush()
+        return self
+
+    def __exit__(self, kind, value, traceback):
+        if self.process is not None:
+            if kind is not None:
+                self.process.terminate()
+            self.process.stdin.close()
+            code = self.process.wait()
+            self.process.stdout.close()
+            self.errors.seek(0)
+            error = self.errors.read()
+            self.errors.close()
+            if code and kind is None:
+                raise RuntimeError(f'MySQL snapshot failed: {error}')
 
     def pg(self, sql: str) -> str:
         result = subprocess.run(self.target,input=sql,text=True,capture_output=True)
@@ -195,6 +224,17 @@ class Database:
         return result.stdout.strip()
 
     def mysql(self, sql: str):
+        if self.snapshot:
+            marker = uuid.uuid4().hex
+            self.process.stdin.write(sql + '; SELECT JSON_ARRAY(' + literal(marker) + ');\n')
+            self.process.stdin.flush()
+            for line in self.process.stdout:
+                row = json.loads(line)
+                if row == [marker]:
+                    return
+                yield row
+            self.errors.seek(0)
+            raise RuntimeError('MySQL snapshot ended before completing its query: ' + self.errors.read())
         query = 'START TRANSACTION WITH CONSISTENT SNAPSHOT, READ ONLY; ' + sql + '; COMMIT;'
         with subprocess.Popen(self.source + ['-e', query], stdout=subprocess.PIPE,
                               stderr=subprocess.PIPE, text=True) as process:
@@ -494,7 +534,12 @@ def apply_script(target: list[str]) -> str:
 
 
 def build(args) -> dict:
-    db = Database(args.source_container, args.source_database, args.target_container, args.target_database)
+    with Database(args.source_container, args.source_database, args.target_container, args.target_database,
+                  source_local=args.source_local) as db:
+        return build_snapshot(args, db)
+
+
+def build_snapshot(args, db: Database) -> dict:
     system_id = db.pg('SELECT system_identifier FROM pg_control_system();')
     db.pg(target_guard(args.target_database, system_id))
     columns = source_columns(db)
@@ -502,7 +547,7 @@ def build(args) -> dict:
     counts = json.loads(args.expected_counts.read_text())
     if set(counts) != set(TABLES) or any(type(n) is not int or n < 0 for n in counts.values()):
         raise ValueError('expected counts must contain exactly the original domain tables')
-    source_counts = {table: next(db.mysql(f'SELECT JSON_ARRAY(count(*)) FROM `{table}`'))[0] for table in (*TABLES, 'users')}
+    source_counts = {table: list(db.mysql(f'SELECT JSON_ARRAY(count(*)) FROM `{table}`'))[0][0] for table in (*TABLES, 'users')}
     if any(counts[table] != source_counts[table] for table in TABLES):
         raise ValueError('source cardinalities differ from reviewed expected counts')
     counts['users'] = source_counts['users']
@@ -569,7 +614,7 @@ def build(args) -> dict:
     sql = promotion_sql(columns,corrections,counts,args.target_database,system_id,files,args.defer_projections)
     (args.output/'apply.sql').write_text(sql,encoding='utf-8')
     (args.output/'apply.sh').write_text(apply_script(db.target),encoding='utf-8')
-    manifest = {'source_container':args.source_container,'source_database':args.source_database,
+    manifest = {'source_container':args.source_container,'source_local':args.source_local,'source_database':args.source_database,
                 'target_container':args.target_container,'target_database':args.target_database,
                 'target_system_identifier':system_id,'counts':counts,'mapped_cells':csv_counts,
                 'enrichment_preflight':enrichment_preflight,
@@ -605,7 +650,9 @@ def build(args) -> dict:
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--source-container',required=True)
+    source = parser.add_mutually_exclusive_group(required=True)
+    source.add_argument('--source-container')
+    source.add_argument('--source-local',action='store_true',help='Read local mysql -uroot in one consistent read-only snapshot')
     parser.add_argument('--source-database',required=True)
     parser.add_argument('--target-container',required=True)
     parser.add_argument('--target-database',required=True)

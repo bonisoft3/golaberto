@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "jsr:@std/assert@1.0.19";
-import { evaluateRole } from "omnishell/interpreter/jessie.js";
+import { evaluateRole } from "./platform.ts";
 
 Deno.test("archive calendar weeks retain civil dates across leap years and ISO year boundaries", async () => {
   const handler = await evaluateRole(

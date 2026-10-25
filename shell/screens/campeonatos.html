@@ -6,7 +6,7 @@
   <nav class="langs" aria-label="{msg.lang_label}">
     <a data-route="campeonatos" data-locale="pt-BR" data-locale-current="page" lang="pt-BR"><span class="long" data-text="{msg.lang_pt}"></span><span class="short" data-text="{msg.lang_pt_short}"></span></a>
     <a data-route="campeonatos" data-locale="es-AR" data-locale-current="page" lang="es-AR"><span class="long" data-text="{msg.lang_es}"></span><span class="short" data-text="{msg.lang_es_short}"></span></a>
-    <a data-route="campeonatos" data-locale="en-GB" data-locale-current="page" lang="en-GB"><span class="long" data-text="{msg.lang_en}"></span><span class="short" data-text="{msg.lang_en_short}"></span></a>
+    <a data-route="campeonatos" data-locale="en-US" data-locale-current="page" lang="en-US"><span class="long" data-text="{msg.lang_en}"></span><span class="short" data-text="{msg.lang_en_short}"></span></a>
     <a data-route="campeonatos" data-locale="it-IT" data-locale-current="page" lang="it-IT"><span class="long" data-text="{msg.lang_it}"></span><span class="short" data-text="{msg.lang_it_short}"></span></a>
     <a data-route="campeonatos" data-locale="de-DE" data-locale-current="page" lang="de-DE"><span class="long" data-text="{msg.lang_de}"></span><span class="short" data-text="{msg.lang_de_short}"></span></a>
     <a data-route="campeonatos" data-locale="fr-FR" data-locale-current="page" lang="fr-FR"><span class="long" data-text="{msg.lang_fr}"></span><span class="short" data-text="{msg.lang_fr_short}"></span></a>
@@ -49,7 +49,7 @@
 <nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
   <button id="catalog-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
   <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
-  <span data-live="championship" data-filter="search_key=like.*{q_key}*&region=like.*{region}*&amp;offset={next_offset}&amp;limit=1" data-order='region_name.asc,name.asc,begins.desc' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <span data-live="championship" data-filter="search_key=like.*{q_key}*&region=like.*{region}*&amp;offset={next_offset}&amp;limit=1" data-select="id" data-order='region_name.asc,name.asc,begins.desc' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
   <button id="catalog-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
 </nav>
       </div>

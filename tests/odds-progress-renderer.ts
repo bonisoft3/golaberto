@@ -1,7 +1,6 @@
 import { assert, assertEquals, assertStringIncludes, assertThrows } from "jsr:@std/assert@1";
 import render from "../shell/renderers/odds-progress.js";
-import { buildNodes } from "../../../plugins/omnishell/interpreter/render.js";
-import { evaluateRole } from "../../../plugins/omnishell/interpreter/jessie.js";
+import { buildNodes, evaluateRole } from "./platform.ts";
 
 const SEP = "\u001f";
 const championId = "11111111-1111-4111-8111-111111111111";

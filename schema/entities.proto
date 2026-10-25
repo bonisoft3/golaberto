@@ -41,6 +41,8 @@ message ArchivePage {
   optional string date_from = 27 [json_name = "date_from"];
   optional string date_to = 28 [json_name = "date_to"];
   optional string series_json = 29 [json_name = "series_json"];
+  optional int32 page_origin = 30 [json_name = "page_origin"];
+  optional int32 page_size = 31 [json_name = "page_size"];
 }
 
 message CatalogFilter {
@@ -449,6 +451,13 @@ message MatchesGameCard {
   reserved "home_country";
   reserved 33;
   reserved "away_country";
+}
+
+message MatchesStart {
+  optional string id = 1 [json_name = "id"];
+  optional int32 start_offset = 2 [json_name = "start_offset"];
+  optional int32 start_next_offset = 3 [json_name = "start_next_offset"];
+  optional int32 start_page = 4 [json_name = "start_page"];
 }
 
 message MatchHeadToHead {

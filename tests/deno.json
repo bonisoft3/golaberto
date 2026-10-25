@@ -1,6 +1,1 @@
-{
-  "nodeModulesDir": "none",
-  "imports": {
-    "omnishell/": "/omnishell/"
-  }
-}
+{}

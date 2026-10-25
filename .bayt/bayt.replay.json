@@ -1,0 +1,49 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "entrypoint": {
+    "do": "deno run --config \"$(mise where github:bonisoft3/pronto)/deno.json\" --allow-read --allow-write --allow-run --allow-env \"$(mise where github:bonisoft3/pronto)/check-replay.ts\" .",
+    "shell": "sh",
+    "env": {
+      "POSTGRES_USER": "${POSTGRES_USER:-postgres}",
+      "POSTGRES_PASSWORD": "${POSTGRES_PASSWORD:-postgres}",
+      "POSTGRES_DB": "${POSTGRES_DB:-golaberto}",
+      "ELECTRIC_PASSWORD": "${ELECTRIC_PASSWORD:-dev-electric-password}",
+      "AUTHENTICATOR_PASSWORD": "${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}",
+      "POSTGRES_INITDB_ARGS": "--no-sync --encoding=UTF8 --auth=trust --locale-provider=icu --icu-locale=und --locale=C",
+      "REQUIRED_TABLES": "schedule"
+    },
+    "after": {
+      "database": "healthy"
+    },
+    "host": true
+  },
+  "name": "replay",
+  "project": "golaberto",
+  "dir": ".",
+  "activate": "mise x --",
+  "srcs": {
+    "globs": [],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {},
+  "visibility": "internal",
+  "emitsSrcs": false,
+  "deps": [],
+  "sameProjectDeps": [],
+  "transitiveDeps": [],
+  "transitiveCrossDeps": [],
+  "upClosure": [],
+  "chainedDeps": [],
+  "cmds": [],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

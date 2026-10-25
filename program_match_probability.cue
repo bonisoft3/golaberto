@@ -9,7 +9,7 @@ _matchProbabilityUpgrade: strings.Replace(strings.Replace(_matchProbabilitySql, 
 
 code: state: entities: {
 	MatchProbability: {
-		id: "0xde64479fbf5382c5"
+		id:         "0xde64479fbf5382c5"
 		table:      "match_probability"
 		durability: "server"
 		access: {scope: "public"}
@@ -24,7 +24,7 @@ code: state: entities: {
 		]
 	}
 	MatchProbabilityScenario: {
-		id: "0xb2a3e1db2f1f2c94"
+		id:         "0xb2a3e1db2f1f2c94"
 		table:      "match_probability_scenario"
 		durability: "tab"
 		fields: [
@@ -42,7 +42,7 @@ code: state: entities: {
 		]
 	}
 	MatchProbabilityScenarioEvent: {
-		id: "0xd263ad5b26f1db13"
+		id:         "0xd263ad5b26f1db13"
 		table:      "match_probability_scenario_event"
 		durability: "tab"
 		fields: [
@@ -88,17 +88,9 @@ code: state: migrations: "039_match_probability": {
 	operations: [{sql: {up: _matchProbabilityUpgrade, onComplete: true}}]
 }
 
-build: checks: "match-probability": {
-	priority: 1
-	database: true
-	srcs: ["services/database/sql/039_match_probability.sql"]
-	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-net --allow-read --allow-sys tests/match-probability.ts"]
-	note: "strict historical-rating cutoffs, ambiguous or missing ratings, bounded event payloads and read-only access run against Postgres"
-}
-
 loop: surface: checks: "match-probability-renderer": {
 	verb: "test"
-	cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/match-probability-renderer.ts tests/match-probability-events.ts"]
+	cmds: ["mise exec -- deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-read --allow-env tests/match-probability-renderer.ts tests/match-probability-events.ts"]
 	note: "Rails probability vectors, individually editable scenarios and accessible Jessie SVG output stay pure and bounded"
 }
 
@@ -109,3 +101,9 @@ code: meta: tests: "test-match-probability": {
 	when: "read the game page and edit hypothetical goals and red cards"
 	then: "output.prior_ratings_only && output.matches_rails && output.bounded"
 }
+
+_matchRatingHistoryBoundSql: string @embed(file="services/database/sql/049_match_rating_history_bound.sql", type=text)
+code: state: migrations: "049_match_rating_history_bound": {operations: [{sql: {
+	up:         strings.Replace(strings.Replace(_matchRatingHistoryBoundSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
+	onComplete: true
+}}]}

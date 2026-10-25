@@ -8,7 +8,9 @@ const migration = (await Deno.readTextFile(new URL("../services/database/sql/042
 
 Deno.test("042 replays over itself without touching recorded history", async () => {
   const fingerprint = `(SELECT md5(coalesce(string_agg(md5(to_jsonb(h)::text),'' ORDER BY id),'')) FROM team_odds_history h)`;
-  assertEquals(await replay(`BEGIN;
+  // One snapshot for both fingerprints: the running cluster's workers commit
+  // history meanwhile, which only the migration's own writes may change.
+  assertEquals(await replay(`BEGIN ISOLATION LEVEL REPEATABLE READ;
     SELECT set_config('golaberto.odds_history_before',${fingerprint},true) IS NOT NULL AS taken;
     ${migration}
     ${migration}

@@ -5,13 +5,14 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.9.0@sha256:275dddfe0afce4358da916fc3cde9da49516139850d440eb1f4f7d87e56b1fb4}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.19.0@sha256:c29f0e6ba82bcf2872ede2b21c871adfe1106f6d02d3bbaf6f421b0614e0d071}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
       },
       "secrets": [],
       "args": {}
     },
     "environment": {
       "DOOR": "http://caddy:8080",
+      "DOOR_TIMEOUT_MS": "41000",
       "ENTRY": "/render/entry.html",
       "ORIGIN": "${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT}}",
       "PORT": "8090"
@@ -112,9 +113,12 @@
         "exclude": []
       },
       {
-        "from": null,
+        "from": {
+          "ref": ":served",
+          "name": "golaberto-served"
+        },
         "srcs": [
-          "shell/index.html"
+          "/served/shell/index.html"
         ],
         "dst": "/render/entry.html",
         "link": true,
@@ -170,8 +174,6 @@
       "shell/screens/arquivo-campeonato.css",
       "shell/screens/publico.html",
       "shell/screens/publico.css",
-      "shell/screens/jogadores.html",
-      "shell/screens/jogadores.css",
       "shell/screens/campeonato-jogadores.html",
       "shell/screens/campeonato-jogadores.css",
       "shell/screens/jogador-campeonato.html",
@@ -190,6 +192,8 @@
       "shell/screens/editar.css",
       "shell/screens/equipes.html",
       "shell/screens/equipes.css",
+      "shell/screens/jogadores.html",
+      "shell/screens/jogadores.css",
       "shell/screens/estadios.html",
       "shell/screens/estadios.css",
       "shell/screens/estadio.html",
@@ -283,7 +287,6 @@
       "shell/renderers/community-history.js",
       "shell/renderers/country-flag.js",
       "shell/renderers/geography-label.js",
-      "shell/renderers/home-date.js",
       "shell/renderers/match-context-map.js",
       "shell/renderers/match-final-score.js",
       "shell/renderers/match-probability.js",
@@ -299,6 +302,7 @@
       "shell/renderers/team-badge.js",
       "shell/renderers/team-chart.js",
       "shell/renderers/team-location.js",
+      "shell/renderers/weekday.js",
       "shell/shared/catalog.css",
       "shell/shared/chrome.css",
       "shell/shared/community.css",
@@ -310,7 +314,7 @@
       "shell/shared/team.css",
       "messages/pt-BR.json",
       "messages/es-AR.json",
-      "messages/en-GB.json",
+      "messages/en-US.json",
       "messages/it-IT.json",
       "messages/de-DE.json",
       "messages/fr-FR.json",
@@ -367,6 +371,7 @@
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
         "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.served.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.auth.yaml"
       ]
@@ -401,6 +406,7 @@
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
         "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.served.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.auth.yaml"
       ]
@@ -428,8 +434,6 @@
           "shell/screens/arquivo-campeonato.css",
           "shell/screens/publico.html",
           "shell/screens/publico.css",
-          "shell/screens/jogadores.html",
-          "shell/screens/jogadores.css",
           "shell/screens/campeonato-jogadores.html",
           "shell/screens/campeonato-jogadores.css",
           "shell/screens/jogador-campeonato.html",
@@ -448,6 +452,8 @@
           "shell/screens/editar.css",
           "shell/screens/equipes.html",
           "shell/screens/equipes.css",
+          "shell/screens/jogadores.html",
+          "shell/screens/jogadores.css",
           "shell/screens/estadios.html",
           "shell/screens/estadios.css",
           "shell/screens/estadio.html",
@@ -541,7 +547,6 @@
           "shell/renderers/community-history.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js",
-          "shell/renderers/home-date.js",
           "shell/renderers/match-context-map.js",
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-probability.js",
@@ -557,6 +562,7 @@
           "shell/renderers/team-badge.js",
           "shell/renderers/team-chart.js",
           "shell/renderers/team-location.js",
+          "shell/renderers/weekday.js",
           "shell/shared/catalog.css",
           "shell/shared/chrome.css",
           "shell/shared/community.css",
@@ -568,7 +574,7 @@
           "shell/shared/team.css",
           "messages/pt-BR.json",
           "messages/es-AR.json",
-          "messages/en-GB.json",
+          "messages/en-US.json",
           "messages/it-IT.json",
           "messages/de-DE.json",
           "messages/fr-FR.json",
@@ -586,7 +592,8 @@
         "caddy_outs_srcs",
         "crud_outs_srcs",
         "electric_outs_srcs",
-        "auth_outs_srcs"
+        "auth_outs_srcs",
+        "served_outs_srcs"
       ],
       "transitiveCrossDeps": [],
       "chainedDeps": [],
@@ -601,6 +608,7 @@
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
         "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.served.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.auth.yaml"
       ]
@@ -612,19 +620,22 @@
     "caddy_outs",
     "crud_outs",
     "electric_outs",
-    "auth_outs"
+    "auth_outs",
+    "served_outs"
   ],
   "sameProjectDeps": [
     "caddy_outs",
     "crud_outs",
     "electric_outs",
-    "auth_outs"
+    "auth_outs",
+    "served_outs"
   ],
   "transitiveDeps": [
     "caddy_outs",
     "crud_outs",
     "electric_outs",
-    "auth_outs"
+    "auth_outs",
+    "served_outs"
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
@@ -633,6 +644,7 @@
     "./.bayt/compose.crud.yaml",
     "./.bayt/compose.database.yaml",
     "./.bayt/compose.migrate.yaml",
+    "./.bayt/compose.served.yaml",
     "./.bayt/compose.electric.yaml",
     "./.bayt/compose.auth.yaml"
   ],
@@ -666,6 +678,15 @@
     },
     {
       "name": "auth_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "served_outs",
       "project": "golaberto",
       "dir": ".",
       "outs": {

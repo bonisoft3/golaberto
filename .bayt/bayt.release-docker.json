@@ -6,16 +6,22 @@
     "environment": {},
     "image": "${BAYT_DOCKER_REPOSITORY:-ghcr.io/bonisoft3/golaberto}:${BAYT_IMAGE_TAG:-latest}",
     "ports": [
-      "8080:8080"
+      "${PORT:-8080}:${PORT:-8080}"
     ],
     "volumes": [],
     "depends_on": {}
   },
   "dockerfile": {
     "preamble": [
-      "RUN --mount=type=cache,target=/zypper-store,id=/zypper-store,sharing=shared --mount=type=cache,target=/var/cache/zypp,id=golaberto-release-docker:/var/cache/zypp,sharing=locked p=\"$PWD\"; s=/zypper-store; d=/var/cache/zypp/packages; mkdir -p \"$s\" \"$d\"; cp -r \"$s\"/. \"$d\"/ 2>/dev/null || true; zypper -n modifyservice --no-refresh --all && sed -i 's|http://|https://|g' /etc/zypp/repos.d/*.repo || exit; zypper -n modifyrepo --keep-packages --all && zypper -n install postgresql18-server=18.6-160000.1.1 postgresql18-contrib=18.6-160000.1.1 libopenssl3=3.5.0-160000.10.1 findutils=4.10.0-160000.2.2 || exit; cd \"$d\" && for f in */*.rpm */*/*.rpm; do [ -f \"$f\" ] || continue; o=\"$s/$f\"; [ -e \"$o\" ] && continue; mkdir -p \"$(dirname \"$o\")\"; t=\"$(mktemp \"$(dirname \"$o\")/.pXXXXXX\")\" && cp \"$f\" \"$t\" && mv -f \"$t\" \"$o\"; done; zypper -n modifyrepo --no-keep-packages --all || true; (cd \"$p\" && rm -rf /usr/lib/locale/* && mkdir -p /run/postgresql && chown -R postgres:postgres /run/postgresql) || exit",
+      "COPY --from=bonitao/lazybox:0.8.5@sha256:091a3b63ba222777000acc3bf8327faebfea4870e23ee07c6eb42431dadb2ac6 /lazybox/ /root/.local/share/lazybox/",
+      "ENV PATH=/root/.local/bin:/root/.local/share/lazybox/bin:$PATH",
+      "ENV MISE_TRUSTED_CONFIG_PATHS=/monorepo",
+      "RUN mv /root/.local/share/lazybox/libexec/static-curl /root/.local/share/lazybox/libexec/static-curl.bin\nCOPY --chmod=0755 <<'STATIC_CURL' /root/.local/share/lazybox/libexec/static-curl\n#!/bin/sh\nOPENSSL_CONF=\"${OPENSSL_CONF:-/dev/null}\" exec \"$(dirname \"$0\")/static-curl.bin\" \"$@\"\nSTATIC_CURL",
+      "RUN --mount=type=cache,target=/zypper-store,id=/zypper-store,sharing=shared --mount=type=cache,target=/var/cache/zypp,id=golaberto-release-docker:/var/cache/zypp,sharing=locked s=/zypper-store; d=/var/cache/zypp/packages; mkdir -p \"$s\" \"$d\"; cp -r \"$s\"/. \"$d\"/ 2>/dev/null || true; zypper -n modifyservice --no-refresh --all && sed -i 's|http://|https://|g' /etc/zypp/repos.d/*.repo || exit; zypper -n modifyrepo --keep-packages --all && zypper -n install findutils=4.10.0-160000.2.2 which=2.23-160000.2.2 git-core=2.51.0-160000.1.2 libatomic1=15.3.0+git11272-160000.1.1 || exit; cd \"$d\" && for f in */*.rpm */*/*.rpm; do [ -f \"$f\" ] || continue; o=\"$s/$f\"; [ -e \"$o\" ] && continue; mkdir -p \"$(dirname \"$o\")\"; t=\"$(mktemp \"$(dirname \"$o\")/.pXXXXXX\")\" && cp \"$f\" \"$t\" && mv -f \"$t\" \"$o\"; done; zypper -n modifyrepo --no-keep-packages --all || true",
+      "RUN --mount=type=cache,target=/zypper-store,id=/zypper-store,sharing=shared --mount=type=cache,target=/var/cache/zypp,id=golaberto-release-docker:/var/cache/zypp,sharing=locked p=\"$PWD\"; s=/zypper-store; d=/var/cache/zypp/packages; mkdir -p \"$s\" \"$d\"; cp -r \"$s\"/. \"$d\"/ 2>/dev/null || true; zypper -n modifyservice --no-refresh --all && sed -i 's|http://|https://|g' /etc/zypp/repos.d/*.repo || exit; zypper -n modifyrepo --keep-packages --all && zypper -n install postgresql18-server=18.6-160000.1.1 postgresql18-contrib=18.6-160000.1.1 libopenssl3=3.5.0-160000.10.1 || exit; cd \"$d\" && for f in */*.rpm */*/*.rpm; do [ -f \"$f\" ] || continue; o=\"$s/$f\"; [ -e \"$o\" ] && continue; mkdir -p \"$(dirname \"$o\")\"; t=\"$(mktemp \"$(dirname \"$o\")/.pXXXXXX\")\" && cp \"$f\" \"$t\" && mv -f \"$t\" \"$o\"; done; zypper -n modifyrepo --no-keep-packages --all || true; (cd \"$p\" && rm -rf /usr/lib/locale/* && mkdir -p /run/postgresql && chown -R postgres:postgres /run/postgresql) || exit",
       "ENV PATH=/usr/lib/postgresql18/bin:/usr/local/bin:$PATH",
       "ENV PGDATA=/var/lib/pgsql/data",
+      "ENV PORT=8080",
       "ENV ORIGIN=http://localhost:8080",
       "ENV CADDY_TLS_HOST_PORT=8080",
       "ENV DENO_DIR=/deno-dir"
@@ -118,32 +124,6 @@
         "exclude": []
       },
       {
-        "from": {
-          "ref": ":caddy",
-          "name": "golaberto-caddy"
-        },
-        "srcs": [
-          "/srv"
-        ],
-        "dst": "/srv",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "ref": ":caddy",
-          "name": "golaberto-caddy"
-        },
-        "srcs": [
-          "/omnishell"
-        ],
-        "dst": "/omnishell",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
         "from": null,
         "srcs": [
           ".bayt/process-compose.yaml"
@@ -155,7 +135,46 @@
       },
       {
         "from": {
-          "name": "denoland/deno:bin-2.5.5@sha256:a8dd9a073b2b4d1beb77a8174830c5af54e32517808dcc28249ed6c04fdac979"
+          "ref": ":served-release",
+          "name": "golaberto-served-release"
+        },
+        "srcs": [
+          "/served/omnishell/"
+        ],
+        "dst": "/omnishell/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "ref": ":served-release",
+          "name": "golaberto-served-release"
+        },
+        "srcs": [
+          "/served/"
+        ],
+        "dst": "/srv/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "ref": ":served-release",
+          "name": "golaberto-served-release"
+        },
+        "srcs": [
+          "/served.scripts"
+        ],
+        "dst": "/etc/caddy/release-scripts",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "denoland/deno:bin-2.9.7@sha256:bc5aa4466e21b6d3021226a85ba2e1911f7c386254d97b9d797903ab74edace2"
         },
         "srcs": [
           "/deno"
@@ -195,10 +214,10 @@
     "epilogue": [
       "RUN printf '%s\\n' '#!/bin/sh' 'set -e' 'export PGDATA=\"${PGDATA:-/var/lib/pgsql/data}\"' 'export POSTGRES_DB=\"${POSTGRES_DB:-golaberto}\"' 'export PATH=\"/usr/lib/postgresql18/bin:$PATH\"' 'q=$(printf \"\\047\")' 'if [ ! -s \"$PGDATA/PG_VERSION\" ]; then' '  mkdir -p \"$PGDATA\" /run/postgresql' '  chown -R postgres:postgres \"$PGDATA\" /run/postgresql' '  setpriv --reuid=postgres --regid=postgres --clear-groups initdb -D \"$PGDATA\" --no-sync --encoding=UTF8 --auth=trust --locale-provider=icu --icu-locale=und --locale=C' '  setpriv --reuid=postgres --regid=postgres --clear-groups pg_ctl -D \"$PGDATA\" -w -o \"-c listen_addresses='\\'''\\''\" start' '  if [ \"$POSTGRES_DB\" != \"postgres\" ]; then setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d postgres -c \"CREATE DATABASE \\\"$POSTGRES_DB\\\"\"; fi' '  setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d \"$POSTGRES_DB\" -c \"CREATE TABLE IF NOT EXISTS _pronto_migrations (name text primary key, applied_at timestamptz default now())\"' '  for f in /docker-entrypoint-initdb.d/*.sql; do' '    if [ -f \"$f\" ]; then' '      echo \"Applying $f...\"' '      setpriv --reuid=postgres --regid=postgres --clear-groups psql -v ON_ERROR_STOP=1 -U postgres -d \"$POSTGRES_DB\" -f \"$f\"' '      base=$(basename \"$f\")' '      setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d \"$POSTGRES_DB\" -c \"INSERT INTO _pronto_migrations (name) VALUES ($q$base$q) ON CONFLICT DO NOTHING\"' '    fi' '  done' '  setpriv --reuid=postgres --regid=postgres --clear-groups pg_ctl -D \"$PGDATA\" -m fast -w stop' 'else' '  setpriv --reuid=postgres --regid=postgres --clear-groups pg_ctl -D \"$PGDATA\" -w -o \"-c listen_addresses='\\'''\\''\" start' '  setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d \"$POSTGRES_DB\" -c \"CREATE TABLE IF NOT EXISTS _pronto_migrations (name text primary key, applied_at timestamptz default now())\"' '  for f in /docker-entrypoint-initdb.d/*.sql; do' '    if [ -f \"$f\" ]; then' '      base=$(basename \"$f\")' '      case \"$base\" in *seed*) continue;; esac' '      applied=$(setpriv --reuid=postgres --regid=postgres --clear-groups psql -t -A -U postgres -d \"$POSTGRES_DB\" -c \"SELECT count(*) FROM _pronto_migrations WHERE name = $q$base$q\")' '      if [ \"$applied\" = \"0\" ]; then' '        echo \"Applying pending migration $f...\"' '        setpriv --reuid=postgres --regid=postgres --clear-groups psql -v ON_ERROR_STOP=1 -U postgres -d \"$POSTGRES_DB\" -f \"$f\"' '        setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d \"$POSTGRES_DB\" -c \"INSERT INTO _pronto_migrations (name) VALUES ($q$base$q)\"' '      fi' '    fi' '  done' '  setpriv --reuid=postgres --regid=postgres --clear-groups pg_ctl -D \"$PGDATA\" -m fast -w stop' 'fi' 'if [ \"$1\" = \"postgres\" ]; then shift; fi' 'exec setpriv --reuid=postgres --regid=postgres --clear-groups postgres -D \"$PGDATA\" -c listen_addresses=127.0.0.1 \"$@\"' > /usr/local/bin/docker-entrypoint.sh && chmod 755 /usr/local/bin/docker-entrypoint.sh",
       "RUN printf '%s\\n' '#!/bin/sh' 'if [ \"$1\" = \"microcheck\" ]; then' '  shift' '  exec \"$@\"' 'fi' 'exec \"$@\"' > /usr/local/bin/bayt && chmod 755 /usr/local/bin/bayt",
-      "RUN printf '%s\\n' '#!/bin/sh' 'set -e' 'if ! grep -q \"crud\" /etc/hosts 2>/dev/null; then' '  echo \"127.0.0.1 crud database auth\" >> /etc/hosts 2>/dev/null || true' 'fi' 'exec \"$@\"' > /usr/local/bin/appliance-entrypoint.sh && chmod 755 /usr/local/bin/appliance-entrypoint.sh",
-      "RUN if [ -f /srv/shell/index.html ] && [ ! -f /srv/index.html ]; then ln -sf /srv/shell/index.html /srv/index.html; fi",
+      "RUN printf '%s\\n' '#!/bin/sh' 'set -e' 'if ! grep -q \"crud\" /etc/hosts 2>/dev/null; then' '  echo \"127.0.0.1 crud database auth\" >> /etc/hosts 2>/dev/null || true' 'fi' 'export PORT=\"${PORT:-8080}\"' 'export CADDY_TLS_HOST_PORT=\"${PORT}\"' 'if [ -n \"$ORIGIN\" ]; then' '  if [ -z \"$WEBAUTHN_RP_ID\" ]; then' '    h=\"${ORIGIN#*://}\"' '    h=\"${h%%/*}\"' '    h=\"${h%%:*}\"' '    if [ -n \"$h\" ] && [ \"$h\" != \"localhost\" ]; then export WEBAUTHN_RP_ID=\"$h\"; fi' '  fi' '  if [ -z \"$WEBAUTHN_ORIGIN\" ] && [ -n \"$WEBAUTHN_RP_ID\" ] && [ \"$WEBAUTHN_RP_ID\" != \"localhost\" ]; then export WEBAUTHN_ORIGIN=\"$ORIGIN\"; fi' 'fi' 'exec \"$@\"' > /usr/local/bin/appliance-entrypoint.sh && chmod 755 /usr/local/bin/appliance-entrypoint.sh",
+      "RUN sed -i 's|http://127.0.0.1:8080/health|http://127.0.0.1:${PORT:-8080}/health|g' /.bayt/process-compose.yaml",
       "RUN sed -i '/handle @rendered {/,/^[[:space:]]*}[[:space:]]*$/d' /etc/caddy/Caddyfile",
-      "RUN awk '/handle \\/electric\\/\\* \\{/{p=1; print \"  handle /electric/* {\\n    header Content-Type application/json\\n    header electric-offset 0_0\\n    header electric-up-to-date true\\n    respond `[{\\\"headers\\\":{\\\"control\\\":\\\"up-to-date\\\"}}]` 200\\n  }\"; next} p && /^  \\}/{p=0; next} !p{print}' /etc/caddy/Caddyfile > /etc/caddy/Caddyfile.tmp && mv /etc/caddy/Caddyfile.tmp /etc/caddy/Caddyfile"
+      "RUN awk '/handle \\/electric\\/\\* \\{/{p=1; print \"  handle /electric/* {\\n    header Content-Type application/json\\n    header electric-handle stub\\n    header electric-offset 0_0\\n    header electric-cursor 0\\n    header electric-schema `{\\\"id\\\":{\\\"type\\\":\\\"text\\\"}}`\\n    header electric-up-to-date true\\n    header Access-Control-Allow-Origin *\\n    header Access-Control-Expose-Headers \\\"electric-handle, electric-offset, electric-cursor, electric-schema, electric-up-to-date, content-type, cache-control, x-txid\\\"\\n\\n    @subset query subset__where=*\\n    handle @subset {\\n      respond `{\\\"metadata\\\":{\\\"xmin\\\":\\\"1\\\",\\\"xmax\\\":\\\"1\\\",\\\"xip_list\\\":[],\\\"snapshot_mark\\\":0,\\\"database_lsn\\\":\\\"0\\\"},\\\"data\\\":[]}` 200\\n    }\\n    handle {\\n      respond `[{\\\"headers\\\":{\\\"control\\\":\\\"up-to-date\\\"}}]` 200\\n    }\\n  }\"; next} p && /^  \\}/{p=0; next} !p{print}' /etc/caddy/Caddyfile > /etc/caddy/Caddyfile.tmp && mv /etc/caddy/Caddyfile.tmp /etc/caddy/Caddyfile"
     ],
     "extra_hosts": [],
     "mounts": [],
@@ -215,7 +234,9 @@
       "-f",
       "/.bayt/process-compose.yaml",
       "-t=false",
-      "--no-server"
+      "--no-server",
+      "caddy",
+      "auth"
     ]
   },
   "name": "release-docker",
@@ -274,6 +295,8 @@
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.served.yaml",
+        "./.bayt/compose.served-release.yaml",
         "./.bayt/compose.auth.yaml"
       ]
     },
@@ -307,6 +330,8 @@
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.served.yaml",
+        "./.bayt/compose.served-release.yaml",
         "./.bayt/compose.auth.yaml"
       ]
     },
@@ -367,6 +392,8 @@
           "services/database/migrations/045_drain_feed.sql",
           "services/database/migrations/046_team_projection_turn.sql",
           "services/database/migrations/047_home_games_at_read.sql",
+          "services/database/migrations/048_matches_start.sql",
+          "services/database/migrations/049_match_rating_history_bound.sql",
           "services/database/migrations/900_seed.sql",
           "services/database/migrations/801_schedule_seed.sql",
           "docker/Caddyfile",
@@ -383,8 +410,6 @@
           "shell/screens/arquivo-campeonato.css",
           "shell/screens/publico.html",
           "shell/screens/publico.css",
-          "shell/screens/jogadores.html",
-          "shell/screens/jogadores.css",
           "shell/screens/campeonato-jogadores.html",
           "shell/screens/campeonato-jogadores.css",
           "shell/screens/jogador-campeonato.html",
@@ -403,6 +428,8 @@
           "shell/screens/editar.css",
           "shell/screens/equipes.html",
           "shell/screens/equipes.css",
+          "shell/screens/jogadores.html",
+          "shell/screens/jogadores.css",
           "shell/screens/estadios.html",
           "shell/screens/estadios.css",
           "shell/screens/estadio.html",
@@ -496,7 +523,6 @@
           "shell/renderers/community-history.js",
           "shell/renderers/country-flag.js",
           "shell/renderers/geography-label.js",
-          "shell/renderers/home-date.js",
           "shell/renderers/match-context-map.js",
           "shell/renderers/match-final-score.js",
           "shell/renderers/match-probability.js",
@@ -512,6 +538,7 @@
           "shell/renderers/team-badge.js",
           "shell/renderers/team-chart.js",
           "shell/renderers/team-location.js",
+          "shell/renderers/weekday.js",
           "shell/shared/catalog.css",
           "shell/shared/chrome.css",
           "shell/shared/community.css",
@@ -523,7 +550,7 @@
           "shell/shared/team.css",
           "messages/pt-BR.json",
           "messages/es-AR.json",
-          "messages/en-GB.json",
+          "messages/en-US.json",
           "messages/it-IT.json",
           "messages/de-DE.json",
           "messages/fr-FR.json",
@@ -550,10 +577,12 @@
         "database_srcs",
         "crud_srcs",
         "caddy_srcs",
+        "served-release_srcs",
         "auth_srcs",
         "database_outs_srcs",
         "migrate_outs_srcs",
-        "crud_outs_srcs"
+        "crud_outs_srcs",
+        "served_outs_srcs"
       ],
       "transitiveCrossDeps": [
         {
@@ -607,6 +636,8 @@
               "services/database/migrations/045_drain_feed.sql",
               "services/database/migrations/046_team_projection_turn.sql",
               "services/database/migrations/047_home_games_at_read.sql",
+              "services/database/migrations/048_matches_start.sql",
+              "services/database/migrations/049_match_rating_history_bound.sql",
               "services/database/migrations/900_seed.sql",
               "services/database/migrations/801_schedule_seed.sql"
             ],
@@ -619,7 +650,17 @@
           "dir": ".",
           "outs": {
             "globs": [
-              "docker/Caddyfile",
+              "docker/Caddyfile"
+            ],
+            "exclude": []
+          }
+        },
+        {
+          "project": "golaberto",
+          "name": "served-release_srcs",
+          "dir": ".",
+          "outs": {
+            "globs": [
               "shell/index.html",
               "shell/shell.css",
               "shell/boot.js",
@@ -633,8 +674,6 @@
               "shell/screens/arquivo-campeonato.css",
               "shell/screens/publico.html",
               "shell/screens/publico.css",
-              "shell/screens/jogadores.html",
-              "shell/screens/jogadores.css",
               "shell/screens/campeonato-jogadores.html",
               "shell/screens/campeonato-jogadores.css",
               "shell/screens/jogador-campeonato.html",
@@ -653,6 +692,8 @@
               "shell/screens/editar.css",
               "shell/screens/equipes.html",
               "shell/screens/equipes.css",
+              "shell/screens/jogadores.html",
+              "shell/screens/jogadores.css",
               "shell/screens/estadios.html",
               "shell/screens/estadios.css",
               "shell/screens/estadio.html",
@@ -746,7 +787,6 @@
               "shell/renderers/community-history.js",
               "shell/renderers/country-flag.js",
               "shell/renderers/geography-label.js",
-              "shell/renderers/home-date.js",
               "shell/renderers/match-context-map.js",
               "shell/renderers/match-final-score.js",
               "shell/renderers/match-probability.js",
@@ -762,6 +802,7 @@
               "shell/renderers/team-badge.js",
               "shell/renderers/team-chart.js",
               "shell/renderers/team-location.js",
+              "shell/renderers/weekday.js",
               "shell/shared/catalog.css",
               "shell/shared/chrome.css",
               "shell/shared/community.css",
@@ -773,7 +814,7 @@
               "shell/shared/team.css",
               "messages/pt-BR.json",
               "messages/es-AR.json",
-              "messages/en-GB.json",
+              "messages/en-US.json",
               "messages/it-IT.json",
               "messages/de-DE.json",
               "messages/fr-FR.json",
@@ -807,6 +848,8 @@
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.served.yaml",
+        "./.bayt/compose.served-release.yaml",
         "./.bayt/compose.auth.yaml"
       ]
     }
@@ -817,22 +860,26 @@
     "database",
     "crud",
     "caddy",
+    "served-release",
     "auth"
   ],
   "sameProjectDeps": [
     "database",
     "crud",
     "caddy",
+    "served-release",
     "auth"
   ],
   "transitiveDeps": [
     "database",
     "crud",
     "caddy",
+    "served-release",
     "auth",
     "database_outs",
     "migrate_outs",
-    "crud_outs"
+    "crud_outs",
+    "served_outs"
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
@@ -841,6 +888,8 @@
     "./.bayt/compose.crud.yaml",
     "./.bayt/compose.migrate.yaml",
     "./.bayt/compose.caddy.yaml",
+    "./.bayt/compose.served.yaml",
+    "./.bayt/compose.served-release.yaml",
     "./.bayt/compose.auth.yaml"
   ],
   "chainedDeps": [
@@ -864,6 +913,15 @@
     },
     {
       "name": "caddy",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "served-release",
       "project": "golaberto",
       "dir": ".",
       "outs": {
@@ -900,6 +958,15 @@
     },
     {
       "name": "crud_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "served_outs",
       "project": "golaberto",
       "dir": ".",
       "outs": {

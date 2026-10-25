@@ -5,7 +5,7 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.9.0@sha256:eadcd8a668af9bf9f71f375f96b08965ebd49469d0c7a45d99e70b04316bcc2e}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+        "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.17.0@sha256:72dc57321816141cf21744244afee9e09448790365e178ab607bc83b8e71f738}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
       },
       "secrets": [],
       "args": {}
@@ -14,6 +14,8 @@
       "POSTGRES_USER": "${POSTGRES_USER:-postgres}",
       "POSTGRES_PASSWORD": "${POSTGRES_PASSWORD:-postgres}",
       "POSTGRES_DB": "${POSTGRES_DB:-golaberto}",
+      "ELECTRIC_PASSWORD": "${ELECTRIC_PASSWORD:-dev-electric-password}",
+      "AUTHENTICATOR_PASSWORD": "${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}",
       "POSTGRES_INITDB_ARGS": "--no-sync --encoding=UTF8 --auth=trust --locale-provider=icu --icu-locale=und --locale=C"
     },
     "ports": [
@@ -276,6 +278,16 @@
         },
         {
           "action": "rebuild",
+          "path": "../services/database/migrations/048_matches_start.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
+          "path": "../services/database/migrations/049_match_rating_history_bound.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
           "path": "../services/database/migrations/900_seed.sql",
           "target": "/docker-entrypoint-initdb.d"
         },
@@ -347,10 +359,24 @@
           "services/database/migrations/045_drain_feed.sql",
           "services/database/migrations/046_team_projection_turn.sql",
           "services/database/migrations/047_home_games_at_read.sql",
+          "services/database/migrations/048_matches_start.sql",
+          "services/database/migrations/049_match_rating_history_bound.sql",
           "services/database/migrations/900_seed.sql",
           "services/database/migrations/801_schedule_seed.sql"
         ],
         "dst": "/docker-entrypoint-initdb.d/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-database-image"
+        },
+        "srcs": [
+          "/usr/share/mecha/initdb/899_role_passwords.sh"
+        ],
+        "dst": "/docker-entrypoint-initdb.d/899_role_passwords.sh",
         "link": true,
         "parents": false,
         "exclude": []
@@ -394,7 +420,14 @@
   "entrypoint": {
     "do": "docker-entrypoint.sh postgres -c wal_level=logical -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c shared_buffers=32MB -c max_connections=200",
     "shell": "exec",
-    "env": {},
+    "env": {
+      "POSTGRES_USER": "${POSTGRES_USER:-postgres}",
+      "POSTGRES_PASSWORD": "${POSTGRES_PASSWORD:-postgres}",
+      "POSTGRES_DB": "${POSTGRES_DB:-golaberto}",
+      "ELECTRIC_PASSWORD": "${ELECTRIC_PASSWORD:-dev-electric-password}",
+      "AUTHENTICATOR_PASSWORD": "${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}",
+      "POSTGRES_INITDB_ARGS": "--no-sync --encoding=UTF8 --auth=trust --locale-provider=icu --icu-locale=und --locale=C"
+    },
     "after": {},
     "host": true
   },
@@ -466,6 +499,8 @@
       "services/database/migrations/045_drain_feed.sql",
       "services/database/migrations/046_team_projection_turn.sql",
       "services/database/migrations/047_home_games_at_read.sql",
+      "services/database/migrations/048_matches_start.sql",
+      "services/database/migrations/049_match_rating_history_bound.sql",
       "services/database/migrations/900_seed.sql",
       "services/database/migrations/801_schedule_seed.sql"
     ],
@@ -599,6 +634,8 @@
           "services/database/migrations/045_drain_feed.sql",
           "services/database/migrations/046_team_projection_turn.sql",
           "services/database/migrations/047_home_games_at_read.sql",
+          "services/database/migrations/048_matches_start.sql",
+          "services/database/migrations/049_match_rating_history_bound.sql",
           "services/database/migrations/900_seed.sql",
           "services/database/migrations/801_schedule_seed.sql"
         ],

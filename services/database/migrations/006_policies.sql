@@ -453,6 +453,13 @@ CREATE POLICY player_directory_app_user_select ON player_directory FOR SELECT TO
 DROP POLICY IF EXISTS player_directory_service_all ON player_directory;
 CREATE POLICY player_directory_service_all ON player_directory FOR ALL TO service USING (true) WITH CHECK (true);
 
+CALL rls_protect('matches_start');
+ALTER TABLE matches_start ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS matches_start_app_user_select ON matches_start;
+CREATE POLICY matches_start_app_user_select ON matches_start FOR SELECT TO app_user USING (true);
+DROP POLICY IF EXISTS matches_start_service_all ON matches_start;
+CREATE POLICY matches_start_service_all ON matches_start FOR ALL TO service USING (true) WITH CHECK (true);
+
 CALL rls_protect('game_archive');
 ALTER TABLE game_archive ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS game_archive_app_user_select ON game_archive;

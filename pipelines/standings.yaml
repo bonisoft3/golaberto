@@ -17,10 +17,37 @@ input:
             - cdc-events
           body_key: data
           consumer_group: golaberto-standings
+        processors:
+          # The change feed's transaction markers become each row's
+          # @traceparent (mecha's cdc-trace.yaml, loaded by -r).
+          - mutation: meta cdc_consumer = "golaberto-standings"
+          - resource: cdc_trace_join
       - generate:
           count: 1
           interval: ""
           mapping: 'root = {"boot": true}'
+        # Reuse group events, one batch each: a batch is processed whole, so
+        # one holding every group would hold every game the recounts read.
+        processors:
+          - try:
+              - branch:
+                  processors:
+                    - http:
+                        url: ${CRUD_URL}/stage_group?select=id&order=id
+                        verb: GET
+                        retries: 30
+                        retry_period: 2s
+                        headers:
+                          Authorization: Bearer ${SERVICE_JWT}
+                        metadata:
+                          include_patterns: ["^traceparent$"]
+                  result_map: root.groups = this
+              - mapping: |
+                  root = this.groups.map_each(g -> {"data": {"__table": "stage_group", "id": g.id}.format_json().string()})
+              - unarchive:
+                  format: json_array
+          - split:
+              size: 1
 pipeline:
   threads: 1
   processors:
@@ -31,7 +58,7 @@ pipeline:
         let table = $row.__table.or("")
         let before = $row.__before.or("{}").parse_json()
         let scope = match {
-          this.boot.or(false) => "stage_group?select=id,phase_id",
+          this.boot.or(false) => throw("Group bootstrap failed"),
           $table == "game" => "stage_group?select=id,phase_id&phase_id=eq." + $row.phase_id,
           $table == "phase" => "stage_group?select=id,phase_id&phase_id=eq." + $row.id,
           $table == "stage_group" => "stage_group?select=id,phase_id&id=eq." + $row.id,
@@ -55,6 +82,8 @@ pipeline:
                   retry_period: 2s
                   headers:
                     Authorization: Bearer ${SERVICE_JWT}
+                  metadata:
+                    include_patterns: ["^traceparent$"]
             result_map: root.groups = this
         # One message per group, so no read or post grows with the archive.
         - mapping: |
@@ -68,6 +97,8 @@ pipeline:
                   verb: GET
                   headers:
                     Authorization: Bearer ${SERVICE_JWT}
+                  metadata:
+                    include_patterns: ["^traceparent$"]
             result_map: root.members = this
         - branch:
             processors:
@@ -76,6 +107,8 @@ pipeline:
                   verb: GET
                   headers:
                     Authorization: Bearer ${SERVICE_JWT}
+                  metadata:
+                    include_patterns: ["^traceparent$"]
             result_map: root.games = this
         - branch:
             processors:
@@ -84,6 +117,8 @@ pipeline:
                   verb: GET
                   headers:
                     Authorization: Bearer ${SERVICE_JWT}
+                  metadata:
+                    include_patterns: ["^traceparent$"]
             result_map: root.phases = this
         - branch:
             processors:
@@ -92,6 +127,8 @@ pipeline:
                   verb: GET
                   headers:
                     Authorization: Bearer ${SERVICE_JWT}
+                  metadata:
+                    include_patterns: ["^traceparent$"]
             result_map: root.zones = this
         - bloblang: |
             # A key that sorts descending, as a fixed-width string that sorts
@@ -236,3 +273,6 @@ output:
       successful_on:
         - 200
         - 201
+
+      metadata:
+        include_patterns: ["^traceparent$"]

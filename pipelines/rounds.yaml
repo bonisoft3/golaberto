@@ -16,6 +16,11 @@ input:
             - cdc-events
           body_key: data
           consumer_group: golaberto-rounds
+        processors:
+          # The change feed's transaction markers become each row's
+          # @traceparent (mecha's cdc-trace.yaml, loaded by -r).
+          - mutation: meta cdc_consumer = "golaberto-rounds"
+          - resource: cdc_trace_join
       - generate:
           count: 1
           interval: ""
@@ -45,6 +50,8 @@ pipeline:
                   retry_period: 2s
                   headers:
                     Authorization: Bearer ${SERVICE_JWT}
+                  metadata:
+                    include_patterns: ["^traceparent$"]
             result_map: root.phases = this
         - mapping: |
             root = if this.phases.length() == 0 { deleted() } else { this.phases.map_each(p -> {"phase": p.id}) }
@@ -59,6 +66,8 @@ pipeline:
                   retry_period: 2s
                   headers:
                     Authorization: Bearer ${SERVICE_JWT}
+                  metadata:
+                    include_patterns: ["^traceparent$"]
             result_map: root.games = this
         - bloblang: |
             let rounds = this.games.map_each(g -> g.round).unique().sort()
@@ -86,6 +95,8 @@ output:
               successful_on:
                 - 200
                 - 201
+              metadata:
+                include_patterns: ["^traceparent$"]
         - check: '@sink == "delete"'
           output:
             http_client:
@@ -97,3 +108,6 @@ output:
               successful_on:
                 - 200
                 - 204
+
+              metadata:
+                include_patterns: ["^traceparent$"]

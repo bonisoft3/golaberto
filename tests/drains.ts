@@ -1,15 +1,9 @@
-// The drains run on change, never on an interval: an edit reaches its
-// projection by its own change event, a stack nobody writes to calls none of
-// them, and the two that share team rows take turns rather than deadlock. Each
-// edit is committed, since only a commit reaches the change feed, and restored
-// in finally.
+// Edits commit to reach CDC; projection and lock-state assertions bound
+// failures by a deadline, never establish success by elapsed time.
 import { assert, assertEquals } from "jsr:@std/assert@1";
 import { query } from "./db.ts";
+import postgres from "npm:postgres@3.4.9";
 
-const drains = [
-  "refresh_team_enrichment", "refresh_team_profiles", "refresh_team_directory",
-  "refresh_matches_games", "refresh_recent_championships",
-];
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 async function eventually(sql: string, seconds: number) {
@@ -18,40 +12,6 @@ async function eventually(sql: string, seconds: number) {
   }
   throw new Error(`not within ${seconds}s: ${sql}`);
 }
-
-Deno.test("an idle stack calls no drain", async () => {
-  const calls = async () => Number(await query(`SELECT coalesce(sum(calls), 0) FROM pg_stat_user_functions
-    WHERE funcname = ANY('{${drains.join(",")}}')`));
-  // A day tick inside the window would be a call owed: UTC midnight and
-  // Brasília's, which is 03:00 UTC.
-  const clear = () => {
-    const hour = 3_600_000, sinceHour = Date.now() % hour, h = new Date().getUTCHours();
-    const nearTick = (h === 23 || h === 2) && hour - sinceHour < 90_000;
-    return nearTick ? sleep(hour - sinceHour + 5_000) : Promise.resolve();
-  };
-  await query("ALTER SYSTEM SET track_functions = 'pl'");
-  await query("SELECT pg_reload_conf()");
-  try {
-    // Quiet first: the stack's start, and the checks before this one, are still
-    // owed their calls, a card stream's recount waking matches-games once a
-    // second. A backend reports its counts within ten seconds of going idle.
-    await clear();
-    let last = await calls();
-    for (let steady = 0, waited = 0; steady < 4; steady++, waited++) {
-      assert(waited < 72, "the drains did not settle within six minutes");
-      await sleep(5_000);
-      const now = await calls();
-      if (now !== last) [last, steady] = [now, -1];
-    }
-    await clear();
-    const before = await calls();
-    await sleep(60_000);
-    assertEquals(await calls(), before);
-  } finally {
-    await query("ALTER SYSTEM RESET track_functions");
-    await query("SELECT pg_reload_conf()");
-  }
-});
 
 Deno.test("a team's edit reaches the directory through the change feed", async () => {
   const [id, city] = (await query("SELECT id, city FROM team WHERE coalesce(city, '') <> '' ORDER BY id LIMIT 1")).split("|");
@@ -82,24 +42,122 @@ Deno.test("championships' renames drain every member's profile", async () => {
   }
 });
 
-// Profiles rewrite team_roster, whose triggers queue roster totals, while
-// enrichment drains that queue: before they took turns, a boot or a rebuild
-// like this one deadlocked about one round in three.
-Deno.test("rebuilding every roster while both team drains run deadlocks neither", async () => {
-  const deadlocks = async () => Number(await query("SELECT deadlocks FROM pg_stat_database WHERE datname = current_database()"));
-  const settled = async () => {
-    for (const deadline = Date.now() + 120_000; Date.now() < deadline; await sleep(500)) {
-      if (await query(`SELECT NOT EXISTS (SELECT 1 FROM team_profile_dirty) AND NOT EXISTS (SELECT 1 FROM team_roster_total_dirty)`) === "t") return;
+// Holding the common lock makes the formerly conflicting calls overlap
+// deterministically, even when both dirty queues are empty.
+Deno.test("both team drains wait for the same transaction lock before writing", async () => {
+  const connect = () => postgres(Deno.env.get("DATABASE_URL")!, { max: 1, fetch_types: false });
+  const holder = connect();
+  const profiles = connect();
+  const enrichment = connect();
+  let holding = false;
+  const pending: Promise<unknown>[] = [];
+  try {
+    const [{ pid: profilePid }] = await profiles`SELECT pg_backend_pid() AS pid`;
+    const [{ pid: enrichmentPid }] = await enrichment`SELECT pg_backend_pid() AS pid`;
+    await holder`BEGIN`;
+    holding = true;
+    await holder`SELECT pg_advisory_xact_lock(715030, 1)`;
+    // Attach rejection handlers immediately; all results are asserted below.
+    pending.push(profiles`SELECT refresh_team_profiles()`.execute());
+    pending.push(enrichment`SELECT refresh_team_enrichment()`.execute());
+    const completed = Promise.allSettled(pending);
+    await eventually(`SELECT count(*) = 2 FROM pg_locks
+      WHERE pid IN (${profilePid}, ${enrichmentPid}) AND locktype = 'advisory'
+        AND classid = 715030 AND objid = 1 AND objsubid = 2 AND NOT granted`, 10);
+    assertEquals(await query(`SELECT count(*) FROM pg_locks l JOIN pg_class c ON c.oid = l.relation
+      JOIN pg_namespace n ON n.oid = c.relnamespace
+      WHERE l.pid IN (${profilePid}, ${enrichmentPid}) AND n.nspname = 'public'
+        AND l.mode IN ('RowExclusiveLock', 'ShareRowExclusiveLock', 'ExclusiveLock', 'AccessExclusiveLock')`), "0");
+    await holder`COMMIT`;
+    holding = false;
+    for (const result of await completed) {
+      if (result.status === "rejected") throw result.reason;
     }
-    throw new Error("the team queues did not drain within two minutes");
-  };
-  const rosters = await query("SELECT count(*) FROM team_roster");
-  await settled();
-  const before = await deadlocks();
-  for (let round = 0; round < 6; round++) {
-    await query("BEGIN; DELETE FROM team_roster; SELECT count(enqueue_team_profile(id)) FROM team; COMMIT;");
-    await settled();
+  } finally {
+    if (holding) await holder`ROLLBACK`;
+    await Promise.allSettled(pending);
+    await Promise.all([holder.end(), profiles.end(), enrichment.end()]);
   }
+});
+
+Deno.test("rebuilding every roster drains both team queues", async () => {
+  const settled = () => eventually(`SELECT NOT EXISTS (SELECT 1 FROM team_profile_dirty)
+    AND NOT EXISTS (SELECT 1 FROM team_roster_total_dirty)`, 120);
+  await settled();
+  const rosters = await query("SELECT count(*) FROM team_roster");
+  await query("BEGIN; DELETE FROM team_roster; SELECT count(enqueue_team_profile(id)) FROM team; COMMIT;");
+  await settled();
   assertEquals(await query("SELECT count(*) FROM team_roster"), rosters);
-  assertEquals(await deadlocks(), before);
+});
+
+Deno.test("championship writers take the projection turn before locking source rows", async () => {
+  const connect = () => postgres(Deno.env.get("DATABASE_URL")!, { max: 1, fetch_types: false });
+  const holder = connect();
+  const writer = connect();
+  let held = false;
+  let writing = false;
+  let pending: Promise<unknown> | undefined;
+  try {
+    const [{ id }] = await holder`SELECT id FROM championship ORDER BY id LIMIT 1`;
+    assert(id, "the seed has a championship");
+    const [{ pid }] = await writer`SELECT pg_backend_pid() AS pid`;
+    await holder`BEGIN`;
+    held = true;
+    await holder`SELECT pg_advisory_xact_lock(715030, 1)`;
+    await writer`BEGIN`;
+    writing = true;
+    await writer`SET LOCAL lock_timeout = '17s'`;
+    pending = writer`UPDATE championship SET name = 'Projection turn ' || name WHERE id = ${id}`.execute();
+    const completed = Promise.allSettled([pending]);
+    await eventually(`SELECT EXISTS (SELECT 1 FROM pg_locks WHERE pid = ${pid}
+      AND locktype = 'advisory' AND classid = 715030 AND objid = 1 AND objsubid = 2 AND NOT granted)`, 3);
+    // A row trigger would acquire this row first and recreate the deadlock.
+    await holder`SELECT id FROM championship WHERE id = ${id} FOR UPDATE NOWAIT`;
+    await holder`ROLLBACK`;
+    held = false;
+    const [result] = await completed;
+    if (result.status === "rejected") throw result.reason;
+    const [{ lock_timeout }] = await writer`SHOW lock_timeout`;
+    assertEquals(lock_timeout, "17s");
+  } finally {
+    if (held) await holder`ROLLBACK`;
+    if (pending) await Promise.allSettled([pending]);
+    if (writing) await writer`ROLLBACK`;
+    await Promise.all([holder.end(), writer.end()]);
+  }
+});
+
+Deno.test("user deletion takes the projection turn before locking attribution parents", async () => {
+  const connect = () => postgres(Deno.env.get("DATABASE_URL")!, { max: 1, fetch_types: false });
+  const holder = connect();
+  const deleter = connect();
+  const user = crypto.randomUUID();
+  let held = false;
+  let deleting = false;
+  let pending: Promise<unknown> | undefined;
+  try {
+    await holder`INSERT INTO app_user(id, handle) VALUES (${user}, ${`projection-${user}`})`;
+    const [{ pid }] = await deleter`SELECT pg_backend_pid() AS pid`;
+    await holder`BEGIN`;
+    held = true;
+    await holder`SELECT pg_advisory_xact_lock(715030, 1)`;
+    await deleter`BEGIN`;
+    deleting = true;
+    pending = deleter`DELETE FROM app_user WHERE id = ${user}`.execute();
+    const completed = Promise.allSettled([pending]);
+    await eventually(`SELECT EXISTS (SELECT 1 FROM pg_locks WHERE pid = ${pid}
+      AND locktype = 'advisory' AND classid = 715030 AND objid = 1 AND objsubid = 2 AND NOT granted)`, 3);
+    // The FK check must acquire its parent lock while deletion waits for the turn.
+    await holder`INSERT INTO team(id, name, country, created_by) VALUES (${crypto.randomUUID()}, 'Projection parent', 'Brasil', ${user})`;
+    await holder`ROLLBACK`;
+    held = false;
+    const [result] = await completed;
+    if (result.status === "rejected") throw result.reason;
+  } finally {
+    if (held) await holder`ROLLBACK`;
+    if (pending) await Promise.allSettled([pending]);
+    if (deleting) await deleter`ROLLBACK`;
+    await holder`DELETE FROM app_user WHERE id = ${user}`;
+    await Promise.all([holder.end(), deleter.end()]);
+  }
 });

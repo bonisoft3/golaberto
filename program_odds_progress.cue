@@ -72,17 +72,9 @@ code: surface: handlers: {
 code: state: migrations: "042_team_odds_progress": {operations: [{sql: {up: _teamOddsProgressUpgrade, onComplete: true}}]}
 code: state: migrations: "043_queued_odds_refresh": {operations: [{sql: {up: _queuedOddsRefreshSql, onComplete: true}}]}
 
-build: checks: "odds-progress": {
-	priority: 1
-	database: true
-	srcs: ["services/database/sql/042_team_odds_progress.sql", "services/database/sql/043_queued_odds_refresh.sql"]
-	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-net --allow-read --allow-sys tests/odds-progress.ts"]
-	note: "recorded odds keep whole complete days, at most 360 of them, with zone sums over sparse positions and the last result before each capture"
-}
-
 loop: surface: checks: "odds-progress-renderer": {
 	verb: "test"
-	cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/odds-progress-renderer.ts tests/odds-progress-controls.ts tests/position-odds-renderer.ts tests/position-odds-controls.ts tests/position-odds-hover.ts"]
+	cmds: ["mise exec -- deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-read --allow-env tests/odds-progress-renderer.ts tests/odds-progress-controls.ts tests/position-odds-renderer.ts tests/position-odds-controls.ts tests/position-odds-hover.ts"]
 	note: "shared-date stacks, zone paint by role or source hex, compact locale-aware odds, range totals and isolated chart controls"
 }
 

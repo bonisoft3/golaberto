@@ -1,4 +1,32 @@
-import { query } from "./db.ts";
+import { query, replay } from "./db.ts";
+
+Deno.test("rating-bound migration preserves existing view grants and public security", async () => {
+  const migration = (await Deno.readTextFile(new URL("../services/database/sql/049_match_rating_history_bound.sql", import.meta.url)))
+    .replace(/^BEGIN;\s*$/m, "").replace(/^COMMIT;\s*$/m, "");
+  await replay(`BEGIN;
+    SET LOCAL pgroll.no_inferred_migrations = 'TRUE';
+    GRANT SELECT ON match_probability TO electric;
+    CREATE TEMP TABLE expected_probability_acl ON COMMIT DROP AS
+      SELECT a.* FROM pg_class c CROSS JOIN LATERAL aclexplode(c.relacl) a
+      WHERE c.oid='public.match_probability'::regclass;
+    ${migration}
+    DO $$ BEGIN
+      IF EXISTS (
+        (SELECT * FROM expected_probability_acl EXCEPT
+          SELECT a.* FROM pg_class c CROSS JOIN LATERAL aclexplode(c.relacl) a
+          WHERE c.oid='public.match_probability'::regclass)
+        UNION ALL
+        (SELECT a.* FROM pg_class c CROSS JOIN LATERAL aclexplode(c.relacl) a
+          WHERE c.oid='public.match_probability'::regclass EXCEPT
+          SELECT * FROM expected_probability_acl)
+      ) OR NOT has_table_privilege('electric','match_probability','SELECT')
+        OR NOT has_table_privilege('app_user','match_probability','SELECT')
+        OR NOT (SELECT coalesce('security_invoker=true'=ANY(reloptions),false)
+          FROM pg_class WHERE oid='public.match_probability'::regclass)
+      THEN RAISE EXCEPTION 'rating-bound migration changed grants or public security'; END IF;
+    END $$;
+    ROLLBACK;`);
+});
 
 Deno.test("match probability selects historical ratings and bounds timed events", async () => {
   const [
@@ -91,6 +119,24 @@ Deno.test("match probability selects historical ratings and bounds timed events"
         OR has_table_privilege('app_user','match_probability','DELETE')
       THEN RAISE EXCEPTION 'probability request view is incomplete or writable'; END IF;
     END $$;
+    DO $$ DECLARE zone text; cutoff record; payload jsonb; BEGIN
+      FOREACH zone IN ARRAY ARRAY['UTC','America/Sao_Paulo','Pacific/Kiritimati'] LOOP
+        PERFORM set_config('TimeZone',zone,true);
+        FOR cutoff IN SELECT * FROM (VALUES
+          (NULL::timestamptz,'2026-01-01'),
+          ('2026-01-03T00:00:00Z'::timestamptz,'2026-01-01'),
+          ('2026-01-03T00:00:00.000001Z'::timestamptz,'2026-01-03'),
+          ('2026-01-03T23:59:59Z'::timestamptz,'2026-01-03'),
+          ('2026-01-03T23:30:00-03:00'::timestamptz,'2026-01-04')
+        ) cases(instant,expected) LOOP
+          UPDATE game SET kickoff=cutoff.instant WHERE id='${kickoffGame}';
+          SELECT payload_json::jsonb INTO payload FROM match_probability WHERE id='${kickoffGame}';
+          IF payload->>'home_measure_date' IS DISTINCT FROM cutoff.expected
+            OR payload->>'rating_status' IS DISTINCT FROM 'available'
+          THEN RAISE EXCEPTION 'UTC cutoff % in zone % changed: %',cutoff.instant,zone,payload; END IF;
+        END LOOP;
+      END LOOP;
+    END $$;
     SET LOCAL app.scopes='public:';
     SET LOCAL request.jwt.claims='{"sub":"00000000-0000-0000-0000-000000000001","guest":true}';
     SET LOCAL ROLE app_user;
@@ -99,6 +145,22 @@ Deno.test("match probability selects historical ratings and bounds timed events"
       THEN RAISE EXCEPTION 'public reader cannot evaluate the security-invoker view'; END IF;
     END $$;
     RESET ROLE;
+    ROLLBACK;`);
+});
+
+Deno.test("historical probability lookups bound the indexed rating date for both teams", async () => {
+  await query(`BEGIN;
+    SET LOCAL enable_seqscan=off;
+    SET LOCAL app.scopes='public:';
+    SET LOCAL ROLE app_user;
+    DO $$ DECLARE plan jsonb; game_id uuid; BEGIN
+      SELECT id INTO STRICT game_id FROM game ORDER BY day,id LIMIT 1;
+      EXECUTE format('EXPLAIN (FORMAT JSON) SELECT * FROM match_probability WHERE id=%L',game_id) INTO plan;
+      IF (SELECT count(DISTINCT node->>'Alias')
+          FROM jsonb_path_query(plan,'$.** ? (@."Relation Name" == "team_rating")') node
+          WHERE jsonb_path_exists(node,'$.** ? (@."Index Cond" like_regex "measure_date.*<=")'))<2
+      THEN RAISE EXCEPTION 'historical rating lookup lost its indexed date bound: %',plan; END IF;
+    END $$;
     ROLLBACK;`);
 });
 

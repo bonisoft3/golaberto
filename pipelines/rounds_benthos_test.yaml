@@ -48,3 +48,11 @@ tests:
       - content: '{"boot": true}'
     output_batches:
       - - bloblang: 'this == {"scope": "phase?select=id"}'
+  - name: a transaction's marker stamps the trace of the rows after it and is no change itself
+    target_processors: /input/broker/inputs/0/processors
+    input_batch:
+      - content: '{"data": "{\"__table\": \"txn_trace\", \"txid\": 7, \"traceparent\": \"00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01\"}"}'
+      - content: '{"data": "{\"__table\": \"game\", \"txid\": 7, \"phase_id\": \"p\"}"}'
+    output_batches:
+      - - metadata_equals:
+            traceparent: 00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01

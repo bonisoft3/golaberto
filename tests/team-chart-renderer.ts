@@ -4,8 +4,7 @@ import positionOdds from "../shell/renderers/position-odds.js";
 import { built } from "./terminal-nodes.ts";
 
 const render = (value: string) => built(renderNodes(value));
-import { buildNodes } from "../../../plugins/omnishell/interpreter/render.js";
-import { evaluateRole } from "../../../plugins/omnishell/interpreter/jessie.js";
+import { buildNodes, evaluateRole } from "./platform.ts";
 
 const SEP = "\u001f";
 const input = (chart: unknown, title = "Rating history", locale = "en-GB") =>

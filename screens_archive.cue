@@ -7,10 +7,10 @@ _archiveGameOrder: #"{"by":"{played}","of":{"true":"day.desc,kickoff.desc.nullsl
 	order:      string
 	attendance: *false | bool
 	out:        """
-	<ol class="games" data-live="game_archive" data-filter="\(G.filter)" data-order='\(G.order)' data-empty="{msg.archive_empty}">
+	<ol class="games" data-project='{"reader_day":{"date":["kickoff","day"]}}' data-live="game_archive" data-filter="\(G.filter)" data-order='\(G.order)' data-empty="{msg.archive_empty}">
 	  <template data-item><li>
 	    <a class="game-row" data-show-country="{show_country}" data-route="jogo" data-param-slug="{slug}" data-played="{played}">
-	      <span class="when"><span class="day" data-text="{day_display}"></span><span class="hour" data-text="{kickoff_local}"></span></span>
+	      <span class="when"><span class="day" data-text="{reader_day}" data-text-format="date"></span><span class="hour" data-text="{kickoff}" data-text-format="time"></span></span>
 	      <span class="where"><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span><br><small data-text="{phase_name}"></small></span>
 	      <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{show_country}|{home_country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}|{home_logo_key}" data-text-format="team-badge"></span></span></span>
 	      \(_matchScoreMarkup)

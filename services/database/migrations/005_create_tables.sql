@@ -989,6 +989,15 @@ CREATE TABLE IF NOT EXISTS player_directory (
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS matches_start (
+  "id" uuid PRIMARY KEY,
+  "start_offset" integer NOT NULL,
+  "start_next_offset" integer NOT NULL,
+  "start_page" integer NOT NULL,
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS game_archive (
   "id" uuid PRIMARY KEY,
   "phase_id" uuid,

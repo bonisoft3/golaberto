@@ -10,27 +10,32 @@ processes:
     - microcheck
     - httpcheck
     - --help
-  caddy:
+  replay:
     depends_on:
-      crud:
+      database:
         condition: process_healthy
-      "bayt:httpcheck":
-        condition: process_completed_successfully
     entrypoint:
+    - mise
+    - x
+    - --
     - sh
     - -c
-    - "case \"$${ORIGIN#http://}\" in \"$$ORIGIN\") h=$${ORIGIN#https://};; *) h=$${ORIGIN#http://};; esac; case \"$$h\" in \"$$ORIGIN\"|\"\"|*[!A-Za-z0-9.:-]*) echo \"ORIGIN '$$ORIGIN' is no origin: set it to the scheme and host readers reach the door at, as https://app.example\" >&2; exit 1;; esac; set -e -o pipefail; roots=$$(caddy adapt --config /etc/caddy/Caddyfile --adapter caddyfile | tr , '\\n' | grep -o '\"root\":\"[^\"]*\"' | cut -d'\"' -f4 | sort -u); if [ -n \"$$roots\" ]; then find $$roots -type f ! -name '*.etag' -exec sh -c 'set -e; q=$$1; shift; for f do h=$$(sha256sum < \"$$f\"); printf \"$$q%s$$q\" \"$${h%% *}\" > \"$$f.etag\"; done' sh '\"' {} +; fi; if [ -f /certs/localhost.pem ]; then export CADDY_TLS='/certs/localhost.pem /certs/localhost-key.pem'; fi; exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile"
+    - >-
+      deno run --config "$$(mise where github:bonisoft3/pronto)/deno.json"
+      --allow-read --allow-write --allow-run --allow-env "$$(mise where
+      github:bonisoft3/pronto)/check-replay.ts" .
     availability:
       exit_on_skipped: true
     environment:
-    - ELECTRIC_SECRET=${ELECTRIC_SECRET:-dev-electric-secret}
-    - ORIGIN=${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT}}
-    readiness_probe:
-      exec:
-        command: bayt microcheck httpcheck http://127.0.0.1:8080/health
-      period_seconds: 5
-      timeout_seconds: 5
-      failure_threshold: 32
+    - AUTHENTICATOR_PASSWORD=${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}
+    - ELECTRIC_PASSWORD=${ELECTRIC_PASSWORD:-dev-electric-password}
+    - POSTGRES_DB=${POSTGRES_DB:-golaberto}
+    - >-
+      POSTGRES_INITDB_ARGS=--no-sync --encoding=UTF8 --auth=trust
+      --locale-provider=icu --icu-locale=und --locale=C
+    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+    - POSTGRES_USER=${POSTGRES_USER:-postgres}
+    - REQUIRED_TABLES=schedule
   database:
     entrypoint:
     - docker-entrypoint.sh
@@ -49,6 +54,15 @@ processes:
     - max_connections=200
     availability:
       exit_on_skipped: true
+    environment:
+    - AUTHENTICATOR_PASSWORD=${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}
+    - ELECTRIC_PASSWORD=${ELECTRIC_PASSWORD:-dev-electric-password}
+    - POSTGRES_DB=${POSTGRES_DB:-golaberto}
+    - >-
+      POSTGRES_INITDB_ARGS=--no-sync --encoding=UTF8 --auth=trust
+      --locale-provider=icu --icu-locale=und --locale=C
+    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+    - POSTGRES_USER=${POSTGRES_USER:-postgres}
     readiness_probe:
       exec:
         command: >-
@@ -57,6 +71,49 @@ processes:
       period_seconds: 1
       timeout_seconds: 5
       failure_threshold: 330
+  auth:
+    depends_on:
+      database:
+        condition: process_healthy
+    entrypoint:
+    - deno
+    - run
+    - --allow-net
+    - --allow-env
+    - --config
+    - /app/deno.json
+    - /app/main.ts
+    availability:
+      exit_on_skipped: true
+    environment:
+    - AUTH_STATEMENT_TIMEOUT_MS=5000
+    - >-
+      DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:5432/${POSTGRES_DB:-golaberto}
+    - OIDC_PROVIDERS=
+    - PGRST_JWT_SECRET=${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
+    - WEBAUTHN_ORIGIN=${WEBAUTHN_ORIGIN:-https://localhost:*}
+    - WEBAUTHN_RP_ID=${WEBAUTHN_RP_ID:-localhost}
+  caddy:
+    depends_on:
+      crud:
+        condition: process_healthy
+      "bayt:httpcheck":
+        condition: process_completed_successfully
+    entrypoint:
+    - sh
+    - -c
+    - "case \"$${ORIGIN#http://}\" in \"$$ORIGIN\") h=$${ORIGIN#https://};; *) h=$${ORIGIN#http://};; esac; case \"$$h\" in \"$$ORIGIN\"|\"\"|*[!A-Za-z0-9.:-]*) echo \"ORIGIN '$$ORIGIN' is no origin: set it to the scheme and host readers reach the door at, as https://app.example\" >&2; exit 1;; esac; set -e -o pipefail; roots=$$(caddy adapt --config /etc/caddy/Caddyfile --adapter caddyfile | tr , '\\n' | grep -o '\"root\":\"[^\"]*\"' | cut -d'\"' -f4 | sort -u); if [ -n \"$$roots\" ]; then find $$roots -type f ! -name '*.etag' -exec sh -c 'set -e; q=$$1; shift; for f do h=$$(sha256sum < \"$$f\"); printf \"$$q%s$$q\" \"$${h%% *}\" > \"$$f.etag\"; done' sh '\"' {} +; fi; PRONTO_RELEASE_SCRIPTS=$$(cat /etc/caddy/release-scripts 2>/dev/null || true); export PRONTO_RELEASE_SCRIPTS; if [ -f /certs/localhost.pem ]; then export CADDY_TLS='/certs/localhost.pem /certs/localhost-key.pem'; fi; exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile"
+    availability:
+      exit_on_skipped: true
+    environment:
+    - ELECTRIC_SECRET=${ELECTRIC_SECRET:-dev-electric-secret}
+    - ORIGIN=${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT}}
+    readiness_probe:
+      exec:
+        command: bayt microcheck httpcheck http://127.0.0.1:8080/health
+      period_seconds: 5
+      timeout_seconds: 5
+      failure_threshold: 32
   crud:
     depends_on:
       database:
@@ -73,7 +130,7 @@ processes:
     - PGRST_DB_PRE_REQUEST=public.app_pre_request
     - PGRST_DB_SCHEMA=public
     - >-
-      PGRST_DB_URI=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:5432/${POSTGRES_DB:-golaberto}
+      PGRST_DB_URI=postgres://authenticator:${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}@127.0.0.1:5432/${POSTGRES_DB:-golaberto}
     - PGRST_JWT_SECRET=${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
     - PGRST_SERVER_HOST=*
     - PGRST_SERVER_PORT=3000
@@ -83,21 +140,3 @@ processes:
       period_seconds: 5
       timeout_seconds: 5
       failure_threshold: 36
-  auth:
-    depends_on:
-      database:
-        condition: process_healthy
-    entrypoint:
-    - deno
-    - run
-    - --allow-net
-    - --allow-env
-    - main.ts
-    availability:
-      exit_on_skipped: true
-    environment:
-    - >-
-      DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:5432/${POSTGRES_DB:-golaberto}
-    - PGRST_JWT_SECRET=${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
-    - WEBAUTHN_ORIGIN=${WEBAUTHN_ORIGIN:-https://localhost:*}
-    - WEBAUTHN_RP_ID=${WEBAUTHN_RP_ID:-localhost}

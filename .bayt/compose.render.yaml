@@ -7,8 +7,9 @@ services:
         golaberto-crud: service:golaberto-crud
         golaberto-electric: service:golaberto-electric
         golaberto-auth: service:golaberto-auth
+        golaberto-served: service:golaberto-served
         plugins_omnishell-runtime-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.9.0@sha256:275dddfe0afce4358da916fc3cde9da49516139850d440eb1f4f7d87e56b1fb4}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.19.0@sha256:c29f0e6ba82bcf2872ede2b21c871adfe1106f6d02d3bbaf6f421b0614e0d071}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}
       context: ..
       dockerfile: .bayt/Dockerfile.render
       target: render
@@ -16,8 +17,9 @@ services:
       - bayt-golaberto-render:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
       - bayt-golaberto-render:latest
       args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
         BUILDKIT_SYNTAX: >-
-          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
     depends_on:
       golaberto-caddy:
         condition: service_healthy
@@ -37,6 +39,7 @@ services:
         target: /render/entry.html
     environment:
       DOOR: http://caddy:8080
+      DOOR_TIMEOUT_MS: "41000"
       ENTRY: /render/entry.html
       ORIGIN: ${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-17702}}
       PORT: "8090"
@@ -63,12 +66,14 @@ services:
         golaberto-crud_bayt: service:golaberto-crud_bayt
         golaberto-electric_bayt: service:golaberto-electric_bayt
         golaberto-auth_bayt: service:golaberto-auth_bayt
+        golaberto-served_bayt: service:golaberto-served_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.render
       target: render_bayt
       args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
         BUILDKIT_SYNTAX: >-
-          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
     image: bayt-golaberto-render_bayt:latest
     scale: 0
   golaberto-render_srcs:
@@ -77,7 +82,8 @@ services:
       dockerfile: .bayt/Dockerfile.render
       target: render_srcs
       args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
         BUILDKIT_SYNTAX: >-
-          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
     image: bayt-golaberto-render_srcs:latest
     scale: 0

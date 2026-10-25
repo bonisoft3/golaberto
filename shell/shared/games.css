@@ -10,6 +10,17 @@
 .game-row:hover .home, .game-row:hover .away { text-decoration: underline; }
 .game-row .when { grid-area: when; display: flex; gap: var(--sp-sm); color: var(--secondary); white-space: nowrap; }
 .game-row .where { grid-area: where; color: var(--secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.game-day {
+  margin: 0; padding: var(--sp-sm) var(--sp-md); font-size: var(--type-caption);
+  font-weight: 700; letter-spacing: .03em; text-transform: uppercase;
+  color: var(--band-ink); background: var(--band);
+  border-inline-start: var(--sp-sm) solid var(--date-bar);
+}
+.grouped-game:has(> .game-day[data-new-day="true"]):not(:first-child) { margin-block-start: var(--sp-lg); }
+.game-group { margin: 0; padding: var(--sp-sm) var(--sp-md); font-size: var(--type-caption); border-bottom: var(--border-size-1) solid var(--border); }
+.game-group a { color: var(--accent); }
+.game-day[data-new-day="false"], .game-group[data-new-group="false"] { display: none; }
+.grouped-game .game-row { grid-template-columns: 3.5em minmax(0, 1fr) 4.5em minmax(0, 1fr); grid-template-areas: "when home score away"; }
 .game-row .home, .scoreboard .home { grid-area: home; text-align: end; }
 .game-row .away, .scoreboard .away { grid-area: away; }
 /* Badges form two fixed columns beside the score, independent of name length. */
@@ -78,6 +89,7 @@
   }
   .game-row .when { flex-direction: column; gap: 0; }
   .game-row .where { text-align: center; font-size: var(--type-label); }
+  .grouped-game .game-row { grid-template-columns: 3.5em minmax(0, 1fr) 4em minmax(0, 1fr); grid-template-areas: "when home score away"; }
   .scoreboard { font-size: var(--type-subtitle); }
 }
 

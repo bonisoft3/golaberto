@@ -12,13 +12,16 @@ input:
           count: 1
           interval: ''
           mapping: 'root = {"wake": "start"}'
+  processors:
+    - mutation: meta cdc_consumer = "golaberto-team-directory"
+    - resource: cdc_trace_join
 pipeline:
   threads: 1
   processors:
     - mapping: |-
         let row = this.catch({})
         let table = $row.data.or("").parse_json().catch({}).__table.or("")
-        root = if $row.exists("wake") || ["team","team_rating","geography_country"].contains($table) { {} } else { deleted() }
+        root = if $row.exists("wake") || ["team","team_rating","geography_country"].contains($table) { {"body": {}, "trace": @traceparent.or("")} } else { deleted() }
 output:
   http_client:
     url: '${CRUD_URL}/rpc/refresh_team_directory'
@@ -28,6 +31,9 @@ output:
     headers:
       Authorization: 'Bearer ${SERVICE_JWT}'
       Content-Type: application/json
+    metadata:
+      include_patterns:
+        - ^traceparent$
     successful_on:
       - 200
       - 204
@@ -36,4 +42,5 @@ output:
       processors:
         - archive:
             format: json_array
-        - mapping: root = this.index(0)
+        - resource: cdc_trace_batch
+        - mapping: root = this.index(0).body

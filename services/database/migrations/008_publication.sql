@@ -7,15 +7,152 @@ BEGIN;
 -- tier: container
 DO $$ DECLARE t text; BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_publication WHERE pubname = 'golaberto_cdc') THEN
-    CREATE PUBLICATION golaberto_cdc FOR TABLE day_tick,app_user,category,championship,home_championship,phase,stage_group,zone,stadium,team,team_championship,team_group,referee,geography_region,geography_country,team_directory,player,team_player,team_roster,team_player_history,game,goal,player_game,standing,team_chance,zone_chance,position_chance,game_importance,team_rating,player_rating,rating_eval,game_card,home_feed,matches_game_card,team_game,comment,editor,player_stat,phase_round,team_comment,team_campaign_point,team_odds_history,team_rating_chart,team_odds_chart,team_roster_total,user_biography,game_change,community_access,phase_clone,player_merge,match_recent_result,match_probability,user_directory,match_head_to_head,match_lineup,match_location,user_avatar,user_pending_upload,team_odds_progress,phase_directory,player_directory,game_archive,player_appearance,championship_attendance WITH (publish_generated_columns = stored);
+    CREATE PUBLICATION golaberto_cdc FOR TABLE day_tick,app_user,category,championship,home_championship,phase,stage_group,zone,stadium,team,team_championship,team_group,referee,geography_region,geography_country,team_directory,player,team_player,team_roster,team_player_history,game,goal,player_game,standing,team_chance,zone_chance,position_chance,game_importance,team_rating,player_rating,rating_eval,game_card,home_feed,matches_game_card,team_game,comment,editor,player_stat,phase_round,team_comment,team_campaign_point,team_odds_history,team_rating_chart,team_odds_chart,team_roster_total,user_biography,game_change,community_access,phase_clone,player_merge,match_recent_result,match_probability,user_directory,match_head_to_head,match_lineup,match_location,user_avatar,user_pending_upload,team_odds_progress,phase_directory,player_directory,matches_start,game_archive,player_appearance,championship_attendance;
   END IF;
-  FOREACH t IN ARRAY ARRAY['day_tick','app_user','category','championship','home_championship','phase','stage_group','zone','stadium','team','team_championship','team_group','referee','geography_region','geography_country','team_directory','player','team_player','team_roster','team_player_history','game','goal','player_game','standing','team_chance','zone_chance','position_chance','game_importance','team_rating','player_rating','rating_eval','game_card','home_feed','matches_game_card','team_game','comment','editor','player_stat','phase_round','team_comment','team_campaign_point','team_odds_history','team_rating_chart','team_odds_chart','team_roster_total','user_biography','game_change','community_access','phase_clone','player_merge','match_recent_result','match_probability','user_directory','match_head_to_head','match_lineup','match_location','user_avatar','user_pending_upload','team_odds_progress','phase_directory','player_directory','game_archive','player_appearance','championship_attendance'] LOOP
+  FOREACH t IN ARRAY ARRAY['day_tick','app_user','category','championship','home_championship','phase','stage_group','zone','stadium','team','team_championship','team_group','referee','geography_region','geography_country','team_directory','player','team_player','team_roster','team_player_history','game','goal','player_game','standing','team_chance','zone_chance','position_chance','game_importance','team_rating','player_rating','rating_eval','game_card','home_feed','matches_game_card','team_game','comment','editor','player_stat','phase_round','team_comment','team_campaign_point','team_odds_history','team_rating_chart','team_odds_chart','team_roster_total','user_biography','game_change','community_access','phase_clone','player_merge','match_recent_result','match_probability','user_directory','match_head_to_head','match_lineup','match_location','user_avatar','user_pending_upload','team_odds_progress','phase_directory','player_directory','matches_start','game_archive','player_appearance','championship_attendance'] LOOP
     IF NOT EXISTS (SELECT 1 FROM pg_publication_tables
                    WHERE pubname = 'golaberto_cdc' AND schemaname = 'public' AND tablename = t) THEN
       EXECUTE format('ALTER PUBLICATION golaberto_cdc ADD TABLE %I', t);
     END IF;
   END LOOP;
 END $$;
+ALTER PUBLICATION golaberto_cdc SET (publish_generated_columns = stored);
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_publication_tables
+                 WHERE pubname = 'golaberto_cdc' AND schemaname = 'mecha' AND tablename = 'txn_trace') THEN
+    ALTER PUBLICATION golaberto_cdc ADD TABLE mecha.txn_trace;
+  END IF;
+END $$;
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON day_tick
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON app_user
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON category
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON championship
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON home_championship
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON phase
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON stage_group
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON zone
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON stadium
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON team
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON team_championship
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON team_group
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON referee
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON geography_region
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON geography_country
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON team_directory
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON player
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON team_player
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON team_roster
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON team_player_history
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON game
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON goal
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON player_game
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON standing
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON team_chance
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON zone_chance
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON position_chance
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON game_importance
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON team_rating
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON player_rating
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON rating_eval
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON game_card
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON home_feed
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON matches_game_card
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON team_game
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON comment
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON editor
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON player_stat
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON phase_round
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON team_comment
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON team_campaign_point
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON team_odds_history
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON team_rating_chart
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON team_odds_chart
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON team_roster_total
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON user_biography
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON game_change
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON community_access
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON phase_clone
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON player_merge
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON match_recent_result
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON match_probability
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON user_directory
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON match_head_to_head
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON match_lineup
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON match_location
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON user_avatar
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON user_pending_upload
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON team_odds_progress
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON phase_directory
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON player_directory
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON matches_start
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON game_archive
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON player_appearance
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
+CREATE OR REPLACE TRIGGER mark_txn BEFORE INSERT OR UPDATE OR DELETE ON championship_attendance
+  FOR EACH STATEMENT EXECUTE FUNCTION mecha.mark_txn();
 -- tier: any
 
 -- Electric's own publication, declared rather than left to it.
@@ -27,15 +164,16 @@ END $$;
 -- tier: container
 DO $$ DECLARE t text; BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_publication WHERE pubname = 'electric_publication_default') THEN
-    CREATE PUBLICATION electric_publication_default FOR TABLE day_tick,app_user,category,championship,home_championship,phase,stage_group,zone,stadium,team,team_championship,team_group,referee,geography_region,geography_country,team_directory,player,team_player,team_roster,team_player_history,game,goal,player_game,standing,team_chance,zone_chance,position_chance,game_importance,team_rating,player_rating,rating_eval,game_card,home_feed,matches_game_card,team_game,comment,editor,player_stat,phase_round,team_comment,team_campaign_point,team_odds_history,team_rating_chart,team_odds_chart,team_roster_total,user_biography,game_change,community_access,phase_clone,player_merge,match_recent_result,match_probability,user_directory,match_head_to_head,match_lineup,match_location,user_avatar,user_pending_upload,team_odds_progress,phase_directory,player_directory,game_archive,player_appearance,championship_attendance WITH (publish_generated_columns = stored);
+    CREATE PUBLICATION electric_publication_default FOR TABLE day_tick,app_user,category,championship,home_championship,phase,stage_group,zone,stadium,team,team_championship,team_group,referee,geography_region,geography_country,team_directory,player,team_player,team_roster,team_player_history,game,goal,player_game,standing,team_chance,zone_chance,position_chance,game_importance,team_rating,player_rating,rating_eval,game_card,home_feed,matches_game_card,team_game,comment,editor,player_stat,phase_round,team_comment,team_campaign_point,team_odds_history,team_rating_chart,team_odds_chart,team_roster_total,user_biography,game_change,community_access,phase_clone,player_merge,match_recent_result,match_probability,user_directory,match_head_to_head,match_lineup,match_location,user_avatar,user_pending_upload,team_odds_progress,phase_directory,player_directory,matches_start,game_archive,player_appearance,championship_attendance;
   END IF;
-  FOREACH t IN ARRAY ARRAY['day_tick','app_user','category','championship','home_championship','phase','stage_group','zone','stadium','team','team_championship','team_group','referee','geography_region','geography_country','team_directory','player','team_player','team_roster','team_player_history','game','goal','player_game','standing','team_chance','zone_chance','position_chance','game_importance','team_rating','player_rating','rating_eval','game_card','home_feed','matches_game_card','team_game','comment','editor','player_stat','phase_round','team_comment','team_campaign_point','team_odds_history','team_rating_chart','team_odds_chart','team_roster_total','user_biography','game_change','community_access','phase_clone','player_merge','match_recent_result','match_probability','user_directory','match_head_to_head','match_lineup','match_location','user_avatar','user_pending_upload','team_odds_progress','phase_directory','player_directory','game_archive','player_appearance','championship_attendance'] LOOP
+  FOREACH t IN ARRAY ARRAY['day_tick','app_user','category','championship','home_championship','phase','stage_group','zone','stadium','team','team_championship','team_group','referee','geography_region','geography_country','team_directory','player','team_player','team_roster','team_player_history','game','goal','player_game','standing','team_chance','zone_chance','position_chance','game_importance','team_rating','player_rating','rating_eval','game_card','home_feed','matches_game_card','team_game','comment','editor','player_stat','phase_round','team_comment','team_campaign_point','team_odds_history','team_rating_chart','team_odds_chart','team_roster_total','user_biography','game_change','community_access','phase_clone','player_merge','match_recent_result','match_probability','user_directory','match_head_to_head','match_lineup','match_location','user_avatar','user_pending_upload','team_odds_progress','phase_directory','player_directory','matches_start','game_archive','player_appearance','championship_attendance'] LOOP
     IF NOT EXISTS (SELECT 1 FROM pg_publication_tables
                    WHERE pubname = 'electric_publication_default' AND schemaname = 'public' AND tablename = t) THEN
       EXECUTE format('ALTER PUBLICATION electric_publication_default ADD TABLE %I', t);
     END IF;
   END LOOP;
 END $$;
+ALTER PUBLICATION electric_publication_default SET (publish_generated_columns = stored);
 
 ALTER TABLE day_tick REPLICA IDENTITY FULL;
 ALTER TABLE app_user REPLICA IDENTITY FULL;
@@ -98,6 +236,7 @@ ALTER TABLE user_pending_upload REPLICA IDENTITY FULL;
 ALTER TABLE team_odds_progress REPLICA IDENTITY FULL;
 ALTER TABLE phase_directory REPLICA IDENTITY FULL;
 ALTER TABLE player_directory REPLICA IDENTITY FULL;
+ALTER TABLE matches_start REPLICA IDENTITY FULL;
 ALTER TABLE game_archive REPLICA IDENTITY FULL;
 ALTER TABLE player_appearance REPLICA IDENTITY FULL;
 ALTER TABLE championship_attendance REPLICA IDENTITY FULL;

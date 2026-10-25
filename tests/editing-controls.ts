@@ -2,10 +2,7 @@
 /// <reference lib="dom.iterable" />
 import { assert, assertEquals, assertThrows } from "jsr:@std/assert@1.0.11";
 import { parseHTML } from "npm:linkedom@0.18.4";
-import { evaluateRole } from "omnishell/interpreter/jessie.js";
-import { batched } from "omnishell/interpreter/batched-store.js";
-import { interpretScreen } from "omnishell/interpreter/screen.js";
-import { parseFilter, parseLimit } from "omnishell/interpreter/fragment.js";
+import { evaluateRole, batched, interpretScreen, parseFilter, parseLimit } from "./platform.ts";
 
 const app = new URL("../", import.meta.url);
 const screens = [

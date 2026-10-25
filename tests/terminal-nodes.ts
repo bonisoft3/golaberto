@@ -1,5 +1,5 @@
 import { parseHTML } from "npm:linkedom@0.18.4";
-import { buildNodes } from "../../../plugins/omnishell/interpreter/render.js";
+import { buildNodes } from "./platform.ts";
 
 // Renderer output through the terminal's builder: its tag and attribute
 // allowlist is what a page enforces, and a node shape alone does not.

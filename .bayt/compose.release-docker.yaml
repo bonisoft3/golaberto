@@ -6,6 +6,7 @@ services:
         golaberto-database: service:golaberto-database
         golaberto-crud: service:golaberto-crud
         golaberto-caddy: service:golaberto-caddy
+        golaberto-served-release: service:golaberto-served-release
         golaberto-auth: service:golaberto-auth
       context: ..
       dockerfile: .bayt/Dockerfile.release-docker
@@ -13,11 +14,12 @@ services:
       tags:
       - ${BAYT_DOCKER_REPOSITORY:-ghcr.io/bonisoft3/golaberto}:${BAYT_IMAGE_TAG:-latest}
       args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
         BUILDKIT_SYNTAX: >-
-          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
     image: ${BAYT_DOCKER_REPOSITORY:-ghcr.io/bonisoft3/golaberto}:${BAYT_IMAGE_TAG:-latest}
     ports:
-    - 8080:8080
+    - ${PORT:-8080}:${PORT:-8080}
     scale: 0
   golaberto-release-docker_bayt:
     build:
@@ -25,14 +27,17 @@ services:
         golaberto-database_bayt: service:golaberto-database_bayt
         golaberto-crud_bayt: service:golaberto-crud_bayt
         golaberto-caddy_bayt: service:golaberto-caddy_bayt
+        golaberto-served-release_bayt: service:golaberto-served-release_bayt
         golaberto-auth_bayt: service:golaberto-auth_bayt
         golaberto-migrate_bayt: service:golaberto-migrate_bayt
+        golaberto-served_bayt: service:golaberto-served_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.release-docker
       target: release-docker_bayt
       args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
         BUILDKIT_SYNTAX: >-
-          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
     image: bayt-golaberto-release-docker_bayt:latest
     scale: 0
   golaberto-release-docker_srcs:
@@ -40,11 +45,13 @@ services:
       additional_contexts:
         golaberto-database_srcs: service:golaberto-database_srcs
         golaberto-caddy_srcs: service:golaberto-caddy_srcs
+        golaberto-served-release_srcs: service:golaberto-served-release_srcs
       context: ..
       dockerfile: .bayt/Dockerfile.release-docker
       target: release-docker_srcs
       args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
         BUILDKIT_SYNTAX: >-
-          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
     image: bayt-golaberto-release-docker_srcs:latest
     scale: 0

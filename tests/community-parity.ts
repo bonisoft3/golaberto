@@ -1,4 +1,4 @@
-import { assertEquals, assertRejects } from "jsr:@std/assert@1.0.11";
+import { assertEquals, assertRejects } from "jsr:@std/assert@1";
 
 import { query, replay } from "./db.ts";
 import { fixture, identity } from "./community-fixture.ts";

@@ -5,7 +5,7 @@
   <url>
     <loc>{{$o}}/de/arquivo</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/arquivo"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/arquivo"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/arquivo"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/arquivo"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/arquivo"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/arquivo"/>
@@ -15,7 +15,7 @@
   <url>
     <loc>{{$o}}/en/arquivo</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/arquivo"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/arquivo"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/arquivo"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/arquivo"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/arquivo"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/arquivo"/>
@@ -25,7 +25,7 @@
   <url>
     <loc>{{$o}}/es/arquivo</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/arquivo"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/arquivo"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/arquivo"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/arquivo"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/arquivo"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/arquivo"/>
@@ -35,7 +35,7 @@
   <url>
     <loc>{{$o}}/fr/arquivo</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/arquivo"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/arquivo"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/arquivo"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/arquivo"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/arquivo"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/arquivo"/>
@@ -45,7 +45,7 @@
   <url>
     <loc>{{$o}}/it/arquivo</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/arquivo"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/arquivo"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/arquivo"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/arquivo"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/arquivo"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/arquivo"/>
@@ -55,7 +55,7 @@
   <url>
     <loc>{{$o}}/arquivo</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/arquivo"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/arquivo"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/arquivo"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/arquivo"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/arquivo"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/arquivo"/>
@@ -63,69 +63,9 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/arquivo"/>
   </url>
   <url>
-    <loc>{{$o}}/de/spieler</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/spieler"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/players"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/jugadores"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/joueurs"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/giocatori"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/jogadores"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/jogadores"/>
-  </url>
-  <url>
-    <loc>{{$o}}/en/players</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/spieler"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/players"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/jugadores"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/joueurs"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/giocatori"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/jogadores"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/jogadores"/>
-  </url>
-  <url>
-    <loc>{{$o}}/es/jugadores</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/spieler"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/players"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/jugadores"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/joueurs"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/giocatori"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/jogadores"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/jogadores"/>
-  </url>
-  <url>
-    <loc>{{$o}}/fr/joueurs</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/spieler"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/players"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/jugadores"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/joueurs"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/giocatori"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/jogadores"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/jogadores"/>
-  </url>
-  <url>
-    <loc>{{$o}}/it/giocatori</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/spieler"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/players"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/jugadores"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/joueurs"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/giocatori"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/jogadores"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/jogadores"/>
-  </url>
-  <url>
-    <loc>{{$o}}/jogadores</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/spieler"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/players"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/jugadores"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/joueurs"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/giocatori"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/jogadores"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/jogadores"/>
-  </url>
-  <url>
     <loc>{{$o}}/de</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it"/>
@@ -135,7 +75,7 @@
   <url>
     <loc>{{$o}}/en</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it"/>
@@ -145,7 +85,7 @@
   <url>
     <loc>{{$o}}/es</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it"/>
@@ -155,7 +95,7 @@
   <url>
     <loc>{{$o}}/fr</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it"/>
@@ -165,7 +105,7 @@
   <url>
     <loc>{{$o}}/it</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it"/>
@@ -175,7 +115,7 @@
   <url>
     <loc>{{$o}}/</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it"/>
@@ -185,7 +125,7 @@
   <url>
     <loc>{{$o}}/de/wettbewerbe</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/wettbewerbe"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/championships"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/championships"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/campeonatos"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/championnats"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/campionati"/>
@@ -195,7 +135,7 @@
   <url>
     <loc>{{$o}}/en/championships</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/wettbewerbe"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/championships"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/championships"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/campeonatos"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/championnats"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/campionati"/>
@@ -205,7 +145,7 @@
   <url>
     <loc>{{$o}}/es/campeonatos</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/wettbewerbe"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/championships"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/championships"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/campeonatos"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/championnats"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/campionati"/>
@@ -215,7 +155,7 @@
   <url>
     <loc>{{$o}}/fr/championnats</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/wettbewerbe"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/championships"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/championships"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/campeonatos"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/championnats"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/campionati"/>
@@ -225,7 +165,7 @@
   <url>
     <loc>{{$o}}/it/campionati</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/wettbewerbe"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/championships"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/championships"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/campeonatos"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/championnats"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/campionati"/>
@@ -235,7 +175,7 @@
   <url>
     <loc>{{$o}}/campeonatos</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/wettbewerbe"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/championships"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/championships"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/campeonatos"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/championnats"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/campionati"/>
@@ -245,7 +185,7 @@
   <url>
     <loc>{{$o}}/de/spiele</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/spiele"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/matches"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/matches"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/partidos"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/matchs"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/partite"/>
@@ -255,7 +195,7 @@
   <url>
     <loc>{{$o}}/en/matches</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/spiele"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/matches"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/matches"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/partidos"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/matchs"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/partite"/>
@@ -265,7 +205,7 @@
   <url>
     <loc>{{$o}}/es/partidos</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/spiele"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/matches"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/matches"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/partidos"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/matchs"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/partite"/>
@@ -275,7 +215,7 @@
   <url>
     <loc>{{$o}}/fr/matchs</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/spiele"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/matches"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/matches"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/partidos"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/matchs"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/partite"/>
@@ -285,7 +225,7 @@
   <url>
     <loc>{{$o}}/it/partite</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/spiele"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/matches"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/matches"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/partidos"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/matchs"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/partite"/>
@@ -295,7 +235,7 @@
   <url>
     <loc>{{$o}}/jogos</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/spiele"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/matches"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/matches"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/partidos"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/matchs"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/partite"/>
@@ -305,7 +245,7 @@
   <url>
     <loc>{{$o}}/de/mannschaften</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/mannschaften"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/teams"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/teams"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/equipos"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/equipes"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/squadre"/>
@@ -315,7 +255,7 @@
   <url>
     <loc>{{$o}}/en/teams</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/mannschaften"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/teams"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/teams"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/equipos"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/equipes"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/squadre"/>
@@ -325,7 +265,7 @@
   <url>
     <loc>{{$o}}/es/equipos</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/mannschaften"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/teams"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/teams"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/equipos"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/equipes"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/squadre"/>
@@ -335,7 +275,7 @@
   <url>
     <loc>{{$o}}/fr/equipes</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/mannschaften"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/teams"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/teams"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/equipos"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/equipes"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/squadre"/>
@@ -345,7 +285,7 @@
   <url>
     <loc>{{$o}}/it/squadre</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/mannschaften"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/teams"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/teams"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/equipos"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/equipes"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/squadre"/>
@@ -355,7 +295,7 @@
   <url>
     <loc>{{$o}}/equipes</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/mannschaften"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/teams"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/teams"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/equipos"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/equipes"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/squadre"/>
@@ -363,9 +303,69 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/equipes"/>
   </url>
   <url>
+    <loc>{{$o}}/de/spieler</loc>
+    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/spieler"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/players"/>
+    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/jugadores"/>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/joueurs"/>
+    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/giocatori"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/jogadores"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/jogadores"/>
+  </url>
+  <url>
+    <loc>{{$o}}/en/players</loc>
+    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/spieler"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/players"/>
+    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/jugadores"/>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/joueurs"/>
+    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/giocatori"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/jogadores"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/jogadores"/>
+  </url>
+  <url>
+    <loc>{{$o}}/es/jugadores</loc>
+    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/spieler"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/players"/>
+    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/jugadores"/>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/joueurs"/>
+    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/giocatori"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/jogadores"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/jogadores"/>
+  </url>
+  <url>
+    <loc>{{$o}}/fr/joueurs</loc>
+    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/spieler"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/players"/>
+    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/jugadores"/>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/joueurs"/>
+    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/giocatori"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/jogadores"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/jogadores"/>
+  </url>
+  <url>
+    <loc>{{$o}}/it/giocatori</loc>
+    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/spieler"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/players"/>
+    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/jugadores"/>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/joueurs"/>
+    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/giocatori"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/jogadores"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/jogadores"/>
+  </url>
+  <url>
+    <loc>{{$o}}/jogadores</loc>
+    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/spieler"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/players"/>
+    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/jugadores"/>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/joueurs"/>
+    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/giocatori"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/jogadores"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/jogadores"/>
+  </url>
+  <url>
     <loc>{{$o}}/de/stadien</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/stadien"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/stadiums"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/stadiums"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/estadios"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/stades"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/stadi"/>
@@ -375,7 +375,7 @@
   <url>
     <loc>{{$o}}/en/stadiums</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/stadien"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/stadiums"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/stadiums"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/estadios"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/stades"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/stadi"/>
@@ -385,7 +385,7 @@
   <url>
     <loc>{{$o}}/es/estadios</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/stadien"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/stadiums"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/stadiums"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/estadios"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/stades"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/stadi"/>
@@ -395,7 +395,7 @@
   <url>
     <loc>{{$o}}/fr/stades</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/stadien"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/stadiums"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/stadiums"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/estadios"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/stades"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/stadi"/>
@@ -405,7 +405,7 @@
   <url>
     <loc>{{$o}}/it/stadi</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/stadien"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/stadiums"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/stadiums"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/estadios"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/stades"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/stadi"/>
@@ -415,7 +415,7 @@
   <url>
     <loc>{{$o}}/estadios</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/stadien"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/stadiums"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/stadiums"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/estadios"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/stades"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/stadi"/>
@@ -425,7 +425,7 @@
   <url>
     <loc>{{$o}}/de/unparteiische</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/unparteiische"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/referees"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/referees"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/arbitros"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/arbitres"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/arbitri"/>
@@ -435,7 +435,7 @@
   <url>
     <loc>{{$o}}/en/referees</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/unparteiische"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/referees"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/referees"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/arbitros"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/arbitres"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/arbitri"/>
@@ -445,7 +445,7 @@
   <url>
     <loc>{{$o}}/es/arbitros</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/unparteiische"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/referees"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/referees"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/arbitros"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/arbitres"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/arbitri"/>
@@ -455,7 +455,7 @@
   <url>
     <loc>{{$o}}/fr/arbitres</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/unparteiische"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/referees"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/referees"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/arbitros"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/arbitres"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/arbitri"/>
@@ -465,7 +465,7 @@
   <url>
     <loc>{{$o}}/it/arbitri</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/unparteiische"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/referees"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/referees"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/arbitros"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/arbitres"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/arbitri"/>
@@ -475,7 +475,7 @@
   <url>
     <loc>{{$o}}/arbitros</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/unparteiische"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/referees"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/referees"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/arbitros"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/arbitres"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/arbitri"/>
@@ -483,489 +483,9 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/arbitros"/>
   </url>
   <url>
-    <loc>{{$o}}/de/gerenciar</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/gerenciar"/>
-  </url>
-  <url>
-    <loc>{{$o}}/en/gerenciar</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/gerenciar"/>
-  </url>
-  <url>
-    <loc>{{$o}}/es/gerenciar</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/gerenciar"/>
-  </url>
-  <url>
-    <loc>{{$o}}/fr/gerenciar</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/gerenciar"/>
-  </url>
-  <url>
-    <loc>{{$o}}/it/gerenciar</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/gerenciar"/>
-  </url>
-  <url>
-    <loc>{{$o}}/gerenciar</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/gerenciar"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/gerenciar"/>
-  </url>
-  <url>
-    <loc>{{$o}}/de/gerenciar-competicoes</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/gerenciar-competicoes"/>
-  </url>
-  <url>
-    <loc>{{$o}}/en/gerenciar-competicoes</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/gerenciar-competicoes"/>
-  </url>
-  <url>
-    <loc>{{$o}}/es/gerenciar-competicoes</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/gerenciar-competicoes"/>
-  </url>
-  <url>
-    <loc>{{$o}}/fr/gerenciar-competicoes</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/gerenciar-competicoes"/>
-  </url>
-  <url>
-    <loc>{{$o}}/it/gerenciar-competicoes</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/gerenciar-competicoes"/>
-  </url>
-  <url>
-    <loc>{{$o}}/gerenciar-competicoes</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/gerenciar-competicoes"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/gerenciar-competicoes"/>
-  </url>
-  <url>
-    <loc>{{$o}}/de/nova-competicao</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/nova-competicao"/>
-  </url>
-  <url>
-    <loc>{{$o}}/en/nova-competicao</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/nova-competicao"/>
-  </url>
-  <url>
-    <loc>{{$o}}/es/nova-competicao</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/nova-competicao"/>
-  </url>
-  <url>
-    <loc>{{$o}}/fr/nova-competicao</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/nova-competicao"/>
-  </url>
-  <url>
-    <loc>{{$o}}/it/nova-competicao</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/nova-competicao"/>
-  </url>
-  <url>
-    <loc>{{$o}}/nova-competicao</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/nova-competicao"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/nova-competicao"/>
-  </url>
-  <url>
-    <loc>{{$o}}/de/novo-arbitro</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-arbitro"/>
-  </url>
-  <url>
-    <loc>{{$o}}/en/novo-arbitro</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-arbitro"/>
-  </url>
-  <url>
-    <loc>{{$o}}/es/novo-arbitro</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-arbitro"/>
-  </url>
-  <url>
-    <loc>{{$o}}/fr/novo-arbitro</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-arbitro"/>
-  </url>
-  <url>
-    <loc>{{$o}}/it/novo-arbitro</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-arbitro"/>
-  </url>
-  <url>
-    <loc>{{$o}}/novo-arbitro</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-arbitro"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-arbitro"/>
-  </url>
-  <url>
-    <loc>{{$o}}/de/novo-equipe</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-equipe"/>
-  </url>
-  <url>
-    <loc>{{$o}}/en/novo-equipe</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-equipe"/>
-  </url>
-  <url>
-    <loc>{{$o}}/es/novo-equipe</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-equipe"/>
-  </url>
-  <url>
-    <loc>{{$o}}/fr/novo-equipe</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-equipe"/>
-  </url>
-  <url>
-    <loc>{{$o}}/it/novo-equipe</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-equipe"/>
-  </url>
-  <url>
-    <loc>{{$o}}/novo-equipe</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-equipe"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-equipe"/>
-  </url>
-  <url>
-    <loc>{{$o}}/de/novo-estadio</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-estadio"/>
-  </url>
-  <url>
-    <loc>{{$o}}/en/novo-estadio</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-estadio"/>
-  </url>
-  <url>
-    <loc>{{$o}}/es/novo-estadio</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-estadio"/>
-  </url>
-  <url>
-    <loc>{{$o}}/fr/novo-estadio</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-estadio"/>
-  </url>
-  <url>
-    <loc>{{$o}}/it/novo-estadio</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-estadio"/>
-  </url>
-  <url>
-    <loc>{{$o}}/novo-estadio</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-estadio"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-estadio"/>
-  </url>
-  <url>
-    <loc>{{$o}}/de/novo-jogador</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-jogador"/>
-  </url>
-  <url>
-    <loc>{{$o}}/en/novo-jogador</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-jogador"/>
-  </url>
-  <url>
-    <loc>{{$o}}/es/novo-jogador</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-jogador"/>
-  </url>
-  <url>
-    <loc>{{$o}}/fr/novo-jogador</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-jogador"/>
-  </url>
-  <url>
-    <loc>{{$o}}/it/novo-jogador</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-jogador"/>
-  </url>
-  <url>
-    <loc>{{$o}}/novo-jogador</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-jogador"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-jogador"/>
-  </url>
-  <url>
-    <loc>{{$o}}/de/novo-jogo</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-jogo"/>
-  </url>
-  <url>
-    <loc>{{$o}}/en/novo-jogo</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-jogo"/>
-  </url>
-  <url>
-    <loc>{{$o}}/es/novo-jogo</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-jogo"/>
-  </url>
-  <url>
-    <loc>{{$o}}/fr/novo-jogo</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-jogo"/>
-  </url>
-  <url>
-    <loc>{{$o}}/it/novo-jogo</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-jogo"/>
-  </url>
-  <url>
-    <loc>{{$o}}/novo-jogo</loc>
-    <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/novo-jogo"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/novo-jogo"/>
-  </url>
-  <url>
     <loc>{{$o}}/de/usuarios</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/usuarios"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/usuarios"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/usuarios"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/usuarios"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/usuarios"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/usuarios"/>
@@ -975,7 +495,7 @@
   <url>
     <loc>{{$o}}/en/usuarios</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/usuarios"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/usuarios"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/usuarios"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/usuarios"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/usuarios"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/usuarios"/>
@@ -985,7 +505,7 @@
   <url>
     <loc>{{$o}}/es/usuarios</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/usuarios"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/usuarios"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/usuarios"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/usuarios"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/usuarios"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/usuarios"/>
@@ -995,7 +515,7 @@
   <url>
     <loc>{{$o}}/fr/usuarios</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/usuarios"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/usuarios"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/usuarios"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/usuarios"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/usuarios"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/usuarios"/>
@@ -1005,7 +525,7 @@
   <url>
     <loc>{{$o}}/it/usuarios</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/usuarios"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/usuarios"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/usuarios"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/usuarios"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/usuarios"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/usuarios"/>
@@ -1015,7 +535,7 @@
   <url>
     <loc>{{$o}}/usuarios</loc>
     <xhtml:link rel="alternate" hreflang="de-DE" href="{{$o}}/de/usuarios"/>
-    <xhtml:link rel="alternate" hreflang="en-GB" href="{{$o}}/en/usuarios"/>
+    <xhtml:link rel="alternate" hreflang="en-US" href="{{$o}}/en/usuarios"/>
     <xhtml:link rel="alternate" hreflang="es-AR" href="{{$o}}/es/usuarios"/>
     <xhtml:link rel="alternate" hreflang="fr-FR" href="{{$o}}/fr/usuarios"/>
     <xhtml:link rel="alternate" hreflang="it-IT" href="{{$o}}/it/usuarios"/>

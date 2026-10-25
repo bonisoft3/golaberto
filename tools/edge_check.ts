@@ -3,7 +3,8 @@
 // included; accent search finds a team; and each read's round trip, first and
 // again. With --idle <s> it first waits for the platform to evict the object
 // and reports the cold answer. One JSON line per check; exits non-zero on any
-// empty or failed read. docs/cloudflare-release.md runs it after a publish.
+// empty or failed read, except an aged-out recent feed whose source is also
+// outside its window. docs/cloudflare-release.md runs it after a publish.
 // Usage: deno run -A tools/edge_check.ts <origin> [--idle <seconds>]
 const args = [...Deno.args]
 const at = args.indexOf('--idle')
@@ -44,6 +45,7 @@ const reads: [string, string][] = [
   ['home: recent cards', 'home_feed?played=is.true&home_recent_rank=gt.0&limit=20&order=home_recent_rank.asc'],
   ['home: upcoming cards', 'home_feed?played=is.false&home_upcoming_rank=gt.0&limit=20&order=home_upcoming_rank.asc'],
   ['home: championships', 'home_championship?limit=20'],
+  ['archive: played games', 'game_card?played=is.true&kickoff=not.is.null&limit=20&order=kickoff.desc'],
   ['championship: standing', `standing?group_id=eq.${group.id}&order=position.asc`],
   ['championship: games', `game_card?championship_id=eq.${champ.id}&limit=40&order=day.desc`],
   ['championship: position chances', `position_chance?group_id=eq.${group.id}&limit=100`],
@@ -68,8 +70,14 @@ for (const [check, path] of reads) {
   try {
     const first = await get(path)
     const again = await get(path)
-    emit({ check, rows: first.rows.length, clientMs: first.clientMs, againMs: again.clientMs, againCache: again.cache })
-    if (!first.rows.length) failed++
+    let agedOut = false
+    if (check === 'home: recent cards' && !first.rows.length && !again.rows.length) {
+      const cutoff = new Date(Date.now() - (14 * 24 + 3) * 60 * 60 * 1000).toISOString()
+      const source = await get(`game_card?played=is.true&kickoff=gte.${encodeURIComponent(cutoff)}&select=id&limit=1`)
+      agedOut = source.rows.length === 0
+    }
+    emit({ check, rows: first.rows.length, clientMs: first.clientMs, againMs: again.clientMs, againCache: again.cache, ...(agedOut ? { agedOut: true } : {}) })
+    if ((!first.rows.length || !again.rows.length) && !agedOut) failed++
   } catch (e) {
     emit({ check, error: (e as Error).message })
     failed++

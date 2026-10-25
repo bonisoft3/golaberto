@@ -1,5 +1,5 @@
 import {assertEquals} from 'jsr:@std/assert@1';
-import {evaluateRole} from '../../../plugins/omnishell/interpreter/jessie.js';
+import { evaluateRole } from "./platform.ts";
 const handler = async (name:string) => evaluateRole(await Deno.readTextFile(new URL(`../shell/handlers/odds-progress-${name}.js`,import.meta.url)), 'handler');
 Deno.test('chart inspection maps responsive plot coordinates onto recorded snapshots',async()=>{
   const point=await handler('point');

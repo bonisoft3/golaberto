@@ -1,6 +1,7 @@
 ARG ARCHIVE_DATABASE_BASE
 FROM ${ARCHIVE_DATABASE_BASE} AS database
+# Relative to the base's WORKDIR, the app's directory in the image.
 RUN test -f /docker-entrypoint-initdb.d/900_seed.sql \
  && rm /docker-entrypoint-initdb.d/900_seed.sql \
- && test -f /monorepo/services/database/migrations/900_seed.sql \
- && rm /monorepo/services/database/migrations/900_seed.sql
+ && test -f services/database/migrations/900_seed.sql \
+ && rm services/database/migrations/900_seed.sql

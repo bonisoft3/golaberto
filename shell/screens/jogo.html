@@ -6,13 +6,13 @@
   <nav class="langs" aria-label="{msg.lang_label}">
     <a data-route="jogo" data-param-slug="{param.slug}" data-locale="pt-BR" data-locale-current="page" lang="pt-BR"><span class="long" data-text="{msg.lang_pt}"></span><span class="short" data-text="{msg.lang_pt_short}"></span></a>
     <a data-route="jogo" data-param-slug="{param.slug}" data-locale="es-AR" data-locale-current="page" lang="es-AR"><span class="long" data-text="{msg.lang_es}"></span><span class="short" data-text="{msg.lang_es_short}"></span></a>
-    <a data-route="jogo" data-param-slug="{param.slug}" data-locale="en-GB" data-locale-current="page" lang="en-GB"><span class="long" data-text="{msg.lang_en}"></span><span class="short" data-text="{msg.lang_en_short}"></span></a>
+    <a data-route="jogo" data-param-slug="{param.slug}" data-locale="en-US" data-locale-current="page" lang="en-US"><span class="long" data-text="{msg.lang_en}"></span><span class="short" data-text="{msg.lang_en_short}"></span></a>
     <a data-route="jogo" data-param-slug="{param.slug}" data-locale="it-IT" data-locale-current="page" lang="it-IT"><span class="long" data-text="{msg.lang_it}"></span><span class="short" data-text="{msg.lang_it_short}"></span></a>
     <a data-route="jogo" data-param-slug="{param.slug}" data-locale="de-DE" data-locale-current="page" lang="de-DE"><span class="long" data-text="{msg.lang_de}"></span><span class="short" data-text="{msg.lang_de_short}"></span></a>
     <a data-route="jogo" data-param-slug="{param.slug}" data-locale="fr-FR" data-locale-current="page" lang="fr-FR"><span class="long" data-text="{msg.lang_fr}"></span><span class="short" data-text="{msg.lang_fr_short}"></span></a>
   </nav>
 </header>
-<div data-live="game_card" data-select="*,game:id!inner(slug),stadium(slug),referee(slug),championship(show_country,slug),home:home_id(country,slug,logo_key),away:away_id(country,slug,logo_key)" data-filter="game.slug=eq.{param.slug}" data-exit-motion="none" data-empty="{msg.game_gone}">
+<div data-project='{"reader_day":{"date":["kickoff","day"]}}' data-live="game_card" data-select="*,game:id!inner(slug),stadium(slug),referee(slug),championship(show_country,slug),home:home_id(country,slug,logo_key),away:away_id(country,slug,logo_key)" data-filter="game.slug=eq.{param.slug}" data-exit-motion="none" data-empty="{msg.game_gone}">
   <template data-item>
     <article class="game" data-played="{played}">
       <h1 class="band"><a data-route="campeonato" data-param-slug="{championship.slug}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span></a></h1>
@@ -30,8 +30,8 @@
           <p class="extra"><span class="aet"><span data-text="{msg.game_aet}"></span> <b data-text="{home_aet}"></b>–<b data-text="{away_aet}"></b></span> <span class="pen"><span data-text="{msg.game_pen}"></span> <b data-text="{home_pen}"></b>–<b data-text="{away_pen}"></b></span></p>
           <dl class="game-facts">
             <dt data-text="{msg.game_round}"></dt><dd data-text="{round}"></dd>
-            <dt data-text="{msg.game_day}"></dt><dd data-text="{day_display}"></dd>
-            <dt data-text="{msg.game_kickoff}"></dt><dd data-text="{kickoff_local}"></dd>
+            <dt data-text="{msg.game_day}"></dt><dd data-text="{reader_day}" data-text-format="date"></dd>
+            <dt data-text="{msg.game_kickoff}"></dt><dd data-text="{kickoff}" data-text-format="time"></dd>
             <dt data-text="{msg.game_stadium}"></dt><dd><a data-route="estadio" data-param-slug="{stadium.slug}" data-text="{stadium_name}"></a></dd>
             <dt data-text="{msg.game_referee}"></dt><dd><a data-route="arbitro" data-param-slug="{referee.slug}" data-text="{referee_name}"></a></dd>
             <dt data-text="{msg.game_attendance}"></dt><dd data-text="{attendance}" data-text-format="number"></dd>
@@ -41,14 +41,14 @@
  <div class="match-context-forms">
   <section class="match-context-form">
  <h2><span data-text="{msg.match_context_form}"></span> · <span data-text="{home_name}"></span></h2>
- <ol data-live="match_recent_result" data-filter="target_game_id=eq.{id}&team_id=eq.{home_id}&limit=5" data-order="day.asc,kickoff.asc.nullsfirst,id.asc" data-empty="{msg.match_context_form_empty}">
-  <template data-item><li data-result="{result}"><a data-route="jogo" data-param-slug="{game_slug}" title="{day_display} · {championship_name}: {home_name} {home_score} x {away_score} {away_name}"><span aria-hidden="true" data-text="{result}"></span><span class="visually-hidden"><span data-text="{day_display}"></span> · <span data-text="{championship_name}"></span>: <span data-text="{home_name}"></span> <span data-text="{home_score}"></span> x <span data-text="{away_score}"></span> <span data-text="{away_name}"></span></span></a></li></template>
+ <ol data-project='{"reader_day":{"date":["kickoff","day"]}}' data-live="match_recent_result" data-filter="target_game_id=eq.{id}&team_id=eq.{home_id}&limit=5" data-order="day.asc,kickoff.asc.nullsfirst,id.asc" data-empty="{msg.match_context_form_empty}">
+  <template data-item><li data-result="{result}"><a data-route="jogo" data-param-slug="{game_slug}"><span aria-hidden="true" data-text="{result}"></span><span class="visually-hidden"><span data-text="{reader_day}" data-text-format="date"></span> · <span data-text="{championship_name}"></span>: <span data-text="{home_name}"></span> <span data-text="{home_score}"></span> x <span data-text="{away_score}"></span> <span data-text="{away_name}"></span></span></a></li></template>
  </ol>
 </section>
   <section class="match-context-form">
  <h2><span data-text="{msg.match_context_form}"></span> · <span data-text="{away_name}"></span></h2>
- <ol data-live="match_recent_result" data-filter="target_game_id=eq.{id}&team_id=eq.{away_id}&limit=5" data-order="day.asc,kickoff.asc.nullsfirst,id.asc" data-empty="{msg.match_context_form_empty}">
-  <template data-item><li data-result="{result}"><a data-route="jogo" data-param-slug="{game_slug}" title="{day_display} · {championship_name}: {home_name} {home_score} x {away_score} {away_name}"><span aria-hidden="true" data-text="{result}"></span><span class="visually-hidden"><span data-text="{day_display}"></span> · <span data-text="{championship_name}"></span>: <span data-text="{home_name}"></span> <span data-text="{home_score}"></span> x <span data-text="{away_score}"></span> <span data-text="{away_name}"></span></span></a></li></template>
+ <ol data-project='{"reader_day":{"date":["kickoff","day"]}}' data-live="match_recent_result" data-filter="target_game_id=eq.{id}&team_id=eq.{away_id}&limit=5" data-order="day.asc,kickoff.asc.nullsfirst,id.asc" data-empty="{msg.match_context_form_empty}">
+  <template data-item><li data-result="{result}"><a data-route="jogo" data-param-slug="{game_slug}"><span aria-hidden="true" data-text="{result}"></span><span class="visually-hidden"><span data-text="{reader_day}" data-text-format="date"></span> · <span data-text="{championship_name}"></span>: <span data-text="{home_name}"></span> <span data-text="{home_score}"></span> x <span data-text="{away_score}"></span> <span data-text="{away_name}"></span></span></a></li></template>
  </ol>
 </section>
  </div>
@@ -121,9 +121,9 @@
           </section>
           <section class="match-context-history">
  <h2 data-text="{msg.match_context_previous}"></h2>
- <ol class="games" data-live="match_head_to_head" data-filter="target_game_id=eq.{id}&limit=5" data-order="day.desc,kickoff.desc.nullslast,id.desc" data-empty="{msg.match_context_previous_empty}">
+ <ol class="games" data-project='{"reader_day":{"date":["kickoff","day"]}}' data-live="match_head_to_head" data-filter="target_game_id=eq.{id}&limit=5" data-order="day.desc,kickoff.desc.nullslast,id.desc" data-empty="{msg.match_context_previous_empty}">
   <template data-item><li><a class="game-row" data-show-country="{show_country}" data-route="jogo" data-param-slug="{game_slug}" data-played="true">
- <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
+ <span class="when"><span class="day" data-text="{reader_day}" data-text-format="date"></span> <span class="hour" data-text="{kickoff}" data-text-format="time"></span></span>
  <span class="where" data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span>
  <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{show_country}|{home_country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}|{home_logo_key}" data-text-format="team-badge"></span></span></span>
  <span class="score"><b data-text="{home_score}|{home_aet}|{msg.game_aet}" data-text-format="match-final-score"></b><i>x</i><b data-text="{away_score}|{away_aet}|{msg.game_aet}" data-text-format="match-final-score"></b><span class="score-decider" data-text="{home_pen}|{away_pen}|{msg.game_pen}" data-text-format="match-shootout"></span></span>
@@ -147,7 +147,7 @@
       <p class="refusal" role="alert" data-text="{msg.comment_refused}"></p>
       <button id="comment-post" type="button" class="btn post"><span class="idle" data-text="{msg.comment_post}"></span><span class="busy" data-text="{msg.comment_posting}"></span></button>
     </div>
-<div class="paged-read" data-live="archive_page" data-filter="id=eq.game-comments-{id}" data-machine='{"field":"state","initial":"browsing","states":{"browsing":{"on":{"click@game-comments-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@game-comments-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}' data-empty-row='{"id":"game-comments-{id}","owner_id":"{id}","offset":0,"next_offset":40,"page":1,"state":"browsing"}'>
+<div class="paged-read" data-live="archive_page" data-filter="id=eq.game-comments-{id}" data-machine='{"field":"state","initial":"browsing","states":{"browsing":{"on":{"click@game-comments-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@game-comments-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}' data-empty-row='{"id":"game-comments-{id}","offset":0,"next_offset":40,"owner_id":"{id}","page":1,"state":"browsing"}'>
   <div class="page-window">
 
     <ol class="comment-list" data-live="comment" data-select="*,app_user(handle)" data-filter="game_id=eq.{owner_id}&amp;offset={offset}&amp;limit=40" data-order="created_at.desc" data-empty="{msg.comments_none}">
@@ -164,7 +164,7 @@
 <nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
   <button id="game-comments-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
   <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
-  <span data-live="comment" data-filter="game_id=eq.{owner_id}&amp;offset={next_offset}&amp;limit=1" data-order='created_at.desc' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <span data-live="comment" data-filter="game_id=eq.{owner_id}&amp;offset={next_offset}&amp;limit=1" data-select="id" data-order='created_at.desc' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
   <button id="game-comments-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
 </nav>
   </div>

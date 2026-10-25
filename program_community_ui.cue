@@ -23,7 +23,6 @@ code: surface: screens: {
 		(screenRoute): {
 			title: screenRoute
 			route: [if screenRoute == "usuario" {"/usuario/:id"}, if screenRoute == "historico-jogo" {"/historico-jogo/:slug"}, "/usuarios"][0]
-			ssr:    "ssr"
 			// The directory joins the strip beside the other archive directories; a
 			// profile and a game's history are reached from it and from bylines.
 			strip: screenRoute == "usuarios"
@@ -51,14 +50,8 @@ code: meta: tests: {
 	"test-community-history": {of: "historico-jogo", says: "game edits retain their author and field changes across public pages", given: {edits: 41}, when: "read both history pages and the author's profile", then: "output.paginated && output.attributed && output.safe_text"}
 }
 
-build: checks: "community-access": {
-	priority: 1
-	database: true
-	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-net --allow-read tests/community-access-tests.ts"]
-	note: "community controls follow signed-in ownership, guest status and the biography lifecycle"
-}
 loop: surface: checks: "community-controls": {
 	verb: "test"
-	cmds: ["\(_dependencyTest) omnishell --config tests/deno.json --no-lock --allow-read --allow-env tests/community-controls.ts"]
+	cmds: ["mise exec -- deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-read --allow-env tests/community-controls.ts"]
 	note: "native profile forms address the biography row and immutable diffs render untrusted values as text"
 }

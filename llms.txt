@@ -7,11 +7,11 @@ Publicly accessible web application.
 
 ## Screens
 - [Game archive](/arquivo): arquivo screen
-- [Players](/jogadores): jogadores screen
 - [Principal](/): principal screen
 - [Campeonatos](/campeonatos): campeonatos screen
 - [Jogos](/jogos): jogos screen
 - [Equipes](/equipes): equipes screen
+- [Players](/jogadores): jogadores screen
 - [Estádios](/estadios): estadios screen
 - [Árbitros](/arbitros): arbitros screen
 - [gerenciar](/gerenciar): gerenciar screen
@@ -81,6 +81,7 @@ Publicly accessible web application.
 - `TeamOddsProgress`: domain entity
 - `PhaseDirectory`: domain entity
 - `PlayerDirectory`: domain entity
+- `MatchesStart`: domain entity
 - `GameArchive`: domain entity
 - `PlayerAppearance`: domain entity
 - `ChampionshipAttendance`: domain entity

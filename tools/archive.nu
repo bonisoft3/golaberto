@@ -31,11 +31,12 @@ def settings []: nothing -> record {
     cache: $cache
     output: ($env.ARCHIVE_OUTPUT? | default ($cache | path join $project))
     source: $"($project)-source"
-    # The archive overlay builds its database from the dedicated tag; the empty
-    # compose mode takes the pinned published platform images.
+    # The archive overlay builds its database from the dedicated tag, on the
+    # checkout's platform images: the tree's in the monorepo, the pinned
+    # releases where the switch is unset.
     env: {
       BAYT_IMAGE_TAG: $project
-      MONOREPO_COMPOSE_MODE: ""
+      MONOREPO_COMPOSE_MODE: ($env.MONOREPO_COMPOSE_MODE? | default "")
       CADDY_TLS_HOST_PORT: $port
       ORIGIN: ($env.ORIGIN? | default $"https://localhost:($port)")
     }

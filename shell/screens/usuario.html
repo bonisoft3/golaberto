@@ -6,7 +6,7 @@
   <nav class="langs" aria-label="{msg.lang_label}">
     <a data-route="usuario" data-param-id="{param.id}" data-locale="pt-BR" data-locale-current="page" lang="pt-BR"><span class="long" data-text="{msg.lang_pt}"></span><span class="short" data-text="{msg.lang_pt_short}"></span></a>
     <a data-route="usuario" data-param-id="{param.id}" data-locale="es-AR" data-locale-current="page" lang="es-AR"><span class="long" data-text="{msg.lang_es}"></span><span class="short" data-text="{msg.lang_es_short}"></span></a>
-    <a data-route="usuario" data-param-id="{param.id}" data-locale="en-GB" data-locale-current="page" lang="en-GB"><span class="long" data-text="{msg.lang_en}"></span><span class="short" data-text="{msg.lang_en_short}"></span></a>
+    <a data-route="usuario" data-param-id="{param.id}" data-locale="en-US" data-locale-current="page" lang="en-US"><span class="long" data-text="{msg.lang_en}"></span><span class="short" data-text="{msg.lang_en_short}"></span></a>
     <a data-route="usuario" data-param-id="{param.id}" data-locale="it-IT" data-locale-current="page" lang="it-IT"><span class="long" data-text="{msg.lang_it}"></span><span class="short" data-text="{msg.lang_it_short}"></span></a>
     <a data-route="usuario" data-param-id="{param.id}" data-locale="de-DE" data-locale-current="page" lang="de-DE"><span class="long" data-text="{msg.lang_de}"></span><span class="short" data-text="{msg.lang_de_short}"></span></a>
     <a data-route="usuario" data-param-id="{param.id}" data-locale="fr-FR" data-locale-current="page" lang="fr-FR"><span class="long" data-text="{msg.lang_fr}"></span><span class="short" data-text="{msg.lang_fr_short}"></span></a>
@@ -84,7 +84,7 @@
 </li></template></ul></details></div></template>
 </div>
 <h2 data-text="{msg.community_profile_edits}"></h2>
-<div class="paged-read" data-live="archive_page" data-filter="id=eq.community-user-history-{id}" data-machine='{"field":"state","initial":"browsing","states":{"browsing":{"on":{"click@community-user-history-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@community-user-history-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}' data-empty-row='{"id":"community-user-history-{id}","owner_id":"{id}","offset":0,"next_offset":40,"page":1,"state":"browsing"}'>
+<div class="paged-read" data-live="archive_page" data-filter="id=eq.community-user-history-{id}" data-machine='{"field":"state","initial":"browsing","states":{"browsing":{"on":{"click@community-user-history-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@community-user-history-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}' data-empty-row='{"id":"community-user-history-{id}","offset":0,"next_offset":40,"owner_id":"{id}","page":1,"state":"browsing"}'>
   <div class="page-window">
 
 <ol class="community-history" data-live="game_change" data-filter="actor_id=eq.{owner_id}&offset={offset}&limit=40" data-order="created_at.desc,id.asc" data-empty="{msg.community_history_empty}"><template data-item><li>
@@ -97,7 +97,7 @@
 <nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
   <button id="community-user-history-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
   <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
-  <span data-live="game_change" data-filter="actor_id=eq.{owner_id}&amp;offset={next_offset}&amp;limit=1" data-order='created_at.desc,id.asc' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <span data-live="game_change" data-filter="actor_id=eq.{owner_id}&amp;offset={next_offset}&amp;limit=1" data-select="id" data-order='created_at.desc,id.asc' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
   <button id="community-user-history-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
 </nav>
   </div>

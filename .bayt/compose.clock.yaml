@@ -5,7 +5,7 @@ services:
       additional_contexts:
         golaberto-ticker: service:golaberto-ticker
         libraries_mecha-clock-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-clock:0.9.0@sha256:185d23538507ff041799c6408846643205080c80a0f56c7e2d7637278876dd1b}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-clock-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-clock:0.17.0@sha256:9d8cdaca612d880a4de4ab3176f80a1e7acdb38b10295f9aa5990217dcb3317f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-clock-image}
       context: ..
       dockerfile: .bayt/Dockerfile.clock
       target: clock
@@ -13,8 +13,9 @@ services:
       - bayt-golaberto-clock:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
       - bayt-golaberto-clock:latest
       args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
         BUILDKIT_SYNTAX: >-
-          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
     depends_on:
       golaberto-ticker:
         condition: service_started
@@ -38,7 +39,8 @@ services:
       dockerfile: .bayt/Dockerfile.clock
       target: clock_bayt
       args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
         BUILDKIT_SYNTAX: >-
-          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
     image: bayt-golaberto-clock_bayt:latest
     scale: 0

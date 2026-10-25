@@ -84,15 +84,12 @@
     "preamble": [],
     "preambleCopyContexts": [],
     "from": {
-      "name": "redpandadata/connect:4.112.0@sha256:5b70cd14fd2bbb8fe02a80358ed1510169596218d0d46cd7768659b1d1cf8420"
+      "name": "redpandadata/connect:4.114.0@sha256:481e8df48ed733f080623ae67f0dccc82d29ae509dfb3f957347a9e900e74910"
     },
     "add": [],
     "mounts": [],
     "secrets": {},
     "extra_hosts": [],
-    "epilogue": [
-      "COPY <<'COMPUTE' /compute-events.yaml\ninput:\n  redis_streams:\n    url: ${REDIS_URL}\n    streams: [cdc-events]\n    body_key: data\n    consumer_group: ${COMPUTE_GROUP}\n    client_id: compute\n    start_from_oldest: true\n    auto_replay_nacks: true\n    # A backlog is read in large steps so one batch below drains much of it.\n    limit: 1000\npipeline:\n  threads: 1\n  processors:\n    - mapping: |\n        let table = this.data.parse_json().__table\n        root.tables = [if $table.type() == \"string\" && $table != \"\" { $table } else { throw(\"CDC event has no table\") }]\noutput:\n  switch:\n    cases:\n      - check: errored()\n        output:\n          reject: ${! error() }\n      # An invalidation says the named tables changed since the last run, and\n      # a run reads a fresh snapshot, so one run answers every invalidation\n      # pending before it. What arrives within a period goes out as one, its\n      # tables united; while a run is in flight the next batch waits, and what\n      # arrives meanwhile waits in the stream for the batch after. A batch is\n      # acknowledged only once compute accepts it.\n      #\n      # Compute answers a failed delivery 500, the error in the body, and keeps\n      # serving; the batch is retried here as the one message it became, with\n      # exponential backoff. A delivery still refused after twelve retries\n      # (about eight minutes of backoff) is no transient failure: crash, so the\n      # stack fails loudly. The delivery stays pending and is replayed first\n      # when Connect restarts.\n      - output:\n          broker:\n            pattern: fan_out\n            batching:\n              count: 10000\n              period: 1s\n              processors:\n                - archive:\n                    format: json_array\n                - mapping: root.tables = this.map_each(m -> m.tables).flatten().unique()\n            outputs:\n              - fallback:\n                  - retry:\n                      backoff:\n                        initial_interval: 1s\n                        max_interval: 1m\n                        max_elapsed_time: 0s\n                      max_retries: 12\n                      output:\n                        http_client:\n                          url: http://compute:9997/invalidate\n                          verb: POST\n                          timeout: 30m\n                          retries: 0\n                          max_in_flight: 1\n                          headers:\n                            Content-Type: application/json\n                            Authorization: Bearer ${SERVICE_JWT:}\n                  - drop: {}\n                    processors:\n                      - crash: 'compute refused an invalidation through every retry: ${! @fallback_error }'\n\nCOMPUTE"
-    ],
     "copy": [
       {
         "from": null,
@@ -185,6 +182,10 @@
         "exclude": []
       }
     ],
+    "epilogue": [
+      "COPY <<'CDCTRACE' /cdc-trace.yaml\n# The change feed's transaction trace, joined onto every row: shared by every\n# stream reading cdc-events through the transform's `-r`, since streams mode\n# refuses resources in a stream's own file.\n#\n# A writing transaction's first change on the bus is its marker\n# (mecha.txn_trace, rls.sql), and conduit does not interleave transactions, so\n# the marker last read is the transaction of every row after it. A row's own\n# txid cannot answer instead: the bus spells a delete as its before-image,\n# indistinguishable from an insert, and that image's txid, where it carries\n# more than its key, is its last writer's.\n#\n# A stream runs this among its INPUT processors, which Connect runs on one\n# goroutine whatever the pipeline's threads, after stamping @cdc_consumer with\n# a name no other stream uses: the cache is one per process, and each stream\n# reads the bus at its own position. The marker is consumed and dropped; a\n# row leaves with @traceparent set to its transaction's trace, or unset when\n# the transaction had none or began before this process read its marker.\ncache_resources:\n  - label: cdc_trace\n    memory:\n      # One entry per stream, replaced by every marker: the TTL bounds nothing\n      # and only has to outlast the longest transaction's rows (the default\n      # is 5m).\n      default_ttl: 24h\n\nprocessor_resources:\n  - label: cdc_trace_join\n    # A batch runs each processor over every message before the next, so a\n    # marker mid-batch would reach the rows after it only once the batch had\n    # already read the cache; for_each runs the batch a message at a time.\n    for_each:\n      - switch:\n          - check: '@cdc_consumer.or(\"\") == \"\"'\n            processors:\n              - crash: a cdc-events stream ran cdc_trace_join without stamping @cdc_consumer\n          - check: this.catch({}).data.or(\"\").catch(\"\").parse_json().catch({}).__table.or(\"\") == \"txn_trace\"\n            processors:\n              # A marker without its NOT NULL trace keeps the error and stays\n              # on the stream, where the consumer refuses it as it would any\n              # malformed row.\n              - try:\n                  - mapping: |\n                      let trace = this.data.parse_json().traceparent\n                      root = if $trace.type() == \"string\" { $trace } else { throw(\"txn_trace marker has no traceparent\") }\n                  - cache:\n                      resource: cdc_trace\n                      operator: set\n                      key: ${! @cdc_consumer }\n                      value: ${! content() }\n                  - mapping: root = deleted()\n          - processors:\n              - branch:\n                  request_map: root = \"\"\n                  processors:\n                    - cache:\n                        resource: cdc_trace\n                        operator: get\n                        key: ${! @cdc_consumer }\n                    # No marker read yet: the transaction's trace is unknown.\n                    - catch:\n                        - mapping: root = \"\"\n                  result_map: meta traceparent = if content().string() != \"\" { content().string() } else { deleted() }\n\n  # A coalesced call's @traceparent, over a batch archived as a JSON array whose\n  # elements carry their row's @traceparent as `trace` (archive keeps no\n  # metadata): the first transaction's trace, the one that set the call off.\n  - label: cdc_trace_batch\n    mutation: |\n      let traces = this.map_each(m -> m.trace).filter(t -> t != \"\")\n      meta traceparent = if $traces.length() > 0 { $traces.index(0) } else { deleted() }\n\nCDCTRACE",
+      "COPY <<'COMPUTE' /compute-events.yaml\ninput:\n  redis_streams:\n    url: ${REDIS_URL}\n    streams: [cdc-events]\n    body_key: data\n    consumer_group: ${COMPUTE_GROUP}\n    client_id: compute\n    start_from_oldest: true\n    auto_replay_nacks: true\n    # A backlog is read in large steps so one batch below drains much of it.\n    limit: 1000\n  # The transform's -r cdc-trace.yaml consumes the transaction markers and\n  # stamps each row's @traceparent.\n  processors:\n    - mutation: meta cdc_consumer = env(\"COMPUTE_GROUP\")\n    - resource: cdc_trace_join\npipeline:\n  threads: 1\n  processors:\n    - mapping: |\n        let table = this.data.parse_json().__table\n        root.tables = [if $table.type() == \"string\" && $table != \"\" { $table } else { throw(\"CDC event has no table\") }]\n        root.trace = @traceparent.or(\"\")\noutput:\n  switch:\n    cases:\n      - check: errored()\n        output:\n          reject: ${! error() }\n      # An invalidation says the named tables changed since the last run, and\n      # a run reads a fresh snapshot, so one run answers every invalidation\n      # pending before it. What arrives within a period goes out as one, its\n      # tables united; while a run is in flight the next batch waits, and what\n      # arrives meanwhile waits in the stream for the batch after. A batch is\n      # acknowledged only once compute accepts it.\n      #\n      # Compute answers a failed delivery 500, the error in the body, and keeps\n      # serving; the batch is retried here as the one message it became, with\n      # exponential backoff. A delivery still refused after twelve retries\n      # (about eight minutes of backoff) is no transient failure: crash, so the\n      # stack fails loudly. The delivery stays pending and is replayed first\n      # when Connect restarts.\n      - output:\n          broker:\n            pattern: fan_out\n            batching:\n              count: 10000\n              period: 1s\n              processors:\n                - archive:\n                    format: json_array\n                - resource: cdc_trace_batch\n                - mapping: root.tables = this.map_each(m -> m.tables).flatten().unique()\n            outputs:\n              - fallback:\n                  - retry:\n                      backoff:\n                        initial_interval: 1s\n                        max_interval: 1m\n                        max_elapsed_time: 0s\n                      max_retries: 12\n                      output:\n                        http_client:\n                          url: http://compute:9997/invalidate\n                          verb: POST\n                          timeout: 30m\n                          retries: 0\n                          max_in_flight: 1\n                          headers:\n                            Content-Type: application/json\n                            Authorization: Bearer ${SERVICE_JWT:}\n                          metadata:\n                            include_patterns: [\"^traceparent$\"]\n                  - drop: {}\n                    processors:\n                      - crash: 'compute refused an invalidation through every retry: ${! @fallback_error }'\n\nCOMPUTE"
+    ],
     "healthcheck": null,
     "expose": [],
     "entrypoint": null,
@@ -192,6 +193,8 @@
     "cmd": [
       "streams",
       "--no-api",
+      "-r",
+      "/cdc-trace.yaml",
       "/pipelines/golaberto-standings.yaml",
       "/pipelines/golaberto-game-cards.yaml",
       "/pipelines/golaberto-player-stats.yaml",
@@ -271,7 +274,8 @@
         "./.bayt/compose.compute.yaml",
         "./.bayt/compose.conduit.yaml",
         "./.bayt/compose.mesh-events.yaml",
-        "./.bayt/compose.caddy.yaml"
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.served.yaml"
       ]
     },
     "outs": {
@@ -307,7 +311,8 @@
         "./.bayt/compose.compute.yaml",
         "./.bayt/compose.conduit.yaml",
         "./.bayt/compose.mesh-events.yaml",
-        "./.bayt/compose.caddy.yaml"
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.served.yaml"
       ]
     },
     "srcs": {
@@ -357,7 +362,8 @@
         "./.bayt/compose.compute.yaml",
         "./.bayt/compose.conduit.yaml",
         "./.bayt/compose.mesh-events.yaml",
-        "./.bayt/compose.caddy.yaml"
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.served.yaml"
       ]
     }
   },
@@ -388,7 +394,8 @@
     "./.bayt/compose.compute.yaml",
     "./.bayt/compose.conduit.yaml",
     "./.bayt/compose.mesh-events.yaml",
-    "./.bayt/compose.caddy.yaml"
+    "./.bayt/compose.caddy.yaml",
+    "./.bayt/compose.served.yaml"
   ],
   "chainedDeps": [
     {

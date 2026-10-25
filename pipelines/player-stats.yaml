@@ -16,6 +16,11 @@ input:
             - cdc-events
           body_key: data
           consumer_group: golaberto-player-stats
+        processors:
+          # The change feed's transaction markers become each row's
+          # @traceparent (mecha's cdc-trace.yaml, loaded by -r).
+          - mutation: meta cdc_consumer = "golaberto-player-stats"
+          - resource: cdc_trace_join
       - generate:
           count: 1
           interval: ""
@@ -34,6 +39,8 @@ input:
                         retry_period: 2s
                         headers:
                           Authorization: Bearer ${SERVICE_JWT}
+                        metadata:
+                          include_patterns: ["^traceparent$"]
                   result_map: root.championships = this
               - mapping: |
                   root = this.championships.map_each(c -> {"data": {"__table": "championship", "id": c.id}.format_json().string()})
@@ -86,6 +93,8 @@ pipeline:
                   retry_period: 2s
                   headers:
                     Authorization: Bearer ${SERVICE_JWT}
+                  metadata:
+                    include_patterns: ["^traceparent$"]
               - archive:
                   format: json_array
             result_map: root.rows = this.flatten()
@@ -107,6 +116,8 @@ pipeline:
                   retry_period: 2s
                   headers:
                     Authorization: Bearer ${SERVICE_JWT}
+                  metadata:
+                    include_patterns: ["^traceparent$"]
             result_map: root.apps = this
         - branch:
             processors:
@@ -117,6 +128,8 @@ pipeline:
                   retry_period: 2s
                   headers:
                     Authorization: Bearer ${SERVICE_JWT}
+                  metadata:
+                    include_patterns: ["^traceparent$"]
             result_map: root.goals = this
         - branch:
             processors:
@@ -127,6 +140,8 @@ pipeline:
                   retry_period: 2s
                   headers:
                     Authorization: Bearer ${SERVICE_JWT}
+                  metadata:
+                    include_patterns: ["^traceparent$"]
             # A deleted player took their rows with them; their lines go too.
             result_map: 'root.player_row = this.index(0).catch({})'
         - branch:
@@ -138,6 +153,8 @@ pipeline:
                   retry_period: 2s
                   headers:
                     Authorization: Bearer ${SERVICE_JWT}
+                  metadata:
+                    include_patterns: ["^traceparent$"]
             result_map: root.championship_name = this.index(0).full_name
         - bloblang: |
             # One team's line: what the player did for it.
@@ -206,6 +223,8 @@ output:
               successful_on:
                 - 200
                 - 201
+              metadata:
+                include_patterns: ["^traceparent$"]
         - check: '@sink == "delete"'
           output:
             http_client:
@@ -217,3 +236,6 @@ output:
               successful_on:
                 - 200
                 - 204
+
+              metadata:
+                include_patterns: ["^traceparent$"]

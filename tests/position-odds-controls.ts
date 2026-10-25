@@ -1,5 +1,5 @@
 import {assertEquals} from 'jsr:@std/assert@1';
-import {evaluateRole} from '../../../plugins/omnishell/interpreter/jessie.js';
+import { evaluateRole } from "./platform.ts";
 const handler = async (name:string) => evaluateRole(await Deno.readTextFile(new URL(`../shell/handlers/${name}.js`,import.meta.url)), 'handler');
 const inspection = async () => {
  const reduce=await handler('position-odds-fold');

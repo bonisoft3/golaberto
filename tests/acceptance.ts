@@ -3,11 +3,13 @@
 // archive in a real browser, with the cluster up. Declared in program.cue as an
 // integrate check. Each case names the test pair it realizes.
 
+import { AsyncLocalStorage } from "node:async_hooks";
 import { assert, assertEquals } from "jsr:@std/assert@1.0.11";
-import { baseUrl } from "omnishell/base-url.ts";
+import { baseUrl } from "./platform.ts";
 import { query } from "./db.ts";
 import { address, fixturePath } from "./addresses.ts";
 import { crudReads } from "./reads.ts";
+import { localhostDoor } from "./localhost-door.ts";
 
 const { chromium } = await import("npm:playwright@1.61.1");
 const { SignJWT } = await import("npm:jose@6.0.11");
@@ -17,21 +19,42 @@ const browser = await chromium.launch({ args: ["--ignore-certificate-errors"] })
 // deno-lint-ignore no-explicit-any
 type Page = any;
 
-// Every context a case opens is closed when the case ends.
+// Every context or tab a case opens is closed when the case ends.
 const opened: { close(): Promise<void> }[] = [];
-const test = (name: string, fn: () => Promise<void>) =>
-  Deno.test(name, async () => {
-    try {
-      await fn();
-    } finally {
-      await Promise.all(opened.splice(0).map((c) => c.close()));
-    }
-  });
+// deno-lint-ignore no-explicit-any
+type Store = { opened: { close(): Promise<void> }[]; warm?: any };
+const scope = new AsyncLocalStorage<Store>();
+const currentOpened = () => scope.getStore()?.opened ?? opened;
 
-// A reader who signed in with a passkey: an account row and the token the auth
-// service would issue it, signed with the dev cluster's secret. The ceremony
-// itself needs the origin the cluster pins, which a stack on a random port is
-// not; mecha's auth suite covers it.
+const readonlyCases: { name: string; fn: () => Promise<void> }[] = [];
+const mutatingCases: { name: string; fn: () => Promise<void> }[] = [];
+const MUTATING = new Set([
+  "test-chances-live",
+  "test-home-featured",
+  "test-home-levels",
+  "test-standings-live",
+  "test-games-timezone",
+  "test-player-stats-live",
+  "test-appearance-live",
+  "test-edit-link",
+  "test-edit-game",
+  "test-edit-goal",
+  "test-edit-refused",
+  "test-sign-in",
+  "test-comment",
+  "test-dark",
+  "door: a game's document follows its result",
+]);
+const test = (name: string, fn: () => Promise<void>) => {
+  const prefix = name.split(":")[0];
+  if (MUTATING.has(prefix) || MUTATING.has(name)) {
+    mutatingCases.push({ name, fn });
+  } else {
+    readonlyCases.push({ name, fn });
+  }
+};
+
+// Cases unrelated to the ceremony use the token the dev auth service issues.
 const signedIn = async (handle: string) => {
   const id = crypto.randomUUID();
   await query(`INSERT INTO app_user (id, handle) VALUES ('${id}', '${handle}')`);
@@ -43,18 +66,29 @@ const signedIn = async (handle: string) => {
   return { token, user: { id, handle } };
 };
 
-const context = async (opts: { width?: number; dark?: boolean; session?: unknown } = {}) => {
+const context = async (opts: { width?: number; dark?: boolean; session?: unknown; timeZone?: string } = {}) => {
   const c = await browser.newContext({
     viewport: { width: opts.width ?? 1366, height: 900 },
     colorScheme: opts.dark ? "dark" : "light",
+    timezoneId: opts.timeZone ?? "America/Sao_Paulo",
     // A Brazilian reader: the unprefixed addresses negotiate to the language a browser asks for.
     locale: "pt-BR",
   });
-  opened.push(c);
+  currentOpened().push(c);
   if (opts.session !== undefined) {
     await c.addInitScript((s: unknown) => sessionStorage.setItem("pronto-token", JSON.stringify(s)), opts.session);
   }
   return c;
+};
+
+const newPage = async (opts: { width?: number; dark?: boolean; session?: unknown; timeZone?: string } = {}) => {
+  const store = scope.getStore();
+  if (store?.warm && opts.width === undefined && opts.dark === undefined && opts.session === undefined && opts.timeZone === undefined) {
+    const page = await store.warm.newPage();
+    store.opened.push(page);
+    return page;
+  }
+  return await (await context(opts)).newPage();
 };
 
 const visit = async (page: Page, path: string, ready = '.shell-screen:not([hidden]):not([data-served]) .screen[data-state="populated"]') => {
@@ -133,7 +167,7 @@ const visit = async (page: Page, path: string, ready = '.shell-screen:not([hidde
 };
 
 const open = async (path: string, opts: { width?: number; dark?: boolean; session?: unknown } = {}) =>
-  visit(await (await context(opts)).newPage(), path);
+  visit(await newPage(opts), path);
 
 const texts = (page: Page, selector: string): Promise<string[]> =>
   page.$$eval(selector, (els: Element[]) => els.map((e) => (e.textContent ?? "").trim()));
@@ -186,7 +220,7 @@ const awaitPoints = (page: Page, team: string, want: number) =>
 
 // A page addressed to an id that names nothing, saying so in words.
 const gone = async (route: string, words: string) => {
-  const page = await (await context()).newPage();
+  const page = await newPage();
   await page.goto(`${base}${route}/missing-address`);
   await page.waitForFunction((words: string) =>
     (document.querySelector(".shell-screen:not([hidden]):not([data-served]) .screen")?.textContent ?? "").includes(words), words);
@@ -463,15 +497,50 @@ const newestFirst = async (page: Page, selector: string) => {
   assert(days.length > 1 && days.every((d, i) => i === 0 || days[i - 1] >= d), days.join(" | "));
 };
 
-test("test-games-upcoming: the games page opens on the upcoming games, soonest first", async () => {
+const sharedMatchHeadings = async (page: Page, selector: string) => {
+  const groups = await page.$$eval(`${selector} > li`, (items: Element[]) => items.map((item) => {
+    const day = item.querySelector<HTMLElement>(".game-day")!;
+    const competition = item.querySelector<HTMLElement>(".game-group")!;
+    return {
+      day: item.querySelector(".day")!.textContent,
+      hour: item.querySelector(".hour")!.textContent!.trim(),
+      championship: item.getAttribute("data-championship"),
+      dayHeading: getComputedStyle(day).display !== "none",
+      competitionHeading: getComputedStyle(competition).display !== "none",
+      championshipLink: competition.querySelector("a")!.getAttribute("href"),
+      repeatedChampionship: item.querySelector(".game-row .where") !== null,
+    };
+  }));
+  assert(groups.length > 1);
+  const seen = new Set<string>();
+  groups.forEach((group: { day: string; hour: string; championship: string; dayHeading: boolean; competitionHeading: boolean; championshipLink: string; repeatedChampionship: boolean }, i: number) => {
+    const newDay = i === 0 || group.day !== groups[i - 1].day;
+    assertEquals(group.dayHeading, newDay);
+    assertEquals(group.competitionHeading, newDay || group.championship !== groups[i - 1].championship);
+    const key = `${group.day}:${group.championship}`;
+    if (group.competitionHeading) {
+      assert(!seen.has(key), `repeated championship heading: ${key}`);
+      seen.add(key);
+    } else {
+      const previous = groups[i - 1].hour;
+      const current = group.hour;
+      assert(selector.endsWith("upcoming") ? previous <= current : previous === "" || (current !== "" && previous >= current));
+    }
+    assert(group.championshipLink);
+    assertEquals(group.repeatedChampionship, false);
+  });
+};
+
+test("test-games-upcoming: upcoming games share day and championship headings, with times ordered within each group", async () => {
   const page = await open("/jogos");
   await page.waitForSelector(".games.upcoming .game-row");
   assertEquals(await page.$eval(".games-view", (el: Element) => el.getAttribute("data-view")), "upcoming");
-  const whens = (await texts(page, ".games.upcoming .when")).map(sortable);
-  assert(whens.length > 1 && whens.every((w, i) => i === 0 || whens[i - 1] <= w), whens.join(" | "));
+  const days = (await texts(page, ".games.upcoming .day")).map(sortable);
+  assert(days.length > 1 && days.every((day, i) => i === 0 || days[i - 1] <= day), days.join(" | "));
   const first = await page.$eval(".games.upcoming .game-row", (a: Element) =>
-    [".where", ".home", ".away"].map((c) => a.querySelector(c)?.textContent?.trim() ?? ""));
+    [".home", ".away"].map((c) => a.querySelector(c)?.textContent?.trim() ?? ""));
   assert(first.every(Boolean), first.join(" | "));
+  await sharedMatchHeadings(page, ".games.upcoming");
 });
 
 test("test-games-results: the results tab lists played games and is remembered", async () => {
@@ -481,10 +550,197 @@ test("test-games-results: the results tab lists played games and is remembered",
   assertEquals(await page.$eval("#games-tab-results", (el: Element) => el.getAttribute("aria-selected")), "true");
   const score = await page.$eval(".games.results .score", (el: Element) => [...el.querySelectorAll("b")].map((b) => b.textContent));
   assert(score.every((s: string) => /^\d+$/.test(s)), score.join("x"));
+  await newestFirst(page, ".games.results .day");
+  await sharedMatchHeadings(page, ".games.results");
   await page.click(".masthead .wordmark");
   await page.waitForURL(await fixturePath(`${base}/`));
   await page.goBack();
   await page.waitForSelector('.shell-screen:not([hidden]):not([data-served]) .games-view[data-view="results"]');
+});
+
+test("test-games-pagination: both match tabs page through the archive and remember their positions", async () => {
+  const page = await (await context()).newPage();
+  const reads = crudReads(page);
+  await visit(page, "/jogos");
+  const active = '.shell-screen:not([hidden]):not([data-served])';
+  const origin = Number(await query("SELECT count(*) FROM game_archive WHERE played IS FALSE AND kickoff IS NOT NULL AND day < (now() AT TIME ZONE 'America/Sao_Paulo')::date-7"));
+  assert(origin > 0);
+  const expected = async (view: string, offset: number, limit = 40) => {
+    const upcoming = view === "upcoming";
+    return (await query(`SELECT slug FROM (
+      SELECT * FROM game_archive WHERE played=${!upcoming}${upcoming ? " AND kickoff IS NOT NULL" : ""}
+      ORDER BY day ${upcoming ? "ASC" : "DESC"},kickoff ${upcoming ? "ASC" : "DESC"},id ASC
+      OFFSET ${offset} LIMIT ${limit}
+    ) page ORDER BY coalesce((kickoff AT TIME ZONE 'America/Sao_Paulo')::date,day) ${upcoming ? "ASC" : "DESC"},
+      championship_name ASC,championship_id ASC,kickoff ${upcoming ? "ASC" : "DESC"},id ASC`)).split("\n").filter(Boolean);
+  };
+  const waitPage = async (view: string, slugs: string[], offset: number) => {
+    await page.waitForFunction(({ active, view, slugs, offset }: { active: string; view: string; slugs: string[]; offset: number }) => {
+      const list = document.querySelector(`${active} .games.${view}`);
+      const pager = list?.closest(".page-window")?.querySelector(".archive-pager");
+      return pager?.getAttribute("data-page-offset") === String(offset) &&
+        JSON.stringify(Array.from(list!.querySelectorAll(".game-row"), (row) => row.getAttribute("data-param-slug"))) === JSON.stringify(slugs);
+    }, { active, view, slugs, offset }, { timeout: 30_000 });
+  };
+  const secondPages = new Map<string, string[]>();
+  for (const view of ["upcoming", "results"]) {
+    await page.locator(`${active} #games-tab-${view}`).click();
+    const start = view === "upcoming" ? origin : 0;
+    const first = await expected(view, start);
+    const second = await expected(view, start + 40);
+    assertEquals(first.length, 40);
+    assert(second.length > 1);
+    assert(second.every((slug) => !first.includes(slug)));
+    await waitPage(view, first, start);
+    assertEquals(await page.locator(`${active} #matches-${view}-previous`).isVisible(), start > 0);
+    if (view === "upcoming") {
+      // A partial oldest page must not overlap the next page on the way back.
+      const offsets = [origin];
+      while (offsets.at(-1)! > 0) offsets.push(Math.max(0, offsets.at(-1)! - 40));
+      for (let index = 1; index < offsets.length; index++) {
+        await page.locator(`${active} #matches-upcoming-previous`).click();
+        await waitPage(view, await expected(view, offsets[index], offsets[index - 1] - offsets[index]), offsets[index]);
+      }
+      assertEquals(await page.locator(`${active} #matches-upcoming-previous`).isVisible(), false);
+      for (let index = offsets.length - 2; index >= 0; index--) {
+        await page.locator(`${active} #matches-upcoming-next`).click();
+        const limit = index === 0 ? 40 : offsets[index - 1] - offsets[index];
+        await waitPage(view, await expected(view, offsets[index], limit), offsets[index]);
+      }
+      const cutoff = await query("SELECT ((now() AT TIME ZONE 'America/Sao_Paulo')::date-7)::text");
+      const days = await page.locator(`${active} .games.upcoming .day`).allTextContents();
+      assert(days.every((day: string) => {
+        const [d, m, y] = day.trim().split("/");
+        return `${y}-${m}-${d}` >= cutoff;
+      }));
+    }
+    await page.locator(`${active} #matches-${view}-next`).click();
+    await waitPage(view, second, start + 40);
+    await sharedMatchHeadings(page, `${active} .games.${view}`);
+    await page.locator(`${active} #matches-${view}-previous`).click();
+    await waitPage(view, first, start);
+    await page.locator(`${active} #matches-${view}-next`).click();
+    await waitPage(view, second, start + 40);
+    secondPages.set(view, second);
+  }
+  await page.locator(`${active} #games-tab-upcoming`).click();
+  await waitPage("upcoming", secondPages.get("upcoming")!, origin + 40);
+  await page.locator(`${active} .masthead .wordmark`).click();
+  await page.waitForURL(await fixturePath(`${base}/`));
+  await page.goBack();
+  await waitPage("upcoming", secondPages.get("upcoming")!, origin + 40);
+  await page.locator(`${active} #games-tab-results`).click();
+  await waitPage("results", secondPages.get("results")!, 40);
+  await page.locator(`${active} #games-tab-upcoming`).click();
+  const total = Number(await query("SELECT count(*) FROM game_archive WHERE NOT played AND kickoff IS NOT NULL"));
+  const lastOffset = origin + Math.floor((total - origin - 1) / 40) * 40;
+  for (let offset = origin + 80; offset <= lastOffset; offset += 40) {
+    await page.locator(`${active} #matches-upcoming-next`).click();
+    await waitPage("upcoming", await expected("upcoming", offset), offset);
+  }
+  await page.waitForFunction((active: string) => {
+    const next = document.querySelector(`${active} #matches-upcoming-next`)!;
+    return getComputedStyle(next).display === "none";
+  }, active);
+  assertEquals(await page.locator(`${active} .games.upcoming .game-row`).count(), total - lastOffset);
+  const archiveReads = (await reads.settled()).filter((url) => url.pathname === "/crud/game_archive");
+  assert(archiveReads.some((url) => url.searchParams.get("offset") === "40" && url.searchParams.get("limit") === "40"));
+  assert(archiveReads.every((url) => Number(url.searchParams.get("limit")) >= 1 && Number(url.searchParams.get("limit")) <= 40));
+});
+
+test("test-games-timezone: kickoff dates, times and grouping follow the reader's timezone", async () => {
+  const active = '.shell-screen:not([hidden]):not([data-served])';
+  const fixture = (n: number) => `fe380000-0000-4000-8000-${String(n).padStart(12, "0")}`;
+  await query(`BEGIN;
+    INSERT INTO championship(id,name,region_name,begins,ends,slug) VALUES
+      ('${fixture(1)}','Timezone cup','Brasil','2000-01-01','2000-12-31','timezone-cup');
+    INSERT INTO phase(id,championship_id,name) VALUES ('${fixture(2)}','${fixture(1)}','Timezone phase');
+    INSERT INTO team(id,name,country,slug) VALUES
+      ('${fixture(3)}','Timezone home','Brazil','timezone-home'),('${fixture(4)}','Timezone away','Brazil','timezone-away');
+    INSERT INTO game(id,phase_id,day,kickoff,home_id,away_id,played,home_score,away_score,slug) VALUES
+      ('${fixture(5)}','${fixture(2)}','2000-03-01',NULL,'${fixture(3)}','${fixture(4)}',true,0,0,'timezone-hourless'),
+      ('${fixture(6)}','${fixture(2)}','2000-03-02','2000-03-02T20:00:00Z','${fixture(3)}','${fixture(4)}',false,NULL,NULL,'timezone-target');
+    COMMIT;`);
+  try {
+    const origin = Number(await query("SELECT start_offset FROM matches_start"));
+    for (const timeZone of ["America/Los_Angeles", "Asia/Tokyo"]) {
+      const page = await (await context({ timeZone })).newPage();
+      const expected = async (view: string, offset: number) => {
+        const upcoming = view === "upcoming";
+        const direction = upcoming ? "ASC" : "DESC";
+        return JSON.parse(await query(`SELECT json_agg(json_build_object('slug',slug,
+          'day',to_char(local_day,'DD/MM/YYYY'),
+          'hour',coalesce(to_char(kickoff AT TIME ZONE '${timeZone}','HH24:MI'),''))
+          ORDER BY local_day ${direction},championship_name,championship_id,kickoff ${direction},id)
+        FROM (SELECT *,coalesce((kickoff AT TIME ZONE '${timeZone}')::date,day) AS local_day
+          FROM game_archive WHERE played=${!upcoming}${upcoming ? " AND kickoff IS NOT NULL" : ""}
+          ORDER BY day ${direction},kickoff ${direction},id OFFSET ${offset} LIMIT 40) page_window`));
+      };
+      const waitRows = async (view: string, offset: number) => {
+        await page.waitForFunction(({ active, view, expected }: { active: string; view: string; expected: unknown }) =>
+          JSON.stringify(Array.from(document.querySelectorAll(`${active} .games.${view} .game-row`), row => ({
+            slug: row.getAttribute('data-param-slug'), day: row.querySelector('.day')!.textContent,
+            hour: row.querySelector('.hour')!.textContent,
+          }))) === JSON.stringify(expected), { active, view, expected: await expected(view, offset) });
+        await sharedMatchHeadings(page, `${active} .games.${view}`);
+      };
+      await visit(page, "/");
+      const homeRows = await page.locator(`${active} .home-games .game-row`).evaluateAll((rows: Element[]) =>
+        rows.map(row => ({ slug: row.getAttribute('data-param-slug')!, day: row.querySelector('.day')!.textContent,
+          hour: row.querySelector('.hour')!.textContent })));
+      assert(homeRows.length > 0);
+      const quoted = homeRows.map((row: { slug: string }) => "'" + row.slug.replaceAll("'", "''") + "'").join(',');
+      const homeExpected = JSON.parse(await query(`SELECT json_object_agg(slug,json_build_object(
+        'slug',slug,'day',to_char(kickoff AT TIME ZONE '${timeZone}','DD/MM/YYYY'),
+        'hour',to_char(kickoff AT TIME ZONE '${timeZone}','HH24:MI'))) FROM game_archive WHERE slug IN (${quoted})`));
+      for (const row of homeRows) assertEquals(row,homeExpected[row.slug]);
+      for (const feed of ["home-upcoming", "home-results"]) {
+        const grouped = await page.locator(`${active} .${feed}`).evaluate((section: Element) => ({
+          days: Array.from(section.querySelectorAll('.day'), node => node.textContent!),
+          headings: Array.from(section.querySelectorAll('.game-day')).filter(node => getComputedStyle(node).display !== 'none').length,
+        }));
+        assertEquals(grouped.headings,new Set(grouped.days).size);
+        const ordered = grouped.days.map(sortable);
+        assert(ordered.every((day: string, index: number) => index === 0 ||
+          (feed === "home-upcoming" ? ordered[index - 1] <= day : ordered[index - 1] >= day)));
+      }
+      await visit(page, "/jogos");
+      for (const view of ["upcoming", "results"]) {
+        const start = view === "upcoming" ? origin : 0;
+        await page.locator(`${active} #games-tab-${view}`).click();
+        await waitRows(view, start);
+        await page.locator(`${active} #matches-${view}-next`).click();
+        await waitRows(view, start + 40);
+        await page.locator(`${active} #matches-${view}-previous`).click();
+        await waitRows(view, start);
+      }
+      await visit(page, `/jogo/${WIN}`);
+      const facts = JSON.parse(await query(`SELECT json_build_array(
+        to_char(kickoff AT TIME ZONE '${timeZone}','DD/MM/YYYY'),
+        to_char(kickoff AT TIME ZONE '${timeZone}','HH24:MI')) FROM game WHERE id='${WIN}'`));
+      assertEquals((await texts(page, `${active} .game-facts dd`)).slice(1,3), facts);
+      await page.waitForSelector(`${active} .match-context-form li a`);
+      const contextRows = await page.locator(`${active} .match-context-form li a`).evaluateAll((rows: Element[]) =>
+        rows.map(row => ({ slug: row.getAttribute('data-param-slug')!, title: row.getAttribute('title'),
+          day: row.querySelector('[data-text-format="date"]')!.textContent })));
+      for (const row of contextRows) {
+        assertEquals(row.title,null);
+        const day = await query(`SELECT to_char(coalesce((kickoff AT TIME ZONE '${timeZone}')::date,day),'DD/MM/YYYY')
+          FROM game_archive WHERE slug='${row.slug.replaceAll("'", "''")}'`);
+        assertEquals(row.day,day);
+      }
+      await visit(page, `/jogo/${fixture(6)}`);
+      await page.waitForSelector(`${active} .match-context-history .game-row`);
+      assertEquals(await texts(page, `${active} .match-context-history .day`), ["01/03/2000"]);
+      assertEquals(await texts(page, `${active} .match-context-history .hour`), [""]);
+      await visit(page, `/jogo/${fixture(5)}`);
+      assertEquals((await texts(page, `${active} .game-facts dd`)).slice(1,3), ["01/03/2000", ""]);
+    }
+  } finally {
+    await query(`BEGIN; DELETE FROM game WHERE id IN ('${fixture(5)}','${fixture(6)}');
+      DELETE FROM phase WHERE id='${fixture(2)}'; DELETE FROM championship WHERE id='${fixture(1)}';
+      DELETE FROM team WHERE id IN ('${fixture(3)}','${fixture(4)}'); COMMIT;`);
+  }
 });
 
 test("test-game-page: a game's page shows its score, facts, goals and line-ups", async () => {
@@ -830,9 +1086,98 @@ test("test-game-importance: a game still to play shows how much its result matte
   assert(sides.every((v) => v >= 0), `importance ${sides} has a negative side`);
 });
 
-test("test-sign-in: a guest is offered a passkey in the strip", async () => {
-  const page = await open(`/jogo/${WIN}`);
-  assertEquals(await said(page, "body > nav .shell-signin"), ["Entrar"]);
+test("test-sign-in: explicit passkey creation preserves a guest, and an unknown credential stays refused until a new passkey is explicitly created", async () => {
+  const door = localhostDoor(base);
+  const c = await context();
+  const page = await c.newPage();
+  const cdp = await c.newCDPSession(page);
+  const identities = new Set<string>();
+  const ceremonies: string[] = [];
+  let authenticatorId: string | undefined;
+  const session = async () => {
+    await page.waitForSelector('.shell-screen:not([hidden]):not([data-served]) .screen[data-state="populated"]');
+    await page.waitForFunction(() => JSON.parse(sessionStorage.getItem("pronto-token") ?? "null")?.user?.id);
+    const value = await page.evaluate(() => JSON.parse(sessionStorage.getItem("pronto-token")!));
+    assert(value?.user?.id, "the browser has a session identity");
+    identities.add(value.user.id);
+    return value;
+  };
+  const signedIn = async () => {
+    await page.waitForSelector("body > nav .shell-signout", { state: "visible" });
+    return await session();
+  };
+  const signOut = async () => {
+    await page.locator("body > nav .shell-signout").click();
+    await page.waitForSelector("body > nav .shell-register", { state: "visible" });
+    const guest = await session();
+    assertEquals(guest.user.guest, true);
+    return guest;
+  };
+  page.on("request", (request: { url(): string }) => {
+    const path = new URL(request.url()).pathname;
+    if (/^\/auth\/(register|login)\//.test(path)) ceremonies.push(path);
+  });
+  try {
+    await cdp.send("WebAuthn.enable");
+    ({ authenticatorId } = await cdp.send("WebAuthn.addVirtualAuthenticator", { options: {
+      protocol: "ctap2", transport: "internal", hasResidentKey: true,
+      hasUserVerification: true, isUserVerified: true, automaticPresenceSimulation: true,
+    } }));
+    await page.goto(`${door.origin}${await fixturePath(`/jogo/${WIN}`)}`);
+    await page.waitForSelector("body > nav .shell-register", { state: "visible" });
+    assertEquals(await said(page, "body > nav .shell-signin"), ["Entrar"]);
+    const initialGuest = await session();
+    assertEquals(initialGuest.user.guest, true);
+    await page.locator("body > nav .shell-register").click();
+    const firstAccount = await signedIn();
+    assertEquals(firstAccount.user.id, initialGuest.user.id);
+    assertEquals(firstAccount.user.handle, initialGuest.user.handle);
+    assertEquals(firstAccount.user.guest, undefined);
+    assertEquals(ceremonies, ["/auth/register/start", "/auth/register/verify"]);
+    assertEquals(await query(`SELECT count(*) FROM webauthn_credential WHERE user_id = '${firstAccount.user.id}'`), "1");
+    const { credentials } = await cdp.send("WebAuthn.getCredentials", { authenticatorId });
+    assertEquals(credentials.length, 1);
+    assertEquals(credentials[0].rpId, "localhost");
+    assertEquals(credentials[0].isResidentCredential, true);
+
+    await query(`DELETE FROM webauthn_credential WHERE user_id = '${firstAccount.user.id}'`);
+    const recoveryGuest = await signOut();
+    ceremonies.length = 0;
+    const refused = page.waitForResponse((response: { url(): string }) => new URL(response.url()).pathname === "/auth/login/verify");
+    await page.locator("body > nav .shell-signin").click();
+    assertEquals((await refused).status(), 401);
+    await page.waitForSelector('body > nav .shell-signin[data-key="chrome_passkey_failed"]');
+    assertEquals(ceremonies, ["/auth/login/start", "/auth/login/verify"]);
+    assertEquals((await session()).user, recoveryGuest.user);
+    assertEquals(await query(`SELECT count(*) FROM webauthn_credential WHERE user_id IN ('${firstAccount.user.id}', '${recoveryGuest.user.id}')`), "0");
+
+    await page.locator("body > nav .shell-register").click();
+    const recovered = await signedIn();
+    assertEquals(recovered.user.id, recoveryGuest.user.id);
+    assertEquals(recovered.user.handle, recoveryGuest.user.handle);
+    assertEquals(ceremonies.slice(2), ["/auth/register/start", "/auth/register/verify"]);
+    assertEquals(await query(`SELECT count(*) FROM webauthn_credential WHERE user_id = '${recovered.user.id}'`), "1");
+    await cdp.send("WebAuthn.removeCredential", { authenticatorId, credentialId: credentials[0].credentialId });
+    await signOut();
+    const accepted = page.waitForResponse((response: { url(): string }) => new URL(response.url()).pathname === "/auth/login/verify");
+    await page.locator("body > nav .shell-signin").click();
+    assertEquals((await accepted).status(), 200);
+    assertEquals((await signedIn()).user, recovered.user);
+  } finally {
+    const failures: unknown[] = [];
+    for (const dispose of [
+      async () => { if (authenticatorId !== undefined) await cdp.send("WebAuthn.removeVirtualAuthenticator", { authenticatorId }); },
+      () => cdp.detach(),
+      () => c.close(),
+      () => door.close(),
+      async () => { if (identities.size) await query(`DELETE FROM app_user WHERE id IN (${[...identities].map(id => `'${id}'`).join(",")})`); },
+    ]) {
+      try { await dispose(); } catch (error) { failures.push(error); }
+    }
+    const list = currentOpened();
+    list.splice(list.indexOf(c), 1);
+    if (failures.length) throw new AggregateError(failures, "passkey regression cleanup failed");
+  }
 });
 
 test("test-comment: a signed-in reader's comment appears for every reader of the game", async () => {
@@ -869,7 +1214,7 @@ test("test-comment-refused: a guest's comment is refused and what was typed is k
   assertEquals(await page.$eval("#comment-body", (e: Element) => (e as HTMLTextAreaElement).value), "Golaço!");
 });
 
-test("test-languages: three languages, each at its own address", async () => {
+test("test-languages: selected languages keep routes and localize date order", async () => {
   // Spanish and Portuguese share this title, so the search label tells them apart.
   const es = await open("/es/campeonatos");
   assertEquals(await texts(es, "h1.band"), ["Campeonatos"]);
@@ -877,21 +1222,324 @@ test("test-languages: three languages, each at its own address", async () => {
   const en = await open("/en/championships");
   assertEquals(await texts(en, "h1.band"), ["Championships"]);
   const page = await championship(BRASILEIRO_2026);
-  await page.click('.masthead .langs a[data-locale="en-GB"]');
+  await page.click('.masthead .langs a[data-locale="en-US"]');
   await page.waitForURL(await fixturePath(`**/en/championship/${BRASILEIRO_2026}`));
+  const active = '.shell-screen:not([hidden]):not([data-served])';
+  await visit(page, `/en/match/${WIN}`);
+  assertEquals((await texts(page, `${active} .game-facts dd`)).slice(1, 3), ["09/20/2026", "19:30"]);
+  await page.click('.masthead .langs a[data-locale="pt-BR"]');
+  await page.waitForFunction(() => document.documentElement.lang === "pt-BR" &&
+    document.querySelector('.shell-screen:not([hidden]):not([data-served]) .game-facts dd:nth-of-type(2)')?.textContent === "20/09/2026");
+  assertEquals((await texts(page, `${active} .game-facts dd`)).slice(1, 3), ["20/09/2026", "19:30"]);
+
+  await visit(page, "/en/matches");
+  const slug = await page.locator(`${active} .games.upcoming .game-row`).first().getAttribute('data-param-slug');
+  const dates = JSON.parse(await query(`SELECT json_build_array(
+    to_char(kickoff AT TIME ZONE 'America/Sao_Paulo','MM/DD/YYYY'),
+    to_char(kickoff AT TIME ZONE 'America/Sao_Paulo','DD/MM/YYYY'))
+    FROM game_archive WHERE slug='${slug.replaceAll("'", "''")}'`));
+  const heading = `${active} .games.upcoming .game-day[data-new-day="true"]`;
+  assert((await page.locator(heading).first().textContent()).endsWith(", " + dates[0]));
+  assertEquals(await page.locator(`${active} .games.upcoming .day`).first().textContent(), dates[0]);
+  await page.click('.masthead .langs a[data-locale="pt-BR"]');
+  await page.waitForFunction(({ heading, date }: { heading: string; date: string }) =>
+    document.documentElement.lang === "pt-BR" && document.querySelector(heading)?.textContent?.endsWith(", " + date),
+    { heading, date: dates[1] });
+  assertEquals(await page.locator(`${active} .games.upcoming .day`).first().textContent(), dates[1]);
 });
 
-test("test-dark: the dark appearance resolves the dark tokens", async () => {
-  const page = await open("/", { dark: true });
-  const column = await page.$eval("main#app", (el: Element) => getComputedStyle(el).backgroundColor);
-  assertEquals(column, "rgb(35, 38, 15)");
+test("test-dark: stacked match probabilities and native inspectors work in both themes", async () => {
+  const luminance = (color: string) => {
+    const channels = color.match(/[\d.]+/g)!.slice(0, 3).map(Number).map(value => {
+      const channel = value / 255;
+      return channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4;
+    });
+    return channels[0] * .2126 + channels[1] * .7152 + channels[2] * .0722;
+  };
+  // The ordinary fixture has no historical ratings before this match.
+  const ratings = [crypto.randomUUID(), crypto.randomUUID()];
+  await query(`INSERT INTO team_rating(id,team_id,measure_date,offense,defense,rating)
+    SELECT '${ratings[0]}'::uuid,home_id,day-1,1.8,1.1,50 FROM game WHERE id='${WIN}'
+    UNION ALL SELECT '${ratings[1]}'::uuid,away_id,day-1,1.3,.9,50 FROM game WHERE id='${WIN}'`);
+  const goals: { side: "home" | "away"; minute: number }[] = JSON.parse(await query(`
+    SELECT coalesce(json_agg(json_build_object('side',side,'minute',minute) ORDER BY minute,id),'[]'::json)
+    FROM goal WHERE game_id='${WIN}' AND minute IS NOT NULL`));
+  const scoreAt = (minute: number) => goals.reduce((score, goal) => {
+    if (goal.minute <= minute) score[goal.side]++;
+    return score;
+  }, { home: 0, away: 0 });
+  const headingAt = (minute: number) => {
+    const score = scoreAt(minute);
+    return `Minuto ${minute} · ${score.home}–${score.away}`;
+  };
+  const boundary = goals.find((goal) => goal.minute > 0)!;
+  assert(boundary, "the played fixture has a timed goal");
+  try {
+    for (const dark of [false, true]) {
+      const page = await open(`/jogo/${WIN}`, { dark });
+      const active = '.shell-screen:not([hidden]):not([data-served])';
+      const minuteInput = page.locator(`${active} #match-probability-minute`);
+      await minuteInput.fill('30');
+      await page.waitForFunction((active: string) =>
+        document.querySelector(`${active} .match-probability__snapshot`)?.textContent?.startsWith('Minuto 30:'), active);
+      const chart = page.locator(`${active} .match-probability__chart`);
+      const snapshotLocator = page.locator(`${active} .match-probability__snapshot`);
+      const snapshot = (await snapshotLocator.textContent())!;
+      const expectedValues = snapshot.match(/[0-9]+,[0-9]%/g)!.reverse();
+      assertEquals(expectedValues.length, 3);
+      const geometry = await chart.evaluate((el: Element) => {
+        const points = (selector: string) => el.querySelector(selector)!.getAttribute('points')!.split(' ');
+        const areas = ['home', 'draw', 'away'].map(key => points(`.match-probability__area--${key}`));
+        const lines = ['home', 'draw', 'away'].map(key => points(`.match-probability__line--${key}`));
+        const count = lines[0].length;
+        const samples = [...el.querySelectorAll('.match-probability__sample')];
+        const hits = samples.map(sample => sample.querySelector<SVGRectElement>('.match-probability__hit')!);
+        const firstBox = samples[0].querySelector<SVGRectElement>('.match-probability__tooltip-box')!;
+        const lastBox = samples.at(-1)!.querySelector<SVGRectElement>('.match-probability__tooltip-box')!;
+        const eventLabels = [...el.querySelectorAll<SVGTextElement>('.match-probability__event-label')];
+        return {
+          areaCount: areas.length,
+          lineCount: lines.length,
+          sampleCount: samples.length,
+          closed: areas.every(area => area.length === count * 2),
+          shared: areas[0].slice(count).every(point => point.endsWith(',266')) &&
+            JSON.stringify(areas[1].slice(count).reverse()) === JSON.stringify(lines[0]) &&
+            JSON.stringify(areas[2].slice(count).reverse()) === JSON.stringify(lines[1]),
+          hitHeight: hits.every(hit => Number(hit.getAttribute('y')) === 18 && Number(hit.getAttribute('height')) === 248),
+          hitEdges: Number(hits[0].getAttribute('x')) === 48 &&
+            Number(hits.at(-1)!.getAttribute('x')) + Number(hits.at(-1)!.getAttribute('width')) === 624,
+          tooltipEdges: Number(firstBox.getAttribute('x')) >= 48 &&
+            Number(lastBox.getAttribute('x')) + Number(lastBox.getAttribute('width')) === 624,
+          minuteLabels: [...el.querySelectorAll('.match-probability__minute-label')].map(label => label.textContent),
+          eventLabels: eventLabels.map(label => ({
+            text: label.textContent,
+            aria: label.getAttribute('aria-label'),
+            visible: label.getBoundingClientRect().width > 0 && label.getBoundingClientRect().height > 0,
+          })),
+        };
+      });
+      assertEquals(geometry, {
+        areaCount: 3,
+        lineCount: 3,
+        sampleCount: 96,
+        closed: true,
+        shared: true,
+        hitHeight: true,
+        hitEdges: true,
+        tooltipEdges: true,
+        minuteLabels: ['0', '10', '20', '30', '40', '50', '60', '70', '80', '90', '95'],
+        eventLabels: geometry.eventLabels,
+      });
+      for (const minute of [...new Set(goals.map((goal) => goal.minute))]) {
+        const label = geometry.eventLabels.find((event: { aria: string | null }) =>
+          event.aria?.startsWith(`Minuto ${minute}:`));
+        const score = scoreAt(minute);
+        assert(label?.visible, `the event label for minute ${minute} is not visible`);
+        assert(label.text?.includes(`${score.home}–${score.away}`), JSON.stringify(label));
+      }
+
+      const sample = chart.locator('.match-probability__sample').nth(30);
+      const hit = sample.locator('.match-probability__hit');
+      const tooltip = sample.locator('.match-probability__tooltip');
+      const tooltipContent = async (target = tooltip) => ({
+        minute: await target.locator('.match-probability__tooltip-minute').textContent(),
+        names: await target.locator('.match-probability__tooltip-name').allTextContents(),
+        values: await target.locator('.match-probability__tooltip-value').allTextContents(),
+      });
+      type SvgLocator = {
+        evaluate<T>(read: (el: SVGGraphicsElement) => T): Promise<T>;
+      };
+      const tooltipOffset = (target: SvgLocator): Promise<[number, number]> => target.evaluate((el) => {
+        const matrix = el.transform.baseVal.consolidate()?.matrix;
+        if (!matrix) throw new Error('a pointer tooltip has no transform');
+        return [matrix.e, matrix.f];
+      });
+      const assertBounded = async (target: SvgLocator) => {
+        const bounds = await target.evaluate((el) => {
+          const box = el.getBBox();
+          const matrix = el.transform.baseVal.consolidate()?.matrix;
+          if (!matrix) throw new Error('a pointer tooltip has no transform');
+          const view = el.ownerSVGElement!.viewBox.baseVal;
+          return {
+            left: box.x + matrix.e,
+            top: box.y + matrix.f,
+            right: box.x + box.width + matrix.e,
+            bottom: box.y + box.height + matrix.f,
+            minLeft: view.x + 8,
+            minTop: view.y + 8,
+            maxRight: view.x + view.width - 8,
+            maxBottom: view.y + view.height - 8,
+          };
+        });
+        assert(bounds.left >= bounds.minLeft - .01 && bounds.top >= bounds.minTop - .01, JSON.stringify(bounds));
+        assert(bounds.right <= bounds.maxRight + .01 && bounds.bottom <= bounds.maxBottom + .01, JSON.stringify(bounds));
+      };
+      const assertResponsiveSvg = async () => {
+        const svg = chart.locator('svg');
+        const original = (await svg.getAttribute('viewBox'))!;
+        const measure = () => svg.evaluate((el: SVGSVGElement) => {
+          const rect = el.getBoundingClientRect();
+          const view = el.viewBox.baseVal;
+          const matrix = el.querySelector<SVGGraphicsElement>('.match-probability__point')!.getScreenCTM();
+          if (!matrix) throw new Error('the probability plot has no screen transform');
+          return {
+            width: rect.width,
+            height: rect.height,
+            aspect: rect.width / rect.height,
+            viewAspect: view.width / view.height,
+            scaleX: Math.hypot(matrix.a, matrix.b),
+            scaleY: Math.hypot(matrix.c, matrix.d),
+          };
+        });
+        const close = (actual: number, expected: number, label: string) =>
+          assert(Math.abs(actual - expected) <= Math.max(.01, Math.abs(expected) * .005),
+            `${label}: ${actual} != ${expected}`);
+        try {
+          const before = await measure();
+          close(before.aspect, before.viewAspect, 'the SVG follows its original viewBox aspect');
+          await svg.evaluate((el: SVGSVGElement) => {
+            const view = el.viewBox.baseVal;
+            el.setAttribute('viewBox', `${view.x} ${view.y - 200} ${view.width} ${view.height + 200}`);
+          });
+          const expanded = await measure();
+          close(expanded.aspect, expanded.viewAspect, 'the SVG grows with an expanded header');
+          close(expanded.scaleX, before.scaleX, 'an expanded header preserves horizontal plot scale');
+          close(expanded.scaleY, before.scaleY, 'an expanded header preserves vertical plot scale');
+          assert(expanded.height > before.height, `${expanded.height} did not grow beyond ${before.height}`);
+        } finally {
+          await svg.evaluate((el: SVGSVGElement, viewBox: string) => el.setAttribute('viewBox', viewBox), original);
+        }
+      };
+      const visiblePointsPrecedeTooltip = async () =>
+        await chart.evaluate((el: Element) => {
+          const tooltips = [...el.querySelectorAll('.match-probability__tooltip')]
+            .filter(node => getComputedStyle(node).display !== 'none');
+          const points = [...el.querySelectorAll('.match-probability__point')]
+            .filter(node => Number(getComputedStyle(node).opacity) > 0);
+          return tooltips.length === 1 && points.every(point =>
+            Boolean(point.compareDocumentPosition(tooltips[0]) & Node.DOCUMENT_POSITION_FOLLOWING));
+        });
+      await hit.scrollIntoViewIfNeeded();
+      const hitBox = (await hit.boundingBox())!;
+      const pointerPositions = [
+        [hitBox.x + hitBox.width * .2, hitBox.y + 1],
+        [hitBox.x + hitBox.width * .8, hitBox.y + hitBox.height - 1],
+      ];
+      const offsets: [number, number][] = [];
+      for (const [x, y] of pointerPositions) {
+        await page.mouse.move(x, y);
+        assertEquals(await tooltip.evaluate((el: Element) => getComputedStyle(el).display), 'inline');
+        assertEquals(await tooltipContent(), {
+          minute: headingAt(30),
+          names: ['Bahia-BA', 'Empate', 'Athletico-PR'],
+          values: expectedValues,
+        });
+        offsets.push(await tooltipOffset(tooltip));
+      }
+      assert(offsets[0][0] !== offsets[1][0], `tooltip did not follow x: ${JSON.stringify(offsets)}`);
+      assert(offsets[0][1] !== offsets[1][1], `tooltip did not follow y: ${JSON.stringify(offsets)}`);
+      assert(await visiblePointsPrecedeTooltip(), 'a painted point follows the hovered tooltip');
+      assertEquals(await minuteInput.inputValue(), '30');
+      await page.mouse.move(0, 0);
+      assertEquals(await tooltip.getAttribute('transform'), null);
+      await minuteInput.focus();
+      assertEquals(await tooltip.evaluate((el: Element) => getComputedStyle(el).display), 'none');
+      await page.mouse.move(pointerPositions[0][0], pointerPositions[0][1]);
+      assert(await tooltip.getAttribute('transform'));
+      await sample.locator('.match-probability__point').focus();
+      assertEquals(await tooltip.getAttribute('transform'), null);
+      assertEquals(await tooltip.evaluate((el: Element) => getComputedStyle(el).display), 'inline');
+      assertEquals(await sample.locator('.match-probability__point').evaluate((el: Element) =>
+        getComputedStyle(el).opacity), '1');
+      assert(await visiblePointsPrecedeTooltip(), 'a painted point follows the focused tooltip');
+      assertEquals(await tooltipContent(), {
+        minute: headingAt(30),
+        names: ['Bahia-BA', 'Empate', 'Athletico-PR'],
+        values: expectedValues,
+      });
+
+      for (const minute of [boundary.minute - 1, boundary.minute]) {
+        const boundarySample = chart.locator('.match-probability__sample').nth(minute);
+        const boundaryHit = boundarySample.locator('.match-probability__hit');
+        const boundaryBox = (await boundaryHit.boundingBox())!;
+        await page.mouse.move(boundaryBox.x + boundaryBox.width / 2, boundaryBox.y + boundaryBox.height / 2);
+        assertEquals(
+          await boundarySample.locator('.match-probability__tooltip-minute').textContent(),
+          headingAt(minute),
+        );
+      }
+      for (const width of [1366, 390]) {
+        if (width === 390) {
+          await page.setViewportSize({ width, height: 900 });
+          assert((await chart.boundingBox())!.width < 640, 'the chart did not resize for a mobile viewport');
+        }
+        await assertResponsiveSvg();
+        for (const edge of [0, 95]) {
+          const edgeSample = chart.locator('.match-probability__sample').nth(edge);
+          const edgeHit = edgeSample.locator('.match-probability__hit');
+          const edgeTooltip = edgeSample.locator('.match-probability__tooltip');
+          await edgeHit.scrollIntoViewIfNeeded();
+          const edgeBox = (await edgeHit.boundingBox())!;
+          for (const y of [edgeBox.y + 1, edgeBox.y + edgeBox.height - 1]) {
+            await page.mouse.move(edgeBox.x + edgeBox.width / 2, y);
+            assertEquals(await edgeTooltip.evaluate((el: Element) => getComputedStyle(el).display), 'inline');
+            await assertBounded(edgeTooltip);
+            assertEquals(await chart.locator('.match-probability__tooltip').evaluateAll((els: Element[]) =>
+              els.filter(el => getComputedStyle(el).display !== 'none').length), 1);
+          }
+        }
+      }
+      await minuteInput.focus();
+      await page.mouse.move(0, 0);
+      assertEquals(await chart.locator('.match-probability__tooltip').evaluateAll((els: Element[]) =>
+        els.filter(el => getComputedStyle(el).display !== 'none').length), 0);
+      assertEquals(await minuteInput.inputValue(), '30');
+      assertEquals((await snapshotLocator.textContent())!, snapshot);
+
+      await sample.locator('.match-probability__point').focus();
+      const colors = await chart.evaluate((el: Element) => {
+        const style = (selector: string, property: string) =>
+          getComputedStyle(el.querySelector(selector)!).getPropertyValue(property);
+        return {
+          background: getComputedStyle(el.closest('main')!).backgroundColor,
+          label: style('text', 'fill'),
+          axis: style('.team-chart__axis', 'stroke'),
+          event: style('.match-probability__event', 'stroke'),
+          focus: style('.match-probability__point:focus', 'stroke'),
+          home: style('.match-probability__line--home', 'stroke'),
+          draw: style('.match-probability__line--draw', 'stroke'),
+          away: style('.match-probability__line--away', 'stroke'),
+          grid: style('.team-chart__grid', 'stroke'),
+          tooltipBackground: style('.match-probability__tooltip-box', 'fill'),
+          tooltipText: style('.match-probability__tooltip text', 'fill'),
+        };
+      });
+      assertEquals(colors.background, dark ? 'rgb(35, 38, 15)' : 'rgb(227, 239, 202)');
+      assert(colors.grid !== 'none', 'the match page must load its shared chart styles');
+      const background = luminance(colors.background);
+      for (const key of ['label', 'axis', 'event', 'focus', 'home', 'draw', 'away'] as const) {
+        assert(colors[key] !== 'none', `${key} has no paint`);
+        const ink = luminance(colors[key]);
+        const ratio = (Math.max(ink, background) + .05) / (Math.min(ink, background) + .05);
+        assert(ratio >= (key === 'label' ? 4.5 : 3), `${dark ? 'dark' : 'light'} ${key}: ${ratio}`);
+      }
+      const tooltipBackground = luminance(colors.tooltipBackground);
+      const tooltipText = luminance(colors.tooltipText);
+      const tooltipRatio = (Math.max(tooltipText, tooltipBackground) + .05) /
+        (Math.min(tooltipText, tooltipBackground) + .05);
+      assert(tooltipRatio >= 4.5, `${dark ? 'dark' : 'light'} tooltip: ${tooltipRatio}`);
+    }
+  } finally {
+    await query(`DELETE FROM team_rating WHERE id IN ('${ratings[0]}','${ratings[1]}')`);
+  }
 });
 
 test("test-screen-range: no page scrolls sideways", async () => {
-  for (const width of [390, 768, 1366, 1920]) {
-    const page = await (await context({ width })).newPage();
-    for (const path of ["/", "/campeonatos", `/campeonato/${BRASILEIRO_2026}`, "/jogos", `/jogo/${WIN}`, "/equipes", `/equipe/${ATHLETICO}`, `/jogador/${VIVEROS}`, "/estadios", `/estadio/${PACAEMBU}`, "/arbitros", `/arbitro/${ABADE}`]) {
-      await visit(page, path);
+  const page = await newPage();
+  for (const path of ["/", "/campeonatos", `/campeonato/${BRASILEIRO_2026}`, "/jogos", `/jogo/${WIN}`, "/equipes", `/equipe/${ATHLETICO}`, `/jogador/${VIVEROS}`, "/estadios", `/estadio/${PACAEMBU}`, "/arbitros", `/arbitro/${ABADE}`]) {
+    await visit(page, path);
+    for (const width of [390, 768, 1366, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
       const [scroll, client] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
       assert(scroll <= client, `${path} at ${width}px scrolls sideways: ${scroll} > ${client}`);
     }
@@ -952,7 +1600,7 @@ test("door: every public route is answered with its document, rows and all, in i
   // document at once: a redirect is a round trip ahead of every byte.
   const english = await served("/", "en-US,en;q=0.9");
   assertEquals(english.status, 200);
-  assert(english.html.includes('<html lang="en-GB"'), english.html.slice(0, 200));
+  assert(english.html.includes('<html lang="en-US"'), english.html.slice(0, 200));
   assertEquals((await served("/nowhere")).status, 404);
 });
 
@@ -1142,5 +1790,76 @@ test("door: a page the worker kept stays the page in a tab opened offline", asyn
   assert((await offline.$$eval("#app .games li[data-id]", (els: Element[]) => els.length)) > 0, "the kept rows are gone");
   await c.setOffline(false);
 });
+
+Deno.test("readonly acceptance", async () => {
+  const guest = await fetch(`${base}/auth/guest`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "{}",
+  }).then(async (r) => {
+    if (!r.ok) throw new Error(`POST /auth/guest -> ${r.status}`);
+    return await r.json();
+  });
+  const HEAVY = new Set([
+    "test-games-pagination",
+    "test-screen-range",
+    "test-languages",
+    "test-game-page",
+    "test-team-page",
+    "test-chances",
+  ]);
+  const ordered = [
+    ...readonlyCases.filter((c) => HEAVY.has(c.name.split(":")[0])),
+    ...readonlyCases.filter((c) => !HEAVY.has(c.name.split(":")[0])),
+  ];
+  const LANES = 4;
+  let next = 0;
+  const failures: Error[] = [];
+  await Promise.all(
+    Array.from({ length: Math.min(LANES, ordered.length) }, async () => {
+      const warm = await browser.newContext({
+        viewport: { width: 1366, height: 900 },
+        colorScheme: "light",
+        timezoneId: "America/Sao_Paulo",
+        locale: "pt-BR",
+        serviceWorkers: "block",
+      });
+      await warm.addInitScript((s: unknown) => {
+        if (sessionStorage.getItem("pronto-token") === null) {
+          sessionStorage.setItem("pronto-token", JSON.stringify(s));
+        }
+      }, guest);
+      try {
+        while (next < ordered.length) {
+          const c = ordered[next++];
+          const localOpened: { close(): Promise<void> }[] = [];
+          try {
+            await scope.run({ opened: localOpened, warm }, () => c.fn());
+          } catch (err) {
+            failures.push(err instanceof Error ? new Error(`${c.name}: ${err.message}`, { cause: err }) : new Error(`${c.name}: ${String(err)}`));
+          } finally {
+            await Promise.all(localOpened.splice(0).map((h) => h.close().catch(() => {})));
+          }
+        }
+      } finally {
+        await warm.close();
+      }
+    }),
+  );
+  if (failures.length > 0) {
+    throw new AggregateError(failures, `${failures.length} readonly acceptance test(s) failed:\n${failures.map((f) => f.message).join("\n")}`);
+  }
+});
+
+for (const c of mutatingCases) {
+  Deno.test(c.name, async () => {
+    const localOpened: { close(): Promise<void> }[] = [];
+    try {
+      await scope.run({ opened: localOpened }, () => c.fn());
+    } finally {
+      await Promise.all(localOpened.splice(0).map((h) => h.close().catch(() => {})));
+    }
+  });
+}
 
 globalThis.addEventListener("unload", () => browser.close());

@@ -1,10 +1,7 @@
 /// <reference lib="dom" />
 import { assert, assertEquals } from "jsr:@std/assert@1";
 import { parseHTML } from "npm:linkedom@0.18.4";
-import "../../../plugins/omnishell/interpreter/vendor/ses.umd.min.js";
-import { ensureSes } from "../../../plugins/omnishell/interpreter/jessie.js";
-import { createStore } from "../../../plugins/omnishell/interpreter/data-sync.js";
-import { interpretScreen } from "../../../plugins/omnishell/interpreter/screen.js";
+import { ensureSes, createStore, interpretScreen } from "./platform.ts";
 
 await ensureSes();
 

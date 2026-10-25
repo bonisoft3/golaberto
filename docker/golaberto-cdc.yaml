@@ -4,6 +4,17 @@ pipelines:
   - id: cdc-to-bus
     status: running
     processors:
+      - id: key-as-before
+        plugin: 'builtin:field.set'
+        condition: '{{ if or .Payload.After .Payload.Before }}false{{ else }}true{{ end }}'
+        settings:
+          field: .Payload.Before
+          value: '{{ toJson .Key }}'
+      - id: decode-key-before
+        plugin: 'builtin:json.decode'
+        condition: '{{ if eq (printf "%T" .Payload.Before) "opencdc.RawData" }}true{{ else }}false{{ end }}'
+        settings:
+          field: .Payload.Before
       - id: stamp-collection-after
         plugin: 'builtin:field.set'
         condition: '{{ if .Payload.After }}true{{ else }}false{{ end }}'

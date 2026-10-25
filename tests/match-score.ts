@@ -1,7 +1,6 @@
 /// <reference lib="dom" />
 import { assertEquals, assertThrows } from "jsr:@std/assert@1.0.8";
-import { evaluateRole } from "omnishell/interpreter/jessie.js";
-import { buildNodes } from "omnishell/interpreter/render.js";
+import { evaluateRole, buildNodes } from "./platform.ts";
 import { parseHTML } from "npm:linkedom@0.18.4";
 
 Deno.test("match scores add extra time while shootouts remain a separate result", async () => {

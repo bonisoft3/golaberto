@@ -3,7 +3,7 @@ package golaberto
 #MatchContextGameRow: {
 	out: """
 		<a class="game-row" data-show-country="{show_country}" data-route="jogo" data-param-slug="{game_slug}" data-played="true">
-		 <span class="when"><span class="day" data-text="{day_display}"></span> <span class="hour" data-text="{kickoff_local}"></span></span>
+		 <span class="when"><span class="day" data-text="{reader_day}" data-text-format="date"></span> <span class="hour" data-text="{kickoff}" data-text-format="time"></span></span>
 		 <span class="where" data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span>
 		 <span class="home"><span class="team-name" data-text="{home_name}"></span><span class="team-icons"><span class="archive-icon team-flag" data-text="{show_country}|{home_country}" data-text-format="country-flag"></span><span class="archive-icon team-badge" data-text="{home_id}|{home_name}|{home_logo_key}" data-text-format="team-badge"></span></span></span>
 		 <span class="score"><b data-text="{home_score}|{home_aet}|{msg.game_aet}" data-text-format="match-final-score"></b><i>x</i><b data-text="{away_score}|{away_aet}|{msg.game_aet}" data-text-format="match-final-score"></b><span class="score-decider" data-text="{home_pen}|{away_pen}|{msg.game_pen}" data-text-format="match-shootout"></span></span>
@@ -18,8 +18,8 @@ package golaberto
 	out:    """
 		<section class="match-context-form">
 		 <h2><span data-text="{msg.match_context_form}"></span> · <span data-text="{\(F.team)}"></span></h2>
-		 <ol data-live="match_recent_result" data-filter="target_game_id=eq.{id}&team_id=eq.\(F.teamID)&limit=5" data-order="day.asc,kickoff.asc.nullsfirst,id.asc" data-empty="{msg.match_context_form_empty}">
-		  <template data-item><li data-result="{result}"><a data-route="jogo" data-param-slug="{game_slug}" title="{day_display} · {championship_name}: {home_name} {home_score} x {away_score} {away_name}"><span aria-hidden="true" data-text="{result}"></span><span class="visually-hidden"><span data-text="{day_display}"></span> · <span data-text="{championship_name}"></span>: <span data-text="{home_name}"></span> <span data-text="{home_score}"></span> x <span data-text="{away_score}"></span> <span data-text="{away_name}"></span></span></a></li></template>
+		 <ol data-project='{"reader_day":{"date":["kickoff","day"]}}' data-live="match_recent_result" data-filter="target_game_id=eq.{id}&team_id=eq.\(F.teamID)&limit=5" data-order="day.asc,kickoff.asc.nullsfirst,id.asc" data-empty="{msg.match_context_form_empty}">
+		  <template data-item><li data-result="{result}"><a data-route="jogo" data-param-slug="{game_slug}"><span aria-hidden="true" data-text="{result}"></span><span class="visually-hidden"><span data-text="{reader_day}" data-text-format="date"></span> · <span data-text="{championship_name}"></span>: <span data-text="{home_name}"></span> <span data-text="{home_score}"></span> x <span data-text="{away_score}"></span> <span data-text="{away_name}"></span></span></a></li></template>
 		 </ol>
 		</section>
 		"""
@@ -44,7 +44,7 @@ _matchContextTopMarkup: """
 _matchContextHistoryMarkup: """
 	<section class="match-context-history">
 	 <h2 data-text="{msg.match_context_previous}"></h2>
-	 <ol class="games" data-live="match_head_to_head" data-filter="target_game_id=eq.{id}&limit=5" data-order="day.desc,kickoff.desc.nullslast,id.desc" data-empty="{msg.match_context_previous_empty}">
+	 <ol class="games" data-project='{"reader_day":{"date":["kickoff","day"]}}' data-live="match_head_to_head" data-filter="target_game_id=eq.{id}&limit=5" data-order="day.desc,kickoff.desc.nullslast,id.desc" data-empty="{msg.match_context_previous_empty}">
 	  <template data-item><li>\((#MatchContextGameRow).out)</li></template>
 	 </ol>
 	</section>

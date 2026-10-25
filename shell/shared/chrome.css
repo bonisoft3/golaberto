@@ -25,7 +25,7 @@ body > nav > a[aria-current="page"] { text-decoration: underline; text-underline
 
 /* The reader: a guest is offered a passkey, a signed-in reader is named. */
 body > nav .shell-me { flex: none; }
-body > nav .shell-signin { font: inherit; font-weight: 700; color: var(--strip-ink); background: none; border: 0; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 0 var(--sp-md); }
+body > nav :is(.shell-signin, .shell-register) { font: inherit; font-weight: 700; color: var(--strip-ink); background: none; border: 0; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 0 var(--sp-md); }
 
 /* The archive's buttons: the band's colours for the one action, a quiet rim
    for the way back, and a link-like text button for a row's small action. */

@@ -860,7 +860,7 @@ code: state: entities: {
 			q?: strings.MaxRunes(80)
 			state?: ("browsing")
 			offset?: >=0
-			next_offset?: >=40
+			next_offset?: >=1
 			page?: >=1
 			country?: strings.MaxRunes(60)
 			q_key?: strings.MaxRunes(160)
@@ -880,7 +880,7 @@ code: state: entities: {
 				id: {sizeMin: 1, sizeMax: 16}
 				q: {sizeMax: 80}
 				offset: {intMin: 0}
-				next_offset: {intMin: 40}
+				next_offset: {intMin: 1}
 				page: {intMin: 1}
 				country: {sizeMax: 60}
 				q_key: {sizeMax: 160}
@@ -899,7 +899,7 @@ code: state: entities: {
 			region?: ("" | "world" | "continental" | "national")
 			state?: ("browsing")
 			offset?: >=0
-			next_offset?: >=40
+			next_offset?: >=1
 			page?: >=1
 			q_key?: strings.MaxRunes(160)
 		}]
@@ -912,7 +912,7 @@ code: state: entities: {
 				id: {sizeMin: 1, sizeMax: 16}
 				q: {sizeMax: 80}
 				offset: {intMin: 0}
-				next_offset: {intMin: 40}
+				next_offset: {intMin: 1}
 				page: {intMin: 1}
 				q_key: {sizeMax: 160}
 			}
@@ -1053,7 +1053,7 @@ code: state: entities: {
 	ArchivePage: {
 		seed: [...{
 			offset?: >=0
-			next_offset?: >=40
+			next_offset?: >=1
 			page?: >=1
 			state?: ("browsing")
 			q?: strings.MaxRunes(80)
@@ -1065,6 +1065,8 @@ code: state: entities: {
 			played?: ("*" | "true" | "false")
 			date_from?: strings.MaxRunes(10)
 			date_to?: strings.MaxRunes(10)
+			page_origin?: >=0
+			page_size?: >=1 & <=40
 		}]
 		cel: {
 			enums: {
@@ -1076,13 +1078,15 @@ code: state: entities: {
 			}
 			bounds: {
 				offset: {intMin: 0}
-				next_offset: {intMin: 40}
+				next_offset: {intMin: 1}
 				page: {intMin: 1}
 				q: {sizeMax: 80}
 				q_key: {sizeMax: 160}
 				minimum_minutes: {intMin: 0, intMax: 1000000}
 				date_from: {sizeMax: 10}
 				date_to: {sizeMax: 10}
+				page_origin: {intMin: 0}
+				page_size: {intMin: 1, intMax: 40}
 			}
 		}
 	}

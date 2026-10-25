@@ -5,8 +5,7 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "root": "..",
-        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.9.0@sha256:275dddfe0afce4358da916fc3cde9da49516139850d440eb1f4f7d87e56b1fb4}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+        "root": ".."
       },
       "secrets": [],
       "args": {}
@@ -54,857 +53,857 @@
           "target": "/certs"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/index.html",
           "target": "/srv/shell/index.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/shell.css",
           "target": "/srv/shell/shell.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/boot.js",
           "target": "/srv/shell/boot.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../offline-first-sw.js",
           "target": "/srv/offline-first-sw.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/shell.yaml",
           "target": "/srv/shell/shell.yaml"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/shell.json",
           "target": "/srv/shell/shell.json"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/design.css",
           "target": "/srv/shell/design.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/arquivo.html",
           "target": "/srv/shell/screens/arquivo.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/arquivo.css",
           "target": "/srv/shell/screens/arquivo.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/arquivo-campeonato.html",
           "target": "/srv/shell/screens/arquivo-campeonato.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/arquivo-campeonato.css",
           "target": "/srv/shell/screens/arquivo-campeonato.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/publico.html",
           "target": "/srv/shell/screens/publico.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/publico.css",
           "target": "/srv/shell/screens/publico.css"
         },
         {
-          "action": "sync+restart",
-          "path": "../shell/screens/jogadores.html",
-          "target": "/srv/shell/screens/jogadores.html"
-        },
-        {
-          "action": "sync+restart",
-          "path": "../shell/screens/jogadores.css",
-          "target": "/srv/shell/screens/jogadores.css"
-        },
-        {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/campeonato-jogadores.html",
           "target": "/srv/shell/screens/campeonato-jogadores.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/campeonato-jogadores.css",
           "target": "/srv/shell/screens/campeonato-jogadores.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/jogador-campeonato.html",
           "target": "/srv/shell/screens/jogador-campeonato.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/jogador-campeonato.css",
           "target": "/srv/shell/screens/jogador-campeonato.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/principal.html",
           "target": "/srv/shell/screens/principal.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/principal.css",
           "target": "/srv/shell/screens/principal.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/campeonatos.html",
           "target": "/srv/shell/screens/campeonatos.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/campeonatos.css",
           "target": "/srv/shell/screens/campeonatos.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/jogos.html",
           "target": "/srv/shell/screens/jogos.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/jogos.css",
           "target": "/srv/shell/screens/jogos.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/jogo.html",
           "target": "/srv/shell/screens/jogo.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/jogo.css",
           "target": "/srv/shell/screens/jogo.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/chances.html",
           "target": "/srv/shell/screens/chances.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/chances.css",
           "target": "/srv/shell/screens/chances.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/editar.html",
           "target": "/srv/shell/screens/editar.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/editar.css",
           "target": "/srv/shell/screens/editar.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/equipes.html",
           "target": "/srv/shell/screens/equipes.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/equipes.css",
           "target": "/srv/shell/screens/equipes.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
+          "path": "../shell/screens/jogadores.html",
+          "target": "/srv/shell/screens/jogadores.html"
+        },
+        {
+          "action": "rebuild",
+          "path": "../shell/screens/jogadores.css",
+          "target": "/srv/shell/screens/jogadores.css"
+        },
+        {
+          "action": "rebuild",
           "path": "../shell/screens/estadios.html",
           "target": "/srv/shell/screens/estadios.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/estadios.css",
           "target": "/srv/shell/screens/estadios.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/estadio.html",
           "target": "/srv/shell/screens/estadio.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/estadio.css",
           "target": "/srv/shell/screens/estadio.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/arbitros.html",
           "target": "/srv/shell/screens/arbitros.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/arbitros.css",
           "target": "/srv/shell/screens/arbitros.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/arbitro.html",
           "target": "/srv/shell/screens/arbitro.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/arbitro.css",
           "target": "/srv/shell/screens/arbitro.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/equipe.html",
           "target": "/srv/shell/screens/equipe.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/equipe.css",
           "target": "/srv/shell/screens/equipe.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/equipe-campeonato.html",
           "target": "/srv/shell/screens/equipe-campeonato.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/equipe-campeonato.css",
           "target": "/srv/shell/screens/equipe-campeonato.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/jogador.html",
           "target": "/srv/shell/screens/jogador.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/jogador.css",
           "target": "/srv/shell/screens/jogador.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/campeonato.html",
           "target": "/srv/shell/screens/campeonato.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/campeonato.css",
           "target": "/srv/shell/screens/campeonato.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/editar-arbitro.html",
           "target": "/srv/shell/screens/editar-arbitro.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/editar-arbitro.css",
           "target": "/srv/shell/screens/editar-arbitro.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/editar-competicao.html",
           "target": "/srv/shell/screens/editar-competicao.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/editar-competicao.css",
           "target": "/srv/shell/screens/editar-competicao.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/editar-equipe.html",
           "target": "/srv/shell/screens/editar-equipe.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/editar-equipe.css",
           "target": "/srv/shell/screens/editar-equipe.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/editar-estadio.html",
           "target": "/srv/shell/screens/editar-estadio.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/editar-estadio.css",
           "target": "/srv/shell/screens/editar-estadio.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/editar-jogador.html",
           "target": "/srv/shell/screens/editar-jogador.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/editar-jogador.css",
           "target": "/srv/shell/screens/editar-jogador.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/editar-jogo.html",
           "target": "/srv/shell/screens/editar-jogo.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/editar-jogo.css",
           "target": "/srv/shell/screens/editar-jogo.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/escalacao-jogo.html",
           "target": "/srv/shell/screens/escalacao-jogo.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/escalacao-jogo.css",
           "target": "/srv/shell/screens/escalacao-jogo.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/gerenciar.html",
           "target": "/srv/shell/screens/gerenciar.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/gerenciar.css",
           "target": "/srv/shell/screens/gerenciar.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/gerenciar-competicoes.html",
           "target": "/srv/shell/screens/gerenciar-competicoes.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/gerenciar-competicoes.css",
           "target": "/srv/shell/screens/gerenciar-competicoes.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/gols-jogo.html",
           "target": "/srv/shell/screens/gols-jogo.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/gols-jogo.css",
           "target": "/srv/shell/screens/gols-jogo.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/historico-jogo.html",
           "target": "/srv/shell/screens/historico-jogo.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/historico-jogo.css",
           "target": "/srv/shell/screens/historico-jogo.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/inscricoes-jogador.html",
           "target": "/srv/shell/screens/inscricoes-jogador.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/inscricoes-jogador.css",
           "target": "/srv/shell/screens/inscricoes-jogador.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/nova-competicao.html",
           "target": "/srv/shell/screens/nova-competicao.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/nova-competicao.css",
           "target": "/srv/shell/screens/nova-competicao.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/novo-arbitro.html",
           "target": "/srv/shell/screens/novo-arbitro.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/novo-arbitro.css",
           "target": "/srv/shell/screens/novo-arbitro.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/novo-equipe.html",
           "target": "/srv/shell/screens/novo-equipe.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/novo-equipe.css",
           "target": "/srv/shell/screens/novo-equipe.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/novo-estadio.html",
           "target": "/srv/shell/screens/novo-estadio.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/novo-estadio.css",
           "target": "/srv/shell/screens/novo-estadio.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/novo-jogador.html",
           "target": "/srv/shell/screens/novo-jogador.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/novo-jogador.css",
           "target": "/srv/shell/screens/novo-jogador.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/novo-jogo.html",
           "target": "/srv/shell/screens/novo-jogo.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/novo-jogo.css",
           "target": "/srv/shell/screens/novo-jogo.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/usuario.html",
           "target": "/srv/shell/screens/usuario.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/usuario.css",
           "target": "/srv/shell/screens/usuario.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/usuarios.html",
           "target": "/srv/shell/screens/usuarios.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/usuarios.css",
           "target": "/srv/shell/screens/usuarios.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/archive-round.js",
           "target": "/srv/shell/handlers/archive-round.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/archive-week.js",
           "target": "/srv/shell/handlers/archive-week.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/blank-null.js",
           "target": "/srv/shell/handlers/blank-null.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/both-scored.js",
           "target": "/srv/shell/handlers/both-scored.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/chart-compare.js",
           "target": "/srv/shell/handlers/chart-compare.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/chart-position-bound.js",
           "target": "/srv/shell/handlers/chart-position-bound.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/count-or-null.js",
           "target": "/srv/shell/handlers/count-or-null.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/country-option.js",
           "target": "/srv/shell/handlers/country-option.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/editing-choice-event.js",
           "target": "/srv/shell/handlers/editing-choice-event.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/editing-integer.js",
           "target": "/srv/shell/handlers/editing-integer.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/editing-played.js",
           "target": "/srv/shell/handlers/editing-played.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/editing-text.js",
           "target": "/srv/shell/handlers/editing-text.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/editing-timestamp.js",
           "target": "/srv/shell/handlers/editing-timestamp.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/editing-uuid.js",
           "target": "/srv/shell/handlers/editing-uuid.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/geography-selection.js",
           "target": "/srv/shell/handlers/geography-selection.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/match-probability-event-control.js",
           "target": "/srv/shell/handlers/match-probability-event-control.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/match-probability-event-edit.js",
           "target": "/srv/shell/handlers/match-probability-event-edit.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/match-probability-event-fold.js",
           "target": "/srv/shell/handlers/match-probability-event-fold.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/match-probability-seed.js",
           "target": "/srv/shell/handlers/match-probability-seed.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/odds-progress-point.js",
           "target": "/srv/shell/handlers/odds-progress-point.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/odds-progress-snapshot.js",
           "target": "/srv/shell/handlers/odds-progress-snapshot.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/odds-progress-zone.js",
           "target": "/srv/shell/handlers/odds-progress-zone.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/page-value.js",
           "target": "/srv/shell/handlers/page-value.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/parity-minutes.js",
           "target": "/srv/shell/handlers/parity-minutes.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/player-csv-fold.js",
           "target": "/srv/shell/handlers/player-csv-fold.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/player-csv-seed.js",
           "target": "/srv/shell/handlers/player-csv-seed.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/position-odds-control.js",
           "target": "/srv/shell/handlers/position-odds-control.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/position-odds-fold.js",
           "target": "/srv/shell/handlers/position-odds-fold.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/position-odds-source.js",
           "target": "/srv/shell/handlers/position-odds-source.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/row-id.js",
           "target": "/srv/shell/handlers/row-id.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/search-key.js",
           "target": "/srv/shell/handlers/search-key.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/team-chart-fold.js",
           "target": "/srv/shell/handlers/team-chart-fold.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/team-chart-seed.js",
           "target": "/srv/shell/handlers/team-chart-seed.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/team-rating-series.js",
           "target": "/srv/shell/handlers/team-rating-series.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/renderers/community-history.js",
           "target": "/srv/shell/renderers/community-history.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/renderers/country-flag.js",
           "target": "/srv/shell/renderers/country-flag.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/renderers/geography-label.js",
           "target": "/srv/shell/renderers/geography-label.js"
         },
         {
-          "action": "sync+restart",
-          "path": "../shell/renderers/home-date.js",
-          "target": "/srv/shell/renderers/home-date.js"
-        },
-        {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/renderers/match-context-map.js",
           "target": "/srv/shell/renderers/match-context-map.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/renderers/match-final-score.js",
           "target": "/srv/shell/renderers/match-final-score.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/renderers/match-probability.js",
           "target": "/srv/shell/renderers/match-probability.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/renderers/match-shootout.js",
           "target": "/srv/shell/renderers/match-shootout.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/renderers/media-image.js",
           "target": "/srv/shell/renderers/media-image.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/renderers/odds-progress.js",
           "target": "/srv/shell/renderers/odds-progress.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/renderers/player-csv.js",
           "target": "/srv/shell/renderers/player-csv.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/renderers/player-event-label.js",
           "target": "/srv/shell/renderers/player-event-label.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/renderers/player-height.js",
           "target": "/srv/shell/renderers/player-height.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/renderers/player-position.js",
           "target": "/srv/shell/renderers/player-position.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/renderers/player-rate-per90.js",
           "target": "/srv/shell/renderers/player-rate-per90.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/renderers/position-odds.js",
           "target": "/srv/shell/renderers/position-odds.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/renderers/team-badge.js",
           "target": "/srv/shell/renderers/team-badge.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/renderers/team-chart.js",
           "target": "/srv/shell/renderers/team-chart.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/renderers/team-location.js",
           "target": "/srv/shell/renderers/team-location.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
+          "path": "../shell/renderers/weekday.js",
+          "target": "/srv/shell/renderers/weekday.js"
+        },
+        {
+          "action": "rebuild",
           "path": "../shell/shared/catalog.css",
           "target": "/srv/shell/shared/catalog.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/shared/chrome.css",
           "target": "/srv/shell/shared/chrome.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/shared/community.css",
           "target": "/srv/shell/shared/community.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/shared/competition.css",
           "target": "/srv/shell/shared/competition.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/shared/editing.css",
           "target": "/srv/shell/shared/editing.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/shared/games.css",
           "target": "/srv/shell/shared/games.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/shared/match-context.css",
           "target": "/srv/shell/shared/match-context.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/shared/match-probability.css",
           "target": "/srv/shell/shared/match-probability.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/shared/team.css",
           "target": "/srv/shell/shared/team.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../messages/pt-BR.json",
           "target": "/srv/messages/pt-BR.json"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../messages/es-AR.json",
           "target": "/srv/messages/es-AR.json"
         },
         {
-          "action": "sync+restart",
-          "path": "../messages/en-GB.json",
-          "target": "/srv/messages/en-GB.json"
+          "action": "rebuild",
+          "path": "../messages/en-US.json",
+          "target": "/srv/messages/en-US.json"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../messages/it-IT.json",
           "target": "/srv/messages/it-IT.json"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../messages/de-DE.json",
           "target": "/srv/messages/de-DE.json"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../messages/fr-FR.json",
           "target": "/srv/messages/fr-FR.json"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../branding/favicon.svg",
           "target": "/srv/shell/favicon.svg"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../branding/favicon.ico",
           "target": "/srv/shell/favicon.ico"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../brief.html",
           "target": "/srv/docs/brief.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../ir.html",
           "target": "/srv/docs/ir.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../ir/card.css",
           "target": "/srv/docs/ir/card.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../acceptance.md",
           "target": "/srv/docs/acceptance.md"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../DESIGN.md",
           "target": "/srv/docs/DESIGN.md"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../robots.txt",
           "target": "/srv/robots.txt"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../sitemap.xml",
           "target": "/srv/sitemap.xml"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/favicon.ico",
           "target": "/srv/shell/favicon.ico"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/manifest.webmanifest",
           "target": "/srv/shell/manifest.webmanifest"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/manifest.webmanifest",
           "target": "/srv/manifest.webmanifest"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../llms.txt",
           "target": "/srv/llms.txt"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../llms-full.txt",
           "target": "/srv/llms-full.txt"
         }
@@ -915,7 +914,7 @@
     "preamble": [],
     "preambleCopyContexts": [],
     "from": {
-      "name": "caddy:2.9-alpine@sha256:b4e3952384eb9524a887633ce65c752dd7c71314d2c2acf98cd5c715aaa534f0"
+      "name": "caddy:2.11.7-alpine@sha256:d8542f48d34a9cf4e4c11a478865229840e87e4c96ea3f439101f31a5d35f75f"
     },
     "add": [],
     "mounts": [],
@@ -923,330 +922,6 @@
     "extra_hosts": [],
     "epilogue": [],
     "copy": [
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "components/wallclock.js"
-        ],
-        "dst": "/omnishell/components/wallclock.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/chrome.js"
-        ],
-        "dst": "/omnishell/interpreter/chrome.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/data-sync.js"
-        ],
-        "dst": "/omnishell/interpreter/data-sync.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/deferred-boot.js"
-        ],
-        "dst": "/omnishell/interpreter/deferred-boot.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/fragment.js"
-        ],
-        "dst": "/omnishell/interpreter/fragment.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/hatch-worker.js"
-        ],
-        "dst": "/omnishell/interpreter/hatch-worker.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/hatch.js"
-        ],
-        "dst": "/omnishell/interpreter/hatch.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/host-dom.js"
-        ],
-        "dst": "/omnishell/interpreter/host-dom.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/jessie.js"
-        ],
-        "dst": "/omnishell/interpreter/jessie.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/kinetic.js"
-        ],
-        "dst": "/omnishell/interpreter/kinetic.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/markup.js"
-        ],
-        "dst": "/omnishell/interpreter/markup.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/preloads.js"
-        ],
-        "dst": "/omnishell/interpreter/preloads.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/prng.js"
-        ],
-        "dst": "/omnishell/interpreter/prng.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/release-assets.js"
-        ],
-        "dst": "/omnishell/interpreter/release-assets.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/release-plan.js"
-        ],
-        "dst": "/omnishell/interpreter/release-plan.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/render.js"
-        ],
-        "dst": "/omnishell/interpreter/render.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/screen.js"
-        ],
-        "dst": "/omnishell/interpreter/screen.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/script-url.js"
-        ],
-        "dst": "/omnishell/interpreter/script-url.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/shell.js"
-        ],
-        "dst": "/omnishell/interpreter/shell.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/storybook.js"
-        ],
-        "dst": "/omnishell/interpreter/storybook.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/validate.js"
-        ],
-        "dst": "/omnishell/interpreter/validate.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/vendor/game-inputs.js"
-        ],
-        "dst": "/omnishell/interpreter/vendor/game-inputs.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/vendor/js-yaml.js"
-        ],
-        "dst": "/omnishell/interpreter/vendor/js-yaml.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/vendor/mecha-client.js"
-        ],
-        "dst": "/omnishell/interpreter/vendor/mecha-client.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/vendor/messages.js"
-        ],
-        "dst": "/omnishell/interpreter/vendor/messages.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/vendor/morphlex.js"
-        ],
-        "dst": "/omnishell/interpreter/vendor/morphlex.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/vendor/ses.umd.min.js"
-        ],
-        "dst": "/omnishell/interpreter/vendor/ses.umd.min.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
       {
         "from": {
           "name": "tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa"
@@ -1281,237 +956,42 @@
         "exclude": []
       },
       {
-        "from": null,
+        "from": {
+          "ref": ":served",
+          "name": "golaberto-served"
+        },
         "srcs": [
-          "shell/index.html",
-          "shell/shell.css",
-          "shell/boot.js",
-          "offline-first-sw.js",
-          "shell/shell.yaml",
-          "shell/shell.json",
-          "shell/design.css",
-          "shell/screens/arquivo.html",
-          "shell/screens/arquivo.css",
-          "shell/screens/arquivo-campeonato.html",
-          "shell/screens/arquivo-campeonato.css",
-          "shell/screens/publico.html",
-          "shell/screens/publico.css",
-          "shell/screens/jogadores.html",
-          "shell/screens/jogadores.css",
-          "shell/screens/campeonato-jogadores.html",
-          "shell/screens/campeonato-jogadores.css",
-          "shell/screens/jogador-campeonato.html",
-          "shell/screens/jogador-campeonato.css",
-          "shell/screens/principal.html",
-          "shell/screens/principal.css",
-          "shell/screens/campeonatos.html",
-          "shell/screens/campeonatos.css",
-          "shell/screens/jogos.html",
-          "shell/screens/jogos.css",
-          "shell/screens/jogo.html",
-          "shell/screens/jogo.css",
-          "shell/screens/chances.html",
-          "shell/screens/chances.css",
-          "shell/screens/editar.html",
-          "shell/screens/editar.css",
-          "shell/screens/equipes.html",
-          "shell/screens/equipes.css",
-          "shell/screens/estadios.html",
-          "shell/screens/estadios.css",
-          "shell/screens/estadio.html",
-          "shell/screens/estadio.css",
-          "shell/screens/arbitros.html",
-          "shell/screens/arbitros.css",
-          "shell/screens/arbitro.html",
-          "shell/screens/arbitro.css",
-          "shell/screens/equipe.html",
-          "shell/screens/equipe.css",
-          "shell/screens/equipe-campeonato.html",
-          "shell/screens/equipe-campeonato.css",
-          "shell/screens/jogador.html",
-          "shell/screens/jogador.css",
-          "shell/screens/campeonato.html",
-          "shell/screens/campeonato.css",
-          "shell/screens/editar-arbitro.html",
-          "shell/screens/editar-arbitro.css",
-          "shell/screens/editar-competicao.html",
-          "shell/screens/editar-competicao.css",
-          "shell/screens/editar-equipe.html",
-          "shell/screens/editar-equipe.css",
-          "shell/screens/editar-estadio.html",
-          "shell/screens/editar-estadio.css",
-          "shell/screens/editar-jogador.html",
-          "shell/screens/editar-jogador.css",
-          "shell/screens/editar-jogo.html",
-          "shell/screens/editar-jogo.css",
-          "shell/screens/escalacao-jogo.html",
-          "shell/screens/escalacao-jogo.css",
-          "shell/screens/gerenciar.html",
-          "shell/screens/gerenciar.css",
-          "shell/screens/gerenciar-competicoes.html",
-          "shell/screens/gerenciar-competicoes.css",
-          "shell/screens/gols-jogo.html",
-          "shell/screens/gols-jogo.css",
-          "shell/screens/historico-jogo.html",
-          "shell/screens/historico-jogo.css",
-          "shell/screens/inscricoes-jogador.html",
-          "shell/screens/inscricoes-jogador.css",
-          "shell/screens/nova-competicao.html",
-          "shell/screens/nova-competicao.css",
-          "shell/screens/novo-arbitro.html",
-          "shell/screens/novo-arbitro.css",
-          "shell/screens/novo-equipe.html",
-          "shell/screens/novo-equipe.css",
-          "shell/screens/novo-estadio.html",
-          "shell/screens/novo-estadio.css",
-          "shell/screens/novo-jogador.html",
-          "shell/screens/novo-jogador.css",
-          "shell/screens/novo-jogo.html",
-          "shell/screens/novo-jogo.css",
-          "shell/screens/usuario.html",
-          "shell/screens/usuario.css",
-          "shell/screens/usuarios.html",
-          "shell/screens/usuarios.css",
-          "shell/handlers/archive-round.js",
-          "shell/handlers/archive-week.js",
-          "shell/handlers/blank-null.js",
-          "shell/handlers/both-scored.js",
-          "shell/handlers/chart-compare.js",
-          "shell/handlers/chart-position-bound.js",
-          "shell/handlers/count-or-null.js",
-          "shell/handlers/country-option.js",
-          "shell/handlers/editing-choice-event.js",
-          "shell/handlers/editing-integer.js",
-          "shell/handlers/editing-played.js",
-          "shell/handlers/editing-text.js",
-          "shell/handlers/editing-timestamp.js",
-          "shell/handlers/editing-uuid.js",
-          "shell/handlers/geography-selection.js",
-          "shell/handlers/match-probability-event-control.js",
-          "shell/handlers/match-probability-event-edit.js",
-          "shell/handlers/match-probability-event-fold.js",
-          "shell/handlers/match-probability-seed.js",
-          "shell/handlers/odds-progress-point.js",
-          "shell/handlers/odds-progress-snapshot.js",
-          "shell/handlers/odds-progress-zone.js",
-          "shell/handlers/page-value.js",
-          "shell/handlers/parity-minutes.js",
-          "shell/handlers/player-csv-fold.js",
-          "shell/handlers/player-csv-seed.js",
-          "shell/handlers/position-odds-control.js",
-          "shell/handlers/position-odds-fold.js",
-          "shell/handlers/position-odds-source.js",
-          "shell/handlers/row-id.js",
-          "shell/handlers/search-key.js",
-          "shell/handlers/team-chart-fold.js",
-          "shell/handlers/team-chart-seed.js",
-          "shell/handlers/team-rating-series.js",
-          "shell/renderers/community-history.js",
-          "shell/renderers/country-flag.js",
-          "shell/renderers/geography-label.js",
-          "shell/renderers/home-date.js",
-          "shell/renderers/match-context-map.js",
-          "shell/renderers/match-final-score.js",
-          "shell/renderers/match-probability.js",
-          "shell/renderers/match-shootout.js",
-          "shell/renderers/media-image.js",
-          "shell/renderers/odds-progress.js",
-          "shell/renderers/player-csv.js",
-          "shell/renderers/player-event-label.js",
-          "shell/renderers/player-height.js",
-          "shell/renderers/player-position.js",
-          "shell/renderers/player-rate-per90.js",
-          "shell/renderers/position-odds.js",
-          "shell/renderers/team-badge.js",
-          "shell/renderers/team-chart.js",
-          "shell/renderers/team-location.js",
-          "shell/shared/catalog.css",
-          "shell/shared/chrome.css",
-          "shell/shared/community.css",
-          "shell/shared/competition.css",
-          "shell/shared/editing.css",
-          "shell/shared/games.css",
-          "shell/shared/match-context.css",
-          "shell/shared/match-probability.css",
-          "shell/shared/team.css",
-          "messages/pt-BR.json",
-          "messages/es-AR.json",
-          "messages/en-GB.json",
-          "messages/it-IT.json",
-          "messages/de-DE.json",
-          "messages/fr-FR.json"
+          "/served/omnishell/"
         ],
-        "dst": "/srv/",
-        "link": true,
-        "parents": true,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "branding/favicon.svg"
-        ],
-        "dst": "/srv/shell/favicon.svg",
+        "dst": "/omnishell/",
         "link": true,
         "parents": false,
         "exclude": []
       },
       {
-        "from": null,
+        "from": {
+          "ref": ":served",
+          "name": "golaberto-served"
+        },
         "srcs": [
-          "branding/favicon.ico"
+          "/served/"
         ],
-        "dst": "/srv/shell/favicon.ico",
+        "dst": "/srv/",
         "link": true,
         "parents": false,
         "exclude": []
       },
       {
-        "from": null,
+        "from": {
+          "ref": ":served",
+          "name": "golaberto-served"
+        },
         "srcs": [
-          "brief.html",
-          "ir.html",
-          "ir/card.css",
-          "acceptance.md",
-          "DESIGN.md"
+          "/served.scripts"
         ],
-        "dst": "/srv/docs/",
-        "link": true,
-        "parents": true,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "robots.txt",
-          "sitemap.xml",
-          "shell/favicon.ico",
-          "shell/manifest.webmanifest"
-        ],
-        "dst": "/srv/",
-        "link": true,
-        "parents": true,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "shell/manifest.webmanifest"
-        ],
-        "dst": "/srv/manifest.webmanifest",
+        "dst": "/etc/caddy/release-scripts",
         "link": true,
         "parents": false,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "llms.txt",
-          "llms-full.txt"
-        ],
-        "dst": "/srv/",
-        "link": true,
-        "parents": true,
         "exclude": []
       }
     ],
@@ -1532,7 +1012,7 @@
     "cmd": null
   },
   "entrypoint": {
-    "do": "case \"${ORIGIN#http://}\" in \"$ORIGIN\") h=${ORIGIN#https://};; *) h=${ORIGIN#http://};; esac; case \"$h\" in \"$ORIGIN\"|\"\"|*[!A-Za-z0-9.:-]*) echo \"ORIGIN '$ORIGIN' is no origin: set it to the scheme and host readers reach the door at, as https://app.example\" >&2; exit 1;; esac; set -e -o pipefail; roots=$(caddy adapt --config /etc/caddy/Caddyfile --adapter caddyfile | tr , '\\n' | grep -o '\"root\":\"[^\"]*\"' | cut -d'\"' -f4 | sort -u); if [ -n \"$roots\" ]; then find $roots -type f ! -name '*.etag' -exec sh -c 'set -e; q=$1; shift; for f do h=$(sha256sum < \"$f\"); printf \"$q%s$q\" \"${h%% *}\" > \"$f.etag\"; done' sh '\"' {} +; fi; if [ -f /certs/localhost.pem ]; then export CADDY_TLS='/certs/localhost.pem /certs/localhost-key.pem'; fi; exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile",
+    "do": "case \"${ORIGIN#http://}\" in \"$ORIGIN\") h=${ORIGIN#https://};; *) h=${ORIGIN#http://};; esac; case \"$h\" in \"$ORIGIN\"|\"\"|*[!A-Za-z0-9.:-]*) echo \"ORIGIN '$ORIGIN' is no origin: set it to the scheme and host readers reach the door at, as https://app.example\" >&2; exit 1;; esac; set -e -o pipefail; roots=$(caddy adapt --config /etc/caddy/Caddyfile --adapter caddyfile | tr , '\\n' | grep -o '\"root\":\"[^\"]*\"' | cut -d'\"' -f4 | sort -u); if [ -n \"$roots\" ]; then find $roots -type f ! -name '*.etag' -exec sh -c 'set -e; q=$1; shift; for f do h=$(sha256sum < \"$f\"); printf \"$q%s$q\" \"${h%% *}\" > \"$f.etag\"; done' sh '\"' {} +; fi; PRONTO_RELEASE_SCRIPTS=$(cat /etc/caddy/release-scripts 2>/dev/null || true); export PRONTO_RELEASE_SCRIPTS; if [ -f /certs/localhost.pem ]; then export CADDY_TLS='/certs/localhost.pem /certs/localhost-key.pem'; fi; exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile",
     "shell": "sh",
     "env": {
       "ELECTRIC_SECRET": "${ELECTRIC_SECRET:-dev-electric-secret}",
@@ -1554,6 +1034,8 @@
   "healthcheck": {
     "template": "http",
     "url": "http://127.0.0.1:8080/health",
+    "authorization": null,
+    "headers": [],
     "interval": "5s",
     "start_interval": "500ms",
     "timeout": "5s",
@@ -1566,178 +1048,7 @@
   "activate": "",
   "srcs": {
     "globs": [
-      "docker/Caddyfile",
-      "shell/index.html",
-      "shell/shell.css",
-      "shell/boot.js",
-      "offline-first-sw.js",
-      "shell/shell.yaml",
-      "shell/shell.json",
-      "shell/design.css",
-      "shell/screens/arquivo.html",
-      "shell/screens/arquivo.css",
-      "shell/screens/arquivo-campeonato.html",
-      "shell/screens/arquivo-campeonato.css",
-      "shell/screens/publico.html",
-      "shell/screens/publico.css",
-      "shell/screens/jogadores.html",
-      "shell/screens/jogadores.css",
-      "shell/screens/campeonato-jogadores.html",
-      "shell/screens/campeonato-jogadores.css",
-      "shell/screens/jogador-campeonato.html",
-      "shell/screens/jogador-campeonato.css",
-      "shell/screens/principal.html",
-      "shell/screens/principal.css",
-      "shell/screens/campeonatos.html",
-      "shell/screens/campeonatos.css",
-      "shell/screens/jogos.html",
-      "shell/screens/jogos.css",
-      "shell/screens/jogo.html",
-      "shell/screens/jogo.css",
-      "shell/screens/chances.html",
-      "shell/screens/chances.css",
-      "shell/screens/editar.html",
-      "shell/screens/editar.css",
-      "shell/screens/equipes.html",
-      "shell/screens/equipes.css",
-      "shell/screens/estadios.html",
-      "shell/screens/estadios.css",
-      "shell/screens/estadio.html",
-      "shell/screens/estadio.css",
-      "shell/screens/arbitros.html",
-      "shell/screens/arbitros.css",
-      "shell/screens/arbitro.html",
-      "shell/screens/arbitro.css",
-      "shell/screens/equipe.html",
-      "shell/screens/equipe.css",
-      "shell/screens/equipe-campeonato.html",
-      "shell/screens/equipe-campeonato.css",
-      "shell/screens/jogador.html",
-      "shell/screens/jogador.css",
-      "shell/screens/campeonato.html",
-      "shell/screens/campeonato.css",
-      "shell/screens/editar-arbitro.html",
-      "shell/screens/editar-arbitro.css",
-      "shell/screens/editar-competicao.html",
-      "shell/screens/editar-competicao.css",
-      "shell/screens/editar-equipe.html",
-      "shell/screens/editar-equipe.css",
-      "shell/screens/editar-estadio.html",
-      "shell/screens/editar-estadio.css",
-      "shell/screens/editar-jogador.html",
-      "shell/screens/editar-jogador.css",
-      "shell/screens/editar-jogo.html",
-      "shell/screens/editar-jogo.css",
-      "shell/screens/escalacao-jogo.html",
-      "shell/screens/escalacao-jogo.css",
-      "shell/screens/gerenciar.html",
-      "shell/screens/gerenciar.css",
-      "shell/screens/gerenciar-competicoes.html",
-      "shell/screens/gerenciar-competicoes.css",
-      "shell/screens/gols-jogo.html",
-      "shell/screens/gols-jogo.css",
-      "shell/screens/historico-jogo.html",
-      "shell/screens/historico-jogo.css",
-      "shell/screens/inscricoes-jogador.html",
-      "shell/screens/inscricoes-jogador.css",
-      "shell/screens/nova-competicao.html",
-      "shell/screens/nova-competicao.css",
-      "shell/screens/novo-arbitro.html",
-      "shell/screens/novo-arbitro.css",
-      "shell/screens/novo-equipe.html",
-      "shell/screens/novo-equipe.css",
-      "shell/screens/novo-estadio.html",
-      "shell/screens/novo-estadio.css",
-      "shell/screens/novo-jogador.html",
-      "shell/screens/novo-jogador.css",
-      "shell/screens/novo-jogo.html",
-      "shell/screens/novo-jogo.css",
-      "shell/screens/usuario.html",
-      "shell/screens/usuario.css",
-      "shell/screens/usuarios.html",
-      "shell/screens/usuarios.css",
-      "shell/handlers/archive-round.js",
-      "shell/handlers/archive-week.js",
-      "shell/handlers/blank-null.js",
-      "shell/handlers/both-scored.js",
-      "shell/handlers/chart-compare.js",
-      "shell/handlers/chart-position-bound.js",
-      "shell/handlers/count-or-null.js",
-      "shell/handlers/country-option.js",
-      "shell/handlers/editing-choice-event.js",
-      "shell/handlers/editing-integer.js",
-      "shell/handlers/editing-played.js",
-      "shell/handlers/editing-text.js",
-      "shell/handlers/editing-timestamp.js",
-      "shell/handlers/editing-uuid.js",
-      "shell/handlers/geography-selection.js",
-      "shell/handlers/match-probability-event-control.js",
-      "shell/handlers/match-probability-event-edit.js",
-      "shell/handlers/match-probability-event-fold.js",
-      "shell/handlers/match-probability-seed.js",
-      "shell/handlers/odds-progress-point.js",
-      "shell/handlers/odds-progress-snapshot.js",
-      "shell/handlers/odds-progress-zone.js",
-      "shell/handlers/page-value.js",
-      "shell/handlers/parity-minutes.js",
-      "shell/handlers/player-csv-fold.js",
-      "shell/handlers/player-csv-seed.js",
-      "shell/handlers/position-odds-control.js",
-      "shell/handlers/position-odds-fold.js",
-      "shell/handlers/position-odds-source.js",
-      "shell/handlers/row-id.js",
-      "shell/handlers/search-key.js",
-      "shell/handlers/team-chart-fold.js",
-      "shell/handlers/team-chart-seed.js",
-      "shell/handlers/team-rating-series.js",
-      "shell/renderers/community-history.js",
-      "shell/renderers/country-flag.js",
-      "shell/renderers/geography-label.js",
-      "shell/renderers/home-date.js",
-      "shell/renderers/match-context-map.js",
-      "shell/renderers/match-final-score.js",
-      "shell/renderers/match-probability.js",
-      "shell/renderers/match-shootout.js",
-      "shell/renderers/media-image.js",
-      "shell/renderers/odds-progress.js",
-      "shell/renderers/player-csv.js",
-      "shell/renderers/player-event-label.js",
-      "shell/renderers/player-height.js",
-      "shell/renderers/player-position.js",
-      "shell/renderers/player-rate-per90.js",
-      "shell/renderers/position-odds.js",
-      "shell/renderers/team-badge.js",
-      "shell/renderers/team-chart.js",
-      "shell/renderers/team-location.js",
-      "shell/shared/catalog.css",
-      "shell/shared/chrome.css",
-      "shell/shared/community.css",
-      "shell/shared/competition.css",
-      "shell/shared/editing.css",
-      "shell/shared/games.css",
-      "shell/shared/match-context.css",
-      "shell/shared/match-probability.css",
-      "shell/shared/team.css",
-      "messages/pt-BR.json",
-      "messages/es-AR.json",
-      "messages/en-GB.json",
-      "messages/it-IT.json",
-      "messages/de-DE.json",
-      "messages/fr-FR.json",
-      "branding/favicon.svg",
-      "branding/favicon.ico",
-      "brief.html",
-      "ir.html",
-      "ir/card.css",
-      "acceptance.md",
-      "DESIGN.md",
-      "robots.txt",
-      "sitemap.xml",
-      "shell/favicon.ico",
-      "shell/manifest.webmanifest",
-      "shell/manifest.webmanifest",
-      "llms.txt",
-      "llms-full.txt"
+      "docker/Caddyfile"
     ],
     "exclude": []
   },
@@ -1785,7 +1096,8 @@
         "./.bayt/compose.caddy.yaml",
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
-        "./.bayt/compose.migrate.yaml"
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.served.yaml"
       ]
     },
     "outs": {
@@ -1816,7 +1128,8 @@
         "./.bayt/compose.caddy.yaml",
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
-        "./.bayt/compose.migrate.yaml"
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.served.yaml"
       ]
     },
     "srcs": {
@@ -1830,177 +1143,7 @@
       },
       "outs": {
         "globs": [
-          "docker/Caddyfile",
-          "shell/index.html",
-          "shell/shell.css",
-          "shell/boot.js",
-          "offline-first-sw.js",
-          "shell/shell.yaml",
-          "shell/shell.json",
-          "shell/design.css",
-          "shell/screens/arquivo.html",
-          "shell/screens/arquivo.css",
-          "shell/screens/arquivo-campeonato.html",
-          "shell/screens/arquivo-campeonato.css",
-          "shell/screens/publico.html",
-          "shell/screens/publico.css",
-          "shell/screens/jogadores.html",
-          "shell/screens/jogadores.css",
-          "shell/screens/campeonato-jogadores.html",
-          "shell/screens/campeonato-jogadores.css",
-          "shell/screens/jogador-campeonato.html",
-          "shell/screens/jogador-campeonato.css",
-          "shell/screens/principal.html",
-          "shell/screens/principal.css",
-          "shell/screens/campeonatos.html",
-          "shell/screens/campeonatos.css",
-          "shell/screens/jogos.html",
-          "shell/screens/jogos.css",
-          "shell/screens/jogo.html",
-          "shell/screens/jogo.css",
-          "shell/screens/chances.html",
-          "shell/screens/chances.css",
-          "shell/screens/editar.html",
-          "shell/screens/editar.css",
-          "shell/screens/equipes.html",
-          "shell/screens/equipes.css",
-          "shell/screens/estadios.html",
-          "shell/screens/estadios.css",
-          "shell/screens/estadio.html",
-          "shell/screens/estadio.css",
-          "shell/screens/arbitros.html",
-          "shell/screens/arbitros.css",
-          "shell/screens/arbitro.html",
-          "shell/screens/arbitro.css",
-          "shell/screens/equipe.html",
-          "shell/screens/equipe.css",
-          "shell/screens/equipe-campeonato.html",
-          "shell/screens/equipe-campeonato.css",
-          "shell/screens/jogador.html",
-          "shell/screens/jogador.css",
-          "shell/screens/campeonato.html",
-          "shell/screens/campeonato.css",
-          "shell/screens/editar-arbitro.html",
-          "shell/screens/editar-arbitro.css",
-          "shell/screens/editar-competicao.html",
-          "shell/screens/editar-competicao.css",
-          "shell/screens/editar-equipe.html",
-          "shell/screens/editar-equipe.css",
-          "shell/screens/editar-estadio.html",
-          "shell/screens/editar-estadio.css",
-          "shell/screens/editar-jogador.html",
-          "shell/screens/editar-jogador.css",
-          "shell/screens/editar-jogo.html",
-          "shell/screens/editar-jogo.css",
-          "shell/screens/escalacao-jogo.html",
-          "shell/screens/escalacao-jogo.css",
-          "shell/screens/gerenciar.html",
-          "shell/screens/gerenciar.css",
-          "shell/screens/gerenciar-competicoes.html",
-          "shell/screens/gerenciar-competicoes.css",
-          "shell/screens/gols-jogo.html",
-          "shell/screens/gols-jogo.css",
-          "shell/screens/historico-jogo.html",
-          "shell/screens/historico-jogo.css",
-          "shell/screens/inscricoes-jogador.html",
-          "shell/screens/inscricoes-jogador.css",
-          "shell/screens/nova-competicao.html",
-          "shell/screens/nova-competicao.css",
-          "shell/screens/novo-arbitro.html",
-          "shell/screens/novo-arbitro.css",
-          "shell/screens/novo-equipe.html",
-          "shell/screens/novo-equipe.css",
-          "shell/screens/novo-estadio.html",
-          "shell/screens/novo-estadio.css",
-          "shell/screens/novo-jogador.html",
-          "shell/screens/novo-jogador.css",
-          "shell/screens/novo-jogo.html",
-          "shell/screens/novo-jogo.css",
-          "shell/screens/usuario.html",
-          "shell/screens/usuario.css",
-          "shell/screens/usuarios.html",
-          "shell/screens/usuarios.css",
-          "shell/handlers/archive-round.js",
-          "shell/handlers/archive-week.js",
-          "shell/handlers/blank-null.js",
-          "shell/handlers/both-scored.js",
-          "shell/handlers/chart-compare.js",
-          "shell/handlers/chart-position-bound.js",
-          "shell/handlers/count-or-null.js",
-          "shell/handlers/country-option.js",
-          "shell/handlers/editing-choice-event.js",
-          "shell/handlers/editing-integer.js",
-          "shell/handlers/editing-played.js",
-          "shell/handlers/editing-text.js",
-          "shell/handlers/editing-timestamp.js",
-          "shell/handlers/editing-uuid.js",
-          "shell/handlers/geography-selection.js",
-          "shell/handlers/match-probability-event-control.js",
-          "shell/handlers/match-probability-event-edit.js",
-          "shell/handlers/match-probability-event-fold.js",
-          "shell/handlers/match-probability-seed.js",
-          "shell/handlers/odds-progress-point.js",
-          "shell/handlers/odds-progress-snapshot.js",
-          "shell/handlers/odds-progress-zone.js",
-          "shell/handlers/page-value.js",
-          "shell/handlers/parity-minutes.js",
-          "shell/handlers/player-csv-fold.js",
-          "shell/handlers/player-csv-seed.js",
-          "shell/handlers/position-odds-control.js",
-          "shell/handlers/position-odds-fold.js",
-          "shell/handlers/position-odds-source.js",
-          "shell/handlers/row-id.js",
-          "shell/handlers/search-key.js",
-          "shell/handlers/team-chart-fold.js",
-          "shell/handlers/team-chart-seed.js",
-          "shell/handlers/team-rating-series.js",
-          "shell/renderers/community-history.js",
-          "shell/renderers/country-flag.js",
-          "shell/renderers/geography-label.js",
-          "shell/renderers/home-date.js",
-          "shell/renderers/match-context-map.js",
-          "shell/renderers/match-final-score.js",
-          "shell/renderers/match-probability.js",
-          "shell/renderers/match-shootout.js",
-          "shell/renderers/media-image.js",
-          "shell/renderers/odds-progress.js",
-          "shell/renderers/player-csv.js",
-          "shell/renderers/player-event-label.js",
-          "shell/renderers/player-height.js",
-          "shell/renderers/player-position.js",
-          "shell/renderers/player-rate-per90.js",
-          "shell/renderers/position-odds.js",
-          "shell/renderers/team-badge.js",
-          "shell/renderers/team-chart.js",
-          "shell/renderers/team-location.js",
-          "shell/shared/catalog.css",
-          "shell/shared/chrome.css",
-          "shell/shared/community.css",
-          "shell/shared/competition.css",
-          "shell/shared/editing.css",
-          "shell/shared/games.css",
-          "shell/shared/match-context.css",
-          "shell/shared/match-probability.css",
-          "shell/shared/team.css",
-          "messages/pt-BR.json",
-          "messages/es-AR.json",
-          "messages/en-GB.json",
-          "messages/it-IT.json",
-          "messages/de-DE.json",
-          "messages/fr-FR.json",
-          "branding/favicon.svg",
-          "branding/favicon.ico",
-          "brief.html",
-          "ir.html",
-          "ir/card.css",
-          "acceptance.md",
-          "DESIGN.md",
-          "robots.txt",
-          "sitemap.xml",
-          "shell/favicon.ico",
-          "shell/manifest.webmanifest",
-          "llms.txt",
-          "llms-full.txt"
+          "docker/Caddyfile"
         ],
         "exclude": []
       },
@@ -2008,7 +1151,8 @@
       "visibility": "internal",
       "deps": [],
       "transitiveDeps": [
-        "crud_outs_srcs"
+        "crud_outs_srcs",
+        "served_outs_srcs"
       ],
       "transitiveCrossDeps": [],
       "chainedDeps": [],
@@ -2021,31 +1165,45 @@
         "./.bayt/compose.caddy.yaml",
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
-        "./.bayt/compose.migrate.yaml"
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.served.yaml"
       ]
     }
   },
   "visibility": "internal",
   "emitsSrcs": true,
   "deps": [
-    "crud_outs"
+    "crud_outs",
+    "served_outs"
   ],
   "sameProjectDeps": [
-    "crud_outs"
+    "crud_outs",
+    "served_outs"
   ],
   "transitiveDeps": [
-    "crud_outs"
+    "crud_outs",
+    "served_outs"
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
     "./.bayt/compose.caddy.yaml",
     "./.bayt/compose.crud.yaml",
     "./.bayt/compose.database.yaml",
-    "./.bayt/compose.migrate.yaml"
+    "./.bayt/compose.migrate.yaml",
+    "./.bayt/compose.served.yaml"
   ],
   "chainedDeps": [
     {
       "name": "crud_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "served_outs",
       "project": "golaberto",
       "dir": ".",
       "outs": {

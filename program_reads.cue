@@ -44,6 +44,18 @@ code: state: entities: {
 			{ordinal: 21, name: "latest_team_logo_key", type: "string", required: false},
 		]
 	}
+	MatchesStart: {
+		id: "0xca58d99d04e30601"
+		table: "matches_start"
+		durability: "server"
+		access: {scope: "public"}
+		fields: [
+			{ordinal: 1, name: "id", type: "uuid", pk: true},
+			{ordinal: 2, name: "start_offset", type: "int32"},
+			{ordinal: 3, name: "start_next_offset", type: "int32"},
+			{ordinal: 4, name: "start_page", type: "int32"},
+		]
+	}
 	GameArchive: {
 		id: "0x853b9ec68d8b90d2"
 		table: "game_archive"

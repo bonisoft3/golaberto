@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from "jsr:@std/assert@1.0.11";
-import { evaluateRole } from "omnishell/interpreter/jessie.js";
+import { evaluateRole } from "./platform.ts";
 import { adaptBlobRequest } from "../services/media/blob-route.ts";
 import { built } from "./terminal-nodes.ts";
 

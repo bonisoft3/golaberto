@@ -5,6 +5,7 @@ import re
 import sqlite3
 import subprocess
 import tempfile
+import sys
 import unittest
 
 from import_archive import (DEFERRED_TRIGGERS, KINDS, MAPS, PUBLIC_TABLES, RATING_NAMESPACE, UID_SQL, Database, apply_script,corrected_views,csv_row,
@@ -32,6 +33,27 @@ class ArchiveMappingTest(unittest.TestCase):
             original.rename(relocated)
             applied = subprocess.run(['sh',str(relocated/'apply.sh')],cwd=temporary,text=True,capture_output=True,check=True)
             self.assertEqual(applied.stdout,'private SQL payload\n')
+
+    def test_local_snapshot_keeps_one_transaction_across_exports_and_fails_on_lost_connection(self):
+        fake = """import json,re,sys
+for query in sys.stdin:
+    if 'READ ONLY' in query:
+        print(json.dumps(['snapshot started']),flush=True)
+    elif 'DISCONNECT' in query:
+        sys.exit(3)
+    else:
+        marker=re.search(r"SELECT JSON_ARRAY\\('([a-f0-9]+)'\\)",query).group(1)
+        print(json.dumps([7]),flush=True)
+        print(json.dumps([marker]),flush=True)
+"""
+        db = Database(None, 'archive', '', '', source_local=True)
+        db.source = [sys.executable, '-u', '-c', fake]
+        with self.assertRaisesRegex(RuntimeError, 'snapshot ended before completing'):
+            with db:
+                self.assertEqual(json.loads(db.process.stdout.readline()), ['snapshot started'])
+                self.assertEqual(list(db.mysql('SELECT JSON_ARRAY(7)')), [[7]])
+                self.assertEqual(list(db.mysql('SELECT JSON_ARRAY(7)')), [[7]])
+                list(db.mysql('DISCONNECT'))
 
     def test_unknown_source_types_fail_instead_of_implicitly_coercing(self):
         self.assertEqual(source_type('int'),'bigint')

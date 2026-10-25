@@ -11,6 +11,9 @@ import (
 	"strings"
 )
 
+_matchesStartSql: string @embed(file="services/database/sql/048_matches_start.sql", type=text)
+_matchesStartUpgrade: strings.Replace(strings.Replace(_matchesStartSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
+
 _readParitySql:     string @embed(file="services/database/sql/035_read_parity.sql", type=text)
 _readParityUpgrade: strings.Replace(strings.Replace(_readParitySql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
@@ -1003,7 +1006,7 @@ code: pronto.#App & {
 				{ordinal: 2, name: "q", type: "string", default: "''", cel: "this.size() <= 80"},
 				{ordinal: 3, name: "state", type: "string", default: "'browsing'", cel: "this in ['browsing']"},
 				{ordinal: 4, name: "offset", type: "int32", default: "0", cel: "this >= 0"},
-				{ordinal: 5, name: "next_offset", type: "int32", default: "40", cel: "this >= 40"},
+				{ordinal: 5, name: "next_offset", type: "int32", default: "40", cel: "this >= 1"},
 				{ordinal: 6, name: "page", type: "int32", default: "1", cel: "this >= 1"},
 				{ordinal: 7, name: "country", type: "string", default: "''", cel: "this.size() <= 60"},
 				{ordinal: 8, name: "q_key", type: "string", default: "''", cel: "this.size() <= 160"},
@@ -1030,7 +1033,7 @@ code: pronto.#App & {
 				// The search machine's state (ir decision-catalog-tab).
 				{ordinal: 4, name: "state", type: "string", default: "'browsing'", cel: "this in ['browsing']"},
 				{ordinal: 5, name: "offset", type: "int32", default: "0", cel: "this >= 0"},
-				{ordinal: 6, name: "next_offset", type: "int32", default: "40", cel: "this >= 40"},
+				{ordinal: 6, name: "next_offset", type: "int32", default: "40", cel: "this >= 1"},
 				{ordinal: 7, name: "page", type: "int32", default: "1", cel: "this >= 1"},
 				{ordinal: 8, name: "q_key", type: "string", default: "''", cel: "this.size() <= 160"},
 			]
@@ -1173,7 +1176,7 @@ code: pronto.#App & {
 				{ordinal: 1, name: "id", type: "string", pk: true},
 				{ordinal: 2, name: "owner_id", type: "uuid"},
 				{ordinal: 3, name: "offset", type: "int32", default: "0", cel: "this >= 0"},
-				{ordinal: 4, name: "next_offset", type: "int32", default: "40", cel: "this >= 40"},
+				{ordinal: 4, name: "next_offset", type: "int32", default: "40", cel: "this >= 1"},
 				{ordinal: 5, name: "page", type: "int32", default: "1", cel: "this >= 1"},
 				{ordinal: 6, name: "state", type: "string", default: "'browsing'", cel: "this in ['browsing']"},
 				{ordinal: 7, name: "q", type: "string", default: "''", cel: "this.size() <= 80"},
@@ -1199,6 +1202,8 @@ code: pronto.#App & {
 				{ordinal: 27, name: "date_from", type: "string", default: "''", cel: "this.size() <= 10"},
 				{ordinal: 28, name: "date_to", type: "string", default: "''", cel: "this.size() <= 10"},
 				{ordinal: 29, name: "series_json", type: "string", default: "'{}'"},
+				{ordinal: 30, name: "page_origin", type: "int32", default: "0", cel: "this >= 0"},
+				{ordinal: 31, name: "page_size", type: "int32", default: "40", cel: "this >= 1 && this <= 40"},
 			]
 		}
 	}
@@ -1266,6 +1271,8 @@ code: pronto.#App & {
 		{name: "045_drain_feed.sql", src: "services/database/sql/045_drain_feed.sql"},
 		{name: "046_team_projection_turn.sql", src: "services/database/sql/046_team_projection_turn.sql"},
 		{name: "047_home_games_at_read.sql", src: "services/database/sql/047_home_games_at_read.sql"},
+		{name: "048_matches_start.sql", src: "services/database/sql/048_matches_start.sql"},
+		{name: "049_match_rating_history_bound.sql", src: "services/database/sql/049_match_rating_history_bound.sql"},
 		// Large archive fixtures are copied at build, never expanded through CUE.
 		{name: "900_seed.sql", src: "services/database/sql/900_seed.sql"},
 	]
@@ -1292,6 +1299,7 @@ code: pronto.#App & {
 	state: migrations: "030_campaign_read": {operations: [{sql: {up: _campaignReadUpgrade, onComplete: true}}]}
 	state: migrations: "032_archive_compatibility": {operations: [{sql: {up: _archiveCompatibilityUpgrade, onComplete: true}}]}
 	state: migrations: "033_cdc_outputs": {operations: [{sql: {up: _cdcOutputsSql, onComplete: true}}]}
+	state: migrations: "048_matches_start": {operations: [{sql: {up: _matchesStartUpgrade, onComplete: true}}]}
 	state: migrations: "047_home_games_at_read": {operations: [{sql: {up: _homeGamesAtReadUpgrade, onComplete: true}}]}
 	state: migrations: "035_read_parity": {operations: [{sql: {up: _readParityUpgrade, onComplete: true}}]}
 	state: migrations: "034_idempotent_odds_capture": {operations: [{sql: {up: _oddsCaptureSql, onComplete: true}}]}
@@ -1351,16 +1359,14 @@ code: pronto.#App & {
 		"row-id": {ir: "handler-row-id", of: "editar", src: "shell/handlers/row-id.js", note: "the guard that lets a click remove a goal only when it names one"}
 	}
 	surface: screens: {
-		"arquivo": {title: "Game archive", route: "/arquivo", ssr: "ssr", keep: 0, strip: false, markup: _archiveMarkup, forms: [], states: ["loading", "populated", "gone", "populated-dark"], paths: {"read": {"states": ["loading", "populated"], "accepts": ["accept-games-results"]}, "empty": {"states": ["loading", "gone"], "accepts": ["accept-games-results"]}, "night": {"states": ["populated", "populated-dark"], "accepts": ["accept-dark"]}}, files: {renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"], shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/team.css"]}}
-		"arquivo-campeonato": {title: "Championship archive", route: "/campeonato/:slug/arquivo", ssr: "ssr", keep: 0, strip: false, markup: _championshipArchiveMarkup, forms: [], states: ["loading", "populated", "gone", "populated-dark"], paths: {"read": {"states": ["loading", "populated"], "accepts": ["accept-games-results"]}, "empty": {"states": ["loading", "gone"], "accepts": ["accept-games-results"]}, "night": {"states": ["populated", "populated-dark"], "accepts": ["accept-dark"]}}, files: {renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"], shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/team.css"]}}
-		"publico": {title: "Attendance", route: "/campeonato/:slug/publico", ssr: "ssr", keep: 0, strip: false, markup: _attendanceMarkup, forms: [], states: ["loading", "populated", "gone", "populated-dark"], paths: {"read": {"states": ["loading", "populated"], "accepts": ["accept-games-results"]}, "empty": {"states": ["loading", "gone"], "accepts": ["accept-games-results"]}, "night": {"states": ["populated", "populated-dark"], "accepts": ["accept-dark"]}}, files: {renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"], shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/team.css"]}}
-		"jogadores": {title: "Players", route: "/jogadores", slug: "route_players", ssr: "ssr", keep: 0, label: "players_title", markup: _playerDirectoryMarkup, forms: [], states: ["loading", "populated", "gone", "populated-dark"], paths: {"read": {"states": ["loading", "populated"], "accepts": ["accept-player-page", "accept-player-stats"]}, "missing": {"states": ["loading", "gone"], "accepts": ["accept-team-gone"]}, "night": {"states": ["populated", "populated-dark"], "accepts": ["accept-dark"]}}, files: {renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/player-csv.js", "shell/renderers/player-rate-per90.js", "shell/renderers/player-position.js", "shell/renderers/player-event-label.js"], shared: ["shell/shared/chrome.css", "shell/shared/catalog.css", "shell/shared/games.css", "shell/shared/team.css"]}}
-		"campeonato-jogadores": {title: "Championship players", route: "/campeonato-jogadores/:slug", slug: "route_championship_players", ssr: "ssr", keep: 0, strip: false, markup: _championshipPlayersMarkup, forms: [], states: ["loading", "populated", "gone", "populated-dark"], paths: {"read": {"states": ["loading", "populated"], "accepts": ["accept-player-page", "accept-player-stats"]}, "missing": {"states": ["loading", "gone"], "accepts": ["accept-team-gone"]}, "night": {"states": ["populated", "populated-dark"], "accepts": ["accept-dark"]}}, files: {renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/player-csv.js", "shell/renderers/player-rate-per90.js", "shell/renderers/player-position.js", "shell/renderers/player-event-label.js"], shared: ["shell/shared/chrome.css", "shell/shared/catalog.css", "shell/shared/games.css", "shell/shared/team.css"]}}
-		"jogador-campeonato": {title: "Player season", route: "/jogador-campeonato/:slug/:team/:championship", slug: "route_scoped_player", ssr: "ssr", keep: 0, strip: false, markup: _scopedPlayerMarkup, forms: [], states: ["loading", "populated", "gone", "populated-dark"], paths: {"read": {"states": ["loading", "populated"], "accepts": ["accept-player-page", "accept-player-stats"]}, "missing": {"states": ["loading", "gone"], "accepts": ["accept-team-gone"]}, "night": {"states": ["populated", "populated-dark"], "accepts": ["accept-dark"]}}, files: {renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/player-csv.js", "shell/renderers/player-rate-per90.js", "shell/renderers/player-position.js", "shell/renderers/player-event-label.js"], shared: ["shell/shared/chrome.css", "shell/shared/catalog.css", "shell/shared/games.css", "shell/shared/team.css"]}}
+		"arquivo": {title: "Game archive", route: "/arquivo", keep: 0, strip: false, markup: _archiveMarkup, forms: [], states: ["loading", "populated", "gone", "populated-dark"], paths: {"read": {"states": ["loading", "populated"], "accepts": ["accept-games-results"]}, "empty": {"states": ["loading", "gone"], "accepts": ["accept-games-results"]}, "night": {"states": ["populated", "populated-dark"], "accepts": ["accept-dark"]}}, files: {renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"], shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/team.css"]}}
+		"arquivo-campeonato": {title: "Championship archive", route: "/campeonato/:slug/arquivo", keep: 0, strip: false, markup: _championshipArchiveMarkup, forms: [], states: ["loading", "populated", "gone", "populated-dark"], paths: {"read": {"states": ["loading", "populated"], "accepts": ["accept-games-results"]}, "empty": {"states": ["loading", "gone"], "accepts": ["accept-games-results"]}, "night": {"states": ["populated", "populated-dark"], "accepts": ["accept-dark"]}}, files: {renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"], shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/team.css"]}}
+		"publico": {title: "Attendance", route: "/campeonato/:slug/publico", keep: 0, strip: false, markup: _attendanceMarkup, forms: [], states: ["loading", "populated", "gone", "populated-dark"], paths: {"read": {"states": ["loading", "populated"], "accepts": ["accept-games-results"]}, "empty": {"states": ["loading", "gone"], "accepts": ["accept-games-results"]}, "night": {"states": ["populated", "populated-dark"], "accepts": ["accept-dark"]}}, files: {renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"], shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/team.css"]}}
+		"campeonato-jogadores": {title: "Championship players", route: "/campeonato-jogadores/:slug", slug: "route_championship_players", keep: 0, strip: false, markup: _championshipPlayersMarkup, forms: [], states: ["loading", "populated", "gone", "populated-dark"], paths: {"read": {"states": ["loading", "populated"], "accepts": ["accept-player-page", "accept-player-stats"]}, "missing": {"states": ["loading", "gone"], "accepts": ["accept-team-gone"]}, "night": {"states": ["populated", "populated-dark"], "accepts": ["accept-dark"]}}, files: {renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/player-csv.js", "shell/renderers/player-rate-per90.js", "shell/renderers/player-position.js", "shell/renderers/player-event-label.js"], shared: ["shell/shared/chrome.css", "shell/shared/catalog.css", "shell/shared/games.css", "shell/shared/team.css"]}}
+		"jogador-campeonato": {title: "Player season", route: "/jogador-campeonato/:slug/:team/:championship", slug: "route_scoped_player", keep: 0, strip: false, markup: _scopedPlayerMarkup, forms: [], states: ["loading", "populated", "gone", "populated-dark"], paths: {"read": {"states": ["loading", "populated"], "accepts": ["accept-player-page", "accept-player-stats"]}, "missing": {"states": ["loading", "gone"], "accepts": ["accept-team-gone"]}, "night": {"states": ["populated", "populated-dark"], "accepts": ["accept-dark"]}}, files: {renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/player-csv.js", "shell/renderers/player-rate-per90.js", "shell/renderers/player-position.js", "shell/renderers/player-event-label.js"], shared: ["shell/shared/chrome.css", "shell/shared/catalog.css", "shell/shared/games.css", "shell/shared/team.css"]}}
 		principal: {
 			title:  "Principal"
 			route:  "/"
-			ssr:    "ssr"
 			label:  "nav_home"
 			markup: _principalMarkup
 			forms: []
@@ -1370,7 +1376,7 @@ code: pronto.#App & {
 				quiet: {states: ["populated", "no-games", "populated"], accepts: ["accept-home-games"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/home-date.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/weekday.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		campeonatos: {
@@ -1381,7 +1387,6 @@ code: pronto.#App & {
 			// tab's row, not a held page (ir decision-catalog-tab).
 			keep:   0
 			label:  "nav_championships"
-			ssr:    "ssr"
 			markup: _campeonatosMarkup
 			forms: []
 			states: ["loading", "populated", "filtered", "no-match", "populated-dark"]
@@ -1396,7 +1401,6 @@ code: pronto.#App & {
 		jogos: {
 			title:  "Jogos"
 			route:  "/jogos"
-			ssr:    "ssr"
 			slug:   "route_games"
 			label:  "nav_games"
 			markup: _jogosMarkup
@@ -1407,13 +1411,12 @@ code: pronto.#App & {
 				switch: {states: ["populated", "results", "populated"], accepts: ["accept-games-results"]}
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
-			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
+			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/weekday.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
 		}
 		jogo: {
 			title:  "Jogo"
 			route:  "/jogo/:slug"
-			ssr:    "ssr"
 			slug:   "route_game"
 			strip:  false
 			keep:   3
@@ -1432,10 +1435,9 @@ code: pronto.#App & {
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
 			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/match-context-map.js", "shell/renderers/match-probability.js"]
-			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/match-context.css", "shell/shared/match-probability.css", "shell/shared/editing.css", "shell/shared/community.css"]
+			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/team.css", "shell/shared/match-context.css", "shell/shared/match-probability.css", "shell/shared/editing.css", "shell/shared/community.css"]
 		}
 		chances: {
-			ssr:    "ssr"
 			title:  "Chances"
 			route:  "/chances/:slug"
 			slug:   "route_chances"
@@ -1455,6 +1457,7 @@ code: pronto.#App & {
 		editar: {
 			title:  "Editar jogo"
 			route:  "/editar/:slug"
+			access: "private"
 			slug:   "route_edit"
 			strip:  false
 			keep:   0
@@ -1478,7 +1481,6 @@ code: pronto.#App & {
 			// decision-catalog-tab).
 			keep:   0
 			label:  "nav_teams"
-			ssr:    "ssr"
 			markup: _equipesMarkup
 			forms: []
 			states: ["loading", "populated", "filtered", "no-match", "populated-dark"]
@@ -1490,13 +1492,13 @@ code: pronto.#App & {
 			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
+		"jogadores": {title: "Players", route: "/jogadores", slug: "route_players", keep: 0, label: "players_title", markup: _playerDirectoryMarkup, forms: [], states: ["loading", "populated", "gone", "populated-dark"], paths: {"read": {"states": ["loading", "populated"], "accepts": ["accept-player-page", "accept-player-stats"]}, "missing": {"states": ["loading", "gone"], "accepts": ["accept-team-gone"]}, "night": {"states": ["populated", "populated-dark"], "accepts": ["accept-dark"]}}, files: {renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js", "shell/renderers/player-csv.js", "shell/renderers/player-rate-per90.js", "shell/renderers/player-position.js", "shell/renderers/player-event-label.js"], shared: ["shell/shared/chrome.css", "shell/shared/catalog.css", "shell/shared/games.css", "shell/shared/team.css"]}}
 		estadios: {
 			title:  "Estádios"
 			route:  "/estadios"
 			slug:   "route_stadiums"
 			keep:   0
 			label:  "nav_stadiums"
-			ssr:    "ssr"
 			markup: _estadiosMarkup
 			forms: []
 			states: ["loading", "populated", "filtered", "no-match", "populated-dark"]
@@ -1509,7 +1511,6 @@ code: pronto.#App & {
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		estadio: {
-			ssr:    "ssr"
 			title:  "Estádio"
 			route:  "/estadio/:slug"
 			slug:   "route_stadium"
@@ -1532,7 +1533,6 @@ code: pronto.#App & {
 			slug:   "route_referees"
 			keep:   0
 			label:  "nav_referees"
-			ssr:    "ssr"
 			markup: _arbitrosMarkup
 			forms: []
 			states: ["loading", "populated", "filtered", "no-match", "populated-dark"]
@@ -1545,7 +1545,6 @@ code: pronto.#App & {
 			files: shared: ["shell/shared/chrome.css", "shell/shared/catalog.css"]
 		}
 		arbitro: {
-			ssr:    "ssr"
 			title:  "Árbitro"
 			route:  "/arbitro/:slug"
 			slug:   "route_referee"
@@ -1565,7 +1564,6 @@ code: pronto.#App & {
 		equipe: {
 			title:  "Equipe"
 			route:  "/equipe/:slug"
-			ssr:    "ssr"
 			slug:   "route_team"
 			strip:  false
 			keep:   3
@@ -1585,7 +1583,6 @@ code: pronto.#App & {
 		"equipe-campeonato": {
 			title:  "Equipe no campeonato"
 			route:  "/equipe-campeonato/:slug/:championship"
-			ssr:    "ssr"
 			slug:   "route_team_championship"
 			strip:  false
 			keep:   3
@@ -1603,7 +1600,6 @@ code: pronto.#App & {
 		jogador: {
 			title:  "Jogador"
 			route:  "/jogador/:slug"
-			ssr:    "ssr"
 			slug:   "route_player"
 			strip:  false
 			keep:   3
@@ -1621,7 +1617,6 @@ code: pronto.#App & {
 		campeonato: {
 			title:  "Campeonato"
 			route:  "/campeonato/:slug"
-			ssr:    "ssr"
 			slug:   "route_championship"
 			strip:  false
 			keep:   3
@@ -1641,6 +1636,9 @@ code: pronto.#App & {
 
 	meta: {
 		name:        "golaberto"
+		domain:      "golaberto.bonisoft3.com"
+		ssrOrigin:   "https://\(domain)"
+		edgeClock:   "disabled"
 		description: "O banco de dados aberto do futebol — campeonatos, tabelas, jogos, gols e elencos, mantido pelos seus leitores."
 		favicon:     "/shell/favicon.ico"
 		// A shared championship or match is the app's whole reach: the card
@@ -1651,14 +1649,11 @@ code: pronto.#App & {
 		llms:     true
 		i18n: {
 			default: "pt-BR"
-			// Football's traditions before the rest: Brazil's own, then the
-			// River Plate's (Argentina, the nearest rival and the Spanish most
-			// of South America reads), then England's, where the game was
-			// codified. A bare "es" negotiates to the first Spanish tag.
+			// A bare language negotiates to its declared regional tag.
 			locales: {
 				"pt-BR": path: "pt-br"
 				"es-AR": path: "es"
-				"en-GB": path: "en"
+				"en-US": path: "en"
 				// Then the other great football cultures of Europe.
 				"it-IT": path: "it"
 				"de-DE": path: "de"
@@ -1667,7 +1662,7 @@ code: pronto.#App & {
 			catalogues: _catalogues
 		}
 		ir: sha256: "25a5a02d5aa396d41d48c7b5489df04383e636934baf919d82853876a5723a32"
-		targets: ["pages", "cloudflare", "docker"]
+		targets: ["pages", "cloudflare", "docker", "k8s"]
 		decisions: {
 			"decision-team-page-split": {}
 			"decision-favicon": {}
@@ -1970,7 +1965,7 @@ code: pronto.#App & {
 				says: "every page reads in three languages at its own address"
 				given: {}
 				when: "view"
-				then: "output.title[\"en-GB\"] == \"Championships\""
+				then: "output.title[\"en-US\"] == \"Championships\""
 			}
 			"test-dark": {
 				of:   "principal"
@@ -2016,7 +2011,7 @@ code: pronto.#App & {
 			}
 			"test-games-upcoming": {
 				of:   "jogos"
-				says: "the games page opens on the upcoming games, soonest first"
+				says: "upcoming games share day and championship headings, with times ordered within each group"
 				given: {}
 				when: "view"
 				then: "output.rows.size() > 0"
@@ -2027,6 +2022,20 @@ code: pronto.#App & {
 				given: {}
 				when: "view"
 				then: "output.view == \"results\""
+			}
+			"test-games-pagination": {
+				of: "jogos"
+				says: "both match tabs page through the archive and remember their positions"
+				given: {}
+				when: "next"
+				then: "output.page >= 2"
+			}
+			"test-games-timezone": {
+				of: "jogos"
+				says: "kickoff dates, times and grouping follow the reader's timezone"
+				given: {}
+				when: "view"
+				then: "output.localized"
 			}
 			"test-game-page": {
 				of:   "jogo"
@@ -2294,7 +2303,6 @@ cluster: (pronto.#DefaultCluster & {
 			watch:  true
 		}],
 	])
-	local: loop.surface.sources.pronto != ""
 }).out
 _appBoot: string @embed(file="boot.js", type=text)
 terminal: (pronto.#DefaultTerminal & {"code": code, boot: _appBoot}).out
@@ -2306,8 +2314,31 @@ build: (pronto.#DefaultBuild & {"code": code, "loop": loop, "cluster": cluster, 
 build: checks: "constraints": {
 	priority: 1
 	database: true
-	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-net --allow-read --allow-sys tests/constraints.ts"]
-	note: "each test pair of the ir run as a rolled-back transaction in the cluster's Postgres"
+	srcs: [
+		"services/database/sql/035_read_parity.sql",
+		"services/database/sql/038_match_context.sql",
+		"services/database/sql/039_match_probability.sql",
+		"services/database/sql/040_community.sql",
+		"services/database/sql/041_native_media.sql",
+		"services/database/sql/042_team_odds_progress.sql",
+		"services/database/sql/043_queued_odds_refresh.sql",
+		"services/database/sql/044_heavy_reads.sql",
+		"services/database/sql/049_match_rating_history_bound.sql",
+		"services/media/deno.json",
+		"services/media/deno.lock",
+		"services/media/normalize.ts",
+		"services/media/request.ts",
+		"services/media/native-gateway.ts",
+	]
+	// Rolled-back DDL/migration replays run before suites that commit WAL events
+	// (native-media, readable-addresses, drains), so background CDC writers stay
+	// idle while 035-049 take AccessExclusiveLock on shared tables.
+	cmds: [
+		"deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-env --allow-net --allow-read --allow-sys tests/constraints.ts tests/campaign-read.ts tests/read-parity.ts tests/heavy-reads.ts tests/community-parity.ts tests/community-access-tests.ts tests/competition-admin.ts tests/editing-parity.ts tests/match-context.ts tests/match-probability.ts tests/odds-progress.ts",
+		"deno test --config services/media/deno.json --frozen --allow-read --allow-env --allow-net --allow-ffi tests/media-normalize.ts tests/native-media.ts",
+		"deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-env --allow-net --allow-read --allow-sys tests/readable-addresses.ts tests/drains.ts",
+	]
+	note: "each test pair of the ir, request views, drains, parity migrations and native media graded in the cluster's Postgres"
 }
 
 // The screens' invariants, walked in a browser against the running archive.
@@ -2316,7 +2347,7 @@ build: checks: "acceptance": {
 	priority: 1
 	browser:  true
 	database: true
-	cmds: ["deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=caddy tests/acceptance.ts tests/player-reading.ts tests/archive-reading.ts tests/editing-acceptance.ts tests/competition-acceptance.ts tests/community-acceptance.ts"]
+	cmds: ["deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-all --unsafely-ignore-certificate-errors=caddy tests/acceptance.ts"]
 	note: "the ir's screen invariants against the running archive: levels, catalogue and search, a championship's structure, three languages, the dark twin and the screen range"
 }
 
@@ -2328,27 +2359,22 @@ loop: surface: checks: "seed-data": {
 
 loop: surface: checks: "standings": {
 	verb: "test"
-	cmds: ["mise exec -- redpanda-connect test pipelines/standings.yaml pipelines/rounds.yaml pipelines/game-cards.yaml pipelines/player-stats.yaml"]
+	// The pipelines join their rows to mecha's transaction markers through
+	// cdc-trace.yaml's resources, which the transform loads by -r.
+	cmds: ["use tools.nu [run-mise]; mise exec -- redpanda-connect test -r ((run-mise where github:bonisoft3/mecha | str trim) | path join services/transform/cdc-trace.yaml) pipelines/standings.yaml pipelines/rounds.yaml pipelines/game-cards.yaml pipelines/player-stats.yaml"]
 	note: "the derived streams over crawled data: the 2026 Serie A's table and its 885 players' seasons as golaberto.com.br shows them, a phase's current and next rounds, and a game's card and team lines"
 }
 
 loop: surface: checks: "image-renderers": {
 	verb: "test"
-	cmds: ["mise exec -- deno test --config tests/deno.json --no-lock tests/image-renderers.ts"]
-	note: "imported hexadecimal IDs, fixture mappings, country aliases and neutral badges"
+	cmds: ["mise exec -- deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-read --allow-env tests/image-renderers.ts tests/weekday-renderer.ts"]
+	note: "imported hexadecimal IDs, fixture mappings, country aliases, neutral badges and localized weekdays"
 }
 
-loop: surface: checks: "team-chart-renderer": {verb: "test", cmds: ["mise exec -- deno test --config tests/deno.json --no-lock --allow-read --allow-env tests/team-chart-renderer.ts"], note: "pure chart geometry, accessible links and safe SVG node output"}
+loop: surface: checks: "team-chart-renderer": {verb: "test", cmds: ["mise exec -- deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-read --allow-env tests/team-chart-renderer.ts"], note: "pure chart geometry, accessible links and safe SVG node output"}
 
 
 loop: surface: checks: "team-enrichment-import": {verb: "test", cmds: ["python3 -m unittest discover -s tools -p team_enrichment_import_test.py"], note: "legacy snapshot parsing, stable identity and validation are deterministic"}
-
-build: checks: "request-reads": {
-	priority: 1
-	database: true
-	srcs: ["services/database/sql/035_read_parity.sql", "services/database/sql/044_heavy_reads.sql"]
-	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-net --allow-read --allow-sys tests/campaign-read.ts tests/readable-addresses.ts tests/read-parity.ts tests/heavy-reads.ts"]
-	note: "stored campaign rankings, maintained user activity, custom-planned reads and readable address uniqueness"
-}
+loop: surface: checks: "cloudflare-policy": {verb: "test", cmds: ["use tools.nu [run-mise]; mise exec -- deno test -A --no-check --no-lock --config ((run-mise where github:bonisoft3/pronto | str trim) | path join bundle/deno.json) tools/cloudflare-policy.test.ts tools/cloudflare-combined.test.ts tools/publish-cloudflare.test.ts"], note: "Cloudflare composition preserves storage, secrets, snapshot isolation and demand rendering"}
 
 out: pronto.#emit & {"code": code, "cluster": cluster, "terminal": terminal, "loop": loop, "build": build}

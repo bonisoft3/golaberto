@@ -5,7 +5,7 @@
     "manual": true,
     "build": {
       "additional_contexts": {
-        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.9.0@sha256:275dddfe0afce4358da916fc3cde9da49516139850d440eb1f4f7d87e56b1fb4}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.19.0@sha256:c29f0e6ba82bcf2872ede2b21c871adfe1106f6d02d3bbaf6f421b0614e0d071}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
       },
       "secrets": [],
       "args": {}
@@ -16,7 +16,7 @@
       "--",
       "sh",
       "-c",
-      "deno test --config tests/deno.json --no-lock --allow-all --unsafely-ignore-certificate-errors=caddy tests/acceptance.ts tests/player-reading.ts tests/archive-reading.ts tests/editing-acceptance.ts tests/competition-acceptance.ts tests/community-acceptance.ts"
+      "deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-all --unsafely-ignore-certificate-errors=caddy tests/acceptance.ts"
     ],
     "depends_on": {
       "golaberto-launch": {
@@ -27,7 +27,8 @@
       "APP_URL": "https://caddy:8443",
       "DATABASE_URL": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
       "ORIGIN": "${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT}}",
-      "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}"
+      "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}",
+      "SETTLE_TIMEOUT_MS": "50000"
     },
     "ports": [],
     "volumes": []
@@ -107,8 +108,7 @@
           ".bayt/Dockerfile.*",
           ".bayt/bayt.*.json",
           ".bayt/Taskfile.*.yaml",
-          "mecha/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml",
-          "omnishell/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml"
+          "monorepo/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml"
         ],
         "exclude": []
       },
@@ -131,6 +131,7 @@
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
         "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.served.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.mesh-events.yaml",
@@ -176,6 +177,7 @@
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
         "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.served.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.mesh-events.yaml",
@@ -246,6 +248,7 @@
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
         "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.served.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.mesh-events.yaml",
@@ -288,6 +291,7 @@
     "./.bayt/compose.crud.yaml",
     "./.bayt/compose.database.yaml",
     "./.bayt/compose.migrate.yaml",
+    "./.bayt/compose.served.yaml",
     "./.bayt/compose.electric.yaml",
     "./.bayt/compose.redis.yaml",
     "./.bayt/compose.mesh-events.yaml",

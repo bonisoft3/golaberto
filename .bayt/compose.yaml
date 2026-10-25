@@ -11,12 +11,6 @@ services:
       service: golaberto-browser
     profiles:
     - browser
-  caddy:
-    extends:
-      file: ./compose.caddy.yaml
-      service: golaberto-caddy
-    profiles:
-    - caddy
     scale: 1
   release-docker:
     extends:
@@ -25,12 +19,19 @@ services:
     profiles:
     - release-docker
     scale: 1
+  ci-replay:
+    extends:
+      file: ./compose.ci-replay.yaml
+      service: golaberto-ci-replay
+    profiles:
+    - ci-replay
   setup:
     extends:
       file: ./compose.setup.yaml
       service: golaberto-setup
     profiles:
     - setup
+    scale: 1
   lint:
     extends:
       file: ./compose.lint.yaml
@@ -75,162 +76,35 @@ services:
       service: golaberto-ci-visual
     profiles:
     - ci-visual
-  check-drains:
-    extends:
-      file: ./compose.check-drains.yaml
-      service: golaberto-check-drains
-    profiles:
-    - check-drains
     scale: 1
-  ci-drains:
+  ci:
     extends:
-      file: ./compose.ci-drains.yaml
-      service: golaberto-ci-drains
+      file: ./compose.ci.yaml
+      service: golaberto-ci
     profiles:
-    - ci-drains
-  check-constraints:
-    extends:
-      file: ./compose.check-constraints.yaml
-      service: golaberto-check-constraints
-    profiles:
-    - check-constraints
+    - ci
     scale: 1
-  ci-constraints:
+  served:
     extends:
-      file: ./compose.ci-constraints.yaml
-      service: golaberto-ci-constraints
+      file: ./compose.served.yaml
+      service: golaberto-served
     profiles:
-    - ci-constraints
-  check-acceptance:
-    extends:
-      file: ./compose.check-acceptance.yaml
-      service: golaberto-check-acceptance
-    profiles:
-    - check-acceptance
+    - served
     scale: 1
-  ci-acceptance:
+  render:
     extends:
-      file: ./compose.ci-acceptance.yaml
-      service: golaberto-ci-acceptance
+      file: ./compose.render.yaml
+      service: golaberto-render
     profiles:
-    - ci-acceptance
-  check-request-reads:
-    extends:
-      file: ./compose.check-request-reads.yaml
-      service: golaberto-check-request-reads
-    profiles:
-    - check-request-reads
+    - render
     scale: 1
-  ci-request-reads:
+  served-release:
     extends:
-      file: ./compose.ci-request-reads.yaml
-      service: golaberto-ci-request-reads
+      file: ./compose.served-release.yaml
+      service: golaberto-served-release
     profiles:
-    - ci-request-reads
-  check-community-parity:
-    extends:
-      file: ./compose.check-community-parity.yaml
-      service: golaberto-check-community-parity
-    profiles:
-    - check-community-parity
+    - served-release
     scale: 1
-  ci-community-parity:
-    extends:
-      file: ./compose.ci-community-parity.yaml
-      service: golaberto-ci-community-parity
-    profiles:
-    - ci-community-parity
-  check-community-access:
-    extends:
-      file: ./compose.check-community-access.yaml
-      service: golaberto-check-community-access
-    profiles:
-    - check-community-access
-    scale: 1
-  ci-community-access:
-    extends:
-      file: ./compose.ci-community-access.yaml
-      service: golaberto-ci-community-access
-    profiles:
-    - ci-community-access
-  check-competition-admin:
-    extends:
-      file: ./compose.check-competition-admin.yaml
-      service: golaberto-check-competition-admin
-    profiles:
-    - check-competition-admin
-    scale: 1
-  ci-competition-admin:
-    extends:
-      file: ./compose.ci-competition-admin.yaml
-      service: golaberto-ci-competition-admin
-    profiles:
-    - ci-competition-admin
-  check-editing-parity:
-    extends:
-      file: ./compose.check-editing-parity.yaml
-      service: golaberto-check-editing-parity
-    profiles:
-    - check-editing-parity
-    scale: 1
-  ci-editing-parity:
-    extends:
-      file: ./compose.ci-editing-parity.yaml
-      service: golaberto-ci-editing-parity
-    profiles:
-    - ci-editing-parity
-  check-match-context:
-    extends:
-      file: ./compose.check-match-context.yaml
-      service: golaberto-check-match-context
-    profiles:
-    - check-match-context
-    scale: 1
-  ci-match-context:
-    extends:
-      file: ./compose.ci-match-context.yaml
-      service: golaberto-ci-match-context
-    profiles:
-    - ci-match-context
-  check-match-probability:
-    extends:
-      file: ./compose.check-match-probability.yaml
-      service: golaberto-check-match-probability
-    profiles:
-    - check-match-probability
-    scale: 1
-  ci-match-probability:
-    extends:
-      file: ./compose.ci-match-probability.yaml
-      service: golaberto-ci-match-probability
-    profiles:
-    - ci-match-probability
-  check-native-media:
-    extends:
-      file: ./compose.check-native-media.yaml
-      service: golaberto-check-native-media
-    profiles:
-    - check-native-media
-    scale: 1
-  ci-native-media:
-    extends:
-      file: ./compose.ci-native-media.yaml
-      service: golaberto-ci-native-media
-    profiles:
-    - ci-native-media
-  check-odds-progress:
-    extends:
-      file: ./compose.check-odds-progress.yaml
-      service: golaberto-check-odds-progress
-    profiles:
-    - check-odds-progress
-    scale: 1
-  ci-odds-progress:
-    extends:
-      file: ./compose.ci-odds-progress.yaml
-      service: golaberto-ci-odds-progress
-    profiles:
-    - ci-odds-progress
   database:
     extends:
       file: ./compose.database.yaml
@@ -238,33 +112,12 @@ services:
     profiles:
     - database
     scale: 1
-  crud:
-    extends:
-      file: ./compose.crud.yaml
-      service: golaberto-crud
-    profiles:
-    - crud
-    scale: 1
   auth:
     extends:
       file: ./compose.auth.yaml
       service: golaberto-auth
     profiles:
     - auth
-    scale: 1
-  electric:
-    extends:
-      file: ./compose.electric.yaml
-      service: golaberto-electric
-    profiles:
-    - electric
-    scale: 1
-  redis:
-    extends:
-      file: ./compose.redis.yaml
-      service: golaberto-redis
-    profiles:
-    - redis
     scale: 1
   mesh-events:
     extends:
@@ -279,20 +132,6 @@ services:
       service: golaberto-conduit
     profiles:
     - conduit
-    scale: 1
-  rclone-s3:
-    extends:
-      file: ./compose.rclone-s3.yaml
-      service: golaberto-rclone-s3
-    profiles:
-    - rclone-s3
-    scale: 1
-  transform:
-    extends:
-      file: ./compose.transform.yaml
-      service: golaberto-transform
-    profiles:
-    - transform
     scale: 1
   compute:
     extends:
@@ -315,17 +154,80 @@ services:
     profiles:
     - clock
     scale: 1
-  render:
-    extends:
-      file: ./compose.render.yaml
-      service: golaberto-render
-    profiles:
-    - render
-    scale: 1
   migrate:
     extends:
       file: ./compose.migrate.yaml
       service: golaberto-migrate
     profiles:
     - migrate
+    scale: 1
+  check-constraints:
+    extends:
+      file: ./compose.check-constraints.yaml
+      service: golaberto-check-constraints
+    profiles:
+    - check-constraints
+    scale: 1
+  ci-constraints:
+    extends:
+      file: ./compose.ci-constraints.yaml
+      service: golaberto-ci-constraints
+    profiles:
+    - ci-constraints
+    scale: 1
+  check-acceptance:
+    extends:
+      file: ./compose.check-acceptance.yaml
+      service: golaberto-check-acceptance
+    profiles:
+    - check-acceptance
+    scale: 1
+  ci-acceptance:
+    extends:
+      file: ./compose.ci-acceptance.yaml
+      service: golaberto-ci-acceptance
+    profiles:
+    - ci-acceptance
+    scale: 1
+  caddy:
+    extends:
+      file: ./compose.caddy.yaml
+      service: golaberto-caddy
+    profiles:
+    - caddy
+    scale: 1
+  crud:
+    extends:
+      file: ./compose.crud.yaml
+      service: golaberto-crud
+    profiles:
+    - crud
+    scale: 1
+  electric:
+    extends:
+      file: ./compose.electric.yaml
+      service: golaberto-electric
+    profiles:
+    - electric
+    scale: 1
+  redis:
+    extends:
+      file: ./compose.redis.yaml
+      service: golaberto-redis
+    profiles:
+    - redis
+    scale: 1
+  rclone-s3:
+    extends:
+      file: ./compose.rclone-s3.yaml
+      service: golaberto-rclone-s3
+    profiles:
+    - rclone-s3
+    scale: 1
+  transform:
+    extends:
+      file: ./compose.transform.yaml
+      service: golaberto-transform
+    profiles:
+    - transform
     scale: 1

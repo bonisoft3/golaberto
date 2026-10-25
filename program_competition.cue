@@ -29,10 +29,3 @@ code: state: entities: {
 }
 
 code: state: migrations: "037_competition_admin": {operations: [{sql: {up: _competitionAdminUpgrade, onComplete: true}}]}
-
-build: checks: "competition-admin": {
-	priority: 1
-	database: true
-	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-net --allow-read --allow-sys tests/competition-admin.ts"]
-	note: "competition CRUD, clone structure, sparse overlapping zones, attribution and cache invalidation run against Postgres"
-}

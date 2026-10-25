@@ -17,11 +17,17 @@ DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'electric') THEN
     CREATE ROLE electric NOLOGIN;
   END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticator') THEN
+    CREATE ROLE authenticator NOINHERIT;
+  END IF;
 END $$;
+
+ALTER ROLE authenticator LOGIN;
+GRANT anon, app_user, service TO authenticator;
 
 ALTER ROLE service BYPASSRLS;
 
-ALTER ROLE electric BYPASSRLS REPLICATION LOGIN PASSWORD 'electric';
+ALTER ROLE electric BYPASSRLS REPLICATION LOGIN;
 GRANT USAGE ON SCHEMA public TO electric;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO electric;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO electric;

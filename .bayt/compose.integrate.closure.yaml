@@ -2,17 +2,23 @@
 include:
 - path: .././.bayt/compose.browser.yaml
   required: false
-- path: .././.bayt/compose.caddy.yaml
-  required: false
-- path: .././.bayt/compose.crud.yaml
+- path: .././.bayt/compose.release-docker.yaml
   required: false
 - path: .././.bayt/compose.database.yaml
   required: false
+- path: .././.bayt/compose.crud.yaml
+  required: false
 - path: .././.bayt/compose.migrate.yaml
   required: false
-- path: .././.bayt/compose.release-docker.yaml
+- path: .././.bayt/compose.caddy.yaml
+  required: false
+- path: .././.bayt/compose.served.yaml
+  required: false
+- path: .././.bayt/compose.served-release.yaml
   required: false
 - path: .././.bayt/compose.auth.yaml
+  required: false
+- path: .././.bayt/compose.ci-replay.yaml
   required: false
 - path: .././.bayt/compose.setup.yaml
   required: false
@@ -48,33 +54,11 @@ include:
   required: false
 - path: .././.bayt/compose.integrate.yaml
   required: false
-- path: .././.bayt/compose.check-drains.yaml
-  required: false
 - path: .././.bayt/compose.check-constraints.yaml
   required: false
 - path: .././.bayt/compose.check-acceptance.yaml
   required: false
-- path: .././.bayt/compose.check-request-reads.yaml
-  required: false
-- path: .././.bayt/compose.check-community-parity.yaml
-  required: false
-- path: .././.bayt/compose.check-community-access.yaml
-  required: false
-- path: .././.bayt/compose.check-competition-admin.yaml
-  required: false
-- path: .././.bayt/compose.check-editing-parity.yaml
-  required: false
-- path: .././.bayt/compose.check-match-context.yaml
-  required: false
-- path: .././.bayt/compose.check-match-probability.yaml
-  required: false
-- path: .././.bayt/compose.check-native-media.yaml
-  required: false
-- path: .././.bayt/compose.check-odds-progress.yaml
-  required: false
-- path: ../mecha/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml
-  required: false
-- path: ../omnishell/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml
+- path: ../monorepo/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml
   required: false
 services:
   bayt:

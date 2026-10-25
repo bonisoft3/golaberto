@@ -4,7 +4,6 @@ SET statement_timeout = '60s';
 
 BEGIN;
 
--- tier: container
 INSERT INTO schedule (name, cron, time_zone, suspended, max_lateness_seconds,
                       concurrency_policy, done_entity, done_filter,
                       emits_entity, emits_values)
@@ -31,6 +30,5 @@ ON CONFLICT (name) DO UPDATE SET
   concurrency_policy = EXCLUDED.concurrency_policy,
   done_entity = EXCLUDED.done_entity, done_filter = EXCLUDED.done_filter,
   emits_entity = EXCLUDED.emits_entity, emits_values = EXCLUDED.emits_values;
--- tier: any
 
 COMMIT;

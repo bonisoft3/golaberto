@@ -1,0 +1,46 @@
+# generated from bayt.cue — do not edit
+FROM scratch AS fetch_ci-replay_0_amd64
+ADD --checksum=sha256:9b6dbc38324c0b0481f1cd1dd828ffdc78117129ec797678f4bf8c4023311281 --unpack=true https://github.com/F1bonacc1/process-compose/releases/download/v1.122.0/process-compose_linux_amd64.tar.gz /
+FROM scratch AS fetch_ci-replay_0_arm64
+ADD --checksum=sha256:52fa7d5a2d5e0db470faec5976204fc215ed7e3d13689e930cf522becfb63778 --unpack=true https://github.com/F1bonacc1/process-compose/releases/download/v1.122.0/process-compose_linux_arm64.tar.gz /
+FROM fetch_ci-replay_0_$TARGETARCH AS fetch_ci-replay_0
+FROM golaberto-database AS ci-replay
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+ENV PATH=/root/.local/bin:/root/.local/share/lazybox/bin:$PATH
+ENV MISE_TRUSTED_CONFIG_PATHS=/monorepo
+ENV CADDY_TLS_HOST_PORT=8443
+COPY --from=fetch_ci-replay_0 /process-compose /usr/local/bin/process-compose
+COPY --link --from=golaberto-setup /root/.local /root/.local
+COPY --from=golaberto-setup /monorep[o] /monorepo/
+COPY --link --from=golaberto-migrate /pgroll /pgroll
+COPY --from=golaberto-setup --link /monorepo/${BAYT_DIR} /monorepo/${BAYT_DIR}
+COPY --from=golaberto-migrate --link /monorepo/${BAYT_DIR} /monorepo/${BAYT_DIR}
+COPY --parents .bayt/process-compose.yaml .pronto/cluster.json services/database/migrations/** tests/[r]eplay.json tests/[r]eplay/** ./
+RUN process-compose --no-server -f .bayt/process-compose.yaml run replay
+COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/Taskfile.ci-replay.yaml .bayt/bayt.ci-replay.json ./.bayt/
+
+FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS ci-replay_ctxs
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY --parents .bayt/process-compose.yaml .pronto/cluster.json services/database/migrations/** tests/[r]eplay.json tests/[r]eplay/** ./
+COPY --from=golaberto-setup_srcs /monorepo /monorepo
+COPY --from=golaberto-database_srcs /monorepo /monorepo
+ARG SOURCE_DATE_EPOCH
+ARG BAYT_CLAMP=1
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
+FROM scratch AS ci-replay_srcs
+COPY --from=ci-replay_ctxs /monorepo /monorepo
+
+FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS ci-replay_bayt_ctxs
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY --parents .bayt/compose.ci-replay.yaml .bayt/Dockerfile.ci-replay .bayt/bayt.ci-replay.json .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/Taskfile.ci-replay.yaml .bayt/process-compose.yaml ./
+COPY --from=golaberto-setup_bayt /monorepo /monorepo
+COPY --from=golaberto-database_bayt /monorepo /monorepo
+COPY --from=golaberto-migrate_bayt /monorepo /monorepo
+ARG SOURCE_DATE_EPOCH
+ARG BAYT_CLAMP=1
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
+FROM scratch AS ci-replay_bayt
+COPY --from=ci-replay_bayt_ctxs /monorepo /monorepo

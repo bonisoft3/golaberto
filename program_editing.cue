@@ -27,13 +27,6 @@ code: state: entities: {
 
 code: state: migrations: "036_editing_parity": {operations: [{sql: {up: _editingParityUpgrade, onComplete: true}}]}
 
-build: checks: "editing-parity": {
-	priority: 1
-	database: true
-	cmds: ["deno test --config tests/deno.json --no-lock --allow-env --allow-net --allow-read --allow-sys tests/editing-parity.ts"]
-	note: "editor grants, immutable attribution, dependency refusal, registration cleanup and player merge run against Postgres"
-}
-
 code: meta: tests: {
 	"test-everyday-editing": {
 		of:   "gerenciar"

@@ -24,8 +24,8 @@ SET app.scopes='public:';
 SET ROLE app_user;
 SELECT count(*) = 1 AND bool_and(
   f.home_upcoming_rank = 1
-  AND (SELECT id FROM id(f)) = f.id
-  AND (SELECT id FROM championship(f)) = f.championship_id
-  AND (SELECT id FROM home_id(f)) = f.home_id
-  AND (SELECT id FROM away_id(f)) = f.away_id
+  AND (SELECT id FROM game_archive(f)) = f.id
+  AND (SELECT championship_id FROM game_archive(f)) = f.championship_id
+  AND (SELECT home_id FROM game_archive(f)) = f.home_id
+  AND (SELECT away_id FROM game_archive(f)) = f.away_id
 ) FROM home_feed f;

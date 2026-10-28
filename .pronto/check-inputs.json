@@ -12403,6 +12403,10 @@
       "src": "services/database/sql/050_home_feed_relationships.sql"
     },
     {
+      "name": "051_home_feed_relationship_names.sql",
+      "src": "services/database/sql/051_home_feed_relationship_names.sql"
+    },
+    {
       "name": "900_seed.sql",
       "src": "services/database/sql/900_seed.sql"
     }

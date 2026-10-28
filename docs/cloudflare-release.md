@@ -71,9 +71,10 @@ cluster's pgroll migrations its ledger lacks applied, as the trial's migrate
 step would ([`migrate.ts`](../../../libraries/mecha/packages/pglite-workerd/migrate.ts));
 `900_seed.sql` is no pgroll migration, and the archive holds its rows.
 
-Keep `dist/.jwt-secret` from the existing release. The app publisher refuses
-to proceed without it, so rebuilding in a different checkout requires copying
-that file securely first. It must never be committed.
+For a local publish, supply the existing `JWT_SECRET` or keep the existing
+`dist/.jwt-secret`. In CI, the shared publisher verifies the deployed secret
+and preserves it when no `JWT_SECRET` is supplied. A first CI release must
+provide the secret. Never commit a secret.
 
 ## 3. Check it locally
 
@@ -117,6 +118,14 @@ answered its first guest in 0.7 s. Then browse `https://localhost:8443`.
 
 ```sh
 cd apps/golaberto
+./saytw release@cloudflare --from=<work>/pgdata
+```
+
+The generated release builds the archive and calls the app publisher, which
+restores the existing Durable Object migration history and applies both
+deployment policies. To publish an already built snapshot instead, run:
+
+```sh
 mise exec -- deno run -A --config ../../plugins/pronto/bundle/deno.json \
   tools/publish-cloudflare.ts dist/cloudflare
 ```
@@ -131,10 +140,9 @@ before each publish; the composition rejects an already transformed artifact
 or changed generator output. To inspect the composition locally, add
 `--prepare-only` and rebuild again before publishing.
 
-Use this app publisher for subsequent releases; a direct non-snapshot
-`release@cloudflare` rebuilds the default deployment without these policies.
-The app publisher accepts no reset flag. On 2026-10-10 the first publish
-loaded 7.1 GB in 695 s (10.2 MiB/s from the releasing machine) and verified it
+`release@cloudflare` uses the same app publisher for subsequent releases.
+The app publisher and release rule refuse a reset of the archive. On 2026-10-10
+the first publish loaded 7.1 GB in 695 s (10.2 MiB/s from the releasing machine) and verified it
 in the object in 70 s; a guest's first request reached an object the platform
 had evicted in about 2 s, a warm one in 0.25 s, with no memory or CPU kill.
 

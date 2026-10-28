@@ -838,8 +838,8 @@ code: surface: screens: {
 	}
 	principal: {
 		reads: [
-			{table: "home_feed", kind: "live", nested: false, lists: [], route: "snapshot", clauses: [{"col":"played","op":"false"},{"col":"home_upcoming_rank","op":"gt"}], embeds: ["id","championship","home_id","away_id"], limit: 20, orders: ["home_upcoming_rank"]},
-			{table: "home_feed", kind: "live", nested: false, lists: [], route: "snapshot", clauses: [{"col":"played","op":"true"},{"col":"home_recent_rank","op":"gt"}], embeds: ["id","championship","home_id","away_id"], limit: 20, orders: ["home_recent_rank"]},
+			{table: "home_feed", kind: "live", nested: false, lists: [], route: "snapshot", clauses: [{"col":"played","op":"false"},{"col":"home_upcoming_rank","op":"gt"}], embeds: ["game_archive"], limit: 20, orders: ["home_upcoming_rank"]},
+			{table: "home_feed", kind: "live", nested: false, lists: [], route: "snapshot", clauses: [{"col":"played","op":"true"},{"col":"home_recent_rank","op":"gt"}], embeds: ["game_archive"], limit: 20, orders: ["home_recent_rank"]},
 			{table: "championship", kind: "live", nested: false, lists: [], route: "snapshot", clauses: [{"col":"featured","op":"true"}], embeds: [], limit: 1, orders: ["begins"]},
 			{table: "phase", kind: "live", nested: true, lists: [2], route: "view", clauses: [{"col":"championship_id","op":"eq"}], embeds: [], limit: 1, orders: ["position"]},
 			{table: "stage_group", kind: "live", nested: true, lists: [2,3], route: "view", clauses: [{"col":"phase_id","op":"eq"}], embeds: [], limit: 1, orders: ["position","name"]},

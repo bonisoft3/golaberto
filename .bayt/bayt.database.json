@@ -293,6 +293,11 @@
         },
         {
           "action": "rebuild",
+          "path": "../services/database/migrations/051_home_feed_relationship_names.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
           "path": "../services/database/migrations/900_seed.sql",
           "target": "/docker-entrypoint-initdb.d"
         },
@@ -367,6 +372,7 @@
           "services/database/migrations/048_matches_start.sql",
           "services/database/migrations/049_match_rating_history_bound.sql",
           "services/database/migrations/050_home_feed_relationships.sql",
+          "services/database/migrations/051_home_feed_relationship_names.sql",
           "services/database/migrations/900_seed.sql",
           "services/database/migrations/801_schedule_seed.sql"
         ],
@@ -508,6 +514,7 @@
       "services/database/migrations/048_matches_start.sql",
       "services/database/migrations/049_match_rating_history_bound.sql",
       "services/database/migrations/050_home_feed_relationships.sql",
+      "services/database/migrations/051_home_feed_relationship_names.sql",
       "services/database/migrations/900_seed.sql",
       "services/database/migrations/801_schedule_seed.sql"
     ],
@@ -644,6 +651,7 @@
           "services/database/migrations/048_matches_start.sql",
           "services/database/migrations/049_match_rating_history_bound.sql",
           "services/database/migrations/050_home_feed_relationships.sql",
+          "services/database/migrations/051_home_feed_relationship_names.sql",
           "services/database/migrations/900_seed.sql",
           "services/database/migrations/801_schedule_seed.sql"
         ],

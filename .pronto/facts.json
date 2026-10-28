@@ -368,13 +368,13 @@
     {"path":"shell/shared/team.css","token":"--hex-dim"}
   ],
   "artifact": [
-    {"path":"program.cue","sha256":"e6d49ba24f66956ecd0cb794432f4277ea8faa962c64f7b8036547bde37b4c6b","derived":false},
+    {"path":"program.cue","sha256":"d2c6869ced4e8f67ff67ce402e9162bd119021dff249a22e2ae8e6b1f671b739","derived":false},
     {"path":"DESIGN.md","sha256":"2e01637c0f0815c0f90ce14e897eceb3dd2de991968be26fb9dbf616fef78aa7","derived":false},
-    {"path":"ir.html","sha256":"91653076e4120cb2747ade10dfddd3f9f3caabedad3cae3ff8eb88f10f57246d","derived":false},
+    {"path":"ir.html","sha256":"fb3c9afd5543fa1ff2f19f1cf51e9170962d521c67df4f68ac1c34ee5912341d","derived":false},
     {"path":"acceptance.md","sha256":"637577241d1b61e66b0d2f0b17da006e5ccd962f3a9979b4eebb840e7b547513","derived":false},
     {"path":".pronto/cel.json","sha256":"d02c9a515d600f20b3ccb827692a42291cfdb905936325faa2ca74333e133693","derived":true},
     {"path":"program_cel.cue","sha256":"cfc0f8b91b3c4eba17fc09ac3826e8390b65afc80f1dfa93f4239fa4c8d9440a","derived":true},
-    {"path":"program_derived.cue","sha256":"f3bd30b2255dedcdb177a151c209fc9a9c7acab69db903f45cc747c86521b1a8","derived":true},
+    {"path":"program_derived.cue","sha256":"1816c06b7d782cbace8a73c9bb9d24f2826ee004d743b69297b4bd72c6d70b7f","derived":true},
     {"path":"computations/ratings.js","sha256":"920b889b5b88e988152e88622967468be98a7030e0139aa4f9c4951afa74c4dd","derived":false},
     {"path":"computations/chances.js","sha256":"3320780d598078f63cdf7eff1232fc5c2c31b56c2c4380d11161d3df08e132bd","derived":false},
     {"path":"shell/screens/arbitro.css","sha256":"aaef8be7b1f56e40abdee4734869abb90405e52611de2a8e3263d4e908f80095","derived":false},

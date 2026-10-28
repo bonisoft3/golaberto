@@ -1,4 +1,4 @@
-import { assert, assertEquals } from "jsr:@std/assert@1";
+import { assert, assertEquals, assertRejects } from "jsr:@std/assert@1";
 
 import { query as psql } from "./db.ts";
 
@@ -163,23 +163,25 @@ Deno.test("home feed computed relationships retain the guest reader's access", a
     SET LOCAL request.jwt.claims='{"role":"app_user","sub":"guest-fixture","guest":true}';
     SET LOCAL ROLE app_user;
     DO $$ BEGIN PERFORM app_pre_request(); END $$;
-    SELECT (SELECT id FROM id(f)) = '${game}'::uuid,
+    SELECT (SELECT id FROM game_archive(f)) = '${game}'::uuid,
+      (SELECT championship_id FROM game_archive(f)) = '${champ}'::uuid,
+      (SELECT home_id FROM game_archive(f)) = '${home}'::uuid,
+      (SELECT away_id FROM game_archive(f)) = '${away}'::uuid,
+      (SELECT id FROM id(f)) = '${game}'::uuid,
       (SELECT id FROM championship(f)) = '${champ}'::uuid,
       (SELECT id FROM home_id(f)) = '${home}'::uuid,
       (SELECT id FROM away_id(f)) = '${away}'::uuid
     FROM jsonb_populate_record(NULL::home_feed, jsonb_build_object(
       'id','${game}','championship_id','${champ}','home_id','${home}','away_id','${away}')) f;
     SET LOCAL app.scopes='';
-    SELECT (SELECT count(*) FROM id(f)), (SELECT count(*) FROM championship(f)),
-      (SELECT count(*) FROM home_id(f)), (SELECT count(*) FROM away_id(f))
-    FROM jsonb_populate_record(NULL::home_feed, jsonb_build_object(
-      'id','${game}','championship_id','${champ}','home_id','${home}','away_id','${away}')) f;
-    SET LOCAL app.scopes='public:';
-    SET LOCAL ROLE anon;
-    SELECT (SELECT count(*) FROM id(f)), (SELECT count(*) FROM championship(f)),
-      (SELECT count(*) FROM home_id(f)), (SELECT count(*) FROM away_id(f))
+    SELECT (SELECT count(*) FROM game_archive(f))
     FROM jsonb_populate_record(NULL::home_feed, jsonb_build_object(
       'id','${game}','championship_id','${champ}','home_id','${home}','away_id','${away}')) f;
     ROLLBACK;`);
-  assertEquals(output, "t|t|t|t\n0|0|0|0\n0|0|0|0");
+  assertEquals(output, "t|t|t|t|t|t|t|t\n0");
+  await assertRejects(() => psql(`BEGIN;
+    SET LOCAL app.scopes='public:';
+    SET LOCAL ROLE anon;
+    SELECT count(*) FROM game_archive(NULL::home_feed);
+    ROLLBACK;`), Error, "permission denied for view game_archive");
 });

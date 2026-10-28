@@ -186,14 +186,26 @@ _catalogMachine: json.Marshal({
 	}
 	if G.table != "game_archive" {
 		_fields: {
-			select: "*,game:id(slug),championship(show_country,slug),home:home_id(country,slug,logo_key),away:away_id(country,slug,logo_key)"
-			game: "game.slug"
-			championship: "championship.slug"
-			country: "championship.show_country"
-			homeCountry: "home.country"
-			awayCountry: "away.country"
-			homeLogo: "home.logo_key"
-			awayLogo: "away.logo_key"
+			if G.table == "home_feed" {
+				select: "*,game:game_archive(slug,championship_slug,show_country,home_country,away_country,home_logo_key,away_logo_key)"
+				game: "game.slug"
+				championship: "game.championship_slug"
+				country: "game.show_country"
+				homeCountry: "game.home_country"
+				awayCountry: "game.away_country"
+				homeLogo: "game.home_logo_key"
+				awayLogo: "game.away_logo_key"
+			}
+			if G.table != "home_feed" {
+				select: "*,game:id(slug),championship(show_country,slug),home:home_id(country,slug,logo_key),away:away_id(country,slug,logo_key)"
+				game: "game.slug"
+				championship: "championship.slug"
+				country: "championship.show_country"
+				homeCountry: "home.country"
+				awayCountry: "away.country"
+				homeLogo: "home.logo_key"
+				awayLogo: "away.logo_key"
+			}
 		}
 	}
 	_grouped: G.matchGroups || G.homeFeed != ""

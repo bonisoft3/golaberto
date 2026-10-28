@@ -32,6 +32,7 @@ const MUTATING = new Set([
   "test-chances-live",
   "test-home-featured",
   "test-home-levels",
+  "test-home-feed-api",
   "test-standings-live",
   "test-games-timezone",
   "test-player-stats-live",
@@ -327,6 +328,37 @@ test("test-chances-live: a result recorded for a game still to play moves the ch
   }
   await page.waitForFunction((before: string) =>
     document.querySelector(".zone-odds .rows .row:first-child .pct .exact")?.textContent === before, before, { timeout: CHANCES_SETTLE_MS });
+});
+
+test("test-home-feed-api: home feed relationships resolve through PostgREST for a guest", async () => {
+  const [home, away, champ, phase, game] = Array.from({ length: 5 }, () => crypto.randomUUID());
+  const slug = (id: string) => `feed-${id}`;
+  await query(`BEGIN; INSERT INTO team(id,name,country,slug) VALUES ('${home}','Feed home','Brasil','${slug(home)}'),('${away}','Feed away','Brasil','${slug(away)}');
+    INSERT INTO championship(id,name,region_name,begins,ends,slug) VALUES ('${champ}','Feed season','Brasil','2026-01-01','2026-12-31','${slug(champ)}');
+    INSERT INTO phase(id,championship_id,name) VALUES ('${phase}','${champ}','Feed phase');
+    INSERT INTO game(id,phase_id,round,day,kickoff,home_id,away_id,played,slug)
+      VALUES ('${game}','${phase}',1,current_date,now()+interval '1 hour','${home}','${away}',false,'${slug(game)}');
+    INSERT INTO game_card(id,phase_id,championship_id,day,kickoff,played,home_id,away_id,home_name,away_name,championship_name,phase_name)
+      VALUES ('${game}','${phase}','${champ}',current_date,now()+interval '1 hour',false,'${home}','${away}','Feed home','Feed away','Feed season','Feed phase'); COMMIT;`);
+  try {
+    const guestResponse = await fetch(`${base}/auth/guest`, { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
+    assert(guestResponse.ok, `guest mint returned ${guestResponse.status}`);
+    const guest = await guestResponse.json();
+    const select = "*,game:game_archive(slug,championship_slug,show_country,home_country,away_country,home_logo_key,away_logo_key)";
+    for (const [played, rank] of [["false", "home_upcoming_rank"], ["true", "home_recent_rank"]]) {
+      const params = new URLSearchParams({ select, played: `is.${played}`, [rank]: "gt.0", order: `${rank}.asc`, limit: "20" });
+      const response = await fetch(`${base}/crud/home_feed?${params}`, { headers: { Authorization: `Bearer ${guest.token}` } });
+      const body = await response.text();
+      assert(response.ok, `home_feed returned ${response.status}: ${body}`);
+      const rows = JSON.parse(body);
+      if (played === "false") assert(rows.length > 0, "the upcoming feed must contain a match");
+      for (const row of rows) {
+        assert(row.game && row.game.slug && row.game.championship_slug && row.game.home_country && row.game.away_country, "home feed embeds its match and related data");
+      }
+    }
+  } finally {
+    await query(`BEGIN; DELETE FROM game_card WHERE id='${game}'; DELETE FROM game WHERE id='${game}'; DELETE FROM phase WHERE id='${phase}'; DELETE FROM championship WHERE id='${champ}'; DELETE FROM team WHERE id IN ('${home}','${away}'); COMMIT;`);
+  }
 });
 
 test("test-home-featured: the front page keeps the featured season and its top six below the game feeds", async () => {

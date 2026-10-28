@@ -1,5 +1,38 @@
 # generated from bayt.cue — do not edit
 say:
+  build:
+    do: "null"
+  doctor:
+    do: >-
+      use tools.nu [run-mise]; run-mise exec -- cue version; run-mise exec -- deno
+      --version; run-mise where github:bonisoft3/pronto
+  generate:
+    rulemap:
+      auto-cue:
+        cmds:
+        - use: ./tools.nu
+          do: >-
+            if ('pronto/generate_tool.cue' | path exists) { tools run-cue cmd generate
+            ./pronto }
+      pronto:
+        priority: 1
+        cmds:
+        - do: >-
+            if ('program.cue' | path exists) { use tools.nu [run-mise]; let pronto =
+            (run-mise where github:bonisoft3/pronto | str trim); run-mise exec -- deno run --config
+            ($pronto | path join deno.json) --allow-read --allow-write=. --allow-run
+            --allow-env ($pronto | path join write.ts) . }
+      auto-bayt:
+        priority: 2
+        cmds:
+        - use: ./auto-bayt.nu
+          do: auto-bayt
+      omnishell:
+        priority: 0
+        cmds:
+        - do: >-
+            if ('program.cue' | path exists) { use tools.nu [run-mise]; run-mise exec --
+            omnishell mode . | save --force program_terminal.cue }
   integrate:
     rulemap:
       builtin:
@@ -118,6 +151,15 @@ say:
           use: ./release.nu
         - do: "if ($env.SAY_RELEASE_ARGS_SNAPSHOT? | is-empty) { use semver.nu [tag-on-head]; let tag = (tag-on-head); if ($tag | is-empty) { error make {msg: \"no release tag on HEAD to push\"} }; git push origin $tag }"
         platform: pages
+      docker:
+        cmds:
+        - do: docker compose build release-docker
+        - do: >-
+            if ($env.SAY_RELEASE_ARGS_SNAPSHOT? | is-empty) { release --skip=validate
+            --clean } else { release --snapshot --skip=validate --clean }
+          use: ./release.nu
+        - do: "if ($env.SAY_RELEASE_ARGS_SNAPSHOT? | is-empty) { use semver.nu [tag-on-head]; let tag = (tag-on-head); if ($tag | is-empty) { error make {msg: \"no release tag on HEAD to push\"} }; git push origin $tag; let image_tag = ($tag | path basename); with-env { BAYT_IMAGE_TAG: $image_tag } { docker compose build release-docker; docker compose push release-docker } }"
+        platform: docker
       cloudflare:
         cmds:
         - do: >-
@@ -140,24 +182,8 @@ say:
             if ($env.SAY_RELEASE_ARGS_SNAPSHOT? | is-empty) { release --skip=validate
             --clean } else { release --snapshot --skip=validate --clean }
           use: ./release.nu
-        - do: >-
-            if ($env.SAY_RELEASE_ARGS_SNAPSHOT? | is-empty) { use tools.nu [run-mise]; let
-            pronto = (run-mise where github:bonisoft3/pronto | str trim); run-mise exec --
-            deno run -A --config ($pronto | path join bundle deno.json) ($pronto | path join
-            bundle publish-edge.ts) dist/cloudflare --mecha (run-mise where
-            github:bonisoft3/mecha | str trim) ...(if ($env.SAY_RELEASE_ARGS_RESET? | is-empty) { [] } else {
-            ['--reset'] }) ...(if ($env.SAY_RELEASE_ARGS_TEMPORARY? | is-empty) { [] } else {
-            ['--temporary'] }) }
+        - do: "if ($env.SAY_RELEASE_ARGS_SNAPSHOT? | is-empty) { if ($env.SAY_RELEASE_ARGS_RESET? | is-not-empty) { error make {msg: 'GolAberto does not permit --reset'} }; use tools.nu [run-mise]; let pronto = (run-mise where github:bonisoft3/pronto | str trim); run-mise exec -- deno run -A --config ($pronto | path join bundle deno.json) tools/publish-cloudflare.ts dist/cloudflare ...(if ($env.SAY_RELEASE_ARGS_TEMPORARY? | is-empty) { [] } else { ['--temporary'] }) }"
         platform: cloudflare
-      docker:
-        cmds:
-        - do: docker compose build release-docker
-        - do: >-
-            if ($env.SAY_RELEASE_ARGS_SNAPSHOT? | is-empty) { release --skip=validate
-            --clean } else { release --snapshot --skip=validate --clean }
-          use: ./release.nu
-        - do: "if ($env.SAY_RELEASE_ARGS_SNAPSHOT? | is-empty) { use semver.nu [tag-on-head]; let tag = (tag-on-head); if ($tag | is-empty) { error make {msg: \"no release tag on HEAD to push\"} }; git push origin $tag; let image_tag = ($tag | path basename); with-env { BAYT_IMAGE_TAG: $image_tag } { docker compose build release-docker; docker compose push release-docker } }"
-        platform: docker
       k8s:
         platform: k8s
         cmds:
@@ -166,39 +192,6 @@ say:
             str trim); run-mise exec -- nu ($pronto | path join k8s release.nu)
   self:
     version: v0.45.1
-  doctor:
-    do: >-
-      use tools.nu [run-mise]; run-mise exec -- cue version; run-mise exec -- deno
-      --version; run-mise where github:bonisoft3/pronto
-  build:
-    do: "null"
-  generate:
-    rulemap:
-      omnishell:
-        priority: 0
-        cmds:
-        - do: >-
-            if ('program.cue' | path exists) { use tools.nu [run-mise]; run-mise exec --
-            omnishell mode . | save --force program_terminal.cue }
-      auto-cue:
-        cmds:
-        - use: ./tools.nu
-          do: >-
-            if ('pronto/generate_tool.cue' | path exists) { tools run-cue cmd generate
-            ./pronto }
-      pronto:
-        priority: 1
-        cmds:
-        - do: >-
-            if ('program.cue' | path exists) { use tools.nu [run-mise]; let pronto =
-            (run-mise where github:bonisoft3/pronto | str trim); run-mise exec -- deno run --config
-            ($pronto | path join deno.json) --allow-read --allow-write=. --allow-run
-            --allow-env ($pronto | path join write.ts) . }
-      auto-bayt:
-        priority: 2
-        cmds:
-        - use: ./auto-bayt.nu
-          do: auto-bayt
   setup:
     rulemap:
       builtin:

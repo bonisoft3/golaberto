@@ -5,7 +5,7 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.17.0@sha256:72dc57321816141cf21744244afee9e09448790365e178ab607bc83b8e71f738}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+        "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.18.0@sha256:b44f283f271dfefd5c6453874f81b8626ac2e9dac755123e21e3e9eeb8eca18a}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
       },
       "secrets": [],
       "args": {}

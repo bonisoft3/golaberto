@@ -5,7 +5,7 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "libraries_mecha-auth-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.17.0@sha256:6d2486a7018d10d1f9d68a4a5d689d9e1e23ebe0f16e47355c902a84b4814380}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}"
+        "libraries_mecha-auth-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.18.0@sha256:fc880aa71831b5bdcaa8bc6181bddd161f2bf4af24833afb14a94b402094133c}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}"
       },
       "secrets": [],
       "args": {}

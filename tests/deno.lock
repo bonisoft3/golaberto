@@ -85,7 +85,9 @@
     },
     "fsevents@2.3.2": {
       "integrity": "sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==",
-      "os": ["darwin"]
+      "os": [
+        "darwin"
+      ]
     },
     "html-escaper@3.0.3": {
       "integrity": "sha512-RuMffC89BOWQoY0WKGpIhn5gX3iI54O6nRA0yC124NYVtzjmFWBIiFd8M0x+ZdX0P9R4lADg1mgP8C7PxGOWuQ=="
@@ -140,34 +142,34 @@
     }
   },
   "remote": {
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/base-url.ts": "d6ad6934ad0bff27f5778124011d0601cde9c1abae14a59e969454fe3a22029c",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/batched-store.js": "7bf56d58bf3a617699901cb1e566479d7f6fdc87b7a0b8142e02d5971dc4e325",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/data-sync.js": "fc3c61a99a44daa28d8315d5113152016915b5e154d8adbe624d5324d67394bf",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/fragment.js": "a163f748f863972342ffc144ac2eb1ed3315c2478f6c373dc44fd3d93eb389a6",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/hatch-presenter.js": "4a2e40145ccbf4f9e0a4587440178dc3bebb7da3322e5906414dfe98bff688bd",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/hatch-worker.js": "c31e980afb05dda7420112a8ca2fb18101c979d8748bb4a6efd9df03a8f046f0",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/hatch.js": "afe63946e93b68b5504eb55f8e60ed53f7c710b4f98e25c7bf4a316b867f88f0",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/host-dom.js": "10ee2da098c1d3f5d5edb6f0b576f994ca608cb4bd17eaaae2587ef81dfb281b",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/jessie.js": "7e860525d029b320ac7a00e1f8898c470c7a649a044c54a4ed1beb0e4e18b4a7",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/kinetic-milestones.js": "4c093f5b4440aa5c23400c9be57761179408c5e272ff55dd714236cd0dab62f0",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/kinetic-mount.js": "e3b92ae168c2fd2bbcbd21465c9bc899753725a053aa31b278d7a3d4059eac03",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/kinetic-session.js": "aabaf2c9d4ab8d660afc4709faf2860e99771f437fae9cfbfc2b409cdb5152a0",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/kinetic-sound.js": "a5d5337300ea8169e97ae237e53c8a489e8519708a06f1c762322abea8945f4b",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/kinetic.js": "5a0f0f7a39cf9ba4f0dba7bd49111d6166bca7e3482760ec303cad248937550c",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/markup.js": "1d8c1974aa87cee8379e392a2093fc67bea4fcb96b053820712c095d484b3c62",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/preloads.js": "8acffa0dff6c7eeefa75b26fb07bae88f29c554852ffdaf3d2fb172a4bc8e0fa",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/presenter-realm.js": "baff39185de8179c2d7f0fe831c6720a21ce1180dbf776a245a904a5e78f612f",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/prng.js": "afaa2c24f5636bfc3a85f26b603f6b639e266a5c4717ebfd0e86a47969b2e662",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/render.js": "79b8e0c791c5c8b757399058480b61e59cba9ac2b51b1307ad6125989d2af328",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/rtc-channel.js": "316eb694167b2e713eaf1163b134afb0731e7fad724c12229356ba1735a4a5e1",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/screen.js": "9232842c59d68560d588d2f4f3e644a87c85c6015f34b0ecc4b200241313de2a",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/script-url.js": "40e8e095d61c84f43bab5dcac40603c67cf4231bc075c4925266f13d813ef258",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/validate.js": "2113b1cbfe051f6ba0084478320b4c48b0099dab4535fb71f48b84a6f7b51dc1",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/vendor/game-inputs.js": "516b4f6b6a9a6f4071403e4ba5c3678613f3e1c6878bf3685007867ec80e99b4",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/vendor/ggrs/ggrs_wasm.js": "1b6939e69bc1baba277ae92c9e7cffb9bfe007f43ac68f3606bd6b9c4a3cb286",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/vendor/mecha-client.js": "b65ce75d4de912f6198c1daa9191155784aa8debeebb5ce04347e86621c7d799",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/vendor/messages.js": "c6c9d884b79fee9f4b36924ec3f18bcb6ba0edc4d38b99e1d0ba5bfa4b688cc0",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/vendor/morphlex.js": "b98cbd9472b6fb556174af718c193f16f60d9d77d3d55fc8788fd48a84739b48",
-    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.19.1/interpreter/vendor/ses.umd.min.js": "d6a22c7c6dea2a8e9b1ea8613e649c8ae58aec86ad677a7118fdf0e19678a468"
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/base-url.ts": "d6ad6934ad0bff27f5778124011d0601cde9c1abae14a59e969454fe3a22029c",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/batched-store.js": "7bf56d58bf3a617699901cb1e566479d7f6fdc87b7a0b8142e02d5971dc4e325",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/data-sync.js": "4b7beee851080030f54e27aa388be39debeec446d44cc42c51d170a6580336c5",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/fragment.js": "ff4419041ef73359d2293d93fca5b772a7757d0208f60a6d9ff33c43486ac31b",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/hatch-presenter.js": "7f6a08aadd6cfe12ff132c20127d7a4e48af7c8ce0966b91c09304b8c4ffff90",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/hatch-worker.js": "c31e980afb05dda7420112a8ca2fb18101c979d8748bb4a6efd9df03a8f046f0",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/hatch.js": "afe63946e93b68b5504eb55f8e60ed53f7c710b4f98e25c7bf4a316b867f88f0",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/host-dom.js": "10ee2da098c1d3f5d5edb6f0b576f994ca608cb4bd17eaaae2587ef81dfb281b",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/jessie.js": "7e860525d029b320ac7a00e1f8898c470c7a649a044c54a4ed1beb0e4e18b4a7",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/kinetic-milestones.js": "4c093f5b4440aa5c23400c9be57761179408c5e272ff55dd714236cd0dab62f0",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/kinetic-mount.js": "9771a4f0e4697e58e188381532c1cfa1561ff3883493fed86dff2de47dc8bef5",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/kinetic-session.js": "aabaf2c9d4ab8d660afc4709faf2860e99771f437fae9cfbfc2b409cdb5152a0",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/kinetic-sound.js": "a5d5337300ea8169e97ae237e53c8a489e8519708a06f1c762322abea8945f4b",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/kinetic.js": "5a0f0f7a39cf9ba4f0dba7bd49111d6166bca7e3482760ec303cad248937550c",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/markup.js": "1d8c1974aa87cee8379e392a2093fc67bea4fcb96b053820712c095d484b3c62",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/preloads.js": "8acffa0dff6c7eeefa75b26fb07bae88f29c554852ffdaf3d2fb172a4bc8e0fa",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/presenter-realm.js": "baff39185de8179c2d7f0fe831c6720a21ce1180dbf776a245a904a5e78f612f",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/prng.js": "afaa2c24f5636bfc3a85f26b603f6b639e266a5c4717ebfd0e86a47969b2e662",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/render.js": "79b8e0c791c5c8b757399058480b61e59cba9ac2b51b1307ad6125989d2af328",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/rtc-channel.js": "a3b7b7f932f58574f81a3509d8416f8cc22e47867112e95b62a45dfe69bc9a19",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/screen.js": "f5dec9678d3fc9e0873d3e11363c3357dc3441fdb073426fd47a8366c443f8e0",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/script-url.js": "40e8e095d61c84f43bab5dcac40603c67cf4231bc075c4925266f13d813ef258",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/validate.js": "2113b1cbfe051f6ba0084478320b4c48b0099dab4535fb71f48b84a6f7b51dc1",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/vendor/game-inputs.js": "516b4f6b6a9a6f4071403e4ba5c3678613f3e1c6878bf3685007867ec80e99b4",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/vendor/ggrs/ggrs_wasm.js": "1b6939e69bc1baba277ae92c9e7cffb9bfe007f43ac68f3606bd6b9c4a3cb286",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/vendor/mecha-client.js": "b65ce75d4de912f6198c1daa9191155784aa8debeebb5ce04347e86621c7d799",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/vendor/messages.js": "c6c9d884b79fee9f4b36924ec3f18bcb6ba0edc4d38b99e1d0ba5bfa4b688cc0",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/vendor/morphlex.js": "b98cbd9472b6fb556174af718c193f16f60d9d77d3d55fc8788fd48a84739b48",
+    "https://raw.githubusercontent.com/bonisoft3/omnishell/v0.20.3/interpreter/vendor/ses.umd.min.js": "d6a22c7c6dea2a8e9b1ea8613e649c8ae58aec86ad677a7118fdf0e19678a468"
   }
 }

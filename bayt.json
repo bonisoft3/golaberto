@@ -207,7 +207,7 @@
           }
         },
         "self": {
-          "version": "v0.45.0"
+          "version": "v0.45.1"
         },
         "doctor": {
           "do": "use tools.nu [run-mise]; run-mise exec -- cue version; run-mise exec -- deno --version; run-mise where github:bonisoft3/pronto"
@@ -435,6 +435,34 @@
               "cmds": [
                 {
                   "do": "use tools.nu [run-mise]; run-mise exec -- omnishell check battery ."
+                }
+              ]
+            }
+          }
+        },
+        "verify": {
+          "rulemap": {
+            "cloudflare": {
+              "platform": "cloudflare",
+              "cmds": [
+                {
+                  "do": "use tools.nu [run-mise]; let pronto = (run-mise where github:bonisoft3/pronto | str trim); run-mise exec -- deno run -A --config ($pronto | path join deno.json) ($pronto | path join verify verify.ts) . --platform cloudflare --default-domain golaberto.bonisoft3.com ...(if ($env.SAY_VERIFY_ARGS_TARGET? | is-empty) { [] } else { ['--target', $env.SAY_VERIFY_ARGS_TARGET] }) ...(if ($env.SAY_VERIFY_ARGS_TIER? | is-empty) { [] } else { ['--tier', $env.SAY_VERIFY_ARGS_TIER] }) ...(if ($env.SAY_VERIFY_ARGS_HEADLESS? | is-empty) { [] } else { ['--headless', $env.SAY_VERIFY_ARGS_HEADLESS] }) ...(if ($env.SAY_VERIFY_ARGS_SESSION? | is-empty) { [] } else { ['--session', $env.SAY_VERIFY_ARGS_SESSION] })"
+                }
+              ]
+            },
+            "k8s": {
+              "platform": "k8s",
+              "cmds": [
+                {
+                  "do": "use tools.nu [run-mise]; let pronto = (run-mise where github:bonisoft3/pronto | str trim); run-mise exec -- deno run -A --config ($pronto | path join deno.json) ($pronto | path join verify verify.ts) . --platform k8s --default-domain golaberto.bonisoft3.com ...(if ($env.SAY_VERIFY_ARGS_TARGET? | is-empty) { [] } else { ['--target', $env.SAY_VERIFY_ARGS_TARGET] }) ...(if ($env.SAY_VERIFY_ARGS_TIER? | is-empty) { [] } else { ['--tier', $env.SAY_VERIFY_ARGS_TIER] }) ...(if ($env.SAY_VERIFY_ARGS_HEADLESS? | is-empty) { [] } else { ['--headless', $env.SAY_VERIFY_ARGS_HEADLESS] }) ...(if ($env.SAY_VERIFY_ARGS_SESSION? | is-empty) { [] } else { ['--session', $env.SAY_VERIFY_ARGS_SESSION] })"
+                }
+              ]
+            },
+            "pages": {
+              "platform": "pages",
+              "cmds": [
+                {
+                  "do": "use tools.nu [run-mise]; let pronto = (run-mise where github:bonisoft3/pronto | str trim); run-mise exec -- deno run -A --config ($pronto | path join deno.json) ($pronto | path join verify verify.ts) . --platform pages --default-domain golaberto.bonisoft3.com ...(if ($env.SAY_VERIFY_ARGS_TARGET? | is-empty) { [] } else { ['--target', $env.SAY_VERIFY_ARGS_TARGET] }) ...(if ($env.SAY_VERIFY_ARGS_TIER? | is-empty) { [] } else { ['--tier', $env.SAY_VERIFY_ARGS_TIER] }) ...(if ($env.SAY_VERIFY_ARGS_HEADLESS? | is-empty) { [] } else { ['--headless', $env.SAY_VERIFY_ARGS_HEADLESS] }) ...(if ($env.SAY_VERIFY_ARGS_SESSION? | is-empty) { [] } else { ['--session', $env.SAY_VERIFY_ARGS_SESSION] })"
                 }
               ]
             }
@@ -2179,7 +2207,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.19.0@sha256:c29f0e6ba82bcf2872ede2b21c871adfe1106f6d02d3bbaf6f421b0614e0d071}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.20.2@sha256:0f7d84358244c875a76bf97f13974bf6336e15f639a2f01fa31ad3eb0ce0d8a7}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -4085,7 +4113,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.19.0@sha256:c29f0e6ba82bcf2872ede2b21c871adfe1106f6d02d3bbaf6f421b0614e0d071}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.20.2@sha256:0f7d84358244c875a76bf97f13974bf6336e15f639a2f01fa31ad3eb0ce0d8a7}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -4400,7 +4428,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.19.0@sha256:c29f0e6ba82bcf2872ede2b21c871adfe1106f6d02d3bbaf6f421b0614e0d071}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.20.2@sha256:0f7d84358244c875a76bf97f13974bf6336e15f639a2f01fa31ad3eb0ce0d8a7}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -4711,7 +4739,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.19.0@sha256:c29f0e6ba82bcf2872ede2b21c871adfe1106f6d02d3bbaf6f421b0614e0d071}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.20.2@sha256:0f7d84358244c875a76bf97f13974bf6336e15f639a2f01fa31ad3eb0ce0d8a7}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -4932,7 +4960,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.17.0@sha256:72dc57321816141cf21744244afee9e09448790365e178ab607bc83b8e71f738}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.18.0@sha256:b44f283f271dfefd5c6453874f81b8626ac2e9dac755123e21e3e9eeb8eca18a}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
           },
           "secrets": [],
           "args": {}
@@ -5326,7 +5354,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-auth-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.17.0@sha256:6d2486a7018d10d1f9d68a4a5d689d9e1e23ebe0f16e47355c902a84b4814380}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}"
+            "libraries_mecha-auth-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.18.0@sha256:fc880aa71831b5bdcaa8bc6181bddd161f2bf4af24833afb14a94b402094133c}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}"
           },
           "secrets": [],
           "args": {}
@@ -5470,7 +5498,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-mesh-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.17.0@sha256:04ad88869e10f421813db7af7f32102ec233095205f37ae5f2103587e669aeb3}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}"
+            "libraries_mecha-mesh-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.18.0@sha256:04ad88869e10f421813db7af7f32102ec233095205f37ae5f2103587e669aeb3}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}"
           },
           "secrets": [],
           "args": {}
@@ -5618,7 +5646,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-conduit-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-conduit:0.17.0@sha256:23951e9266e57d93a5ec21350a551be0648a6a9473c7790d7ff85b9196a06ff4}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image}"
+            "libraries_mecha-conduit-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-conduit:0.18.0@sha256:a9e01015f31e369b10268025d097ab39ad02493e9b256640b92321f2cd2c20c3}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image}"
           },
           "secrets": [],
           "args": {}
@@ -5802,7 +5830,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-compute-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.17.0@sha256:388a05d41fa088526eed86cc480f48e4625b474f7c44cb1a4c90797ca589fe81}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}"
+            "libraries_mecha-compute-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.18.0@sha256:a3826e7388929beeb220a8bf46075e5bbe4e355bb0118b59b4ad0ec9d630e2a5}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}"
           },
           "secrets": [],
           "args": {}
@@ -5938,7 +5966,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-ticker-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-ticker:0.17.0@sha256:e85f3cba4582e29f1d95bde4fad82b965746fe89600657319d6f5b5d6dde2a19}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image}"
+            "libraries_mecha-ticker-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-ticker:0.18.0@sha256:1d6a5b250ca28669f7a840685ccfc26bfedd411dab2ae347f18416ebbfe1519c}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image}"
           },
           "secrets": [],
           "args": {}
@@ -6021,7 +6049,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-clock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-clock:0.17.0@sha256:9d8cdaca612d880a4de4ab3176f80a1e7acdb38b10295f9aa5990217dcb3317f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-clock-image}"
+            "libraries_mecha-clock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-clock:0.18.0@sha256:9d8cdaca612d880a4de4ab3176f80a1e7acdb38b10295f9aa5990217dcb3317f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-clock-image}"
           },
           "secrets": [],
           "args": {}
@@ -6148,7 +6176,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.17.0@sha256:72dc57321816141cf21744244afee9e09448790365e178ab607bc83b8e71f738}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.18.0@sha256:b44f283f271dfefd5c6453874f81b8626ac2e9dac755123e21e3e9eeb8eca18a}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
           },
           "secrets": [],
           "args": {}
@@ -6378,7 +6406,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.19.0@sha256:c29f0e6ba82bcf2872ede2b21c871adfe1106f6d02d3bbaf6f421b0614e0d071}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.20.2@sha256:0f7d84358244c875a76bf97f13974bf6336e15f639a2f01fa31ad3eb0ce0d8a7}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -7294,7 +7322,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.19.0@sha256:c29f0e6ba82bcf2872ede2b21c871adfe1106f6d02d3bbaf6f421b0614e0d071}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.20.2@sha256:0f7d84358244c875a76bf97f13974bf6336e15f639a2f01fa31ad3eb0ce0d8a7}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}

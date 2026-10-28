@@ -12399,6 +12399,10 @@
       "src": "services/database/sql/049_match_rating_history_bound.sql"
     },
     {
+      "name": "050_home_feed_relationships.sql",
+      "src": "services/database/sql/050_home_feed_relationships.sql"
+    },
+    {
       "name": "900_seed.sql",
       "src": "services/database/sql/900_seed.sql"
     }

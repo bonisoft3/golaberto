@@ -159,6 +159,9 @@ services:
         path: ../services/database/migrations/049_match_rating_history_bound.sql
         target: /docker-entrypoint-initdb.d
       - action: rebuild
+        path: ../services/database/migrations/050_home_feed_relationships.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
         path: ../services/database/migrations/900_seed.sql
         target: /docker-entrypoint-initdb.d
       - action: rebuild

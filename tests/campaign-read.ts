@@ -152,3 +152,34 @@ Deno.test("campaign history ranks the whole group, follows source edits through 
     );
   }
 });
+
+Deno.test("home feed computed relationships retain the guest reader's access", async () => {
+  const [home, away, champ, phase, game] = Array.from({ length: 5 }, () => crypto.randomUUID());
+  const output = await psql(`BEGIN;
+    INSERT INTO team(id,name,country) VALUES ('${home}','Feed home','Brasil'),('${away}','Feed away','Brasil');
+    INSERT INTO championship(id,name,region_name,begins,ends) VALUES ('${champ}','Feed season','Brasil','2026-01-01','2026-12-31');
+    INSERT INTO phase(id,championship_id,name) VALUES ('${phase}','${champ}','Feed phase');
+    INSERT INTO game(id,phase_id,round,day,home_id,away_id,played) VALUES ('${game}','${phase}',1,'2026-01-01','${home}','${away}',false);
+    SET LOCAL request.jwt.claims='{"role":"app_user","sub":"guest-fixture","guest":true}';
+    SET LOCAL ROLE app_user;
+    DO $$ BEGIN PERFORM app_pre_request(); END $$;
+    SELECT (SELECT id FROM id(f)) = '${game}'::uuid,
+      (SELECT id FROM championship(f)) = '${champ}'::uuid,
+      (SELECT id FROM home_id(f)) = '${home}'::uuid,
+      (SELECT id FROM away_id(f)) = '${away}'::uuid
+    FROM jsonb_populate_record(NULL::home_feed, jsonb_build_object(
+      'id','${game}','championship_id','${champ}','home_id','${home}','away_id','${away}')) f;
+    SET LOCAL app.scopes='';
+    SELECT (SELECT count(*) FROM id(f)), (SELECT count(*) FROM championship(f)),
+      (SELECT count(*) FROM home_id(f)), (SELECT count(*) FROM away_id(f))
+    FROM jsonb_populate_record(NULL::home_feed, jsonb_build_object(
+      'id','${game}','championship_id','${champ}','home_id','${home}','away_id','${away}')) f;
+    SET LOCAL app.scopes='public:';
+    SET LOCAL ROLE anon;
+    SELECT (SELECT count(*) FROM id(f)), (SELECT count(*) FROM championship(f)),
+      (SELECT count(*) FROM home_id(f)), (SELECT count(*) FROM away_id(f))
+    FROM jsonb_populate_record(NULL::home_feed, jsonb_build_object(
+      'id','${game}','championship_id','${champ}','home_id','${home}','away_id','${away}')) f;
+    ROLLBACK;`);
+  assertEquals(output, "t|t|t|t\n0|0|0|0\n0|0|0|0");
+});

@@ -79,6 +79,8 @@ _homeHighlightsSql:     string @embed(file="services/database/sql/021_home_highl
 _homeHighlightsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeHighlightsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
 _homeGamesAtReadSql:     string @embed(file="services/database/sql/047_home_games_at_read.sql", type=text)
 _homeGamesAtReadUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeGamesAtReadSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_homeFeedRelationshipsSql: string @embed(file="services/database/sql/050_home_feed_relationships.sql", type=text)
+_homeFeedRelationshipsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeFeedRelationshipsSql, "BEGIN;\n"), ""), "\nCOMMIT;\n"), "\n")
 
 _routePerformanceSql:     string @embed(file="services/database/sql/018_route_performance.sql", type=text)
 _routePerformanceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_routePerformanceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
@@ -1273,6 +1275,7 @@ code: pronto.#App & {
 		{name: "047_home_games_at_read.sql", src: "services/database/sql/047_home_games_at_read.sql"},
 		{name: "048_matches_start.sql", src: "services/database/sql/048_matches_start.sql"},
 		{name: "049_match_rating_history_bound.sql", src: "services/database/sql/049_match_rating_history_bound.sql"},
+		{name: "050_home_feed_relationships.sql", src: "services/database/sql/050_home_feed_relationships.sql"},
 		// Large archive fixtures are copied at build, never expanded through CUE.
 		{name: "900_seed.sql", src: "services/database/sql/900_seed.sql"},
 	]
@@ -1301,6 +1304,7 @@ code: pronto.#App & {
 	state: migrations: "033_cdc_outputs": {operations: [{sql: {up: _cdcOutputsSql, onComplete: true}}]}
 	state: migrations: "048_matches_start": {operations: [{sql: {up: _matchesStartUpgrade, onComplete: true}}]}
 	state: migrations: "047_home_games_at_read": {operations: [{sql: {up: _homeGamesAtReadUpgrade, onComplete: true}}]}
+	state: migrations: "050_home_feed_relationships": {operations: [{sql: {up: _homeFeedRelationshipsUpgrade, onComplete: true}}]}
 	state: migrations: "035_read_parity": {operations: [{sql: {up: _readParityUpgrade, onComplete: true}}]}
 	state: migrations: "034_idempotent_odds_capture": {operations: [{sql: {up: _oddsCaptureSql, onComplete: true}}]}
 	state: migrations: "031_readable_addresses": {operations: [{sql: {up: _readableAddressesUpgrade, onComplete: true}}]}
@@ -2324,6 +2328,7 @@ build: checks: "constraints": {
 		"services/database/sql/043_queued_odds_refresh.sql",
 		"services/database/sql/044_heavy_reads.sql",
 		"services/database/sql/049_match_rating_history_bound.sql",
+		"services/database/sql/050_home_feed_relationships.sql",
 		"services/media/deno.json",
 		"services/media/deno.lock",
 		"services/media/normalize.ts",

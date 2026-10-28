@@ -603,6 +603,7 @@
           "services/database/sql/043_queued_odds_refresh.sql",
           "services/database/sql/044_heavy_reads.sql",
           "services/database/sql/049_match_rating_history_bound.sql",
+          "services/database/sql/050_home_feed_relationships.sql",
           "services/media/deno.json",
           "services/media/deno.lock",
           "services/media/normalize.ts",
@@ -688,6 +689,7 @@
           "services/database/migrations/047_home_games_at_read.sql",
           "services/database/migrations/048_matches_start.sql",
           "services/database/migrations/049_match_rating_history_bound.sql",
+          "services/database/migrations/050_home_feed_relationships.sql",
           "services/database/migrations/900_seed.sql",
           "services/database/migrations/801_schedule_seed.sql"
         ],

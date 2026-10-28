@@ -1,7 +1,7 @@
 [
   {
     "name": "home-feed-view",
-    "omitInitdb": ["047_home_games_at_read.sql"],
+    "omitInitdb": ["047_home_games_at_read.sql", "050_home_feed_relationships.sql"],
     "through": "046_team_projection_turn",
     "seed": "tests/replay/home-feed-before.sql",
     "verify": "tests/replay/home-feed-after.sql",

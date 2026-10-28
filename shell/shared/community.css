@@ -22,3 +22,5 @@
 @media (max-width:720px) { .community-diff > div { grid-template-columns: 1fr; gap: var(--sp-sm); } }
 
 .community-avatar{padding:var(--size-3)}.community-avatar img,.community-media img{object-fit:contain;background:transparent}.community-media{margin-block:var(--size-3)}.community-media input[type=file]{max-width:100%}.community-media small{display:block}.community-media ul{padding-inline-start:var(--size-3)}.community-media li{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-md)}.community-media form{margin-block:var(--sp-md)}
+
+.community-list > li > a { display: inline-flex; align-items: center; min-height: var(--min-touch); }

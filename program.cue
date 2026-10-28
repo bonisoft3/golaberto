@@ -1630,7 +1630,7 @@ code: pronto.#App & {
 				night: {states: ["populated", "populated-dark"], accepts: ["accept-dark"]}
 			}
 			files: renderers: ["shell/renderers/match-final-score.js", "shell/renderers/match-shootout.js", "shell/renderers/team-badge.js", "shell/renderers/country-flag.js", "shell/renderers/geography-label.js"]
-			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css"]
+			files: shared: ["shell/shared/chrome.css", "shell/shared/games.css", "shell/shared/team.css"]
 		}
 	}
 

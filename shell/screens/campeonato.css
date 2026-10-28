@@ -1,5 +1,6 @@
 @import url("shared/chrome.css");
 @import url("shared/games.css");
+@import url("shared/team.css");
 /* One championship: its facts, its phases, each phase's groups. */
 .facts { display: flex; flex-wrap: wrap; gap: var(--sp-md); align-items: center; margin: 0; }
 .points { font-size: var(--type-caption); color: var(--secondary); }

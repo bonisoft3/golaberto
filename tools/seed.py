@@ -309,10 +309,12 @@ team_name = {t["id"]: t["name"] for t in teams}
 upstream_name = {t["upstream"]: t["name"] for t in crawled_teams.values()}
 listed = collections.Counter()
 nationality = {}
+season_stats = {}
 for q in json.load(open("tools/crawl/players-1523-brasil-campeonato-brasileiro-2026.json")):
     key = (upstream_name[q["team"]], q["name"])
     listed[key] += 1
     nationality[key] = q["nationality"]
+    season_stats[key] = q
 player_row = {r["id"]: r for r in players}
 # The 2026 table names its players' countries; a scorer of another season is
 # keyed by that season too and is not in it.
@@ -322,6 +324,21 @@ for (team, name, *season), pid in player_of.items():
     if not season and listed[key] == 1 and nationality[key]:
         player_row[pid]["country"] = nationality[key]
 
+# Fresh clusters serve the verified archive snapshot while CDC recounts it.
+# Namesakes have no unambiguous appearance identity in the upstream archive.
+player_stats = []
+for (team, name, *season), pid in player_of.items():
+    key = (team_name[team], name)
+    if season or listed[key] != 1:
+        continue
+    q = season_stats[key]
+    if q["played"] == 0 and q["bench"] == 0:
+        continue
+    player_stats.append(dict(
+        id=f"{C[0]}:{team}:{pid}", championship_id=C[0], team_id=team, player_id=pid,
+        started=q["played"] - q["substitute"], came_on=q["substitute"],
+        **{field: q[field] for field in ("played", "bench", "minutes", "goals", "penalties", "own_goals", "yellow", "red")}))
+
 body = {"Category": [dict(id=v, name=k) for k,v in cat.items()], "Stadium": stadium_rows,
-        "Team": teams, "Referee": referees, "Championship": championships, "Phase": phases, "Group": groups, "Zone": zones, "TeamGroup": tgs, "Game": games + extra_games, "Player": players, "TeamPlayer": squad, "PlayerGame": appearances, "Goal": goals_rows}
+        "Team": teams, "Referee": referees, "Championship": championships, "Phase": phases, "Group": groups, "Zone": zones, "TeamGroup": tgs, "Game": games + extra_games, "Player": players, "TeamPlayer": squad, "PlayerGame": appearances, "Goal": goals_rows, "PlayerStat": player_stats}
 write(body, out)

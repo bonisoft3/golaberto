@@ -25,7 +25,7 @@ body > nav > a[aria-current="page"] { text-decoration: underline; text-underline
 
 /* The reader: a guest is offered a passkey, a signed-in reader is named. */
 body > nav .shell-me { flex: none; }
-body > nav :is(.shell-signin, .shell-register) { font: inherit; font-weight: 700; color: var(--strip-ink); background: none; border: 0; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 0 var(--sp-md); }
+body > nav :is(.shell-signin, .shell-register) { min-height: var(--min-touch); font: inherit; font-weight: 700; color: var(--strip-ink); background: none; border: 0; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; padding: 0 var(--sp-md); }
 
 /* The archive's buttons: the band's colours for the one action, a quiet rim
    for the way back, and a link-like text button for a row's small action. */
@@ -113,14 +113,14 @@ main#app { max-width: var(--measure-page); margin-inline: auto; background: var(
   background: var(--band); color: var(--band-ink);
   font-size: var(--type-title); line-height: var(--type-leading-title); font-weight: 700;
 }
-.band a { color: var(--band-ink); text-underline-offset: 3px; }
+.band a { display: inline-block; min-height: var(--min-touch); color: var(--band-ink); text-underline-offset: 3px; }
 abbr[title] { text-decoration: none; }
 
 /* Content beside a side column on a wide screen, above it on a narrow one. */
 .page { display: grid; grid-template-columns: minmax(0, 1fr) var(--measure-side); }
 .content { padding: var(--sp-xl) var(--sp-lg); display: flex; flex-direction: column; gap: var(--sp-lg); min-width: 0; }
 .side { background: var(--side); color: var(--strip-ink); padding: var(--sp-lg); font-weight: 700; font-size: var(--type-caption); }
-.side a { color: var(--strip-ink); }
+.side a { display: inline-block; min-height: var(--min-touch); color: var(--strip-ink); }
 .side p { margin: 0 0 var(--sp-md); }
 
 h2 { font-size: var(--type-subtitle); margin: 0; }
@@ -130,6 +130,7 @@ h3 { font-size: var(--type-body); margin: 0; }
 /* The archive's table: navy head, zebra rows in the column's two greens. */
 .grid { width: 100%; border-collapse: separate; border-spacing: 0 1px; font-size: var(--type-caption); }
 .grid th { background: var(--table-head); color: var(--table-head-ink); text-align: start; padding: var(--sp-sm); }
+.grid :is(th, td) a { display: inline-block; min-height: var(--min-touch); }
 .grid td { padding: var(--sp-sm); }
 .grid tbody tr:nth-child(odd) td { background: var(--surface-muted); }
 

@@ -18,7 +18,7 @@
 }
 .grouped-game:has(> .game-day[data-new-day="true"]):not(:first-child) { margin-block-start: var(--sp-lg); }
 .game-group { margin: 0; padding: var(--sp-sm) var(--sp-md); font-size: var(--type-caption); border-bottom: var(--border-size-1) solid var(--border); }
-.game-group a { color: var(--accent); }
+.game-group a { display: inline-block; min-height: var(--min-touch); color: var(--accent); }
 .game-day[data-new-day="false"], .game-group[data-new-group="false"] { display: none; }
 .grouped-game .game-row { grid-template-columns: 3.5em minmax(0, 1fr) 4.5em minmax(0, 1fr); grid-template-areas: "when home score away"; }
 .game-row .home, .scoreboard .home { grid-area: home; text-align: end; }
@@ -66,6 +66,7 @@
 .game-facts dd:is(.rating, .importance):empty,
 .game-facts dt:has(+ dd:is(.rating, .importance):empty) { display: none; }
 .goals { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-sm); font-size: var(--type-caption); }
+.goals a { display: inline-block; min-height: var(--min-touch); }
 .goals li[data-side="away"] { text-align: end; }
 .goals .minute { font-variant-numeric: tabular-nums; color: var(--secondary); }
 .goals .minute:not(:empty)::after { content: "'"; }
@@ -144,3 +145,5 @@
 }
 .player-bench { display: none; }
 .player-games [data-bench="true"] .player-bench { display: inline; }
+
+.game-facts a { display: inline-flex; align-items: center; min-height: var(--min-touch); }

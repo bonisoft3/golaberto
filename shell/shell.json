@@ -1393,7 +1393,8 @@
         "adapters": [],
         "shared": [
           "shell/shared/chrome.css",
-          "shell/shared/games.css"
+          "shell/shared/games.css",
+          "shell/shared/team.css"
         ],
         "renderers": [
           "shell/renderers/match-final-score.js",

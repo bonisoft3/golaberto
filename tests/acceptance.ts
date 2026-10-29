@@ -92,7 +92,7 @@ const newPage = async (opts: { width?: number; dark?: boolean; session?: unknown
   return await (await context(opts)).newPage();
 };
 
-const visit = async (page: Page, path: string, ready = '.shell-screen:not([hidden]):not([data-served]) .screen[data-state="populated"]') => {
+const visit = async (page: Page, path: string, ready = '.shell-screen:not([hidden]):not([inert]):not([data-entering]):not([data-served]) .screen[data-state="populated"]') => {
   const logged: string[] = [];
   type Request = { url(): string; method(): string; resourceType(): string };
   const pending = new Map<Request, number>();
@@ -135,7 +135,7 @@ const visit = async (page: Page, path: string, ready = '.shell-screen:not([hidde
           const attributes = (element: Element, names: string[]) => Object.fromEntries(names.map(name => [name, element.getAttribute(name)]));
           return {
             shells: [...document.querySelectorAll(".shell-screen")].map(shell => ({
-              ...attributes(shell, ["hidden", "data-served"]),
+              ...attributes(shell, ["hidden", "inert", "data-entering", "data-served"]),
               screens: [...shell.querySelectorAll(".screen")].map(screen => ({
                 ...attributes(screen, ["data-screen", "data-state"]),
                 regions: [...screen.querySelectorAll("[data-live]")].map(region => ({
@@ -1079,9 +1079,11 @@ test("test-edit-refused: a non-editor's save and a goal with no scorer are refus
   try {
     const page = await open(`/editar/${WIN}`, { session: plain });
     await page.waitForSelector('.edit[data-state="editing"]');
+    await page.$eval("#edit-home", (el: Element) => el.addEventListener("input", () => el.setAttribute("data-test-input", "received"), { once: true }));
     await page.fill("#edit-home", "7");
     await page.click("#edit-save");
     await page.waitForSelector('.edit[data-state="refused"]', { timeout: 30_000 });
+    assertEquals(await page.getAttribute("#edit-home", "data-test-input"), "received");
     assertEquals(await said(page, ".edit .refusal"), [REFUSED]);
     assertEquals(await page.inputValue("#edit-home"), "7");
     assertEquals(await query(`SELECT home_score FROM game WHERE id = '${WIN}'`), score);

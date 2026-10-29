@@ -5,7 +5,7 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "libraries_mecha-ticker-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-ticker:0.19.1@sha256:f3410acc27b70754be64a7b0bce1d7a7067c1ef7412482ff05e5bf48b073b4e0}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image}"
+        "libraries_mecha-ticker-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-ticker:0.20.0@sha256:fd2f0a45faca3234f74e33ccda29bb3fd8a74c954b96bb1c0c14f087d0b22f8c}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image}"
       },
       "secrets": [],
       "args": {}

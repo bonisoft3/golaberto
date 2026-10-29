@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GolAberto — Journal</title>
+<style>
+  body { font:16px/1.55 system-ui,sans-serif; max-width:1100px; margin:40px auto; padding:0 24px; background:#f6f8ef; color:#202719; }
+  main { display:grid; gap:36px; }
+  h1, h2 { line-height:1.15; margin:8px 0; }
+  h3 { margin:16px 0 6px; }
+  article { border-top:1px solid #bac4ab; padding-top:24px; }
+  time, .eyebrow { color:#345d26; font-size:12px; text-transform:uppercase; letter-spacing:.14em; font-weight:700; display:block; }
+  figure { margin:0; }
+  img { width:100%; border:1px solid #bac4ab; border-radius:8px; }
+  .comparison { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin:16px 0; }
+  figcaption { padding:8px 0; font-size:14px; color:#506c39; }
+  a { color:#345d26; }
+  table { border-collapse:collapse; margin:12px 0; }
+  td, th { padding:8px 20px 8px 0; text-align:left; border-bottom:1px solid #bac4ab; }
+  @media(max-width:700px) { .comparison { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="eyebrow">GolAberto · Project journal</span>
+    <h1>GolAberto — The Open Football Statistics Encyclopedia</h1>
+    <p>An open football archive in Portuguese, Spanish, and English covering championships, phases, groups, qualification zones, match line-ups, referees, stadiums, and live-recounted standings tables across South American and world football. <a href="#initial-brief">Latest product brief ↓</a></p>
+  </header>
+
+  <article id="turn-2026-10-28-controls">
+    <time datetime="2026-10-28">2026-10-28 · Release Controls &amp; Fixture</time>
+    <h2>Archive link targets and fresh database fixture</h2>
+    <p>Shared championship headings, side navigation, table cells, home championship lists and scorer links now have the existing 24px minimum target height. Fresh fixtures also include all 885 unambiguous, active 2026 archive player statistics.</p>
+    <div class="comparison">
+      <figure><img src="journal/2026-10-28-catalog-before.png" alt="Championship catalog before target sizing"><figcaption>Catalog · Before</figcaption></figure>
+      <figure><img src="journal/2026-10-28-catalog-after.png" alt="Championship catalog with taller link targets"><figcaption>Catalog · After</figcaption></figure>
+      <figure><img src="journal/2026-10-28-match-before.png" alt="Match before target sizing"><figcaption>Match · Before</figcaption></figure>
+      <figure><img src="journal/2026-10-28-match-after.png" alt="Match with taller link targets"><figcaption>Match · After</figcaption></figure>
+    </div>
+  </article>
+
+  <article id="turn-2026-10-28-visual">
+    <time datetime="2026-10-28">2026-10-28 · Release Visual Regression</time>
+    <h2>Stable filters, usable links, and a chart that keeps its space</h2>
+    <p>Authentication buttons, facts and community links, and fixture links now keep the 24px target floor. The championship page imports its shared standings styles, odds selection uses visible native radio controls, and the rating chart keeps its plot, caption, and legend space during hydration.</p>
+    <table><thead><tr><th>Tablet route</th><th>Before CLS</th><th>After CLS</th></tr></thead><tbody><tr><td>Game archive</td><td>0.23747</td><td>0.00055</td></tr><tr><td>Team profile</td><td>0.16101</td><td>0.00348</td></tr></tbody></table>
+    <div class="comparison">
+      <figure><img src="journal/2026-10-28-archive-before.png" alt="Before: compact filters can change row count during hydration"><figcaption>Archive filter · Before</figcaption></figure>
+      <figure><img src="journal/2026-10-28-archive-after.png" alt="After: filters keep stable rows and usable input widths"><figcaption>Archive filter · After</figcaption></figure>
+      <figure><img src="journal/2026-10-28-team-before.png" alt="Team profile before chart geometry reservation"><figcaption>Team rating chart · Before</figcaption></figure>
+      <figure><img src="journal/2026-10-28-team-after.png" alt="Team profile after chart geometry reservation"><figcaption>Team rating chart · After</figcaption></figure>
+      <figure><img src="journal/2026-10-28-championship-before.png" alt="Before: championship standings without the shared team layout"><figcaption>Phone standings · Before</figcaption></figure>
+      <figure><img src="journal/2026-10-28-championship-after.png" alt="After: championship standings with 24px-high team targets"><figcaption>Phone standings · After</figcaption></figure>
+      <figure><img src="journal/2026-10-28-odds-before.png" alt="Before: probability zone labels conceal their radio inputs"><figcaption>Odds controls · Before</figcaption></figure>
+      <figure><img src="journal/2026-10-28-odds-after.png" alt="After: probability zones have visible native radio controls"><figcaption>Odds controls · After</figcaption></figure>
+    </div>
+  </article>
+
+  <article id="turn-2026-10-16-matches">
+    <time datetime="2026-10-16">2026-10-16 · Matches &amp; Stacked Probabilities</time>
+    <h2>Matches open near today, section date bars, and stacked probability timeline</h2>
+    <p>Upcoming matches start at seven calendar days before today in Brasília with Previous/Next archive navigation, reader-timezone formatting, distinctive dark olive date section headings, and stacked Poisson win/draw/loss probability polygons with pointer-following score and event annotations.</p>
+    <div class="comparison">
+      <figure><img src="journal/2026-10-16-matches-before.png" alt="Before: Upcoming begins with an unplayed match in March 1952"><figcaption>Matches default · Before</figcaption></figure>
+      <figure><img src="journal/2026-10-16-matches-after.png" alt="After: Upcoming begins near today"><figcaption>Matches default · After</figcaption></figure>
+      <figure><img src="journal/2026-10-16-date-heading-before.png" alt="Before: the date line blends into the match list"><figcaption>Date heading · Before</figcaption></figure>
+      <figure><img src="journal/2026-10-16-date-heading-after.png" alt="After: contrasting date section bar with gold leading edge"><figcaption>Date heading · After</figcaption></figure>
+      <figure><img src="journal/2026-10-16-pointer-score-events.png" alt="Porto–Benfica at minute 52: score 1–1, individual probabilities and annotated time axes"><figcaption>Stacked probability &amp; timeline annotations</figcaption></figure>
+      <figure><img src="journal/2026-10-16-legend-away-first.png" alt="Minute 52 card lists Benfica 17.8%, draw 38.7%, Porto 43.5%"><figcaption>Legend ordered away-first to match stacked areas</figcaption></figure>
+    </div>
+  </article>
+
+  <article id="initial-brief">
+    <time datetime="2026-10-01">2026-10-01 · Initial Brief</time>
+    <h2>GolAberto</h2>
+    <p>GolAberto is an open database of football: every championship, its phases and groups, every game with its goals and line-ups, and the tables those games make. Nothing a reader sees is typed twice: a table is what its games say; a player's goals are the goals recorded in games; a referee's record is the games he whistled.</p>
+    <h3>Data</h3>
+    <ul>
+      <li><a href="ir.html#Category">Category</a>, <a href="ir.html#Championship">Championship</a>, <a href="ir.html#Phase">Phase</a>, <a href="ir.html#Group">Group</a>, <a href="ir.html#Zone">Zone</a>, <a href="ir.html#TeamGroup">TeamGroup</a> — competition structure, standings sorting rules, and qualification/relegation zones.</li>
+      <li><a href="ir.html#Team">Team</a>, <a href="ir.html#Stadium">Stadium</a>, <a href="ir.html#Referee">Referee</a>, <a href="ir.html#Player">Player</a>, <a href="ir.html#PlayerStat">PlayerStat</a>, <a href="ir.html#TeamPlayer">TeamPlayer</a> — clubs, national teams, venues, referees, and squad statistics recounted from recorded line-ups and goals.</li>
+      <li><a href="ir.html#Game">Game</a>, <a href="ir.html#Goal">Goal</a>, <a href="ir.html#PlayerGame">PlayerGame</a>, <a href="ir.html#Comment">Comment</a> — match fixtures, scores, minute-by-minute events, line-ups, and community discussion.</li>
+    </ul>
+  </article>
+</main>
+</body>
+</html>

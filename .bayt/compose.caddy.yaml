@@ -506,8 +506,8 @@ services:
         path: ../branding/favicon.ico
         target: /srv/shell/favicon.ico
       - action: rebuild
-        path: ../brief.html
-        target: /srv/docs/brief.html
+        path: ../journal.html
+        target: /srv/docs/journal.html
       - action: rebuild
         path: ../ir.html
         target: /srv/docs/ir.html
@@ -520,6 +520,60 @@ services:
       - action: rebuild
         path: ../DESIGN.md
         target: /srv/docs/DESIGN.md
+      - action: rebuild
+        path: ../journal/2026-10-16-date-heading-after.png
+        target: /srv/docs/journal/2026-10-16-date-heading-after.png
+      - action: rebuild
+        path: ../journal/2026-10-16-date-heading-before.png
+        target: /srv/docs/journal/2026-10-16-date-heading-before.png
+      - action: rebuild
+        path: ../journal/2026-10-16-legend-away-first.png
+        target: /srv/docs/journal/2026-10-16-legend-away-first.png
+      - action: rebuild
+        path: ../journal/2026-10-16-matches-after.png
+        target: /srv/docs/journal/2026-10-16-matches-after.png
+      - action: rebuild
+        path: ../journal/2026-10-16-matches-before.png
+        target: /srv/docs/journal/2026-10-16-matches-before.png
+      - action: rebuild
+        path: ../journal/2026-10-16-pointer-score-events.png
+        target: /srv/docs/journal/2026-10-16-pointer-score-events.png
+      - action: rebuild
+        path: ../journal/2026-10-28-archive-after.png
+        target: /srv/docs/journal/2026-10-28-archive-after.png
+      - action: rebuild
+        path: ../journal/2026-10-28-archive-before.png
+        target: /srv/docs/journal/2026-10-28-archive-before.png
+      - action: rebuild
+        path: ../journal/2026-10-28-catalog-after.png
+        target: /srv/docs/journal/2026-10-28-catalog-after.png
+      - action: rebuild
+        path: ../journal/2026-10-28-catalog-before.png
+        target: /srv/docs/journal/2026-10-28-catalog-before.png
+      - action: rebuild
+        path: ../journal/2026-10-28-championship-after.png
+        target: /srv/docs/journal/2026-10-28-championship-after.png
+      - action: rebuild
+        path: ../journal/2026-10-28-championship-before.png
+        target: /srv/docs/journal/2026-10-28-championship-before.png
+      - action: rebuild
+        path: ../journal/2026-10-28-match-after.png
+        target: /srv/docs/journal/2026-10-28-match-after.png
+      - action: rebuild
+        path: ../journal/2026-10-28-match-before.png
+        target: /srv/docs/journal/2026-10-28-match-before.png
+      - action: rebuild
+        path: ../journal/2026-10-28-odds-after.png
+        target: /srv/docs/journal/2026-10-28-odds-after.png
+      - action: rebuild
+        path: ../journal/2026-10-28-odds-before.png
+        target: /srv/docs/journal/2026-10-28-odds-before.png
+      - action: rebuild
+        path: ../journal/2026-10-28-team-after.png
+        target: /srv/docs/journal/2026-10-28-team-after.png
+      - action: rebuild
+        path: ../journal/2026-10-28-team-before.png
+        target: /srv/docs/journal/2026-10-28-team-before.png
       - action: rebuild
         path: ../robots.txt
         target: /srv/robots.txt

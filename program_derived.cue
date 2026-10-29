@@ -1064,3 +1064,5 @@ _irAccepts: {
 if !_deriving {
 	code: meta: tests: [Id=string]: accepts: _irAccepts[Id]
 }
+
+code: meta: ladder: ["journal/2026-10-16-date-heading-after.png","journal/2026-10-16-date-heading-before.png","journal/2026-10-16-legend-away-first.png","journal/2026-10-16-matches-after.png","journal/2026-10-16-matches-before.png","journal/2026-10-16-pointer-score-events.png","journal/2026-10-28-archive-after.png","journal/2026-10-28-archive-before.png","journal/2026-10-28-catalog-after.png","journal/2026-10-28-catalog-before.png","journal/2026-10-28-championship-after.png","journal/2026-10-28-championship-before.png","journal/2026-10-28-match-after.png","journal/2026-10-28-match-before.png","journal/2026-10-28-odds-after.png","journal/2026-10-28-odds-before.png","journal/2026-10-28-team-after.png","journal/2026-10-28-team-before.png"]

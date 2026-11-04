@@ -506,6 +506,12 @@ services:
         path: ../branding/favicon.ico
         target: /srv/shell/favicon.ico
       - action: rebuild
+        path: ../brief.md
+        target: /srv/docs/brief.md
+      - action: rebuild
+        path: ../brief.html
+        target: /srv/docs/brief.html
+      - action: rebuild
         path: ../journal.html
         target: /srv/docs/journal.html
       - action: rebuild
@@ -520,6 +526,132 @@ services:
       - action: rebuild
         path: ../DESIGN.md
         target: /srv/docs/DESIGN.md
+      - action: rebuild
+        path: ../ir/neighbourhood-app.svg
+        target: /srv/docs/ir/neighbourhood-app.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-arbitro.svg
+        target: /srv/docs/ir/neighbourhood-arbitro.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-arbitros.svg
+        target: /srv/docs/ir/neighbourhood-arbitros.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-arquivo-campeonato.svg
+        target: /srv/docs/ir/neighbourhood-arquivo-campeonato.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-arquivo.svg
+        target: /srv/docs/ir/neighbourhood-arquivo.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-campeonato-jogadores.svg
+        target: /srv/docs/ir/neighbourhood-campeonato-jogadores.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-campeonato.svg
+        target: /srv/docs/ir/neighbourhood-campeonato.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-campeonatos.svg
+        target: /srv/docs/ir/neighbourhood-campeonatos.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-chances.svg
+        target: /srv/docs/ir/neighbourhood-chances.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-editar-arbitro.svg
+        target: /srv/docs/ir/neighbourhood-editar-arbitro.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-editar-competicao.svg
+        target: /srv/docs/ir/neighbourhood-editar-competicao.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-editar-equipe.svg
+        target: /srv/docs/ir/neighbourhood-editar-equipe.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-editar-estadio.svg
+        target: /srv/docs/ir/neighbourhood-editar-estadio.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-editar-jogador.svg
+        target: /srv/docs/ir/neighbourhood-editar-jogador.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-editar-jogo.svg
+        target: /srv/docs/ir/neighbourhood-editar-jogo.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-editar.svg
+        target: /srv/docs/ir/neighbourhood-editar.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-equipe-campeonato.svg
+        target: /srv/docs/ir/neighbourhood-equipe-campeonato.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-equipe.svg
+        target: /srv/docs/ir/neighbourhood-equipe.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-equipes.svg
+        target: /srv/docs/ir/neighbourhood-equipes.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-escalacao-jogo.svg
+        target: /srv/docs/ir/neighbourhood-escalacao-jogo.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-estadio.svg
+        target: /srv/docs/ir/neighbourhood-estadio.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-estadios.svg
+        target: /srv/docs/ir/neighbourhood-estadios.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-gerenciar-competicoes.svg
+        target: /srv/docs/ir/neighbourhood-gerenciar-competicoes.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-gerenciar.svg
+        target: /srv/docs/ir/neighbourhood-gerenciar.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-gols-jogo.svg
+        target: /srv/docs/ir/neighbourhood-gols-jogo.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-historico-jogo.svg
+        target: /srv/docs/ir/neighbourhood-historico-jogo.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-inscricoes-jogador.svg
+        target: /srv/docs/ir/neighbourhood-inscricoes-jogador.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-jogador-campeonato.svg
+        target: /srv/docs/ir/neighbourhood-jogador-campeonato.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-jogador.svg
+        target: /srv/docs/ir/neighbourhood-jogador.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-jogadores.svg
+        target: /srv/docs/ir/neighbourhood-jogadores.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-jogo.svg
+        target: /srv/docs/ir/neighbourhood-jogo.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-jogos.svg
+        target: /srv/docs/ir/neighbourhood-jogos.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-nova-competicao.svg
+        target: /srv/docs/ir/neighbourhood-nova-competicao.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-novo-arbitro.svg
+        target: /srv/docs/ir/neighbourhood-novo-arbitro.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-novo-equipe.svg
+        target: /srv/docs/ir/neighbourhood-novo-equipe.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-novo-estadio.svg
+        target: /srv/docs/ir/neighbourhood-novo-estadio.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-novo-jogador.svg
+        target: /srv/docs/ir/neighbourhood-novo-jogador.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-novo-jogo.svg
+        target: /srv/docs/ir/neighbourhood-novo-jogo.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-principal.svg
+        target: /srv/docs/ir/neighbourhood-principal.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-publico.svg
+        target: /srv/docs/ir/neighbourhood-publico.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-usuario.svg
+        target: /srv/docs/ir/neighbourhood-usuario.svg
+      - action: rebuild
+        path: ../ir/neighbourhood-usuarios.svg
+        target: /srv/docs/ir/neighbourhood-usuarios.svg
       - action: rebuild
         path: ../journal/2026-10-16-date-heading-after.png
         target: /srv/docs/journal/2026-10-16-date-heading-after.png

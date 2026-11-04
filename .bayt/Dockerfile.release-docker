@@ -27,7 +27,7 @@ COPY --from=fetch_release-docker_0 /process-compose /usr/local/bin/process-compo
 COPY --from=tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa /bin/httpcheck /usr/local/bin/httpcheck
 COPY --from=tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa /bin/portcheck /usr/local/bin/portcheck
 COPY --link --from=golaberto-database /docker-entrypoint-initdb.d /docker-entrypoint-initdb.d
-COPY --from=golaberto-crud /usr/bin/postgrest /usr/local/bin/postgrest
+COPY --from=golaberto-crud /bin/postgrest /usr/local/bin/postgrest
 COPY --link --from=golaberto-caddy /usr/bin/caddy /usr/bin/caddy
 COPY --link --from=golaberto-caddy /etc/caddy/Caddyfile /etc/caddy/Caddyfile
 COPY .bayt/process-compose.yaml /.bayt/process-compose.yaml

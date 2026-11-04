@@ -5,7 +5,7 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "libraries_mecha-conduit-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-conduit:0.20.2@sha256:a946dec4b1ae777c86e6fbd16243458c52398352b011bddf0203058d1f0ae775}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image}"
+        "libraries_mecha-conduit-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-conduit:0.20.6@sha256:c18a81780ff1c066c2dc2f7ed1115ac0333b28b2f6c9fe4c9390708c8f7810a1}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image}"
       },
       "secrets": [],
       "args": {}

@@ -5,9 +5,9 @@ services:
       additional_contexts:
         golaberto-sofascore: service:golaberto-sofascore
         libraries_mecha-mesh-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.23.1@sha256:8d39aa3543560232c52330152ba70a4d2c973b76d0ac97899d677704bc0e09a4}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.23.2@sha256:8d39aa3543560232c52330152ba70a4d2c973b76d0ac97899d677704bc0e09a4}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}
         libraries_mecha-airlock-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-airlock:0.23.1@sha256:3c67d8822d64dfd469ed25cccf0db76e0d7d939d9d05486f5fe725332c2e1dd2}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-airlock:0.23.2@sha256:52751f02d2f6c3c3fd63568e1d236942052dc64b0f81685e000844168dc1892e}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image}
       context: ..
       dockerfile: .bayt/Dockerfile.airlock-mesh
       target: airlock-mesh

@@ -9,7 +9,7 @@ services:
         golaberto-airlock-upgrade: service:golaberto-airlock-upgrade
         golaberto-timer-check: service:golaberto-timer-check
         libraries_mecha-conduit-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-conduit:0.23.1@sha256:922b908bf57ac1fdd195c414aa352d180956d3636e6ee4168f1cafa9a51a7327}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-conduit:0.23.2@sha256:b751fb66fc3dac6fd202d0846a9a8f46714e494d24edfd1dbc4e9a9d631acae8}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image}
       context: ..
       dockerfile: .bayt/Dockerfile.conduit
       target: conduit

@@ -1,5 +1,7 @@
 package golaberto
 
+import pronto "github.com/bonisoft3/pronto"
+
 code: capabilities: auth: self: {route: "usuario"}
 
 code: state: entities: {
@@ -22,7 +24,7 @@ code: surface: screens: {
 	for screenRoute, screenMarkup in {usuarios: _communityDirectoryMarkup, usuario: _communityProfileMarkup, "historico-jogo": _communityGameHistoryMarkup} {
 		(screenRoute): {
 			title: screenRoute
-			route: [if screenRoute == "usuario" {"/usuario/:id"}, if screenRoute == "historico-jogo" {"/historico-jogo/:slug"}, "/usuarios"][0]
+
 			// The directory joins the strip beside the other archive directories; a
 			// profile and a game's history are reached from it and from bylines.
 			strip: screenRoute == "usuarios"
@@ -52,6 +54,6 @@ code: meta: tests: {
 
 loop: surface: checks: "community-controls": {
 	verb: "test"
-	cmds: ["mise exec -- deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-read --allow-env tests/community-controls.ts"]
+	cmds: ["\(pronto.#Harness.rule); mise exec -- deno test \(pronto.#Harness.flags) --allow-read --allow-env tests/community-controls.ts"]
 	note: "native profile forms address the biography row and immutable diffs render untrusted values as text"
 }

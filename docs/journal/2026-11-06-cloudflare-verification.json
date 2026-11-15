@@ -1,0 +1,69 @@
+{
+  "date": "2026-11-06",
+  "origin": "https://golaberto.bonisoft3.com",
+  "version": "7f3e3afa-da78-4567-a24b-c6203f85650a",
+  "verdict": "verification-failed",
+  "storage": {
+    "codec": "deflate",
+    "blockSize": 8192,
+    "generationPreserved": true,
+    "initialMeasuredBytes": 8793075712,
+    "convertedBytes": 4383567872
+  },
+  "http": {
+    "immutableAssetsPassed": 381,
+    "cataloguesPassed": 6,
+    "negativeCacheProbePassed": true,
+    "exit": 1,
+    "shortDeadlineTimeoutErrors": 9,
+    "shortDeadlineMs": 5000,
+    "defaultDeadlineRun": {
+      "exit": 1,
+      "document503Errors": 9
+    }
+  },
+  "mutation": {
+    "fixtureCreated": true,
+    "initialStandingObserved": false,
+    "matchInserted": false,
+    "transitionVerified": false,
+    "runInterrupted": true,
+    "automaticCleanupCompleted": false,
+    "operatorCleanupConfirmed": true,
+    "remainingFixtureRows": 0,
+    "remainingAccountEditorAndPasskeys": 0
+  },
+  "standingsAtProbe": {
+    "claimed": 1,
+    "completed": 0,
+    "requested": 2,
+    "failures": 0
+  },
+  "checks": {
+    "appGenerate": "passed",
+    "appLint": "passed",
+    "appTest": "passed",
+    "verificationRegressions": 7,
+    "rendererUnit": 12,
+    "rendererRpc": 1,
+    "readerPackaging": 1,
+    "auth": 2,
+    "publicSnapshot": 6,
+    "workerdDrains": 2,
+    "drainLifecycleAndExisting": 14,
+    "migrationReplay": "passed",
+    "nativeVisualIntegration": "failed: compute service startup timeout"
+  },
+  "limits": [
+    "No live statistics transition proved",
+    "Native visual integration did not pass",
+    "Earlier deployment attempts hit memory resets and stalled queues; cause remains unproved",
+    "No ratings, odds or monthly publication capacity claim"
+  ],
+  "finalHomeSmoke": {
+    "status": 200,
+    "seconds": 2.877,
+    "afterQueueRestart": true,
+    "fullSuiteRerun": false
+  }
+}

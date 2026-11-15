@@ -1,0 +1,25 @@
+{
+  "engine": "DuckDB 1.5.4 / duckdb-wasm 1.33.1-dev57.0, patched native prototype",
+  "wasmSha256": "88ba7655f8a9a60d1428f02a64dbd7c59d50123594c095beaef7b8965236c085",
+  "nativeFileCacheBytes": 4194304,
+  "sqlMemoryLimitBytes": 32000000,
+  "environment": "local workerd; not hosted isolate accounting",
+  "archiveManifestSha256": "4ab9f4883362e4a2f2d74a7ad42b896fa7e01b7fec08fc3edeb264306bf40ca4",
+  "gamesRows": 305088,
+  "singleJsonMaterializationHeapBytes": 150536192,
+  "pagedJsonExperiment": {
+    "rowsPerPage": 4096,
+    "typedRelationHeapBytes": 87097344,
+    "finalHeapBytes": 180682752,
+    "retainedInImplementation": false
+  },
+  "result": "blocked: JSON column compression mitigation passes games; full ratings relational pipeline still fails before appearances completes",
+  "productionChanged": false,
+  "uncompressedJsonColumn": {
+    "gamesRows": 305088,
+    "heapBytes": 72548352,
+    "retainedInImplementation": true,
+    "fullRatingsStatus": "fails at physical appearances stage 12 with Network connection lost; cause not established",
+    "heapBeforeFailedStageBytes": 87097344
+  }
+}

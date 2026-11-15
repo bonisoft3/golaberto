@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "bridges": {},
+  "effects": {
+    "acquire": "sofascore"
+  }
+}

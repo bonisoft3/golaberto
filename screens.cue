@@ -1,6 +1,5 @@
 // The screens' markup, composed here so the masthead every page opens with is
 // written once. write.ts emits each to shell/screens/<name>.html.
-
 package golaberto
 
 import (
@@ -22,7 +21,8 @@ _locales: [
 	{tag: "fr-FR", name: "lang_fr"},
 ]
 
-#Masthead: M={
+#Masthead: {
+	let M = self
 	route:  string
 	params: *"" | string
 	_links: strings.Join([for l in _locales {
@@ -40,9 +40,10 @@ _locales: [
 }
 
 // One region of the home page's championship lists.
-#Recent: R={
+#Recent: {
+	let R = self
 	region: string
-	out:    """
+	out: """
 		<section class="recent">
 		  <h2 data-text="{msg.\(R.region)}"></h2>
 		  <ul class="champ-list" data-live="home_championship" data-select="*,championship:id(slug)" data-filter="region=eq.\(R.region)" data-order="strength.desc,full_name.asc,id.asc" data-empty="{msg.home_empty}">
@@ -76,80 +77,87 @@ _standingsHead: strings.Join(list.Concat([[for c in _standings {
 	][0]
 }], ["\t                            <th scope=\"col\" class=\"form wide\" data-text=\"{msg.col_form}\"></th>"]]), "\n")
 
-#StandingsCells: S={
+#StandingsCells: {
+	let S = self
 	championship_param: string
+	preview:            *false | bool
 	out: strings.Join(list.Concat([[for c in _standings {
 		[
-			if c.link != _|_ && S.championship_param != "" {"\t                                <td class=\"\(c.cls)\"><span class=\"team-name-cell\"><span class=\"archive-icon\" data-text=\"{\(c.link)}|{\(c.bind)}|{team.logo_key}\" data-text-format=\"team-badge\"></span><a class=\"team-name\" title=\"{\(c.bind)}\" data-route=\"equipe-campeonato\" data-param-slug=\"{team.slug}\" data-param-championship=\"\(S.championship_param)\" data-text=\"{\(c.bind)}\"></a></span></td>"},
+			if c.link != _|_ && S.championship_param != "" {(#ChampionshipTeamName & {championship: S.championship_param, preview: S.preview}).out},
 			if c.link != _|_ {"\t                                <td class=\"\(c.cls)\"><a data-route=\"equipe\" data-param-slug=\"{team.slug}\"><span class=\"archive-icon\" data-text=\"{\(c.link)}|{\(c.bind)}|{team.logo_key}\" data-text-format=\"team-badge\"></span><span data-text=\"{\(c.bind)}\"></span></a></td>"},
 			"\t                                <td class=\"\(c.cls)\" data-text=\"{\(c.bind)}\"></td>",
 		][0]
 	}], ["\t                                <td class=\"form wide\">" + strings.Join([for i in [1, 2, 3, 4, 5] {"<i data-result=\"{form\(i)}\" title=\"{msg[form\(i)]}\"></i>"}], "") + "</td>"]]), "\n")
 }
 
-_standingsCells: (#StandingsCells & {championship_param: ""}).out
+_standingsCells:             (#StandingsCells & {championship_param: ""}).out
 _championshipStandingsCells: (#StandingsCells & {championship_param: "{param.championship}"}).out
 
 // Forty rows per page; a one-row probe shows Next only when another page exists.
-#PageActions: P={
-	key: string
+#PageActions: {
+	let P = self
+	key:      string
 	anchored: *false | bool
 	out: {
 		("click@\(P.key)-previous"): assign: {
-			offset: {type: "page-value", params: {step: -40, field: "offset"}}
+			offset:      {type: "page-value", params: {step: -40, field: "offset"}}
 			next_offset: {type: "page-value", params: {step: -40, field: "next_offset"}}
-			page: {type: "page-value", params: {step: -40, field: "page"}}
+			page:        {type: "page-value", params: {step: -40, field: "page"}}
 			if P.anchored {page_size: {type: "page-value", params: {step: -40, field: "page_size"}}}
 		}
 		("click@\(P.key)-next"): assign: {
-			offset: {type: "page-value", params: {step: 40, field: "offset"}}
+			offset:      {type: "page-value", params: {step: 40, field: "offset"}}
 			next_offset: {type: "page-value", params: {step: 40, field: "next_offset"}}
-			page: {type: "page-value", params: {step: 40, field: "page"}}
+			page:        {type: "page-value", params: {step: 40, field: "page"}}
 			if P.anchored {page_size: {type: "page-value", params: {step: 40, field: "page_size"}}}
 		}
 	}
 }
-#PageArrows: P={
+#PageArrows: {
+	let P = self
 	key:    string
 	table:  string
 	filter: string
 	order:  string
-	out:    """
-	<nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
-	  <button id="\(P.key)-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
-	  <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
-	  <span data-live="\(P.table)" data-filter="\(P.filter)&amp;offset={next_offset}&amp;limit=1" data-select="id" data-order='\(P.order)' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
-	  <button id="\(P.key)-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
-	</nav>
-	"""
+	select: *"id" | string
+	out: """
+		<nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
+		  <button id="\(P.key)-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
+		  <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
+		  <span data-live="\(P.table)" data-filter="\(P.filter)&amp;offset={next_offset}&amp;limit=1" data-select="\(P.select)" data-order='\(P.order)' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+		  <button id="\(P.key)-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
+		</nav>
+		"""
 }
-#PagedRead: P={
-	anchored: *false | bool
-	seed:     *false | bool
-	key:      string
-	table:    string
-	filter:   string
-	order:    string
+#PagedRead: {
+	let P = self
+	probeSelect: *"id" | string
+	anchored:    *false | bool
+	seed:        *false | bool
+	key:         string
+	table:       string
+	filter:      string
+	order:       string
 	// archive_page.owner_id is a uuid: a placeholder for the owning row, or a literal one.
-	owner: *"{id}" | =~"^(\\{[a-z_]+\\}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$"
+	owner:    *"{id}" | =~"^(\\{[a-z_]+\\}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$"
 	scope:    *"" | string
 	content:  string
 	controls: *"" | string
-	start: *{offset: 0, next_offset: 40, page: 1} | {offset: _, next_offset: _, page: _}
+	start:    *{offset: 0, next_offset: 40, page: 1} | {offset: _, next_offset: _, page: _}
 	emptyRow: *{} | {[string]: _}
-	events: *{} | {[string]: _}
-	_seed: [if P.seed {#" data-on-mutation="player-csv-seed" data-read-stored="archive_page?id=eq.{id}""#}, ""][0]
-	_empty: json.Marshal({id: "\(P.key)-\(P.owner)\(P.scope)", owner_id: P.owner, state: "browsing"} & P.start & P.emptyRow)
+	events:   *{} | {[string]: _}
+	_seed:    [if P.seed {#" data-on-mutation="player-csv-seed" data-read-stored="archive_page?id=eq.{id}""#}, ""][0]
+	_empty:   json.Marshal({id: "\(P.key)-\(P.owner)\(P.scope)", owner_id: P.owner, state: "browsing"} & P.start & P.emptyRow)
 	_machine: json.Marshal({field: "state", initial: "browsing", states: browsing: on: (#PageActions & {key: P.key, anchored: P.anchored}).out & P.events})
 	out: """
-	<div class="paged-read" data-live="archive_page" data-filter="id=eq.\(P.key)-\(P.owner)\(P.scope)" data-machine='\(P._machine)' data-empty-row='\(P._empty)'\(P._seed)>
-	  <div class="page-window">
-	\(P.controls)
-	\(P.content)
-	\((#PageArrows & {key: P.key, table: P.table, filter: P.filter, order: P.order}).out)
-	  </div>
-	</div>
-	"""
+		<div class="paged-read" data-live="archive_page" data-filter="id=eq.\(P.key)-\(P.owner)\(P.scope)" data-machine='\(P._machine)' data-empty-row='\(P._empty)'\(P._seed)>
+		  <div class="page-window">
+		\(P.controls)
+		\(P.content)
+		\((#PageArrows & {key: P.key, table: P.table, filter: P.filter, order: P.order, select: P.probeSelect}).out)
+		  </div>
+		</div>
+		"""
 }
 
 // The catalogue search and page belong to the tab.
@@ -157,75 +165,76 @@ _catalogMachine: json.Marshal({
 	field:   "state"
 	initial: "browsing"
 	states: browsing: on: (#PageActions & {key: "catalog"}).out & {
-		"input@catalog-q": assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}
+		"input@catalog-q": assign:       {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}
 		"change@catalog-region": assign: {region: {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}
 	}
 })
 
-#GameList: G={
-	table:    *"game_card" | string
-	filter:   string
-	order:    string
-	empty:    string
-	cls:      *"games" | string
-	where:    *true | bool
-	homeFeed: *"" | "upcoming" | "recent"
-	matchGroups: *false | bool
+#GameList: {
+	let G = self
+	table:        *"game_card" | string
+	filter:       string
+	order:        string
+	empty:        string
+	cls:          *"games" | string
+	where:        *true | bool
+	homeFeed:     *"" | "upcoming" | "recent"
+	matchGroups:  *false | bool
 	displayOrder: *"" | string
 	if G.table == "game_archive" {
 		_fields: {
-			select: "*"
-			game: "slug"
+			select:       "*"
+			game:         "slug"
 			championship: "championship_slug"
-			country: "show_country"
-			homeCountry: "home_country"
-			awayCountry: "away_country"
-			homeLogo: "home_logo_key"
-			awayLogo: "away_logo_key"
+			country:      "show_country"
+			homeCountry:  "home_country"
+			awayCountry:  "away_country"
+			homeLogo:     "home_logo_key"
+			awayLogo:     "away_logo_key"
 		}
 	}
 	if G.table != "game_archive" {
 		_fields: {
 			if G.table == "home_feed" {
-				select: "*,game:game_archive(slug,championship_slug,show_country,home_country,away_country,home_logo_key,away_logo_key)"
-				game: "game.slug"
+				select:       "*,game:game_archive(slug,championship_slug,show_country,home_country,away_country,home_logo_key,away_logo_key)"
+				game:         "game.slug"
 				championship: "game.championship_slug"
-				country: "game.show_country"
-				homeCountry: "game.home_country"
-				awayCountry: "game.away_country"
-				homeLogo: "game.home_logo_key"
-				awayLogo: "game.away_logo_key"
+				country:      "game.show_country"
+				homeCountry:  "game.home_country"
+				awayCountry:  "game.away_country"
+				homeLogo:     "game.home_logo_key"
+				awayLogo:     "game.away_logo_key"
 			}
 			if G.table != "home_feed" {
-				select: "*,game:id(slug),championship(show_country,slug),home:home_id(country,slug,logo_key),away:away_id(country,slug,logo_key)"
-				game: "game.slug"
+				select:       "*,game:id(slug),championship(show_country,slug),home:home_id(country,slug,logo_key),away:away_id(country,slug,logo_key)"
+				game:         "game.slug"
 				championship: "championship.slug"
-				country: "championship.show_country"
-				homeCountry: "home.country"
-				awayCountry: "away.country"
-				homeLogo: "home.logo_key"
-				awayLogo: "away.logo_key"
+				country:      "championship.show_country"
+				homeCountry:  "home.country"
+				awayCountry:  "away.country"
+				homeLogo:     "home.logo_key"
+				awayLogo:     "away.logo_key"
 			}
 		}
 	}
-	_grouped: G.matchGroups || G.homeFeed != ""
-	_projection: " data-project='\(json.Marshal({reader_day: date: ["kickoff", "day"], if G._grouped {group_new_day: changed: ["reader_day"], group_new_championship: changed: ["reader_day", "championship_id", if G.homeFeed != "" {"phase_id"}]}}))'"
+	_grouped:      G.matchGroups || G.homeFeed != ""
+	_projection:   " data-project='\(json.Marshal({reader_day: date: ["kickoff", "day"], if G._grouped {group_new_day: changed: ["reader_day"], group_new_championship: changed: ["reader_day", "championship_id", if G.homeFeed != "" {"phase_id"}]}}))'"
 	_displayOrder: [if G.displayOrder != "" {" data-display-order='\(G.displayOrder)'"}, ""][0]
-	_where: [if G.where {"\n      <span class=\"where\" data-text=\"{championship_name}|{msg.geography_names}\" data-text-format=\"geography-label\"></span>"}, ""][0]
-	_exitMotion: [if G._grouped {#" data-exit-motion="none""#}, ""][0]
-	_dayClass: [if G._grouped {"day visually-hidden"}, "day"][0]
-	_dayTag: [if G.matchGroups {"h2"}, "h3"][0]
-	_dayField: "group_new_day"
-	_groupTag: [if G.matchGroups {"h3"}, "h4"][0]
-	_groupField: "group_new_championship"
-	_phaseLabel: [if G.homeFeed != "" {#" <small data-text="{phase_name}"></small>"#}, ""][0]
+	_where:        [if G.where {"\n      <span class=\"where\" data-text=\"{championship_name}|{msg.geography_names}\" data-text-format=\"geography-label\"></span>"}, ""][0]
+	_exitMotion:   [if G._grouped {#" data-exit-motion="none""#}, ""][0]
+	_dayClass:     [if G._grouped {"day visually-hidden"}, "day"][0]
+	_dayTag:       [if G.matchGroups {"h2"}, "h3"][0]
+	_dayField:     "group_new_day"
+	_groupTag:     [if G.matchGroups {"h3"}, "h4"][0]
+	_groupField:   "group_new_championship"
+	_phaseLabel:   [if G.homeFeed != "" {#" <small data-text="{phase_name}"></small>"#}, ""][0]
 	_dayHeading: [if G._grouped {"""
-	      <\(G._dayTag) class="home-day game-day" data-new-day="{\(G._dayField)}"><span class="home-day-label"><span data-text="{reader_day}|{msg.home_weekdays}" data-text-format="weekday"></span><span data-text="{reader_day}" data-text-format="date"></span></span></\(G._dayTag)>
-	"""}, ""][0]
+		      <\(G._dayTag) class="home-day game-day" data-new-day="{\(G._dayField)}"><span class="home-day-label"><span data-text="{reader_day}|{msg.home_weekdays}" data-text-format="weekday"></span><span data-text="{reader_day}" data-text-format="date"></span></span></\(G._dayTag)>
+		"""}, ""][0]
 	_phaseHeading: [if G._grouped {"""
 		      <\(G._groupTag) class="home-phase game-group" data-new-group="{\(G._groupField)}"><a class="home-phase-label" data-route="campeonato" data-param-slug="{\(G._fields.championship)}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span>\(G._phaseLabel)</a></\(G._groupTag)>
 		"""}, ""][0]
-	_itemAttributes: [if G.homeFeed != "" {#" class="home-championship grouped-game" data-championship="{championship_id}" data-phase="{phase_id}""#}, if G.matchGroups {#" class="grouped-game" data-championship="{championship_id}""#}, ""][0]
+	_itemAttributes:     [if G.homeFeed != "" {#" class="home-championship grouped-game" data-championship="{championship_id}" data-phase="{phase_id}""#}, if G.matchGroups {#" class="grouped-game" data-championship="{championship_id}""#}, ""][0]
 	_highlightAttribute: [if G.homeFeed != "" {#" data-highlighted="{home_highlighted}""#}, ""][0]
 	out: """
 		<ol class="\(G.cls)" data-live="\(G.table)" data-select="\(G._fields.select)" data-filter="\(G.filter)" data-order="\(G.order)" data-empty="\(G.empty)"\(G._exitMotion)\(G._projection)\(G._displayOrder)>
@@ -242,54 +251,56 @@ _catalogMachine: json.Marshal({
 }
 
 // Keep the server rank within each reader-local day.
-#HomeGameFeed: H={
+#HomeGameFeed: {
+	let H = self
 	feed:   "upcoming" | "recent"
 	played: string
 	empty:  string
 	out: (#GameList & {
-		table:    "home_feed"
-		filter:   "played=is.\(H.played)&home_\(H.feed)_rank=gt.0&limit=20"
-		order:    "home_\(H.feed)_rank.asc"
-		empty:    H.empty
-		cls:      "games home-championships"
-		where:    false
+		table:        "home_feed"
+		filter:       "played=is.\(H.played)&home_\(H.feed)_rank=gt.0&limit=20"
+		order:        "home_\(H.feed)_rank.asc"
+		empty:        H.empty
+		cls:          "games home-championships"
+		where:        false
 		displayOrder: "reader_day.\([if H.feed == "upcoming" {"asc"}, "desc"][0]),home_\(H.feed)_rank.asc"
-		homeFeed: H.feed
+		homeFeed:     H.feed
 	}).out
 }
 
-#MatchesPage: M={
-	view: "upcoming" | "results"
+#MatchesPage: {
+	let M = self
+	view:   "upcoming" | "results"
 	filter: string
-	order: string
-	empty: string
+	order:  string
+	empty:  string
 	out: """
-	<div class="\(M.view)"\([if M.view == "upcoming" {#" data-live="matches_start" data-filter="id=eq.00000000-0000-0000-0000-000000000000" data-empty-row='{"id":"00000000-0000-0000-0000-000000000000","start_offset":0,"start_next_offset":40,"start_page":1}'"#}, ""][0])>
-	\((#PagedRead & {
-		key: "matches-\(M.view)"
-		if M.view == "upcoming" {
-			scope: "-recent"
-			anchored: true
-			start: {offset: "{start_offset}", next_offset: "{start_next_offset}", page: "{start_page}"}
-			emptyRow: {page_origin: "{start_offset}", page_size: 40}
-		}
-		owner: "00000000-0000-0000-0000-000000000000"
-		table: "game_archive"
-		filter: M.filter
-		order: M.order
-		content: (#GameList & {
-			table: "game_archive"
-			filter: "\(M.filter)&offset={offset}&limit=\([if M.view == "upcoming" {"{page_size}"}, "40"][0])"
-			order: M.order
-			empty: M.empty
-			cls: "games \(M.view)"
-			where: false
-			matchGroups: true
-			displayOrder: "reader_day.\([if M.view == "upcoming" {"asc"}, "desc"][0]),championship_name.asc,championship_id.asc,kickoff.\([if M.view == "upcoming" {"asc"}, "desc"][0]),id.asc"
-		}).out
-	}).out)
-	</div>
-	"""
+		<div class="\(M.view)"\([if M.view == "upcoming" {#" data-live="matches_start" data-filter="id=eq.00000000-0000-0000-0000-000000000000" data-empty-row='{"id":"00000000-0000-0000-0000-000000000000","start_offset":0,"start_next_offset":40,"start_page":1}'"#}, ""][0])>
+		\((#PagedRead & {
+			key: "matches-\(M.view)"
+			if M.view == "upcoming" {
+				scope:    "-recent"
+				anchored: true
+				start:    {offset: "{start_offset}", next_offset: "{start_next_offset}", page: "{start_page}"}
+				emptyRow: {page_origin: "{start_offset}", page_size: 40}
+			}
+			owner:  "00000000-0000-0000-0000-000000000000"
+			table:  "game_archive"
+			filter: M.filter
+			order:  M.order
+			content: (#GameList & {
+				table:        "game_archive"
+				filter:       "\(M.filter)&offset={offset}&limit=\([if M.view == "upcoming" {"{page_size}"}, "40"][0])"
+				order:        M.order
+				empty:        M.empty
+				cls:          "games \(M.view)"
+				where:        false
+				matchGroups:  true
+				displayOrder: "reader_day.\([if M.view == "upcoming" {"asc"}, "desc"][0]),championship_name.asc,championship_id.asc,kickoff.\([if M.view == "upcoming" {"asc"}, "desc"][0]),id.asc"
+			}).out
+		}).out)
+		</div>
+		"""
 }
 
 // The games page's two lists, switched by a machine over the tab's view row.
@@ -314,7 +325,7 @@ _jogosMarkup: """
 	          <button type="button" id="games-tab-upcoming" role="tab" aria-selected="{up}" data-text="{msg.games_upcoming}"></button>
 	          <button type="button" id="games-tab-results" role="tab" aria-selected="{res}" data-text="{msg.games_results}"></button>
 	        </div>
-	\((#MatchesPage & {view: "upcoming", filter: "played=is.false&kickoff=not.is.null", order: "day.asc,kickoff.asc,id.asc", empty: "{msg.games_none_upcoming}"}).out)
+	\((#MatchesPage & {view: "upcoming", filter: "played=is.false&fixture_available=is.true&kickoff=not.is.null", order: "day.asc,kickoff.asc,id.asc", empty: "{msg.games_none_upcoming}"}).out)
 	\((#MatchesPage & {view: "results", filter: "played=is.true", order: "day.desc,kickoff.desc,id.asc", empty: "{msg.games_none_results}"}).out)
 	      </div>
 	    </template>
@@ -327,8 +338,8 @@ _jogosMarkup: """
 // The comment composer: a machine over the tab's draft for this game. Posting
 // is a create the store sends; an acknowledged one clears the draft, a refused
 // one keeps it and says why (ir decision-comments).
-_post: {target: "sending", effect: {op: "create", entity: "comment", values: {game_id: "{id}", body: "{body}"}}}
-_type: {assign: body: {type: "event", params: field: "value"}}
+_post:              {target: "sending", effect: {op: "create", entity: "comment", values: {game_id: "{id}", body: "{body}"}}}
+_type:              {assign: body: {type: "event", params: field: "value"}}
 _commentDraftEmpty: json.Marshal({id: "{id}", body: "", state: "writing"})
 _composerMachine: json.Marshal({
 	field:   "state"
@@ -347,18 +358,23 @@ _composerMachine: json.Marshal({
 // removed on its own, as the archive's goals are rows of their own.
 _editKeys: {
 	// A game is played exactly when both sides have a score.
-	"input@edit-home": {assign: {home_score: "count-or-null", played: {type: "both-scored", params: other: "away_score"}}}
-	"input@edit-away": {assign: {away_score: "count-or-null", played: {type: "both-scored", params: other: "home_score"}}}
+	"input@edit-home":       {assign: {home_score: "count-or-null", played: {type: "both-scored", params: other: "away_score"}}}
+	"input@edit-away":       {assign: {away_score: "count-or-null", played: {type: "both-scored", params: other: "home_score"}}}
 	"input@edit-attendance": {assign: attendance: "count-or-null"}
-	"change@edit-stadium": {assign: stadium_id: "blank-null"}
-	"input@edit-stadium-q": {assign: {stadium_q: {type: "event", params: field: "value"}, stadium_q_key: {type: "search-key"}}}
-	"change@edit-referee": {assign: referee_id: "blank-null"}
-	"input@edit-referee-q": {assign: {referee_q: {type: "event", params: field: "value"}, referee_q_key: {type: "search-key"}}}
-	"input@goal-minute": {assign: goal_minute: "count-or-null"}
-	"change@goal-player": {assign: goal_player_id: "blank-null"}
+	"change@edit-stadium":   {assign: stadium_id: "blank-null"}
+	"input@edit-stadium-q":  {assign: {stadium_q: {type: "event", params: field: "value"}, stadium_q_key: {type: "search-key"}}}
+	"change@edit-referee":   {assign: referee_id: "blank-null"}
+	"input@edit-referee-q":  {assign: {referee_q: {type: "event", params: field: "value"}, referee_q_key: {type: "search-key"}}}
+	"input@goal-minute":     {assign: goal_minute: "count-or-null"}
+	"change@goal-player":    {assign: goal_player_id: "blank-null"}
 	"click@edit-save": {target: "saving", effect: {op: "update", entity: "game", values: {
-		id:         "{id}", played:             "{played}", home_score:     "{home_score}", away_score: "{away_score}"
-		attendance: "{attendance}", stadium_id: "{stadium_id}", referee_id: "{referee_id}"
+		id:         "{id}"
+		played:     "{played}"
+		home_score: "{home_score}"
+		away_score: "{away_score}"
+		attendance: "{attendance}"
+		stadium_id: "{stadium_id}"
+		referee_id: "{referee_id}"
 	}}}
 	for s in ["home", "away"] {
 		"click@goal-add-\(s)": {
@@ -384,9 +400,10 @@ _editMachine: json.Marshal({
 	}
 })
 
-#GoalSide: G={
+#GoalSide: {
+	let G = self
 	side: string
-	out:  """
+	out: """
 		<section class="goal-side">
 		  <header><h3 data-text="{\(G.side)_name}"></h3></header>
 		  <ol class="goal-rows" data-live="goal" data-select="*,player(name,slug)" data-filter="game_id=eq.{id}&side=eq.\(G.side)" data-order="aet.asc,minute.asc" data-empty="{msg.game_no_goals}">
@@ -503,7 +520,7 @@ _chancesMarkup: """
 	                  <div class="grid-table zone-odds" role="table">
 	                    <div class="row head" role="row">
 	                      <span class="pos" role="columnheader">#</span><span class="name" role="columnheader" data-text="{msg.col_team}"></span><span class="pts" role="columnheader" data-text="{msg.col_points}"></span>
-	                      <span class="cells" data-live="zone" data-filter="group_id=eq.{group_id}" data-order="first.asc,last.asc" data-empty=""><template data-item><span class="zone" role="columnheader" data-zone="{color}" style="--zone-source: {color}"><i aria-hidden="true"></i><span data-text="{name}"></span><small data-text="{first}–{last}"></small></span></template></span>
+	                      <span class="cells" data-live="zone" data-filter="group_id=eq.{group_id}" data-order="first.asc,last.asc" data-empty=""><template data-item><span class="zone" role="columnheader" data-zone="{color}" style="--zone-source: {color}"><i aria-hidden="true"></i><span data-text="{name}"></span><small data-text="{first}|{last}" data-text-format="zone-positions"></small></span></template></span>
 	                    </div>
 	                    <div class="rows" data-live="team_chance" data-select="*,team(slug,logo_key),group:group_id(slug)" data-filter="group_id=eq.{group_id}" data-order="rank.asc" data-empty="">
 	                      <template data-item>
@@ -563,7 +580,19 @@ _jogoMarkup: """
 	  <template data-item>
 	    <article class="game" data-played="{played}">
 	      <h1 class="band"><a data-route="campeonato" data-param-slug="{championship.slug}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span></a></h1>
-	      <div class="page">
+	      <div class="page page-with-local-nav">
+	        \((#SectionNavigation & {
+		route:  "jogo"
+		params: #" data-param-slug="{param.slug}""#
+		links: [
+			{key: "location", label: "match_context_location", fragment: "match-context-location-{id}"},
+			{key: "goals", label: "game_goals", fragment: "game-goals-{id}"},
+			{key: "probability", label: "match_probability_title", fragment: "match-probability-{id}"},
+			{key: "lineups", label: "game_lineups", fragment: "game-lineups-{id}"},
+			{key: "previous", label: "match_context_previous", fragment: "game-history-{id}"},
+		]
+		back: #"<a data-route="campeonato" data-param-slug="{championship.slug}" data-text="{msg.back_championship}"></a>"#
+	}).out)
 	        <div class="content">
 	          <div class="game-head">
 	            <p class="phase-name" data-text="{phase_name}"></p>
@@ -585,7 +614,7 @@ _jogoMarkup: """
 	            <dt data-text="{msg.game_importance}"></dt><dd class="importance" data-live="game_importance" data-filter="id=eq.{id}" data-empty=""><template data-item><abbr title="{msg.game_importance_long}"><span data-text="{home}" data-text-format="number"></span> · <span data-text="{away}" data-text-format="number"></span></abbr></template></dd>
 	          </dl>
 	          \(_matchContextTopMarkup)
-	          <section class="goals-sec">
+	          <section id="game-goals-{id}" class="goals-sec">
 	            <h2 data-text="{msg.game_goals}"></h2>
 	            <ol class="goals" data-live="goal" data-select="*,player(name,slug)" data-filter="game_id=eq.{id}" data-order="aet.asc,minute.asc" data-empty="{msg.game_no_goals}">
 	              <template data-item>
@@ -594,7 +623,7 @@ _jogoMarkup: """
 	            </ol>
 	          </section>
 	          \(_matchProbabilityMarkup)
-	          <section class="lineups">
+	          <section id="game-lineups-{id}" class="lineups">
 	            <h2 data-text="{msg.game_lineups}"></h2>
 	            <div class="sides">
 	              \((#MatchContextLineup & {side: "home"}).out)
@@ -604,10 +633,6 @@ _jogoMarkup: """
 	          \(_matchContextHistoryMarkup)
 	          <nav class="buttons"><a class="btn-quiet" data-route="historico-jogo" data-param-slug="{param.slug}" data-text="{msg.community_history}"></a></nav>
 	        </div>
-	        <aside class="side">
-	          <p><a data-route="jogos" data-text="{msg.back_games}"></a></p>
-	          <p data-text="{msg.about}"></p>
-	        </aside>
 	      </div>
 	  <section class="comments page-tail">
 	    <h2 data-text="{msg.comments_title}"></h2>
@@ -634,9 +659,10 @@ _game_commentsMarkup: """
 	    </ol>
 	"""
 
-_lineup: L={
+_lineup: {
+	let L = self
 	side: string
-	out:  """
+	out: """
 		<table class="grid lineup" data-side="\(L.side)">
 		  <caption data-text="{\(L.side)_name}"></caption>
 		  <thead><tr><th scope="col" data-text="{msg.col_player}"></th><th scope="col" class="num"><abbr title="{msg.col_position_long}" data-text="{msg.col_pos}"></abbr></th><th scope="col" class="num" data-text="{msg.col_on}"></th><th scope="col" class="num" data-text="{msg.col_off}"></th><th scope="col"><span class="visually-hidden" data-text="{msg.col_cards}"></span></th></tr></thead>
@@ -770,18 +796,10 @@ _campeonatoMarkup: """
 	  <template data-item>
 	    <article class="championship">
 	      <h1 class="band"><span class="archive-icon" data-text="{region_name}" data-text-format="country-flag"></span><span data-text="{full_name}|{msg.geography_names}" data-text-format="geography-label"></span></h1>
-	      <div class="page">
+	      <div class="page page-with-local-nav">
+	\((#ChampionshipNavigation & {active: "table", stages: true}).out)
 	        <div class="content">
-	          <p class="chips"><a class="chip" data-route="campeonato-jogadores" data-param-slug="{slug}" data-text="{msg.players_title}"></a><a class="chip" data-route="arquivo-campeonato" data-param-slug="{slug}" data-text="{msg.archive_title}"></a><a class="chip" data-route="publico" data-param-slug="{slug}" data-text="{msg.archive_attendance_title}"></a></p>
-	          <p class="facts">
-	            <span class="chip"><span data-text="{msg[region]}"></span></span>
-	            <span class="chip" data-live="category" data-filter="id=eq.{category_id}" data-empty="{msg.professional}"><template data-item><span data-text="{name}"></span></template></span>
-	            <span class="points"><span data-text="{msg.win}"></span> <b data-text="{point_win}"></b> · <span data-text="{msg.draw}"></span> <b data-text="{point_draw}"></b> · <span data-text="{msg.loss}"></span> <b data-text="{point_loss}"></b></span>
-	          </p>
-	          <nav class="phase-chips" aria-label="{msg.phases_label}" data-live="phase" data-filter="championship_id=eq.{id}" data-order="position.asc" data-empty="{msg.no_phases}">
-	            <template data-item><a class="chip" href="#fase-{id}" data-text="{name}"></a></template>
-	          </nav>
-	          <div class="phases" data-live="phase" data-filter="championship_id=eq.{id}" data-order="position.asc" data-empty="">
+	          <div class="phases" data-live="phase" data-filter="championship_id=eq.{id}" data-order="position.desc,id.desc" data-empty="">
 	            <template data-item>
 	              <section class="phase" id="fase-{id}">
 	                <h2 data-text="{name}"></h2>
@@ -800,7 +818,7 @@ _campeonatoMarkup: """
 	                          <tbody data-live="standing" data-select="*,team(slug,logo_key)" data-filter="group_id=eq.{id}" data-order="position.asc" data-empty="{msg.no_teams}">
 	                            <template data-item>
 	                              <tr data-zone="{zone}" style="--zone-source: {zone}">
-	\((#StandingsCells & {championship_param: "{param.slug}"}).out)
+	\((#StandingsCells & {championship_param: "{param.slug}", preview: true}).out)
 	                              </tr>
 	                            </template>
 	                          </tbody>
@@ -808,38 +826,17 @@ _campeonatoMarkup: """
 	                      </div>
 	                      <ul class="zones" data-live="zone" data-filter="group_id=eq.{id}" data-order="first.asc,last.asc" data-empty="">
 	                        <template data-item>
-	                          <li data-zone="{color}" style="--zone-source: {color}"><i aria-hidden="true"></i><span data-text="{name}"></span> <span class="range" data-text="{first}–{last}"></span></li>
+	                          <li data-zone="{color}" style="--zone-source: {color}"><i aria-hidden="true"></i><span data-text="{name}"></span> <span class="range" data-text="{first}|{last}" data-text-format="zone-positions"></span></li>
 	                        </template>
 	                      </ul>
 	                    </section>
 	                  </template>
 	                </div>
-	                <div class="rounds" data-live="phase_round" data-filter="phase_id=eq.{id}" data-empty="">
-	                  <template data-item>
-	                    <div class="round-pair">
-	                      <section class="round">
-	                        <h3><span data-text="{msg.round}"></span> <span data-text="{current}"></span></h3>
-	\((#GameList & {filter: "phase_id=eq.{phase_id}&round=eq.{current}", order: "day.asc,kickoff.asc", empty: "{msg.round_empty}", where: false}).out)
-	                      </section>
-	                      <div class="round-next" data-live="phase_round" data-filter="id=eq.{id}&next=not.is.null" data-empty="">
-	                        <template data-item>
-	                          <section class="round">
-	                            <h3><span data-text="{msg.round}"></span> <span data-text="{next}"></span></h3>
-	\((#GameList & {filter: "phase_id=eq.{phase_id}&round=eq.{next}", order: "day.asc,kickoff.asc", empty: "{msg.round_empty}", where: false}).out)
-	                          </section>
-	                        </template>
-	                      </div>
-	                    </div>
-	                  </template>
-	                </div>
+
 	              </section>
 	            </template>
 	          </div>
 	        </div>
-	        <aside class="side">
-	          <p><a data-route="campeonatos" data-text="{msg.back_catalog}"></a></p>
-	          <p data-text="{msg.about}"></p>
-	        </aside>
 	      </div>
 	    </article>
 	  </template>
@@ -850,7 +847,8 @@ _campeonatoMarkup: """
 // A directory: everything of one kind, narrowed by a name typed. The search is
 // the tab's row of DirectoryFilter for this directory, written by a one-arrow
 // machine (ir decision-catalog-tab).
-#Directory: D={
+#Directory: {
+	let D = self
 	screen:       string
 	row:          string
 	table:        string
@@ -861,19 +859,23 @@ _campeonatoMarkup: """
 	withTeamType: *false | bool
 	// A column marked `drop` is the one a phone does without.
 	columns: [...{key: string, bind: string, drop: *false | bool}]
-	_input: "\(D.row)-q"
+	_input:  "\(D.row)-q"
 	_machine: json.Marshal({
 		field:   "state"
 		initial: "browsing"
 		states: browsing: on: (#PageActions & {key: D.row}).out & {"input@\(D._input)": assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}}
-		if D.withTeamType {states: browsing: on: {
-			"change@teams-type": assign: {team_type: {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}
-		}}
-		if D.withCountry {states: browsing: on: {
-			"input@teams-country": assign: {country: {type: "event", params: field: "value"}, country_key: {type: "search-key"}, country_selection: "*", offset: 0, next_offset: 40, page: 1}
-			"change@teams-region": assign: {region_selection: {type: "geography-selection"}, country_selection: "*", country: "", country_key: "", offset: 0, next_offset: 40, page: 1}
-			"click@teams-country-all": assign: {country_selection: "*", country: "", country_key: "", offset: 0, next_offset: 40, page: 1}
-		}}
+		if D.withTeamType {
+			states: browsing: on: {
+				"change@teams-type": assign: {team_type: {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}
+			}
+		}
+		if D.withCountry {
+			states: browsing: on: {
+				"input@teams-country": assign:     {country: {type: "event", params: field: "value"}, country_key: {type: "search-key"}, country_selection: "*", offset: 0, next_offset: 40, page: 1}
+				"change@teams-region": assign:     {region_selection: {type: "geography-selection"}, country_selection: "*", country: "", country_key: "", offset: 0, next_offset: 40, page: 1}
+				"click@teams-country-all": assign: {country_selection: "*", country: "", country_key: "", offset: 0, next_offset: 40, page: 1}
+			}
+		}
 	})
 	_filter: "search_key=like.*{q_key}*\([if D.withCountry {"&country_search_key=like.*{country_key}*&region_id=like.{region_selection}&country_id=like.{country_selection}"}, ""][0])\([if D.withTeamType {"&team_type=eq.{team_type}"}, ""][0])"
 	_type: [if D.withTeamType {"""
@@ -954,18 +956,19 @@ _campeonatoMarkup: """
 		"""
 }
 
-_equipesMarkup: (#Directory & {screen: "equipes", row: "teams", table: "team_directory", select: "*,team:id(slug,logo_key)", route: "equipe", order: "rating.desc.nullslast,name.asc,id.asc", withCountry: true, withTeamType: true, columns: [{key: "team", bind: "name"}, {key: "rating", bind: "rating_display"}, {key: "city", bind: "city", drop: true}, {key: "country", bind: "country"}]}).out
+_equipesMarkup:  (#Directory & {screen: "equipes", row: "teams", table: "team_directory", select: "*,team:id(slug,logo_key)", route: "equipe", order: "rating.desc.nullslast,name.asc,id.asc", withCountry: true, withTeamType: true, columns: [{key: "team", bind: "name"}, {key: "rating", bind: "rating_display"}, {key: "city", bind: "city", drop: true}, {key: "country", bind: "country"}]}).out
 _estadiosMarkup: (#Directory & {screen: "estadios", row: "stadiums", table: "stadium", route: "estadio", columns: [{key: "stadium", bind: "name"}, {key: "city", bind: "city"}, {key: "country", bind: "country", drop: true}]}).out
 _arbitrosMarkup: (#Directory & {screen: "arbitros", row: "referees", table: "referee", route: "arbitro", columns: [{key: "referee", bind: "name"}, {key: "from", bind: "location"}]}).out
 
 // One team's games from its own side: when, where, home or away, the
 // opponent, its score first, and how it went.
-#TeamGames: T={
+#TeamGames: {
+	let T = self
 	filter: string
 	order:  string
 	empty:  string
 	// Only a played game has an outcome to name.
-	played: bool
+	played:   bool
 	_outcome: [if T.played {"<i class=\"outcome\" title=\"{msg[result]}\"></i><span class=\"visually-hidden\" data-text=\"{msg[result]}\"></span>"}, ""][0]
 	out: """
 		<ol class="games team-games" data-project='{"reader_day":{"date":["kickoff","day"]}}' data-live="team_game" data-select="*,game:game_id(slug),championship(show_country,slug),opponent:opponent_id(country,logo_key)" data-filter="\(T.filter)" data-order="\(T.order)" data-empty="\(T.empty)">
@@ -984,13 +987,14 @@ _arbitrosMarkup: (#Directory & {screen: "arbitros", row: "referees", table: "ref
 
 // A championship-scoped archive lists each fixture once in the match's own
 // home/away order, regardless of which side the selected team played.
-#TeamChampionshipGames: T={
-	filter: string
-	order:  string
-	empty:  string
-	played: bool
-	_outcome: [if T.played {"<i class=\"outcome\" title=\"{msg[result]}\" aria-hidden=\"true\"></i><span class=\"visually-hidden\" data-text=\"{msg[result]}\"></span>"}, ""][0]
-	_score: [if T.played {"<b data-text=\"{game.home_score}\"></b><i aria-hidden=\"true\">x</i><b data-text=\"{game.away_score}\"></b>"}, "<span class=\"fixture-score-placeholder\" aria-hidden=\"true\">–</span>"][0]
+#TeamChampionshipGames: {
+	let T = self
+	filter:      string
+	order:       string
+	empty:       string
+	played:      bool
+	_outcome:    [if T.played {"<i class=\"outcome\" title=\"{msg[result]}\" aria-hidden=\"true\"></i><span class=\"visually-hidden\" data-text=\"{msg[result]}\"></span>"}, ""][0]
+	_score:      [if T.played {"<b data-text=\"{game.home_score}\"></b><i aria-hidden=\"true\">x</i><b data-text=\"{game.away_score}\"></b>"}, "<span class=\"fixture-score-placeholder\" aria-hidden=\"true\">–</span>"][0]
 	_scoreLabel: [if T.played {" aria-label=\"{msg.team_home} {game.home.name} {game.home_score} x {game.away_score} {msg.team_away} {game.away.name}\""}, " aria-label=\"{msg.team_home} {game.home.name} x {msg.team_away} {game.away.name}\""][0]
 	out: """
 		<div class="table-wrap">
@@ -1012,29 +1016,31 @@ _arbitrosMarkup: (#Directory & {screen: "arbitros", row: "referees", table: "ref
 		"""
 }
 
-#TeamProfileChampionships: P={
-	key:      string
-	filter:   string
-	order:    string
-	empty:    string
+#TeamProfileChampionships: {
+	let P = self
+	key:    string
+	filter: string
+	order:  string
+	empty:  string
 	_content: """
-	<ul class="team-championship-list" data-live="team_championship" data-select="*,team(slug,logo_key),championship(slug)" data-filter="\(P.filter)&offset={offset}&limit=40" data-order='\(P.order)' data-empty="\(P.empty)">
-	  <template data-item><li><a data-route="equipe-campeonato" data-param-slug="{team.slug}" data-param-championship="{championship.slug}"><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span><span class="chip" data-text="{msg[status]}"></span></a></li></template>
-	</ul>
-	"""
+		<ul class="team-championship-list" data-live="team_championship" data-select="*,team(slug,logo_key),championship(slug)" data-filter="\(P.filter)&offset={offset}&limit=40" data-order='\(P.order)' data-empty="\(P.empty)">
+		  <template data-item><li><a data-route="equipe-campeonato" data-param-slug="{team.slug}" data-param-championship="{championship.slug}"><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span><span class="chip" data-text="{msg[status]}"></span></a></li></template>
+		</ul>
+		"""
 	out: (#PagedRead & {key: P.key, owner: "{id}", table: "team_championship", filter: P.filter, order: P.order, content: P._content}).out
 }
 
-#TeamProfilePlayers: P={
-	key:      string
-	filter:   string
-	order:    string
-	empty:    string
+#TeamProfilePlayers: {
+	let P = self
+	key:    string
+	filter: string
+	order:  string
+	empty:  string
 	_content: """
-	<ul class="team-player-list" data-live="team_player_history" data-select="*,player(slug)" data-filter="\(P.filter)&search_key=like.*{q_key}*&offset={offset}&limit=40" data-order='\(P.order)' data-empty="\(P.empty)">
-	  <template data-item><li><a data-route="jogador" data-param-slug="{player.slug}"><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{player_name}"></span> <small data-text="{position}"></small></a></li></template>
-	</ul>
-	"""
+		<ul class="team-player-list" data-live="team_player_history" data-select="*,player(slug)" data-filter="\(P.filter)&search_key=like.*{q_key}*&offset={offset}&limit=40" data-order='\(P.order)' data-empty="\(P.empty)">
+		  <template data-item><li><a data-route="jogador" data-param-slug="{player.slug}"><span class="archive-icon" data-text="{country}" data-text-format="country-flag"></span><span data-text="{player_name}"></span> <small data-text="{position}"></small></a></li></template>
+		</ul>
+		"""
 	out: (#PagedRead & {key: P.key, owner: "{id}", table: "team_player_history", filter: P.filter + "&search_key=like.*{q_key}*", order: P.order, content: P._content, emptyRow: {q: "", q_key: ""}, events: {("input@\(P.key)-q"): assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}}, controls: "<label class=\"team-filter\"><span data-text=\"{msg.team_player_search}\"></span><input id=\"\(P.key)-q\" type=\"search\" value=\"{q}\" maxlength=\"80\"></label>"}).out
 }
 
@@ -1058,14 +1064,15 @@ _teamRosterColumns: [
 	{key: "red", bind: "red", cls: "num wide"},
 ]
 
-#TeamRosterPage: R={
+#TeamRosterPage: {
+	let R = self
 	filter: string
 	order:  string
 	empty:  string
-	out:    """
-	<div class="table-wrap"><table class="grid squad-table"><thead><tr>\(_teamRosterHead)</tr></thead>
-	<tbody data-live="team_roster" data-select="*,player(slug)" data-filter="\(R.filter)" data-order='\(R.order)' data-empty="\(R.empty)"><template data-item><tr>\(_teamRosterCells)</tr></template></tbody><tfoot data-live="team_roster_total" data-filter="team_id=eq.{owner_id}&championship_id=eq.{championship_id}&limit=1" data-empty=""><template data-item><tr>\(_teamRosterTotalCells)</tr></template></tfoot></table></div>
-	"""
+	out: """
+		<div class="table-wrap"><table class="grid squad-table"><thead><tr>\(_teamRosterHead)</tr></thead>
+		<tbody data-live="team_roster" data-select="*,player(slug)" data-filter="\(R.filter)" data-order='\(R.order)' data-empty="\(R.empty)"><template data-item><tr>\(_teamRosterCells)</tr></template></tbody><tfoot data-live="team_roster_total" data-filter="team_id=eq.{owner_id}&championship_id=eq.{championship_id}&limit=1" data-empty=""><template data-item><tr>\(_teamRosterTotalCells)</tr></template></tfoot></table></div>
+		"""
 }
 
 _teamRosterHead: strings.Join([for c in _teamRosterColumns {
@@ -1085,71 +1092,72 @@ _teamRosterTotalCells: strings.Join([for c in _teamRosterColumns {[
 	"<td class=\"\(c.cls)\" data-text=\"{\(c.bind)}\" data-text-format=\"number\"></td>",
 ][0]}], "")
 
-#TeamGameArchive: G={
-	key:    string
-	played: bool
-	scoped: *false | bool
-	_scope: [if G.scoped {"&championship_id=eq.{championship_id}"}, ""][0]
-	_filter: "team_id=eq.{owner_id}&played=is.\(G.played)&side=like.{side}&phase_key=like.{phase}" + G._scope + [if !G.scoped {"&category_key=like.{category}"}, ""][0]
-	_order: [if G.played {"day.desc,kickoff.desc,id.asc"}, "day.asc,kickoff.asc,id.asc"][0]
+#TeamGameArchive: {
+	let G = self
+	key:     string
+	played:  bool
+	scoped:  *false | bool
+	_scope:  [if G.scoped {"&championship_id=eq.{championship_id}"}, ""][0]
+	_filter: "team_id=eq.{owner_id}&played=is.\(G.played)&side=like.{side}&phase_key=like.{phase}" + [if !G.played {"&fixture_available=is.true"}, ""][0] + G._scope + [if !G.scoped {"&category_key=like.{category}"}, ""][0]
+	_order:  [if G.played {"day.desc,kickoff.desc,id.asc"}, "day.asc,kickoff.asc,id.asc"][0]
 	_controls: """
- <div class="team-filters">
- \([if !G.scoped {"""
- <label><span data-text="{msg.team_category}"></span><select id="\(G.key)-category" data-value="{category}"><option value="*" data-text="{msg.all}"></option><option value="professional" data-text="{msg.team_professional}"></option><optgroup data-live="category" data-filter="id=not.is.null&limit=40" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select></label>
- """}, ""][0])
- <label><span data-text="{msg.team_venue}"></span><select id="\(G.key)-side" data-value="{side}"><option value="*" data-text="{msg.all}"></option><option value="home" data-text="{msg.home}"></option><option value="away" data-text="{msg.away}"></option></select></label>
- \([if G.scoped {"""
- <label><span data-text="{msg.team_phase}"></span><select id="\(G.key)-phase" data-value="{phase}"><option value="*" data-text="{msg.all}"></option><optgroup data-live="phase" data-filter="championship_id=eq.{championship_id}&limit=100" data-order="position.asc,id.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select></label>
- """}, ""][0])
- </div>
- """
-	out: (#PagedRead & {key: G.key, owner: [if G.scoped {"{team_id}"}, "{id}"][0], scope: [if G.scoped {"-championship-{championship_id}"}, ""][0], table: "team_game", filter: G._filter, order: G._order, emptyRow: {category: "*", side: "*", phase: "*", if G.scoped {championship_id: "{championship_id}"}}, events: {for f in [if !G.scoped {"category"}, "side", "phase"] {("change@\(G.key)-\(f)"): assign: {(f): {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}}}, controls: G._controls, content: [if G.scoped {(#TeamChampionshipGames & {filter: G._filter + "&offset={offset}&limit=40", order: G._order, empty: [if G.played {"{msg.games_none_results}"}, "{msg.games_none_upcoming}"][0], played: G.played}).out}, (#TeamGames & {filter: G._filter + "&offset={offset}&limit=40", order: G._order, empty: [if G.played {"{msg.games_none_results}"}, "{msg.games_none_upcoming}"][0], played: G.played}).out][0]}).out
+		<div class="team-filters">
+		\([if !G.scoped {"""
+			<label><span data-text="{msg.team_category}"></span><select id="\(G.key)-category" data-value="{category}"><option value="*" data-text="{msg.all}"></option><option value="professional" data-text="{msg.team_professional}"></option><optgroup data-live="category" data-filter="id=not.is.null&limit=40" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select></label>
+			"""}, ""][0])
+		<label><span data-text="{msg.team_venue}"></span><select id="\(G.key)-side" data-value="{side}"><option value="*" data-text="{msg.all}"></option><option value="home" data-text="{msg.home}"></option><option value="away" data-text="{msg.away}"></option></select></label>
+		\([if G.scoped {"""
+			<label><span data-text="{msg.team_phase}"></span><select id="\(G.key)-phase" data-value="{phase}"><option value="*" data-text="{msg.all}"></option><optgroup data-live="phase" data-filter="championship_id=eq.{championship_id}&limit=100" data-order="position.asc,id.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select></label>
+			"""}, ""][0])
+		</div>
+		"""
+	out: (#PagedRead & {key: G.key, owner: [if G.scoped {"{team_id}"}, "{id}"][0], scope: [if G.scoped {"-championship-{championship_id}"}, ""][0], table: "team_game", filter: G._filter, order: G._order, emptyRow: {category: "*", side: "*", phase: "*", if G.scoped {championship_id: "{championship_id}"}}, events: {for f in [if !G.scoped {"category"}, "side", if G.scoped {"phase"}] {("change@\(G.key)-\(f)"): assign: {(f): {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}}}, controls: G._controls, content: [if G.scoped {(#TeamChampionshipGames & {filter: G._filter + "&offset={offset}&limit=40", order: G._order, empty: [if G.played {"{msg.games_none_results}"}, "{msg.games_none_upcoming}"][0], played: G.played}).out}, (#TeamGames & {filter: G._filter + "&offset={offset}&limit=40", order: G._order, empty: [if G.played {"{msg.games_none_results}"}, "{msg.games_none_upcoming}"][0], played: G.played}).out][0]}).out
 }
 
 _teamCommentMachine: json.Marshal({field: "state", initial: "writing", on: refused: target: "refused", states: {writing: on: {"input@team-comment-body": _type, "click@team-comment-post": {target: "sending", effect: {op: "create", entity: "team_comment", values: {team_id: "{id}", body: "{body}"}}}}, sending: on: sync_ack: {target: "writing", assign: body: ""}, refused: on: {"input@team-comment-body": _type & {target: "writing"}, "click@team-comment-post": {target: "sending", effect: {op: "create", entity: "team_comment", values: {team_id: "{id}", body: "{body}"}}}}}})
-_teamComments:      """
- <section class="comments"><h2 data-text="{msg.comments_title}"></h2>
- <div class="composer" data-live="team_comment_draft" data-filter="id=eq.{id}" data-machine='\(_teamCommentMachine)' data-empty-row='\(_commentDraftEmpty)' data-state="{state}"><label class="field" for="team-comment-body"><span data-text="{msg.comment_label}"></span><textarea id="team-comment-body" data-value="{body}" maxlength="1000" rows="3" placeholder="{msg.team_comment_placeholder}"></textarea></label><p class="refusal" role="alert" data-text="{msg.comment_refused}"></p><button id="team-comment-post" type="button" class="btn post"><span class="idle" data-text="{msg.comment_post}"></span><span class="busy" data-text="{msg.comment_posting}"></span></button></div>
- \((#PagedRead & {key: "team-comments", owner: "{id}", table: "team_comment", filter: "team_id=eq.{owner_id}", order: "created_at.desc,id.asc", content: """
-	<ol class="comment-list" data-live="team_comment" data-select="*,app_user(handle)" data-filter="team_id=eq.{owner_id}&offset={offset}&limit=40" data-order="created_at.desc,id.asc" data-empty="{msg.team_comment_empty}"><template data-item><li><p class="byline"><a data-route="usuario" data-param-id="{app_user_id}" data-text="{app_user.handle}"></a> <time data-text="{created_at}" data-text-format="datetime"></time></p><p class="body" data-text="{body}"></p>\((#CommunityCommentDelete & {table: "team_comment"}).out)</li></template></ol>
-	"""}).out)
- </section>
- """
+_teamComments: """
+	<section id="team-comments-{id}" class="comments"><h2 data-text="{msg.comments_title}"></h2>
+	<div class="composer" data-live="team_comment_draft" data-filter="id=eq.{id}" data-machine='\(_teamCommentMachine)' data-empty-row='\(_commentDraftEmpty)' data-state="{state}"><label class="field" for="team-comment-body"><span data-text="{msg.comment_label}"></span><textarea id="team-comment-body" data-value="{body}" maxlength="1000" rows="3" placeholder="{msg.team_comment_placeholder}"></textarea></label><p class="refusal" role="alert" data-text="{msg.comment_refused}"></p><button id="team-comment-post" type="button" class="btn post"><span class="idle" data-text="{msg.comment_post}"></span><span class="busy" data-text="{msg.comment_posting}"></span></button></div>
+	\((#PagedRead & {key: "team-comments", owner: "{id}", table: "team_comment", filter: "team_id=eq.{owner_id}", order: "created_at.desc,id.asc", content: """
+		<ol class="comment-list" data-live="team_comment" data-select="*,app_user(handle)" data-filter="team_id=eq.{owner_id}&offset={offset}&limit=40" data-order="created_at.desc,id.asc" data-empty="{msg.team_comment_empty}"><template data-item><li><p class="byline"><a data-route="usuario" data-param-id="{app_user_id}" data-text="{app_user.handle}"></a> <time data-text="{created_at}" data-text-format="datetime"></time></p><p class="body" data-text="{body}"></p>\((#CommunityCommentDelete & {table: "team_comment"}).out)</li></template></ol>
+		"""}).out)
+	</section>
+	"""
 _teamRatingHistory: """
- <section class="team-rating-history"><h2 data-text="{msg.team_rating_history}"></h2>
- \((#PagedRead & {key: "team-rating-history", owner: "{id}", table: "team_rating", filter: "team_id=eq.{owner_id}", order: "measure_date.desc,id.asc", emptyRow: {period: "1y", date_from: "", date_to: "", series_json: "{}"}, events: {"change@team-rating-period": assign: {period: {type: "event", params: field: "value"}, date_from: "", date_to: ""}, "change@team-rating-from": assign: {date_from: {type: "event", params: field: "value"}, period: "all"}, "change@team-rating-to": assign: {date_to: {type: "event", params: field: "value"}, period: "all"}, "click@team-rating-reset": assign: {period: "1y", date_from: "", date_to: ""}}, controls: """
-	<div class="team-filters"><label><span data-text="{msg.team_period}"></span><select id="team-rating-period" data-value="{period}"><option value="1m" data-text="{msg.period_1m}"></option><option value="3m" data-text="{msg.period_3m}"></option><option value="6m" data-text="{msg.period_6m}"></option><option value="1y" data-text="{msg.period_1y}"></option><option value="5y" data-text="{msg.period_5y}"></option><option value="all" data-text="{msg.all}"></option></select></label><label><span data-text="{msg.team_date_from}"></span><input id="team-rating-from" type="date" value="{date_from}"></label><label><span data-text="{msg.team_date_to}"></span><input id="team-rating-to" type="date" value="{date_to}"></label><button id="team-rating-reset" class="btn-quiet" type="button" data-text="{msg.team_chart_reset}"></button></div>
-	""", content: """
-	<div class="team-chart-source" data-live="team_rating_chart" data-filter="team_id=eq.{owner_id}&period=eq.{period}" data-on-mutation="team-rating-series" data-read-view="archive_page?id=eq.team-rating-history-{owner_id}"><template data-item><span hidden></span></template></div>
-	<div data-text="{series_json}\u001f{msg.team_rating_history}\u001f{msg.chart_locale}\u001f{msg.team_history_none}\u001fdate\u001f{date_from}\u001f{date_to}\u001f{msg.team_chart_invalid_range}" data-text-format="team-chart"></div>
-	<p class="team-chart-note" data-text="{msg.team_chart_sample}"></p>
-	<details><summary data-text="{msg.team_history_table}"></summary><table class="grid"><thead><tr><th data-text="{msg.team_date}"></th><th data-text="{msg.team_rating}"></th><th data-text="{msg.col_off_rating}"></th><th data-text="{msg.col_def_rating}"></th></tr></thead><tbody data-live="team_rating" data-filter="team_id=eq.{owner_id}&offset={offset}&limit=40" data-order="measure_date.desc,id.asc" data-empty="{msg.team_history_none}"><template data-item><tr><th scope="row" data-text="{measure_date}"></th><td data-text="{rating}" data-text-format="number"></td><td data-text="{offense}" data-text-format="number"></td><td data-text="{defense}" data-text-format="number"></td></tr></template></tbody></table></details>
-	"""}).out)
- </section>
- """
+	<section id="team-rating-history-{id}" class="team-rating-history"><h2 data-text="{msg.team_rating_history}"></h2>
+	\((#PagedRead & {key: "team-rating-history", owner: "{id}", table: "team_rating", filter: "team_id=eq.{owner_id}", order: "measure_date.desc,id.asc", emptyRow: {period: "1y", date_from: "", date_to: "", series_json: "{}"}, events: {"change@team-rating-period": assign: {period: {type: "event", params: field: "value"}, date_from: "", date_to: ""}, "change@team-rating-from": assign: {date_from: {type: "event", params: field: "value"}, period: "all"}, "change@team-rating-to": assign: {date_to: {type: "event", params: field: "value"}, period: "all"}, "click@team-rating-reset": assign: {period: "1y", date_from: "", date_to: ""}}, controls: """
+		<div class="team-filters"><label><span data-text="{msg.team_period}"></span><select id="team-rating-period" data-value="{period}"><option value="1m" data-text="{msg.period_1m}"></option><option value="3m" data-text="{msg.period_3m}"></option><option value="6m" data-text="{msg.period_6m}"></option><option value="1y" data-text="{msg.period_1y}"></option><option value="5y" data-text="{msg.period_5y}"></option><option value="all" data-text="{msg.all}"></option></select></label><label><span data-text="{msg.team_date_from}"></span><input id="team-rating-from" type="date" value="{date_from}"></label><label><span data-text="{msg.team_date_to}"></span><input id="team-rating-to" type="date" value="{date_to}"></label><button id="team-rating-reset" class="btn-quiet" type="button" data-text="{msg.team_chart_reset}"></button></div>
+		""", content: """
+		<div class="team-chart-source" data-live="team_rating_chart" data-filter="team_id=eq.{owner_id}&period=eq.{period}" data-on-mutation="team-rating-series" data-read-view="archive_page?id=eq.team-rating-history-{owner_id}"><template data-item><span hidden></span></template></div>
+		<div data-text="{series_json}\u001f{msg.team_rating_history}\u001f{msg.chart_locale}\u001f{msg.team_history_none}\u001fdate\u001f{date_from}\u001f{date_to}\u001f{msg.team_chart_invalid_range}" data-text-format="team-chart"></div>
+		<p class="team-chart-note" data-text="{msg.team_chart_sample}"></p>
+		<details><summary data-text="{msg.team_history_table}"></summary><table class="grid"><thead><tr><th data-text="{msg.team_date}"></th><th data-text="{msg.team_rating}"></th><th data-text="{msg.col_off_rating}"></th><th data-text="{msg.col_def_rating}"></th></tr></thead><tbody data-live="team_rating" data-filter="team_id=eq.{owner_id}&offset={offset}&limit=40" data-order="measure_date.desc,id.asc" data-empty="{msg.team_history_none}"><template data-item><tr><th scope="row" data-text="{measure_date}"></th><td data-text="{rating}" data-text-format="number"></td><td data-text="{offense}" data-text-format="number"></td><td data-text="{defense}" data-text-format="number"></td></tr></template></tbody></table></details>
+		"""}).out)
+	</section>
+	"""
 
 _teamRosterOrder: #"{"by":"{sort}","of":{"name":"player_name.asc,player_id.asc","played":"played.desc.nullslast,player_name.asc,player_id.asc","minutes":"minutes.desc.nullslast,player_name.asc,player_id.asc","goals":"goals.desc.nullslast,player_name.asc,player_id.asc","goals_per90":"goals_per90.desc.nullslast,player_name.asc,player_id.asc","contribution":"contribution.desc.nullslast,player_name.asc,player_id.asc","contribution_per90":"contribution_per90.desc.nullslast,player_name.asc,player_id.asc"}}"#
 
 _teamRosterArchive: """
- \((#PagedRead & {key: "team-roster", owner: "{team_id}", scope: "-championship-{championship_id}", table: "team_roster", filter: "team_id=eq.{owner_id}&championship_id=eq.{championship_id}&search_key=like.*{q_key}*", order: _teamRosterOrder, emptyRow: {q: "", q_key: "", sort: "name", championship_id: "{championship_id}"}, events: {"input@team-roster-q": assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}, "change@team-roster-sort": assign: {sort: {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}}, controls: """
-	<div class="team-filters"><label><span data-text="{msg.team_player_search}"></span><input id="team-roster-q" type="search" value="{q}" maxlength="80"></label><label><span data-text="{msg.team_sort}"></span><select id="team-roster-sort" data-value="{sort}"><option value="name" data-text="{msg.col_player}"></option><option value="played" data-text="{msg.col_played_long}"></option><option value="minutes" data-text="{msg.col_minutes_long}"></option><option value="goals" data-text="{msg.col_goals_long}"></option><option value="goals_per90" data-text="{msg.col_goals_per90_long}"></option><option value="contribution" data-text="{msg.col_contribution_long}"></option><option value="contribution_per90" data-text="{msg.col_contribution_per90_long}"></option></select></label></div>
-	""", content: (#TeamRosterPage & {filter: "team_id=eq.{owner_id}&championship_id=eq.{championship_id}&search_key=like.*{q_key}*&offset={offset}&limit=40", order: _teamRosterOrder, empty: "{msg.team_no_roster}"}).out}).out)
- <p class="team-chart-note" data-text="{msg.team_contribution_note}"></p>
+	\((#PagedRead & {key: "team-roster", owner: "{team_id}", scope: "-championship-{championship_id}", table: "team_roster", filter: "team_id=eq.{owner_id}&championship_id=eq.{championship_id}&search_key=like.*{q_key}*", order: _teamRosterOrder, emptyRow: {q: "", q_key: "", sort: "name", championship_id: "{championship_id}"}, events: {"input@team-roster-q": assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}, "change@team-roster-sort": assign: {sort: {type: "event", params: field: "value"}, offset: 0, next_offset: 40, page: 1}}, controls: """
+		<div class="team-filters"><label><span data-text="{msg.team_player_search}"></span><input id="team-roster-q" type="search" value="{q}" maxlength="80"></label><label><span data-text="{msg.team_sort}"></span><select id="team-roster-sort" data-value="{sort}"><option value="name" data-text="{msg.col_player}"></option><option value="played" data-text="{msg.col_played_long}"></option><option value="minutes" data-text="{msg.col_minutes_long}"></option><option value="goals" data-text="{msg.col_goals_long}"></option><option value="goals_per90" data-text="{msg.col_goals_per90_long}"></option><option value="contribution" data-text="{msg.col_contribution_long}"></option><option value="contribution_per90" data-text="{msg.col_contribution_per90_long}"></option></select></label></div>
+		""", content: (#TeamRosterPage & {filter: "team_id=eq.{owner_id}&championship_id=eq.{championship_id}&search_key=like.*{q_key}*&offset={offset}&limit=40", order: _teamRosterOrder, empty: "{msg.team_no_roster}"}).out}).out)
+	<p class="team-chart-note" data-text="{msg.team_contribution_note}"></p>
 
- """
+	"""
 
 _teamCampaign: """
- <section class="team-campaign"><h2 data-text="{msg.team_progress}"></h2><p class="team-chart-note" data-text="{msg.team_progress_note}"></p>
- <div data-live="team_group" data-select="*,group:stage_group!inner(name,slug,phase!inner(name,championship_id))" data-filter="team_id=eq.{team_id}&group.phase.championship_id=eq.{championship_id}" data-order="group_id.asc" data-empty="{msg.team_no_table}"><template data-item><section class="team-group-card"><h3><span data-text="{group.phase.name}"></span> · <span data-text="{group.name}"></span></h3>
- <div data-live="team_chart_state" data-filter="id=eq.{group_id}:{team_id}" data-machine='{"field":"metric","initial":"points","on":{"change":{"assign":{"compare_id":{"type":"chart-compare"}}}},"states":{"points":{}}}' data-empty-row='{"id":"{group_id}:{team_id}","group_id":"{group_id}","team_id":"{team_id}","compare_id":"{team_id}","metric":"points","series_json":"{}","game_prefix":"{msg.chart_game_prefix}"}' data-on-mutation="team-chart-seed" data-read-stored="team_chart_state?id=eq.{id}">
- <div class="team-filters"><label><span data-text="{msg.team_compare}"></span><select data-value="{compare_id}"><optgroup data-live="standing" data-select="*,team(slug,logo_key)" data-filter="group_id=eq.{group_id}&limit=250" data-order="team_name.asc,team_id.asc" data-empty=""><template data-item><option value="{team_id}" data-text="{team_name}"></option></template></optgroup></select></label></div>
- <div data-text="{series_json}\u001f{msg.team_progress}\u001f{msg.chart_locale}\u001f{msg.team_history_none}\u001fcombined\u001f\u001f\u001f\u001f{msg.col_points_long}\u001f{msg.col_position_long}" data-text-format="team-chart"></div>
- <div class="team-chart-source" data-live="team_campaign_point" data-select="*,team(name),game(slug)" data-filter="group_id=eq.{group_id}&team_id=in.({team_id},{compare_id})&limit=800" data-order="sequence.asc,team_id.asc" data-on-mutation="team-chart-fold" data-read-view="team_chart_state?id=eq.{id}" data-read-memberships="team_group?group_id=eq.{group_id}&limit=250"><template data-item><span hidden></span></template></div>
- \((#PagedRead & {key: "team-campaign-history", owner: "{team_id}", scope: "-{group_id}", emptyRow: {phase: "{group_id}"}, table: "team_campaign_point", filter: "group_id=eq.{phase}&team_id=eq.{owner_id}", order: "sequence.asc", content: """
-	<details><summary data-text="{msg.team_history_table}"></summary><table class="grid"><thead><tr><th data-text="{msg.team_date}"></th><th data-text="{msg.col_points}"></th><th data-text="{msg.col_position}"></th><th data-text="{msg.team_fixtures}"></th></tr></thead><tbody data-live="team_campaign_point" data-select="*,game(slug)" data-filter="group_id=eq.{phase}&team_id=eq.{owner_id}&offset={offset}&limit=40" data-order="sequence.asc" data-empty="{msg.team_history_none}"><template data-item><tr><th scope="row" data-text="{day}"></th><td data-text="{points}"></td><td data-text="{position}"></td><td><a data-route="jogo" data-param-slug="{game.slug}" data-text="{sequence}"></a></td></tr></template></tbody></table></details>
-	"""}).out)
- </div></section></template></div></section>
- """
+	<section class="team-campaign"><h2 data-text="{msg.team_progress}"></h2><p class="team-chart-note" data-text="{msg.team_progress_note}"></p>
+	<div data-live="team_group" data-select="*,group:stage_group!inner(name,slug,phase!inner(name,championship_id))" data-filter="team_id=eq.{team_id}&group.phase.championship_id=eq.{championship_id}" data-order="group_id.asc" data-empty="{msg.team_no_table}"><template data-item><section class="team-group-card"><h3><span data-text="{group.phase.name}"></span> · <span data-text="{group.name}"></span></h3>
+	<div data-live="team_chart_state" data-filter="id=eq.{group_id}:{team_id}" data-machine='{"field":"metric","initial":"points","on":{"change":{"assign":{"compare_id":{"type":"chart-compare"}}}},"states":{"points":{}}}' data-empty-row='{"id":"{group_id}:{team_id}","group_id":"{group_id}","team_id":"{team_id}","compare_id":"{team_id}","metric":"points","series_json":"{}","game_prefix":"{msg.chart_game_prefix}"}' data-on-mutation="team-chart-seed" data-read-stored="team_chart_state?id=eq.{id}">
+	<div class="team-filters"><label><span data-text="{msg.team_compare}"></span><select data-value="{compare_id}"><optgroup data-live="standing" data-select="*,team(slug,logo_key)" data-filter="group_id=eq.{group_id}&limit=250" data-order="team_name.asc,team_id.asc" data-empty=""><template data-item><option value="{team_id}" data-text="{team_name}"></option></template></optgroup></select></label></div>
+	<div data-text="{series_json}\u001f{msg.team_progress}\u001f{msg.chart_locale}\u001f{msg.team_history_none}\u001fcombined\u001f\u001f\u001f\u001f{msg.col_points_long}\u001f{msg.col_position_long}" data-text-format="team-chart"></div>
+	<div class="team-chart-source" data-live="team_campaign_point" data-select="*,team(name),game(slug)" data-filter="group_id=eq.{group_id}&team_id=in.({team_id},{compare_id})&limit=800" data-order="sequence.asc,team_id.asc" data-on-mutation="team-chart-fold" data-read-view="team_chart_state?id=eq.{id}" data-read-memberships="team_group?group_id=eq.{group_id}&limit=250"><template data-item><span hidden></span></template></div>
+	\((#PagedRead & {key: "team-campaign-history", owner: "{team_id}", scope: "-{group_id}", emptyRow: {phase: "{group_id}"}, table: "team_campaign_point", filter: "group_id=eq.{phase}&team_id=eq.{owner_id}", order: "sequence.asc", content: """
+		<details><summary data-text="{msg.team_history_table}"></summary><table class="grid"><thead><tr><th data-text="{msg.team_date}"></th><th data-text="{msg.col_points}"></th><th data-text="{msg.col_position}"></th><th data-text="{msg.team_fixtures}"></th></tr></thead><tbody data-live="team_campaign_point" data-select="*,game(slug)" data-filter="group_id=eq.{phase}&team_id=eq.{owner_id}&offset={offset}&limit=40" data-order="sequence.asc" data-empty="{msg.team_history_none}"><template data-item><tr><th scope="row" data-text="{day}"></th><td data-text="{points}"></td><td data-text="{position}"></td><td><a data-route="jogo" data-param-slug="{game.slug}" data-text="{sequence}"></a></td></tr></template></tbody></table></details>
+		"""}).out)
+	</div></section></template></div></section>
+	"""
 
 // Inspection writes must not invalidate the source reads they inspect.
 _teamOddsEvolution: """
@@ -1179,7 +1187,19 @@ _equipeMarkup: """
 	  <template data-item>
 	    <article class="team">
 	      <h1 class="band"><span class="archive-icon" data-text="{id}|{name}|{logo_key}" data-text-format="team-badge"></span><span data-text="{name}"></span></h1>
-	      <div class="page">
+	      <div class="page page-with-local-nav">
+	        \((#SectionNavigation & {
+		route:  "equipe"
+		params: #" data-param-slug="{param.slug}""#
+		links: [
+			{key: "ratings", label: "team_rating_history", fragment: "team-rating-history-{id}"},
+			{key: "games", label: "games_title", fragment: "team-fixtures-{id}"},
+			{key: "championships", label: "nav_championships", fragment: "team-championships-{id}"},
+			{key: "players", label: "players_title", fragment: "team-players-{id}"},
+			{key: "comments", label: "comments_title", fragment: "team-comments-{id}"},
+		]
+		back: #"<a data-route="equipes" data-text="{msg.back_teams}"></a>"#
+	}).out)
 	        <div class="content">
 	          <div class="community-media" data-text="{logo_key}" data-text-format="media-image"></div>
 	          <dl class="game-facts">
@@ -1192,9 +1212,9 @@ _equipeMarkup: """
 	          </dl>
 	          <div data-text="{latitude}|{longitude}|{msg.team_location}|{msg.team_location_none}" data-text-format="team-location"></div>
 	          \(_teamRatingHistory)
-	          <section><h2 data-text="{msg.games_upcoming}"></h2>\((#TeamGameArchive & {key: "team-upcoming", played: false}).out)</section>
+	          <section id="team-fixtures-{id}"><h2 data-text="{msg.games_upcoming}"></h2>\((#TeamGameArchive & {key: "team-upcoming", played: false}).out)</section>
 	          <section><h2 data-text="{msg.games_results}"></h2>\((#TeamGameArchive & {key: "team-results", played: true}).out)</section>
-	          <section class="team-current-championships">
+	          <section id="team-championships-{id}" class="team-current-championships">
 	            <h2 data-text="{msg.team_current_championships}"></h2>
 	            \((#TeamProfileChampionships & {key: "team-current-championships", filter: "team_id=eq.{owner_id}&status=neq.past", order: "status.asc,begins.desc,championship_id.asc", empty: "{msg.team_no_current_championships}"}).out)
 	          </section>
@@ -1202,7 +1222,7 @@ _equipeMarkup: """
 	            <h2 data-text="{msg.team_past_championships}"></h2>
 	            \((#TeamProfileChampionships & {key: "team-past-championships", filter: "team_id=eq.{owner_id}&status=eq.past", order: "begins.desc,championship_id.asc", empty: "{msg.team_no_past_championships}"}).out)
 	          </section>
-	          <section class="team-current-players">
+	          <section id="team-players-{id}" class="team-current-players">
 	            <h2 data-text="{msg.team_current_players}"></h2>
 	            \((#TeamProfilePlayers & {key: "team-current-players", filter: "team_id=eq.{owner_id}&is_current=is.true", order: "player_name.asc,player_id.asc", empty: "{msg.team_no_current_players}"}).out)
 	          </section>
@@ -1213,10 +1233,6 @@ _equipeMarkup: """
 
 	          \(_teamComments)
 	        </div>
-	        <aside class="side">
-	          <p><a data-route="equipes" data-text="{msg.back_teams}"></a></p>
-	          <p data-text="{msg.about}"></p>
-	        </aside>
 	      </div>
 	    </article>
 	  </template>
@@ -1235,12 +1251,12 @@ _equipe_campeonatoMarkup: """
 	</div>
 	<div class="team-membership" \(_teamChampionshipRead) data-exit-motion="none" data-empty="{msg.team_championship_gone}">
 	  <template data-item>
-	      <div class="page">
+	      <div class="page page-with-local-nav">
+	        \((#ChampionshipNavigation & {active: "", slug: "{param.championship}"}).out)
 	        <div class="content">
 	          <div class="team-championship-links"><a class="btn-quiet" data-route="equipe" data-param-slug="{team.slug}"><span data-text="{msg.back_team_profile}"></span></a><span class="chip" data-text="{msg[status]}"></span></div>
 	          <form class="team-switch" data-action="navigate" data-route="equipe-campeonato" data-param-slug="{param.slug}" data-param-championship="{param.championship}"><input type="hidden" name="championship" value="{param.championship}"><label><span data-text="{msg.team_switch}"></span><select name="slug" data-value="{param.slug}"><optgroup data-live="team_championship" data-select="*,team(name,slug)" data-filter="championship_id=eq.{championship_id}&limit=250" data-order="team_id.asc" data-empty=""><template data-item><option value="{team.slug}" data-text="{team.name}"></option></template></optgroup></select></label><button type="submit" class="btn-quiet" data-text="{msg.team_open}"></button></form>
-	          <nav class="team-section-links" aria-label="{msg.team_section_links}"><a href="#team-fixtures" data-text="{msg.team_fixtures}"></a><a href="#team-table" data-text="{msg.team_table}"></a><a href="#team-roster" data-text="{msg.team_roster}"></a><a href="#team-odds" data-text="{msg.team_odds}"></a></nav>
-	          <section id="team-fixtures" class="team-next">
+	          <section id="team-fixtures-{team_id}-{championship_id}" class="team-next">
 	            <h2 data-text="{msg.games_upcoming}"></h2>
 	\((#TeamGameArchive & {key: "team-championship-upcoming", played: false, scoped: true}).out)
 	          </section>
@@ -1248,25 +1264,25 @@ _equipe_campeonatoMarkup: """
 	            <h2 data-text="{msg.games_results}"></h2>
 	\((#TeamGameArchive & {key: "team-championship-results", played: true, scoped: true}).out)
 	          </section>
-	          <section id="team-table" class="team-standings">
+	          <section id="team-table-{team_id}-{championship_id}" class="team-standings">
 	            <h2 data-text="{msg.team_table}"></h2>
 	            <div class="team-group" data-live="team_group" data-select="*,group:stage_group!inner(name,slug,phase!inner(name,championship_id))" data-filter="team_id=eq.{team_id}&group.phase.championship_id=eq.{championship_id}" data-order="group_id.asc" data-empty="{msg.team_no_table}">
 	              <template data-item><section class="team-group-card"><h3><span data-text="{group.phase.name}"></span> · <span data-text="{group.name}"></span></h3><div class="table-wrap"><table class="grid standings"><thead><tr>\(_standingsHead)</tr></thead><tbody data-live="standing" data-select="*,team(slug,logo_key)" data-project='{"current":{"eq":["team_id","{team_id}"]}}' data-filter="group_id=eq.{group_id}" data-order="position.asc,id.asc" data-empty="{msg.no_teams}"><template data-item><tr data-zone="{zone}" style="--zone-source: {zone}" data-current="{current}">\(_championshipStandingsCells)</tr></template></tbody></table></div><div class="team-full-group"><a data-route="chances" data-param-slug="{group.slug}" data-text="{msg.chances_link}"></a></div></section></template>
 	            </div>
 	          </section>
-	          <section id="team-roster" class="team-roster">
+	          <section id="team-roster-{team_id}-{championship_id}" class="team-roster">
 	            <h2 data-text="{msg.team_roster}"></h2>
 	\(_teamRosterArchive)
 	          </section>
 	          \(_teamCampaign)
-	          <section id="team-odds" class="team-odds">
+	          <section id="team-odds-{team_id}-{championship_id}" class="team-odds">
 	            <h2 data-text="{msg.team_odds}"></h2>
 	            <div class="team-group-odds" data-live="team_group" data-select="*,group:stage_group!inner(name,slug,phase!inner(name,championship_id))" data-filter="team_id=eq.{team_id}&group.phase.championship_id=eq.{championship_id}" data-order="group_id.asc" data-empty="{msg.team_no_odds}">
 	              <template data-item><section class="team-group-card"><h3><span data-text="{group.phase.name}"></span> · <span data-text="{group.name}"></span></h3><div data-live="team_chance" data-select="*,team(slug,logo_key),group:group_id(slug)" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}&limit=1" data-order="rank.asc,id.asc" data-empty="{msg.team_no_odds}"><template data-item><div class="team-chance-detail"><p class="team-odds-summary"><span data-text="{msg.col_position}"></span> <b data-text="{rank}"></b><span data-text="{msg.col_points}"></span> <b data-text="{points}"></b><span data-text="{msg.col_played}"></span> <b data-text="{played}"></b></p><div class="team-zone-odds" data-live="zone_chance" data-select="*,zone:zone_id(name)" data-filter="group_id=eq.{group_id}&team_id=eq.{team_id}" data-order="first.asc,last.asc" data-empty=""><template data-item><p><span><i class="odds-progress-swatch" data-zone="{color}" style="--zone-source: {color}" aria-hidden="true"></i> <span data-text="{zone.name}"></span></span> <span class="title-chance" data-band="{band}"><span class="bar" aria-hidden="true"><i></i></span><span data-text="{percent}" data-text-format="number"></span>%<span class="reach" data-reach="{reach}" title="{msg[reach]}" aria-hidden="true"></span><span class="visually-hidden" data-text="{msg[reach]}"></span></span></p></template></div><p><a data-route="chances" data-param-slug="{group.slug}" data-text="{msg.chances_link}"></a></p></div></template></div>\(_teamOddsEvolution)</section></template>
 	            </div>
 	          </section>
 	        </div>
-	        <aside class="side"><p><a data-route="equipe" data-param-slug="{team.slug}" data-text="{msg.back_team_profile}"></a></p><p data-text="{msg.about}"></p></aside>
+
 	      </div>
 	  </template>
 	</div>

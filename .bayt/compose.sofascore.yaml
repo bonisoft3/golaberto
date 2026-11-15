@@ -1,0 +1,47 @@
+# generated from bayt.cue — do not edit
+services:
+  golaberto-sofascore:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.sofascore
+      target: sofascore
+      tags:
+      - bayt-golaberto-sofascore:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-golaberto-sofascore:latest
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    environment:
+      SOFASCORE_PORT: "8080"
+    image: bayt-golaberto-sofascore:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    networks:
+      airlock-out:
+        aliases:
+        - sofascore
+      bridge-sofascore-egress:
+        aliases:
+        - sofascore
+    restart: unless-stopped
+  golaberto-sofascore_bayt:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.sofascore
+      target: sofascore_bayt
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    image: bayt-golaberto-sofascore_bayt:latest
+    scale: 0
+  golaberto-sofascore_srcs:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.sofascore
+      target: sofascore_srcs
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    image: bayt-golaberto-sofascore_srcs:latest
+    scale: 0

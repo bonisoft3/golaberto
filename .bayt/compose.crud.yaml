@@ -5,6 +5,8 @@ services:
       additional_contexts:
         golaberto-database: service:golaberto-database
         golaberto-migrate: service:golaberto-migrate
+        golaberto-airlock-upgrade: service:golaberto-airlock-upgrade
+        golaberto-timer-check: service:golaberto-timer-check
       context: ..
       dockerfile: .bayt/Dockerfile.crud
       target: crud
@@ -21,16 +23,20 @@ services:
         restart: true
       golaberto-migrate:
         condition: service_completed_successfully
+      golaberto-airlock-upgrade:
+        condition: service_completed_successfully
+      golaberto-timer-check:
+        condition: service_completed_successfully
     environment:
       PGRST_DB_URI: >-
         postgres://authenticator:${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}@database:5432/${POSTGRES_DB:-golaberto}
       PGRST_DB_SCHEMA: public
       PGRST_DB_ANON_ROLE: anon
       PGRST_DB_PRE_REQUEST: public.app_pre_request
-      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
       PGRST_SERVER_HOST: "*"
       PGRST_SERVER_PORT: "3000"
       PGRST_ADMIN_SERVER_PORT: "3001"
+      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
     healthcheck:
       test:
       - CMD
@@ -51,6 +57,8 @@ services:
       additional_contexts:
         golaberto-database_bayt: service:golaberto-database_bayt
         golaberto-migrate_bayt: service:golaberto-migrate_bayt
+        golaberto-airlock-upgrade_bayt: service:golaberto-airlock-upgrade_bayt
+        golaberto-timer-check_bayt: service:golaberto-timer-check_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.crud
       target: crud_bayt

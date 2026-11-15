@@ -1,0 +1,16 @@
+Check duckstream/native.integration.ts
+running 2 tests from ./duckstream/native.integration.ts
+native ratings matches snapshot queries across bootstrap, updates and deletes ...
+------- output -------
+ratings: stage 0 matched
+ratings: stage 1 matched
+ratings: stage 2 matched
+ratings: stage 3 matched
+ratings: stage 4 matched
+ratings: stage 5 matched
+----- output end -----
+native ratings matches snapshot queries across bootstrap, updates and deletes ... ok (25s)
+native chances matches snapshot queries across bootstrap, updates and deletes ...
+ok | 1 passed | 0 failed (43s)
+
+error: Promise resolution is still pending but the event loop has already resolved

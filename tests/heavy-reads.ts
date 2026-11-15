@@ -49,3 +49,40 @@ Deno.test("a user's counts follow comments and edits without scanning them on re
     ROLLBACK;`);
   assertEquals(output.split("\n"), ["0/0/false", "3/3/true", "2/3/true"]);
 });
+
+Deno.test("a player directory read uses maintained entries without joining player, rating or geography on read", async () => {
+  const player = crypto.randomUUID();
+  const alias = `Alias-${player.slice(0, 8)}`;
+  const row = `SELECT name||'/'||coalesce(rating::text,'none')||'/'||country_id||'/'||position_key FROM player_directory WHERE id='${player}'`;
+  const output = await query(`BEGIN;
+    INSERT INTO player(id,name,full_name,country,position,slug)
+      VALUES ('${player}','Directory Seed','Directory Full','${alias}','cm','dir-${player}');
+    ${row};
+    UPDATE geography_country SET aliases=(aliases::jsonb || to_jsonb('${alias}'::text))::text WHERE id='br';
+    ${row};
+    INSERT INTO player_rating(id,rating,off_rating,def_rating) VALUES ('${player}',8.5,1.2,0.4);
+    ${row};
+    UPDATE player SET name='Directory Edited',country='França',position='fw' WHERE id='${player}';
+    ${row};
+    DELETE FROM player_rating WHERE id='${player}';
+    ${row};
+    SET LOCAL app.scopes='public:';
+    SET LOCAL ROLE app_user;
+    DO $$ DECLARE line text; BEGIN
+      FOR line IN EXPLAIN SELECT * FROM player_directory WHERE id='${player}' LOOP
+        IF line ~ '(player_rating|geography_country)' THEN RAISE EXCEPTION 'a player directory read scans %', line; END IF;
+      END LOOP;
+    END $$;
+    RESET ROLE;
+    DELETE FROM player WHERE id='${player}';
+    SELECT count(*) FROM player_directory WHERE id='${player}';
+    ROLLBACK;`);
+  assertEquals(output.split("\n"), [
+    "Directory Seed/none//cm",
+    "Directory Seed/none/br/cm",
+    "Directory Seed/8.5/br/cm",
+    "Directory Edited/8.5/fr/fw",
+    "Directory Edited/none/fr/fw",
+    "0",
+  ]);
+});

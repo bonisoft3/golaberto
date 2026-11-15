@@ -1,0 +1,1624 @@
+{
+  "captured_at": "2026-10-28T00:02:31.844091+00:00",
+  "original_mysql_teams": [
+    {
+      "id": 1014,
+      "city": null,
+      "name": "United Arab Emirates",
+      "country": "United Arab Emirates",
+      "full_name": "United Arab Emirates Football Association",
+      "team_type": 1,
+      "foundation": null,
+      "stadium_id": null,
+      "sofascore_id": "298263"
+    },
+    {
+      "id": 1189,
+      "city": "Katowice",
+      "name": "Katowice",
+      "country": "Poland",
+      "full_name": "Stowarzyszenie Sympatyków Klubu Górniczy Klub Sportowy Katowice",
+      "team_type": 0,
+      "foundation": "1964-02-27",
+      "stadium_id": null,
+      "sofascore_id": "3112"
+    },
+    {
+      "id": 1444,
+      "city": "Dublin",
+      "name": "Bohemians",
+      "country": "Ireland",
+      "full_name": "Bohemian Football Club",
+      "team_type": 0,
+      "foundation": "1890-09-06",
+      "stadium_id": 811,
+      "sofascore_id": "3173"
+    },
+    {
+      "id": 2336,
+      "city": "Bełchatów",
+      "name": "GKS Bełchatów",
+      "country": "Poland",
+      "full_name": "PGE Górniczy Klub Sportowy Bełchatów",
+      "team_type": 0,
+      "foundation": "1977-01-01",
+      "stadium_id": null,
+      "sofascore_id": "3112"
+    },
+    {
+      "id": 2408,
+      "city": "Semey",
+      "name": "FC Yelimay",
+      "country": "Kazakhstan",
+      "full_name": "Football Club Yelimay",
+      "team_type": 0,
+      "foundation": "1964-01-01",
+      "stadium_id": null,
+      "sofascore_id": "3173"
+    },
+    {
+      "id": 2998,
+      "city": "",
+      "name": "Sint Maarten",
+      "country": "Sint Maarten",
+      "full_name": "Sint Maarten Soccer Association",
+      "team_type": 1,
+      "foundation": null,
+      "stadium_id": null,
+      "sofascore_id": "298263"
+    },
+    {
+      "id": 3476,
+      "city": "Burgos",
+      "name": "Burgos",
+      "country": "Spain",
+      "full_name": "Burgos Club de Fútbol",
+      "team_type": 0,
+      "foundation": "1985-01-01",
+      "stadium_id": null,
+      "sofascore_id": "2854"
+    },
+    {
+      "id": 3477,
+      "city": "Elda",
+      "name": "Eldense",
+      "country": "Spain",
+      "full_name": "Club Deportivo Eldense",
+      "team_type": 0,
+      "foundation": "1921-09-17",
+      "stadium_id": null,
+      "sofascore_id": "47321"
+    },
+    {
+      "id": 3478,
+      "city": "Vigo",
+      "name": "Celta Fortuna",
+      "country": "Spain",
+      "full_name": "Real Club Celta de Vigo Fortuna",
+      "team_type": 0,
+      "foundation": "1927-01-01",
+      "stadium_id": null,
+      "sofascore_id": "24336"
+    },
+    {
+      "id": 3479,
+      "city": "Andorra la Vella",
+      "name": "FC Andorra",
+      "country": "Andorra",
+      "full_name": "Futbol Club Andorra",
+      "team_type": 0,
+      "foundation": "1942-10-15",
+      "stadium_id": null,
+      "sofascore_id": "324871"
+    },
+    {
+      "id": 3480,
+      "city": "San Sebastian",
+      "name": "Real Sociedad B",
+      "country": "Spain",
+      "full_name": "Real Sociedad de Fútbol B",
+      "team_type": 0,
+      "foundation": "1955-01-01",
+      "stadium_id": null,
+      "sofascore_id": "24360"
+    },
+    {
+      "id": 3481,
+      "city": "Ceuta",
+      "name": "Ceuta",
+      "country": "Spain",
+      "full_name": "Agrupación Deportiva Ceuta Fútbol Club",
+      "team_type": 0,
+      "foundation": "1956-07-09",
+      "stadium_id": null,
+      "sofascore_id": "2869"
+    }
+  ],
+  "reviews_before": [
+    {
+      "id": "0029ae1f-8e66-40ab-b664-cc4e37851570",
+      "kind": "binding",
+      "reason": "identity recovery conflict",
+      "evidence": {
+        "reason": "missing target",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "3479"
+          },
+          "local_id": "a0700000-0000-4000-8000-000000000d97",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "324871"
+        }
+      },
+      "resolved": false,
+      "source_id": null,
+      "created_at": "2026-10-27T21:17:09.042258+00:00",
+      "external_id": "",
+      "fingerprint": "ec04a02119f8940bbb7dfcac9a48d751"
+    },
+    {
+      "id": "17a48f03-7b37-4c18-9296-e0df34bdd93a",
+      "kind": "binding",
+      "reason": "identity recovery conflict",
+      "evidence": {
+        "reason": "conflicting identity",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "2408"
+          },
+          "local_id": "a0700000-0000-4000-8000-000000000968",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "3173"
+        }
+      },
+      "resolved": false,
+      "source_id": null,
+      "created_at": "2026-10-27T21:17:09.042119+00:00",
+      "external_id": "",
+      "fingerprint": "b5ace47aba64277de41916d490b94f4c"
+    },
+    {
+      "id": "255deb2a-3687-4a05-9083-7bace3f57c0f",
+      "kind": "binding",
+      "reason": "identity recovery conflict",
+      "evidence": {
+        "reason": "missing target",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "3481"
+          },
+          "local_id": "a0700000-0000-4000-8000-000000000d99",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "2869"
+        }
+      },
+      "resolved": false,
+      "source_id": null,
+      "created_at": "2026-10-27T21:17:09.041569+00:00",
+      "external_id": "",
+      "fingerprint": "9d1fdf95d1055bc2b88176e7449da69c"
+    },
+    {
+      "id": "713acb91-88f2-4ab7-a32a-2a5c6e12e768",
+      "kind": "binding",
+      "reason": "identity recovery conflict",
+      "evidence": {
+        "reason": "missing target",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "3476"
+          },
+          "local_id": "a0700000-0000-4000-8000-000000000d94",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "2854"
+        }
+      },
+      "resolved": false,
+      "source_id": null,
+      "created_at": "2026-10-27T21:17:09.04146+00:00",
+      "external_id": "",
+      "fingerprint": "354752e2040cc0aec063790381af84fe"
+    },
+    {
+      "id": "77460eb4-4e06-49ca-a74c-135cd002f720",
+      "kind": "binding",
+      "reason": "identity recovery conflict",
+      "evidence": {
+        "reason": "conflicting identity",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "1014"
+          },
+          "local_id": "a0700000-0000-4000-8000-0000000003f6",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "298263"
+        }
+      },
+      "resolved": false,
+      "source_id": null,
+      "created_at": "2026-10-27T21:17:09.041656+00:00",
+      "external_id": "",
+      "fingerprint": "9af667925ff254c442d7bd4a452184a5"
+    },
+    {
+      "id": "8f4dbda2-815b-499a-8ea1-f5b5a44fa01f",
+      "kind": "binding",
+      "reason": "identity recovery conflict",
+      "evidence": {
+        "reason": "conflicting identity",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "1444"
+          },
+          "local_id": "a0700000-0000-4000-8000-0000000005a4",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "3173"
+        }
+      },
+      "resolved": false,
+      "source_id": null,
+      "created_at": "2026-10-27T21:17:09.042035+00:00",
+      "external_id": "",
+      "fingerprint": "53842f0ab52d4491e48eb35b781a4d3b"
+    },
+    {
+      "id": "901fd255-ecd1-449a-99c9-4913b41397c1",
+      "kind": "binding",
+      "reason": "identity recovery conflict",
+      "evidence": {
+        "reason": "missing target",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "3477"
+          },
+          "local_id": "a0700000-0000-4000-8000-000000000d95",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "47321"
+        }
+      },
+      "resolved": false,
+      "source_id": null,
+      "created_at": "2026-10-27T21:17:09.04237+00:00",
+      "external_id": "",
+      "fingerprint": "6dc73ff57cff99b6df9092fea9b0527d"
+    },
+    {
+      "id": "b89c5f3e-d622-48cb-837b-e27664addc84",
+      "kind": "binding",
+      "reason": "identity recovery conflict",
+      "evidence": {
+        "reason": "missing target",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "3480"
+          },
+          "local_id": "a0700000-0000-4000-8000-000000000d98",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "24360"
+        }
+      },
+      "resolved": false,
+      "source_id": null,
+      "created_at": "2026-10-27T21:17:09.041361+00:00",
+      "external_id": "",
+      "fingerprint": "f0d277be7d65fd2d622b11f610c41d5f"
+    },
+    {
+      "id": "c282d374-9df0-4be8-9958-046fe15dea33",
+      "kind": "binding",
+      "reason": "identity recovery conflict",
+      "evidence": {
+        "reason": "missing target",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "3478"
+          },
+          "local_id": "a0700000-0000-4000-8000-000000000d96",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "24336"
+        }
+      },
+      "resolved": false,
+      "source_id": null,
+      "created_at": "2026-10-27T21:17:09.041266+00:00",
+      "external_id": "",
+      "fingerprint": "f24e0e7e49a90a85fe17e47327ed1ea2"
+    },
+    {
+      "id": "c76795ce-f3c1-4b10-8fa7-33007381105e",
+      "kind": "binding",
+      "reason": "identity recovery conflict",
+      "evidence": {
+        "reason": "conflicting identity",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "1189"
+          },
+          "local_id": "a0700000-0000-4000-8000-0000000004a5",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "3112"
+        }
+      },
+      "resolved": false,
+      "source_id": null,
+      "created_at": "2026-10-27T21:17:09.041904+00:00",
+      "external_id": "",
+      "fingerprint": "fbc6dcbffeec0be9c9a1d3111a8bb83b"
+    },
+    {
+      "id": "c77d5832-ab75-4e39-b77f-a72cf4986eee",
+      "kind": "binding",
+      "reason": "identity recovery conflict",
+      "evidence": {
+        "reason": "conflicting identity",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "2336"
+          },
+          "local_id": "a0700000-0000-4000-8000-000000000920",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "3112"
+        }
+      },
+      "resolved": false,
+      "source_id": null,
+      "created_at": "2026-10-27T21:17:09.041986+00:00",
+      "external_id": "",
+      "fingerprint": "a55b4a9dfda1528cf36f786e5d8f4431"
+    },
+    {
+      "id": "d275decd-9591-4825-9fd4-f2ab0739458b",
+      "kind": "binding",
+      "reason": "identity recovery conflict",
+      "evidence": {
+        "reason": "conflicting identity",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "2998"
+          },
+          "local_id": "a0700000-0000-4000-8000-000000000bb6",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "298263"
+        }
+      },
+      "resolved": false,
+      "source_id": null,
+      "created_at": "2026-10-27T21:17:09.041786+00:00",
+      "external_id": "",
+      "fingerprint": "1b60500ba80c6df958039f4851e6547e"
+    }
+  ],
+  "teams_before": [
+    {
+      "id": "a0700000-0000-4000-8000-0000000003f6",
+      "city": null,
+      "name": "United Arab Emirates",
+      "slug": "united-arab-emirates",
+      "txid": 5519,
+      "country": "United Arab Emirates",
+      "latitude": 24.0002488,
+      "logo_key": null,
+      "scope_id": "public:",
+      "full_name": "United Arab Emirates Football Association",
+      "longitude": 53.9994829,
+      "team_type": "national",
+      "created_by": null,
+      "foundation": null,
+      "search_key": "United Arab Emirates",
+      "stadium_id": null,
+      "updated_by": null,
+      "row_version": "(107,34)",
+      "search_name": "United Arab Emirates",
+      "foundation_display": null
+    },
+    {
+      "id": "a0700000-0000-4000-8000-0000000004a5",
+      "city": "Katowice",
+      "name": "Katowice",
+      "slug": "katowice",
+      "txid": 5519,
+      "country": "Poland",
+      "latitude": 50.2598987,
+      "logo_key": null,
+      "scope_id": "public:",
+      "full_name": "Stowarzyszenie Sympatyków Klubu Górniczy Klub Sportowy Katowice",
+      "longitude": 19.0215852,
+      "team_type": "club",
+      "created_by": null,
+      "foundation": "1964-02-27",
+      "search_key": "Katowice",
+      "stadium_id": null,
+      "updated_by": null,
+      "row_version": "(112,16)",
+      "search_name": "Katowice",
+      "foundation_display": "27/02/1964"
+    },
+    {
+      "id": "a0700000-0000-4000-8000-0000000005a4",
+      "city": "Dublin",
+      "name": "Bohemians",
+      "slug": "bohemians",
+      "txid": 5519,
+      "country": "Ireland",
+      "latitude": 53.3493795,
+      "logo_key": null,
+      "scope_id": "public:",
+      "full_name": "Bohemian Football Club",
+      "longitude": -6.2605593,
+      "team_type": "club",
+      "created_by": null,
+      "foundation": "1890-09-06",
+      "search_key": "Bohemians",
+      "stadium_id": "a0600000-0000-4000-8000-00000000032b",
+      "updated_by": null,
+      "row_version": "(118,39)",
+      "search_name": "Bohemians",
+      "foundation_display": "06/09/1890"
+    },
+    {
+      "id": "a0700000-0000-4000-8000-000000000920",
+      "city": "Bełchatów",
+      "name": "GKS Bełchatów",
+      "slug": "gks-belchatow",
+      "txid": 5519,
+      "country": "Poland",
+      "latitude": 51.3650175,
+      "logo_key": null,
+      "scope_id": "public:",
+      "full_name": "PGE Górniczy Klub Sportowy Bełchatów",
+      "longitude": 19.3691833,
+      "team_type": "club",
+      "created_by": null,
+      "foundation": "1977-01-01",
+      "search_key": "GKS Bełchatów",
+      "stadium_id": null,
+      "updated_by": null,
+      "row_version": "(142,28)",
+      "search_name": "GKS Bełchatów",
+      "foundation_display": "01/01/1977"
+    },
+    {
+      "id": "a0700000-0000-4000-8000-000000000968",
+      "city": "Semey",
+      "name": "FC Yelimay",
+      "slug": "fc-yelimay",
+      "txid": 5519,
+      "country": "Kazakhstan",
+      "latitude": 50.4067378,
+      "logo_key": null,
+      "scope_id": "public:",
+      "full_name": "Football Club Yelimay",
+      "longitude": 80.2502824,
+      "team_type": "club",
+      "created_by": null,
+      "foundation": "1964-01-01",
+      "search_key": "FC Yelimay",
+      "stadium_id": null,
+      "updated_by": null,
+      "row_version": "(144,26)",
+      "search_name": "FC Yelimay",
+      "foundation_display": "01/01/1964"
+    },
+    {
+      "id": "a0700000-0000-4000-8000-000000000bb6",
+      "city": "",
+      "name": "Sint Maarten",
+      "slug": "sint-maarten",
+      "txid": 5519,
+      "country": "Sint Maarten",
+      "latitude": 18.0423736,
+      "logo_key": null,
+      "scope_id": "public:",
+      "full_name": "Sint Maarten Soccer Association",
+      "longitude": -63.0549948,
+      "team_type": "national",
+      "created_by": null,
+      "foundation": null,
+      "search_key": "Sint Maarten",
+      "stadium_id": null,
+      "updated_by": null,
+      "row_version": "(159,26)",
+      "search_name": "Sint Maarten",
+      "foundation_display": null
+    }
+  ],
+  "bindings_before": [],
+  "verified_bindings": [
+    {
+      "entity_kind": "team",
+      "external_id": "4727",
+      "local_id": "a0700000-0000-4000-8000-0000000003f6",
+      "provenance": "operator-research",
+      "evidence": {
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "sources": [
+          "https://www.sofascore.com/football/team/united-arab-emirates/4727"
+        ],
+        "local_source_id": "1014",
+        "original_external_id": "298263",
+        "team_name": "United Arab Emirates",
+        "country": "United Arab Emirates",
+        "review_id": "77460eb4-4e06-49ca-a74c-135cd002f720"
+      }
+    },
+    {
+      "entity_kind": "team",
+      "external_id": "3112",
+      "local_id": "a0700000-0000-4000-8000-0000000004a5",
+      "provenance": "operator-research",
+      "evidence": {
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "sources": [
+          "https://www.sofascore.com/football/team/gks-katowice/3112"
+        ],
+        "local_source_id": "1189",
+        "original_external_id": "3112",
+        "team_name": "Katowice",
+        "country": "Poland",
+        "review_id": "c76795ce-f3c1-4b10-8fa7-33007381105e"
+      }
+    },
+    {
+      "entity_kind": "team",
+      "external_id": "3173",
+      "local_id": "a0700000-0000-4000-8000-0000000005a4",
+      "provenance": "operator-research",
+      "evidence": {
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "sources": [
+          "https://www.sofascore.com/football/team/bohemian/3173"
+        ],
+        "local_source_id": "1444",
+        "original_external_id": "3173",
+        "team_name": "Bohemians",
+        "country": "Ireland",
+        "review_id": "8f4dbda2-815b-499a-8ea1-f5b5a44fa01f"
+      }
+    },
+    {
+      "entity_kind": "team",
+      "external_id": "3128",
+      "local_id": "a0700000-0000-4000-8000-000000000920",
+      "provenance": "operator-research",
+      "evidence": {
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "sources": [
+          "https://www.sofascore.com/football/team/gks-belchatow/3128"
+        ],
+        "local_source_id": "2336",
+        "original_external_id": "3112",
+        "team_name": "GKS Bełchatów",
+        "country": "Poland",
+        "review_id": "c77d5832-ab75-4e39-b77f-a72cf4986eee"
+      }
+    },
+    {
+      "entity_kind": "team",
+      "external_id": "464803",
+      "local_id": "a0700000-0000-4000-8000-000000000968",
+      "provenance": "operator-research",
+      "evidence": {
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "sources": [
+          "https://www.sofascore.com/football/team/elimai-fc/464803"
+        ],
+        "local_source_id": "2408",
+        "original_external_id": "3173",
+        "team_name": "FC Yelimay",
+        "country": "Kazakhstan",
+        "review_id": "17a48f03-7b37-4c18-9296-e0df34bdd93a"
+      }
+    },
+    {
+      "entity_kind": "team",
+      "external_id": "298263",
+      "local_id": "a0700000-0000-4000-8000-000000000bb6",
+      "provenance": "operator-research",
+      "evidence": {
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "sources": [
+          "https://www.sofascore.com/football/team/sint-maarten/298263"
+        ],
+        "local_source_id": "2998",
+        "original_external_id": "298263",
+        "team_name": "Sint Maarten",
+        "country": "Sint Maarten",
+        "review_id": "d275decd-9591-4825-9fd4-f2ab0739458b"
+      }
+    },
+    {
+      "entity_kind": "team",
+      "external_id": "2854",
+      "local_id": "a0700000-0000-4000-8000-000000000d94",
+      "provenance": "operator-research",
+      "evidence": {
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "sources": [
+          "https://www.sofascore.com/football/team/burgos-club-de-futbol/2854"
+        ],
+        "local_source_id": "3476",
+        "original_external_id": "2854",
+        "team_name": "Burgos",
+        "country": "Spain",
+        "review_id": "713acb91-88f2-4ab7-a32a-2a5c6e12e768"
+      }
+    },
+    {
+      "entity_kind": "team",
+      "external_id": "47321",
+      "local_id": "a0700000-0000-4000-8000-000000000d95",
+      "provenance": "operator-research",
+      "evidence": {
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "sources": [
+          "https://www.sofascore.com/football/team/cd-eldense/47321"
+        ],
+        "local_source_id": "3477",
+        "original_external_id": "47321",
+        "team_name": "Eldense",
+        "country": "Spain",
+        "review_id": "901fd255-ecd1-449a-99c9-4913b41397c1"
+      }
+    },
+    {
+      "entity_kind": "team",
+      "external_id": "24336",
+      "local_id": "a0700000-0000-4000-8000-000000000d96",
+      "provenance": "operator-research",
+      "evidence": {
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "sources": [
+          "https://www.sofascore.com/football/team/celta-vigo-b/24336"
+        ],
+        "local_source_id": "3478",
+        "original_external_id": "24336",
+        "team_name": "Celta Fortuna",
+        "country": "Spain",
+        "review_id": "c282d374-9df0-4be8-9958-046fe15dea33"
+      }
+    },
+    {
+      "entity_kind": "team",
+      "external_id": "324871",
+      "local_id": "a0700000-0000-4000-8000-000000000d97",
+      "provenance": "operator-research",
+      "evidence": {
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "sources": [
+          "https://www.sofascore.com/football/team/fc-andorra/324871"
+        ],
+        "local_source_id": "3479",
+        "original_external_id": "324871",
+        "team_name": "FC Andorra",
+        "country": "Andorra",
+        "review_id": "0029ae1f-8e66-40ab-b664-cc4e37851570"
+      }
+    },
+    {
+      "entity_kind": "team",
+      "external_id": "24360",
+      "local_id": "a0700000-0000-4000-8000-000000000d98",
+      "provenance": "operator-research",
+      "evidence": {
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "sources": [
+          "https://www.sofascore.com/football/team/real-sociedad-b/24360"
+        ],
+        "local_source_id": "3480",
+        "original_external_id": "24360",
+        "team_name": "Real Sociedad B",
+        "country": "Spain",
+        "review_id": "b89c5f3e-d622-48cb-837b-e27664addc84"
+      }
+    },
+    {
+      "entity_kind": "team",
+      "external_id": "2869",
+      "local_id": "a0700000-0000-4000-8000-000000000d99",
+      "provenance": "operator-research",
+      "evidence": {
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "sources": [
+          "https://www.sofascore.com/football/team/ad-ceuta/2869"
+        ],
+        "local_source_id": "3481",
+        "original_external_id": "2869",
+        "team_name": "Ceuta",
+        "country": "Spain",
+        "review_id": "255deb2a-3687-4a05-9083-7bace3f57c0f"
+      }
+    }
+  ],
+  "updater_requests_before": 11,
+  "rollback_validation_passed": true,
+  "applied_at": "2026-10-28T00:02:35.166391+00:00",
+  "teams_after": [
+    {
+      "id": "a0700000-0000-4000-8000-0000000003f6",
+      "city": null,
+      "name": "United Arab Emirates",
+      "slug": "united-arab-emirates",
+      "txid": 5519,
+      "country": "United Arab Emirates",
+      "latitude": 24.0002488,
+      "logo_key": null,
+      "scope_id": "public:",
+      "full_name": "United Arab Emirates Football Association",
+      "longitude": 53.9994829,
+      "team_type": "national",
+      "created_by": null,
+      "foundation": null,
+      "search_key": "United Arab Emirates",
+      "stadium_id": null,
+      "updated_by": null,
+      "row_version": "(107,34)",
+      "search_name": "United Arab Emirates",
+      "foundation_display": null
+    },
+    {
+      "id": "a0700000-0000-4000-8000-0000000004a5",
+      "city": "Katowice",
+      "name": "Katowice",
+      "slug": "katowice",
+      "txid": 5519,
+      "country": "Poland",
+      "latitude": 50.2598987,
+      "logo_key": null,
+      "scope_id": "public:",
+      "full_name": "Stowarzyszenie Sympatyków Klubu Górniczy Klub Sportowy Katowice",
+      "longitude": 19.0215852,
+      "team_type": "club",
+      "created_by": null,
+      "foundation": "1964-02-27",
+      "search_key": "Katowice",
+      "stadium_id": null,
+      "updated_by": null,
+      "row_version": "(112,16)",
+      "search_name": "Katowice",
+      "foundation_display": "27/02/1964"
+    },
+    {
+      "id": "a0700000-0000-4000-8000-0000000005a4",
+      "city": "Dublin",
+      "name": "Bohemians",
+      "slug": "bohemians",
+      "txid": 5519,
+      "country": "Ireland",
+      "latitude": 53.3493795,
+      "logo_key": null,
+      "scope_id": "public:",
+      "full_name": "Bohemian Football Club",
+      "longitude": -6.2605593,
+      "team_type": "club",
+      "created_by": null,
+      "foundation": "1890-09-06",
+      "search_key": "Bohemians",
+      "stadium_id": "a0600000-0000-4000-8000-00000000032b",
+      "updated_by": null,
+      "row_version": "(118,39)",
+      "search_name": "Bohemians",
+      "foundation_display": "06/09/1890"
+    },
+    {
+      "id": "a0700000-0000-4000-8000-000000000920",
+      "city": "Bełchatów",
+      "name": "GKS Bełchatów",
+      "slug": "gks-belchatow",
+      "txid": 5519,
+      "country": "Poland",
+      "latitude": 51.3650175,
+      "logo_key": null,
+      "scope_id": "public:",
+      "full_name": "PGE Górniczy Klub Sportowy Bełchatów",
+      "longitude": 19.3691833,
+      "team_type": "club",
+      "created_by": null,
+      "foundation": "1977-01-01",
+      "search_key": "GKS Bełchatów",
+      "stadium_id": null,
+      "updated_by": null,
+      "row_version": "(142,28)",
+      "search_name": "GKS Bełchatów",
+      "foundation_display": "01/01/1977"
+    },
+    {
+      "id": "a0700000-0000-4000-8000-000000000968",
+      "city": "Semey",
+      "name": "FC Yelimay",
+      "slug": "fc-yelimay",
+      "txid": 5519,
+      "country": "Kazakhstan",
+      "latitude": 50.4067378,
+      "logo_key": null,
+      "scope_id": "public:",
+      "full_name": "Football Club Yelimay",
+      "longitude": 80.2502824,
+      "team_type": "club",
+      "created_by": null,
+      "foundation": "1964-01-01",
+      "search_key": "FC Yelimay",
+      "stadium_id": null,
+      "updated_by": null,
+      "row_version": "(144,26)",
+      "search_name": "FC Yelimay",
+      "foundation_display": "01/01/1964"
+    },
+    {
+      "id": "a0700000-0000-4000-8000-000000000bb6",
+      "city": "",
+      "name": "Sint Maarten",
+      "slug": "sint-maarten",
+      "txid": 5519,
+      "country": "Sint Maarten",
+      "latitude": 18.0423736,
+      "logo_key": null,
+      "scope_id": "public:",
+      "full_name": "Sint Maarten Soccer Association",
+      "longitude": -63.0549948,
+      "team_type": "national",
+      "created_by": null,
+      "foundation": null,
+      "search_key": "Sint Maarten",
+      "stadium_id": null,
+      "updated_by": null,
+      "row_version": "(159,26)",
+      "search_name": "Sint Maarten",
+      "foundation_display": null
+    },
+    {
+      "id": "a0700000-0000-4000-8000-000000000d94",
+      "city": "Burgos",
+      "name": "Burgos",
+      "slug": "burgos",
+      "txid": 4190370,
+      "country": "Spain",
+      "latitude": null,
+      "logo_key": null,
+      "scope_id": "public:",
+      "full_name": "Burgos Club de Fútbol",
+      "longitude": null,
+      "team_type": "club",
+      "created_by": null,
+      "foundation": "1985-01-01",
+      "search_key": "Burgos",
+      "stadium_id": null,
+      "updated_by": null,
+      "row_version": "(0,43)",
+      "search_name": "Burgos",
+      "foundation_display": "01/01/1985"
+    },
+    {
+      "id": "a0700000-0000-4000-8000-000000000d95",
+      "city": "Elda",
+      "name": "Eldense",
+      "slug": "eldense",
+      "txid": 4190370,
+      "country": "Spain",
+      "latitude": null,
+      "logo_key": null,
+      "scope_id": "public:",
+      "full_name": "Club Deportivo Eldense",
+      "longitude": null,
+      "team_type": "club",
+      "created_by": null,
+      "foundation": "1921-09-17",
+      "search_key": "Eldense",
+      "stadium_id": null,
+      "updated_by": null,
+      "row_version": "(0,44)",
+      "search_name": "Eldense",
+      "foundation_display": "17/09/1921"
+    },
+    {
+      "id": "a0700000-0000-4000-8000-000000000d96",
+      "city": "Vigo",
+      "name": "Celta Fortuna",
+      "slug": "celta-fortuna",
+      "txid": 4190370,
+      "country": "Spain",
+      "latitude": null,
+      "logo_key": null,
+      "scope_id": "public:",
+      "full_name": "Real Club Celta de Vigo Fortuna",
+      "longitude": null,
+      "team_type": "club",
+      "created_by": null,
+      "foundation": "1927-01-01",
+      "search_key": "Celta Fortuna",
+      "stadium_id": null,
+      "updated_by": null,
+      "row_version": "(0,45)",
+      "search_name": "Celta Fortuna",
+      "foundation_display": "01/01/1927"
+    },
+    {
+      "id": "a0700000-0000-4000-8000-000000000d97",
+      "city": "Andorra la Vella",
+      "name": "FC Andorra",
+      "slug": "fc-andorra",
+      "txid": 4190370,
+      "country": "Andorra",
+      "latitude": null,
+      "logo_key": null,
+      "scope_id": "public:",
+      "full_name": "Futbol Club Andorra",
+      "longitude": null,
+      "team_type": "club",
+      "created_by": null,
+      "foundation": "1942-10-15",
+      "search_key": "FC Andorra",
+      "stadium_id": null,
+      "updated_by": null,
+      "row_version": "(0,46)",
+      "search_name": "FC Andorra",
+      "foundation_display": "15/10/1942"
+    },
+    {
+      "id": "a0700000-0000-4000-8000-000000000d98",
+      "city": "San Sebastian",
+      "name": "Real Sociedad B",
+      "slug": "real-sociedad-b",
+      "txid": 4190370,
+      "country": "Spain",
+      "latitude": null,
+      "logo_key": null,
+      "scope_id": "public:",
+      "full_name": "Real Sociedad de Fútbol B",
+      "longitude": null,
+      "team_type": "club",
+      "created_by": null,
+      "foundation": "1955-01-01",
+      "search_key": "Real Sociedad B",
+      "stadium_id": null,
+      "updated_by": null,
+      "row_version": "(0,47)",
+      "search_name": "Real Sociedad B",
+      "foundation_display": "01/01/1955"
+    },
+    {
+      "id": "a0700000-0000-4000-8000-000000000d99",
+      "city": "Ceuta",
+      "name": "Ceuta",
+      "slug": "ceuta",
+      "txid": 4190370,
+      "country": "Spain",
+      "latitude": null,
+      "logo_key": null,
+      "scope_id": "public:",
+      "full_name": "Agrupación Deportiva Ceuta Fútbol Club",
+      "longitude": null,
+      "team_type": "club",
+      "created_by": null,
+      "foundation": "1956-07-09",
+      "search_key": "Ceuta",
+      "stadium_id": null,
+      "updated_by": null,
+      "row_version": "(0,48)",
+      "search_name": "Ceuta",
+      "foundation_display": "09/07/1956"
+    }
+  ],
+  "bindings_after": [
+    {
+      "state": "confirmed",
+      "evidence": {
+        "country": "United Arab Emirates",
+        "sources": [
+          "https://www.sofascore.com/football/team/united-arab-emirates/4727"
+        ],
+        "review_id": "77460eb4-4e06-49ca-a74c-135cd002f720",
+        "team_name": "United Arab Emirates",
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "local_source_id": "1014",
+        "original_external_id": "298263"
+      },
+      "local_id": "a0700000-0000-4000-8000-0000000003f6",
+      "provenance": "operator-research",
+      "entity_kind": "team",
+      "external_id": "4727"
+    },
+    {
+      "state": "confirmed",
+      "evidence": {
+        "country": "Poland",
+        "sources": [
+          "https://www.sofascore.com/football/team/gks-katowice/3112"
+        ],
+        "review_id": "c76795ce-f3c1-4b10-8fa7-33007381105e",
+        "team_name": "Katowice",
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "local_source_id": "1189",
+        "original_external_id": "3112"
+      },
+      "local_id": "a0700000-0000-4000-8000-0000000004a5",
+      "provenance": "operator-research",
+      "entity_kind": "team",
+      "external_id": "3112"
+    },
+    {
+      "state": "confirmed",
+      "evidence": {
+        "country": "Ireland",
+        "sources": [
+          "https://www.sofascore.com/football/team/bohemian/3173"
+        ],
+        "review_id": "8f4dbda2-815b-499a-8ea1-f5b5a44fa01f",
+        "team_name": "Bohemians",
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "local_source_id": "1444",
+        "original_external_id": "3173"
+      },
+      "local_id": "a0700000-0000-4000-8000-0000000005a4",
+      "provenance": "operator-research",
+      "entity_kind": "team",
+      "external_id": "3173"
+    },
+    {
+      "state": "confirmed",
+      "evidence": {
+        "country": "Poland",
+        "sources": [
+          "https://www.sofascore.com/football/team/gks-belchatow/3128"
+        ],
+        "review_id": "c77d5832-ab75-4e39-b77f-a72cf4986eee",
+        "team_name": "GKS Bełchatów",
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "local_source_id": "2336",
+        "original_external_id": "3112"
+      },
+      "local_id": "a0700000-0000-4000-8000-000000000920",
+      "provenance": "operator-research",
+      "entity_kind": "team",
+      "external_id": "3128"
+    },
+    {
+      "state": "confirmed",
+      "evidence": {
+        "country": "Kazakhstan",
+        "sources": [
+          "https://www.sofascore.com/football/team/elimai-fc/464803"
+        ],
+        "review_id": "17a48f03-7b37-4c18-9296-e0df34bdd93a",
+        "team_name": "FC Yelimay",
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "local_source_id": "2408",
+        "original_external_id": "3173"
+      },
+      "local_id": "a0700000-0000-4000-8000-000000000968",
+      "provenance": "operator-research",
+      "entity_kind": "team",
+      "external_id": "464803"
+    },
+    {
+      "state": "confirmed",
+      "evidence": {
+        "country": "Sint Maarten",
+        "sources": [
+          "https://www.sofascore.com/football/team/sint-maarten/298263"
+        ],
+        "review_id": "d275decd-9591-4825-9fd4-f2ab0739458b",
+        "team_name": "Sint Maarten",
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "local_source_id": "2998",
+        "original_external_id": "298263"
+      },
+      "local_id": "a0700000-0000-4000-8000-000000000bb6",
+      "provenance": "operator-research",
+      "entity_kind": "team",
+      "external_id": "298263"
+    },
+    {
+      "state": "confirmed",
+      "evidence": {
+        "country": "Spain",
+        "sources": [
+          "https://www.sofascore.com/football/team/burgos-club-de-futbol/2854"
+        ],
+        "review_id": "713acb91-88f2-4ab7-a32a-2a5c6e12e768",
+        "team_name": "Burgos",
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "local_source_id": "3476",
+        "original_external_id": "2854"
+      },
+      "local_id": "a0700000-0000-4000-8000-000000000d94",
+      "provenance": "operator-research",
+      "entity_kind": "team",
+      "external_id": "2854"
+    },
+    {
+      "state": "confirmed",
+      "evidence": {
+        "country": "Spain",
+        "sources": [
+          "https://www.sofascore.com/football/team/cd-eldense/47321"
+        ],
+        "review_id": "901fd255-ecd1-449a-99c9-4913b41397c1",
+        "team_name": "Eldense",
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "local_source_id": "3477",
+        "original_external_id": "47321"
+      },
+      "local_id": "a0700000-0000-4000-8000-000000000d95",
+      "provenance": "operator-research",
+      "entity_kind": "team",
+      "external_id": "47321"
+    },
+    {
+      "state": "confirmed",
+      "evidence": {
+        "country": "Spain",
+        "sources": [
+          "https://www.sofascore.com/football/team/celta-vigo-b/24336"
+        ],
+        "review_id": "c282d374-9df0-4be8-9958-046fe15dea33",
+        "team_name": "Celta Fortuna",
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "local_source_id": "3478",
+        "original_external_id": "24336"
+      },
+      "local_id": "a0700000-0000-4000-8000-000000000d96",
+      "provenance": "operator-research",
+      "entity_kind": "team",
+      "external_id": "24336"
+    },
+    {
+      "state": "confirmed",
+      "evidence": {
+        "country": "Andorra",
+        "sources": [
+          "https://www.sofascore.com/football/team/fc-andorra/324871"
+        ],
+        "review_id": "0029ae1f-8e66-40ab-b664-cc4e37851570",
+        "team_name": "FC Andorra",
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "local_source_id": "3479",
+        "original_external_id": "324871"
+      },
+      "local_id": "a0700000-0000-4000-8000-000000000d97",
+      "provenance": "operator-research",
+      "entity_kind": "team",
+      "external_id": "324871"
+    },
+    {
+      "state": "confirmed",
+      "evidence": {
+        "country": "Spain",
+        "sources": [
+          "https://www.sofascore.com/football/team/real-sociedad-b/24360"
+        ],
+        "review_id": "b89c5f3e-d622-48cb-837b-e27664addc84",
+        "team_name": "Real Sociedad B",
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "local_source_id": "3480",
+        "original_external_id": "24360"
+      },
+      "local_id": "a0700000-0000-4000-8000-000000000d98",
+      "provenance": "operator-research",
+      "entity_kind": "team",
+      "external_id": "24360"
+    },
+    {
+      "state": "confirmed",
+      "evidence": {
+        "country": "Spain",
+        "sources": [
+          "https://www.sofascore.com/football/team/ad-ceuta/2869"
+        ],
+        "review_id": "255deb2a-3687-4a05-9083-7bace3f57c0f",
+        "team_name": "Ceuta",
+        "verified_at": "2026-10-28T00:02:31.844091+00:00",
+        "local_source_id": "3481",
+        "original_external_id": "2869"
+      },
+      "local_id": "a0700000-0000-4000-8000-000000000d99",
+      "provenance": "operator-research",
+      "entity_kind": "team",
+      "external_id": "2869"
+    }
+  ],
+  "reviews_after": [
+    {
+      "id": "0029ae1f-8e66-40ab-b664-cc4e37851570",
+      "evidence": {
+        "reason": "missing target",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "3479"
+          },
+          "local_id": "a0700000-0000-4000-8000-000000000d97",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "324871"
+        },
+        "resolution": {
+          "action": "confirmed researched team identity",
+          "sources": [
+            "https://www.sofascore.com/football/team/fc-andorra/324871"
+          ],
+          "local_id": "a0700000-0000-4000-8000-000000000d97",
+          "external_id": "324871",
+          "verified_at": "2026-10-28T00:02:31.844091+00:00"
+        }
+      },
+      "resolved": true
+    },
+    {
+      "id": "17a48f03-7b37-4c18-9296-e0df34bdd93a",
+      "evidence": {
+        "reason": "conflicting identity",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "2408"
+          },
+          "local_id": "a0700000-0000-4000-8000-000000000968",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "3173"
+        },
+        "resolution": {
+          "action": "confirmed researched team identity",
+          "sources": [
+            "https://www.sofascore.com/football/team/elimai-fc/464803"
+          ],
+          "local_id": "a0700000-0000-4000-8000-000000000968",
+          "external_id": "464803",
+          "verified_at": "2026-10-28T00:02:31.844091+00:00"
+        }
+      },
+      "resolved": true
+    },
+    {
+      "id": "255deb2a-3687-4a05-9083-7bace3f57c0f",
+      "evidence": {
+        "reason": "missing target",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "3481"
+          },
+          "local_id": "a0700000-0000-4000-8000-000000000d99",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "2869"
+        },
+        "resolution": {
+          "action": "confirmed researched team identity",
+          "sources": [
+            "https://www.sofascore.com/football/team/ad-ceuta/2869"
+          ],
+          "local_id": "a0700000-0000-4000-8000-000000000d99",
+          "external_id": "2869",
+          "verified_at": "2026-10-28T00:02:31.844091+00:00"
+        }
+      },
+      "resolved": true
+    },
+    {
+      "id": "713acb91-88f2-4ab7-a32a-2a5c6e12e768",
+      "evidence": {
+        "reason": "missing target",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "3476"
+          },
+          "local_id": "a0700000-0000-4000-8000-000000000d94",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "2854"
+        },
+        "resolution": {
+          "action": "confirmed researched team identity",
+          "sources": [
+            "https://www.sofascore.com/football/team/burgos-club-de-futbol/2854"
+          ],
+          "local_id": "a0700000-0000-4000-8000-000000000d94",
+          "external_id": "2854",
+          "verified_at": "2026-10-28T00:02:31.844091+00:00"
+        }
+      },
+      "resolved": true
+    },
+    {
+      "id": "77460eb4-4e06-49ca-a74c-135cd002f720",
+      "evidence": {
+        "reason": "conflicting identity",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "1014"
+          },
+          "local_id": "a0700000-0000-4000-8000-0000000003f6",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "298263"
+        },
+        "resolution": {
+          "action": "confirmed researched team identity",
+          "sources": [
+            "https://www.sofascore.com/football/team/united-arab-emirates/4727"
+          ],
+          "local_id": "a0700000-0000-4000-8000-0000000003f6",
+          "external_id": "4727",
+          "verified_at": "2026-10-28T00:02:31.844091+00:00"
+        }
+      },
+      "resolved": true
+    },
+    {
+      "id": "8f4dbda2-815b-499a-8ea1-f5b5a44fa01f",
+      "evidence": {
+        "reason": "conflicting identity",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "1444"
+          },
+          "local_id": "a0700000-0000-4000-8000-0000000005a4",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "3173"
+        },
+        "resolution": {
+          "action": "confirmed researched team identity",
+          "sources": [
+            "https://www.sofascore.com/football/team/bohemian/3173"
+          ],
+          "local_id": "a0700000-0000-4000-8000-0000000005a4",
+          "external_id": "3173",
+          "verified_at": "2026-10-28T00:02:31.844091+00:00"
+        }
+      },
+      "resolved": true
+    },
+    {
+      "id": "901fd255-ecd1-449a-99c9-4913b41397c1",
+      "evidence": {
+        "reason": "missing target",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "3477"
+          },
+          "local_id": "a0700000-0000-4000-8000-000000000d95",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "47321"
+        },
+        "resolution": {
+          "action": "confirmed researched team identity",
+          "sources": [
+            "https://www.sofascore.com/football/team/cd-eldense/47321"
+          ],
+          "local_id": "a0700000-0000-4000-8000-000000000d95",
+          "external_id": "47321",
+          "verified_at": "2026-10-28T00:02:31.844091+00:00"
+        }
+      },
+      "resolved": true
+    },
+    {
+      "id": "b89c5f3e-d622-48cb-837b-e27664addc84",
+      "evidence": {
+        "reason": "missing target",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "3480"
+          },
+          "local_id": "a0700000-0000-4000-8000-000000000d98",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "24360"
+        },
+        "resolution": {
+          "action": "confirmed researched team identity",
+          "sources": [
+            "https://www.sofascore.com/football/team/real-sociedad-b/24360"
+          ],
+          "local_id": "a0700000-0000-4000-8000-000000000d98",
+          "external_id": "24360",
+          "verified_at": "2026-10-28T00:02:31.844091+00:00"
+        }
+      },
+      "resolved": true
+    },
+    {
+      "id": "c282d374-9df0-4be8-9958-046fe15dea33",
+      "evidence": {
+        "reason": "missing target",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "3478"
+          },
+          "local_id": "a0700000-0000-4000-8000-000000000d96",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "24336"
+        },
+        "resolution": {
+          "action": "confirmed researched team identity",
+          "sources": [
+            "https://www.sofascore.com/football/team/celta-vigo-b/24336"
+          ],
+          "local_id": "a0700000-0000-4000-8000-000000000d96",
+          "external_id": "24336",
+          "verified_at": "2026-10-28T00:02:31.844091+00:00"
+        }
+      },
+      "resolved": true
+    },
+    {
+      "id": "c76795ce-f3c1-4b10-8fa7-33007381105e",
+      "evidence": {
+        "reason": "conflicting identity",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "1189"
+          },
+          "local_id": "a0700000-0000-4000-8000-0000000004a5",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "3112"
+        },
+        "resolution": {
+          "action": "confirmed researched team identity",
+          "sources": [
+            "https://www.sofascore.com/football/team/gks-katowice/3112"
+          ],
+          "local_id": "a0700000-0000-4000-8000-0000000004a5",
+          "external_id": "3112",
+          "verified_at": "2026-10-28T00:02:31.844091+00:00"
+        }
+      },
+      "resolved": true
+    },
+    {
+      "id": "c77d5832-ab75-4e39-b77f-a72cf4986eee",
+      "evidence": {
+        "reason": "conflicting identity",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "2336"
+          },
+          "local_id": "a0700000-0000-4000-8000-000000000920",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "3112"
+        },
+        "resolution": {
+          "action": "confirmed researched team identity",
+          "sources": [
+            "https://www.sofascore.com/football/team/gks-belchatow/3128"
+          ],
+          "local_id": "a0700000-0000-4000-8000-000000000920",
+          "external_id": "3128",
+          "verified_at": "2026-10-28T00:02:31.844091+00:00"
+        }
+      },
+      "resolved": true
+    },
+    {
+      "id": "d275decd-9591-4825-9fd4-f2ab0739458b",
+      "evidence": {
+        "reason": "conflicting identity",
+        "binding": {
+          "state": "confirmed",
+          "evidence": {
+            "local_source_id": "2998"
+          },
+          "local_id": "a0700000-0000-4000-8000-000000000bb6",
+          "provider": "sofascore",
+          "provenance": "mysql.teams",
+          "entity_kind": "team",
+          "external_id": "298263"
+        },
+        "resolution": {
+          "action": "confirmed researched team identity",
+          "sources": [
+            "https://www.sofascore.com/football/team/sint-maarten/298263"
+          ],
+          "local_id": "a0700000-0000-4000-8000-000000000bb6",
+          "external_id": "298263",
+          "verified_at": "2026-10-28T00:02:31.844091+00:00"
+        }
+      },
+      "resolved": true
+    }
+  ],
+  "remaining_reviews": [
+    {
+      "kind": "binding",
+      "count": 462,
+      "detail": "missing target",
+      "reason": "identity recovery conflict"
+    },
+    {
+      "kind": "binding",
+      "count": 4,
+      "detail": "'unique_tournament_id'",
+      "reason": "identity recovery conflict"
+    },
+    {
+      "kind": "binding",
+      "count": 1,
+      "detail": "unverified stage scope",
+      "reason": "identity recovery conflict"
+    },
+    {
+      "kind": "binding",
+      "count": 1,
+      "detail": "missing championship target",
+      "reason": "identity recovery conflict"
+    }
+  ],
+  "source_status": [
+    {
+      "id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 11,
+      "season_id": 95836,
+      "next_due_at": "2026-10-28T03:48:13.651939+00:00",
+      "detail_after": "2026-10-27T21:30:16.440058+00:00",
+      "payload_bytes": 1042098,
+      "championship_id": "a0200000-0000-4000-8000-000000000604",
+      "last_success_at": "2026-10-27T23:48:32.792981+00:00",
+      "unique_tournament_id": 23
+    }
+  ],
+  "updater_requests_after": 11
+}

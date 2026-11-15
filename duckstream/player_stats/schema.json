@@ -1,0 +1,480 @@
+{
+  "inputs" : [ {
+    "name" : "source_player_game",
+    "case_sensitive" : false,
+    "fields" : [ {
+      "name" : "id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : true
+    }, {
+      "name" : "game_id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "player_id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "side",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "on_minute",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "type" : "INTEGER"
+      },
+      "unused" : false
+    }, {
+      "name" : "off_minute",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "type" : "INTEGER"
+      },
+      "unused" : false
+    }, {
+      "name" : "yellow",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "type" : "BOOLEAN"
+      },
+      "unused" : false
+    }, {
+      "name" : "red",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "type" : "BOOLEAN"
+      },
+      "unused" : false
+    }, {
+      "name" : "bench",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "type" : "BOOLEAN"
+      },
+      "unused" : false
+    } ],
+    "materialized" : false,
+    "foreign_keys" : [ ]
+  }, {
+    "name" : "source_goal",
+    "case_sensitive" : false,
+    "fields" : [ {
+      "name" : "id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : true
+    }, {
+      "name" : "game_id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "player_id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "side",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "penalty",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "type" : "BOOLEAN"
+      },
+      "unused" : false
+    }, {
+      "name" : "own_goal",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "type" : "BOOLEAN"
+      },
+      "unused" : false
+    } ],
+    "materialized" : false,
+    "foreign_keys" : [ ]
+  }, {
+    "name" : "source_game",
+    "case_sensitive" : false,
+    "fields" : [ {
+      "name" : "id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "phase_id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "home_id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "away_id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    } ],
+    "materialized" : false,
+    "foreign_keys" : [ ]
+  }, {
+    "name" : "source_phase",
+    "case_sensitive" : false,
+    "fields" : [ {
+      "name" : "id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "championship_id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    } ],
+    "materialized" : false,
+    "foreign_keys" : [ ]
+  }, {
+    "name" : "source_championship",
+    "case_sensitive" : false,
+    "fields" : [ {
+      "name" : "id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "full_name",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    } ],
+    "materialized" : false,
+    "foreign_keys" : [ ]
+  }, {
+    "name" : "source_team",
+    "case_sensitive" : false,
+    "fields" : [ {
+      "name" : "id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "name",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    } ],
+    "materialized" : false,
+    "foreign_keys" : [ ]
+  }, {
+    "name" : "source_player",
+    "case_sensitive" : false,
+    "fields" : [ {
+      "name" : "id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "name",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "position",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    } ],
+    "materialized" : false,
+    "foreign_keys" : [ ]
+  } ],
+  "outputs" : [ {
+    "name" : "error_view",
+    "case_sensitive" : false,
+    "fields" : [ {
+      "name" : "table_or_view_name",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : false,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "message",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : false,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "metadata",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : false,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    } ],
+    "materialized" : false
+  }, {
+    "name" : "result_player_stat",
+    "case_sensitive" : false,
+    "fields" : [ {
+      "name" : "id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "championship_id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "team_id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "player_id",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "player_name",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "position",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : false,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "played",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : false,
+        "type" : "INTEGER"
+      },
+      "unused" : false
+    }, {
+      "name" : "started",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : false,
+        "type" : "INTEGER"
+      },
+      "unused" : false
+    }, {
+      "name" : "came_on",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : false,
+        "type" : "INTEGER"
+      },
+      "unused" : false
+    }, {
+      "name" : "bench",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : false,
+        "type" : "INTEGER"
+      },
+      "unused" : false
+    }, {
+      "name" : "minutes",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "type" : "INTEGER"
+      },
+      "unused" : false
+    }, {
+      "name" : "goals",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : false,
+        "type" : "INTEGER"
+      },
+      "unused" : false
+    }, {
+      "name" : "penalties",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : false,
+        "type" : "INTEGER"
+      },
+      "unused" : false
+    }, {
+      "name" : "own_goals",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : false,
+        "type" : "INTEGER"
+      },
+      "unused" : false
+    }, {
+      "name" : "yellow",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : false,
+        "type" : "INTEGER"
+      },
+      "unused" : false
+    }, {
+      "name" : "red",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : false,
+        "type" : "INTEGER"
+      },
+      "unused" : false
+    }, {
+      "name" : "championship_name",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    }, {
+      "name" : "team_name",
+      "case_sensitive" : false,
+      "columntype" : {
+        "nullable" : true,
+        "precision" : -1,
+        "type" : "VARCHAR"
+      },
+      "unused" : false
+    } ],
+    "materialized" : true
+  } ]
+}

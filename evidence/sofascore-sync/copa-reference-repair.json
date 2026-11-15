@@ -1,0 +1,86 @@
+{
+  "before": {
+    "state": "conflict",
+    "away_id": "a0700000-0000-4000-8000-000000000010",
+    "home_id": "a0700000-0000-4000-8000-000000000012",
+    "evidence": {
+      "verification": {
+        "sample": {
+          "phase": "Semis",
+          "issues": [
+            "provider_response_failed"
+          ],
+          "event_id": "16988178",
+          "phase_id": "a0300000-0000-4000-8000-0000000011c3",
+          "warnings": [],
+          "local_day": "2026-10-31",
+          "local_away": "Palmeiras-SP",
+          "local_home": "Vasco-RJ",
+          "local_round": 28,
+          "championship": "Brazil - Copa do Brasil 2026",
+          "local_season": "2026",
+          "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+          "response_status": 404,
+          "local_away_external_id": "1963",
+          "local_home_external_id": "1974"
+        },
+        "local_game": {
+          "day": "2026-10-31",
+          "away": "Palmeiras-SP",
+          "home": "Vasco-RJ",
+          "round": 28,
+          "played": false,
+          "away_id": "a0700000-0000-4000-8000-000000000010",
+          "game_id": "a0900000-0000-4000-8000-00000005a7cb",
+          "home_id": "a0700000-0000-4000-8000-000000000012",
+          "event_id": "16988178",
+          "phase_id": "a0300000-0000-4000-8000-0000000011c3",
+          "phase_name": "Semis",
+          "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+          "away_external_id": "1963",
+          "home_external_id": "1974"
+        },
+        "verified_at": "2026-10-28T01:43:09.933045+00:00",
+        "provider_url": "https://www.sofascore.com/api/v1/event/16988178"
+      },
+      "local_source_id": "370635"
+    },
+    "local_id": "a0900000-0000-4000-8000-00000005a7cb",
+    "phase_id": "a0300000-0000-4000-8000-0000000011c3",
+    "provenance": "legacy.games,mysql.games",
+    "entity_kind": "game",
+    "external_id": "16988178",
+    "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+    "away_external_id": "1963",
+    "home_external_id": "1974"
+  },
+  "resolution": {
+    "verified_at": "2026-10-28T01:58:29.699275+00:00",
+    "original_external_id": "16988178",
+    "corrected_external_id": "17166359",
+    "provider_url": "https://www.sofascore.com/api/v1/unique-tournament/373/season/89353/events/round/28/slug/semifinals",
+    "event": {
+      "external_id": "17166359",
+      "home_external_id": "1974",
+      "away_external_id": "1963",
+      "home": "Vasco da Gama",
+      "away": "Palmeiras",
+      "stage_id": "283",
+      "season_id": "89353",
+      "unique_tournament_id": "373",
+      "stage_key": "283|{\"slug\": \"semifinals\"}",
+      "round_key": 28,
+      "day": "2026-11-08",
+      "kickoff": "2026-11-08T20:00:00Z",
+      "status": "scheduled",
+      "played": false,
+      "terminal": false,
+      "home_score": null,
+      "away_score": null,
+      "home_aet": null,
+      "away_aet": null,
+      "home_pen": null,
+      "away_pen": null
+    }
+  }
+}

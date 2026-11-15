@@ -1,0 +1,1736 @@
+{
+ "uniqueTournament": {
+  "id": 99001,
+  "name": "Liga Simulada"
+ },
+ "season": {
+  "id": 99026,
+  "year": "2026"
+ },
+ "tournament": {
+  "id": 99101,
+  "name": "Liga Simulada, Série Única"
+ },
+ "teams": [
+  {
+   "id": 96001,
+   "name": "Atlético Serrano",
+   "players": [
+    {
+     "id": 780001,
+     "name": "Danilo Souza",
+     "position": "G"
+    },
+    {
+     "id": 780002,
+     "name": "Matheus Pereira",
+     "position": "D"
+    },
+    {
+     "id": 780003,
+     "name": "Diego Silva",
+     "position": "D"
+    },
+    {
+     "id": 780004,
+     "name": "Everton Castro",
+     "position": "D"
+    },
+    {
+     "id": 780005,
+     "name": "Arthur Carvalho",
+     "position": "D"
+    },
+    {
+     "id": 780006,
+     "name": "Felipe Campos",
+     "position": "M"
+    },
+    {
+     "id": 780007,
+     "name": "Murilo Silva",
+     "position": "M"
+    },
+    {
+     "id": 780008,
+     "name": "Danilo Silva",
+     "position": "M"
+    },
+    {
+     "id": 780009,
+     "name": "Davi Santos",
+     "position": "M"
+    },
+    {
+     "id": 780010,
+     "name": "Bruno Nascimento",
+     "position": "F"
+    },
+    {
+     "id": 780011,
+     "name": "Rafael Costa",
+     "position": "F"
+    },
+    {
+     "id": 780012,
+     "name": "Vinícius Monteiro",
+     "position": "G"
+    },
+    {
+     "id": 780013,
+     "name": "Rafael Araújo",
+     "position": "D"
+    },
+    {
+     "id": 780014,
+     "name": "Davi Freitas",
+     "position": "M"
+    },
+    {
+     "id": 780015,
+     "name": "Gabriel Almeida",
+     "position": "F"
+    },
+    {
+     "id": 780016,
+     "name": "Hugo Moura",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96002,
+   "name": "Sport Clube Ribeira",
+   "players": [
+    {
+     "id": 780017,
+     "name": "Hugo Ribeiro",
+     "position": "G"
+    },
+    {
+     "id": 780018,
+     "name": "Gabriel Oliveira",
+     "position": "D"
+    },
+    {
+     "id": 780019,
+     "name": "Wesley Cardoso",
+     "position": "D"
+    },
+    {
+     "id": 780020,
+     "name": "André Dias",
+     "position": "D"
+    },
+    {
+     "id": 780021,
+     "name": "Breno Rocha",
+     "position": "D"
+    },
+    {
+     "id": 780022,
+     "name": "Samuel Ribeiro",
+     "position": "M"
+    },
+    {
+     "id": 780023,
+     "name": "Diego Barbosa",
+     "position": "M"
+    },
+    {
+     "id": 780024,
+     "name": "Bruno Oliveira",
+     "position": "M"
+    },
+    {
+     "id": 780025,
+     "name": "Davi Fernandes",
+     "position": "M"
+    },
+    {
+     "id": 780026,
+     "name": "Hugo Gomes",
+     "position": "F"
+    },
+    {
+     "id": 780027,
+     "name": "Rodrigo Gomes",
+     "position": "F"
+    },
+    {
+     "id": 780028,
+     "name": "Breno Oliveira",
+     "position": "G"
+    },
+    {
+     "id": 780029,
+     "name": "Thiago Cavalcanti",
+     "position": "D"
+    },
+    {
+     "id": 780030,
+     "name": "Otávio Gomes",
+     "position": "M"
+    },
+    {
+     "id": 780031,
+     "name": "Matheus Monteiro",
+     "position": "F"
+    },
+    {
+     "id": 780032,
+     "name": "Vinícius Moura",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96003,
+   "name": "União Litorânea",
+   "players": [
+    {
+     "id": 780033,
+     "name": "Thiago Barbosa",
+     "position": "G"
+    },
+    {
+     "id": 780034,
+     "name": "Igor Gomes",
+     "position": "D"
+    },
+    {
+     "id": 780035,
+     "name": "Bruno Martins",
+     "position": "D"
+    },
+    {
+     "id": 780036,
+     "name": "Diego Araújo",
+     "position": "D"
+    },
+    {
+     "id": 780037,
+     "name": "Otávio Souza",
+     "position": "D"
+    },
+    {
+     "id": 780038,
+     "name": "Bruno Souza",
+     "position": "M"
+    },
+    {
+     "id": 780039,
+     "name": "Léo Barbosa",
+     "position": "M"
+    },
+    {
+     "id": 780040,
+     "name": "Rodrigo Mendes",
+     "position": "M"
+    },
+    {
+     "id": 780041,
+     "name": "Lucas Freitas",
+     "position": "M"
+    },
+    {
+     "id": 780042,
+     "name": "Rafael Rodrigues",
+     "position": "F"
+    },
+    {
+     "id": 780043,
+     "name": "Caio Barros",
+     "position": "F"
+    },
+    {
+     "id": 780044,
+     "name": "Renan Santos",
+     "position": "G"
+    },
+    {
+     "id": 780045,
+     "name": "João Lima",
+     "position": "D"
+    },
+    {
+     "id": 780046,
+     "name": "Diego Alves",
+     "position": "M"
+    },
+    {
+     "id": 780047,
+     "name": "Gabriel Carvalho",
+     "position": "F"
+    },
+    {
+     "id": 780048,
+     "name": "Lucas Oliveira",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96004,
+   "name": "Esporte Clube Cerrado",
+   "players": [
+    {
+     "id": 780049,
+     "name": "Caio Martins",
+     "position": "G"
+    },
+    {
+     "id": 780050,
+     "name": "Everton Silva",
+     "position": "D"
+    },
+    {
+     "id": 780051,
+     "name": "Bruno Oliveira",
+     "position": "D"
+    },
+    {
+     "id": 780052,
+     "name": "Everton Rocha",
+     "position": "D"
+    },
+    {
+     "id": 780053,
+     "name": "Bruno Lima",
+     "position": "D"
+    },
+    {
+     "id": 780054,
+     "name": "Gabriel Rocha",
+     "position": "M"
+    },
+    {
+     "id": 780055,
+     "name": "André Dias",
+     "position": "M"
+    },
+    {
+     "id": 780056,
+     "name": "Felipe Pinto",
+     "position": "M"
+    },
+    {
+     "id": 780057,
+     "name": "Caio Campos",
+     "position": "M"
+    },
+    {
+     "id": 780058,
+     "name": "Wesley Fernandes",
+     "position": "F"
+    },
+    {
+     "id": 780059,
+     "name": "Caio Lima",
+     "position": "F"
+    },
+    {
+     "id": 780060,
+     "name": "Rodrigo Silva",
+     "position": "G"
+    },
+    {
+     "id": 780061,
+     "name": "Kauã Cardoso",
+     "position": "D"
+    },
+    {
+     "id": 780062,
+     "name": "Igor Martins",
+     "position": "M"
+    },
+    {
+     "id": 780063,
+     "name": "Bruno Santos",
+     "position": "F"
+    },
+    {
+     "id": 780064,
+     "name": "André Campos",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96005,
+   "name": "Clube Atlético Vale Verde",
+   "players": [
+    {
+     "id": 780065,
+     "name": "Everton Nascimento",
+     "position": "G"
+    },
+    {
+     "id": 780066,
+     "name": "Otávio Campos",
+     "position": "D"
+    },
+    {
+     "id": 780067,
+     "name": "Vinícius Castro",
+     "position": "D"
+    },
+    {
+     "id": 780068,
+     "name": "Breno Moura",
+     "position": "D"
+    },
+    {
+     "id": 780069,
+     "name": "João Fernandes",
+     "position": "D"
+    },
+    {
+     "id": 780070,
+     "name": "Murilo Rocha",
+     "position": "M"
+    },
+    {
+     "id": 780071,
+     "name": "Kauã Cardoso",
+     "position": "M"
+    },
+    {
+     "id": 780072,
+     "name": "Caio Silva",
+     "position": "M"
+    },
+    {
+     "id": 780073,
+     "name": "André Martins",
+     "position": "M"
+    },
+    {
+     "id": 780074,
+     "name": "Igor Ribeiro",
+     "position": "F"
+    },
+    {
+     "id": 780075,
+     "name": "Caio Santos",
+     "position": "F"
+    },
+    {
+     "id": 780076,
+     "name": "Hugo Barros",
+     "position": "G"
+    },
+    {
+     "id": 780077,
+     "name": "Caio Almeida",
+     "position": "D"
+    },
+    {
+     "id": 780078,
+     "name": "Caio Oliveira",
+     "position": "M"
+    },
+    {
+     "id": 780079,
+     "name": "Lucas Barros",
+     "position": "F"
+    },
+    {
+     "id": 780080,
+     "name": "Caio Lima",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96006,
+   "name": "Grêmio Pinheiral",
+   "players": [
+    {
+     "id": 780081,
+     "name": "Léo Carvalho",
+     "position": "G"
+    },
+    {
+     "id": 780082,
+     "name": "Léo Barbosa",
+     "position": "D"
+    },
+    {
+     "id": 780083,
+     "name": "Rodrigo Rocha",
+     "position": "D"
+    },
+    {
+     "id": 780084,
+     "name": "Hugo Martins",
+     "position": "D"
+    },
+    {
+     "id": 780085,
+     "name": "Danilo Carvalho",
+     "position": "D"
+    },
+    {
+     "id": 780086,
+     "name": "Renan Pinto",
+     "position": "M"
+    },
+    {
+     "id": 780087,
+     "name": "Rafael Almeida",
+     "position": "M"
+    },
+    {
+     "id": 780088,
+     "name": "Wesley Rodrigues",
+     "position": "M"
+    },
+    {
+     "id": 780089,
+     "name": "Everton Monteiro",
+     "position": "M"
+    },
+    {
+     "id": 780090,
+     "name": "Davi Alves",
+     "position": "F"
+    },
+    {
+     "id": 780091,
+     "name": "Arthur Gomes",
+     "position": "F"
+    },
+    {
+     "id": 780092,
+     "name": "Samuel Costa",
+     "position": "G"
+    },
+    {
+     "id": 780093,
+     "name": "Arthur Ribeiro",
+     "position": "D"
+    },
+    {
+     "id": 780094,
+     "name": "Danilo Pinto",
+     "position": "M"
+    },
+    {
+     "id": 780095,
+     "name": "Otávio Pereira",
+     "position": "F"
+    },
+    {
+     "id": 780096,
+     "name": "Otávio Fernandes",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96007,
+   "name": "Associação Ferroviária do Planalto",
+   "players": [
+    {
+     "id": 780097,
+     "name": "Matheus Monteiro",
+     "position": "G"
+    },
+    {
+     "id": 780098,
+     "name": "Samuel Nascimento",
+     "position": "D"
+    },
+    {
+     "id": 780099,
+     "name": "Diego Cavalcanti",
+     "position": "D"
+    },
+    {
+     "id": 780100,
+     "name": "Murilo Moura",
+     "position": "D"
+    },
+    {
+     "id": 780101,
+     "name": "Diego Freitas",
+     "position": "D"
+    },
+    {
+     "id": 780102,
+     "name": "Murilo Pinto",
+     "position": "M"
+    },
+    {
+     "id": 780103,
+     "name": "Gabriel Pinto",
+     "position": "M"
+    },
+    {
+     "id": 780104,
+     "name": "Kauã Alves",
+     "position": "M"
+    },
+    {
+     "id": 780105,
+     "name": "Breno Monteiro",
+     "position": "M"
+    },
+    {
+     "id": 780106,
+     "name": "André Araújo",
+     "position": "F"
+    },
+    {
+     "id": 780107,
+     "name": "Otávio Costa",
+     "position": "F"
+    },
+    {
+     "id": 780108,
+     "name": "Pedro Souza",
+     "position": "G"
+    },
+    {
+     "id": 780109,
+     "name": "Kauã Barros",
+     "position": "D"
+    },
+    {
+     "id": 780110,
+     "name": "Gabriel Oliveira",
+     "position": "M"
+    },
+    {
+     "id": 780111,
+     "name": "Caio Freitas",
+     "position": "F"
+    },
+    {
+     "id": 780112,
+     "name": "Enzo Fernandes",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96008,
+   "name": "Real Mineração",
+   "players": [
+    {
+     "id": 780113,
+     "name": "Enzo Martins",
+     "position": "G"
+    },
+    {
+     "id": 780114,
+     "name": "Otávio Freitas",
+     "position": "D"
+    },
+    {
+     "id": 780115,
+     "name": "Vinícius Moura",
+     "position": "D"
+    },
+    {
+     "id": 780116,
+     "name": "Vinícius Pereira",
+     "position": "D"
+    },
+    {
+     "id": 780117,
+     "name": "Murilo Fernandes",
+     "position": "D"
+    },
+    {
+     "id": 780118,
+     "name": "Otávio Martins",
+     "position": "M"
+    },
+    {
+     "id": 780119,
+     "name": "João Mendes",
+     "position": "M"
+    },
+    {
+     "id": 780120,
+     "name": "Enzo Rocha",
+     "position": "M"
+    },
+    {
+     "id": 780121,
+     "name": "Felipe Souza",
+     "position": "M"
+    },
+    {
+     "id": 780122,
+     "name": "Renan Rocha",
+     "position": "F"
+    },
+    {
+     "id": 780123,
+     "name": "Rodrigo Dias",
+     "position": "F"
+    },
+    {
+     "id": 780124,
+     "name": "Rafael Rocha",
+     "position": "G"
+    },
+    {
+     "id": 780125,
+     "name": "Felipe Gomes",
+     "position": "D"
+    },
+    {
+     "id": 780126,
+     "name": "Samuel Moura",
+     "position": "M"
+    },
+    {
+     "id": 780127,
+     "name": "Arthur Martins",
+     "position": "F"
+    },
+    {
+     "id": 780128,
+     "name": "Bruno Costa",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96009,
+   "name": "Ypiranga Fluvial",
+   "players": [
+    {
+     "id": 780129,
+     "name": "Renan Martins",
+     "position": "G"
+    },
+    {
+     "id": 780130,
+     "name": "Thiago Pinto",
+     "position": "D"
+    },
+    {
+     "id": 780131,
+     "name": "Samuel Cavalcanti",
+     "position": "D"
+    },
+    {
+     "id": 780132,
+     "name": "Everton Barros",
+     "position": "D"
+    },
+    {
+     "id": 780133,
+     "name": "Davi Alves",
+     "position": "D"
+    },
+    {
+     "id": 780134,
+     "name": "Vinícius Alves",
+     "position": "M"
+    },
+    {
+     "id": 780135,
+     "name": "Hugo Nascimento",
+     "position": "M"
+    },
+    {
+     "id": 780136,
+     "name": "Caio Rocha",
+     "position": "M"
+    },
+    {
+     "id": 780137,
+     "name": "Enzo Santos",
+     "position": "M"
+    },
+    {
+     "id": 780138,
+     "name": "Otávio Araújo",
+     "position": "F"
+    },
+    {
+     "id": 780139,
+     "name": "Rafael Fernandes",
+     "position": "F"
+    },
+    {
+     "id": 780140,
+     "name": "Lucas Barros",
+     "position": "G"
+    },
+    {
+     "id": 780141,
+     "name": "Hugo Araújo",
+     "position": "D"
+    },
+    {
+     "id": 780142,
+     "name": "Vinícius Campos",
+     "position": "M"
+    },
+    {
+     "id": 780143,
+     "name": "Caio Dias",
+     "position": "F"
+    },
+    {
+     "id": 780144,
+     "name": "Arthur Lima",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96010,
+   "name": "Nacional do Agreste",
+   "players": [
+    {
+     "id": 780145,
+     "name": "Breno Santos",
+     "position": "G"
+    },
+    {
+     "id": 780146,
+     "name": "Kauã Mendes",
+     "position": "D"
+    },
+    {
+     "id": 780147,
+     "name": "Samuel Lima",
+     "position": "D"
+    },
+    {
+     "id": 780148,
+     "name": "André Almeida",
+     "position": "D"
+    },
+    {
+     "id": 780149,
+     "name": "Rafael Rodrigues",
+     "position": "D"
+    },
+    {
+     "id": 780150,
+     "name": "Matheus Rocha",
+     "position": "M"
+    },
+    {
+     "id": 780151,
+     "name": "Caio Barros",
+     "position": "M"
+    },
+    {
+     "id": 780152,
+     "name": "Breno Lima",
+     "position": "M"
+    },
+    {
+     "id": 780153,
+     "name": "Rafael Pereira",
+     "position": "M"
+    },
+    {
+     "id": 780154,
+     "name": "Danilo Barros",
+     "position": "F"
+    },
+    {
+     "id": 780155,
+     "name": "Pedro Barros",
+     "position": "F"
+    },
+    {
+     "id": 780156,
+     "name": "Yuri Lima",
+     "position": "G"
+    },
+    {
+     "id": 780157,
+     "name": "Matheus Silva",
+     "position": "D"
+    },
+    {
+     "id": 780158,
+     "name": "Vinícius Almeida",
+     "position": "M"
+    },
+    {
+     "id": 780159,
+     "name": "Enzo Martins",
+     "position": "F"
+    },
+    {
+     "id": 780160,
+     "name": "Matheus Fernandes",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96011,
+   "name": "Operário Campineiro",
+   "players": [
+    {
+     "id": 780161,
+     "name": "Igor Araújo",
+     "position": "G"
+    },
+    {
+     "id": 780162,
+     "name": "Thiago Mendes",
+     "position": "D"
+    },
+    {
+     "id": 780163,
+     "name": "Rafael Souza",
+     "position": "D"
+    },
+    {
+     "id": 780164,
+     "name": "Everton Nascimento",
+     "position": "D"
+    },
+    {
+     "id": 780165,
+     "name": "Hugo Barbosa",
+     "position": "D"
+    },
+    {
+     "id": 780166,
+     "name": "Léo Santos",
+     "position": "M"
+    },
+    {
+     "id": 780167,
+     "name": "Pedro Almeida",
+     "position": "M"
+    },
+    {
+     "id": 780168,
+     "name": "João Costa",
+     "position": "M"
+    },
+    {
+     "id": 780169,
+     "name": "Hugo Freitas",
+     "position": "M"
+    },
+    {
+     "id": 780170,
+     "name": "Otávio Ribeiro",
+     "position": "F"
+    },
+    {
+     "id": 780171,
+     "name": "Diego Almeida",
+     "position": "F"
+    },
+    {
+     "id": 780172,
+     "name": "Enzo Costa",
+     "position": "G"
+    },
+    {
+     "id": 780173,
+     "name": "Everton Pinto",
+     "position": "D"
+    },
+    {
+     "id": 780174,
+     "name": "Caio Barbosa",
+     "position": "M"
+    },
+    {
+     "id": 780175,
+     "name": "Léo Fernandes",
+     "position": "F"
+    },
+    {
+     "id": 780176,
+     "name": "Léo Gomes",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96012,
+   "name": "Internacional da Serra",
+   "players": [
+    {
+     "id": 780177,
+     "name": "Enzo Barbosa",
+     "position": "G"
+    },
+    {
+     "id": 780178,
+     "name": "Hugo Almeida",
+     "position": "D"
+    },
+    {
+     "id": 780179,
+     "name": "Enzo Martins",
+     "position": "D"
+    },
+    {
+     "id": 780180,
+     "name": "Vinícius Pinto",
+     "position": "D"
+    },
+    {
+     "id": 780181,
+     "name": "Igor Almeida",
+     "position": "D"
+    },
+    {
+     "id": 780182,
+     "name": "Igor Alves",
+     "position": "M"
+    },
+    {
+     "id": 780183,
+     "name": "Samuel Pereira",
+     "position": "M"
+    },
+    {
+     "id": 780184,
+     "name": "Igor Carvalho",
+     "position": "M"
+    },
+    {
+     "id": 780185,
+     "name": "Caio Dias",
+     "position": "M"
+    },
+    {
+     "id": 780186,
+     "name": "Wesley Pereira",
+     "position": "F"
+    },
+    {
+     "id": 780187,
+     "name": "Enzo Barros",
+     "position": "F"
+    },
+    {
+     "id": 780188,
+     "name": "Bruno Gomes",
+     "position": "G"
+    },
+    {
+     "id": 780189,
+     "name": "Felipe Moura",
+     "position": "D"
+    },
+    {
+     "id": 780190,
+     "name": "Wesley Pinto",
+     "position": "M"
+    },
+    {
+     "id": 780191,
+     "name": "Rodrigo Fernandes",
+     "position": "F"
+    },
+    {
+     "id": 780192,
+     "name": "Igor Pinto",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96013,
+   "name": "Botafogo do Sertão",
+   "players": [
+    {
+     "id": 780193,
+     "name": "Yuri Monteiro",
+     "position": "G"
+    },
+    {
+     "id": 780194,
+     "name": "André Nascimento",
+     "position": "D"
+    },
+    {
+     "id": 780195,
+     "name": "João Martins",
+     "position": "D"
+    },
+    {
+     "id": 780196,
+     "name": "Pedro Freitas",
+     "position": "D"
+    },
+    {
+     "id": 780197,
+     "name": "Arthur Pinto",
+     "position": "D"
+    },
+    {
+     "id": 780198,
+     "name": "Rodrigo Fernandes",
+     "position": "M"
+    },
+    {
+     "id": 780199,
+     "name": "Rafael Pereira",
+     "position": "M"
+    },
+    {
+     "id": 780200,
+     "name": "Léo Barbosa",
+     "position": "M"
+    },
+    {
+     "id": 780201,
+     "name": "Gabriel Carvalho",
+     "position": "M"
+    },
+    {
+     "id": 780202,
+     "name": "Vinícius Moura",
+     "position": "F"
+    },
+    {
+     "id": 780203,
+     "name": "Rodrigo Cavalcanti",
+     "position": "F"
+    },
+    {
+     "id": 780204,
+     "name": "Wesley Silva",
+     "position": "G"
+    },
+    {
+     "id": 780205,
+     "name": "Davi Barbosa",
+     "position": "D"
+    },
+    {
+     "id": 780206,
+     "name": "Wesley Rodrigues",
+     "position": "M"
+    },
+    {
+     "id": 780207,
+     "name": "Samuel Cavalcanti",
+     "position": "F"
+    },
+    {
+     "id": 780208,
+     "name": "Renan Moura",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96014,
+   "name": "América Praiano",
+   "players": [
+    {
+     "id": 780209,
+     "name": "Murilo Castro",
+     "position": "G"
+    },
+    {
+     "id": 780210,
+     "name": "Everton Carvalho",
+     "position": "D"
+    },
+    {
+     "id": 780211,
+     "name": "Pedro Lima",
+     "position": "D"
+    },
+    {
+     "id": 780212,
+     "name": "Felipe Oliveira",
+     "position": "D"
+    },
+    {
+     "id": 780213,
+     "name": "Lucas Alves",
+     "position": "D"
+    },
+    {
+     "id": 780214,
+     "name": "Otávio Barbosa",
+     "position": "M"
+    },
+    {
+     "id": 780215,
+     "name": "Hugo Fernandes",
+     "position": "M"
+    },
+    {
+     "id": 780216,
+     "name": "Thiago Ribeiro",
+     "position": "M"
+    },
+    {
+     "id": 780217,
+     "name": "Pedro Fernandes",
+     "position": "M"
+    },
+    {
+     "id": 780218,
+     "name": "André Monteiro",
+     "position": "F"
+    },
+    {
+     "id": 780219,
+     "name": "Arthur Pereira",
+     "position": "F"
+    },
+    {
+     "id": 780220,
+     "name": "Yuri Martins",
+     "position": "G"
+    },
+    {
+     "id": 780221,
+     "name": "Thiago Freitas",
+     "position": "D"
+    },
+    {
+     "id": 780222,
+     "name": "Caio Mendes",
+     "position": "M"
+    },
+    {
+     "id": 780223,
+     "name": "Arthur Rodrigues",
+     "position": "F"
+    },
+    {
+     "id": 780224,
+     "name": "André Martins",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96015,
+   "name": "Coritiba Andino",
+   "players": [
+    {
+     "id": 780225,
+     "name": "Pedro Pereira",
+     "position": "G"
+    },
+    {
+     "id": 780226,
+     "name": "Kauã Rocha",
+     "position": "D"
+    },
+    {
+     "id": 780227,
+     "name": "Otávio Cardoso",
+     "position": "D"
+    },
+    {
+     "id": 780228,
+     "name": "Wesley Souza",
+     "position": "D"
+    },
+    {
+     "id": 780229,
+     "name": "Enzo Campos",
+     "position": "D"
+    },
+    {
+     "id": 780230,
+     "name": "Renan Pinto",
+     "position": "M"
+    },
+    {
+     "id": 780231,
+     "name": "Otávio Castro",
+     "position": "M"
+    },
+    {
+     "id": 780232,
+     "name": "Felipe Santos",
+     "position": "M"
+    },
+    {
+     "id": 780233,
+     "name": "Renan Rodrigues",
+     "position": "M"
+    },
+    {
+     "id": 780234,
+     "name": "Everton Fernandes",
+     "position": "F"
+    },
+    {
+     "id": 780235,
+     "name": "Everton Nascimento",
+     "position": "F"
+    },
+    {
+     "id": 780236,
+     "name": "Renan Cavalcanti",
+     "position": "G"
+    },
+    {
+     "id": 780237,
+     "name": "Davi Dias",
+     "position": "D"
+    },
+    {
+     "id": 780238,
+     "name": "Diego Carvalho",
+     "position": "M"
+    },
+    {
+     "id": 780239,
+     "name": "Yuri Oliveira",
+     "position": "F"
+    },
+    {
+     "id": 780240,
+     "name": "Thiago Costa",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96016,
+   "name": "Vasco do Cais",
+   "players": [
+    {
+     "id": 780241,
+     "name": "Matheus Rocha",
+     "position": "G"
+    },
+    {
+     "id": 780242,
+     "name": "Gabriel Cardoso",
+     "position": "D"
+    },
+    {
+     "id": 780243,
+     "name": "Pedro Freitas",
+     "position": "D"
+    },
+    {
+     "id": 780244,
+     "name": "Caio Mendes",
+     "position": "D"
+    },
+    {
+     "id": 780245,
+     "name": "Caio Carvalho",
+     "position": "D"
+    },
+    {
+     "id": 780246,
+     "name": "Vinícius Lima",
+     "position": "M"
+    },
+    {
+     "id": 780247,
+     "name": "Léo Castro",
+     "position": "M"
+    },
+    {
+     "id": 780248,
+     "name": "Renan Cavalcanti",
+     "position": "M"
+    },
+    {
+     "id": 780249,
+     "name": "Rodrigo Souza",
+     "position": "M"
+    },
+    {
+     "id": 780250,
+     "name": "Hugo Rocha",
+     "position": "F"
+    },
+    {
+     "id": 780251,
+     "name": "Renan Santos",
+     "position": "F"
+    },
+    {
+     "id": 780252,
+     "name": "Breno Martins",
+     "position": "G"
+    },
+    {
+     "id": 780253,
+     "name": "Murilo Cardoso",
+     "position": "D"
+    },
+    {
+     "id": 780254,
+     "name": "Yuri Silva",
+     "position": "M"
+    },
+    {
+     "id": 780255,
+     "name": "João Rocha",
+     "position": "F"
+    },
+    {
+     "id": 780256,
+     "name": "Bruno Silva",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96017,
+   "name": "Fortaleza Imperial",
+   "players": [
+    {
+     "id": 780257,
+     "name": "Enzo Campos",
+     "position": "G"
+    },
+    {
+     "id": 780258,
+     "name": "Felipe Ribeiro",
+     "position": "D"
+    },
+    {
+     "id": 780259,
+     "name": "Murilo Barros",
+     "position": "D"
+    },
+    {
+     "id": 780260,
+     "name": "Vinícius Almeida",
+     "position": "D"
+    },
+    {
+     "id": 780261,
+     "name": "Diego Nascimento",
+     "position": "D"
+    },
+    {
+     "id": 780262,
+     "name": "Davi Campos",
+     "position": "M"
+    },
+    {
+     "id": 780263,
+     "name": "Breno Lima",
+     "position": "M"
+    },
+    {
+     "id": 780264,
+     "name": "Rodrigo Campos",
+     "position": "M"
+    },
+    {
+     "id": 780265,
+     "name": "Vinícius Araújo",
+     "position": "M"
+    },
+    {
+     "id": 780266,
+     "name": "Matheus Cavalcanti",
+     "position": "F"
+    },
+    {
+     "id": 780267,
+     "name": "Thiago Almeida",
+     "position": "F"
+    },
+    {
+     "id": 780268,
+     "name": "Enzo Araújo",
+     "position": "G"
+    },
+    {
+     "id": 780269,
+     "name": "Vinícius Barros",
+     "position": "D"
+    },
+    {
+     "id": 780270,
+     "name": "Gabriel Moura",
+     "position": "M"
+    },
+    {
+     "id": 780271,
+     "name": "Otávio Araújo",
+     "position": "F"
+    },
+    {
+     "id": 780272,
+     "name": "Léo Carvalho",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96018,
+   "name": "Paraná Esporte",
+   "players": [
+    {
+     "id": 780273,
+     "name": "Lucas Barbosa",
+     "position": "G"
+    },
+    {
+     "id": 780274,
+     "name": "Felipe Rocha",
+     "position": "D"
+    },
+    {
+     "id": 780275,
+     "name": "André Rocha",
+     "position": "D"
+    },
+    {
+     "id": 780276,
+     "name": "Yuri Pinto",
+     "position": "D"
+    },
+    {
+     "id": 780277,
+     "name": "Rodrigo Barbosa",
+     "position": "D"
+    },
+    {
+     "id": 780278,
+     "name": "Caio Campos",
+     "position": "M"
+    },
+    {
+     "id": 780279,
+     "name": "Yuri Martins",
+     "position": "M"
+    },
+    {
+     "id": 780280,
+     "name": "Pedro Carvalho",
+     "position": "M"
+    },
+    {
+     "id": 780281,
+     "name": "João Martins",
+     "position": "M"
+    },
+    {
+     "id": 780282,
+     "name": "Vinícius Oliveira",
+     "position": "F"
+    },
+    {
+     "id": 780283,
+     "name": "Pedro Costa",
+     "position": "F"
+    },
+    {
+     "id": 780284,
+     "name": "João Ribeiro",
+     "position": "G"
+    },
+    {
+     "id": 780285,
+     "name": "Caio Rocha",
+     "position": "D"
+    },
+    {
+     "id": 780286,
+     "name": "Hugo Barros",
+     "position": "M"
+    },
+    {
+     "id": 780287,
+     "name": "André Almeida",
+     "position": "F"
+    },
+    {
+     "id": 780288,
+     "name": "Matheus Cardoso",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96019,
+   "name": "Juventude Tropical",
+   "players": [
+    {
+     "id": 780289,
+     "name": "Pedro Costa",
+     "position": "G"
+    },
+    {
+     "id": 780290,
+     "name": "Vinícius Carvalho",
+     "position": "D"
+    },
+    {
+     "id": 780291,
+     "name": "André Martins",
+     "position": "D"
+    },
+    {
+     "id": 780292,
+     "name": "Thiago Almeida",
+     "position": "D"
+    },
+    {
+     "id": 780293,
+     "name": "Yuri Barbosa",
+     "position": "D"
+    },
+    {
+     "id": 780294,
+     "name": "João Silva",
+     "position": "M"
+    },
+    {
+     "id": 780295,
+     "name": "Thiago Oliveira",
+     "position": "M"
+    },
+    {
+     "id": 780296,
+     "name": "Murilo Ribeiro",
+     "position": "M"
+    },
+    {
+     "id": 780297,
+     "name": "Breno Barros",
+     "position": "M"
+    },
+    {
+     "id": 780298,
+     "name": "Caio Barbosa",
+     "position": "F"
+    },
+    {
+     "id": 780299,
+     "name": "Otávio Alves",
+     "position": "F"
+    },
+    {
+     "id": 780300,
+     "name": "Rodrigo Pinto",
+     "position": "G"
+    },
+    {
+     "id": 780301,
+     "name": "Enzo Silva",
+     "position": "D"
+    },
+    {
+     "id": 780302,
+     "name": "Rafael Freitas",
+     "position": "M"
+    },
+    {
+     "id": 780303,
+     "name": "Diego Cardoso",
+     "position": "F"
+    },
+    {
+     "id": 780304,
+     "name": "Arthur Fernandes",
+     "position": "F"
+    }
+   ]
+  },
+  {
+   "id": 96020,
+   "name": "Santa Cruz Celeste",
+   "players": [
+    {
+     "id": 780305,
+     "name": "Renan Freitas",
+     "position": "G"
+    },
+    {
+     "id": 780306,
+     "name": "Hugo Silva",
+     "position": "D"
+    },
+    {
+     "id": 780307,
+     "name": "Gabriel Santos",
+     "position": "D"
+    },
+    {
+     "id": 780308,
+     "name": "Renan Pinto",
+     "position": "D"
+    },
+    {
+     "id": 780309,
+     "name": "Murilo Martins",
+     "position": "D"
+    },
+    {
+     "id": 780310,
+     "name": "Matheus Mendes",
+     "position": "M"
+    },
+    {
+     "id": 780311,
+     "name": "Arthur Rocha",
+     "position": "M"
+    },
+    {
+     "id": 780312,
+     "name": "Bruno Santos",
+     "position": "M"
+    },
+    {
+     "id": 780313,
+     "name": "Gabriel Pinto",
+     "position": "M"
+    },
+    {
+     "id": 780314,
+     "name": "Rodrigo Rocha",
+     "position": "F"
+    },
+    {
+     "id": 780315,
+     "name": "André Fernandes",
+     "position": "F"
+    },
+    {
+     "id": 780316,
+     "name": "Gabriel Almeida",
+     "position": "G"
+    },
+    {
+     "id": 780317,
+     "name": "André Freitas",
+     "position": "D"
+    },
+    {
+     "id": 780318,
+     "name": "Igor Monteiro",
+     "position": "M"
+    },
+    {
+     "id": 780319,
+     "name": "Otávio Castro",
+     "position": "F"
+    },
+    {
+     "id": 780320,
+     "name": "Felipe Santos",
+     "position": "F"
+    }
+   ]
+  }
+ ]
+}

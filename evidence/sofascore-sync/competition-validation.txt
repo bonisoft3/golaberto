@@ -1,0 +1,22 @@
+Competition configuration repair and LaLiga 2 import
+
+Rollback validation passed: 3 configured sources, 6 stage bindings, LaLiga2 22 teams/462 games/110 played/4 zones/462 history records/18876 odds rows; all468 reviews resolve.
+{"applied": true, "open_reviews": 0, "import_counts": {"championships": 1, "phases": 1, "groups": 1, "team_groups": 22, "games": 462, "played": 110, "zones": 4, "game_history": 462, "odds_history": 18876}, "source_ids": [{"tournament": 54, "season": 97280, "enabled": false}, {"tournament": 10783, "season": 89945, "enabled": false}, {"tournament": 1281, "season": 90642, "enabled": false}, {"tournament": 23, "season": 95836, "enabled": true}]}
+
+Independent post-commit counts:
+{
+  "teams": 22,
+  "zones": 4,
+  "played": 110,
+  "fixtures": 462,
+  "game_history": 462,
+  "odds_history": 18876,
+  "open_reviews": 0,
+  "match_bindings": 462,
+  "updater_requests": 11
+}
+
+Backend review: no actionable findings.
+Research: six HTTP200 responses through the custom Rust fetcher (three season lists, three exact-season standings); no historical event/details requests.
+Browser: LaLiga2 standings showed22teams with10games each; followedMatches andverifiedimportedresults/localtimes.
+No application code or schema changes; verification used rollback and live post-commit assertions rather than rerunning software suites.

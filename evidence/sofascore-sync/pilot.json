@@ -1,0 +1,54 @@
+{
+  "source": {
+    "id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+    "enabled": true,
+    "overdue": 0,
+    "reviews": 18,
+    "requests": 11,
+    "season_id": 95836,
+    "next_due_at": "2026-10-28T01:54:20.057882+00:00",
+    "detail_after": "2026-10-27T21:30:16.440058+00:00",
+    "payload_bytes": 961410,
+    "championship_id": "a0200000-0000-4000-8000-000000000604",
+    "last_success_at": "2026-10-27T21:59:38.584793+00:00",
+    "unique_tournament_id": 23
+  },
+  "captured_at": "2026-10-27T23:18:57.644099+00:00",
+  "played_games": 83,
+  "baseline_rows": {
+    "game": 40,
+    "goal": 18,
+    "player": 3,
+    "player_game": 146,
+    "team_player": 146,
+    "substitution": 30
+  },
+  "review_reasons": [
+    {
+      "count": 18,
+      "reason": "manual fixture fields conflict with provider"
+    }
+  ],
+  "detail_resources": [
+    {
+      "count": 3,
+      "family": "lineups",
+      "complete": "true"
+    },
+    {
+      "count": 3,
+      "family": "incidents",
+      "complete": "true"
+    }
+  ],
+  "request_families": {
+    "round": 4,
+    "rounds": 1,
+    "lineups": 3,
+    "incidents": 3
+  },
+  "confirmed_bindings": 34664,
+  "historical_details": 0,
+  "positive_minute_records": 94,
+  "response_body_bytes": 704822
+}

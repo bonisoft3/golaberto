@@ -1,0 +1,82 @@
+{
+  "versions": [
+    {
+      "name": "golaberto-ratings",
+      "frozenDeployedVersion": "4a565ae0a7da1ac9d51668941377dd457f837e7ed99e024911c3290296cb6222",
+      "nextSourceVersion": "66907c2dacaf8910ccc963fcfb3e4ac8064f09a88d293daafef375af873c09f7",
+      "changed": true
+    },
+    {
+      "name": "golaberto-chances",
+      "frozenDeployedVersion": "702aac01969bab777b229896f514a108a29408cc32d436d3498892acb38f8c9f",
+      "nextSourceVersion": "50c59c9c768f3bdc6d9b93f0e7ce02ab6d91ce40862ead9be53f4fd3f9617c0a",
+      "changed": true
+    },
+    {
+      "name": "golaberto-game-cards",
+      "frozenDeployedVersion": "d9baaf41fd0e6dd593332a4ea40a4c2bfb44adf3633f96615782885985b2fdac",
+      "nextSourceVersion": "6f77c0aca512e8dd70ec02999621e93d0ced804d4718e84894744a436a16222f",
+      "changed": true
+    },
+    {
+      "name": "golaberto-player-stats",
+      "frozenDeployedVersion": "495ca96f512d99b47bb2b4674cd50d3daea5e83513260ac32fe4e08b48cd96a5",
+      "nextSourceVersion": "614d6da47a92c62d9c12d547931af7933048fafe38eeee169af0e850caed9f41",
+      "changed": true
+    }
+  ],
+  "descriptors": {
+    "cards": {
+      "beforeSha256": "726dc2b623c745bfed5fbca4015720bd8e6b51e51e66072143b4654f0f19f39b",
+      "afterSha256": "e5bd03568ffab08c9bcd66ad03f22099410f4e7db64b91523741fc0a031e47c5"
+    },
+    "player_stats": {
+      "beforeSha256": "694b732daf992ed055519a72f0bb4f29805097c25e6b9159c65fe58058063825",
+      "afterSha256": "ea6368e60a8e2f08f03e24c6101f622097c0aa06d4e964e051510e8670b85f38"
+    }
+  },
+  "nativeCompile": {
+    "cards": "Success",
+    "player_stats": "Success"
+  },
+  "scope": "Native partition metadata only; frozen dist/cloudflare untouched; snapshot SQL and generated computation JS unchanged.",
+  "controlledDescriptorOnlyBaseVersions": [
+    {
+      "name": "golaberto-ratings",
+      "before": "7a08dcde20f3b3526249fbc9ea03d312015631fdbd68adb14cdc8b4d59c5331b",
+      "after": "7a08dcde20f3b3526249fbc9ea03d312015631fdbd68adb14cdc8b4d59c5331b",
+      "changed": false
+    },
+    {
+      "name": "golaberto-chances",
+      "before": "ee84ebb63c7245ea8f23a0c6b64153d3d201d93f92d9868ead5ac013bdf20d2d",
+      "after": "ee84ebb63c7245ea8f23a0c6b64153d3d201d93f92d9868ead5ac013bdf20d2d",
+      "changed": false
+    },
+    {
+      "name": "golaberto-game-cards",
+      "before": "a859ca476ff09afeaf63c74539105b9ba1e812cc2a61ec4d8e4491aede977495",
+      "after": "d034c795ae23578867b3462c85606bb7187bd8f5fd859a4cd82776bc3d30d406",
+      "changed": true
+    },
+    {
+      "name": "golaberto-player-stats",
+      "before": "ae89c186cdea97721e65ce9b337f2f17167d77e10c6a1bbaa25a65d1200e4f24",
+      "after": "4a7a71ee6df327b40abe89420ebd201dff5ec618d286f2f0e333be8cde9e12bf",
+      "changed": true
+    }
+  ],
+  "freshPackageCaveat": "All four outer versions also differ because freshly bundled DuckDB loader bytes differ from the frozen release loader; descriptor-only controlled base identities change only cards/player-stats.",
+  "nativeCompileScope": "Actual Feldera 0.367.0 manager SQL and Rust compilation succeeded; no connectors were started. Temporary pipelines were deleted.",
+  "acceptance": {
+    "generate": "passed",
+    "test": "passed",
+    "lint": "passed",
+    "nativeCompilation": "both programs compiled SQL and Rust successfully on Feldera 0.367.0",
+    "liveIntegration": "interrupted before stack startup to protect disk headroom; not passed",
+    "integrationLog": "/tmp/2079-statistics-live-final.log",
+    "interruption": "Owned process group stopped after host disk fell below18GiB; no owned processes or integration containers remained. Reclaimed only owned closed reconstructible native probe state, retaining all source/output JSONLs and evidence.",
+    "restart": "not attempted",
+    "frozenCloudflareArtifact": "not modified"
+  }
+}

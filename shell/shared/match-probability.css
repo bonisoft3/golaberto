@@ -3,7 +3,7 @@
 .match-probability-controls legend { font-weight: 800; padding: 0 .35rem; }
 .match-probability-control-grid { display: grid; grid-template-columns: repeat(2, minmax(8rem, 1fr)); gap: .65rem; }
 .match-probability-control-grid label { display: grid; gap: .2rem; font-size: .86rem; }
-.match-probability-control-grid input { box-sizing: border-box; min-height: 2.4rem; width: 100%; }
+.match-probability-control-grid input { box-sizing: border-box; font-family: inherit; font-size: var(--type-body); font-weight: 400; min-height: var(--control-h); padding-inline: var(--control-pad-x); width: 100%; background: var(--surface); color: var(--primary); border: var(--border-size-1) solid var(--border); border-radius: var(--r-sm); }
 .match-probability-event-actions { display: flex; flex-wrap: wrap; gap: var(--sp-md); margin: var(--sp-lg) 0; }
 .match-probability-event-actions button,
 .match-probability-event__remove { min-height: 2.4rem; }
@@ -11,7 +11,7 @@
 .match-probability-event { align-items: end; border-top: var(--border-size-1) solid var(--border); display: grid; gap: var(--sp-md); grid-template-columns: minmax(6.5rem, .7fr) minmax(8rem, 1fr) minmax(6rem, .7fr) auto; padding-top: var(--sp-md); }
 .match-probability-event label { display: grid; font-size: .82rem; gap: .2rem; }
 .match-probability-event input,
-.match-probability-event select { box-sizing: border-box; min-height: 2.4rem; width: 100%; }
+.match-probability-event select { box-sizing: border-box; font-family: inherit; font-size: var(--type-body); font-weight: 400; min-height: var(--control-h); padding-inline: var(--control-pad-x); width: 100%; background: var(--surface); color: var(--primary); border: var(--border-size-1) solid var(--border); border-radius: var(--r-sm); }
 .match-probability-event__kind { align-self: center; font-weight: 800; }
 .match-probability-event--goal .match-probability-event__kind--red-card,
 .match-probability-event--red_card .match-probability-event__kind--goal { display: none; }

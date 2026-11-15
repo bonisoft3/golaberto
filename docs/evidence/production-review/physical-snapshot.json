@@ -1,0 +1,138 @@
+{
+  "before": {
+    "milliseconds": 1553.8487919999998,
+    "result": {
+      "sqliteBytes": 2416152576,
+      "source": {
+        "blocks": {
+          "n": 74691,
+          "bytes": 2292773317
+        },
+        "nodes": {
+          "n": 1652
+        },
+        "format": [
+          {
+            "id": 1,
+            "value": "{\"version\":1,\"blockSize\":131072,\"codec\":\"deflate\"}"
+          }
+        ]
+      },
+      "frozen": null
+    }
+  },
+  "copied": {
+    "milliseconds": 27326.412,
+    "result": {
+      "sqliteBytes": 4830638080,
+      "source": {
+        "blocks": {
+          "n": 74691,
+          "bytes": 2292773317
+        },
+        "nodes": {
+          "n": 1652
+        },
+        "format": [
+          {
+            "id": 1,
+            "value": "{\"version\":1,\"blockSize\":131072,\"codec\":\"deflate\"}"
+          }
+        ]
+      },
+      "frozen": {
+        "blocks": {
+          "n": 74691,
+          "bytes": 2292773317
+        },
+        "nodes": {
+          "n": 1652
+        },
+        "format": [
+          {
+            "id": 1,
+            "value": "{\"version\":1,\"blockSize\":131072,\"codec\":\"deflate\"}"
+          }
+        ]
+      }
+    }
+  },
+  "concurrentPing": {
+    "milliseconds": 27361.079208,
+    "result": {
+      "ok": true
+    }
+  },
+  "cpuBefore": [
+    {
+      "pid": 97171,
+      "cpu": "0:00.06"
+    },
+    {
+      "pid": 97172,
+      "cpu": "0:00.30"
+    }
+  ],
+  "cpuAfter": [
+    {
+      "pid": 97171,
+      "cpu": "0:00.07"
+    },
+    {
+      "pid": 97172,
+      "cpu": "0:14.96"
+    }
+  ],
+  "verified": {
+    "milliseconds": 9498.48,
+    "result": {
+      "differentBlocks": {
+        "n": 0
+      },
+      "differentNodes": {
+        "n": 0
+      }
+    }
+  },
+  "restarted": {
+    "milliseconds": 62.06983300000138,
+    "result": {
+      "sqliteBytes": 4830638080,
+      "source": {
+        "blocks": {
+          "n": 74691,
+          "bytes": 2292773317
+        },
+        "nodes": {
+          "n": 1652
+        },
+        "format": [
+          {
+            "id": 1,
+            "value": "{\"version\":1,\"blockSize\":131072,\"codec\":\"deflate\"}"
+          }
+        ]
+      },
+      "frozen": {
+        "blocks": {
+          "n": 74691,
+          "bytes": 2292773317
+        },
+        "nodes": {
+          "n": 1652
+        },
+        "format": [
+          {
+            "id": 1,
+            "value": "{\"version\":1,\"blockSize\":131072,\"codec\":\"deflate\"}"
+          }
+        ]
+      }
+    }
+  },
+  "limitations": [
+    "Stopped-source clone only; does not prove physical fork while PGlite actively mutates.",
+    "No PGlite opened, no application data written, no repo or production mutation.",
+    "Process CPU includes native SQLite/runtime, not hosted isolate billing."
+  ]
+}

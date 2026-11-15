@@ -1,0 +1,393 @@
+{
+  "contract": "Historical ratings lower bound is seven calendar years before the latest played match UTC month; all other windows and numerical WASM remain unchanged.",
+  "feldera": "0.367.0",
+  "compilerSha256": "d08430de8b34ae997b72c44eb9a9274b25955a41af35e7c6997e7e459d3283ab",
+  "duckdb": "v1.4.3",
+  "fixture": "plugins/pronto/spikes/duckstream/json-plan/fixtures/calendar_year.sql",
+  "fixtureSha256": "58264f4980863681beb3985ec5b8eed94f155536b056e70110c6ab7e650e79cc",
+  "nativeAndTranslatedRows": [
+    [
+      1,
+      "2024-02-01 00:00:00",
+      "2017-02-01 00:00:00",
+      "2023-02-28 23:59:59.999999"
+    ],
+    [
+      2,
+      "2024-03-01 00:00:00",
+      "2017-03-01 00:00:00",
+      "2023-03-01 00:00:00"
+    ],
+    [
+      3,
+      "2027-01-01 00:00:00",
+      "2020-01-01 00:00:00",
+      "2026-01-01 00:00:00"
+    ],
+    [
+      4,
+      "1969-12-01 00:00:00",
+      "1962-12-01 00:00:00",
+      "1968-12-31 23:59:59.999999"
+    ],
+    [
+      5,
+      null,
+      null,
+      null
+    ]
+  ],
+  "normalization": "Timestamp separator T normalized to space only.",
+  "temporaryPipelineDeleted": true,
+  "coverage": "Leap-day clamping, month/year boundaries, pre-epoch microseconds and null propagation; app tests separately cover UTC offset, membership boundary and deterministic replay.",
+  "limitation": "Native archive output verification with explicit evaluation request-identity reuse. Hosted runtime latency and atomic publication capacity remain separate checks.",
+  "archiveHistory": {
+    "policy": "Monthly UTC seven-year lower bound; all other canonical inputs and pure numerical algorithms unchanged",
+    "source": "/tmp/2079-chances-capacity/actual-final/database.duckdb",
+    "mutation": "a0900000-0000-4000-8000-000000058e33",
+    "scenarios": {
+      "baseline": {
+        "latest": "2026-10-05 18:45:00",
+        "anchor": "2026-10-01 00:00:00",
+        "generatedGames": 305088,
+        "changedSevenYearFlags": 368,
+        "unchangedRelations": {
+          "phases": "09081e5403baad7e9328ecc89a6fc2aa2672062003aef65bfd5d6c40cdbc211d",
+          "cutoff": "395078bd68bb6852c4929e629606e5db3dd970d0ede3c004a3093d61808e95f5",
+          "teams": "25e584133391f484ec8124e263c371a78204f95eb8357a30250ee27f26d2ff05",
+          "players": "74c46336c4c156d021e302c2353cfca6178c3717245aca60e714f2bccfb8635b",
+          "appearances": "60933ce92e7ebe99b942545ac59687f0f5ec96d764e702097094f2b84b381be2",
+          "goals": "852371e800daa3a4d992647ac37185dfe4c9b7875c465a011165cff6226737ce"
+        },
+        "historicGames": 67681,
+        "inputSha256": "51ccc7bdc505792602a151722be9c1822af94179c1b58ba15a0cc45ab63e0253",
+        "rows": 1424044,
+        "outputSha256": "c95d35f00b0f1619b6919d8c81a009dca597149326f885f974675f69cea1a16c",
+        "queryMs": 4891.370083,
+        "fitMs": 29024.565833,
+        "totalMs": 57619.080333
+      },
+      "current": {
+        "latest": "2026-10-07 22:30:00",
+        "anchor": "2026-10-01 00:00:00",
+        "generatedGames": 305089,
+        "changedSevenYearFlags": 602,
+        "unchangedRelations": {
+          "phases": "16715faa27c61554d88dd2799afcb2adb80b1b1964da11d281a36e9e0a800c02",
+          "cutoff": "e4093720bc401ffceac94d07b49ff6b299822878dacc29bee719b8de48b1adf9",
+          "teams": "25e584133391f484ec8124e263c371a78204f95eb8357a30250ee27f26d2ff05",
+          "players": "74c46336c4c156d021e302c2353cfca6178c3717245aca60e714f2bccfb8635b",
+          "appearances": "074062fe8c7b3df8cf2f15871a4cf0b165e622999a1d4c1ebbbb7fe16ac826b3",
+          "goals": "65ed46eb6721c7fa7f47b23c2c5d81c6bcf6e1bced0ae95cc917a9c9d6d94614"
+        },
+        "historicGames": 67682,
+        "inputSha256": "2455d592d4421cc9f17bf277cf96698dbc98e52d8155dc3290cf860125da5b61",
+        "rows": 1425160,
+        "outputSha256": "66efd9c7731ea4bd509deebf53388ed2a23de17e3dcac72054c6d512d6142d45",
+        "queryMs": 5160.145166000002,
+        "fitMs": 29306.979167000005,
+        "totalMs": 56959.549583
+      }
+    },
+    "artifacts": {
+      "/Users/davi/code/trash/.worktrees/duckstream/apps/golaberto/computations/golaberto-odds.wasm": "53bbb38ad80d18fbefe4c94ac96f2e9bdc83736b4c3bbd28eaf79fa1c7cce9c5",
+      "/tmp/2079-monthly-history/reference.mjs": "428cfa7c93c1e68ed7530b7bcdad9ef1feae74b39bf8b76beedca599e59b396c",
+      "/tmp/2079-monthly-history/monthly-program.mjs": "97b88b92255636c5c1d4b6b546efb491e72c5e87a66fe5e692bb2f103e853cf7",
+      "/tmp/2079-monthly-history/ratings.sql": "70d29945136690392869bdb345c5f907ecea51eeaac9c354e493bb2e8dd389c6",
+      "/tmp/2079-match-delta/ratings-baseline-inputs.json": "76febc271668fa2a3d7571adef208addc718a457ab8e196de3b71680c8aaa063",
+      "/tmp/2079-match-delta/ratings-current-inputs.json": "683feb16b268df89f0887720c7ca5adbddd93561919d918ce4e3e6ba6fd33d2d"
+    },
+    "comparisonMemoryLimit": "1GB native diagnostic only; physical query proof stayed32MB",
+    "comparisons": {
+      "monthlyBaselineVsOriginalSource": {
+        "rows": 1424044,
+        "inserted": 133565,
+        "changed": 1290479,
+        "unchanged": 0
+      },
+      "monthlyBaselineVsOldAlgorithmOnSource": {
+        "rows": 1424044,
+        "inserted": 2144,
+        "changed": 1414718,
+        "unchanged": 7182
+      },
+      "monthlyCurrentVsMonthlyOutput": {
+        "rows": 1425160,
+        "inserted": 1116,
+        "changed": 1116,
+        "unchanged": 1422928
+      },
+      "monthlyCurrentVsMonthlyBaselineOnSource": {
+        "rows": 1425160,
+        "inserted": 1116,
+        "changed": 1116,
+        "unchanged": 1422928
+      }
+    },
+    "omittedBaselineRowsRetained": 0,
+    "deleted": 0,
+    "limitations": "Native diagnostic only, no production cache or phase/player recomputation claim. Generated physical games query independently validated against all retained non-history game fields; all other canonical relations unchanged. Original source export read-only.",
+    "changedRowsByDate": [
+      {
+        "day": "2026-10-05",
+        "inserted": 0,
+        "changed": 1116
+      },
+      {
+        "day": "2026-10-07",
+        "inserted": 1116,
+        "changed": 0
+      }
+    ],
+    "comparisonElapsedMs": 4381.510875
+  },
+  "ratingPublications": {
+    "contract": "Monthly seven-year history policy; team_rating upsert retains omitted history; player_rating/rating_eval replace; pure WASM unchanged.",
+    "sourceMutation": {
+      "id": "a0900000-0000-4000-8000-000000058e33",
+      "played": true,
+      "home_score": 2,
+      "away_score": 1
+    },
+    "baseline": {
+      "mode": "baseline",
+      "evalReuse": {
+        "sourceInputSha256": "76febc271668fa2a3d7571adef208addc718a457ab8e196de3b71680c8aaa063",
+        "fullNumericalArchiveSha256": "e4714ecf9e67b3c9d3611bca8402ced3a4c52b635496ae46c67603ed4628e7f4",
+        "phaseBoundsAndNumericIdsSha256": "90b60fc1d6dc455abc1f37e7f35701a15b320d09e6f76557177359792ee0f41c",
+        "teamsSha256": "25e584133391f484ec8124e263c371a78204f95eb8357a30250ee27f26d2ff05",
+        "phases": 3931,
+        "proof": "Generated physical-query proof changed only seven_years. Every eval request is the same chronological numeric-game subsequence selected by unchanged since/until, identical zero priors and phase numeric ID. Full underlying input identity verified; no eval WASM rerun.",
+        "outputSource": "/tmp/2079-native-join-spike/oracle/rating_eval.jsonl",
+        "outputSourceSha256": "6cab179b693191b11fbbeefd6b029a75e13709b0e332c09c5e83973f65b245f6"
+      },
+      "playerRequestSha256": "60fd930c1556bdcca2ac4bfd636bb38385cc8ab5ec01a9f78003f185cf5c1acb",
+      "playerRequestBytes": 194661568,
+      "wasmSha256": "53bbb38ad80d18fbefe4c94ac96f2e9bdc83736b4c3bbd28eaf79fa1c7cce9c5",
+      "playerWasmMs": 2614.4570830000002,
+      "sinks": {
+        "player_rating": {
+          "rows": 41155,
+          "sha256": "8275ec19b062e3881551e9195c908bbcd2df00d9446217a8f24eec3d883a25c7"
+        },
+        "rating_eval": {
+          "rows": 3931,
+          "sha256": "6cab179b693191b11fbbeefd6b029a75e13709b0e332c09c5e83973f65b245f6"
+        },
+        "team_rating": {
+          "rows": 1424044,
+          "sha256": "c95d35f00b0f1619b6919d8c81a009dca597149326f885f974675f69cea1a16c"
+        }
+      },
+      "elapsedMs": 7409.549084,
+      "referenceWithExportsSha256": "41850d88b28f5b22579542961582c7576b3eadbae6beff3105d7696a373662d7",
+      "limits": "Native diagnostic; player computation rerun against exact monthly rounded history. No production-cache or Worker latency claim."
+    },
+    "current": {
+      "mode": "current",
+      "evalReuse": {
+        "sourceInputSha256": "683feb16b268df89f0887720c7ca5adbddd93561919d918ce4e3e6ba6fd33d2d",
+        "fullNumericalArchiveSha256": "f69bc7f5bc0aeaf615b4418931864eb2ca5beb4c7179ad693afccd78a4cd578b",
+        "phaseBoundsAndNumericIdsSha256": "a8be507f9c9f88e45ab565a323f92a6ffe37880393f5e08bf65e82977769d3a7",
+        "teamsSha256": "25e584133391f484ec8124e263c371a78204f95eb8357a30250ee27f26d2ff05",
+        "phases": 3931,
+        "proof": "Generated physical-query proof changed only seven_years. Every eval request is the same chronological numeric-game subsequence selected by unchanged since/until, identical zero priors and phase numeric ID. Full underlying input identity verified; no eval WASM rerun.",
+        "outputSource": "/tmp/2079-match-delta/current-rating_eval.jsonl",
+        "outputSourceSha256": "bfbdd01273d84767889cf29086cdecffba6cbd99eca47528f2efd10966ce1e2a"
+      },
+      "playerRequestSha256": "8c0b32b560fa3d1aac645582800cfb9cffb03b51e4057bad68ff8ca7ef9021a7",
+      "playerRequestBytes": 194636739,
+      "wasmSha256": "53bbb38ad80d18fbefe4c94ac96f2e9bdc83736b4c3bbd28eaf79fa1c7cce9c5",
+      "playerWasmMs": 2660.2724579999995,
+      "sinks": {
+        "player_rating": {
+          "rows": 41147,
+          "sha256": "ad33ba05845f6fcb7a95fff739038cd01fb7462170958d63b26aa414a26baf0c"
+        },
+        "rating_eval": {
+          "rows": 3931,
+          "sha256": "bfbdd01273d84767889cf29086cdecffba6cbd99eca47528f2efd10966ce1e2a"
+        },
+        "team_rating": {
+          "rows": 1425160,
+          "sha256": "66efd9c7731ea4bd509deebf53388ed2a23de17e3dcac72054c6d512d6142d45"
+        }
+      },
+      "elapsedMs": 7443.6285,
+      "referenceWithExportsSha256": "41850d88b28f5b22579542961582c7576b3eadbae6beff3105d7696a373662d7",
+      "limits": "Native diagnostic; player computation rerun against exact monthly rounded history. No production-cache or Worker latency claim."
+    },
+    "comparisons": {
+      "monthlyBaselineVsOriginalSource": {
+        "rows": 1424044,
+        "inserted": 133565,
+        "changed": 1290479,
+        "unchanged": 0
+      },
+      "monthlyBaselineVsOldAlgorithmOnSource": {
+        "rows": 1424044,
+        "inserted": 2144,
+        "changed": 1414718,
+        "unchanged": 7182
+      },
+      "monthlyCurrentVsMonthlyOutput": {
+        "rows": 1425160,
+        "inserted": 1116,
+        "changed": 1116,
+        "unchanged": 1422928
+      },
+      "monthlyCurrentVsMonthlyBaselineOnSource": {
+        "rows": 1425160,
+        "inserted": 1116,
+        "changed": 1116,
+        "unchanged": 1422928
+      },
+      "monthlyBaselineVsOldBaseline_player_rating": {
+        "rows": 41155,
+        "changed": 41042,
+        "inserted": 0,
+        "deleted": 0,
+        "unchanged": 113
+      },
+      "monthlyBaselineVsOldBaseline_rating_eval": {
+        "rows": 3931,
+        "changed": 0,
+        "inserted": 0,
+        "deleted": 0,
+        "unchanged": 3931
+      }
+    },
+    "delta": {
+      "team_rating": {
+        "rows": 1425160,
+        "inserted": 1116,
+        "changed": 1116,
+        "unchanged": 1422928,
+        "deleted": 0
+      },
+      "player_rating": {
+        "rows": 41147,
+        "changed": 41147,
+        "inserted": 0,
+        "deleted": 8,
+        "unchanged": 0
+      },
+      "rating_eval": {
+        "rows": 3931,
+        "changed": 1,
+        "inserted": 0,
+        "deleted": 0,
+        "unchanged": 3930
+      }
+    },
+    "paths": {
+      "baseline": {
+        "team_rating": "/tmp/2079-monthly-history/baseline-team_rating.jsonl",
+        "player_rating": "/tmp/2079-monthly-history/baseline-player_rating.jsonl",
+        "rating_eval": "/tmp/2079-monthly-history/baseline-rating_eval.jsonl"
+      },
+      "current": {
+        "team_rating": "/tmp/2079-monthly-history/current-team_rating.jsonl",
+        "player_rating": "/tmp/2079-monthly-history/current-player_rating.jsonl",
+        "rating_eval": "/tmp/2079-monthly-history/current-rating_eval.jsonl"
+      }
+    },
+    "limits": "Exact native diagnostic outputs; no Worker latency claim. No historical recomputation during completion. Phase eval references reused only with full underlying numeric input/identity proof."
+  },
+  "oddsBaseline": {
+    "mode": "baseline",
+    "seed": 751300073,
+    "jobs": 332,
+    "hits": 297,
+    "misses": 35,
+    "elapsedMs": 48683.055959000005,
+    "evidence": {
+      "team_chance": {
+        "rows": 58440,
+        "bytes": 11894349,
+        "sha256": "8bdcd8683f1764c37d9b069fda87c36c2f9a8ed41e024dbfbd88d70d8ceedfe7"
+      },
+      "zone_chance": {
+        "rows": 81522,
+        "bytes": 22081077,
+        "sha256": "4335b387ad26259b1fbd14d99eb34a907d4e194e9d0ce79d1b61415265511bb8"
+      },
+      "position_chance": {
+        "rows": 988850,
+        "bytes": 213223414,
+        "sha256": "87184db68f7e7d1bdbda6b7d811936d16cd72379b6f96d526dd5008fa123da9a"
+      },
+      "game_importance": {
+        "rows": 5419,
+        "bytes": 482744,
+        "sha256": "2d513ad5806248322905a73668f17f81a50104c7568d1a6d271b91015808923d"
+      }
+    },
+    "physicalQueries": true,
+    "nativeDuckDB": "1.5.6-r.1",
+    "workers": 8,
+    "inputs": {
+      "source": "/tmp/2079-chances-capacity/actual-final/database.duckdb",
+      "monthly": "/tmp/2079-monthly-history/baseline-team_rating.jsonl",
+      "standing": "/tmp/2079-match-delta/refreshed-pg-standings.json",
+      "queries": {
+        "groups": {
+          "rows": 15518,
+          "ms": 396.73762499999975,
+          "sha256": "ee2ca115a1c5a728f683a7019ab96533034e602c8d89b34d2806398b6471efe6"
+        },
+        "members": {
+          "rows": 58440,
+          "ms": 440.7381250000003,
+          "sha256": "69f5494616b509c9d2753c965a058abc1500a9d84910f59f34fff834742e194a"
+        },
+        "games": {
+          "rows": 19743,
+          "ms": 34952.382458,
+          "sha256": "1e913d35a9564a6bf5cfb3ea7f39c8c3bf3e7355c673ac79453881bad593d16b"
+        },
+        "zones": {
+          "rows": 16379,
+          "ms": 264.0720000000001,
+          "sha256": "662591547473af3cd21a1194bf5dfbb712c071a7ef301e48eb65e9aedd1954e5"
+        }
+      }
+    },
+    "artifacts": {
+      "/tmp/2079-monthly-chances/inputs.json": "2cbe2e1ec1a6395048dc5c92e80f799f5504e64aca7f18683ce5ce9e9556d25f",
+      "/tmp/2079-monthly-chances/compute.ts": "da1aeed86266f22ef442b0047110611a6cd9b42a73cd9d4b192c1fc9afc8612d",
+      "/tmp/2079-monthly-chances/worker.ts": "bfe6047f5b7c95c02c3e4ec4866b3b05f04721c3e54b23127c33e420fa03b7a9",
+      "/Users/davi/code/trash/.worktrees/duckstream/apps/golaberto/computations/golaberto-odds.wasm": "53bbb38ad80d18fbefe4c94ac96f2e9bdc83736b4c3bbd28eaf79fa1c7cce9c5",
+      "/Users/davi/code/trash/.worktrees/duckstream/apps/golaberto/duckstream/chances.pure.js": "e9f23babae1251db9c3cadfdf8f8d8874f1758e4aa1e5aa5a151358e004a5fda"
+    },
+    "scope": "Local monthly baseline. Prepared PostgreSQL ratings and standings independently matched the complete DuckDB input overlay; other raw sources matched immutable archive fingerprints.",
+    "preparedRatings": {
+      "passed": true,
+      "actualSource": "/tmp/2079-monthly-chances/prepared-pgdata",
+      "expected": "original archive plus exact monthly upsert overlay",
+      "rows": 8328930,
+      "sha256": "095f535c120669d8f0ed25b1093be93038f87723271b67dbfe543b18a9b03196",
+      "comparison": {
+        "total": 8328930,
+        "missing": 0,
+        "mismatches": 0
+      },
+      "elapsedMs": 55126.068167,
+      "scope": "Native independent verification;1GB comparison budget, not runtime capacity proof"
+    },
+    "preparedStandings": {
+      "passed": true,
+      "rows": 58440,
+      "columns": [
+        "group_id",
+        "team_id",
+        "position",
+        "points",
+        "played"
+      ],
+      "prepared": "/tmp/2079-fresh-bootstrap/prepared-standing.jsonl",
+      "reference": "/tmp/2079-match-delta/refreshed-pg-standings.json",
+      "canonical_sha256": "c65a384e8649efde1cac5a597252153d8489bd7e7e34464ed260212e4eee0a85"
+    }
+  }
+}

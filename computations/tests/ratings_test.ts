@@ -104,15 +104,15 @@ test("the chances price games with the ratings", async () => {
   assert(left.length > 0 && left.every((g) => g.home_power !== null && 0.01 <= g.home_power && g.home_power <= 10));
 });
 
-test("windows count calendar years", async () => {
-  // Rails' `- n.years` keeps the day, but for a 29 February missing from
-  // the year it lands in, which falls to the 28th.
+test("history starts seven years before the month while phase bounds retain their day", async () => {
   const w = new World();
   const template = w.rows.game.find((g) => g.phase_id === w.phases["2026"] && g.played === "true")!;
   const days: Record<string, string> = {
     "2024-02-29": w.phases["2026"],
     "2017-02-28": w.phases["2021"],
     "2017-02-27": w.phases["2021"],
+    "2017-02-01": w.phases["2021"],
+    "2017-01-31": w.phases["2021"],
     "2020-03-01": w.phases["2026"],
   };
   const id = (day: string) => `00000013-0000-4000-8000-0000${day.replaceAll("-", "")}`;
@@ -120,10 +120,10 @@ test("windows count calendar years", async () => {
   const { games, phases } = await inputs(ratings.queries, await w.lake());
   assertEquals(
     Object.fromEntries(games.map((g) => [g.id, g.seven_years])),
-    Object.fromEntries(Object.keys(days).map((d) => [id(d), d !== "2017-02-27"])),
+    Object.fromEntries(Object.keys(days).map((d) => [id(d), d !== "2017-01-31"])),
   );
   assertEquals(Object.fromEntries(phases.map((p) => [p.id, [p.since, p.until]])), {
-    [w.phases["2021"]]: [seconds("2013-02-27 00:00:00"), seconds("2017-02-28 00:00:00")],
+    [w.phases["2021"]]: [seconds("2013-01-31 00:00:00"), seconds("2017-02-28 00:00:00")],
     [w.phases["2026"]]: [seconds("2016-03-01 00:00:00"), seconds("2024-02-29 00:00:00")],
   });
 });

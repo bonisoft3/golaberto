@@ -1,4 +1,4 @@
-(_state, event) => {
+({ event }) => {
   const value = event.value?.trim() ?? "";
   if (value === "") return 0;
   if (!/^\d+$/.test(value)) throw new Error(`Invalid minimum minutes: ${value}`);

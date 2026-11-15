@@ -2,7 +2,7 @@ package golaberto
 
 code: state: entities: {
 	PhaseDirectory: {
-		id: "0xa8ed30eedb435a14"
+		id:         "0xa8ed30eedb435a14"
 		table:      "phase_directory"
 		durability: "server"
 		access: {scope: "public"}
@@ -16,8 +16,8 @@ code: state: entities: {
 	}
 
 	PlayerDirectory: {
-		id: "0xe0b08154b2af5782"
-		table: "player_directory"
+		id:         "0xe0b08154b2af5782"
+		table:      "player_directory"
 		durability: "server"
 		access: {scope: "public"}
 		fields: [
@@ -45,8 +45,8 @@ code: state: entities: {
 		]
 	}
 	MatchesStart: {
-		id: "0xca58d99d04e30601"
-		table: "matches_start"
+		id:         "0xca58d99d04e30601"
+		table:      "matches_start"
 		durability: "server"
 		access: {scope: "public"}
 		fields: [
@@ -57,8 +57,8 @@ code: state: entities: {
 		]
 	}
 	GameArchive: {
-		id: "0x853b9ec68d8b90d2"
-		table: "game_archive"
+		id:         "0x853b9ec68d8b90d2"
+		table:      "game_archive"
 		durability: "server"
 		access: {scope: "public"}
 		fields: [
@@ -104,11 +104,12 @@ code: state: entities: {
 			{ordinal: 40, name: "referee_name", type: "string", required: false},
 			{ordinal: 41, name: "home_logo_key", type: "string", required: false},
 			{ordinal: 42, name: "away_logo_key", type: "string", required: false},
+			{ordinal: 43, name: "fixture_available", type: "bool"},
 		]
 	}
 	PlayerAppearance: {
-		id: "0x8d885bdc70946da0"
-		table: "player_appearance"
+		id:         "0x8d885bdc70946da0"
+		table:      "player_appearance"
 		durability: "server"
 		access: {scope: "public"}
 		fields: [
@@ -169,8 +170,8 @@ code: state: entities: {
 		]
 	}
 	ChampionshipAttendance: {
-		id: "0xe66ae0649c6349c7"
-		table: "championship_attendance"
+		id:         "0xe66ae0649c6349c7"
+		table:      "championship_attendance"
 		durability: "server"
 		access: {scope: "public"}
 		fields: [

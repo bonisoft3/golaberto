@@ -166,6 +166,12 @@ CREATE TRIGGER restamp_txid BEFORE UPDATE ON match_recent_result
 DROP TRIGGER IF EXISTS restamp_txid ON match_probability;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON match_probability
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+DROP TRIGGER IF EXISTS restamp_txid ON sofa_resource_seat;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON sofa_resource_seat
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
+DROP TRIGGER IF EXISTS restamp_txid ON sofa_provider_seat;
+CREATE TRIGGER restamp_txid BEFORE UPDATE ON sofa_provider_seat
+  FOR EACH ROW EXECUTE FUNCTION restamp_txid();
 DROP TRIGGER IF EXISTS restamp_txid ON user_directory;
 CREATE TRIGGER restamp_txid BEFORE UPDATE ON user_directory
   FOR EACH ROW EXECUTE FUNCTION restamp_txid();

@@ -1,1 +1,1 @@
-(state, event) => String(event.from || '').startsWith('position-graph-') ? state.items[0].snapshot_index : Math.round(Math.max(0,Math.min(1,(event.pointerX * 0.64 - 52) / 574)) * state.items[0].snapshot_last)
+({ context, event }) => String(event.from || '').startsWith('position-graph-') ? context.items[0].snapshot_index : Math.round(Math.max(0,Math.min(1,(event.pointerX * 0.64 - 52) / 574)) * context.items[0].snapshot_last)

@@ -18,7 +18,7 @@ export const TABLES: Record<string, string> = {
   team_group: "id UUID, group_id UUID, team_id UUID, add_sub VARCHAR, bias VARCHAR",
   zone: "id UUID, group_id UUID, first VARCHAR, last VARCHAR, positions VARCHAR, color VARCHAR",
   game: "id UUID, phase_id UUID, day VARCHAR, kickoff VARCHAR, home_id UUID, away_id UUID, home_field VARCHAR, " +
-    "played VARCHAR, home_score VARCHAR, away_score VARCHAR, home_aet VARCHAR, away_aet VARCHAR",
+    "played VARCHAR, home_score VARCHAR, away_score VARCHAR, home_aet VARCHAR, away_aet VARCHAR, sync_status VARCHAR",
   team_rating: "id UUID, team_id UUID, measure_date VARCHAR, offense VARCHAR, defense VARCHAR, rating VARCHAR",
   standing: "id VARCHAR, group_id UUID, team_id UUID, position VARCHAR, points VARCHAR, played VARCHAR",
   player: "id UUID, position VARCHAR",

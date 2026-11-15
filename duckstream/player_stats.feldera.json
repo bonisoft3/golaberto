@@ -1,0 +1,268 @@
+{
+  "sql": "CREATE TABLE source_player_game(id VARCHAR,game_id VARCHAR,player_id VARCHAR,side VARCHAR,\n on_minute INTEGER,off_minute INTEGER,yellow BOOLEAN,red BOOLEAN,bench BOOLEAN);\nCREATE TABLE source_goal(id VARCHAR,game_id VARCHAR,player_id VARCHAR,side VARCHAR,penalty BOOLEAN,own_goal BOOLEAN);\nCREATE TABLE source_game(id VARCHAR,phase_id VARCHAR,home_id VARCHAR,away_id VARCHAR);\nCREATE TABLE source_phase(id VARCHAR,championship_id VARCHAR);\nCREATE TABLE source_championship(id VARCHAR,full_name VARCHAR);\nCREATE TABLE source_team(id VARCHAR,name VARCHAR);\nCREATE TABLE source_player(id VARCHAR,name VARCHAR,position VARCHAR);\nCREATE LOCAL VIEW appearances AS\n SELECT p.championship_id,a.player_id,CASE WHEN a.side='home' THEN g.home_id ELSE g.away_id END AS team_id,\n CASE WHEN a.bench THEN 0 ELSE 1 END AS played,\n CASE WHEN NOT a.bench AND a.on_minute=0 THEN 1 ELSE 0 END AS started,\n CASE WHEN NOT a.bench AND a.on_minute>0 THEN 1 ELSE 0 END AS came_on,\n CASE WHEN a.bench THEN 1 ELSE 0 END AS bench,\n CASE WHEN a.bench THEN 0 ELSE COALESCE(a.off_minute,CASE WHEN a.on_minute>90 THEN a.on_minute ELSE 90 END)-a.on_minute END AS elapsed,\n CASE WHEN a.yellow THEN 1 ELSE 0 END AS yellow,CASE WHEN a.red THEN 1 ELSE 0 END AS red\n FROM source_player_game a JOIN source_game g ON g.id=a.game_id JOIN source_phase p ON p.id=g.phase_id;\nCREATE LOCAL VIEW events AS\n SELECT championship_id,player_id,team_id,played,started,came_on,bench,\n CASE WHEN elapsed>0 THEN elapsed ELSE 0 END AS minutes,\n 0 AS goals,0 AS penalties,0 AS own_goals,yellow,red FROM appearances\n UNION ALL\n SELECT p.championship_id,q.player_id,CASE WHEN (q.side='home')<>q.own_goal THEN g.home_id ELSE g.away_id END,\n 0,0,0,0,0,CASE WHEN q.own_goal THEN 0 ELSE 1 END,CASE WHEN q.penalty AND NOT q.own_goal THEN 1 ELSE 0 END,\n CASE WHEN q.own_goal THEN 1 ELSE 0 END,0,0\n FROM source_goal q JOIN source_game g ON g.id=q.game_id JOIN source_phase p ON p.id=g.phase_id;\nCREATE LOCAL VIEW counters AS\n SELECT championship_id,player_id,team_id,CAST(SUM(played) AS INTEGER) AS played,\n CAST(SUM(started) AS INTEGER) AS started,CAST(SUM(came_on) AS INTEGER) AS came_on,CAST(SUM(bench) AS INTEGER) AS bench,\n CAST(SUM(minutes) AS INTEGER) AS minutes,CAST(SUM(goals) AS INTEGER) AS goals,CAST(SUM(penalties) AS INTEGER) AS penalties,\n CAST(SUM(own_goals) AS INTEGER) AS own_goals,CAST(SUM(yellow) AS INTEGER) AS yellow,CAST(SUM(red) AS INTEGER) AS red\n FROM events GROUP BY championship_id,player_id,team_id;\nCREATE MATERIALIZED VIEW result_player_stat AS\n SELECT s.championship_id || ':' || s.team_id || ':' || s.player_id AS id,\n s.championship_id,s.team_id,s.player_id,p.name AS player_name,COALESCE(p.position,'') AS position,\n s.played,s.started,s.came_on,s.bench,s.minutes,s.goals,s.penalties,s.own_goals,s.yellow,s.red,\n c.full_name AS championship_name,t.name AS team_name\n FROM counters s JOIN source_player p ON p.id=s.player_id JOIN source_team t ON t.id=s.team_id\n JOIN source_championship c ON c.id=s.championship_id;\n",
+  "incremental": {
+    "inputs": {
+      "source_player_game": {
+        "table": "player_game",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"game_id\" AS VARCHAR) AS \"game_id\", CAST(\"player_id\" AS VARCHAR) AS \"player_id\", CAST(\"side\" AS VARCHAR) AS \"side\", CAST(\"on_minute\" AS INTEGER) AS \"on_minute\", CAST(\"off_minute\" AS INTEGER) AS \"off_minute\", CAST(\"yellow\" AS BOOLEAN) AS \"yellow\", CAST(\"red\" AS BOOLEAN) AS \"red\", CAST(\"bench\" AS BOOLEAN) AS \"bench\""
+      },
+      "source_goal": {
+        "table": "goal",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"game_id\" AS VARCHAR) AS \"game_id\", CAST(\"player_id\" AS VARCHAR) AS \"player_id\", CAST(\"side\" AS VARCHAR) AS \"side\", CAST(\"penalty\" AS BOOLEAN) AS \"penalty\", CAST(\"own_goal\" AS BOOLEAN) AS \"own_goal\""
+      },
+      "source_game": {
+        "table": "game",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"phase_id\" AS VARCHAR) AS \"phase_id\", CAST(\"home_id\" AS VARCHAR) AS \"home_id\", CAST(\"away_id\" AS VARCHAR) AS \"away_id\""
+      },
+      "source_phase": {
+        "table": "phase",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"championship_id\" AS VARCHAR) AS \"championship_id\""
+      },
+      "source_championship": {
+        "table": "championship",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"full_name\" AS VARCHAR) AS \"full_name\""
+      },
+      "source_team": {
+        "table": "team",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"name\" AS VARCHAR) AS \"name\""
+      },
+      "source_player": {
+        "table": "player",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"name\" AS VARCHAR) AS \"name\", CAST(\"position\" AS VARCHAR) AS \"position\""
+      }
+    },
+    "outputs": {
+      "player_stat": {
+        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_player_stat r"
+      }
+    }
+  },
+  "inputs": {
+    "source_player_game": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"game_id\" AS VARCHAR) AS \"game_id\", CAST(\"player_id\" AS VARCHAR) AS \"player_id\", CAST(\"side\" AS VARCHAR) AS \"side\", CAST(\"on_minute\" AS INTEGER) AS \"on_minute\", CAST(\"off_minute\" AS INTEGER) AS \"off_minute\", CAST(\"yellow\" AS BOOLEAN) AS \"yellow\", CAST(\"red\" AS BOOLEAN) AS \"red\", CAST(\"bench\" AS BOOLEAN) AS \"bench\" FROM \"player_game\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "game_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "side",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "on_minute",
+          "type": "INTEGER"
+        },
+        {
+          "name": "off_minute",
+          "type": "INTEGER"
+        },
+        {
+          "name": "yellow",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "red",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "bench",
+          "type": "BOOLEAN"
+        }
+      ]
+    },
+    "source_goal": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"game_id\" AS VARCHAR) AS \"game_id\", CAST(\"player_id\" AS VARCHAR) AS \"player_id\", CAST(\"side\" AS VARCHAR) AS \"side\", CAST(\"penalty\" AS BOOLEAN) AS \"penalty\", CAST(\"own_goal\" AS BOOLEAN) AS \"own_goal\" FROM \"goal\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "game_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "side",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "penalty",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "own_goal",
+          "type": "BOOLEAN"
+        }
+      ]
+    },
+    "source_game": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"phase_id\" AS VARCHAR) AS \"phase_id\", CAST(\"home_id\" AS VARCHAR) AS \"home_id\", CAST(\"away_id\" AS VARCHAR) AS \"away_id\" FROM \"game\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "phase_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "home_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "away_id",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "source_phase": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"championship_id\" AS VARCHAR) AS \"championship_id\" FROM \"phase\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "championship_id",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "source_championship": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"full_name\" AS VARCHAR) AS \"full_name\" FROM \"championship\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "full_name",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "source_team": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"name\" AS VARCHAR) AS \"name\" FROM \"team\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "source_player": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"name\" AS VARCHAR) AS \"name\", CAST(\"position\" AS VARCHAR) AS \"position\" FROM \"player\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "position",
+          "type": "VARCHAR"
+        }
+      ]
+    }
+  },
+  "outputs": {
+    "player_stat": {
+      "view": "result_player_stat",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "championship_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "player_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "position",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "played",
+          "type": "INTEGER"
+        },
+        {
+          "name": "started",
+          "type": "INTEGER"
+        },
+        {
+          "name": "came_on",
+          "type": "INTEGER"
+        },
+        {
+          "name": "bench",
+          "type": "INTEGER"
+        },
+        {
+          "name": "minutes",
+          "type": "INTEGER"
+        },
+        {
+          "name": "goals",
+          "type": "INTEGER"
+        },
+        {
+          "name": "penalties",
+          "type": "INTEGER"
+        },
+        {
+          "name": "own_goals",
+          "type": "INTEGER"
+        },
+        {
+          "name": "yellow",
+          "type": "INTEGER"
+        },
+        {
+          "name": "red",
+          "type": "INTEGER"
+        },
+        {
+          "name": "championship_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_name",
+          "type": "VARCHAR"
+        }
+      ]
+    }
+  }
+}

@@ -1,13 +1,18 @@
 import { assertEquals, assertThrows } from "jsr:@std/assert@1.0.19";
 import { evaluateRole } from "./platform.ts";
 
+// The assertions below state a leaf's world and its event side by side; the
+// leaf itself takes them as XState's one argument.
+// deno-lint-ignore no-explicit-any
+const positional = (leaf: any) => (state: any, event?: any, ...rest: any[]) => leaf({ context: state, event }, ...rest);
+
 Deno.test("archive calendar weeks retain civil dates across leap years and ISO year boundaries", async () => {
-  const handler = await evaluateRole(
+  const handler = positional(await evaluateRole(
     await Deno.readTextFile(
       new URL("../shell/handlers/archive-week.js", import.meta.url),
     ),
     "handler",
-  );
+  ));
   for (
     const [value, expected] of [
       ["2026-10-05", "2026-10-05"],
@@ -40,12 +45,12 @@ Deno.test("archive calendar weeks retain civil dates across leap years and ISO y
 });
 
 Deno.test("archive round filters preserve all rounds when cleared and reject invalid integer queries", async () => {
-  const handler = await evaluateRole(
+  const handler = positional(await evaluateRole(
     await Deno.readTextFile(
       new URL("../shell/handlers/archive-round.js", import.meta.url),
     ),
     "handler",
-  );
+  ));
   assertEquals(handler({}, { value: "" }), "*");
   assertEquals(handler({}, { value: "003" }), "3");
   assertEquals(handler({}, { value: "2147483647" }), "2147483647");

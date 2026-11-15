@@ -1,0 +1,10 @@
+{
+  "operations": [
+    {
+      "sql": {
+        "up": "-- A request-time origin keeps the default current without hiding older fixtures.\nSET lock_timeout = '5s';\nSET statement_timeout = '60s';\n\nDO $$ DECLARE alias record; BEGIN\n  IF EXISTS (SELECT 1 FROM pg_class WHERE oid=to_regclass('public.matches_start') AND relkind='r') THEN\n    IF EXISTS (SELECT 1 FROM matches_start) THEN\n      RAISE EXCEPTION 'read view placeholder matches_start contains rows';\n    END IF;\n    IF to_regclass('pgroll.migrations') IS NOT NULL THEN\n      FOR alias IN SELECT n.nspname,c.relname FROM pg_class c\n        JOIN pg_namespace n ON n.oid=c.relnamespace\n        JOIN pgroll.migrations m ON n.nspname=m.schema||'_'||m.name\n        WHERE m.schema='public' AND c.relname='matches_start' AND c.relkind='v'\n      LOOP EXECUTE format('DROP VIEW %I.%I',alias.nspname,alias.relname); END LOOP;\n    END IF;\n    DROP TABLE matches_start;\n  END IF;\nEND $$;\n\nCREATE OR REPLACE VIEW matches_start WITH (security_invoker=true) AS\nSELECT '00000000-0000-0000-0000-000000000000'::uuid AS id,\n  n AS start_offset,n+40 AS start_next_offset,(n+39)/40+1 AS start_page,\n  NULL::bigint AS txid,'public:'::text AS scope_id\nFROM (\n  SELECT count(*)::integer AS n FROM game_archive\n  WHERE played IS FALSE AND kickoff IS NOT NULL\n    AND day < (now() AT TIME ZONE 'America/Sao_Paulo')::date-7\n) origin;\nREVOKE ALL ON matches_start FROM PUBLIC,anon,app_user,service,electric;\nGRANT SELECT ON matches_start TO app_user,service;\nNOTIFY pgrst,'reload schema';\n",
+        "onComplete": true
+      }
+    }
+  ]
+}

@@ -1,16 +1,48 @@
 # generated from bayt.cue — do not edit
 tasks:
   default:
+    deps:
+    - playwright
+    run: when_changed
+  builtin:
+    cmds:
+    - mise install
     env:
       MISE_ALWAYS_KEEP_DOWNLOAD: "1"
-    run: when_changed
-    status:
-    - >-
-      mise x -- bayt fingerprint --manifest '{{.TASKFILE_DIR}}/bayt.browser.json'
-      --stamp-file .task/bayt/browser.hash
-    vars:
-      BAYTW: mise x -- bayt cache run --manifest '{{.TASKFILE_DIR}}/bayt.browser.json' --
+    internal: true
+  playwright:
     cmds:
-    - "{{.BAYTW}} mise install"
-    - defer: "{{if not .EXIT_CODE}}mise x -- bayt fingerprint --manifest '{{.TASKFILE_DIR}}/bayt.browser.json' --stamp-file .task/bayt/browser.hash --update-stamp{{end}}"
+    - |-
+      nu -c "let os = (match \$nu.os-info.name { \"macos\" => \"macos\", \"windows\" => \"windows\", _ => \"linux\" })
+      let home = (\$env.HOME? | default (\$env.USERPROFILE? | default ('~' | path expand)))
+      let default_pw = (match \$os {
+        \"macos\" => (\$home | path join \"Library/Caches/ms-playwright\")
+        \"windows\" => ((\$env.LOCALAPPDATA? | default (\$home | path join \"AppData/Local\")) | path join \"ms-playwright\")
+        _ => (\$home | path join \".cache/ms-playwright\")
+      })
+      let pw_dir = (if ((\$env.PLAYWRIGHT_BROWSERS_PATH? | default \"\") != \"\") { \$env.PLAYWRIGHT_BROWSERS_PATH } else { \$default_pw })
+      mkdir \$pw_dir
+      let marker = (\$pw_dir | path join \".playwright-chromium-1.61.1\")
+      let has_chromium = ((glob (\$pw_dir | path join \"chromium-*\" | str replace -a (char -u 5c) \"/\") | length) > 0)
+      if (not (\$marker | path exists)) or (not \$has_chromium) {
+        if \$os == \"linux\" {
+          ^mise x -- deno run -A --node-modules-dir=none npm:playwright@1.61.1 install --with-deps chromium
+        } else {
+          ^mise x -- deno run -A --node-modules-dir=none npm:playwright@1.61.1 install chromium
+        }
+        \"\" | save -f \$marker
+      }
+      let omnishell = (if ((\$env.OMNISHELL_DIR? | default \"\") != \"\") { \$env.OMNISHELL_DIR } else { (^mise where github:bonisoft3/omnishell | str trim) })
+      let check_visual = (\$omnishell | path join \"check-visual.ts\")
+      let nm_marker = (\$omnishell | path join \"node_modules/.omnishell-visual-nm-v1\")
+      if (\$check_visual | path exists) and (not (\$nm_marker | path exists)) {
+        let deno_bin = (which deno | get 0.path)
+        do { cd \$omnishell; ^\$deno_bin install --node-modules-dir=auto --entrypoint \$check_visual }
+        \"\" | save -f \$nm_marker
+      }"
+    deps:
+    - builtin
+    env:
+      MISE_ALWAYS_KEEP_DOWNLOAD: "1"
+    internal: true
 version: "3"

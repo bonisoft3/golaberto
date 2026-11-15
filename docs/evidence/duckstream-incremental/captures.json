@@ -1,0 +1,68 @@
+[
+  {
+    "computation": "golaberto-ratings",
+    "capture": "1477eea9-8902-4a60-b74f-6c15f3543178",
+    "partitions": 1,
+    "deltaRows": 11800
+  },
+  {
+    "computation": "golaberto-chances",
+    "capture": "8344af59-7cef-4832-ba41-e33029187603",
+    "partitions": 5,
+    "deltaRows": 1242
+  },
+  {
+    "computation": "golaberto-ratings",
+    "capture": "d8ebb8a5-de76-45f5-873e-3c5b9301ab2f",
+    "partitions": 0,
+    "deltaRows": 0
+  },
+  {
+    "computation": "golaberto-chances",
+    "capture": "1b70d9ef-bf20-463c-9682-c8ead0f25083",
+    "partitions": 3,
+    "deltaRows": 1026
+  },
+  {
+    "computation": "golaberto-chances",
+    "capture": "d9463d89-97fc-4c11-bd39-6d286d4bd75d",
+    "partitions": 1,
+    "deltaRows": 8
+  },
+  {
+    "computation": "golaberto-ratings",
+    "capture": "3f6ad120-4c4c-4a07-bd0d-a0fcd10fc6e8",
+    "partitions": 1,
+    "deltaRows": 5
+  },
+  {
+    "computation": "golaberto-chances",
+    "capture": "fa16d254-0c9c-49b0-bc4d-9cd925a7c6b8",
+    "partitions": 3,
+    "deltaRows": 1032
+  },
+  {
+    "computation": "golaberto-ratings",
+    "capture": "fbf112d6-ffcb-4b42-b270-a6fa46695a87",
+    "partitions": 1,
+    "deltaRows": 5
+  },
+  {
+    "computation": "golaberto-chances",
+    "capture": "d355623a-f6a5-4988-b024-a423af51321d",
+    "partitions": 3,
+    "deltaRows": 1026
+  },
+  {
+    "computation": "golaberto-ratings",
+    "capture": "9eee38fc-6f3a-4c70-a027-742b7d149023",
+    "partitions": 0,
+    "deltaRows": 0
+  },
+  {
+    "computation": "golaberto-chances",
+    "capture": "8f49ba57-b644-4224-9641-5c50076df469",
+    "partitions": 0,
+    "deltaRows": 0
+  }
+]

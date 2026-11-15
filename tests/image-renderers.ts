@@ -321,3 +321,7 @@ Deno.test("geography labels translate countries and tournament prefixes while pr
   assertEquals(render(`constructor|${labels}`), ["constructor"]);
   assertEquals(render(`Germany|⟦${labels}⟧`), ["Alemanha"]);
 });
+
+Deno.test("Guinea-Bissau uses the archive CDN hyphenated filename", () => {
+  assertEquals(flag("Guinea-Bissau")[0].attrs.src, "https://d24oxbyqb2c11t.cloudfront.net/countries/flags/guinea-bissau_15.png");
+});

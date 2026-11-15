@@ -29,13 +29,27 @@ _drainTables: list.SortStrings([for t, _ in {
 } {t}])
 _feedTables: list.Concat([_cdcTables, _drainTables])
 
+// 045 holds the feed as production's ledger has it; the dated migration below
+// sets the feed over every drain table declared, and a table added later is a
+// new dated migration, not an edit here.
 _drainKeySql: string @embed(file="services/database/sql/045_drain_feed.sql", type=text)
 _drainFeedSql: strings.Replace(strings.Replace(_drainKeySql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1) + """
 	-- tier: container
-	ALTER PUBLICATION golaberto_cdc SET TABLE \(strings.Join(_feedTables, ", "));
+	ALTER PUBLICATION golaberto_cdc SET TABLE championship, phase, game, team, player, player_game, goal, stage_group, team_group, zone, team_rating, standing, stadium, referee, day_tick, game_card, geography_country, player_metric_dirty, team_odds_chart_dirty, team_profile_dirty, team_rating_chart_dirty, team_roster_total_dirty;
 	-- tier: any
 	"""
 code: state: migrations: "045_drain_feed": {operations: [{sql: {up: _drainFeedSql, onComplete: true}}]}
+// Sorts after the later entities' 20261108_<table> migrations it names.
+code: state: migrations: "20261110_drain_feed": {operations: [{sql: {up: """
+	-- tier: container
+	ALTER PUBLICATION golaberto_cdc SET TABLE championship, phase, game, team, player, player_game, goal, stage_group, team_group, zone, team_rating, standing, stadium, referee, day_tick, game_card, geography_country, player_metric_dirty, sofa_tick, team_odds_chart_dirty, team_profile_dirty, team_rating_chart_dirty, team_roster_total_dirty;
+	-- tier: any
+	""", onComplete: true}}]}
+code: state: migrations: "20261112_sofascore_event_schedule_feed": {operations: [{sql: {up: """
+	-- tier: container
+	ALTER PUBLICATION golaberto_cdc SET TABLE \(strings.Join(_feedTables, ", "));
+	-- tier: any
+	""", onComplete: true}}]}
 
 cluster: meta: conduitTemplate: "docker/golaberto-cdc.yaml"
 

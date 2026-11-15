@@ -1,0 +1,428 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "compose": {
+    "up": false,
+    "manual": false,
+    "build": {
+      "additional_contexts": {
+        "libraries_mecha-airlock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-airlock:0.23.1@sha256:3c67d8822d64dfd469ed25cccf0db76e0d7d939d9d05486f5fe725332c2e1dd2}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image}"
+      },
+      "secrets": [],
+      "args": {}
+    },
+    "environment": {
+      "AIRLOCK_DIR": "/airlock",
+      "DATABASE_URL": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
+      "MESH_URL": "http://airlock-mesh:3500",
+      "ORIGIN": "${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT}}",
+      "AIRLOCK_TARGET": "local"
+    },
+    "ports": [],
+    "volumes": [],
+    "depends_on": {
+      "golaberto-airlock-mesh": {
+        "condition": "service_healthy"
+      },
+      "golaberto-database": {
+        "condition": "service_healthy"
+      },
+      "golaberto-migrate": {
+        "condition": "service_completed_successfully"
+      },
+      "golaberto-airlock-upgrade": {
+        "condition": "service_completed_successfully"
+      },
+      "golaberto-timer-check": {
+        "condition": "service_completed_successfully"
+      }
+    },
+    "networks": {
+      "airlock": {
+        "aliases": [
+          "airlock"
+        ]
+      },
+      "airlock-wake": {
+        "aliases": [
+          "airlock"
+        ]
+      }
+    },
+    "restart": "on-failure",
+    "healthcheck": {
+      "test": [
+        "CMD",
+        "portcheck",
+        "--port",
+        "9997"
+      ],
+      "interval": "5s",
+      "timeout": "5s",
+      "retries": 30,
+      "start_period": "30s",
+      "start_interval": "500ms"
+    },
+    "develop": {
+      "watch": [
+        {
+          "action": "sync+restart",
+          "path": "../services/airlock/effects.json",
+          "target": "/airlock/effects.json"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../effects/acquire.js",
+          "target": "/airlock/effects/acquire.js"
+        }
+      ]
+    }
+  },
+  "dockerfile": {
+    "preamble": [],
+    "preambleCopyContexts": [],
+    "from": {
+      "name": "libraries_mecha-airlock-image"
+    },
+    "workdir": "/app/airlock",
+    "add": [],
+    "mounts": [],
+    "secrets": {},
+    "extra_hosts": [],
+    "epilogue": [],
+    "copy": [
+      {
+        "from": {
+          "name": "tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa"
+        },
+        "srcs": [
+          "/bin/portcheck"
+        ],
+        "dst": "/usr/local/bin/portcheck",
+        "chmod": "755",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "services/airlock/effects.json"
+        ],
+        "dst": "/airlock/effects.json",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "effects/acquire.js"
+        ],
+        "dst": "/airlock/effects/acquire.js",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      }
+    ],
+    "healthcheck": {
+      "test": [
+        "CMD",
+        "portcheck",
+        "--port",
+        "9997"
+      ],
+      "interval": "5s",
+      "timeout": "5s",
+      "retries": 30,
+      "start_period": "30s"
+    },
+    "expose": [],
+    "entrypoint": null,
+    "incremental": false,
+    "cmd": [
+      "run",
+      "--frozen",
+      "--unstable-worker-options",
+      "--allow-net=database:5432,airlock-mesh:3500,0.0.0.0:9997",
+      "--allow-read",
+      "--allow-env",
+      "--allow-sys",
+      "main.ts"
+    ]
+  },
+  "entrypoint": {
+    "do": "let base = ($env.BAYT_LOCAL_WORK_DIR? | default $nu.temp-dir); let dir = ($base | path join $'airlock-($nu.pid)-(random int 1000..9999)'); mkdir ($dir | path join 'effects'); cp -f 'services/airlock/effects.json' ($dir | path join 'effects.json'); cp -f 'effects/acquire.js' ($dir | path join 'effects/acquire.js'); let app = (if (($env.AIRLOCK_APP_DIR? | default '') != '') { $env.AIRLOCK_APP_DIR } else if ('services/airlock/main.ts' | path exists) { 'services/airlock' } else { ((^mise where github:bonisoft3/mecha | str trim) | path join 'services/airlock') }); with-env { AIRLOCK_DIR: $dir } { exec deno run --frozen --unstable-worker-options --allow-net --allow-read --allow-env --allow-sys --config ($app | path join 'deno.json') ($app | path join 'main.ts') }",
+    "shell": "nu",
+    "env": {
+      "AIRLOCK_TARGET": "local",
+      "DATABASE_URL": [
+        "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@",
+        {
+          "peer": "database",
+          "port": "pg",
+          "part": "addr",
+          "prefix": "",
+          "suffix": ""
+        },
+        "/${POSTGRES_DB:-golaberto}"
+      ],
+      "MESH_URL": {
+        "peer": "airlock-mesh",
+        "port": "http",
+        "part": "addr",
+        "prefix": "http://",
+        "suffix": ""
+      },
+      "ORIGIN": "${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT}}"
+    },
+    "after": {
+      "airlock-mesh": "healthy",
+      "database": "healthy",
+      "migrate": "completed",
+      "airlock-upgrade": "completed",
+      "timer-check": "completed"
+    },
+    "host": true
+  },
+  "expose": {
+    "tcp": {
+      "port": 9997,
+      "env": "PORT"
+    }
+  },
+  "healthcheck": {
+    "template": "tcp",
+    "port": 9997,
+    "interval": "5s",
+    "start_interval": "500ms",
+    "timeout": "5s",
+    "retries": 30,
+    "start_period": "30s"
+  },
+  "name": "airlock",
+  "process-compose": {
+    "activate": "mise x --",
+    "availability": {
+      "restart": "on_failure",
+      "backoff_seconds": 1,
+      "max_restarts": 15
+    }
+  },
+  "project": "golaberto",
+  "dir": ".",
+  "activate": "",
+  "srcs": {
+    "globs": [
+      "services/airlock/effects.json",
+      "effects/acquire.js"
+    ],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {},
+  "synthetics": {
+    "bayt": {
+      "name": "airlock_bayt",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.airlock.yaml",
+          ".bayt/Dockerfile.airlock",
+          ".bayt/bayt.airlock.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/process-compose.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.airlock.yaml",
+        "./.bayt/compose.airlock-mesh.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml",
+        "./.bayt/compose.timer-check.yaml",
+        "./.bayt/compose.sofascore.yaml"
+      ]
+    },
+    "outs": {
+      "name": "airlock_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.airlock.yaml",
+        "./.bayt/compose.airlock-mesh.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml",
+        "./.bayt/compose.timer-check.yaml",
+        "./.bayt/compose.sofascore.yaml"
+      ]
+    },
+    "srcs": {
+      "name": "airlock_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          "services/airlock/effects.json",
+          "effects/acquire.js"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.airlock.yaml",
+        "./.bayt/compose.airlock-mesh.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml",
+        "./.bayt/compose.timer-check.yaml",
+        "./.bayt/compose.sofascore.yaml"
+      ]
+    }
+  },
+  "visibility": "internal",
+  "emitsSrcs": true,
+  "deps": [
+    "airlock-mesh_outs",
+    "database_outs",
+    "migrate_outs",
+    "airlock-upgrade_outs",
+    "timer-check_outs"
+  ],
+  "sameProjectDeps": [
+    "airlock-mesh_outs",
+    "database_outs",
+    "migrate_outs",
+    "airlock-upgrade_outs",
+    "timer-check_outs"
+  ],
+  "transitiveDeps": [
+    "airlock-mesh_outs",
+    "database_outs",
+    "migrate_outs",
+    "airlock-upgrade_outs",
+    "timer-check_outs"
+  ],
+  "transitiveCrossDeps": [],
+  "upClosure": [
+    "./.bayt/compose.airlock.yaml",
+    "./.bayt/compose.airlock-mesh.yaml",
+    "./.bayt/compose.database.yaml",
+    "./.bayt/compose.migrate.yaml",
+    "./.bayt/compose.airlock-upgrade.yaml",
+    "./.bayt/compose.timer-check.yaml",
+    "./.bayt/compose.sofascore.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "airlock-mesh_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "database_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "migrate_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "airlock-upgrade_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "timer-check_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

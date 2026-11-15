@@ -52,10 +52,17 @@ code: state: schedules: {
 }
 
 // team-enrichment and team-profiles both write team_roster and its total
-// queue; they take turns rather than deadlock.
+// queue; they take turns rather than deadlock. 046 holds the text
+// production's ledger has; the batches' clock bound is 048's.
 _teamProjectionTurnSql: string @embed(file="services/database/sql/046_team_projection_turn.sql", type=text)
 code: state: migrations: "046_team_projection_turn": {operations: [{sql: {
 	up:         strings.Replace(strings.Replace(_teamProjectionTurnSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
+	onComplete: true
+}}]}
+
+_teamProjectionClockSql: string @embed(file="services/database/sql/048_team_projection_clock.sql", type=text)
+code: state: migrations: "048_team_projection_clock": {operations: [{sql: {
+	up:         strings.Replace(strings.Replace(_teamProjectionClockSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 	onComplete: true
 }}]}
 

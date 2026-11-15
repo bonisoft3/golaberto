@@ -1,0 +1,371 @@
+{
+  "sql": "CREATE TABLE source_game(id VARCHAR,phase_id VARCHAR,\"round\" INTEGER,day VARCHAR,kickoff VARCHAR,\n played BOOLEAN,home_id VARCHAR,away_id VARCHAR,home_score INTEGER,away_score INTEGER,\n home_aet INTEGER,away_aet INTEGER,home_pen INTEGER,away_pen INTEGER,stadium_id VARCHAR,referee_id VARCHAR,attendance INTEGER,fixture_available BOOLEAN);\nCREATE TABLE source_phase(id VARCHAR,championship_id VARCHAR,name VARCHAR);\nCREATE TABLE source_championship(id VARCHAR,full_name VARCHAR,category_id VARCHAR);\nCREATE TABLE source_team(id VARCHAR,name VARCHAR);\nCREATE TABLE source_stadium(id VARCHAR,name VARCHAR);\nCREATE TABLE source_referee(id VARCHAR,name VARCHAR);\nCREATE MATERIALIZED VIEW result_game_card AS\n SELECT g.id,g.phase_id,p.championship_id,g.\"round\",g.day,g.kickoff,g.played,g.home_id,g.away_id,\n h.name AS home_name,a.name AS away_name,g.home_score,g.away_score,g.home_aet,g.away_aet,g.home_pen,g.away_pen,\n c.full_name AS championship_name,p.name AS phase_name,g.stadium_id,s.name AS stadium_name,\n g.referee_id,r.name AS referee_name,g.attendance\n FROM source_game g JOIN source_phase p ON p.id=g.phase_id JOIN source_championship c ON c.id=p.championship_id\n JOIN source_team h ON h.id=g.home_id JOIN source_team a ON a.id=g.away_id\n LEFT JOIN source_stadium s ON s.id=g.stadium_id LEFT JOIN source_referee r ON r.id=g.referee_id;\nCREATE LOCAL VIEW sides AS\n SELECT id,phase_id,day,kickoff,played,fixture_available,home_id AS team_id,away_id AS opponent_id,\n CAST('home' AS VARCHAR) AS side,home_score AS gf,away_score AS ga FROM source_game\n UNION ALL\n SELECT id,phase_id,day,kickoff,played,fixture_available,away_id AS team_id,home_id AS opponent_id,\n CAST('away' AS VARCHAR) AS side,away_score AS gf,home_score AS ga FROM source_game;\nCREATE MATERIALIZED VIEW result_team_game AS\n SELECT g.team_id || ':' || g.id AS id,g.team_id,g.id AS game_id,g.side,g.opponent_id,\n opponent.name AS opponent_name,p.championship_id,c.full_name AS championship_name,g.day,g.kickoff,g.played,\n g.gf AS goals_for,g.ga AS goals_against,\n CAST(CASE WHEN NOT g.played THEN '' WHEN g.gf>g.ga THEN 'w' WHEN g.gf<g.ga THEN 'l' ELSE 'd' END AS VARCHAR) AS result,\n c.category_id,p.id AS phase_key,COALESCE(c.category_id,'professional') AS category_key,g.fixture_available\n FROM sides g JOIN source_phase p ON p.id=g.phase_id JOIN source_championship c ON c.id=p.championship_id\n JOIN source_team opponent ON opponent.id=g.opponent_id;\n",
+  "incremental": {
+    "inputs": {
+      "source_game": {
+        "table": "game",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"phase_id\" AS VARCHAR) AS \"phase_id\", CAST(\"round\" AS INTEGER) AS \"round\", CAST(\"day\" AS VARCHAR) AS \"day\", to_char(kickoff AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"') AS \"kickoff\", CAST(\"played\" AS BOOLEAN) AS \"played\", CAST(\"home_id\" AS VARCHAR) AS \"home_id\", CAST(\"away_id\" AS VARCHAR) AS \"away_id\", CAST(\"home_score\" AS INTEGER) AS \"home_score\", CAST(\"away_score\" AS INTEGER) AS \"away_score\", CAST(\"home_aet\" AS INTEGER) AS \"home_aet\", CAST(\"away_aet\" AS INTEGER) AS \"away_aet\", CAST(\"home_pen\" AS INTEGER) AS \"home_pen\", CAST(\"away_pen\" AS INTEGER) AS \"away_pen\", CAST(\"stadium_id\" AS VARCHAR) AS \"stadium_id\", CAST(\"referee_id\" AS VARCHAR) AS \"referee_id\", CAST(\"attendance\" AS INTEGER) AS \"attendance\", played OR NOT (coalesce(sync_status, 'scheduled') IN ('cancelled', 'abandoned', 'awarded')) AS \"fixture_available\""
+      },
+      "source_phase": {
+        "table": "phase",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"championship_id\" AS VARCHAR) AS \"championship_id\", CAST(\"name\" AS VARCHAR) AS \"name\""
+      },
+      "source_championship": {
+        "table": "championship",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"full_name\" AS VARCHAR) AS \"full_name\", CAST(\"category_id\" AS VARCHAR) AS \"category_id\""
+      },
+      "source_team": {
+        "table": "team",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"name\" AS VARCHAR) AS \"name\""
+      },
+      "source_stadium": {
+        "table": "stadium",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"name\" AS VARCHAR) AS \"name\""
+      },
+      "source_referee": {
+        "table": "referee",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"name\" AS VARCHAR) AS \"name\""
+      }
+    },
+    "outputs": {
+      "game_card": {
+        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_game_card r"
+      },
+      "team_game": {
+        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_team_game r"
+      }
+    }
+  },
+  "inputs": {
+    "source_game": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"phase_id\" AS VARCHAR) AS \"phase_id\", CAST(\"round\" AS INTEGER) AS \"round\", CAST(\"day\" AS VARCHAR) AS \"day\", strftime(kickoff::TIMESTAMPTZ AT TIME ZONE 'UTC', '%Y-%m-%dT%H:%M:%S.%fZ') AS \"kickoff\", CAST(\"played\" AS BOOLEAN) AS \"played\", CAST(\"home_id\" AS VARCHAR) AS \"home_id\", CAST(\"away_id\" AS VARCHAR) AS \"away_id\", CAST(\"home_score\" AS INTEGER) AS \"home_score\", CAST(\"away_score\" AS INTEGER) AS \"away_score\", CAST(\"home_aet\" AS INTEGER) AS \"home_aet\", CAST(\"away_aet\" AS INTEGER) AS \"away_aet\", CAST(\"home_pen\" AS INTEGER) AS \"home_pen\", CAST(\"away_pen\" AS INTEGER) AS \"away_pen\", CAST(\"stadium_id\" AS VARCHAR) AS \"stadium_id\", CAST(\"referee_id\" AS VARCHAR) AS \"referee_id\", CAST(\"attendance\" AS INTEGER) AS \"attendance\", played OR NOT (coalesce(sync_status, 'scheduled') IN ('cancelled', 'abandoned', 'awarded')) AS \"fixture_available\" FROM \"game\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "phase_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "round",
+          "type": "INTEGER"
+        },
+        {
+          "name": "day",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "kickoff",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "played",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "home_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "away_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "home_score",
+          "type": "INTEGER"
+        },
+        {
+          "name": "away_score",
+          "type": "INTEGER"
+        },
+        {
+          "name": "home_aet",
+          "type": "INTEGER"
+        },
+        {
+          "name": "away_aet",
+          "type": "INTEGER"
+        },
+        {
+          "name": "home_pen",
+          "type": "INTEGER"
+        },
+        {
+          "name": "away_pen",
+          "type": "INTEGER"
+        },
+        {
+          "name": "stadium_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "referee_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "attendance",
+          "type": "INTEGER"
+        },
+        {
+          "name": "fixture_available",
+          "type": "BOOLEAN"
+        }
+      ]
+    },
+    "source_phase": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"championship_id\" AS VARCHAR) AS \"championship_id\", CAST(\"name\" AS VARCHAR) AS \"name\" FROM \"phase\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "championship_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "source_championship": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"full_name\" AS VARCHAR) AS \"full_name\", CAST(\"category_id\" AS VARCHAR) AS \"category_id\" FROM \"championship\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "full_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "category_id",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "source_team": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"name\" AS VARCHAR) AS \"name\" FROM \"team\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "source_stadium": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"name\" AS VARCHAR) AS \"name\" FROM \"stadium\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "source_referee": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"name\" AS VARCHAR) AS \"name\" FROM \"referee\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        }
+      ]
+    }
+  },
+  "outputs": {
+    "game_card": {
+      "view": "result_game_card",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "phase_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "championship_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "round",
+          "type": "INTEGER"
+        },
+        {
+          "name": "day",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "kickoff",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "played",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "home_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "away_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "home_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "away_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "home_score",
+          "type": "INTEGER"
+        },
+        {
+          "name": "away_score",
+          "type": "INTEGER"
+        },
+        {
+          "name": "home_aet",
+          "type": "INTEGER"
+        },
+        {
+          "name": "away_aet",
+          "type": "INTEGER"
+        },
+        {
+          "name": "home_pen",
+          "type": "INTEGER"
+        },
+        {
+          "name": "away_pen",
+          "type": "INTEGER"
+        },
+        {
+          "name": "championship_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "phase_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "stadium_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "stadium_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "referee_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "referee_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "attendance",
+          "type": "INTEGER"
+        }
+      ]
+    },
+    "team_game": {
+      "view": "result_team_game",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "game_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "side",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "opponent_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "opponent_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "championship_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "championship_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "day",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "kickoff",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "played",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "goals_for",
+          "type": "INTEGER"
+        },
+        {
+          "name": "goals_against",
+          "type": "INTEGER"
+        },
+        {
+          "name": "result",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "category_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "phase_key",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "category_key",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "fixture_available",
+          "type": "BOOLEAN"
+        }
+      ]
+    }
+  }
+}

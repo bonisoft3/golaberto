@@ -1,0 +1,37 @@
+# generated from bayt.cue — do not edit
+FROM libraries_mecha-airlock-image AS airlock
+ARG BAYT_DIR
+WORKDIR /app/airlock
+COPY --chmod=755 --from=tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa /bin/portcheck /usr/local/bin/portcheck
+COPY services/airlock/effects.json /airlock/effects.json
+COPY effects/acquire.js /airlock/effects/acquire.js
+COPY --parents services/airlock/effects.json effects/acquire.js ./
+COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.airlock.json ./.bayt/
+EXPOSE 9997
+CMD ["run", "--frozen", "--unstable-worker-options", "--allow-net=database:5432,airlock-mesh:3500,0.0.0.0:9997", "--allow-read", "--allow-env", "--allow-sys", "main.ts"]
+HEALTHCHECK --interval=5s --timeout=5s --retries=30 --start-period=30s CMD ["portcheck","--port","9997"]
+
+FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS airlock_ctxs
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY --parents services/airlock/effects.json effects/acquire.js ./
+ARG SOURCE_DATE_EPOCH
+ARG BAYT_CLAMP=1
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
+FROM scratch AS airlock_srcs
+COPY --from=airlock_ctxs /monorepo /monorepo
+
+FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS airlock_bayt_ctxs
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY --parents .bayt/compose.airlock.yaml .bayt/Dockerfile.airlock .bayt/bayt.airlock.json .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/process-compose.yaml ./
+COPY --from=golaberto-airlock-mesh_bayt /monorepo /monorepo
+COPY --from=golaberto-database_bayt /monorepo /monorepo
+COPY --from=golaberto-migrate_bayt /monorepo /monorepo
+COPY --from=golaberto-airlock-upgrade_bayt /monorepo /monorepo
+COPY --from=golaberto-timer-check_bayt /monorepo /monorepo
+ARG SOURCE_DATE_EPOCH
+ARG BAYT_CLAMP=1
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
+FROM scratch AS airlock_bayt
+COPY --from=airlock_bayt_ctxs /monorepo /monorepo

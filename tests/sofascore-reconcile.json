@@ -1,0 +1,4154 @@
+[
+ {
+  "name": "new fixture with a final",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": []
+   }
+  },
+  "expect": {
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "patches": [
+    {
+     "rows": [
+      {
+       "table": "game",
+       "id": "a859e8e0-3559-5d55-a0da-355713b290e9",
+       "fields": {
+        "phase_id": "phase",
+        "home_id": "home",
+        "away_id": "away",
+        "day": "2024-01-01",
+        "kickoff": "2024-01-02T00:00:00Z",
+        "sync_status": "finished",
+        "round": 1,
+        "played": true,
+        "home_score": 1,
+        "away_score": 1,
+        "home_aet": 1,
+        "away_aet": 0,
+        "home_pen": 4,
+        "away_pen": 3
+       }
+      }
+     ],
+     "bindings": [
+      {
+       "kind": "game",
+       "external_id": "1",
+       "local_id": "a859e8e0-3559-5d55-a0da-355713b290e9"
+      }
+     ],
+     "reviews": [],
+     "collections": [],
+     "event": {
+      "external_id": "1",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "30",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "30",
+      "round_key": 1,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "finished",
+      "played": true,
+      "terminal": true,
+      "home_score": 1,
+      "away_score": 1,
+      "home_aet": 1,
+      "away_aet": 0,
+      "home_pen": 4,
+      "away_pen": 3
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "existing bound fixture",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": [
+     {
+      "id": "existing",
+      "external_id": "1",
+      "phase_id": "phase",
+      "home_id": "home",
+      "away_id": "away",
+      "played": false,
+      "sync_status": null
+     }
+    ]
+   }
+  },
+  "expect": {
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "patches": [
+    {
+     "rows": [
+      {
+       "table": "game",
+       "id": "existing",
+       "fields": {
+        "phase_id": "phase",
+        "home_id": "home",
+        "away_id": "away",
+        "day": "2024-01-01",
+        "kickoff": "2024-01-02T00:00:00Z",
+        "sync_status": "finished",
+        "round": 1,
+        "played": true,
+        "home_score": 1,
+        "away_score": 1,
+        "home_aet": 1,
+        "away_aet": 0,
+        "home_pen": 4,
+        "away_pen": 3
+       }
+      }
+     ],
+     "bindings": [
+      {
+       "kind": "game",
+       "external_id": "1",
+       "local_id": "existing"
+      }
+     ],
+     "reviews": [],
+     "collections": [],
+     "event": {
+      "external_id": "1",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "30",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "30",
+      "round_key": 1,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "finished",
+      "played": true,
+      "terminal": true,
+      "home_score": 1,
+      "away_score": 1,
+      "home_aet": 1,
+      "away_aet": 0,
+      "home_pen": 4,
+      "away_pen": 3
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "existing fixture with a legacy status",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "postponed"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "postponed",
+     "played": false,
+     "terminal": false,
+     "home_score": null,
+     "away_score": null,
+     "home_aet": null,
+     "away_aet": null,
+     "home_pen": null,
+     "away_pen": null
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": [
+     {
+      "id": "existing",
+      "external_id": "1",
+      "phase_id": "phase",
+      "home_id": "home",
+      "away_id": "away",
+      "played": false,
+      "sync_status": "scheduled"
+     }
+    ]
+   }
+  },
+  "expect": {
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "postponed",
+     "played": false,
+     "terminal": false,
+     "home_score": null,
+     "away_score": null,
+     "home_aet": null,
+     "away_aet": null,
+     "home_pen": null,
+     "away_pen": null
+    }
+   ],
+   "patches": [
+    {
+     "rows": [
+      {
+       "table": "game",
+       "id": "existing",
+       "fields": {
+        "phase_id": "phase",
+        "home_id": "home",
+        "away_id": "away",
+        "day": "2024-01-01",
+        "kickoff": "2024-01-02T00:00:00Z",
+        "sync_status": "postponed",
+        "round": 1
+       }
+      }
+     ],
+     "bindings": [
+      {
+       "kind": "game",
+       "external_id": "1",
+       "local_id": "existing"
+      }
+     ],
+     "reviews": [],
+     "collections": [],
+     "event": {
+      "external_id": "1",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "30",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "30",
+      "round_key": 1,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "postponed",
+      "played": false,
+      "terminal": false,
+      "home_score": null,
+      "away_score": null,
+      "home_aet": null,
+      "away_aet": null,
+      "home_pen": null,
+      "away_pen": null
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "played fixture regresses to live",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "inprogress"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "in_progress",
+     "played": false,
+     "terminal": false,
+     "home_score": null,
+     "away_score": null,
+     "home_aet": null,
+     "away_aet": null,
+     "home_pen": null,
+     "away_pen": null
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": [
+     {
+      "id": "existing",
+      "external_id": "1",
+      "phase_id": "phase",
+      "home_id": "home",
+      "away_id": "away",
+      "played": true,
+      "sync_status": null
+     }
+    ]
+   }
+  },
+  "expect": {
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "in_progress",
+     "played": false,
+     "terminal": false,
+     "home_score": null,
+     "away_score": null,
+     "home_aet": null,
+     "away_aet": null,
+     "home_pen": null,
+     "away_pen": null
+    }
+   ],
+   "patches": [
+    {
+     "rows": [],
+     "bindings": [],
+     "reviews": [
+      {
+       "kind": "game",
+       "external_id": "1",
+       "reason": "provider no longer reports a played final",
+       "evidence": {
+        "game_id": "existing",
+        "status": "in_progress"
+       }
+      }
+     ],
+     "collections": [],
+     "event": {
+      "external_id": "1",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "30",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "30",
+      "round_key": 1,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "in_progress",
+      "played": false,
+      "terminal": false,
+      "home_score": null,
+      "away_score": null,
+      "home_aet": null,
+      "away_aet": null,
+      "home_pen": null,
+      "away_pen": null
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "stage not bound",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 37
+     },
+     "roundInfo": {
+      "slug": "playoff"
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "37",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "37|{\"slug\": \"playoff\"}",
+     "round_key": null,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "37": "regular"
+    },
+    "games": []
+   }
+  },
+  "expect": {
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "37",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "37|{\"slug\": \"playoff\"}",
+     "round_key": null,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "patches": [
+    {
+     "rows": [],
+     "bindings": [],
+     "reviews": [
+      {
+       "kind": "stage",
+       "external_id": "37",
+       "reason": "stage is not bound",
+       "evidence": {
+        "event_id": "1",
+        "stage_key": "37|{\"slug\": \"playoff\"}"
+       }
+      }
+     ],
+     "collections": [],
+     "event": {
+      "external_id": "1",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "37",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "37|{\"slug\": \"playoff\"}",
+      "round_key": null,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "finished",
+      "played": true,
+      "terminal": true,
+      "home_score": 1,
+      "away_score": 1,
+      "home_aet": 1,
+      "away_aet": 0,
+      "home_pen": 4,
+      "away_pen": 3
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "slug stage bound",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 37
+     },
+     "roundInfo": {
+      "slug": "playoff",
+      "round": 2
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "37",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "37|{\"slug\": \"playoff\"}",
+     "round_key": 2,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "37": "regular",
+     "37|{\"slug\": \"playoff\"}": "playoff"
+    },
+    "games": []
+   }
+  },
+  "expect": {
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "37",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "37|{\"slug\": \"playoff\"}",
+     "round_key": 2,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "patches": [
+    {
+     "rows": [
+      {
+       "table": "game",
+       "id": "a859e8e0-3559-5d55-a0da-355713b290e9",
+       "fields": {
+        "phase_id": "playoff",
+        "home_id": "home",
+        "away_id": "away",
+        "day": "2024-01-01",
+        "kickoff": "2024-01-02T00:00:00Z",
+        "sync_status": "finished",
+        "round": 2,
+        "played": true,
+        "home_score": 1,
+        "away_score": 1,
+        "home_aet": 1,
+        "away_aet": 0,
+        "home_pen": 4,
+        "away_pen": 3
+       }
+      }
+     ],
+     "bindings": [
+      {
+       "kind": "game",
+       "external_id": "1",
+       "local_id": "a859e8e0-3559-5d55-a0da-355713b290e9"
+      }
+     ],
+     "reviews": [],
+     "collections": [],
+     "event": {
+      "external_id": "1",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "37",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "37|{\"slug\": \"playoff\"}",
+      "round_key": 2,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "finished",
+      "played": true,
+      "terminal": true,
+      "home_score": 1,
+      "away_score": 1,
+      "home_aet": 1,
+      "away_aet": 0,
+      "home_pen": 4,
+      "away_pen": 3
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "fixture conflicts with stage",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": [
+     {
+      "id": "existing",
+      "external_id": "1",
+      "phase_id": "regular",
+      "home_id": "home",
+      "away_id": "away",
+      "played": false,
+      "sync_status": null
+     }
+    ]
+   }
+  },
+  "expect": {
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "patches": [
+    {
+     "rows": [],
+     "bindings": [],
+     "reviews": [
+      {
+       "kind": "game",
+       "external_id": "1",
+       "reason": "bound fixture conflicts with stage or teams",
+       "evidence": {
+        "game_id": "existing"
+       }
+      }
+     ],
+     "collections": [],
+     "event": {
+      "external_id": "1",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "30",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "30",
+      "round_key": 1,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "finished",
+      "played": true,
+      "terminal": true,
+      "home_score": 1,
+      "away_score": 1,
+      "home_aet": 1,
+      "away_aet": 0,
+      "home_pen": 4,
+      "away_pen": 3
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "team not bound",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": []
+   }
+  },
+  "expect": {
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "patches": [
+    {
+     "rows": [],
+     "bindings": [],
+     "reviews": [
+      {
+       "kind": "team",
+       "external_id": "20",
+       "reason": "team is not bound",
+       "evidence": {
+        "name": "B",
+        "side": "away",
+        "event_id": "1",
+        "candidate_ids": []
+       }
+      }
+     ],
+     "collections": [],
+     "event": {
+      "external_id": "1",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "30",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "30",
+      "round_key": 1,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "finished",
+      "played": true,
+      "terminal": true,
+      "home_score": 1,
+      "away_score": 1,
+      "home_aet": 1,
+      "away_aet": 0,
+      "home_pen": 4,
+      "away_pen": 3
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "same team on both sides",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "home"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": []
+   }
+  },
+  "expect": {
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "patches": [
+    {
+     "rows": [],
+     "bindings": [],
+     "reviews": [
+      {
+       "kind": "game",
+       "external_id": "1",
+       "reason": "both teams resolve to the same team",
+       "evidence": {
+        "team_id": "home"
+       }
+      }
+     ],
+     "collections": [],
+     "event": {
+      "external_id": "1",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "30",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "30",
+      "round_key": 1,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "finished",
+      "played": true,
+      "terminal": true,
+      "home_score": 1,
+      "away_score": 1,
+      "home_aet": 1,
+      "away_aet": 0,
+      "home_pen": 4,
+      "away_pen": 3
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "unbound candidate",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": [
+     {
+      "id": "existing",
+      "external_id": null,
+      "phase_id": "phase",
+      "home_id": "home",
+      "away_id": "away",
+      "played": false,
+      "sync_status": null
+     }
+    ]
+   }
+  },
+  "expect": {
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "patches": [
+    {
+     "rows": [],
+     "bindings": [],
+     "reviews": [
+      {
+       "kind": "game",
+       "external_id": "1",
+       "reason": "unbound fixture may already exist",
+       "evidence": {
+        "candidate_ids": [
+         "existing"
+        ]
+       }
+      }
+     ],
+     "collections": [],
+     "event": {
+      "external_id": "1",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "30",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "30",
+      "round_key": 1,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "finished",
+      "played": true,
+      "terminal": true,
+      "home_score": 1,
+      "away_score": 1,
+      "home_aet": 1,
+      "away_aet": 0,
+      "home_pen": 4,
+      "away_pen": 3
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "game bound by binding only",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     },
+     {
+      "kind": "game",
+      "external_id": "1",
+      "local_id": "g"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": [
+     {
+      "id": "g",
+      "external_id": null,
+      "phase_id": "phase",
+      "home_id": "home",
+      "away_id": "away",
+      "played": false,
+      "sync_status": null
+     }
+    ]
+   }
+  },
+  "expect": {
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "patches": [
+    {
+     "rows": [
+      {
+       "table": "game",
+       "id": "g",
+       "fields": {
+        "phase_id": "phase",
+        "home_id": "home",
+        "away_id": "away",
+        "day": "2024-01-01",
+        "kickoff": "2024-01-02T00:00:00Z",
+        "sync_status": "finished",
+        "round": 1,
+        "played": true,
+        "home_score": 1,
+        "away_score": 1,
+        "home_aet": 1,
+        "away_aet": 0,
+        "home_pen": 4,
+        "away_pen": 3
+       }
+      }
+     ],
+     "bindings": [],
+     "reviews": [],
+     "collections": [],
+     "event": {
+      "external_id": "1",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "30",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "30",
+      "round_key": 1,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "finished",
+      "played": true,
+      "terminal": true,
+      "home_score": 1,
+      "away_score": 1,
+      "home_aet": 1,
+      "away_aet": 0,
+      "home_pen": 4,
+      "away_pen": 3
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "terminal outcomes",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "canceled"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    },
+    {
+     "id": 2,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "abandoned"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    },
+    {
+     "id": 3,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "awarded"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "cancelled",
+     "played": false,
+     "terminal": true,
+     "home_score": null,
+     "away_score": null,
+     "home_aet": null,
+     "away_aet": null,
+     "home_pen": null,
+     "away_pen": null
+    },
+    {
+     "external_id": "2",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "abandoned",
+     "played": false,
+     "terminal": true,
+     "home_score": null,
+     "away_score": null,
+     "home_aet": null,
+     "away_aet": null,
+     "home_pen": null,
+     "away_pen": null
+    },
+    {
+     "external_id": "3",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "awarded",
+     "played": false,
+     "terminal": true,
+     "home_score": null,
+     "away_score": null,
+     "home_aet": null,
+     "away_aet": null,
+     "home_pen": null,
+     "away_pen": null
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": []
+   }
+  },
+  "expect": {
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "cancelled",
+     "played": false,
+     "terminal": true,
+     "home_score": null,
+     "away_score": null,
+     "home_aet": null,
+     "away_aet": null,
+     "home_pen": null,
+     "away_pen": null
+    },
+    {
+     "external_id": "2",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "abandoned",
+     "played": false,
+     "terminal": true,
+     "home_score": null,
+     "away_score": null,
+     "home_aet": null,
+     "away_aet": null,
+     "home_pen": null,
+     "away_pen": null
+    },
+    {
+     "external_id": "3",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "awarded",
+     "played": false,
+     "terminal": true,
+     "home_score": null,
+     "away_score": null,
+     "home_aet": null,
+     "away_aet": null,
+     "home_pen": null,
+     "away_pen": null
+    }
+   ],
+   "patches": [
+    {
+     "rows": [
+      {
+       "table": "game",
+       "id": "a859e8e0-3559-5d55-a0da-355713b290e9",
+       "fields": {
+        "phase_id": "phase",
+        "home_id": "home",
+        "away_id": "away",
+        "day": "2024-01-01",
+        "kickoff": "2024-01-02T00:00:00Z",
+        "sync_status": "cancelled",
+        "round": 1
+       }
+      }
+     ],
+     "bindings": [
+      {
+       "kind": "game",
+       "external_id": "1",
+       "local_id": "a859e8e0-3559-5d55-a0da-355713b290e9"
+      }
+     ],
+     "reviews": [
+      {
+       "kind": "game",
+       "external_id": "1",
+       "reason": "terminal outcome requires review",
+       "evidence": {
+        "game_id": "a859e8e0-3559-5d55-a0da-355713b290e9",
+        "status": "cancelled"
+       }
+      }
+     ],
+     "collections": [],
+     "event": {
+      "external_id": "1",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "30",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "30",
+      "round_key": 1,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "cancelled",
+      "played": false,
+      "terminal": true,
+      "home_score": null,
+      "away_score": null,
+      "home_aet": null,
+      "away_aet": null,
+      "home_pen": null,
+      "away_pen": null
+     }
+    },
+    {
+     "rows": [
+      {
+       "table": "game",
+       "id": "8d3a7908-d070-510b-9b09-217236bac301",
+       "fields": {
+        "phase_id": "phase",
+        "home_id": "home",
+        "away_id": "away",
+        "day": "2024-01-01",
+        "kickoff": "2024-01-02T00:00:00Z",
+        "sync_status": "abandoned",
+        "round": 1
+       }
+      }
+     ],
+     "bindings": [
+      {
+       "kind": "game",
+       "external_id": "2",
+       "local_id": "8d3a7908-d070-510b-9b09-217236bac301"
+      }
+     ],
+     "reviews": [
+      {
+       "kind": "game",
+       "external_id": "2",
+       "reason": "terminal outcome requires review",
+       "evidence": {
+        "game_id": "8d3a7908-d070-510b-9b09-217236bac301",
+        "status": "abandoned"
+       }
+      }
+     ],
+     "collections": [],
+     "event": {
+      "external_id": "2",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "30",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "30",
+      "round_key": 1,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "abandoned",
+      "played": false,
+      "terminal": true,
+      "home_score": null,
+      "away_score": null,
+      "home_aet": null,
+      "away_aet": null,
+      "home_pen": null,
+      "away_pen": null
+     }
+    },
+    {
+     "rows": [
+      {
+       "table": "game",
+       "id": "a8303c1c-58e7-5cd2-bb05-43d3a9021634",
+       "fields": {
+        "phase_id": "phase",
+        "home_id": "home",
+        "away_id": "away",
+        "day": "2024-01-01",
+        "kickoff": "2024-01-02T00:00:00Z",
+        "sync_status": "awarded",
+        "round": 1
+       }
+      }
+     ],
+     "bindings": [
+      {
+       "kind": "game",
+       "external_id": "3",
+       "local_id": "a8303c1c-58e7-5cd2-bb05-43d3a9021634"
+      }
+     ],
+     "reviews": [
+      {
+       "kind": "game",
+       "external_id": "3",
+       "reason": "terminal outcome requires review",
+       "evidence": {
+        "game_id": "a8303c1c-58e7-5cd2-bb05-43d3a9021634",
+        "status": "awarded"
+       }
+      }
+     ],
+     "collections": [],
+     "event": {
+      "external_id": "3",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "30",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "30",
+      "round_key": 1,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "awarded",
+      "played": false,
+      "terminal": true,
+      "home_score": null,
+      "away_score": null,
+      "home_aet": null,
+      "away_aet": null,
+      "home_pen": null,
+      "away_pen": null
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "incomplete final",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {},
+     "awayScore": {}
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": false,
+     "terminal": true,
+     "home_score": null,
+     "away_score": null,
+     "home_aet": null,
+     "away_aet": null,
+     "home_pen": null,
+     "away_pen": null
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": []
+   }
+  },
+  "expect": {
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": false,
+     "terminal": true,
+     "home_score": null,
+     "away_score": null,
+     "home_aet": null,
+     "away_aet": null,
+     "home_pen": null,
+     "away_pen": null
+    }
+   ],
+   "patches": [
+    {
+     "rows": [
+      {
+       "table": "game",
+       "id": "a859e8e0-3559-5d55-a0da-355713b290e9",
+       "fields": {
+        "phase_id": "phase",
+        "home_id": "home",
+        "away_id": "away",
+        "day": "2024-01-01",
+        "kickoff": "2024-01-02T00:00:00Z",
+        "sync_status": "finished",
+        "round": 1
+       }
+      }
+     ],
+     "bindings": [
+      {
+       "kind": "game",
+       "external_id": "1",
+       "local_id": "a859e8e0-3559-5d55-a0da-355713b290e9"
+      }
+     ],
+     "reviews": [
+      {
+       "kind": "game",
+       "external_id": "1",
+       "reason": "final score is incomplete",
+       "evidence": {
+        "game_id": "a859e8e0-3559-5d55-a0da-355713b290e9"
+       }
+      }
+     ],
+     "collections": [],
+     "event": {
+      "external_id": "1",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "30",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "30",
+      "round_key": 1,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "finished",
+      "played": false,
+      "terminal": true,
+      "home_score": null,
+      "away_score": null,
+      "home_aet": null,
+      "away_aet": null,
+      "home_pen": null,
+      "away_pen": null
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "non-ASCII stage key",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 37
+     },
+     "roundInfo": {
+      "slug": "fase-única"
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "37",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "37|{\"slug\": \"fase-\\u00fanica\"}",
+     "round_key": null,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "37|{\"slug\": \"fase-\\u00fanica\"}": "phase"
+    },
+    "games": []
+   }
+  },
+  "expect": {
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "37",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "37|{\"slug\": \"fase-\\u00fanica\"}",
+     "round_key": null,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "patches": [
+    {
+     "rows": [
+      {
+       "table": "game",
+       "id": "a859e8e0-3559-5d55-a0da-355713b290e9",
+       "fields": {
+        "phase_id": "phase",
+        "home_id": "home",
+        "away_id": "away",
+        "day": "2024-01-01",
+        "kickoff": "2024-01-02T00:00:00Z",
+        "sync_status": "finished",
+        "played": true,
+        "home_score": 1,
+        "away_score": 1,
+        "home_aet": 1,
+        "away_aet": 0,
+        "home_pen": 4,
+        "away_pen": 3
+       }
+      }
+     ],
+     "bindings": [
+      {
+       "kind": "game",
+       "external_id": "1",
+       "local_id": "a859e8e0-3559-5d55-a0da-355713b290e9"
+      }
+     ],
+     "reviews": [],
+     "collections": [],
+     "event": {
+      "external_id": "1",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "37",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "37|{\"slug\": \"fase-\\u00fanica\"}",
+      "round_key": null,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "finished",
+      "played": true,
+      "terminal": true,
+      "home_score": 1,
+      "away_score": 1,
+      "home_aet": 1,
+      "away_aet": 0,
+      "home_pen": 4,
+      "away_pen": 3
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "season and tournament agree",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30,
+      "uniqueTournament": {
+       "id": 7
+      }
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     },
+     "season": {
+      "id": 9
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": "9",
+     "unique_tournament_id": "7",
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": []
+   }
+  },
+  "expect": {
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": "9",
+     "unique_tournament_id": "7",
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "patches": [
+    {
+     "rows": [
+      {
+       "table": "game",
+       "id": "a859e8e0-3559-5d55-a0da-355713b290e9",
+       "fields": {
+        "phase_id": "phase",
+        "home_id": "home",
+        "away_id": "away",
+        "day": "2024-01-01",
+        "kickoff": "2024-01-02T00:00:00Z",
+        "sync_status": "finished",
+        "round": 1,
+        "played": true,
+        "home_score": 1,
+        "away_score": 1,
+        "home_aet": 1,
+        "away_aet": 0,
+        "home_pen": 4,
+        "away_pen": 3
+       }
+      }
+     ],
+     "bindings": [
+      {
+       "kind": "game",
+       "external_id": "1",
+       "local_id": "a859e8e0-3559-5d55-a0da-355713b290e9"
+      }
+     ],
+     "reviews": [],
+     "collections": [],
+     "event": {
+      "external_id": "1",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "30",
+      "season_id": "9",
+      "unique_tournament_id": "7",
+      "stage_key": "30",
+      "round_key": 1,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "finished",
+      "played": true,
+      "terminal": true,
+      "home_score": 1,
+      "away_score": 1,
+      "home_aet": 1,
+      "away_aet": 0,
+      "home_pen": 4,
+      "away_pen": 3
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "season differs",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     },
+     "season": {
+      "id": 8
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": "8",
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": []
+   }
+  },
+  "error": "response season differs from configured source"
+ },
+ {
+  "name": "tournament differs",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30,
+      "uniqueTournament": {
+       "id": 6
+      }
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": "6",
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": []
+   }
+  },
+  "error": "response tournament differs from configured source"
+ },
+ {
+  "name": "season is not an object",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     },
+     "season": 9
+    }
+   ],
+   "events": null,
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": []
+   }
+  },
+  "error": "invalid response source metadata"
+ },
+ {
+  "name": "season without id",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     },
+     "season": {}
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": []
+   }
+  },
+  "error": "invalid response season id"
+ },
+ {
+  "name": "event is not an object",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": null,
+   "raw_events": [
+    3
+   ],
+   "events": null,
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": []
+   }
+  },
+  "error": "event must be an object"
+ },
+ {
+  "name": "stages scope keeps bound stages and fixtures",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "stages"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    },
+    {
+     "id": 2,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 31
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    },
+    {
+     "id": 3,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 32
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    },
+    {
+     "external_id": "2",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "31",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "31",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    },
+    {
+     "external_id": "3",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "32",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "32",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": [
+     {
+      "id": "b",
+      "external_id": "3",
+      "phase_id": "other",
+      "home_id": "home",
+      "away_id": "away",
+      "played": false,
+      "sync_status": null
+     }
+    ]
+   }
+  },
+  "expect": {
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    },
+    {
+     "external_id": "3",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "32",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "32",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "patches": [
+    {
+     "rows": [
+      {
+       "table": "game",
+       "id": "a859e8e0-3559-5d55-a0da-355713b290e9",
+       "fields": {
+        "phase_id": "phase",
+        "home_id": "home",
+        "away_id": "away",
+        "day": "2024-01-01",
+        "kickoff": "2024-01-02T00:00:00Z",
+        "sync_status": "finished",
+        "round": 1,
+        "played": true,
+        "home_score": 1,
+        "away_score": 1,
+        "home_aet": 1,
+        "away_aet": 0,
+        "home_pen": 4,
+        "away_pen": 3
+       }
+      }
+     ],
+     "bindings": [
+      {
+       "kind": "game",
+       "external_id": "1",
+       "local_id": "a859e8e0-3559-5d55-a0da-355713b290e9"
+      }
+     ],
+     "reviews": [],
+     "collections": [],
+     "event": {
+      "external_id": "1",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "30",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "30",
+      "round_key": 1,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "finished",
+      "played": true,
+      "terminal": true,
+      "home_score": 1,
+      "away_score": 1,
+      "home_aet": 1,
+      "away_aet": 0,
+      "home_pen": 4,
+      "away_pen": 3
+     }
+    },
+    {
+     "rows": [],
+     "bindings": [],
+     "reviews": [
+      {
+       "kind": "stage",
+       "external_id": "32",
+       "reason": "stage is not bound",
+       "evidence": {
+        "event_id": "3",
+        "stage_key": "32"
+       }
+      }
+     ],
+     "collections": [],
+     "event": {
+      "external_id": "3",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "32",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "32",
+      "round_key": 1,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "finished",
+      "played": true,
+      "terminal": true,
+      "home_score": 1,
+      "away_score": 1,
+      "home_aet": 1,
+      "away_aet": 0,
+      "home_pen": 4,
+      "away_pen": 3
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "fixtures scope keeps bound events",
+  "input": {
+   "family": "round",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "fixtures"
+   },
+   "requested_event": null,
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    },
+    {
+     "id": 2,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    },
+    {
+     "external_id": "2",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": [
+     {
+      "id": "existing",
+      "external_id": "2",
+      "phase_id": "phase",
+      "home_id": "home",
+      "away_id": "away",
+      "played": false,
+      "sync_status": null
+     }
+    ]
+   }
+  },
+  "expect": {
+   "events": [
+    {
+     "external_id": "2",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "patches": [
+    {
+     "rows": [
+      {
+       "table": "game",
+       "id": "existing",
+       "fields": {
+        "phase_id": "phase",
+        "home_id": "home",
+        "away_id": "away",
+        "day": "2024-01-01",
+        "kickoff": "2024-01-02T00:00:00Z",
+        "sync_status": "finished",
+        "round": 1,
+        "played": true,
+        "home_score": 1,
+        "away_score": 1,
+        "home_aet": 1,
+        "away_aet": 0,
+        "home_pen": 4,
+        "away_pen": 3
+       }
+      }
+     ],
+     "bindings": [
+      {
+       "kind": "game",
+       "external_id": "2",
+       "local_id": "existing"
+      }
+     ],
+     "reviews": [],
+     "collections": [],
+     "event": {
+      "external_id": "2",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "30",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "30",
+      "round_key": 1,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "finished",
+      "played": true,
+      "terminal": true,
+      "home_score": 1,
+      "away_score": 1,
+      "home_aet": 1,
+      "away_aet": 0,
+      "home_pen": 4,
+      "away_pen": 3
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "event response for another fixture",
+  "input": {
+   "family": "event",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": "1",
+   "raw_events": [
+    {
+     "id": 2,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "2",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": []
+   }
+  },
+  "error": "response event differs from requested fixture"
+ },
+ {
+  "name": "event response for its fixture",
+  "input": {
+   "family": "event",
+   "source": {
+    "unique_tournament_id": 7,
+    "season_id": 9,
+    "event_scope": "competition"
+   },
+   "requested_event": "1",
+   "raw_events": [
+    {
+     "id": 1,
+     "homeTeam": {
+      "id": 10,
+      "name": "A"
+     },
+     "awayTeam": {
+      "id": 20,
+      "name": "B"
+     },
+     "tournament": {
+      "id": 30
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1704153600,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 1,
+      "current": 2,
+      "extra1": 1,
+      "extra2": 0,
+      "penalties": 4
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1,
+      "extra1": 0,
+      "extra2": 0,
+      "penalties": 3
+     }
+    }
+   ],
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "ctx": {
+    "bindings": [
+     {
+      "kind": "team",
+      "external_id": "10",
+      "local_id": "home"
+     },
+     {
+      "kind": "team",
+      "external_id": "20",
+      "local_id": "away"
+     }
+    ],
+    "stages": {
+     "30": "phase"
+    },
+    "games": []
+   }
+  },
+  "expect": {
+   "events": [
+    {
+     "external_id": "1",
+     "home_external_id": "10",
+     "away_external_id": "20",
+     "home": "A",
+     "away": "B",
+     "stage_id": "30",
+     "season_id": null,
+     "unique_tournament_id": null,
+     "stage_key": "30",
+     "round_key": 1,
+     "day": "2024-01-01",
+     "kickoff": "2024-01-02T00:00:00Z",
+     "status": "finished",
+     "played": true,
+     "terminal": true,
+     "home_score": 1,
+     "away_score": 1,
+     "home_aet": 1,
+     "away_aet": 0,
+     "home_pen": 4,
+     "away_pen": 3
+    }
+   ],
+   "patches": [
+    {
+     "rows": [
+      {
+       "table": "game",
+       "id": "a859e8e0-3559-5d55-a0da-355713b290e9",
+       "fields": {
+        "phase_id": "phase",
+        "home_id": "home",
+        "away_id": "away",
+        "day": "2024-01-01",
+        "kickoff": "2024-01-02T00:00:00Z",
+        "sync_status": "finished",
+        "round": 1,
+        "played": true,
+        "home_score": 1,
+        "away_score": 1,
+        "home_aet": 1,
+        "away_aet": 0,
+        "home_pen": 4,
+        "away_pen": 3
+       }
+      }
+     ],
+     "bindings": [
+      {
+       "kind": "game",
+       "external_id": "1",
+       "local_id": "a859e8e0-3559-5d55-a0da-355713b290e9"
+      }
+     ],
+     "reviews": [],
+     "collections": [],
+     "event": {
+      "external_id": "1",
+      "home_external_id": "10",
+      "away_external_id": "20",
+      "home": "A",
+      "away": "B",
+      "stage_id": "30",
+      "season_id": null,
+      "unique_tournament_id": null,
+      "stage_key": "30",
+      "round_key": 1,
+      "day": "2024-01-01",
+      "kickoff": "2024-01-02T00:00:00Z",
+      "status": "finished",
+      "played": true,
+      "terminal": true,
+      "home_score": 1,
+      "away_score": 1,
+      "home_aet": 1,
+      "away_aet": 0,
+      "home_pen": 4,
+      "away_pen": 3
+     }
+    }
+   ]
+  }
+ }
+]

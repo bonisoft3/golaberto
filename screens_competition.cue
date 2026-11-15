@@ -2,10 +2,11 @@ package golaberto
 
 import "strings"
 
-#CompetitionFields: F={
-	fields: [...]
+#CompetitionFields: {
+	let F = self
+	fields:  [...]
 	current: *false | bool
-	out: strings.Join([for field in F.fields {(#EditingField & field & {current: F.current}).out}], "")
+	out:     strings.Join([for field in F.fields {(#EditingField & field & {current: F.current}).out}], "")
 }
 
 _competitionChampionshipFields: [
@@ -51,9 +52,10 @@ _competitionZoneFields: [
 	{name: "last", label: "manage_zone_last", control: "number", adapter: "editing-integer", minimum: "1", maximum: "1000", initial: "1", required: true},
 ]
 
-#CompetitionMemberships: M={
+#CompetitionMemberships: {
+	let M = self
 	groupID: string
-	out:     """
+	out: """
 <section class="competition-section"><h4 data-text="{msg.manage_memberships}"></h4>
  <form class="edit competition-create" data-form="competition-member-new-\(M.groupID)" data-entity="team_group" data-action="create">
   <input type="hidden" name="group_id" data-value="\(M.groupID)">
@@ -74,9 +76,10 @@ _competitionZoneFields: [
 """
 }
 
-#CompetitionZones: Z={
+#CompetitionZones: {
+	let Z = self
 	groupID: string
-	out:     """
+	out: """
 <section class="competition-section"><h4 data-text="{msg.manage_zones}"></h4>
  <p class="hint" data-text="{msg.manage_zone_overlap_hint}"></p>
  <form class="edit competition-create" data-form="competition-zone-new-\(Z.groupID)" data-entity="zone" data-action="create">
@@ -86,7 +89,7 @@ _competitionZoneFields: [
   \(_editingFormMessages)<button class="btn" type="submit" data-text="{msg.manage_add_zone}"></button>
  </form>
  <ul class="competition-records" data-live="zone" data-filter="group_id=eq.\(Z.groupID)" data-order="first.asc,last.asc,id.asc" data-empty="{msg.manage_zones_empty}"><template data-item><li><details>
-  <summary><span data-text="{name}"></span><small><span data-text="{first}" data-text-format="number"></span>–<span data-text="{last}" data-text-format="number"></span> · <span data-text="{positions}"></span></small></summary>
+  <summary><span data-text="{name}"></span><small><span data-text="{first}|{last}" data-text-format="zone-positions"></span> · <span data-text="{positions}"></span></small></summary>
   <form class="edit" data-form="competition-zone-{id}" data-entity="zone" data-action="update"><div class="fields">
    \((#CompetitionFields & {fields: _competitionZoneFields, current: true}).out)<label class="field wide"><span data-text="{msg.manage_zone_positions}"></span><input name="positions" type="text" maxlength="4999" data-value="{positions}"></label>
   </div><p class="hint" data-text="{msg.manage_zone_positions_hint}"></p>\(_editingFormMessages)<button class="btn" type="submit" data-text="{msg.edit_save}"></button></form>
@@ -96,9 +99,10 @@ _competitionZoneFields: [
 """
 }
 
-#CompetitionGroups: G={
+#CompetitionGroups: {
+	let G = self
 	phaseID: string
-	out:     """
+	out: """
 <section class="competition-section"><h3 data-text="{msg.manage_groups}"></h3>
  <form class="edit competition-create" data-form="competition-group-new-\(G.phaseID)" data-entity="stage_group" data-action="create">
   <input type="hidden" name="phase_id" data-value="\(G.phaseID)">
@@ -118,9 +122,10 @@ _competitionZoneFields: [
 """
 }
 
-#CompetitionClone: C={
+#CompetitionClone: {
+	let C = self
 	phaseID: string
-	out:     """
+	out: """
 <details class="edit-sec competition-clone"><summary data-text="{msg.manage_clone_phase}"></summary>
  <p class="hint" data-text="{msg.manage_clone_hint}"></p>
  <form class="edit" data-form="competition-clone-\(C.phaseID)" data-entity="phase_clone" data-action="create">
@@ -148,8 +153,8 @@ _competitionDirectoryMarkup: """
   <p class="hint" data-text="{msg.manage_competitions_hint}"></p>
   <nav class="buttons"><a class="btn" data-route="nova-competicao" data-text="{msg.manage_new_competition}"></a><a class="btn-quiet" data-route="gerenciar" data-text="{msg.manage_home}"></a></nav>
   \((#PagedRead & {key: "competition-catalog", owner: "00000000-0000-0000-0000-000000000000", table: "championship", filter: "search_key=like.*{q_key}*", order: "region_name.asc,name.asc,begins.desc,id.asc", emptyRow: {q: "", q_key: ""}, events: {"input@competition-catalog-q": assign: {q: {type: "event", params: field: "value"}, q_key: {type: "search-key"}, offset: 0, next_offset: 40, page: 1}}, controls: "<label class=\"field competition-search\"><span data-text=\"{msg.choice_search}\"></span><input id=\"competition-catalog-q\" type=\"search\" maxlength=\"80\" value=\"{q}\"></label>", content: """
-	 <ul class="competition-catalog" data-live="championship" data-filter="search_key=like.*{q_key}*&offset={offset}&limit=40" data-order="region_name.asc,name.asc,begins.desc,id.asc" data-empty="{msg.manage_competitions_empty}"><template data-item><li><a data-route="editar-competicao" data-param-slug="{slug}"><b data-text="{full_name}"></b><small><span data-text="{begins}"></span>–<span data-text="{ends}"></span></small></a></li></template></ul>
-	"""}).out)
+		 <ul class="competition-catalog" data-live="championship" data-filter="search_key=like.*{q_key}*&offset={offset}&limit=40" data-order="region_name.asc,name.asc,begins.desc,id.asc" data-empty="{msg.manage_competitions_empty}"><template data-item><li><a data-route="editar-competicao" data-param-slug="{slug}"><b data-text="{full_name}"></b><small><span data-text="{begins}"></span>–<span data-text="{ends}"></span></small></a></li></template></ul>
+		"""}).out)
  </div></template></div>
 </div><aside class="side"><p data-text="{msg.about}"></p></aside></div>
 </section>

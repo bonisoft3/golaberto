@@ -1,0 +1,246 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "compose": {
+    "up": false,
+    "manual": false,
+    "build": {
+      "additional_contexts": {
+        "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.23.1@sha256:ab98bb1431e05361e30e73583335c01170c17d8dcddbb666b2f57bb837f63f77}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+      },
+      "secrets": [],
+      "args": {}
+    },
+    "environment": {
+      "PGHOST": "database",
+      "PGUSER": "${POSTGRES_USER:-postgres}",
+      "PGPASSWORD": "${POSTGRES_PASSWORD:-postgres}",
+      "PGDATABASE": "${POSTGRES_DB:-golaberto}"
+    },
+    "ports": [],
+    "volumes": [],
+    "depends_on": {
+      "golaberto-database": {
+        "condition": "service_healthy"
+      },
+      "golaberto-migrate": {
+        "condition": "service_completed_successfully"
+      },
+      "golaberto-airlock-upgrade": {
+        "condition": "service_completed_successfully"
+      }
+    },
+    "networks": {
+      "default": {
+        "aliases": [
+          "timer-check"
+        ]
+      }
+    }
+  },
+  "dockerfile": {
+    "preamble": [],
+    "preambleCopyContexts": [],
+    "from": {
+      "name": "libraries_mecha-database-image"
+    },
+    "add": [],
+    "mounts": [],
+    "secrets": {},
+    "extra_hosts": [],
+    "cmd": [
+      "-X",
+      "--set=ON_ERROR_STOP=1",
+      "--single-transaction",
+      "--file=/timer-check.sql"
+    ],
+    "copy": [],
+    "entrypoint": [
+      "psql"
+    ],
+    "epilogue": [
+      "COPY <<'TIMERS' /timer-check.sql\nDO $$ BEGIN\n  IF EXISTS (SELECT FROM hybrid_sofa_resource.instance i\n    WHERE i.state->>'phase' IN ('acquiring', 'idle', 'backoff') AND (i.state->>'due')::bigint > 0\n      AND NOT EXISTS (SELECT FROM public.schedule s WHERE s.emits_entity = 'machine_timer_tick'\n        AND s.emits_values @> jsonb_build_object('machine', 'sofa_resource', 'row', jsonb_build_object('id', i.id::text)))) THEN\n    RAISE EXCEPTION 'machine sofa_resource has instances waiting on a deadline the ticker was never given';\n  END IF;\nEND $$;\nDO $$ BEGIN\n  IF EXISTS (SELECT FROM hybrid_sofa_provider.instance i\n    WHERE i.state->>'phase' IN ('blocked') AND (i.state->>'until')::bigint > 0\n      AND NOT EXISTS (SELECT FROM public.schedule s WHERE s.emits_entity = 'machine_timer_tick'\n        AND s.emits_values @> jsonb_build_object('machine', 'sofa_provider', 'row', jsonb_build_object('id', i.id::text)))) THEN\n    RAISE EXCEPTION 'machine sofa_provider has instances waiting on a deadline the ticker was never given';\n  END IF;\nEND $$;\nTIMERS"
+    ],
+    "expose": [],
+    "healthcheck": null,
+    "incremental": false
+  },
+  "entrypoint": {
+    "do": "open .bayt/bayt.timer-check.json | get dockerfile.epilogue.0 | lines | skip 1 | drop 1 | str join (char nl) | ^psql -X --set=ON_ERROR_STOP=1 --single-transaction",
+    "shell": "nu",
+    "env": {
+      "PGHOST": {
+        "peer": "database",
+        "port": "pg",
+        "part": "host",
+        "prefix": "",
+        "suffix": ""
+      },
+      "PGUSER": "${POSTGRES_USER:-postgres}",
+      "PGPASSWORD": "${POSTGRES_PASSWORD:-postgres}",
+      "PGDATABASE": "${POSTGRES_DB:-golaberto}"
+    },
+    "after": {
+      "database": "healthy",
+      "migrate": "completed",
+      "airlock-upgrade": "completed"
+    },
+    "host": true
+  },
+  "name": "timer-check",
+  "process-compose": {
+    "activate": "mise x --",
+    "env": {
+      "PGPORT": {
+        "peer": "database",
+        "port": "pg",
+        "part": "port",
+        "prefix": "",
+        "suffix": ""
+      }
+    }
+  },
+  "project": "golaberto",
+  "dir": ".",
+  "activate": "",
+  "srcs": {
+    "globs": [],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {},
+  "synthetics": {
+    "bayt": {
+      "name": "timer-check_bayt",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.timer-check.yaml",
+          ".bayt/Dockerfile.timer-check",
+          ".bayt/bayt.timer-check.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/process-compose.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.timer-check.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml"
+      ]
+    },
+    "outs": {
+      "name": "timer-check_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.timer-check.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml"
+      ]
+    }
+  },
+  "visibility": "internal",
+  "emitsSrcs": false,
+  "deps": [
+    "database_outs",
+    "migrate_outs",
+    "airlock-upgrade_outs"
+  ],
+  "sameProjectDeps": [
+    "database_outs",
+    "migrate_outs",
+    "airlock-upgrade_outs"
+  ],
+  "transitiveDeps": [
+    "database_outs",
+    "migrate_outs",
+    "airlock-upgrade_outs"
+  ],
+  "transitiveCrossDeps": [],
+  "upClosure": [
+    "./.bayt/compose.timer-check.yaml",
+    "./.bayt/compose.database.yaml",
+    "./.bayt/compose.migrate.yaml",
+    "./.bayt/compose.airlock-upgrade.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "database_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "migrate_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "airlock-upgrade_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

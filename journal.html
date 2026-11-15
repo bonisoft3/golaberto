@@ -28,6 +28,123 @@
     <h1>GolAberto — The Open Football Statistics Encyclopedia</h1>
     <p>An open football archive in Portuguese, Spanish, and English covering championships, phases, groups, qualification zones, match line-ups, referees, stadiums, and live-recounted standings tables across South American and world football. <a href="#initial-brief">Latest product brief ↓</a></p>
   </header>
+<article id="bounded-verification-2026-11-10">
+<h2>2026-11-10 — Archive verification catches transfer and memory limits</h2>
+<p>The native runtime now sorts outputs once and publishes by ordinal ranges. Ratings and odds read pages bounded by both rows and bytes, retaining the existing numerical input limit. DuckDB uses one execution thread under its 512 MiB engine budget. These changes address full-archive failures without changing the calculation window or WASM algorithm.</p>
+<p>Player-statistics publication checked 302,234 rows, updated 357 and deleted none; standings also published. Fifteen native runtime tests, eleven focused numerical tests, the app build/test and forty browser-verifier tests passed. A synthetic one-million-row publication materialization completed under the engine budget; it does not prove full-archive publication.</p>
+<p>Private VM image <code>sha256:6e7bf34327b5305aa49a74e2a3e8b797ce206f4985716d2d80720f63729985aa</code> passed HTTP verification: 298 assets, six catalogues, seventeen routes and the negative cache probe. Its container remains capped at 3 GiB. Retained inputs survived replacement; the version guard refused an intermediate image whose active bundles had not been updated.</p>
+<figure><img src="journal/2026-11-10-duckdb-vm-teams.png" alt="Forty teams and their previously published ratings visible on the private native VM"><figcaption>The Teams page rendered forty rows without pulsing during archive computation. This screenshot verifies concurrent serving, not new ratings publication.</figcaption></figure>
+<p>Game-card replay and atomic publication completed in 992 seconds, checking 318,970 game cards and 637,940 team-game rows with no changes to existing rows. Ratings and odds publication remain under verification. The live statistics test timed out waiting for its baseline behind archive computation; its fixtures were removed, and the run verified 41 screens. This is not mutation/rollback proof. A subsequent numerical paging change uses up to 4,096 candidate rows under the same 1 MiB limit; a 40,000-row read fell from 314 queries/about 550 ms to 11 queries/about 55 ms. All eleven focused tests and the app build/test passed. Image <code>sha256:885030adf6ec40fd2b9fd1ca615d6c0953034b02719f5f36212297421d0f7f51</code> is deployed with the retained ratings capture and numerical cache. The public hostname still serves Cloudflare. Main was merged cleanly into the PR; checks run again on new commits.</p>
+</article>
+  <article id="bounded-duckdb-native-2026-11-09">
+<h2>2026-11-09 — Native DuckDB keeps the archive out of job JSON</h2>
+<p>Golaberto's DuckDB snapshot engine now keeps immutable captured relations and computation outputs in persistent files. Durable jobs retain manifests. Workers consume bounded pages, and PostgreSQL stages pages before one atomic publication.</p>
+<p>The original full-archive game-card path exceeded JavaScript's string limit. The bounded capture completed in 142 seconds. After interrupting calculation, a new process reopened that capture and completed calculation in 243 seconds. Another 148 seconds drained 318,970 game-card rows in 2,492 pages and 637,940 team-game rows in 4,984 pages. This measurement excludes PostgreSQL publication.</p>
+<ul><li>Generate, lint, build and app tests passed. Focused checks cover 14 native runtime tests, 22 batching tests, 15 publication tests and 31 Docker packaging tests.</li><li>Review fixes deny worker SQL access to host files and remove output artifacts after failed calculation or publication while preserving replay inputs.</li><li>The private GCP VM runs image <code>sha256:ad7e73ab1e9029641c06cf9b6354b7d4888f755e20f639466acf2f0a80331ee1</code> with a persistent DuckDB volume. HTTP verification passed 298 immutable assets, six catalogues and 17 document routes.</li></ul>
+<p>Follow-up review closed a query-bounds race: sizing and retrieval now read one materialized result. Capture conversion considers up to 4,096 rows under the existing byte budget. A local 100,000-row benchmark improved from 2.446 to 0.689 seconds; this is not a whole-pipeline speedup. Build, app tests, all 14 runtime tests and focused lint passed.</p>
+<p>The first VM standings publication checked 58,440 rows and updated four in 1,204 seconds. The latest image was deployed with all persistent volumes preserved; its HTTP verification passed in 11.5 seconds. The uncommitted game-card capture restarted with the faster converter. Full archive bootstrap remains unfinished.</p>
+<figure><img src="journal/2026-11-09-duckdb-vm-teams.png" alt="Golaberto teams page showing forty teams and existing ratings on the private VM"><figcaption>The teams page loaded forty rows without pulsing while background computation ran. These are previously published statistics; this screenshot does not prove new statistics publication.</figcaption></figure>
+<p>Snapshot copying and SQL still repeat for each batch. This is bounded data transfer, not incremental view maintenance. The public hostname remains on Cloudflare; full bootstrap publication and live mutation/rollback verification are pending.</p>
+</article>
+<article id="turn-2026-11-09-duckdb-vm">
+<h2>DuckDB VM trial: bounded archive execution is still required</h2>
+<p>Golaberto now selects DuckDB snapshot execution while retaining its Feldera SQL,
+pure WASM algorithms, durable batching, and transactional publication. The public
+Cloudflare site has not changed.</p>
+<p>Generation, lint, build and app tests passed. The focused runtime suites passed
+22 capture/computation tests and 21 batching tests, including transaction-consistent
+capture, coalescing, rollback and retained-input recovery. The AMD64 appliance
+built in Depot as <code>csp0kvq0cd</code> and started privately on the GCP VM.</p>
+<p>The complete archive exposed a native runtime limitation: game-card capture
+materializes all query results in JavaScript, then fails with
+<code>RangeError: Invalid string length</code> in <code>strictJson(inputs)</code>.
+An 8 GiB diagnostic VM made this failure observable; it did not solve it.
+The existing bounded application steps are not yet used by this execution path.</p>
+<p>Browser mutation verification failed while waiting for statistics. Its five
+created disposable fixture rows were subsequently removed in a guarded PostgreSQL
+transaction; no live-update or rollback-browser success is claimed. Failing
+appliance retries were stopped. Public release remains pending bounded execution.</p>
+</article>
+<article id="turn-2026-11-09-native-vm">
+    <h2>Native streaming VM: the archive stays available during bootstrap</h2>
+    <p>The private GCP VM serves Teams while precompiled Feldera pipelines rebuild streaming state. HTTP verification and the appliance checks pass; live mutation and rollback verification remain pending.</p>
+    <figure><img src="journal/2026-11-09-vm-teams.png" alt="Populated Teams rankings served by the private GCP VM during Feldera bootstrap" loading="lazy"></figure>
+    <p><a href="journal/2026-11-09-feldera-vm.html">Runtime evidence, memory findings, and remaining checks</a></p>
+  </article>
+
+  <article id="turn-2026-11-09-incremental-reader">
+    <time datetime="2026-11-09">9 November 2026</time>
+    <h2>Reuse the archive between statistics captures</h2>
+    <p>The Cloudflare reader now retains a pristine physical baseline. After bootstrap, a new capture transfers changed database blocks instead of copying the whole archive. Local materialization writes are discarded before applying the next image; source baselines stay pinned until the reader acknowledges completion.</p>
+    <p>A real-PGlite workerd test transferred 81,485,919 bytes initially and 8,192 bytes for the next committed capture. Both input tables retained the captured revision even after the source advanced. Restarting after an applied delta block preserved progress; abandoning a partially applied capture, retrying its release, and replacing it also produced the correct rows. These are local transfer measurements, not hosted latency results.</p>
+    <p>The focused runtime suite passed 31 tests, and raw and compressed storage validation passed. Logical input loading into DuckDB, batch computation and output publication remain separate costs. This transport change has not yet been deployed.</p>
+  </article>
+  <article id="turn-2026-11-09-combined-release">
+    <time datetime="2026-11-09">9 November 2026</time>
+    <h2>Live statistics, navigation and SofaScore in one Cloudflare release</h2>
+    <p>The combined branch published the prepared archive and the SofaScore container to golaberto.bonisoft3.com. The publisher verified 3,045 chunks across 1,648 files (7,077.6 MiB), after applying 36 pending migrations to a copy of the archive. The original migration ledger remains intact.</p>
+    <p>Review caught an omitted fixture-availability field that rejected cards publication, and an HTTP-200 body-read failure being treated as a successful SofaScore acquisition. Both are fixed. Generation, lint, build and the full app tests passed. Worker <code>092c7eab-d0cf-4b92-a445-701190d656c3</code> deployed the cards fix without resetting the database.</p>
+    <figure><img src="journal/2026-11-09-cloudflare-home.png" alt="The live GolAberto homepage with upcoming matches and recent competitions"><figcaption>The combined release homepage hydrated without page errors.</figcaption></figure>
+    <p>Worker <code>d2144183-1f53-4bb0-acba-ac79e3bec300</code> subsequently published the lock-order migration. Hosted HTTP verification passed 455 assets, six catalogues, 24 document routes and the negative caching probe. The ordinary browser sweep passed all 41 journeys and screens. The live statistics verifier then observed goals change from 0 to 1 without reload after inserting a match. The browser also observed the restored statistics without reload after rollback, and the disposable fixture was removed. The slow full-archive path is not a low-latency result. This longer verification run subsequently failed its browser sweep on Electric HTTP 500 responses and screen readiness timeouts; the complete verification is not green.</p>
+    <figure><img src="journal/2026-11-09-cloudflare-live-before.png" alt="Verification standings before the match, with Cyprus and Latvia at zero goals"><figcaption>Before the live test match.</figcaption></figure>
+    <figure><img src="journal/2026-11-09-cloudflare-live-changed.png" alt="Verification standings updated to Cyprus one goal and three points, without reloading"><figcaption>The same browser page received the published statistics through synchronization.</figcaption></figure>
+    <figure><img src="journal/2026-11-09-cloudflare-live-restored.png" alt="Verification standings restored to zero goals and zero points after rollback, without reloading"><figcaption>The same page observed the rollback publication.</figcaption></figure>
+  </article>
+
+
+  <article>
+<time datetime="2026-11-08">8 November 2026</time>
+<h2>Follow-up review: local checks pass, hosted hydration blocks verification</h2>
+<p><a href="https://github.com/worldsense/trash/pull/2325">PR #2325</a> carries the bounded edge computation and hosted standings verification follow-up. The independent runtime review found no actionable issue. QA identified that automatic fixture recovery excludes partial cleanup; that documented limit remains.</p>
+<p>Doctor, generation, lint, build and the complete app test command exited successfully. The Docker replay gate passed; remaining integration gates and CI were still running when this entry was written. Two verification commands were corrected to resolve dependencies through the pinned Pronto runtime.</p>
+<p>The deployed site passed 382 immutable asset checks, six catalogues, 24 document routes and the negative cache probe. Browser verification failed: all 16 visited screens timed out, and seven additional routes could not be resolved. A homepage probe rendered populated content with no page exception, but retained <code>data-served</code> after boot while <code>POST /auth/guest</code> remained pending. Its backend cause is not established. No new mutation or rollback proof was obtained.</p>
+<figure><img src="journal/2026-11-08-pr-review.png" alt="Populated Golaberto homepage still awaiting client hydration"><figcaption>The visible server-rendered homepage is not evidence of a functioning live subscription.</figcaption></figure>
+</article>
+<article id="turn-2026-11-07-transfer-profile">
+    <time datetime="2026-11-07">2026-11-07 · Statistics performance investigation</time>
+    <h2>Locating the cost of archive standings updates</h2>
+    <p>The earlier 42-minute hosted transition spent roughly fourteen minutes copying a 7.6 GB physical database, fourteen loading source rows, nine finishing standings, and the remainder in SQL and publication. Coalescing does not remove this per-capture full-snapshot work.</p>
+    <p>A local Workerd/DuckDB experiment transferred 16,384 narrow rows in 16 data pages and 286 ms, versus 128 data pages and 1,028 ms, with the same 28 MiB WASM heap. Source pages now allow 1,024 rows under the existing 256 KiB byte ceiling; insertion sub-batches and output bounds remain unchanged. Alarm-local acknowledged progress removes redundant status calls, and completed physical readers skip their file-cursor scan.</p>
+    <p>This is local performance evidence, not a new hosted latency result. The new companion runtime has not replaced the retained live ratings computation. Full snapshot copying, ranking cost and the source-side memory-pressure cause remain unresolved. <a href="docs/evidence/production-review/source-transfer-profile.json">Benchmark and sampled stage evidence</a>.</p>
+  </article>
+
+  <article id="turn-2026-11-07-hosted-standings">
+    <time datetime="2026-11-07">2026-11-07 · Cloudflare verification</time>
+    <h2>Standings update and roll back in the open browser tab</h2>
+    <p>A disposable Cyprus–Latvia match changed the hosted standings from zero goals to one and back to zero after deletion, without a page reload. The original archive match was untouched and all six fixture records were removed. The forward update took 42m01s; rollback took 42m23s. This proves eventual live publication, not low-latency statistics.</p>
+    <div class="comparison">
+      <figure><img src="journal/2026-11-07-cloudflare-standings-before.png" alt="Disposable championship standings before the match, with zero goals"><figcaption>Before insertion · 09:45:42 UTC</figcaption></figure>
+      <figure><img src="journal/2026-11-07-cloudflare-standings-changed.png" alt="Cyprus has three points and one goal after the inserted match"><figcaption>Live update · 10:27:44 UTC</figcaption></figure>
+      <figure><img src="journal/2026-11-07-cloudflare-standings-restored.png" alt="Standings return to zero after deleting the disposable match"><figcaption>Compensating rollback · 11:10:09 UTC</figcaption></figure>
+    </div>
+    <p>Bounded retries now recover read-only shape and entity requests after marked Durable Object resets. Real Workerd restart tests passed, and the authenticated 41-screen sweep passed on the final deployment. A real memory-limit reset recovered during the mutation proof; its memory cause remains unresolved. Ratings, odds and monthly rollover were not validated by this case. <a href="journal/2026-11-07-cloudflare-standings.html">Version-scoped verification evidence and limitations</a>.</p>
+  </article>
+
+  <article id="turn-2026-11-05-docker-restored">
+    <h2>5 November 2026 — Durable computations verified with Docker restored</h2>
+    <p>Golaberto's full generation, lint and test gates passed. The rebuilt PGlite includes pg_ivm. Real Feldera CDC recovery passed; all fifteen portable types round-tripped through PostgreSQL and DuckDB. The final compute suite passed 166 tests, with two opt-in tests skipped; native CDC was also run separately.</p>
+    <p>Fixed the merged durable isolation guard, restart scheduling of retained work, the narrow compiler fingerprint upgrade, Durex migration parsing, and a Cloudflare reset response that could be cut off by restarting its Durable Object. Thirteen actual Workerd compute/migration tests and the deterministic reset regression passed. The isolated compiler image also builds after routing its cross-package sink-column test to the repository gate; all 17 Duckstream compiler contract tests passed. Independent reviews found no remaining issues in these repairs.</p>
+    <p>Plausible additionally demonstrated live PostgreSQL → Feldera → durable computation → Electric → browser replay without reload. <a href="docs/evidence/production-review/docker-restored-2026-11-05.json">Validation evidence</a>. CI remains the merge gate. This was local validation, not a production deployment; large monthly edge publication and a hosted Golaberto match-edit flow remain unproved.</p>
+  </article>
+
+  <article id="turn-2026-11-05-duckstream-main-merge">
+    <time datetime="2026-11-05">2026-11-05 · Duckstream integration</time>
+    <h2>Live statistics meet the current runtime</h2>
+    <p>The Duckstream branch now combines the current app and framework changes with isolated Cloudflare rendering and computation, durable publication, and the monthly seven-year ratings window. The merge preserves progressive rendering, deployed secrets, private-data exclusions and reconciliation migrations. Generated Cloudflare releases now apply the archive storage and CPU policy before publication, while GCP and Kubernetes retain their release commands.</p>
+    <p>Focused checks passed across synchronization, computation snapshots, SQL generation, renderer RPC lifetime and release packaging. GolAberto’s 27 Duckstream tests and Plausible’s 18 passed. Pronto generation and app lint ran; the full generation entry point remains blocked because Docker cannot start the pinned Feldera compiler. Workerd retention also needs a fresh PGlite build with pg_ivm.</p>
+    <p>This is source integration, not deployment acceptance: no new hosted playtest or screenshots were captured. <a href="docs/evidence/production-review/main-merge-2026-11-05.json">Gate results and remaining limits</a>.</p>
+  </article>
+
+  <article id="turn-2026-11-05-scenario-limit">
+    <time datetime="2026-11-05">2026-11-05 · Match scenarios</time>
+    <h2>Keeping hypothetical event identities distinct</h2>
+    <p>A match scenario keeps its existing events editable when it reaches the last available event identifier, and explains why it cannot add another. On the running archive, a goal was added normally; the tab-local sequence was then set to its maximum to exercise the otherwise remote boundary. A second add left the single event in place.</p>
+    <div class="comparison">
+      <figure><img src="journal/2026-11-05-sequence-before.png" alt="Match scenario with one hypothetical goal before sequence exhaustion"><figcaption>One goal added normally</figcaption></figure>
+      <figure><img src="journal/2026-11-05-sequence-exhausted.png" alt="The same scenario reports that its identifier limit has been reached"><figcaption>After setting the tab-local sequence to its maximum</figcaption></figure>
+    </div>
+    <p>Generation, lint, build and test passed. The mounted test also creates the final available identifier and rejects a duplicate. Replay and visual integration passed; full integration reported a language-page readiness timeout, while the same language case passed alone against the live seeded archive.</p>
+  </article>
 
   <article id="turn-2026-10-28-controls">
     <time datetime="2026-10-28">2026-10-28 · Release Controls &amp; Fixture</time>

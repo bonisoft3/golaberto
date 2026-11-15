@@ -1,0 +1,72 @@
+{
+  "captured_at": "2026-10-27T21:16:45.635070-07:00",
+  "branch": "codex/golaberto-sync-and-navigation",
+  "source_head_before_handoff": "0ad3d55733e2f289c2842a0e15062733c2904688",
+  "merged_upstream_main": "cea02d913a319a670c9ca9820491507b774fd8e3",
+  "gates": [
+    {
+      "gate": "doctor",
+      "exit": 0
+    },
+    {
+      "gate": "generate",
+      "exit": 0
+    },
+    {
+      "gate": "lint",
+      "exit": 0
+    },
+    {
+      "gate": "test",
+      "exit": 0
+    },
+    {
+      "gate": "focused Omnishell tests",
+      "exit": 0
+    },
+    {
+      "gate": "focused Pronto route/SSR tests",
+      "exit": 0
+    }
+  ],
+  "integration": [
+    {
+      "target": "ci-replay",
+      "exit": 0,
+      "seconds": 74
+    },
+    {
+      "target": "ci-visual",
+      "exit": 0,
+      "seconds": 360
+    },
+    {
+      "target": "ci-constraints",
+      "exit": 0,
+      "seconds": 98
+    },
+    {
+      "target": "ci-acceptance",
+      "exit": 0,
+      "seconds": 207
+    }
+  ],
+  "sofascore_python_tests": 49,
+  "omnishell_tests": 16,
+  "pronto_route_ssr_tests": 14,
+  "constraint_tests": 76,
+  "sofascore_database_tests": 9,
+  "rust_unit_tests": 4,
+  "rust_jsonl_tests": 1,
+  "acceptance_aggregate_count": null,
+  "acceptance_output_clipped": true,
+  "acceptance_source_sha256": "bd1bafda3676ddf0e69abbf1499760dee1b1627a7c5b98f7d225b93b72d177e7",
+  "first_acceptance_attempt": {
+    "exit": 1,
+    "passed": 16,
+    "failed": 1,
+    "failure": "Minute 30 snapshot wait timed out before chart scenario readiness was established.",
+    "repair": "Wait for the chart before editing the minute; keep all existing behavior assertions."
+  },
+  "scope": "Container/PostgreSQL syncing. Cloudflare execution adapter remains unimplemented. Enrollment audits describe local operational data."
+}

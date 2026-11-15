@@ -23,10 +23,11 @@ The target is migrated as below and must match the dump: their pgroll ledgers
 name the same migrations, or the script refuses, since a data-only restore into
 other columns would fill or drop them silently. A dump without a ledger, of a
 database the migrate service never ran on, is refused for the same reason. Then,
-in one transaction, the application's tables (every schema but pgroll's) are
-emptied, since the migrations seed rows the dump holds too, and the dump's rows
-restored with triggers off, so nothing is enqueued for the projections to
-replay. There is no MySQL restore or
+in one transaction, only destination tables named in the dump are cleared and
+their rows restored with triggers off; target-only tables, including fresh
+runtime state, stay intact. The restore validates current foreign keys before
+commit and restores sequence next values with transactional sequence restarts.
+A failure rolls the table and sequence changes back. There is no MySQL restore or
 import; the full archive's 1 GB dump restored in about twenty minutes. Tables
 the migrations do not make, such as the credentials the auth service creates at
 runtime or a staging `legacy` schema, are left out and named. On a remote
@@ -118,13 +119,17 @@ reviewed profile (checksum, counts, guarded corrections) is the review, and the
 manifest stays in `ARCHIVE_OUTPUT` for audit.
 
 **Launch.** Derived projections and queues must finish before judging page
-completeness. The preservation overlay disables ratings replacement, whose
-default sink removes historical rows absent from its recent window, and removes
+completeness. The preservation overlay disables ratings recomputation, whose
+normal publication replaces original team/day values, and removes
 the chances completion hook that captures computed odds snapshots. Chances run at
 startup and on CDC changes to their declared inputs, using retained ratings.
 This profile serves original ratings and odds; it does not maintain new rating
 history automatically. An ordinary seeded launch instead recomputes
 ratings/player rankings on their input changes and captures chances history.
+Team ratings use replacement publication: dates absent from the current
+calculation are retracted, including after undoing a game result or advancing
+the seven-year input window. This keeps obsolete ratings out of the chances
+query's ASOF join.
 Those default jobs must stay disabled for an archive preservation trial; player
 rankings and rating evaluations are not refreshed here.
 

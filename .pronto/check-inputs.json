@@ -1,5 +1,6 @@
 {
   "version": 1,
+  "terminal": true,
   "types": {
     "types": {
       "string": {
@@ -3176,6 +3177,15 @@
           "pk": false,
           "required": false,
           "ref": "app_user"
+        },
+        {
+          "name": "sync_status",
+          "ordinal": 24,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false,
+          "cel": "this in ['scheduled', 'in_progress', 'finished', 'postponed', 'cancelled', 'abandoned', 'awarded', 'unknown']"
         }
       ],
       "durability": "server",
@@ -3247,13 +3257,24 @@
           "home_pen": "home_pen >= 0 AND home_pen < 100",
           "away_pen": "away_pen >= 0 AND away_pen < 100",
           "attendance": "attendance >= 0 AND attendance <= 250000",
-          "slug": "slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'"
+          "slug": "slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'",
+          "sync_status": "sync_status IN ('scheduled', 'in_progress', 'finished', 'postponed', 'cancelled', 'abandoned', 'awarded', 'unknown')"
         },
         "enums": {
           "home_field": [
             "left",
             "neutral",
             "right"
+          ],
+          "sync_status": [
+            "scheduled",
+            "in_progress",
+            "finished",
+            "postponed",
+            "cancelled",
+            "abandoned",
+            "awarded",
+            "unknown"
           ]
         },
         "bounds": {
@@ -3395,6 +3416,32 @@
           "pk": false,
           "required": false,
           "ref": "app_user"
+        },
+        {
+          "name": "period",
+          "ordinal": 11,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "added_time",
+          "ordinal": 12,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false,
+          "cel": "this >= 0"
+        },
+        {
+          "name": "source_order",
+          "ordinal": 13,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false,
+          "cel": "this >= 0"
         }
       ],
       "durability": "live",
@@ -3437,7 +3484,9 @@
       "cel": {
         "checks": {
           "side": "side IN ('home', 'away')",
-          "minute": "minute >= 0 AND minute <= 130"
+          "minute": "minute >= 0 AND minute <= 130",
+          "added_time": "added_time >= 0",
+          "source_order": "source_order >= 0"
         },
         "enums": {
           "side": [
@@ -3449,6 +3498,12 @@
           "minute": {
             "intMin": 0,
             "intMax": 130
+          },
+          "added_time": {
+            "intMin": 0
+          },
+          "source_order": {
+            "intMin": 0
           }
         }
       },
@@ -3847,8 +3902,10 @@
       "writers": [
         {
           "by": "standings",
-          "kind": "hatch",
-          "ops": []
+          "kind": "computation",
+          "ops": [
+            "upsert"
+          ]
         }
       ],
       "indexes": [
@@ -4924,8 +4981,10 @@
       "writers": [
         {
           "by": "game-cards",
-          "kind": "hatch",
-          "ops": []
+          "kind": "computation",
+          "ops": [
+            "upsert"
+          ]
         }
       ],
       "indexes": [
@@ -5927,13 +5986,30 @@
           "type": "string",
           "pk": false,
           "required": true
+        },
+        {
+          "name": "fixture_available",
+          "ordinal": 22,
+          "retired": false,
+          "type": "bool",
+          "pk": false,
+          "required": true,
+          "default": "true"
         }
       ],
       "seed": [],
       "durability": "live",
       "level": "compensable",
       "server": true,
-      "writers": [],
+      "writers": [
+        {
+          "by": "game-cards",
+          "kind": "computation",
+          "ops": [
+            "upsert"
+          ]
+        }
+      ],
       "indexes": [
         {
           "on": "team_id",
@@ -6609,8 +6685,10 @@
         },
         {
           "by": "player-stats",
-          "kind": "hatch",
-          "ops": []
+          "kind": "computation",
+          "ops": [
+            "upsert"
+          ]
         }
       ],
       "indexes": [
@@ -6692,7 +6770,7 @@
       },
       "name": "PhaseRound",
       "ir": "PhaseRound",
-      "read": "lazy",
+      "read": "eager",
       "table": "phase_round",
       "id": "0xe326676ae2b1bd9a",
       "fields": [
@@ -8657,6 +8735,126 @@
       "uniques": [],
       "validations": {}
     },
+    "ChampionshipAttendance": {
+      "name": "ChampionshipAttendance",
+      "ir": "ChampionshipAttendance",
+      "id": "0xe66ae0649c6349c7",
+      "table": "championship_attendance",
+      "access": {
+        "scope": "public"
+      },
+      "durability": "server",
+      "fields": [
+        {
+          "name": "id",
+          "ordinal": 1,
+          "retired": false,
+          "type": "string",
+          "pk": true,
+          "required": true
+        },
+        {
+          "name": "championship_id",
+          "ordinal": 2,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "team_id",
+          "ordinal": 3,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "team_name",
+          "ordinal": 4,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "team_slug",
+          "ordinal": 5,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "games",
+          "ordinal": 6,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "attendance_count",
+          "ordinal": 7,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "total",
+          "ordinal": 8,
+          "retired": false,
+          "type": "int64",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "average",
+          "ordinal": 9,
+          "retired": false,
+          "type": "double",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "minimum",
+          "ordinal": 10,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "maximum",
+          "ordinal": 11,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "team_logo_key",
+          "ordinal": 12,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        }
+      ],
+      "seed": [],
+      "level": "replicated",
+      "read": "lazy",
+      "server": true,
+      "writers": [],
+      "cel": {
+        "checks": {},
+        "enums": {},
+        "bounds": {}
+      },
+      "uniques": [],
+      "validations": {}
+    },
     "CommunityAccess": {
       "name": "CommunityAccess",
       "ir": "CommunityAccess",
@@ -8854,6 +9052,374 @@
             "intMax": 99
           }
         }
+      },
+      "uniques": [],
+      "validations": {}
+    },
+    "GameArchive": {
+      "name": "GameArchive",
+      "ir": "GameArchive",
+      "id": "0x853b9ec68d8b90d2",
+      "table": "game_archive",
+      "access": {
+        "scope": "public"
+      },
+      "durability": "server",
+      "fields": [
+        {
+          "name": "id",
+          "ordinal": 1,
+          "retired": false,
+          "type": "uuid",
+          "pk": true,
+          "required": true
+        },
+        {
+          "name": "phase_id",
+          "ordinal": 2,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "round",
+          "ordinal": 3,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "day",
+          "ordinal": 4,
+          "retired": false,
+          "type": "date",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "kickoff",
+          "ordinal": 5,
+          "retired": false,
+          "type": "timestamp",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "home_id",
+          "ordinal": 6,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "away_id",
+          "ordinal": 7,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "home_field",
+          "ordinal": 8,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "played",
+          "ordinal": 9,
+          "retired": false,
+          "type": "bool",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "home_score",
+          "ordinal": 10,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "away_score",
+          "ordinal": 11,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "home_aet",
+          "ordinal": 12,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "away_aet",
+          "ordinal": 13,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "home_pen",
+          "ordinal": 14,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "away_pen",
+          "ordinal": 15,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "stadium_id",
+          "ordinal": 16,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "referee_id",
+          "ordinal": 17,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "attendance",
+          "ordinal": 18,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "day_display",
+          "ordinal": 19,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "kickoff_local",
+          "ordinal": 20,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "slug",
+          "ordinal": 21,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "championship_id",
+          "ordinal": 22,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "championship_name",
+          "ordinal": 23,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "championship_slug",
+          "ordinal": 24,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "phase_name",
+          "ordinal": 25,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "category_id",
+          "ordinal": 26,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "category_key",
+          "ordinal": 27,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "phase_key",
+          "ordinal": 28,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "round_key",
+          "ordinal": 29,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "week",
+          "ordinal": 30,
+          "retired": false,
+          "type": "date",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "week_key",
+          "ordinal": 31,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "show_country",
+          "ordinal": 32,
+          "retired": false,
+          "type": "bool",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "home_name",
+          "ordinal": 33,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "away_name",
+          "ordinal": 34,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "home_country",
+          "ordinal": 35,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "away_country",
+          "ordinal": 36,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "home_slug",
+          "ordinal": 37,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "away_slug",
+          "ordinal": 38,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "stadium_name",
+          "ordinal": 39,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "referee_name",
+          "ordinal": 40,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "home_logo_key",
+          "ordinal": 41,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "away_logo_key",
+          "ordinal": 42,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "fixture_available",
+          "ordinal": 43,
+          "retired": false,
+          "type": "bool",
+          "pk": false,
+          "required": true
+        }
+      ],
+      "seed": [],
+      "level": "replicated",
+      "read": "lazy",
+      "server": true,
+      "writers": [],
+      "cel": {
+        "checks": {},
+        "enums": {},
+        "bounds": {}
       },
       "uniques": [],
       "validations": {}
@@ -9652,7 +10218,7 @@
           "pk": false,
           "required": true,
           "default": "0",
-          "cel": "this >= 0"
+          "cel": "this >= 0 && this < 2147483647"
         },
         {
           "name": "next_event_id",
@@ -9740,7 +10306,8 @@
         },
         "bounds": {
           "event_sequence": {
-            "intMin": 0
+            "intMin": 0,
+            "intMax": 2147483646
           },
           "next_event_id": {
             "sizeMax": 80
@@ -10154,6 +10721,62 @@
       "uniques": [],
       "validations": {}
     },
+    "MatchesStart": {
+      "name": "MatchesStart",
+      "ir": "MatchesStart",
+      "id": "0xca58d99d04e30601",
+      "table": "matches_start",
+      "access": {
+        "scope": "public"
+      },
+      "durability": "server",
+      "fields": [
+        {
+          "name": "id",
+          "ordinal": 1,
+          "retired": false,
+          "type": "uuid",
+          "pk": true,
+          "required": true
+        },
+        {
+          "name": "start_offset",
+          "ordinal": 2,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "start_next_offset",
+          "ordinal": 3,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "start_page",
+          "ordinal": 4,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": true
+        }
+      ],
+      "seed": [],
+      "level": "replicated",
+      "read": "lazy",
+      "server": true,
+      "writers": [],
+      "cel": {
+        "checks": {},
+        "enums": {},
+        "bounds": {}
+      },
+      "uniques": [],
+      "validations": {}
+    },
     "PhaseClone": {
       "name": "PhaseClone",
       "ir": "PhaseClone",
@@ -10277,6 +10900,718 @@
       "uniques": [],
       "validations": {}
     },
+    "PhaseDirectory": {
+      "name": "PhaseDirectory",
+      "ir": "PhaseDirectory",
+      "id": "0xa8ed30eedb435a14",
+      "table": "phase_directory",
+      "access": {
+        "scope": "public"
+      },
+      "durability": "server",
+      "fields": [
+        {
+          "name": "id",
+          "ordinal": 1,
+          "retired": false,
+          "type": "uuid",
+          "pk": true,
+          "required": true
+        },
+        {
+          "name": "name",
+          "ordinal": 2,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "championship_id",
+          "ordinal": 3,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "championship_name",
+          "ordinal": 4,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "search_key",
+          "ordinal": 5,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": true
+        }
+      ],
+      "seed": [],
+      "level": "replicated",
+      "read": "lazy",
+      "server": true,
+      "writers": [],
+      "cel": {
+        "checks": {},
+        "enums": {},
+        "bounds": {}
+      },
+      "uniques": [],
+      "validations": {}
+    },
+    "PlayerAppearance": {
+      "name": "PlayerAppearance",
+      "ir": "PlayerAppearance",
+      "id": "0x8d885bdc70946da0",
+      "table": "player_appearance",
+      "access": {
+        "scope": "public"
+      },
+      "durability": "server",
+      "fields": [
+        {
+          "name": "id",
+          "ordinal": 1,
+          "retired": false,
+          "type": "uuid",
+          "pk": true,
+          "required": true
+        },
+        {
+          "name": "player_id",
+          "ordinal": 2,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "game_id",
+          "ordinal": 3,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "side",
+          "ordinal": 4,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "on_minute",
+          "ordinal": 5,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "off_minute",
+          "ordinal": 6,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "yellow",
+          "ordinal": 7,
+          "retired": false,
+          "type": "bool",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "red",
+          "ordinal": 8,
+          "retired": false,
+          "type": "bool",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "bench",
+          "ordinal": 9,
+          "retired": false,
+          "type": "bool",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "day",
+          "ordinal": 10,
+          "retired": false,
+          "type": "date",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "day_display",
+          "ordinal": 11,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "kickoff",
+          "ordinal": 12,
+          "retired": false,
+          "type": "timestamp",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "kickoff_local",
+          "ordinal": 13,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "played",
+          "ordinal": 14,
+          "retired": false,
+          "type": "bool",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "played_key",
+          "ordinal": 15,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "game_slug",
+          "ordinal": 16,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "phase_id",
+          "ordinal": 17,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "phase_name",
+          "ordinal": 18,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "championship_id",
+          "ordinal": 19,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "championship_name",
+          "ordinal": 20,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "championship_slug",
+          "ordinal": 21,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "category_id",
+          "ordinal": 22,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "category_key",
+          "ordinal": 23,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "round",
+          "ordinal": 24,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "round_key",
+          "ordinal": 25,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "week",
+          "ordinal": 26,
+          "retired": false,
+          "type": "date",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "week_key",
+          "ordinal": 27,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "team_id",
+          "ordinal": 28,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "team_name",
+          "ordinal": 29,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "team_slug",
+          "ordinal": 30,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "home_id",
+          "ordinal": 31,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "away_id",
+          "ordinal": 32,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "home_name",
+          "ordinal": 33,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "away_name",
+          "ordinal": 34,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "home_country",
+          "ordinal": 35,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "away_country",
+          "ordinal": 36,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "show_country",
+          "ordinal": 37,
+          "retired": false,
+          "type": "bool",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "home_score",
+          "ordinal": 38,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "away_score",
+          "ordinal": 39,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "home_aet",
+          "ordinal": 40,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "away_aet",
+          "ordinal": 41,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "home_pen",
+          "ordinal": 42,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "away_pen",
+          "ordinal": 43,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "minutes",
+          "ordinal": 44,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "off_rating",
+          "ordinal": 45,
+          "retired": false,
+          "type": "double",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "def_rating",
+          "ordinal": 46,
+          "retired": false,
+          "type": "double",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "contribution",
+          "ordinal": 47,
+          "retired": false,
+          "type": "double",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "contribution_per90",
+          "ordinal": 48,
+          "retired": false,
+          "type": "double",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "goals",
+          "ordinal": 49,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "penalties",
+          "ordinal": 50,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "own_goals",
+          "ordinal": 51,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "goals_per90",
+          "ordinal": 52,
+          "retired": false,
+          "type": "double",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "home_logo_key",
+          "ordinal": 53,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "away_logo_key",
+          "ordinal": 54,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        }
+      ],
+      "seed": [],
+      "level": "replicated",
+      "read": "lazy",
+      "server": true,
+      "writers": [],
+      "cel": {
+        "checks": {},
+        "enums": {},
+        "bounds": {}
+      },
+      "uniques": [],
+      "validations": {}
+    },
+    "PlayerDirectory": {
+      "name": "PlayerDirectory",
+      "ir": "PlayerDirectory",
+      "id": "0xe0b08154b2af5782",
+      "table": "player_directory",
+      "access": {
+        "scope": "public"
+      },
+      "durability": "server",
+      "fields": [
+        {
+          "name": "id",
+          "ordinal": 1,
+          "retired": false,
+          "type": "uuid",
+          "pk": true,
+          "required": true
+        },
+        {
+          "name": "name",
+          "ordinal": 2,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "full_name",
+          "ordinal": 3,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "birth",
+          "ordinal": 4,
+          "retired": false,
+          "type": "date",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "country",
+          "ordinal": 5,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "height",
+          "ordinal": 6,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "position",
+          "ordinal": 7,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "slug",
+          "ordinal": 8,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "rating",
+          "ordinal": 9,
+          "retired": false,
+          "type": "double",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "off_rating",
+          "ordinal": 10,
+          "retired": false,
+          "type": "double",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "def_rating",
+          "ordinal": 11,
+          "retired": false,
+          "type": "double",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "position_key",
+          "ordinal": 12,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "country_id",
+          "ordinal": 13,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "region_id",
+          "ordinal": 14,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "search_key",
+          "ordinal": 15,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "country_search_key",
+          "ordinal": 16,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "region_search_key",
+          "ordinal": 17,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "latest_team_id",
+          "ordinal": 18,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "latest_team_name",
+          "ordinal": 19,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "latest_team_slug",
+          "ordinal": 20,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "latest_team_logo_key",
+          "ordinal": 21,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        }
+      ],
+      "seed": [],
+      "level": "replicated",
+      "read": "lazy",
+      "server": true,
+      "writers": [],
+      "cel": {
+        "checks": {},
+        "enums": {},
+        "bounds": {}
+      },
+      "uniques": [],
+      "validations": {}
+    },
     "PlayerMerge": {
       "name": "PlayerMerge",
       "ir": "PlayerMerge",
@@ -10355,6 +11690,610 @@
         "enums": {},
         "bounds": {}
       },
+      "uniques": [],
+      "validations": {}
+    },
+    "SofaProviderSeat": {
+      "name": "SofaProviderSeat",
+      "ir": "SofaProviderSeat",
+      "id": "0x8a75bfd71ff551af",
+      "table": "sofa_provider_seat",
+      "access": {
+        "scope": "private",
+        "owner": "actor"
+      },
+      "durability": "live",
+      "fields": [
+        {
+          "name": "id",
+          "ordinal": 1,
+          "retired": false,
+          "type": "text",
+          "pk": true,
+          "required": true,
+          "cel": "this.size() <= 64"
+        },
+        {
+          "name": "instance_id",
+          "ordinal": 2,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "actor",
+          "ordinal": 3,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "seat",
+          "ordinal": 4,
+          "retired": false,
+          "type": "text",
+          "pk": false,
+          "required": true,
+          "cel": "this.size() <= 16"
+        },
+        {
+          "name": "revision",
+          "ordinal": 5,
+          "retired": false,
+          "type": "bigint",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "phase",
+          "ordinal": 6,
+          "retired": false,
+          "type": "text",
+          "pk": false,
+          "required": true,
+          "cel": "this.size() <= 16"
+        },
+        {
+          "name": "view",
+          "ordinal": 7,
+          "retired": false,
+          "type": "json",
+          "pk": false,
+          "required": true,
+          "cel": "type(this) == map && size(this) == 3 && has(this.phase) && type(this.phase) == string && this.phase in [\"open\", \"paused\", \"blocked\", \"judged\"] && has(this.reason) && type(this.reason) == string && this.reason.size() <= 32 && has(this.until) && this.until == int(this.until) && this.until >= 0 && this.until <= 9007199254740991"
+        }
+      ],
+      "seed": [],
+      "level": "compensable",
+      "read": "eager",
+      "server": true,
+      "writers": [],
+      "cel": {
+        "checks": {
+          "id": "char_length(id) <= 64",
+          "seat": "char_length(seat) <= 16",
+          "phase": "char_length(phase) <= 16",
+          "view": "public.portable_shape_valid(view, '{\"kind\":\"object\",\"fields\":{\"phase\":{\"kind\":\"string\",\"enumValues\":[\"open\",\"paused\",\"blocked\",\"judged\"]},\"reason\":{\"kind\":\"string\",\"sizeMax\":32},\"until\":{\"kind\":\"integer\",\"intMin\":0,\"intMax\":9007199254740991}}}'::jsonb)"
+        },
+        "enums": {},
+        "bounds": {
+          "id": {
+            "sizeMax": 64
+          },
+          "seat": {
+            "sizeMax": 16
+          },
+          "phase": {
+            "sizeMax": 16
+          },
+          "view": {
+            "kind": "object",
+            "fields": {
+              "phase": {
+                "kind": "string",
+                "enumValues": [
+                  "open",
+                  "paused",
+                  "blocked",
+                  "judged"
+                ]
+              },
+              "reason": {
+                "kind": "string",
+                "sizeMax": 32
+              },
+              "until": {
+                "kind": "integer",
+                "intMin": 0,
+                "intMax": 9007199254740991
+              }
+            }
+          }
+        }
+      },
+      "uniques": [],
+      "validations": {}
+    },
+    "SofaRequest": {
+      "name": "SofaRequest",
+      "ir": "SofaRequest",
+      "id": "0x8d74c222c6bc5379",
+      "table": "sofa_request",
+      "access": {
+        "scope": "internal"
+      },
+      "durability": "server",
+      "fields": [
+        {
+          "name": "id",
+          "ordinal": 1,
+          "retired": false,
+          "type": "uuid",
+          "pk": true,
+          "required": true,
+          "default": "gen_random_uuid()"
+        },
+        {
+          "name": "status",
+          "ordinal": 2,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "source_id",
+          "ordinal": 3,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "resource_id",
+          "ordinal": 4,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "family",
+          "ordinal": 5,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "resource_key",
+          "ordinal": 6,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "path",
+          "ordinal": 7,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "seq",
+          "ordinal": 8,
+          "retired": false,
+          "type": "int64",
+          "pk": false,
+          "required": true,
+          "cel": "this > 0"
+        },
+        {
+          "name": "failure",
+          "ordinal": 9,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "admitted_at",
+          "ordinal": 10,
+          "retired": false,
+          "type": "timestamptz",
+          "pk": false,
+          "required": true,
+          "default": "clock_timestamp()"
+        },
+        {
+          "name": "stuck_at",
+          "ordinal": 11,
+          "retired": false,
+          "type": "timestamptz",
+          "pk": false,
+          "required": false
+        }
+      ],
+      "seed": [],
+      "level": "replicated",
+      "read": "eager",
+      "server": true,
+      "writers": [
+        {
+          "by": "SofaRequestMachine",
+          "kind": "machine",
+          "ops": [
+            "update"
+          ]
+        }
+      ],
+      "cel": {
+        "checks": {
+          "seq": "seq > 0"
+        },
+        "enums": {},
+        "bounds": {
+          "seq": {
+            "intMin": 1
+          }
+        }
+      },
+      "uniques": [],
+      "validations": {}
+    },
+    "SofaResourceSeat": {
+      "name": "SofaResourceSeat",
+      "ir": "SofaResourceSeat",
+      "id": "0xccc18979b19a17f7",
+      "table": "sofa_resource_seat",
+      "access": {
+        "scope": "private",
+        "owner": "actor"
+      },
+      "durability": "live",
+      "fields": [
+        {
+          "name": "id",
+          "ordinal": 1,
+          "retired": false,
+          "type": "text",
+          "pk": true,
+          "required": true,
+          "cel": "this.size() <= 64"
+        },
+        {
+          "name": "instance_id",
+          "ordinal": 2,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "actor",
+          "ordinal": 3,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "seat",
+          "ordinal": 4,
+          "retired": false,
+          "type": "text",
+          "pk": false,
+          "required": true,
+          "cel": "this.size() <= 16"
+        },
+        {
+          "name": "revision",
+          "ordinal": 5,
+          "retired": false,
+          "type": "bigint",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "phase",
+          "ordinal": 6,
+          "retired": false,
+          "type": "text",
+          "pk": false,
+          "required": true,
+          "cel": "this.size() <= 16"
+        },
+        {
+          "name": "view",
+          "ordinal": 7,
+          "retired": false,
+          "type": "json",
+          "pk": false,
+          "required": true,
+          "cel": "type(this) == map && size(this) == 9 && has(this.checks) && this.checks == int(this.checks) && this.checks >= 0 && this.checks <= 1000000 && has(this.complete) && type(this.complete) == bool && has(this.complete_checks) && this.complete_checks == int(this.complete_checks) && this.complete_checks >= 0 && this.complete_checks <= 1000000 && has(this.due) && this.due == int(this.due) && this.due >= 0 && this.due <= 9007199254740991 && has(this.failures) && this.failures == int(this.failures) && this.failures >= 0 && this.failures <= 1000000 && has(this.family) && type(this.family) == string && this.family in [\"rounds\", \"round\", \"event\", \"lineups\", \"incidents\"] && has(this.phase) && type(this.phase) == string && this.phase in [\"due\", \"acquiring\", \"idle\", \"backoff\", \"review\", \"done\", \"answered\", \"refused\"] && has(this.settled) && type(this.settled) == bool && has(this.status) && this.status == int(this.status) && this.status >= 0 && this.status <= 999"
+        }
+      ],
+      "seed": [],
+      "level": "compensable",
+      "read": "eager",
+      "server": true,
+      "writers": [],
+      "cel": {
+        "checks": {
+          "id": "char_length(id) <= 64",
+          "seat": "char_length(seat) <= 16",
+          "phase": "char_length(phase) <= 16",
+          "view": "public.portable_shape_valid(view, '{\"kind\":\"object\",\"fields\":{\"checks\":{\"kind\":\"integer\",\"intMin\":0,\"intMax\":1000000},\"complete\":{\"kind\":\"boolean\"},\"complete_checks\":{\"kind\":\"integer\",\"intMin\":0,\"intMax\":1000000},\"due\":{\"kind\":\"integer\",\"intMin\":0,\"intMax\":9007199254740991},\"failures\":{\"kind\":\"integer\",\"intMin\":0,\"intMax\":1000000},\"family\":{\"kind\":\"string\",\"enumValues\":[\"rounds\",\"round\",\"event\",\"lineups\",\"incidents\"]},\"phase\":{\"kind\":\"string\",\"enumValues\":[\"due\",\"acquiring\",\"idle\",\"backoff\",\"review\",\"done\",\"answered\",\"refused\"]},\"settled\":{\"kind\":\"boolean\"},\"status\":{\"kind\":\"integer\",\"intMin\":0,\"intMax\":999}}}'::jsonb)"
+        },
+        "enums": {},
+        "bounds": {
+          "id": {
+            "sizeMax": 64
+          },
+          "seat": {
+            "sizeMax": 16
+          },
+          "phase": {
+            "sizeMax": 16
+          },
+          "view": {
+            "kind": "object",
+            "fields": {
+              "checks": {
+                "kind": "integer",
+                "intMin": 0,
+                "intMax": 1000000
+              },
+              "complete": {
+                "kind": "boolean"
+              },
+              "complete_checks": {
+                "kind": "integer",
+                "intMin": 0,
+                "intMax": 1000000
+              },
+              "due": {
+                "kind": "integer",
+                "intMin": 0,
+                "intMax": 9007199254740991
+              },
+              "failures": {
+                "kind": "integer",
+                "intMin": 0,
+                "intMax": 1000000
+              },
+              "family": {
+                "kind": "string",
+                "enumValues": [
+                  "rounds",
+                  "round",
+                  "event",
+                  "lineups",
+                  "incidents"
+                ]
+              },
+              "phase": {
+                "kind": "string",
+                "enumValues": [
+                  "due",
+                  "acquiring",
+                  "idle",
+                  "backoff",
+                  "review",
+                  "done",
+                  "answered",
+                  "refused"
+                ]
+              },
+              "settled": {
+                "kind": "boolean"
+              },
+              "status": {
+                "kind": "integer",
+                "intMin": 0,
+                "intMax": 999
+              }
+            }
+          }
+        }
+      },
+      "uniques": [],
+      "validations": {}
+    },
+    "SofaTick": {
+      "name": "SofaTick",
+      "ir": "SofaTick",
+      "id": "0x9ef7ca41af7de357",
+      "table": "sofa_tick",
+      "access": {
+        "scope": "internal"
+      },
+      "durability": "server",
+      "fields": [
+        {
+          "name": "id",
+          "ordinal": 1,
+          "retired": false,
+          "type": "uuid",
+          "pk": true,
+          "required": true
+        },
+        {
+          "name": "schedule",
+          "ordinal": 2,
+          "retired": false,
+          "type": "text",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "tick_at",
+          "ordinal": 3,
+          "retired": false,
+          "type": "timestamptz",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "late",
+          "ordinal": 4,
+          "retired": false,
+          "type": "bool",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "caller",
+          "ordinal": 5,
+          "retired": false,
+          "type": "text",
+          "pk": false,
+          "required": false
+        }
+      ],
+      "seed": [],
+      "level": "replicated",
+      "read": "eager",
+      "server": true,
+      "writers": [],
+      "cel": {
+        "checks": {},
+        "enums": {},
+        "bounds": {}
+      },
+      "uniques": [],
+      "validations": {}
+    },
+    "Substitution": {
+      "name": "Substitution",
+      "ir": "Substitution",
+      "id": "0xa4cfbc778928e2ee",
+      "table": "substitution",
+      "access": {
+        "scope": "internal"
+      },
+      "durability": "server",
+      "fields": [
+        {
+          "name": "id",
+          "ordinal": 1,
+          "retired": false,
+          "type": "uuid",
+          "pk": true,
+          "required": true,
+          "default": "gen_random_uuid()"
+        },
+        {
+          "name": "game_id",
+          "ordinal": 2,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": true,
+          "ref": "game"
+        },
+        {
+          "name": "player_off_id",
+          "ordinal": 3,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": true,
+          "ref": "player"
+        },
+        {
+          "name": "player_on_id",
+          "ordinal": 4,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": true,
+          "ref": "player"
+        },
+        {
+          "name": "side",
+          "ordinal": 5,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": true,
+          "cel": "this in ['home', 'away']"
+        },
+        {
+          "name": "minute",
+          "ordinal": 6,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": true,
+          "cel": "this >= 0 && this <= 130"
+        },
+        {
+          "name": "added_time",
+          "ordinal": 7,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false,
+          "cel": "this >= 0"
+        },
+        {
+          "name": "period",
+          "ordinal": 8,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": false
+        },
+        {
+          "name": "source_order",
+          "ordinal": 9,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": false,
+          "cel": "this >= 0"
+        }
+      ],
+      "invariant": {
+        "cel": "this.player_off_id != this.player_on_id",
+        "check": "player_off_id <> player_on_id"
+      },
+      "level": "replicated",
+      "seed": [],
+      "server": true,
+      "writers": [],
+      "cel": {
+        "checks": {
+          "side": "side IN ('home', 'away')",
+          "minute": "minute >= 0 AND minute <= 130",
+          "added_time": "added_time >= 0",
+          "source_order": "source_order >= 0"
+        },
+        "enums": {
+          "side": [
+            "home",
+            "away"
+          ]
+        },
+        "bounds": {
+          "minute": {
+            "intMin": 0,
+            "intMax": 130
+          },
+          "added_time": {
+            "intMin": 0
+          },
+          "source_order": {
+            "intMin": 0
+          }
+        }
+      },
+      "read": "eager",
       "uniques": [],
       "validations": {}
     },
@@ -10983,1265 +12922,1090 @@
       },
       "uniques": [],
       "validations": {}
-    },
-    "PhaseDirectory": {
-      "name": "PhaseDirectory",
-      "ir": "PhaseDirectory",
-      "id": "0xa8ed30eedb435a14",
-      "table": "phase_directory",
-      "access": {
-        "scope": "public"
-      },
-      "durability": "server",
-      "fields": [
-        {
-          "name": "id",
-          "ordinal": 1,
-          "retired": false,
-          "type": "uuid",
-          "pk": true,
-          "required": true
-        },
-        {
-          "name": "name",
-          "ordinal": 2,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": true
-        },
-        {
-          "name": "championship_id",
-          "ordinal": 3,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": true
-        },
-        {
-          "name": "championship_name",
-          "ordinal": 4,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": true
-        },
-        {
-          "name": "search_key",
-          "ordinal": 5,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": true
-        }
-      ],
-      "seed": [],
-      "level": "replicated",
-      "read": "lazy",
-      "server": true,
-      "writers": [],
-      "cel": {
-        "checks": {},
-        "enums": {},
-        "bounds": {}
-      },
-      "uniques": [],
-      "validations": {}
-    },
-    "PlayerDirectory": {
-      "name": "PlayerDirectory",
-      "ir": "PlayerDirectory",
-      "id": "0xe0b08154b2af5782",
-      "table": "player_directory",
-      "access": {
-        "scope": "public"
-      },
-      "durability": "server",
-      "fields": [
-        {
-          "name": "id",
-          "ordinal": 1,
-          "retired": false,
-          "type": "uuid",
-          "pk": true,
-          "required": true
-        },
-        {
-          "name": "name",
-          "ordinal": 2,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "full_name",
-          "ordinal": 3,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "birth",
-          "ordinal": 4,
-          "retired": false,
-          "type": "date",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "country",
-          "ordinal": 5,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "height",
-          "ordinal": 6,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "position",
-          "ordinal": 7,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "slug",
-          "ordinal": 8,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "rating",
-          "ordinal": 9,
-          "retired": false,
-          "type": "double",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "off_rating",
-          "ordinal": 10,
-          "retired": false,
-          "type": "double",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "def_rating",
-          "ordinal": 11,
-          "retired": false,
-          "type": "double",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "position_key",
-          "ordinal": 12,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "country_id",
-          "ordinal": 13,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "region_id",
-          "ordinal": 14,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "search_key",
-          "ordinal": 15,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "country_search_key",
-          "ordinal": 16,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "region_search_key",
-          "ordinal": 17,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "latest_team_id",
-          "ordinal": 18,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "latest_team_name",
-          "ordinal": 19,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "latest_team_slug",
-          "ordinal": 20,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "latest_team_logo_key",
-          "ordinal": 21,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        }
-      ],
-      "seed": [],
-      "level": "replicated",
-      "read": "lazy",
-      "server": true,
-      "writers": [],
-      "cel": {
-        "checks": {},
-        "enums": {},
-        "bounds": {}
-      },
-      "uniques": [],
-      "validations": {}
-    },
-    "MatchesStart": {
-      "name": "MatchesStart",
-      "ir": "MatchesStart",
-      "id": "0xca58d99d04e30601",
-      "table": "matches_start",
-      "access": {
-        "scope": "public"
-      },
-      "durability": "server",
-      "fields": [
-        {
-          "name": "id",
-          "ordinal": 1,
-          "retired": false,
-          "type": "uuid",
-          "pk": true,
-          "required": true
-        },
-        {
-          "name": "start_offset",
-          "ordinal": 2,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": true
-        },
-        {
-          "name": "start_next_offset",
-          "ordinal": 3,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": true
-        },
-        {
-          "name": "start_page",
-          "ordinal": 4,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": true
-        }
-      ],
-      "seed": [],
-      "level": "replicated",
-      "read": "lazy",
-      "server": true,
-      "writers": [],
-      "cel": {
-        "checks": {},
-        "enums": {},
-        "bounds": {}
-      },
-      "uniques": [],
-      "validations": {}
-    },
-    "GameArchive": {
-      "name": "GameArchive",
-      "ir": "GameArchive",
-      "id": "0x853b9ec68d8b90d2",
-      "table": "game_archive",
-      "access": {
-        "scope": "public"
-      },
-      "durability": "server",
-      "fields": [
-        {
-          "name": "id",
-          "ordinal": 1,
-          "retired": false,
-          "type": "uuid",
-          "pk": true,
-          "required": true
-        },
-        {
-          "name": "phase_id",
-          "ordinal": 2,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "round",
-          "ordinal": 3,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "day",
-          "ordinal": 4,
-          "retired": false,
-          "type": "date",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "kickoff",
-          "ordinal": 5,
-          "retired": false,
-          "type": "timestamp",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "home_id",
-          "ordinal": 6,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "away_id",
-          "ordinal": 7,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "home_field",
-          "ordinal": 8,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "played",
-          "ordinal": 9,
-          "retired": false,
-          "type": "bool",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "home_score",
-          "ordinal": 10,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "away_score",
-          "ordinal": 11,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "home_aet",
-          "ordinal": 12,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "away_aet",
-          "ordinal": 13,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "home_pen",
-          "ordinal": 14,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "away_pen",
-          "ordinal": 15,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "stadium_id",
-          "ordinal": 16,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "referee_id",
-          "ordinal": 17,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "attendance",
-          "ordinal": 18,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "day_display",
-          "ordinal": 19,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "kickoff_local",
-          "ordinal": 20,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "slug",
-          "ordinal": 21,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "championship_id",
-          "ordinal": 22,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "championship_name",
-          "ordinal": 23,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "championship_slug",
-          "ordinal": 24,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "phase_name",
-          "ordinal": 25,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "category_id",
-          "ordinal": 26,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "category_key",
-          "ordinal": 27,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "phase_key",
-          "ordinal": 28,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "round_key",
-          "ordinal": 29,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "week",
-          "ordinal": 30,
-          "retired": false,
-          "type": "date",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "week_key",
-          "ordinal": 31,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "show_country",
-          "ordinal": 32,
-          "retired": false,
-          "type": "bool",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "home_name",
-          "ordinal": 33,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "away_name",
-          "ordinal": 34,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "home_country",
-          "ordinal": 35,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "away_country",
-          "ordinal": 36,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "home_slug",
-          "ordinal": 37,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "away_slug",
-          "ordinal": 38,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "stadium_name",
-          "ordinal": 39,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "referee_name",
-          "ordinal": 40,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "home_logo_key",
-          "ordinal": 41,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "away_logo_key",
-          "ordinal": 42,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        }
-      ],
-      "seed": [],
-      "level": "replicated",
-      "read": "lazy",
-      "server": true,
-      "writers": [],
-      "cel": {
-        "checks": {},
-        "enums": {},
-        "bounds": {}
-      },
-      "uniques": [],
-      "validations": {}
-    },
-    "PlayerAppearance": {
-      "name": "PlayerAppearance",
-      "ir": "PlayerAppearance",
-      "id": "0x8d885bdc70946da0",
-      "table": "player_appearance",
-      "access": {
-        "scope": "public"
-      },
-      "durability": "server",
-      "fields": [
-        {
-          "name": "id",
-          "ordinal": 1,
-          "retired": false,
-          "type": "uuid",
-          "pk": true,
-          "required": true
-        },
-        {
-          "name": "player_id",
-          "ordinal": 2,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "game_id",
-          "ordinal": 3,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "side",
-          "ordinal": 4,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "on_minute",
-          "ordinal": 5,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "off_minute",
-          "ordinal": 6,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "yellow",
-          "ordinal": 7,
-          "retired": false,
-          "type": "bool",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "red",
-          "ordinal": 8,
-          "retired": false,
-          "type": "bool",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "bench",
-          "ordinal": 9,
-          "retired": false,
-          "type": "bool",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "day",
-          "ordinal": 10,
-          "retired": false,
-          "type": "date",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "day_display",
-          "ordinal": 11,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "kickoff",
-          "ordinal": 12,
-          "retired": false,
-          "type": "timestamp",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "kickoff_local",
-          "ordinal": 13,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "played",
-          "ordinal": 14,
-          "retired": false,
-          "type": "bool",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "played_key",
-          "ordinal": 15,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "game_slug",
-          "ordinal": 16,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "phase_id",
-          "ordinal": 17,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "phase_name",
-          "ordinal": 18,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "championship_id",
-          "ordinal": 19,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "championship_name",
-          "ordinal": 20,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "championship_slug",
-          "ordinal": 21,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "category_id",
-          "ordinal": 22,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "category_key",
-          "ordinal": 23,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "round",
-          "ordinal": 24,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "round_key",
-          "ordinal": 25,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "week",
-          "ordinal": 26,
-          "retired": false,
-          "type": "date",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "week_key",
-          "ordinal": 27,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "team_id",
-          "ordinal": 28,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "team_name",
-          "ordinal": 29,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "team_slug",
-          "ordinal": 30,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "home_id",
-          "ordinal": 31,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "away_id",
-          "ordinal": 32,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "home_name",
-          "ordinal": 33,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "away_name",
-          "ordinal": 34,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "home_country",
-          "ordinal": 35,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "away_country",
-          "ordinal": 36,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "show_country",
-          "ordinal": 37,
-          "retired": false,
-          "type": "bool",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "home_score",
-          "ordinal": 38,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "away_score",
-          "ordinal": 39,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "home_aet",
-          "ordinal": 40,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "away_aet",
-          "ordinal": 41,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "home_pen",
-          "ordinal": 42,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "away_pen",
-          "ordinal": 43,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "minutes",
-          "ordinal": 44,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "off_rating",
-          "ordinal": 45,
-          "retired": false,
-          "type": "double",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "def_rating",
-          "ordinal": 46,
-          "retired": false,
-          "type": "double",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "contribution",
-          "ordinal": 47,
-          "retired": false,
-          "type": "double",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "contribution_per90",
-          "ordinal": 48,
-          "retired": false,
-          "type": "double",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "goals",
-          "ordinal": 49,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "penalties",
-          "ordinal": 50,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "own_goals",
-          "ordinal": 51,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "goals_per90",
-          "ordinal": 52,
-          "retired": false,
-          "type": "double",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "home_logo_key",
-          "ordinal": 53,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "away_logo_key",
-          "ordinal": 54,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        }
-      ],
-      "seed": [],
-      "level": "replicated",
-      "read": "lazy",
-      "server": true,
-      "writers": [],
-      "cel": {
-        "checks": {},
-        "enums": {},
-        "bounds": {}
-      },
-      "uniques": [],
-      "validations": {}
-    },
-    "ChampionshipAttendance": {
-      "name": "ChampionshipAttendance",
-      "ir": "ChampionshipAttendance",
-      "id": "0xe66ae0649c6349c7",
-      "table": "championship_attendance",
-      "access": {
-        "scope": "public"
-      },
-      "durability": "server",
-      "fields": [
-        {
-          "name": "id",
-          "ordinal": 1,
-          "retired": false,
-          "type": "string",
-          "pk": true,
-          "required": true
-        },
-        {
-          "name": "championship_id",
-          "ordinal": 2,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "team_id",
-          "ordinal": 3,
-          "retired": false,
-          "type": "uuid",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "team_name",
-          "ordinal": 4,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "team_slug",
-          "ordinal": 5,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "games",
-          "ordinal": 6,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "attendance_count",
-          "ordinal": 7,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "total",
-          "ordinal": 8,
-          "retired": false,
-          "type": "int64",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "average",
-          "ordinal": 9,
-          "retired": false,
-          "type": "double",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "minimum",
-          "ordinal": 10,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "maximum",
-          "ordinal": 11,
-          "retired": false,
-          "type": "int32",
-          "pk": false,
-          "required": false
-        },
-        {
-          "name": "team_logo_key",
-          "ordinal": 12,
-          "retired": false,
-          "type": "string",
-          "pk": false,
-          "required": false
-        }
-      ],
-      "seed": [],
-      "level": "replicated",
-      "read": "lazy",
-      "server": true,
-      "writers": [],
-      "cel": {
-        "checks": {},
-        "enums": {},
-        "bounds": {}
-      },
-      "uniques": [],
-      "validations": {}
     }
   },
-  "hybrids": {},
+  "reducers": {
+    "sofa_resource": {
+      "name": "sofa_resource",
+      "version": 1,
+      "fuel": 20000,
+      "entropy": 0,
+      "initial": "idle",
+      "initialize": {
+        "reduce": "initial",
+        "input": {
+          "type": "object",
+          "fields": {
+            "family": {
+              "type": "string",
+              "maxLength": 9,
+              "values": [
+                "rounds",
+                "round",
+                "event",
+                "lineups",
+                "incidents"
+              ]
+            },
+            "due": {
+              "type": "integer",
+              "min": 0,
+              "max": 9007199254740991
+            },
+            "owed": {
+              "type": "array",
+              "maxItems": 128,
+              "items": {
+                "type": "object",
+                "fields": {
+                  "status": {
+                    "type": "string",
+                    "maxLength": 16
+                  },
+                  "kickoff": {
+                    "type": "integer",
+                    "min": 0,
+                    "max": 9007199254740991
+                  },
+                  "day": {
+                    "type": "integer",
+                    "min": 0,
+                    "max": 9007199254740991
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ports": {
+        "wake": {
+          "phases": [
+            "acquiring",
+            "idle",
+            "backoff"
+          ],
+          "deadline": "due",
+          "event": "ripe"
+        }
+      },
+      "state": {
+        "type": "object",
+        "fields": {
+          "phase": {
+            "type": "string",
+            "maxLength": 9,
+            "values": [
+              "due",
+              "acquiring",
+              "idle",
+              "backoff",
+              "answered",
+              "refused",
+              "review",
+              "done"
+            ]
+          },
+          "family": {
+            "type": "string",
+            "maxLength": 9,
+            "values": [
+              "rounds",
+              "round",
+              "event",
+              "lineups",
+              "incidents"
+            ]
+          },
+          "due": {
+            "type": "integer",
+            "min": 0,
+            "max": 9007199254740991
+          },
+          "failures": {
+            "type": "integer",
+            "min": 0,
+            "max": 1000000
+          },
+          "checks": {
+            "type": "integer",
+            "min": 0,
+            "max": 1000000
+          },
+          "complete_checks": {
+            "type": "integer",
+            "min": 0,
+            "max": 1000000
+          },
+          "complete": {
+            "type": "boolean"
+          },
+          "settled": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "integer",
+            "min": 0,
+            "max": 999
+          }
+        }
+      },
+      "view": {
+        "type": "object",
+        "fields": {
+          "family": {
+            "type": "string",
+            "maxLength": 9,
+            "values": [
+              "rounds",
+              "round",
+              "event",
+              "lineups",
+              "incidents"
+            ]
+          },
+          "due": {
+            "type": "integer",
+            "min": 0,
+            "max": 9007199254740991
+          },
+          "failures": {
+            "type": "integer",
+            "min": 0,
+            "max": 1000000
+          },
+          "checks": {
+            "type": "integer",
+            "min": 0,
+            "max": 1000000
+          },
+          "complete_checks": {
+            "type": "integer",
+            "min": 0,
+            "max": 1000000
+          },
+          "complete": {
+            "type": "boolean"
+          },
+          "phase": {
+            "type": "string",
+            "maxLength": 9,
+            "values": [
+              "due",
+              "acquiring",
+              "idle",
+              "backoff",
+              "review",
+              "done",
+              "answered",
+              "refused"
+            ]
+          },
+          "settled": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "integer",
+            "min": 0,
+            "max": 999
+          }
+        }
+      },
+      "contracts": {
+        "admit": {
+          "reads": [
+            "_time"
+          ],
+          "writes": [
+            "due"
+          ]
+        },
+        "answer": {
+          "reads": [
+            "_time",
+            "owed",
+            "unresolved",
+            "terminal",
+            "kept",
+            "fixtures",
+            "complete",
+            "max_age",
+            "ends"
+          ],
+          "writes": [
+            "due",
+            "failures",
+            "checks",
+            "complete_checks",
+            "complete",
+            "settled",
+            "status"
+          ]
+        },
+        "fail": {
+          "reads": [
+            "_time",
+            "status",
+            "retry_at"
+          ],
+          "writes": [
+            "due",
+            "failures",
+            "status"
+          ]
+        },
+        "hasten": {
+          "reads": [
+            "_time",
+            "owed"
+          ],
+          "writes": [
+            "due"
+          ]
+        },
+        "reopen": {
+          "reads": [
+            "_time"
+          ],
+          "writes": [
+            "due",
+            "checks",
+            "complete_checks",
+            "complete"
+          ]
+        },
+        "pair": {
+          "reads": [
+            "_time"
+          ],
+          "writes": [
+            "due",
+            "complete",
+            "complete_checks"
+          ]
+        },
+        "stop": {
+          "reads": [],
+          "writes": [
+            "due"
+          ]
+        },
+        "isDue": {
+          "reads": [
+            "_time"
+          ],
+          "reason": "not_due"
+        },
+        "givenUp": {
+          "reads": []
+        },
+        "finished": {
+          "reads": []
+        }
+      },
+      "events": {
+        "admitted": {
+          "tier": "mecha",
+          "payload": {
+            "type": "object",
+            "fields": {
+              "request": {
+                "type": "string",
+                "maxLength": 36
+              }
+            }
+          }
+        },
+        "fetched": {
+          "tier": "mecha",
+          "payload": {
+            "type": "object",
+            "fields": {
+              "owed": {
+                "type": "array",
+                "maxItems": 128,
+                "items": {
+                  "type": "object",
+                  "fields": {
+                    "status": {
+                      "type": "string",
+                      "maxLength": 16
+                    },
+                    "kickoff": {
+                      "type": "integer",
+                      "min": 0,
+                      "max": 9007199254740991
+                    },
+                    "day": {
+                      "type": "integer",
+                      "min": 0,
+                      "max": 9007199254740991
+                    }
+                  }
+                }
+              },
+              "kept": {
+                "type": "boolean"
+              },
+              "terminal": {
+                "type": "boolean"
+              },
+              "unresolved": {
+                "type": "boolean"
+              },
+              "fixtures": {
+                "type": "boolean"
+              },
+              "complete": {
+                "type": "boolean"
+              },
+              "max_age": {
+                "type": "integer",
+                "min": -1,
+                "max": 31536000
+              },
+              "ends": {
+                "type": "integer",
+                "min": 0,
+                "max": 9007199254740991
+              }
+            }
+          }
+        },
+        "failed": {
+          "tier": "mecha",
+          "payload": {
+            "type": "object",
+            "fields": {
+              "status": {
+                "type": "integer",
+                "min": 0,
+                "max": 999
+              },
+              "retry_at": {
+                "type": "integer",
+                "min": 0,
+                "max": 9007199254740991
+              }
+            }
+          }
+        },
+        "hasten": {
+          "tier": "mecha",
+          "payload": {
+            "type": "object",
+            "fields": {
+              "owed": {
+                "type": "array",
+                "maxItems": 128,
+                "items": {
+                  "type": "object",
+                  "fields": {
+                    "status": {
+                      "type": "string",
+                      "maxLength": 16
+                    },
+                    "kickoff": {
+                      "type": "integer",
+                      "min": 0,
+                      "max": 9007199254740991
+                    },
+                    "day": {
+                      "type": "integer",
+                      "min": 0,
+                      "max": 9007199254740991
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "reopened": {
+          "tier": "mecha",
+          "payload": {
+            "type": "object",
+            "fields": {}
+          }
+        },
+        "paired": {
+          "tier": "mecha",
+          "payload": {
+            "type": "object",
+            "fields": {}
+          }
+        },
+        "stopped": {
+          "tier": "mecha",
+          "payload": {
+            "type": "object",
+            "fields": {}
+          }
+        },
+        "ripe": {
+          "tier": "mecha",
+          "payload": {
+            "type": "object",
+            "fields": {}
+          }
+        }
+      },
+      "states": {
+        "due": {
+          "final": false,
+          "on": {
+            "admitted": {
+              "target": "acquiring",
+              "reduce": "admit"
+            },
+            "fetched": {
+              "target": "answered",
+              "reduce": "answer"
+            },
+            "failed": {
+              "target": "refused",
+              "reduce": "fail"
+            },
+            "hasten": {
+              "reduce": "hasten"
+            },
+            "reopened": {
+              "target": "idle",
+              "reduce": "reopen"
+            },
+            "paired": {
+              "target": "idle",
+              "reduce": "pair"
+            },
+            "stopped": {
+              "target": "done",
+              "reduce": "stop"
+            }
+          }
+        },
+        "acquiring": {
+          "final": false,
+          "on": {
+            "ripe": {
+              "target": "due",
+              "guard": [
+                "isDue"
+              ]
+            },
+            "fetched": {
+              "target": "answered",
+              "reduce": "answer"
+            },
+            "failed": {
+              "target": "refused",
+              "reduce": "fail"
+            },
+            "hasten": {
+              "reduce": "hasten"
+            },
+            "reopened": {
+              "target": "idle",
+              "reduce": "reopen"
+            },
+            "paired": {
+              "target": "idle",
+              "reduce": "pair"
+            },
+            "stopped": {
+              "target": "done",
+              "reduce": "stop"
+            }
+          }
+        },
+        "idle": {
+          "final": false,
+          "on": {
+            "ripe": {
+              "target": "due",
+              "guard": [
+                "isDue"
+              ]
+            },
+            "fetched": {
+              "target": "answered",
+              "reduce": "answer"
+            },
+            "failed": {
+              "target": "refused",
+              "reduce": "fail"
+            },
+            "hasten": {
+              "reduce": "hasten"
+            },
+            "reopened": {
+              "target": "idle",
+              "reduce": "reopen"
+            },
+            "paired": {
+              "target": "idle",
+              "reduce": "pair"
+            },
+            "stopped": {
+              "target": "done",
+              "reduce": "stop"
+            }
+          }
+        },
+        "backoff": {
+          "final": false,
+          "on": {
+            "ripe": {
+              "target": "due",
+              "guard": [
+                "isDue"
+              ]
+            },
+            "fetched": {
+              "target": "answered",
+              "reduce": "answer"
+            },
+            "failed": {
+              "target": "refused",
+              "reduce": "fail"
+            },
+            "hasten": {
+              "reduce": "hasten"
+            },
+            "reopened": {
+              "target": "idle",
+              "reduce": "reopen"
+            },
+            "paired": {
+              "target": "idle",
+              "reduce": "pair"
+            },
+            "stopped": {
+              "target": "done",
+              "reduce": "stop"
+            }
+          }
+        },
+        "answered": {
+          "final": false,
+          "always": [
+            {
+              "target": "review",
+              "guard": [
+                "givenUp"
+              ]
+            },
+            {
+              "target": "done",
+              "guard": [
+                "finished"
+              ]
+            },
+            {
+              "target": "idle"
+            }
+          ],
+          "on": {
+            "fetched": {
+              "target": "answered",
+              "reduce": "answer"
+            },
+            "failed": {
+              "target": "refused",
+              "reduce": "fail"
+            },
+            "hasten": {
+              "reduce": "hasten"
+            },
+            "reopened": {
+              "target": "idle",
+              "reduce": "reopen"
+            },
+            "paired": {
+              "target": "idle",
+              "reduce": "pair"
+            },
+            "stopped": {
+              "target": "done",
+              "reduce": "stop"
+            }
+          }
+        },
+        "refused": {
+          "final": false,
+          "always": [
+            {
+              "target": "review",
+              "guard": [
+                "givenUp"
+              ]
+            },
+            {
+              "target": "backoff"
+            }
+          ],
+          "on": {
+            "fetched": {
+              "target": "answered",
+              "reduce": "answer"
+            },
+            "failed": {
+              "target": "refused",
+              "reduce": "fail"
+            },
+            "hasten": {
+              "reduce": "hasten"
+            },
+            "reopened": {
+              "target": "idle",
+              "reduce": "reopen"
+            },
+            "paired": {
+              "target": "idle",
+              "reduce": "pair"
+            },
+            "stopped": {
+              "target": "done",
+              "reduce": "stop"
+            }
+          }
+        },
+        "review": {
+          "final": false,
+          "on": {
+            "fetched": {
+              "target": "answered",
+              "reduce": "answer"
+            },
+            "failed": {
+              "target": "refused",
+              "reduce": "fail"
+            },
+            "hasten": {
+              "reduce": "hasten"
+            },
+            "reopened": {
+              "target": "idle",
+              "reduce": "reopen"
+            },
+            "paired": {
+              "target": "idle",
+              "reduce": "pair"
+            },
+            "stopped": {
+              "target": "done",
+              "reduce": "stop"
+            }
+          }
+        },
+        "done": {
+          "final": false,
+          "on": {
+            "fetched": {
+              "target": "answered",
+              "reduce": "answer"
+            },
+            "failed": {
+              "target": "refused",
+              "reduce": "fail"
+            },
+            "hasten": {
+              "reduce": "hasten"
+            },
+            "reopened": {
+              "target": "idle",
+              "reduce": "reopen"
+            },
+            "paired": {
+              "target": "idle",
+              "reduce": "pair"
+            },
+            "stopped": {
+              "target": "done",
+              "reduce": "stop"
+            }
+          }
+        }
+      },
+      "hatches": [],
+      "mecha": {
+        "locks": "",
+        "ports": {},
+        "transitions": []
+      }
+    },
+    "sofa_provider": {
+      "name": "sofa_provider",
+      "version": 1,
+      "fuel": 10000,
+      "entropy": 0,
+      "initial": "open",
+      "initialize": {
+        "reduce": "initial",
+        "input": {
+          "type": "object",
+          "fields": {}
+        }
+      },
+      "ports": {
+        "wake": {
+          "phases": [
+            "blocked"
+          ],
+          "deadline": "until",
+          "event": "lapsed"
+        }
+      },
+      "state": {
+        "type": "object",
+        "fields": {
+          "phase": {
+            "type": "string",
+            "maxLength": 7,
+            "values": [
+              "open",
+              "paused",
+              "blocked",
+              "judged"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "until": {
+            "type": "integer",
+            "min": 0,
+            "max": 9007199254740991
+          }
+        }
+      },
+      "view": {
+        "type": "object",
+        "fields": {
+          "phase": {
+            "type": "string",
+            "maxLength": 7,
+            "values": [
+              "open",
+              "paused",
+              "blocked",
+              "judged"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "until": {
+            "type": "integer",
+            "min": 0,
+            "max": 9007199254740991
+          }
+        }
+      },
+      "contracts": {
+        "refuse": {
+          "reads": [
+            "status",
+            "until"
+          ],
+          "writes": [
+            "reason",
+            "until"
+          ]
+        },
+        "resume": {
+          "reads": [],
+          "writes": [
+            "reason",
+            "until"
+          ]
+        },
+        "isDue": {
+          "reads": [
+            "_time"
+          ],
+          "reason": "not_due"
+        },
+        "isPaused": {
+          "reads": []
+        },
+        "isBlocked": {
+          "reads": []
+        }
+      },
+      "events": {
+        "refused": {
+          "tier": "mecha",
+          "payload": {
+            "type": "object",
+            "fields": {
+              "status": {
+                "type": "integer",
+                "min": 0,
+                "max": 999
+              },
+              "until": {
+                "type": "integer",
+                "min": 0,
+                "max": 9007199254740991
+              }
+            }
+          }
+        },
+        "resumed": {
+          "tier": "mecha",
+          "payload": {
+            "type": "object",
+            "fields": {}
+          }
+        },
+        "lapsed": {
+          "tier": "mecha",
+          "payload": {
+            "type": "object",
+            "fields": {}
+          }
+        }
+      },
+      "states": {
+        "open": {
+          "final": false,
+          "on": {
+            "refused": {
+              "target": "judged",
+              "reduce": "refuse"
+            },
+            "resumed": {
+              "target": "open",
+              "reduce": "resume"
+            }
+          }
+        },
+        "paused": {
+          "final": false,
+          "on": {
+            "refused": {
+              "target": "judged",
+              "reduce": "refuse"
+            },
+            "resumed": {
+              "target": "open",
+              "reduce": "resume"
+            }
+          }
+        },
+        "blocked": {
+          "final": false,
+          "on": {
+            "lapsed": {
+              "target": "open",
+              "guard": [
+                "isDue"
+              ],
+              "reduce": "resume"
+            },
+            "refused": {
+              "target": "judged",
+              "reduce": "refuse"
+            },
+            "resumed": {
+              "target": "open",
+              "reduce": "resume"
+            }
+          }
+        },
+        "judged": {
+          "final": false,
+          "always": [
+            {
+              "target": "paused",
+              "guard": [
+                "isPaused"
+              ]
+            },
+            {
+              "target": "blocked",
+              "guard": [
+                "isBlocked"
+              ]
+            },
+            {
+              "target": "open"
+            }
+          ],
+          "on": {
+            "refused": {
+              "target": "judged",
+              "reduce": "refuse"
+            },
+            "resumed": {
+              "target": "open",
+              "reduce": "resume"
+            }
+          }
+        }
+      },
+      "hatches": [],
+      "mecha": {
+        "locks": "",
+        "ports": {},
+        "transitions": []
+      }
+    }
+  },
+  "machines": {
+    "SofaRequestMachine": {
+      "name": "SofaRequestMachine",
+      "ir": "SofaRequestMachine",
+      "entity": "SofaRequest",
+      "guards": {},
+      "level": "external",
+      "hatches": [
+        "sofascore-receive"
+      ],
+      "field": "status",
+      "initial": "acquiring",
+      "states": {
+        "acquiring": {
+          "invoke": {
+            "src": "acquire",
+            "onDone": {
+              "target": "applied",
+              "actions": [
+                {
+                  "hatch": {
+                    "name": "sofascore-receive",
+                    "call": "sofa.receive",
+                    "args": [
+                      {
+                        "raw": "NEW.id"
+                      },
+                      {
+                        "raw": "NEW.source_id"
+                      },
+                      {
+                        "raw": "NEW.family"
+                      },
+                      {
+                        "raw": "NEW.resource_key"
+                      },
+                      {
+                        "raw": "NEW.seq"
+                      },
+                      {
+                        "raw": "outcome"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "onError": {
+              "target": "failed",
+              "actions": [
+                {
+                  "assign": {
+                    "failure": {
+                      "raw": "coalesce(outcome->'data'->>'error', outcome->'data'->>'reason', outcome->>'kind')"
+                    }
+                  }
+                },
+                {
+                  "hatch": {
+                    "name": "sofascore-receive",
+                    "call": "sofa.fail",
+                    "args": [
+                      {
+                        "raw": "NEW.resource_id"
+                      },
+                      {
+                        "raw": "outcome"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "applied": {
+          "type": "final"
+        },
+        "failed": {
+          "type": "final"
+        }
+      }
+    }
+  },
   "hatches": {
+    "feldera_sql": {
+      "files": [
+        "duckstream/ratings.sql",
+        "duckstream/chances.sql",
+        "duckstream/cards.sql",
+        "duckstream/player_stats.sql",
+        "duckstream/standings.sql",
+        "duckstream/standings/result_groups.sql",
+        "duckstream/standings/result_members.sql",
+        "duckstream/standings/result_form.sql",
+        "duckstream/standings/result_zones.sql",
+        "duckstream/cards/result_game_card.sql",
+        "duckstream/cards/result_team_game.sql",
+        "duckstream/player_stats/result_player_stat.sql",
+        "duckstream/ratings/result_games.sql",
+        "duckstream/ratings/result_phases.sql",
+        "duckstream/ratings/result_cutoff.sql",
+        "duckstream/ratings/result_teams.sql",
+        "duckstream/ratings/result_players.sql",
+        "duckstream/ratings/result_appearances.sql",
+        "duckstream/ratings/result_goals.sql",
+        "duckstream/chances/result_groups.sql",
+        "duckstream/chances/result_members.sql",
+        "duckstream/chances/result_games.sql",
+        "duckstream/chances/result_zones.sql"
+      ],
+      "ir": "feldera_sql",
+      "kind": "sql",
+      "note": "Pinned stock Feldera compilation and DuckDB equivalence tests validate these SQL dialects instead of PostgreSQL-only Squawk"
+    },
     "rclone-s3": {
       "ir": "hatch-native-media",
       "kind": "container",
       "note": "Authenticated app media gateway adapts the existing /blobs upstream. Private normalized bytes live in PostgreSQL; raw rclone and imgproxy are not started."
+    },
+    "sofascore": {
+      "ir": "hatch-sofascore-transport",
+      "kind": "container",
+      "note": "wreq Chrome TLS profile; follows up to five redirects within the SofaScore host allowlist and reports each request"
+    },
+    "sofascore-receive": {
+      "ir": "hatch-sofascore-receive",
+      "kind": "sql",
+      "files": [
+        "services/database/sql/059_sofascore_requests.sql"
+      ],
+      "note": "The request machine's commit stores, parses and applies an answer, or records a failure, through SQL the machine calls"
+    },
+    "team-match-preview": {
+      "ir": "team-match-preview",
+      "kind": "host-dom",
+      "files": [
+        "shell/hatches/team-match-preview.js"
+      ],
+      "note": "Native popover placement, hover hit testing, pinning and focus control escape standings scroll clipping; match data stays in declared live reads.",
+      "src": "shell/hatches/team-match-preview.js"
     }
   },
   "rawMigrations": [
+    {
+      "name": "003_rls.sql",
+      "src": "services/database/sql/003_rls.txt"
+    },
+    {
+      "name": "063_mecha_actors.sql",
+      "src": "migrations/baseline/063_mecha_actors.sql"
+    },
     {
       "name": "010_game_days.sql",
       "src": "services/database/sql/010_game_days.sql"
@@ -12407,9 +14171,298 @@
       "src": "services/database/sql/051_home_feed_relationship_names.sql"
     },
     {
+      "name": "052_sofascore_sync.sql",
+      "src": "services/database/sql/052_sofascore_sync.sql"
+    },
+    {
+      "name": "053_sofascore_apply.sql",
+      "src": "services/database/sql/053_sofascore_apply.sql"
+    },
+    {
+      "name": "054_fixture_availability.sql",
+      "src": "services/database/sql/054_fixture_availability.sql"
+    },
+    {
+      "name": "055_sofa_seats.sql",
+      "src": "services/database/sql/055_sofa_seats.sql"
+    },
+    {
+      "name": "062_player_directory_read.sql",
+      "src": "services/database/sql/062_player_directory_read.sql"
+    },
+    {
       "name": "900_seed.sql",
       "src": "services/database/sql/900_seed.sql"
     }
   ],
-  "duckstreams": {}
+  "duckstreams": {
+    "chances": {
+      "name": "chances",
+      "ir": "chances",
+      "backend": "compute",
+      "src": "computations/chances.js",
+      "feldera": "duckstream/chances.feldera.json",
+      "steps": "duckstream/bounded-chances.ts",
+      "endowments": [
+        "TextEncoder"
+      ],
+      "onComplete": "capture_team_odds_history",
+      "sinks": {
+        "teams": {
+          "entity": "TeamChance",
+          "write": "replace",
+          "version": "latest",
+          "transaction": "chances"
+        },
+        "zones": {
+          "entity": "ZoneChance",
+          "write": "replace",
+          "version": "latest",
+          "transaction": "chances"
+        },
+        "positions": {
+          "entity": "PositionChance",
+          "write": "replace",
+          "version": "latest",
+          "transaction": "chances"
+        },
+        "games": {
+          "entity": "GameImportance",
+          "write": "replace",
+          "version": "latest",
+          "transaction": "chances"
+        }
+      },
+      "sources": {
+        "football": {
+          "entities": [
+            "Championship",
+            "Phase",
+            "Group",
+            "TeamGroup",
+            "Zone",
+            "Team",
+            "Game",
+            "TeamRating",
+            "Standing"
+          ],
+          "read": "snapshot"
+        }
+      },
+      "wasm": [
+        "computations/golaberto-odds.wasm"
+      ]
+    },
+    "game-cards": {
+      "name": "game-cards",
+      "ir": "game-cards",
+      "backend": "compute",
+      "src": "computations/cards.js",
+      "feldera": "duckstream/cards.feldera.json",
+      "steps": "duckstream/bounded-cards.ts",
+      "endowments": [
+        "TextEncoder"
+      ],
+      "sinks": {
+        "cards": {
+          "entity": "GameCard",
+          "write": "replace",
+          "version": "latest",
+          "transaction": "game-cards"
+        },
+        "teams": {
+          "entity": "TeamGame",
+          "write": "replace",
+          "version": "latest",
+          "transaction": "game-cards"
+        }
+      },
+      "sources": {
+        "football": {
+          "entities": [
+            "Game",
+            "Team",
+            "Phase",
+            "Championship",
+            "Stadium",
+            "Referee"
+          ],
+          "read": "snapshot"
+        }
+      },
+      "wasm": []
+    },
+    "player-stats": {
+      "name": "player-stats",
+      "ir": "player-stats",
+      "backend": "compute",
+      "src": "computations/player_stats.js",
+      "feldera": "duckstream/player_stats.feldera.json",
+      "steps": "duckstream/bounded-player-stats.ts",
+      "endowments": [
+        "TextEncoder"
+      ],
+      "sinks": {
+        "stats": {
+          "entity": "PlayerStat",
+          "columns": [
+            "id",
+            "championship_id",
+            "team_id",
+            "player_id",
+            "player_name",
+            "position",
+            "played",
+            "started",
+            "came_on",
+            "bench",
+            "minutes",
+            "goals",
+            "penalties",
+            "own_goals",
+            "yellow",
+            "red",
+            "championship_name",
+            "team_name"
+          ],
+          "transaction": "player-stats",
+          "version": "latest",
+          "write": "replace"
+        }
+      },
+      "sources": {
+        "football": {
+          "entities": [
+            "PlayerGame",
+            "Goal",
+            "Player",
+            "Game",
+            "Phase",
+            "Championship",
+            "Team"
+          ],
+          "read": "snapshot"
+        }
+      },
+      "wasm": []
+    },
+    "ratings": {
+      "name": "ratings",
+      "ir": "ratings",
+      "backend": "compute",
+      "src": "computations/ratings.js",
+      "feldera": "duckstream/ratings.feldera.json",
+      "steps": "duckstream/bounded-ratings.ts",
+      "endowments": [
+        "TextEncoder"
+      ],
+      "sinks": {
+        "teams": {
+          "entity": "TeamRating",
+          "write": "replace",
+          "version": "latest",
+          "transaction": "ratings"
+        },
+        "players": {
+          "entity": "PlayerRating",
+          "write": "replace",
+          "version": "latest",
+          "transaction": "ratings"
+        },
+        "evaluations": {
+          "entity": "RatingEval",
+          "write": "replace",
+          "version": "latest",
+          "transaction": "ratings"
+        }
+      },
+      "sources": {
+        "football": {
+          "entities": [
+            "Championship",
+            "Phase",
+            "Game",
+            "Team",
+            "Player",
+            "PlayerGame",
+            "Goal"
+          ],
+          "read": "snapshot"
+        }
+      },
+      "wasm": [
+        "computations/golaberto-odds.wasm"
+      ],
+      "queryTypes": {
+        "teams": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "required": true
+          }
+        ],
+        "players": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "required": true
+          }
+        ]
+      }
+    },
+    "standings": {
+      "name": "standings",
+      "ir": "standings",
+      "backend": "compute",
+      "src": "computations/standings.js",
+      "feldera": "duckstream/standings.feldera.json",
+      "steps": "duckstream/bounded-standings.ts",
+      "endowments": [
+        "TextEncoder"
+      ],
+      "sinks": {
+        "standings": {
+          "entity": "Standing",
+          "write": "replace",
+          "version": "latest",
+          "transaction": "standings"
+        }
+      },
+      "sources": {
+        "football": {
+          "entities": [
+            "Championship",
+            "Phase",
+            "Group",
+            "TeamGroup",
+            "Team",
+            "Game",
+            "Zone"
+          ],
+          "read": "snapshot"
+        }
+      },
+      "wasm": []
+    }
+  },
+  "effects": {
+    "acquire": {
+      "name": "acquire",
+      "ir": "acquire",
+      "key": [
+        "id"
+      ],
+      "input": {
+        "id": "NEW.id",
+        "path": "NEW.path"
+      },
+      "sink": {
+        "bridge": "sofascore",
+        "idempotent": false
+      },
+      "reentry": "repeat",
+      "note": "A repeated GET is harmless: every answer is an observation keyed by its request, and only a resource's newest is applied",
+      "attempts": 5
+    }
+  }
 }

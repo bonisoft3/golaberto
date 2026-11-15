@@ -4,7 +4,7 @@ services:
     build:
       additional_contexts:
         libraries_mecha-database-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.20.6@sha256:d3eb729237d5bcdead34c500e4f482b86f4cfce00994b98a7c5a27745880b624}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.23.1@sha256:ab98bb1431e05361e30e73583335c01170c17d8dcddbb666b2f57bb837f63f77}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}
       context: ..
       dockerfile: .bayt/Dockerfile.database
       target: database
@@ -40,6 +40,15 @@ services:
         target: /docker-entrypoint-initdb.d
       - action: rebuild
         path: ../services/database/migrations/008_publication.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/009_functions.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/003_rls.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/063_mecha_actors.sql
         target: /docker-entrypoint-initdb.d
       - action: rebuild
         path: ../services/database/migrations/010_game_days.sql
@@ -165,12 +174,28 @@ services:
         path: ../services/database/migrations/051_home_feed_relationship_names.sql
         target: /docker-entrypoint-initdb.d
       - action: rebuild
+        path: ../services/database/migrations/052_sofascore_sync.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/053_sofascore_apply.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/054_fixture_availability.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/055_sofa_seats.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
+        path: ../services/database/migrations/062_player_directory_read.sql
+        target: /docker-entrypoint-initdb.d
+      - action: rebuild
         path: ../services/database/migrations/900_seed.sql
         target: /docker-entrypoint-initdb.d
       - action: rebuild
         path: ../services/database/migrations/801_schedule_seed.sql
         target: /docker-entrypoint-initdb.d
     environment:
+      PGPORT: "5432"
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB: ${POSTGRES_DB:-golaberto}
@@ -199,6 +224,9 @@ services:
     image: bayt-golaberto-database:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
     networks:
       default:
+        aliases:
+        - database
+      airlock:
         aliases:
         - database
     ports:

@@ -1,0 +1,10 @@
+{
+  "operations": [
+    {
+      "sql": {
+        "up": "-- A parent edit can update a roster before enqueueing profiles, while a\n-- drain holds an earlier queue row and waits for that roster. Take the same\n-- turn before the statement acquires source-row locks, including cascades.\nSET lock_timeout = '5s';\nSET statement_timeout = '60s';\n\nCREATE OR REPLACE FUNCTION take_team_projection_write_turn() RETURNS trigger\nLANGUAGE plpgsql SECURITY DEFINER SET search_path = public, pg_temp\nSET lock_timeout = '2s' AS $$\nBEGIN\n  PERFORM take_team_projection_turn();\n  RETURN NULL;\nEND $$;\nREVOKE ALL ON FUNCTION take_team_projection_write_turn() FROM PUBLIC;\n\nDO $$ DECLARE source_table text; BEGIN\n  FOREACH source_table IN ARRAY ARRAY[\n    'app_user', 'championship', 'phase', 'stage_group', 'team_group', 'game',\n    'team', 'player', 'team_player', 'player_stat', 'player_game',\n    'team_roster', 'team_rating', 'team_odds_history', 'zone'\n  ] LOOP\n    EXECUTE format('DROP TRIGGER IF EXISTS team_projection_write_turn ON %I', source_table);\n    EXECUTE format('CREATE TRIGGER team_projection_write_turn BEFORE INSERT OR UPDATE OR DELETE ON %I\n      FOR EACH STATEMENT EXECUTE FUNCTION take_team_projection_write_turn()', source_table);\n  END LOOP;\nEND $$;\n",
+        "onComplete": true
+      }
+    }
+  ]
+}

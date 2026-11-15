@@ -2,3 +2,4 @@
 include:
   - path: ./.bayt/compose.yaml
   - path: 'monorepo/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml'
+  - path: compose.networks.yaml

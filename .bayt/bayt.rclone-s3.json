@@ -79,7 +79,54 @@
       "main.ts"
     ]
   },
+  "entrypoint": {
+    "do": "^deno run --frozen --allow-env --allow-read --allow-write --allow-ffi --allow-net --config services/media/deno.json services/media/main.ts",
+    "shell": "nu",
+    "env": {
+      "DATABASE_URL": [
+        "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@",
+        {
+          "peer": "database",
+          "port": "pg",
+          "part": "addr",
+          "prefix": "",
+          "suffix": ""
+        },
+        "/${POSTGRES_DB:-golaberto}"
+      ],
+      "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}"
+    },
+    "after": {
+      "database": "healthy",
+      "migrate": "completed"
+    },
+    "host": true
+  },
+  "expose": {
+    "http": {
+      "port": 3900,
+      "env": "PORT"
+    }
+  },
+  "healthcheck": {
+    "template": "http",
+    "scheme": "http",
+    "host": "127.0.0.1",
+    "port": 3900,
+    "path": "/health",
+    "url": "http://127.0.0.1:3900/health",
+    "authorization": null,
+    "headers": [],
+    "start_interval": "200ms",
+    "interval": "1s",
+    "timeout": "5s",
+    "retries": 30,
+    "start_period": "30s"
+  },
   "name": "rclone-s3",
+  "process-compose": {
+    "activate": "mise x --"
+  },
   "project": "golaberto",
   "dir": ".",
   "activate": "",
@@ -134,7 +181,8 @@
       "upClosure": [
         "./.bayt/compose.rclone-s3.yaml",
         "./.bayt/compose.database.yaml",
-        "./.bayt/compose.migrate.yaml"
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml"
       ]
     },
     "outs": {
@@ -164,7 +212,8 @@
       "upClosure": [
         "./.bayt/compose.rclone-s3.yaml",
         "./.bayt/compose.database.yaml",
-        "./.bayt/compose.migrate.yaml"
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml"
       ]
     },
     "srcs": {
@@ -187,10 +236,7 @@
       "env": {},
       "visibility": "public",
       "deps": [],
-      "transitiveDeps": [
-        "database_outs_srcs",
-        "migrate_outs_srcs"
-      ],
+      "transitiveDeps": [],
       "transitiveCrossDeps": [],
       "chainedDeps": [],
       "cmds": [],
@@ -201,7 +247,8 @@
       "upClosure": [
         "./.bayt/compose.rclone-s3.yaml",
         "./.bayt/compose.database.yaml",
-        "./.bayt/compose.migrate.yaml"
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml"
       ]
     }
   },
@@ -223,7 +270,8 @@
   "upClosure": [
     "./.bayt/compose.rclone-s3.yaml",
     "./.bayt/compose.database.yaml",
-    "./.bayt/compose.migrate.yaml"
+    "./.bayt/compose.migrate.yaml",
+    "./.bayt/compose.airlock-upgrade.yaml"
   ],
   "chainedDeps": [
     {

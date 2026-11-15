@@ -2,8 +2,11 @@ SET lock_timeout = '5s';
 SET statement_timeout = '60s';
 BEGIN;
 
--- Lock player_stat before team so DDL and concurrent player_stat upserts
--- (whose BEFORE trigger reads team) acquire both relations in the same order.
+ALTER TABLE team ADD COLUMN IF NOT EXISTS logo_key text;
+
+ALTER TABLE player_rating ADD COLUMN IF NOT EXISTS off_rating double precision;
+ALTER TABLE player_rating ADD COLUMN IF NOT EXISTS def_rating double precision;
+
 -- squawk-ignore adding-field-with-default
 ALTER TABLE player_stat ADD COLUMN IF NOT EXISTS search_key text COLLATE golaberto_search NOT NULL DEFAULT '';
 DO $$ BEGIN
@@ -12,11 +15,6 @@ DO $$ BEGIN
     ALTER TABLE player_stat ALTER COLUMN search_key TYPE text COLLATE golaberto_search;
   END IF;
 END $$;
-
-ALTER TABLE team ADD COLUMN IF NOT EXISTS logo_key text;
-
-ALTER TABLE player_rating ADD COLUMN IF NOT EXISTS off_rating double precision;
-ALTER TABLE player_rating ADD COLUMN IF NOT EXISTS def_rating double precision;
 
 CREATE OR REPLACE FUNCTION player_stat_search_key(player_name text,team_name text,championship_name text,
   player_position text,full_name text) RETURNS text LANGUAGE sql IMMUTABLE SET search_path=public,pg_temp AS $$

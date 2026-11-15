@@ -1,0 +1,649 @@
+{
+  "corrected": 18,
+  "cached_resources": [
+    "unique-tournament/23/season/95836/events/round/8",
+    "unique-tournament/23/season/95836/events/round/9"
+  ],
+  "requests_before": 11,
+  "requests_after": 11,
+  "before": [
+    {
+      "id": "13cd10b1-d9da-4ab4-9a4f-a1c94182260c",
+      "day": "2026-10-27",
+      "slug": "2026-10-27-genoa-juventus",
+      "played": false,
+      "kickoff": "2026-10-27T13:00:00+00:00",
+      "evidence": {
+        "fields": [
+          "day",
+          "kickoff"
+        ],
+        "current": {
+          "day": "2026-10-27",
+          "kickoff": "2026-10-27T13:00:00+00:00"
+        },
+        "proposed": {
+          "day": "2026-10-28",
+          "kickoff": "2026-10-28T19:45:00+00:00"
+        }
+      },
+      "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "away_score": null,
+      "home_score": null,
+      "external_id": "a0900000-0000-4000-8000-000000059e88"
+    },
+    {
+      "id": "16e1b221-3543-4525-a17b-b482880c7d75",
+      "day": "2026-10-27",
+      "slug": "2026-10-27-fiorentina-atalanta",
+      "played": false,
+      "kickoff": "2026-10-27T13:00:00+00:00",
+      "evidence": {
+        "fields": [
+          "day",
+          "kickoff"
+        ],
+        "current": {
+          "day": "2026-10-27",
+          "kickoff": "2026-10-27T13:00:00+00:00"
+        },
+        "proposed": {
+          "day": "2026-10-29",
+          "kickoff": "2026-10-29T19:45:00+00:00"
+        }
+      },
+      "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "away_score": null,
+      "home_score": null,
+      "external_id": "a0900000-0000-4000-8000-000000059e86"
+    },
+    {
+      "id": "3e04f498-9a54-4849-9f89-8fddcf22db6b",
+      "day": "2026-10-27",
+      "slug": "2026-10-27-sassuolo-lazio",
+      "played": true,
+      "kickoff": "2026-10-27T13:00:00+00:00",
+      "evidence": {
+        "fields": [
+          "kickoff"
+        ],
+        "current": {
+          "kickoff": "2026-10-27T13:00:00+00:00"
+        },
+        "proposed": {
+          "kickoff": "2026-10-27T17:30:00+00:00"
+        }
+      },
+      "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "away_score": 6,
+      "home_score": 2,
+      "external_id": "a0900000-0000-4000-8000-000000059e8b"
+    },
+    {
+      "id": "5ba388c1-38e8-4b1f-a2f3-f19798a4634c",
+      "day": "2026-10-27",
+      "slug": "2026-10-27-torino-como",
+      "played": true,
+      "kickoff": "2026-10-27T13:00:00+00:00",
+      "evidence": {
+        "fields": [
+          "kickoff"
+        ],
+        "current": {
+          "kickoff": "2026-10-27T13:00:00+00:00"
+        },
+        "proposed": {
+          "kickoff": "2026-10-27T19:45:00+00:00"
+        }
+      },
+      "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "away_score": 3,
+      "home_score": 1,
+      "external_id": "a0900000-0000-4000-8000-000000059e8c"
+    },
+    {
+      "id": "60014969-c773-44d0-aacf-08f6b6f6fee0",
+      "day": "2026-10-24",
+      "slug": "2026-10-24-napoli-roma",
+      "played": true,
+      "kickoff": "2026-10-24T13:00:00+00:00",
+      "evidence": {
+        "fields": [
+          "kickoff"
+        ],
+        "current": {
+          "kickoff": "2026-10-24T13:00:00+00:00"
+        },
+        "proposed": {
+          "kickoff": "2026-10-24T16:00:00+00:00"
+        }
+      },
+      "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "away_score": 3,
+      "home_score": 3,
+      "external_id": "a0900000-0000-4000-8000-000000059e81"
+    },
+    {
+      "id": "6563022a-0346-4588-9e16-9e10cace736f",
+      "day": "2026-10-24",
+      "slug": "2026-10-24-lecce-juventus",
+      "played": true,
+      "kickoff": "2026-10-24T13:00:00+00:00",
+      "evidence": {
+        "fields": [
+          "day",
+          "kickoff"
+        ],
+        "current": {
+          "day": "2026-10-24",
+          "kickoff": "2026-10-24T13:00:00+00:00"
+        },
+        "proposed": {
+          "day": "2026-10-25",
+          "kickoff": "2026-10-25T17:00:00+00:00"
+        }
+      },
+      "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "away_score": 2,
+      "home_score": 0,
+      "external_id": "a0900000-0000-4000-8000-000000059e80"
+    },
+    {
+      "id": "662337a0-db40-45da-b49b-4b4500407f61",
+      "day": "2026-10-27",
+      "slug": "2026-10-27-milan-bologna",
+      "played": false,
+      "kickoff": "2026-10-27T13:00:00+00:00",
+      "evidence": {
+        "fields": [
+          "day",
+          "kickoff"
+        ],
+        "current": {
+          "day": "2026-10-27",
+          "kickoff": "2026-10-27T13:00:00+00:00"
+        },
+        "proposed": {
+          "day": "2026-10-28",
+          "kickoff": "2026-10-28T17:30:00+00:00"
+        }
+      },
+      "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "away_score": null,
+      "home_score": null,
+      "external_id": "a0900000-0000-4000-8000-000000059e84"
+    },
+    {
+      "id": "6d07a91c-e426-4c4e-a765-3e2852e7401d",
+      "day": "2026-10-27",
+      "slug": "2026-10-27-frosinone-lecce",
+      "played": false,
+      "kickoff": "2026-10-27T13:00:00+00:00",
+      "evidence": {
+        "fields": [
+          "day",
+          "kickoff"
+        ],
+        "current": {
+          "day": "2026-10-27",
+          "kickoff": "2026-10-27T13:00:00+00:00"
+        },
+        "proposed": {
+          "day": "2026-10-29",
+          "kickoff": "2026-10-29T17:30:00+00:00"
+        }
+      },
+      "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "away_score": null,
+      "home_score": null,
+      "external_id": "a0900000-0000-4000-8000-000000059e87"
+    },
+    {
+      "id": "78106655-f1b7-4174-b7f3-a0a33bdf05d8",
+      "day": "2026-10-24",
+      "slug": "2026-10-24-udinese-milan",
+      "played": true,
+      "kickoff": "2026-10-24T13:00:00+00:00",
+      "evidence": {
+        "fields": [
+          "day",
+          "kickoff"
+        ],
+        "current": {
+          "day": "2026-10-24",
+          "kickoff": "2026-10-24T13:00:00+00:00"
+        },
+        "proposed": {
+          "day": "2026-10-25",
+          "kickoff": "2026-10-25T19:45:00+00:00"
+        }
+      },
+      "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "away_score": 2,
+      "home_score": 0,
+      "external_id": "a0900000-0000-4000-8000-000000059e83"
+    },
+    {
+      "id": "86408ec5-0c30-45e5-b391-ceac508530f0",
+      "day": "2026-10-24",
+      "slug": "2026-10-24-atalanta-frosinone",
+      "played": true,
+      "kickoff": "2026-10-24T13:00:00+00:00",
+      "evidence": {
+        "fields": [
+          "day",
+          "kickoff"
+        ],
+        "current": {
+          "day": "2026-10-24",
+          "kickoff": "2026-10-24T13:00:00+00:00"
+        },
+        "proposed": {
+          "day": "2026-10-25",
+          "kickoff": "2026-10-25T14:00:00+00:00"
+        }
+      },
+      "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "away_score": 4,
+      "home_score": 4,
+      "external_id": "a0900000-0000-4000-8000-000000059e7a"
+    },
+    {
+      "id": "8ece4762-b149-46b2-b8b5-b9674cd47abd",
+      "day": "2026-10-27",
+      "slug": "2026-10-27-venezia-internazionale",
+      "played": false,
+      "kickoff": "2026-10-27T13:00:00+00:00",
+      "evidence": {
+        "fields": [
+          "day",
+          "kickoff"
+        ],
+        "current": {
+          "day": "2026-10-27",
+          "kickoff": "2026-10-27T13:00:00+00:00"
+        },
+        "proposed": {
+          "day": "2026-10-28",
+          "kickoff": "2026-10-28T17:30:00+00:00"
+        }
+      },
+      "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "away_score": null,
+      "home_score": null,
+      "external_id": "a0900000-0000-4000-8000-000000059e8d"
+    },
+    {
+      "id": "97ec1816-1df2-439e-8261-5a5333c797f4",
+      "day": "2026-10-24",
+      "slug": "2026-10-24-genoa-venezia",
+      "played": true,
+      "kickoff": "2026-10-24T13:00:00+00:00",
+      "evidence": {
+        "fields": [
+          "day",
+          "kickoff"
+        ],
+        "current": {
+          "day": "2026-10-24",
+          "kickoff": "2026-10-24T13:00:00+00:00"
+        },
+        "proposed": {
+          "day": "2026-10-25",
+          "kickoff": "2026-10-25T14:00:00+00:00"
+        }
+      },
+      "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "away_score": 0,
+      "home_score": 1,
+      "external_id": "a0900000-0000-4000-8000-000000059e7d"
+    },
+    {
+      "id": "bc74b0a5-bb3f-4ada-a684-bb4e471c53b8",
+      "day": "2026-10-27",
+      "slug": "2026-10-27-roma-cagliari",
+      "played": true,
+      "kickoff": "2026-10-27T13:00:00+00:00",
+      "evidence": {
+        "fields": [
+          "kickoff"
+        ],
+        "current": {
+          "kickoff": "2026-10-27T13:00:00+00:00"
+        },
+        "proposed": {
+          "kickoff": "2026-10-27T19:45:00+00:00"
+        }
+      },
+      "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "away_score": 2,
+      "home_score": 4,
+      "external_id": "a0900000-0000-4000-8000-000000059e85"
+    },
+    {
+      "id": "bcb5738b-fabe-4d9d-97b0-f7b6e4f727c0",
+      "day": "2026-10-24",
+      "slug": "2026-10-24-lazio-parma",
+      "played": true,
+      "kickoff": "2026-10-24T13:00:00+00:00",
+      "evidence": {
+        "fields": [
+          "kickoff"
+        ],
+        "current": {
+          "kickoff": "2026-10-24T13:00:00+00:00"
+        },
+        "proposed": {
+          "kickoff": "2026-10-24T18:45:00+00:00"
+        }
+      },
+      "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "away_score": 1,
+      "home_score": 2,
+      "external_id": "a0900000-0000-4000-8000-000000059e7f"
+    },
+    {
+      "id": "cdc91481-a4ec-4272-9ce8-36cefb21976c",
+      "day": "2026-10-27",
+      "slug": "2026-10-27-parma-udinese",
+      "played": false,
+      "kickoff": "2026-10-27T13:00:00+00:00",
+      "evidence": {
+        "fields": [
+          "day",
+          "kickoff"
+        ],
+        "current": {
+          "day": "2026-10-27",
+          "kickoff": "2026-10-27T13:00:00+00:00"
+        },
+        "proposed": {
+          "day": "2026-10-28",
+          "kickoff": "2026-10-28T17:30:00+00:00"
+        }
+      },
+      "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "away_score": null,
+      "home_score": null,
+      "external_id": "a0900000-0000-4000-8000-000000059e8a"
+    },
+    {
+      "id": "d4fb546f-6493-4caa-bb8b-5b359d765727",
+      "day": "2026-10-24",
+      "slug": "2026-10-24-torino-monza",
+      "played": true,
+      "kickoff": "2026-10-24T13:00:00+00:00",
+      "evidence": {
+        "fields": [
+          "day",
+          "kickoff"
+        ],
+        "current": {
+          "day": "2026-10-24",
+          "kickoff": "2026-10-24T13:00:00+00:00"
+        },
+        "proposed": {
+          "day": "2026-10-23",
+          "kickoff": "2026-10-23T18:45:00+00:00"
+        }
+      },
+      "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "away_score": 2,
+      "home_score": 3,
+      "external_id": "a0900000-0000-4000-8000-000000059e82"
+    },
+    {
+      "id": "deb326bf-a3bd-46f6-9c03-5b3cd5cb3d03",
+      "day": "2026-10-24",
+      "slug": "2026-10-24-internazionale-fiorentina",
+      "played": true,
+      "kickoff": "2026-10-24T13:00:00+00:00",
+      "evidence": {
+        "fields": [
+          "day",
+          "kickoff"
+        ],
+        "current": {
+          "day": "2026-10-24",
+          "kickoff": "2026-10-24T13:00:00+00:00"
+        },
+        "proposed": {
+          "day": "2026-10-25",
+          "kickoff": "2026-10-25T11:30:00+00:00"
+        }
+      },
+      "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "away_score": 1,
+      "home_score": 2,
+      "external_id": "a0900000-0000-4000-8000-000000059e7e"
+    },
+    {
+      "id": "ea3dc0d5-87d6-408d-9520-b307275a6f13",
+      "day": "2026-10-27",
+      "slug": "2026-10-27-monza-napoli",
+      "played": false,
+      "kickoff": "2026-10-27T13:00:00+00:00",
+      "evidence": {
+        "fields": [
+          "day",
+          "kickoff"
+        ],
+        "current": {
+          "day": "2026-10-27",
+          "kickoff": "2026-10-27T13:00:00+00:00"
+        },
+        "proposed": {
+          "day": "2026-10-28",
+          "kickoff": "2026-10-28T19:45:00+00:00"
+        }
+      },
+      "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "away_score": null,
+      "home_score": null,
+      "external_id": "a0900000-0000-4000-8000-000000059e89"
+    }
+  ],
+  "after": [
+    {
+      "id": "13cd10b1-d9da-4ab4-9a4f-a1c94182260c",
+      "day": "2026-10-28",
+      "slug": "2026-10-27-genoa-juventus",
+      "played": false,
+      "kickoff": "2026-10-28T19:45:00+00:00",
+      "resolved": true,
+      "away_score": null,
+      "home_score": null
+    },
+    {
+      "id": "16e1b221-3543-4525-a17b-b482880c7d75",
+      "day": "2026-10-29",
+      "slug": "2026-10-27-fiorentina-atalanta",
+      "played": false,
+      "kickoff": "2026-10-29T19:45:00+00:00",
+      "resolved": true,
+      "away_score": null,
+      "home_score": null
+    },
+    {
+      "id": "3e04f498-9a54-4849-9f89-8fddcf22db6b",
+      "day": "2026-10-27",
+      "slug": "2026-10-27-sassuolo-lazio",
+      "played": true,
+      "kickoff": "2026-10-27T17:30:00+00:00",
+      "resolved": true,
+      "away_score": 6,
+      "home_score": 2
+    },
+    {
+      "id": "5ba388c1-38e8-4b1f-a2f3-f19798a4634c",
+      "day": "2026-10-27",
+      "slug": "2026-10-27-torino-como",
+      "played": true,
+      "kickoff": "2026-10-27T19:45:00+00:00",
+      "resolved": true,
+      "away_score": 3,
+      "home_score": 1
+    },
+    {
+      "id": "60014969-c773-44d0-aacf-08f6b6f6fee0",
+      "day": "2026-10-24",
+      "slug": "2026-10-24-napoli-roma",
+      "played": true,
+      "kickoff": "2026-10-24T16:00:00+00:00",
+      "resolved": true,
+      "away_score": 3,
+      "home_score": 3
+    },
+    {
+      "id": "6563022a-0346-4588-9e16-9e10cace736f",
+      "day": "2026-10-25",
+      "slug": "2026-10-24-lecce-juventus",
+      "played": true,
+      "kickoff": "2026-10-25T17:00:00+00:00",
+      "resolved": true,
+      "away_score": 2,
+      "home_score": 0
+    },
+    {
+      "id": "662337a0-db40-45da-b49b-4b4500407f61",
+      "day": "2026-10-28",
+      "slug": "2026-10-27-milan-bologna",
+      "played": false,
+      "kickoff": "2026-10-28T17:30:00+00:00",
+      "resolved": true,
+      "away_score": null,
+      "home_score": null
+    },
+    {
+      "id": "6d07a91c-e426-4c4e-a765-3e2852e7401d",
+      "day": "2026-10-29",
+      "slug": "2026-10-27-frosinone-lecce",
+      "played": false,
+      "kickoff": "2026-10-29T17:30:00+00:00",
+      "resolved": true,
+      "away_score": null,
+      "home_score": null
+    },
+    {
+      "id": "78106655-f1b7-4174-b7f3-a0a33bdf05d8",
+      "day": "2026-10-25",
+      "slug": "2026-10-24-udinese-milan",
+      "played": true,
+      "kickoff": "2026-10-25T19:45:00+00:00",
+      "resolved": true,
+      "away_score": 2,
+      "home_score": 0
+    },
+    {
+      "id": "86408ec5-0c30-45e5-b391-ceac508530f0",
+      "day": "2026-10-25",
+      "slug": "2026-10-24-atalanta-frosinone",
+      "played": true,
+      "kickoff": "2026-10-25T14:00:00+00:00",
+      "resolved": true,
+      "away_score": 4,
+      "home_score": 4
+    },
+    {
+      "id": "8ece4762-b149-46b2-b8b5-b9674cd47abd",
+      "day": "2026-10-28",
+      "slug": "2026-10-27-venezia-internazionale",
+      "played": false,
+      "kickoff": "2026-10-28T17:30:00+00:00",
+      "resolved": true,
+      "away_score": null,
+      "home_score": null
+    },
+    {
+      "id": "97ec1816-1df2-439e-8261-5a5333c797f4",
+      "day": "2026-10-25",
+      "slug": "2026-10-24-genoa-venezia",
+      "played": true,
+      "kickoff": "2026-10-25T14:00:00+00:00",
+      "resolved": true,
+      "away_score": 0,
+      "home_score": 1
+    },
+    {
+      "id": "bc74b0a5-bb3f-4ada-a684-bb4e471c53b8",
+      "day": "2026-10-27",
+      "slug": "2026-10-27-roma-cagliari",
+      "played": true,
+      "kickoff": "2026-10-27T19:45:00+00:00",
+      "resolved": true,
+      "away_score": 2,
+      "home_score": 4
+    },
+    {
+      "id": "bcb5738b-fabe-4d9d-97b0-f7b6e4f727c0",
+      "day": "2026-10-24",
+      "slug": "2026-10-24-lazio-parma",
+      "played": true,
+      "kickoff": "2026-10-24T18:45:00+00:00",
+      "resolved": true,
+      "away_score": 1,
+      "home_score": 2
+    },
+    {
+      "id": "cdc91481-a4ec-4272-9ce8-36cefb21976c",
+      "day": "2026-10-28",
+      "slug": "2026-10-27-parma-udinese",
+      "played": false,
+      "kickoff": "2026-10-28T17:30:00+00:00",
+      "resolved": true,
+      "away_score": null,
+      "home_score": null
+    },
+    {
+      "id": "d4fb546f-6493-4caa-bb8b-5b359d765727",
+      "day": "2026-10-23",
+      "slug": "2026-10-24-torino-monza",
+      "played": true,
+      "kickoff": "2026-10-23T18:45:00+00:00",
+      "resolved": true,
+      "away_score": 2,
+      "home_score": 3
+    },
+    {
+      "id": "deb326bf-a3bd-46f6-9c03-5b3cd5cb3d03",
+      "day": "2026-10-25",
+      "slug": "2026-10-24-internazionale-fiorentina",
+      "played": true,
+      "kickoff": "2026-10-25T11:30:00+00:00",
+      "resolved": true,
+      "away_score": 1,
+      "home_score": 2
+    },
+    {
+      "id": "ea3dc0d5-87d6-408d-9520-b307275a6f13",
+      "day": "2026-10-28",
+      "slug": "2026-10-27-monza-napoli",
+      "played": false,
+      "kickoff": "2026-10-28T19:45:00+00:00",
+      "resolved": true,
+      "away_score": null,
+      "home_score": null
+    }
+  ],
+  "captured_at": "2026-10-27 23:50:00.444923+00",
+  "sources": [
+    {
+      "id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 11,
+      "season_id": 95836,
+      "next_due_at": "2026-10-28T03:48:13.651939+00:00",
+      "detail_after": "2026-10-27T21:30:16.440058+00:00",
+      "payload_bytes": 1042098,
+      "championship_id": "a0200000-0000-4000-8000-000000000604",
+      "last_success_at": "2026-10-27T23:48:32.792981+00:00",
+      "unique_tournament_id": 23
+    }
+  ],
+  "legacy_identity_reviews": 480,
+  "open_work": [],
+  "migration_schema": true,
+  "resolved_schedule_reviews": 18
+}

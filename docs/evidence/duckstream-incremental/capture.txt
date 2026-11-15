@@ -1,0 +1,5 @@
+running 1 test from ./libraries/mecha/services/compute/native-capture_test.ts
+native capture keeps heterogeneous outputs and validation in one request snapshot ...'native capture keeps heterogeneous outputs and validation in one request snapshot' has been running for over (1m0s)
+ ok (1m4s)
+
+ok | 1 passed | 0 failed (1m4s)

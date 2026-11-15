@@ -6,7 +6,7 @@
 Publicly accessible web application.
 
 ## Screens
-- [Game archive](/arquivo): arquivo screen
+- [Game archive](/jogos/arquivo): arquivo screen
 - [Principal](/): principal screen
 - [Campeonatos](/campeonatos): campeonatos screen
 - [Jogos](/jogos): jogos screen
@@ -15,13 +15,13 @@ Publicly accessible web application.
 - [Estádios](/estadios): estadios screen
 - [Árbitros](/arbitros): arbitros screen
 - [gerenciar](/gerenciar): gerenciar screen
-- [Manage championships](/gerenciar-competicoes): gerenciar-competicoes screen
-- [New championship](/nova-competicao): nova-competicao screen
-- [novo-arbitro](/novo-arbitro): novo-arbitro screen
-- [novo-equipe](/novo-equipe): novo-equipe screen
-- [novo-estadio](/novo-estadio): novo-estadio screen
-- [novo-jogador](/novo-jogador): novo-jogador screen
-- [novo-jogo](/novo-jogo): novo-jogo screen
+- [Manage championships](/gerenciar/campeonatos): gerenciar-competicoes screen
+- [New championship](/campeonatos/novo): nova-competicao screen
+- [novo-arbitro](/arbitros/novo): novo-arbitro screen
+- [novo-equipe](/equipes/novo): novo-equipe screen
+- [novo-estadio](/estadios/novo): novo-estadio screen
+- [novo-jogador](/jogadores/novo): novo-jogador screen
+- [novo-jogo](/jogos/novo): novo-jogo screen
 - [usuarios](/usuarios): usuarios screen
 
 ## Data Models

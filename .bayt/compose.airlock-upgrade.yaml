@@ -1,0 +1,45 @@
+# generated from bayt.cue — do not edit
+services:
+  golaberto-airlock-upgrade:
+    build:
+      additional_contexts:
+        golaberto-database: service:golaberto-database
+        libraries_mecha-database-image: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.23.1@sha256:ab98bb1431e05361e30e73583335c01170c17d8dcddbb666b2f57bb837f63f77}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}
+      context: ..
+      dockerfile: .bayt/Dockerfile.airlock-upgrade
+      target: airlock-upgrade
+      tags:
+      - bayt-golaberto-airlock-upgrade:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-golaberto-airlock-upgrade:latest
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    depends_on:
+      golaberto-database:
+        condition: service_healthy
+        restart: true
+    environment:
+      PGHOST: database
+      PGUSER: ${POSTGRES_USER:-postgres}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      PGDATABASE: ${POSTGRES_DB:-golaberto}
+    image: bayt-golaberto-airlock-upgrade:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    networks:
+      default:
+        aliases:
+        - airlock-upgrade
+  golaberto-airlock-upgrade_bayt:
+    build:
+      additional_contexts:
+        golaberto-database_bayt: service:golaberto-database_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.airlock-upgrade
+      target: airlock-upgrade_bayt
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    image: bayt-golaberto-airlock-upgrade_bayt:latest
+    scale: 0

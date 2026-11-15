@@ -384,6 +384,32 @@ CREATE POLICY match_probability_app_user_select ON match_probability FOR SELECT 
 DROP POLICY IF EXISTS match_probability_service_all ON match_probability;
 CREATE POLICY match_probability_service_all ON match_probability FOR ALL TO service USING (true) WITH CHECK (true);
 
+CALL rls_protect('sofa_resource_seat');
+ALTER TABLE sofa_resource_seat ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS sofa_resource_seat_app_user_select ON sofa_resource_seat;
+CREATE POLICY sofa_resource_seat_app_user_select ON sofa_resource_seat FOR SELECT TO app_user USING (sofa_resource_seat.actor = auth_uid());
+DROP POLICY IF EXISTS sofa_resource_seat_app_user_insert ON sofa_resource_seat;
+CREATE POLICY sofa_resource_seat_app_user_insert ON sofa_resource_seat FOR INSERT TO app_user WITH CHECK (sofa_resource_seat.actor = auth_uid());
+DROP POLICY IF EXISTS sofa_resource_seat_app_user_update ON sofa_resource_seat;
+CREATE POLICY sofa_resource_seat_app_user_update ON sofa_resource_seat FOR UPDATE TO app_user USING (sofa_resource_seat.actor = auth_uid());
+DROP POLICY IF EXISTS sofa_resource_seat_app_user_delete ON sofa_resource_seat;
+CREATE POLICY sofa_resource_seat_app_user_delete ON sofa_resource_seat FOR DELETE TO app_user USING (sofa_resource_seat.actor = auth_uid());
+DROP POLICY IF EXISTS sofa_resource_seat_service_all ON sofa_resource_seat;
+CREATE POLICY sofa_resource_seat_service_all ON sofa_resource_seat FOR ALL TO service USING (true) WITH CHECK (true);
+
+CALL rls_protect('sofa_provider_seat');
+ALTER TABLE sofa_provider_seat ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS sofa_provider_seat_app_user_select ON sofa_provider_seat;
+CREATE POLICY sofa_provider_seat_app_user_select ON sofa_provider_seat FOR SELECT TO app_user USING (sofa_provider_seat.actor = auth_uid());
+DROP POLICY IF EXISTS sofa_provider_seat_app_user_insert ON sofa_provider_seat;
+CREATE POLICY sofa_provider_seat_app_user_insert ON sofa_provider_seat FOR INSERT TO app_user WITH CHECK (sofa_provider_seat.actor = auth_uid());
+DROP POLICY IF EXISTS sofa_provider_seat_app_user_update ON sofa_provider_seat;
+CREATE POLICY sofa_provider_seat_app_user_update ON sofa_provider_seat FOR UPDATE TO app_user USING (sofa_provider_seat.actor = auth_uid());
+DROP POLICY IF EXISTS sofa_provider_seat_app_user_delete ON sofa_provider_seat;
+CREATE POLICY sofa_provider_seat_app_user_delete ON sofa_provider_seat FOR DELETE TO app_user USING (sofa_provider_seat.actor = auth_uid());
+DROP POLICY IF EXISTS sofa_provider_seat_service_all ON sofa_provider_seat;
+CREATE POLICY sofa_provider_seat_service_all ON sofa_provider_seat FOR ALL TO service USING (true) WITH CHECK (true);
+
 CALL rls_protect('user_directory');
 ALTER TABLE user_directory ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS user_directory_app_user_select ON user_directory;

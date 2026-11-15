@@ -1,0 +1,12 @@
+Check duckstream/queries_test.ts
+running 8 tests from ./duckstream/queries_test.ts
+Feldera-derived queries preserve archive calendar, strict ASOF and f32 boundaries ... ok (243ms)
+Feldera-derived ratings preserve an empty professional archive ... ok (115ms)
+Golaberto programs and native descriptors are generated from admitted Feldera SQL ... ok (11ms)
+ambiguous rating team/day fails before either engine can choose a power ... ok (93ms)
+calendar 4-year boundaries follow the extremal game before leap-day clamping ... ok (118ms)
+calendar 7-year boundaries follow the extremal game before leap-day clamping ... ok (113ms)
+native odds partitions own whole phases and preserve group seeds and requests ... ok (151ms)
+per-table CDC skew never captures dangling calculation references and converges ... ok (564ms)
+
+ok | 8 passed | 0 failed (1s)

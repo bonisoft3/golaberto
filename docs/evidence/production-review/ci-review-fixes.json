@@ -1,0 +1,45 @@
+{
+  "scope": "PR 2079 CI review follow-up; no deployment",
+  "base": "b549cfc64450384d3edd21a0a492b991810bc267",
+  "fixes": [
+    "Resolve shared DuckDB WASM fixture through its pinned npm package",
+    "Separate SERIALIZABLE transaction retries from computation attempts",
+    "Handle invalidation and worker failure promises together",
+    "Wait for missing server route fixtures within one deadline; propagate failed or timed-out API reads"
+  ],
+  "validation": {
+    "compute": {
+      "doctor": 0,
+      "build": 0,
+      "lint": 0,
+      "test": 0,
+      "passed": 159,
+      "ignored": 2
+    },
+    "golaberto": {
+      "doctor": 0,
+      "saytw_test": 0,
+      "duckstream_passed": 27
+    },
+    "visualResolver": {
+      "steps_passed": 16,
+      "typecheck": 0,
+      "selftest": 0
+    },
+    "liveVisual": {
+      "exit": 1,
+      "missing_fixtures": 0,
+      "critical": 2,
+      "detail": "Two fixture-date-head clipped-content findings on phone equipe-campeonato route; unchanged HEAD checker reproduces both against the same local stack."
+    },
+    "fullIntegration": {
+      "exit": 201,
+      "detail": "Stopped container rebuild after multi-GB context transfer to limit local disk consumption; ran visual checker directly against existing local stack instead."
+    }
+  },
+  "limitations": [
+    "Full container integration is not green evidence",
+    "Two pre-existing live visual clipping findings remain",
+    "No production deployment or fresh hosted acceptance"
+  ]
+}

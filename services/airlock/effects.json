@@ -1,0 +1,29 @@
+{
+  "effects": {
+    "acquire": {
+      "bridge": {
+        "name": "sofascore",
+        "targets": [
+          "docker",
+          "cloudflare"
+        ],
+        "simulated": true
+      },
+      "reentry": "repeat",
+      "table": "sofa_request",
+      "field": "status",
+      "state": "acquiring",
+      "onDone": "applied",
+      "onError": "failed",
+      "row": [
+        "id"
+      ],
+      "key": [
+        "id"
+      ],
+      "idempotent": false,
+      "attempts": 5,
+      "handler": "effects/acquire.js"
+    }
+  }
+}

@@ -6,6 +6,11 @@ import { built } from "./terminal-nodes.ts";
 const render = (value: string) => built(renderNodes(value));
 import { buildNodes, evaluateRole } from "./platform.ts";
 
+// The assertions below state a leaf's world and its event side by side; the
+// leaf itself takes them as XState's one argument.
+// deno-lint-ignore no-explicit-any
+const positional = (leaf: any) => (state: any, event?: any, ...rest: any[]) => leaf({ context: state, event }, ...rest);
+
 const SEP = "\u001f";
 const input = (chart: unknown, title = "Rating history", locale = "en-GB") =>
   `${JSON.stringify(chart)}${SEP}${title}${SEP}${locale}`;
@@ -127,10 +132,10 @@ Deno.test("multi-series lines and odds bars keep labels as text and reject non-l
 });
 
 Deno.test("team chart folds game slugs into localized game links", async () => {
-  const fold = await evaluateRole(
+  const fold = positional(await evaluateRole(
     await Deno.readTextFile(new URL("../shell/handlers/team-chart-fold.js", import.meta.url)),
     "handler",
-  );
+  ));
   const teamId = "22222222-2222-4222-8222-222222222222";
   const result = fold({
     rows: {
@@ -426,7 +431,7 @@ Deno.test("legacy position mode tick labels follow the inverted geometry", () =>
 
 Deno.test("final-position inputs accept only their row-owned controls", async () => {
   const source = await Deno.readTextFile(new URL("../shell/handlers/chart-position-bound.js", import.meta.url));
-  const handler = await evaluateRole(source, "handler");
+  const handler = positional(await evaluateRole(source, "handler"));
   const row = {id:"group:team",range_from:"2",range_to:"8"};
   const state = {items:[row]};
   assertEquals(handler(state, {from:"group:team-from",value:""}, {field:"range_from",suffix:"-from"}), "");
@@ -451,7 +456,7 @@ Deno.test("final-position inputs accept only their row-owned controls", async ()
 
 Deno.test("rating series fold puts the selected period beside the date range", async () => {
   const source = await Deno.readTextFile(new URL("../shell/handlers/team-rating-series.js", import.meta.url));
-  const fold = await evaluateRole(source, "handler");
+  const fold = positional(await evaluateRole(source, "handler"));
   const view = {id: "team-rating-history-t", series_json: "{}", date_from: "2024-01-01"};
   const series = '{"kind":"line","series":[]}';
   assertEquals(fold({items: [{series_json: series}], rows: {view: [view]}}), {

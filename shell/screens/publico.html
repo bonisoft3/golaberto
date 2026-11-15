@@ -13,9 +13,25 @@
   </nav>
 </header>
 <div data-live="championship" data-filter="slug=eq.{param.slug}&limit=1" data-exit-motion="none" data-empty="{msg.championship_gone}"><template data-item><article>
-  <h1 class="band"><span data-text="{full_name}|{msg.geography_names}" data-text-format="geography-label"></span><small data-text="{msg.archive_attendance_title}"></small></h1>
-  <div class="page"><div class="content">
-    <nav class="team-section-links"><a class="btn-quiet" data-route="campeonato" data-param-slug="{slug}" data-text="{msg.back_championship}"></a><a data-route="arquivo-campeonato" data-param-slug="{slug}" data-text="{msg.archive_championship_title}"></a></nav>
+  <h1 class="band"><span data-text="{full_name}|{msg.geography_names}" data-text-format="geography-label"></span> <small data-text="{msg.archive_attendance_title}"></small></h1>
+  <div class="page page-with-local-nav">
+<aside class="side local-side">
+  <div class="local-nav-stack">
+<nav class="local-navigation" aria-label="{msg.local_championship}">
+  <h2 data-text="{msg.local_championship}"></h2>
+  <div class="local-links">
+<a data-route="campeonato" data-param-slug="{param.slug}" data-text="{msg.team_table}"></a>
+<a data-route="arquivo-campeonato" data-param-slug="{param.slug}" data-text="{msg.games_title}"></a>
+<a data-route="campeonato-jogadores" data-param-slug="{param.slug}" data-text="{msg.players_title}"></a>
+<a data-route="publico" data-param-slug="{param.slug}" aria-current="page" data-text="{msg.archive_attendance_title}"></a>
+  </div>
+</nav>
+
+    <p class="local-back"><a data-route="campeonatos" data-text="{msg.back_catalog}"></a></p>
+    <p class="local-about" data-text="{msg.about}"></p>
+  </div>
+</aside>
+<div class="content">
     <h2 data-text="{msg.archive_attendance_averages}"></h2>
 <div class="paged-read" data-live="archive_page" data-filter="id=eq.attendance-teams-{id}" data-machine='{"field":"state","initial":"browsing","states":{"browsing":{"on":{"click@attendance-teams-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@attendance-teams-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}' data-empty-row='{"id":"attendance-teams-{id}","offset":0,"next_offset":40,"owner_id":"{id}","page":1,"state":"browsing"}'>
   <div class="page-window">
@@ -56,6 +72,6 @@
 </nav>
   </div>
 </div>
-  </div><aside class="side"><p><a data-route="arquivo" data-text="{msg.archive_title}"></a></p></aside></div>
+  </div></div>
 </article></template></div>
 </section>

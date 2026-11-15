@@ -1,0 +1,127 @@
+Check libraries/mecha/services/compute/native-runtime_test.ts
+running 9 tests from ./libraries/mecha/services/compute/native-runtime_test.ts
+native partitions bootstrap, update, delete and restart without unrelated recomputation ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+{"computation":"totals","capture":"05384c12-77b1-4a38-9e57-0859a2efecec","partitions":2,"deltaRows":2}
+[worker(worker-b33306a29432240f52)] INFO: Completed task 1 (compute_batch, 150.58ms) with success
+{"computation":"totals","capture":"8898202a-77b4-4777-96a5-7a4f0c81546a","partitions":1,"deltaRows":2}
+[worker(worker-b33306a29432240f52)] INFO: Completed task 2 (compute_batch, 50.08ms) with success
+{"computation":"totals","capture":"72d174c5-86d4-41bc-b89e-eec8b477c2bb","partitions":1,"deltaRows":1}
+[worker(worker-b33306a29432240f52)] INFO: Completed task 3 (compute_batch, 124.45ms) with success
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+{"computation":"totals","capture":"57ab64a4-7fe0-40e5-b8c5-c9cbeadbc60a","partitions":0,"deltaRows":0}
+[worker(worker-c30d9447d71f6c4f90)] INFO: Completed task 4 (compute_batch, 144.00ms) with success
+----- output end -----
+native partitions bootstrap, update, delete and restart without unrelated recomputation ... ok (11s)
+native retained capture survives restart and then processes newer source state ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+{"computation":"totals","capture":"c5107805-8623-4f14-8c12-7ae399121c91","partitions":2,"deltaRows":2}
+[worker(worker-60a72f0afd41a8c7f6)] INFO: Completed task 1 (compute_batch, 38.00ms) with success
+{"computation":"totals","capture":"b51b78e8-e1c2-46f3-87c9-db7210e12dd2","partitions":1,"deltaRows":2}
+[worker(worker-60a72f0afd41a8c7f6)] ERROR: Failed task 2 (compute_batch, 8.05ms, attempt 1 of 25) with error 'calculation interrupted after durable capture':
+  Error: calculation interrupted after durable capture
+      at Object.calculate (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/native-runtime_test.ts:120:19)
+      at Object.calculate (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/native-runtime.ts:221:43)
+      at Object.task (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:272:36)
+      at async doNext (file:///Users/davi/Library/Caches/deno/npm/registry.npmjs.org/graphile-worker/0.18.0/dist/worker.js:255:18)
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+{"computation":"totals","capture":"b51b78e8-e1c2-46f3-87c9-db7210e12dd2","partitions":1,"deltaRows":2}
+[worker(worker-0d5ed86276e2b50297)] INFO: Completed task 2 (compute_batch, 63.23ms, attempt 2 of 25) with success
+{"computation":"totals","capture":"46799e77-1497-4de9-8937-dbd82dbff8a7","partitions":1,"deltaRows":2}
+[worker(worker-0d5ed86276e2b50297)] INFO: Completed task 3 (compute_batch, 18.55ms) with success
+----- output end -----
+native retained capture survives restart and then processes newer source state ... ok (3s)
+native partition ownership rejects cross-partition replacement atomically ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+{"computation":"totals","capture":"9f445f46-3e42-4130-9610-76e332d7868c","partitions":2,"deltaRows":2}
+[worker(worker-1086149f5c5bf251fc)] INFO: Completed task 1 (compute_batch, 40.99ms) with success
+{"computation":"totals","capture":"82eae1cf-6f31-436f-933d-7173909ca5cc","partitions":1,"deltaRows":2}
+[worker(worker-1086149f5c5bf251fc)] ERROR: Failed task 2 (compute_batch, 10.48ms, attempt 1 of 25) with error 'duplicate key value violates unique constraint "stream_owner_pkey"':
+  error: duplicate key value violates unique constraint "stream_owner_pkey"
+      at file:///Users/davi/Library/Caches/deno/npm/registry.npmjs.org/pg/8.16.3/lib/client.js:545:17
+      at async Object.publish (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/native-runtime.ts:243:15)
+      at async file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:275:6
+      at async transaction (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:78:20)
+      at async Object.task (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:274:5)
+      at async doNext (file:///Users/davi/Library/Caches/deno/npm/registry.npmjs.org/graphile-worker/0.18.0/dist/worker.js:255:18)
+----- output end -----
+native partition ownership rejects cross-partition replacement atomically ... ok (2s)
+a consolidated no-op delta cannot recalculate a native partition ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+{"computation":"totals","capture":"0d1760f5-0ed9-43ec-bed4-79bfd7e18e99","partitions":2,"deltaRows":2}
+[worker(worker-216fe5e5539b74489e)] INFO: Completed task 1 (compute_batch, 31.62ms) with success
+{"computation":"totals","capture":"47bc0ea7-c9ca-4be7-8220-5df3e8318ca7","partitions":0,"deltaRows":2}
+[worker(worker-216fe5e5539b74489e)] INFO: Completed task 2 (compute_batch, 9.45ms) with success
+----- output end -----
+a consolidated no-op delta cannot recalculate a native partition ... ok (2s)
+native ownership canonicalizes UUID aliases across sequential partition publications ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+{"computation":"totals","capture":"083226bb-b29b-434a-a015-35060dcf9bba","partitions":2,"deltaRows":2}
+[worker(worker-6af1a9ceddb4e7da3e)] INFO: Completed task 1 (compute_batch, 26.79ms) with success
+{"computation":"totals","capture":"7c583764-58cd-4d5f-a978-5ca43a05f394","partitions":1,"deltaRows":2}
+[worker(worker-6af1a9ceddb4e7da3e)] ERROR: Failed task 2 (compute_batch, 11.06ms, attempt 1 of 25) with error 'duplicate key value violates unique constraint "stream_owner_pkey"':
+  error: duplicate key value violates unique constraint "stream_owner_pkey"
+      at file:///Users/davi/Library/Caches/deno/npm/registry.npmjs.org/pg/8.16.3/lib/client.js:545:17
+      at async Object.publish (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/native-runtime.ts:243:15)
+      at async file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:275:6
+      at async transaction (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:78:20)
+      at async Object.task (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:274:5)
+      at async doNext (file:///Users/davi/Library/Caches/deno/npm/registry.npmjs.org/graphile-worker/0.18.0/dist/worker.js:255:18)
+----- output end -----
+native ownership canonicalizes UUID aliases across sequential partition publications ... ok (2s)
+ambiguous native acknowledgment fails polling and resumes the durable claim after reconstruction ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+[worker(worker-d6cf12332517238e6a)] ERROR: Failed task 1 (compute_batch, 9.02ms, attempt 1 of 25) with error 'ambiguous acknowledgment':
+  Error: ambiguous acknowledgment
+      at NativeFeldera.runtime.engine.acknowledge (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/native-runtime_test.ts:171:42)
+      at captured (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/native-runtime.ts:198:27)
+      at async Object.NativeRuntime.spec.captured (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/native-runtime.ts:305:9)
+      at async Object.task (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:271:4)
+      at async doNext (file:///Users/davi/Library/Caches/deno/npm/registry.npmjs.org/graphile-worker/0.18.0/dist/worker.js:255:18)
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+{"computation":"totals","capture":"677cfa2f-1642-4a5b-930e-a610255bbab1","partitions":2,"deltaRows":2}
+[worker(worker-43e55f367d3e8d9402)] INFO: Completed task 1 (compute_batch, 64.40ms, attempt 2 of 25) with success
+----- output end -----
+ambiguous native acknowledgment fails polling and resumes the durable claim after reconstruction ... ok (2s)
+foreign-key supersession retains every unpublished partition despite unrelated successor deltas ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+{"computation":"totals","capture":"3f6d4c5e-5f0f-4f27-b963-4dcd2f698f1d","partitions":2,"deltaRows":2}
+[worker(worker-cc6337f47b88c2a2ae)] INFO: Completed task 1 (compute_batch, 31.56ms) with success
+{"computation":"totals","capture":"deb09016-e06f-417f-b8bf-f2af279dadce","partitions":2,"deltaRows":4}
+[worker(worker-cc6337f47b88c2a2ae)] INFO: Completed task 2 (compute_batch, 27.00ms) with success
+{"computation":"totals","capture":"c6df2ae8-daff-4f51-8d9d-9dd969805f0c","partitions":2,"deltaRows":1}
+[worker(worker-cc6337f47b88c2a2ae)] INFO: Completed task 3 (compute_batch, 17.96ms) with success
+----- output end -----
+foreign-key supersession retains every unpublished partition despite unrelated successor deltas ... ok (2s)
+cascade deletion and identical source reinsertion repair sinks without relational deltas ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+{"computation":"totals","capture":"8ff82d23-a757-4d69-89fe-517ff3ced81c","partitions":2,"deltaRows":2}
+[worker(worker-8d99483dcfc78703d5)] INFO: Completed task 1 (compute_batch, 31.06ms) with success
+{"computation":"totals","capture":"11cd6db5-af5e-45b8-9f7e-92e4557cadda","partitions":1,"deltaRows":0}
+[worker(worker-8d99483dcfc78703d5)] INFO: Completed task 2 (compute_batch, 15.49ms) with success
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+{"computation":"totals","capture":"71db6dca-b744-49b9-a981-18074f9da606","partitions":1,"deltaRows":0}
+[worker(worker-8edbb89fa93e5f3410)] INFO: Completed task 3 (compute_batch, 28.34ms) with success
+----- output end -----
+cascade deletion and identical source reinsertion repair sinks without relational deltas ... ok (2s)
+source and sink edits during calculation retain repairs outside the active partition ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+{"computation":"totals","capture":"86a52c9a-e682-4f43-939a-bb8303a9b6a5","partitions":2,"deltaRows":2}
+[worker(worker-cd6f5a7a59c7b62353)] INFO: Completed task 1 (compute_batch, 35.83ms) with success
+{"computation":"totals","capture":"785d9b2b-ba59-4748-9709-8c7afcb51a80","partitions":1,"deltaRows":2}
+[worker(worker-cd6f5a7a59c7b62353)] INFO: Completed task 2 (compute_batch, 17.55ms) with success
+{"computation":"totals","capture":"945a62a8-8eaa-41cd-911b-9417adcd61f5","partitions":2,"deltaRows":2}
+[worker(worker-cd6f5a7a59c7b62353)] INFO: Completed task 3 (compute_batch, 18.71ms) with success
+----- output end -----
+source and sink edits during calculation retain repairs outside the active partition ... ok (2s)
+
+ok | 9 passed | 0 failed (33s)

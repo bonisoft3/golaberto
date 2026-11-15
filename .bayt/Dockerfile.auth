@@ -13,6 +13,8 @@ WORKDIR /monorepo/${BAYT_DIR}
 COPY --parents .bayt/compose.auth.yaml .bayt/Dockerfile.auth .bayt/bayt.auth.json .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/process-compose.yaml ./
 COPY --from=golaberto-database_bayt /monorepo /monorepo
 COPY --from=golaberto-migrate_bayt /monorepo /monorepo
+COPY --from=golaberto-airlock-upgrade_bayt /monorepo /monorepo
+COPY --from=golaberto-timer-check_bayt /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
 RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi

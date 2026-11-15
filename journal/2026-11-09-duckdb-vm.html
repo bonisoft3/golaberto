@@ -1,0 +1,20 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Golaberto DuckDB VM trial</title><body><article id="turn-2026-11-09-duckdb-vm">
+<h2>DuckDB VM trial: bounded archive execution is still required</h2>
+<p>Golaberto now selects DuckDB snapshot execution while retaining its Feldera SQL,
+pure WASM algorithms, durable batching, and transactional publication. The public
+Cloudflare site has not changed.</p>
+<p>Generation, lint, build and app tests passed. The focused runtime suites passed
+22 capture/computation tests and 21 batching tests, including transaction-consistent
+capture, coalescing, rollback and retained-input recovery. The AMD64 appliance
+built in Depot as <code>csp0kvq0cd</code> and started privately on the GCP VM.</p>
+<p>The complete archive exposed a native runtime limitation: game-card capture
+materializes all query results in JavaScript, then fails with
+<code>RangeError: Invalid string length</code> in <code>strictJson(inputs)</code>.
+An 8 GiB diagnostic VM made this failure observable; it did not solve it.
+The existing bounded application steps are not yet used by this execution path.</p>
+<p>Browser mutation verification failed while waiting for statistics. Its five
+created disposable fixture rows were subsequently removed in a guarded PostgreSQL
+transaction; no live-update or rollback-browser success is claimed. Failing
+appliance retries were stopped. Public release remains pending bounded execution.</p>
+</article>
+</body></html>

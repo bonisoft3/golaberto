@@ -1,0 +1,194 @@
+{
+  "applied_at": "2026-10-28T02:11:09.812630+00:00",
+  "plans": [
+    {
+      "source": {
+        "id": "8d44c61c-6628-5756-93c8-38b4d37eaead",
+        "enabled": true,
+        "season_id": 87760,
+        "created_at": "2026-10-28T01:43:10.457898+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "unique_tournament_id": 384
+      },
+      "event": {
+        "external_id": "17391621",
+        "home_external_id": "1963",
+        "away_external_id": "3206",
+        "home": "Palmeiras",
+        "away": "Estudiantes de La Plata",
+        "stage_id": "309",
+        "season_id": "87760",
+        "unique_tournament_id": "384",
+        "stage_key": "309|{\"slug\": \"final\"}",
+        "round_key": 29,
+        "day": "2026-11-28",
+        "kickoff": "2026-11-28T18:00:00Z",
+        "status": "scheduled",
+        "played": false,
+        "terminal": false,
+        "home_score": null,
+        "away_score": null,
+        "home_aet": null,
+        "away_aet": null,
+        "home_pen": null,
+        "away_pen": null
+      },
+      "template": {
+        "id": "a0300000-0000-4000-8000-0000000011c4",
+        "name": "Semis",
+        "sort": "pt,w,gd,gf,gp,name",
+        "txid": 5519,
+        "position": 7,
+        "scope_id": "public:",
+        "created_by": null,
+        "updated_by": null,
+        "bonus_points": 0,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "bonus_points_threshold": 0
+      },
+      "phase_id": "4fd5fe22-d591-5820-bf26-e9b0a25a5849",
+      "group_id": "d40509d9-6ed7-5bd4-ad5d-3ed765dca765",
+      "teams": [
+        {
+          "name": "Palmeiras-SP",
+          "local_id": "a0700000-0000-4000-8000-000000000010"
+        },
+        {
+          "name": "Estudiantes",
+          "local_id": "a0700000-0000-4000-8000-0000000000cb"
+        }
+      ],
+      "resource": {
+        "id": "bb184261-2e0a-4098-b631-b007ed57db9e",
+        "body": "{\"events\":[{\"eventState\":{},\"tournament\":{\"name\":\"CONMEBOL Libertadores, Knockout stage\",\"slug\":\"conmebol-libertadores\",\"category\":{\"name\":\"South America\",\"slug\":\"south-america\",\"sport\":{\"name\":\"Football\",\"slug\":\"football\",\"id\":1},\"priority\":18,\"country\":{},\"id\":1470,\"flag\":\"south-america\",\"fieldTranslations\":{\"nameTranslation\":{\"ar\":\"\\u0623\\u0645\\u0631\\u064a\\u0643\\u0627 \\u0627\\u0644\\u062c\\u0646\\u0648\\u0628\\u064a\\u0629\",\"ru\":\"\\u042e\\u0436\\u043d\\u0430\\u044f \\u0410\\u043c\\u0435\\u0440\\u0438\\u043a\\u0430\"},\"shortNameTranslation\":{}}},\"uniqueTournament\":{\"name\":\"CONMEBOL Libertadores\",\"slug\":\"conmebol-libertadores\",\"primaryColorHex\":\"#573215\",\"secondaryColorHex\":\"#dfaf49\",\"category\":{\"name\":\"South America\",\"slug\":\"south-america\",\"sport\":{\"name\":\"Football\",\"slug\":\"football\",\"id\":1},\"priority\":18,\"country\":{},\"id\":1470,\"flag\":\"south-america\",\"fieldTranslations\":{\"nameTranslation\":{\"ar\":\"\\u0623\\u0645\\u0631\\u064a\\u0643\\u0627 \\u0627\\u0644\\u062c\\u0646\\u0648\\u0628\\u064a\\u0629\",\"ru\":\"\\u042e\\u0436\\u043d\\u0430\\u044f \\u0410\\u043c\\u0435\\u0440\\u0438\\u043a\\u0430\"},\"shortNameTranslation\":{}}},\"userCount\":213247,\"hasPerformanceGraphFeature\":false,\"liveActivityEnabled\":true,\"country\":{},\"id\":384,\"hasEventPlayerStatistics\":true,\"displayInverseHomeAwayTeams\":false,\"fieldTranslations\":{\"nameTranslation\":{\"ar\":\"\\u0643\\u0648\\u0628\\u0627 \\u0644\\u064a\\u0628\\u0631\\u062a\\u0627\\u062f\\u0648\\u0631\\u064a\\u0633\",\"bn\":\"\\u0995\\u09a8\\u09ae\\u09c7\\u09ac\\u09b2 \\u09b2\\u09bf\\u09ac\\u09be\\u09b0\\u09cd\\u09a4\\u09be\\u09a6\\u09cb\\u09b0\\u09c7\\u09b8\",\"hi\":\"\\u0915\\u0949\\u0928\\u092e\\u0947\\u092c\\u094b\\u0932 \\u0932\\u093f\\u092c\\u0930\\u094d\\u091f\\u093e\\u0921\\u094b\\u0930\\u0947\\u0938\",\"ru\":\"\\u041a\\u041e\\u041d\\u041c\\u0415\\u0411\\u041e\\u041b \\u041b\\u0438\\u0431\\u0435\\u0440\\u0442\\u0430\\u0434\\u043e\\u0440\\u0435\\u0441\"},\"shortNameTranslation\":{}}},\"priority\":695,\"isGroup\":false,\"isLive\":false,\"id\":309,\"fieldTranslations\":{\"nameTranslation\":{\"ar\":\"\\u0643\\u0623\\u0633 \\u0644\\u064a\\u0628\\u0631\\u062a\\u0627\\u062f\\u0648\\u0631\\u064a\\u0633\\u060c \\u0645\\u0631\\u062d\\u0644\\u0629 \\u0627\\u0644\\u0625\\u0642\\u0635\\u0627\\u0621\",\"bn\":\"\\u0995\\u09cb\\u09aa\\u09be \\u09b2\\u09bf\\u09ac\\u09be\\u09b0\\u09cd\\u09a4\\u09be\\u09a6\\u09cb\\u09b0\\u09c7\\u09b8, \\u09a8\\u0995\\u0986\\u0989\\u099f \\u09b8\\u09cd\\u099f\\u09c7\\u099c\",\"hi\":\"\\u0915\\u094b\\u092a\\u093e \\u0932\\u093f\\u092c\\u0930\\u094d\\u091f\\u093e\\u0921\\u094b\\u0930\\u0947\\u0938, \\u0928\\u0949\\u0915\\u0906\\u0909\\u091f \\u0938\\u094d\\u091f\\u0947\\u091c\",\"ru\":\"\\u041a\\u0443\\u0431\\u043e\\u043a \\u041b\\u0438\\u0431\\u0435\\u0440\\u0442\\u0430\\u0434\\u043e\\u0440\\u0435\\u0441 \\u041a\\u041e\\u041d\\u041c\\u0415\\u0411\\u041e\\u041b, \\u0441\\u0442\\u0430\\u0434\\u0438\\u044f \\u043f\\u043b\\u0435\\u0439-\\u043e\\u0444\\u0444\"},\"shortNameTranslation\":{}}},\"season\":{\"name\":\"CONMEBOL Libertadores 2026\",\"year\":\"2026\",\"editor\":false,\"seasonCoverageInfo\":{},\"id\":87760},\"roundInfo\":{\"round\":29,\"name\":\"Final\",\"slug\":\"final\",\"cupRoundType\":1},\"customId\":\"nOsgob\",\"status\":{\"code\":0,\"description\":\"Not started\",\"type\":\"notstarted\"},\"homeTeam\":{\"name\":\"Palmeiras\",\"slug\":\"palmeiras\",\"shortName\":\"Palmeiras\",\"gender\":\"M\",\"sport\":{\"name\":\"Football\",\"slug\":\"football\",\"id\":1},\"userCount\":596647,\"nameCode\":\"PAL\",\"disabled\":false,\"national\":false,\"type\":0,\"country\":{\"alpha2\":\"BR\",\"alpha3\":\"BRA\",\"name\":\"Brazil\",\"slug\":\"brazil\"},\"id\":1963,\"subTeams\":[],\"teamColors\":{\"primary\":\"#339966\",\"secondary\":\"#336633\",\"text\":\"#336633\"},\"fieldTranslations\":{\"nameTranslation\":{\"ar\":\"\\u0628\\u0627\\u0644\\u0645\\u064a\\u064a\\u0631\\u0627\\u0633\",\"ru\":\"\\u041f\\u0430\\u043b\\u043c\\u0435\\u0439\\u0440\\u0430\\u0441\"},\"shortNameTranslation\":{\"ar\":\"\\u0628\\u0627\\u0644\\u0645\\u064a\\u064a\\u0631\\u0627\\u0633\"}}},\"awayTeam\":{\"name\":\"Estudiantes de La Plata\",\"slug\":\"estudiantes-de-la-plata\",\"shortName\":\"Estudiantes\",\"gender\":\"M\",\"sport\":{\"name\":\"Football\",\"slug\":\"football\",\"id\":1},\"userCount\":56091,\"nameCode\":\"ELP\",\"disabled\":false,\"national\":false,\"type\":0,\"country\":{\"alpha2\":\"AR\",\"alpha3\":\"ARG\",\"name\":\"Argentina\",\"slug\":\"argentina\"},\"id\":3206,\"subTeams\":[],\"teamColors\":{\"primary\":\"#ff0000\",\"secondary\":\"#ffffff\",\"text\":\"#ffffff\"},\"fieldTranslations\":{\"nameTranslation\":{\"ar\":\"\\u0625\\u0633\\u062a\\u0648\\u064a\\u0627\\u0646\\u062a\\u0648\\u0633 \\u062f\\u064a \\u0644\\u0627\\u0628\\u0644\\u0627\\u062f\\u0627\",\"hi\":\"\\u090f\\u0938\\u094d\\u0924\\u0941\\u0921\\u093f\\u092f\\u0928\\u0924\\u0947\\u0938 \\u0921\\u0947 \\u0932\\u093e \\u092a\\u094d\\u0932\\u093e\\u091f\\u093e\",\"ru\":\"\\u041a\\u043b\\u0443\\u0431 \\u042d\\u0441\\u0442\\u0443\\u0434\\u0438\\u0430\\u043d\\u0442\\u0435\\u0441 \\u0434\\u0435 \\u041b\\u0430-\\u041f\\u043b\\u0430\\u0442\\u0430\"},\"shortNameTranslation\":{}}},\"homeScore\":{},\"awayScore\":{},\"time\":{},\"changes\":{\"changeTimestamp\":0},\"hasGlobalHighlights\":false,\"crowdsourcingDataDisplayEnabled\":false,\"id\":17391621,\"slug\":\"estudiantes-de-la-plata-palmeiras\",\"startTimestamp\":1795888800,\"finalResultOnly\":false,\"feedLocked\":true,\"cupMatchesInRound\":1,\"isEditor\":false}],\"hasNextPage\":false}",
+        "etag": "W/\"b16652da9b\"",
+        "meta": {
+          "page": 0,
+          "round": {
+            "name": "Final",
+            "slug": "final",
+            "round": 29
+          },
+          "events": [
+            "17391621"
+          ]
+        },
+        "path": "unique-tournament/384/season/87760/events/round/29/slug/final",
+        "family": "round",
+        "failures": 0,
+        "priority": 0,
+        "source_id": "8d44c61c-6628-5756-93c8-38b4d37eaead",
+        "generation": 3,
+        "last_error": null,
+        "cache_until": "2026-10-28T02:00:13.261995+00:00",
+        "next_due_at": "2026-11-04T01:59:13.261995+00:00",
+        "resource_key": "unique-tournament/384/season/87760/events/round/29/slug/final",
+        "last_modified": null,
+        "semantic_hash": "e0d4f006235e007b52d84b79c8d9a40a1e1c68e1fe60282d6ab54a8ab40f34e2",
+        "last_change_at": "2026-10-28T01:59:13.761591+00:00",
+        "last_success_at": "2026-10-28T01:59:13.761591+00:00"
+      },
+      "provider_url": "https://www.sofascore.com/api/v1/unique-tournament/384/season/87760/events/round/29/slug/final"
+    },
+    {
+      "source": {
+        "id": "3425bdb5-84b5-5e74-a631-605ddf1ecac4",
+        "enabled": true,
+        "season_id": 87770,
+        "created_at": "2026-10-28T01:43:10.462948+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "unique_tournament_id": 480
+      },
+      "event": {
+        "external_id": "17384552",
+        "home_external_id": "1977",
+        "away_external_id": "3202",
+        "home": "Atlético Mineiro",
+        "away": "Boca Juniors",
+        "stage_id": "91444",
+        "season_id": "87770",
+        "unique_tournament_id": "480",
+        "stage_key": "91444|{\"slug\": \"final\"}",
+        "round_key": 29,
+        "day": "2026-11-21",
+        "kickoff": "2026-11-21T18:00:00Z",
+        "status": "scheduled",
+        "played": false,
+        "terminal": false,
+        "home_score": null,
+        "away_score": null,
+        "home_aet": null,
+        "away_aet": null,
+        "home_pen": null,
+        "away_pen": null
+      },
+      "template": {
+        "id": "a0300000-0000-4000-8000-0000000011c5",
+        "name": "Semis",
+        "sort": "pt,w,gd,gf,gp,name",
+        "txid": 5519,
+        "position": 6,
+        "scope_id": "public:",
+        "created_by": null,
+        "updated_by": null,
+        "bonus_points": 0,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "bonus_points_threshold": 0
+      },
+      "phase_id": "bbabb8df-614e-5a3d-b2c0-baacfba55e33",
+      "group_id": "5b32fe52-4657-5df3-9d82-0b2597828e88",
+      "teams": [
+        {
+          "name": "Atlético-MG",
+          "local_id": "a0700000-0000-4000-8000-000000000004"
+        },
+        {
+          "name": "Boca Juniors",
+          "local_id": "a0700000-0000-4000-8000-0000000001b5"
+        }
+      ],
+      "resource": {
+        "id": "cd010710-87cd-40f0-af89-908841612e34",
+        "body": "{\"events\":[{\"eventState\":{},\"tournament\":{\"name\":\"CONMEBOL Sudamericana, Knockout stage\",\"slug\":\"conmebol-sudamericana\",\"category\":{\"name\":\"South America\",\"slug\":\"south-america\",\"sport\":{\"name\":\"Football\",\"slug\":\"football\",\"id\":1},\"priority\":18,\"country\":{},\"id\":1470,\"flag\":\"south-america\",\"fieldTranslations\":{\"nameTranslation\":{\"ar\":\"\\u0623\\u0645\\u0631\\u064a\\u0643\\u0627 \\u0627\\u0644\\u062c\\u0646\\u0648\\u0628\\u064a\\u0629\",\"ru\":\"\\u042e\\u0436\\u043d\\u0430\\u044f \\u0410\\u043c\\u0435\\u0440\\u0438\\u043a\\u0430\"},\"shortNameTranslation\":{}}},\"uniqueTournament\":{\"name\":\"CONMEBOL Sudamericana\",\"slug\":\"conmebol-sudamericana\",\"primaryColorHex\":\"#e3c000\",\"secondaryColorHex\":\"#13489c\",\"category\":{\"name\":\"South America\",\"slug\":\"south-america\",\"sport\":{\"name\":\"Football\",\"slug\":\"football\",\"id\":1},\"priority\":18,\"country\":{},\"id\":1470,\"flag\":\"south-america\",\"fieldTranslations\":{\"nameTranslation\":{\"ar\":\"\\u0623\\u0645\\u0631\\u064a\\u0643\\u0627 \\u0627\\u0644\\u062c\\u0646\\u0648\\u0628\\u064a\\u0629\",\"ru\":\"\\u042e\\u0436\\u043d\\u0430\\u044f \\u0410\\u043c\\u0435\\u0440\\u0438\\u043a\\u0430\"},\"shortNameTranslation\":{}}},\"userCount\":129181,\"hasPerformanceGraphFeature\":false,\"liveActivityEnabled\":true,\"country\":{},\"id\":480,\"hasEventPlayerStatistics\":true,\"displayInverseHomeAwayTeams\":false,\"fieldTranslations\":{\"nameTranslation\":{\"ar\":\"\\u0643\\u0623\\u0633 \\u0623\\u0645\\u0631\\u064a\\u0643\\u0627 \\u0627\\u0644\\u062c\\u0646\\u0648\\u0628\\u064a\\u0629 \\u0644\\u0643\\u0631\\u0629 \\u0627\\u0644\\u0642\\u062f\\u0645\",\"bn\":\"\\u0995\\u09a8\\u09ae\\u09c7\\u09ac\\u09b2 \\u09b8\\u09c1\\u09a6\\u09be\\u0986\\u09ae\\u09c7\\u09b0\\u09bf\\u0995\\u09be\\u09a8\\u09be\",\"hi\":\"\\u0915\\u0949\\u0928\\u092e\\u0947\\u092c\\u094b\\u0932 \\u0938\\u0941\\u0926\\u093e\\u092e\\u0947\\u0930\\u093f\\u0915\\u093e\\u0928\\u093e\",\"pt\":\"Copa Sul-Americana\",\"ru\":\"\\u041a\\u041e\\u041d\\u041c\\u0415\\u0411\\u041e\\u041b \\u0421\\u0443\\u0434\\u0430\\u043c\\u0435\\u0440\\u0438\\u043a\\u0430\\u043d\\u0430\"},\"shortNameTranslation\":{}}},\"priority\":521,\"isGroup\":false,\"isLive\":false,\"id\":91444,\"fieldTranslations\":{\"nameTranslation\":{\"ar\":\"\\u0643\\u0648\\u0628\\u0627 \\u0633\\u0648\\u062f \\u0623\\u0645\\u0631\\u064a\\u0643\\u0627\\u0646\\u0627\\u060c \\u0627\\u0644\\u0623\\u062f\\u0648\\u0627\\u0631 \\u0627\\u0644\\u0625\\u0642\\u0635\\u0627\\u0626\\u064a\\u0629\",\"bn\":\"\\u0995\\u09cb\\u09aa\\u09be \\u09b8\\u09c1\\u09a6\\u09be\\u09ae\\u09c7\\u09b0\\u09bf\\u0995\\u09be\\u09a8\\u09be, \\u09a8\\u0995\\u0986\\u0989\\u099f \\u09b8\\u09cd\\u099f\\u09c7\\u099c\",\"hi\":\"\\u0915\\u094b\\u092a\\u093e \\u0938\\u0941\\u0926\\u093e\\u092e\\u0947\\u0930\\u093f\\u0915\\u093e\\u0928\\u093e, \\u0928\\u0949\\u0915\\u0906\\u0909\\u091f \\u0938\\u094d\\u091f\\u0947\\u091c\",\"pt\":\"Copa Sul-Americana, Fase final\",\"ru\":\"\\u041a\\u0443\\u0431\\u043e\\u043a \\u042e\\u0436\\u043d\\u043e\\u0439 \\u0410\\u043c\\u0435\\u0440\\u0438\\u043a\\u0438 \\u041a\\u041e\\u041d\\u041c\\u0415\\u0411\\u041e\\u041b, \\u0441\\u0442\\u0430\\u0434\\u0438\\u044f \\u043f\\u043b\\u0435\\u0439-\\u043e\\u0444\\u0444\",\"ro\":\"CONMEBOL Sudamericana, Faza eliminatorie\"},\"shortNameTranslation\":{}}},\"season\":{\"name\":\"CONMEBOL Sudamericana 2026\",\"year\":\"2026\",\"editor\":false,\"seasonCoverageInfo\":{},\"id\":87770},\"roundInfo\":{\"round\":29,\"name\":\"Final\",\"slug\":\"final\",\"cupRoundType\":1},\"customId\":\"COscob\",\"status\":{\"code\":0,\"description\":\"Not started\",\"type\":\"notstarted\"},\"homeTeam\":{\"name\":\"Atl\\u00e9tico Mineiro\",\"slug\":\"atletico-mineiro\",\"shortName\":\"Atl\\u00e9tico-MG\",\"gender\":\"M\",\"sport\":{\"name\":\"Football\",\"slug\":\"football\",\"id\":1},\"userCount\":240864,\"nameCode\":\"CAM\",\"disabled\":false,\"national\":false,\"type\":0,\"country\":{\"alpha2\":\"BR\",\"alpha3\":\"BRA\",\"name\":\"Brazil\",\"slug\":\"brazil\"},\"id\":1977,\"subTeams\":[],\"teamColors\":{\"primary\":\"#000000\",\"secondary\":\"#ffffff\",\"text\":\"#ffffff\"},\"fieldTranslations\":{\"nameTranslation\":{\"ar\":\"\\u0623\\u062a\\u0644\\u062a\\u064a\\u0643\\u0648 \\u0645\\u064a\\u0646\\u064a\\u0631\\u0648\",\"ru\":\"\\u0410\\u0442\\u043b\\u0435\\u0442\\u0438\\u043a\\u043e \\u041c\\u0438\\u043d\\u0435\\u0439\\u0440\\u043e\"},\"shortNameTranslation\":{\"ar\":\"\\u0623\\u062a\\u0644\\u062a\\u064a\\u0643\\u0648-\\u0625\\u0645 \\u062c\\u064a\"}}},\"awayTeam\":{\"name\":\"Boca Juniors\",\"slug\":\"boca-juniors\",\"shortName\":\"Boca Juniors\",\"gender\":\"M\",\"sport\":{\"name\":\"Football\",\"slug\":\"football\",\"id\":1},\"userCount\":325535,\"nameCode\":\"BOC\",\"disabled\":false,\"national\":false,\"type\":0,\"country\":{\"alpha2\":\"AR\",\"alpha3\":\"ARG\",\"name\":\"Argentina\",\"slug\":\"argentina\"},\"id\":3202,\"subTeams\":[],\"teamColors\":{\"primary\":\"#003399\",\"secondary\":\"#ffcc66\",\"text\":\"#ffcc66\"},\"fieldTranslations\":{\"nameTranslation\":{\"ar\":\"\\u0628\\u0648\\u0643\\u0627 \\u062c\\u0648\\u0646\\u064a\\u0648\\u0631\\u0632\",\"hi\":\"\\u092c\\u094b\\u0915\\u093e \\u091c\\u0942\\u0928\\u093f\\u092f\\u0930\\u094d\\u0938\",\"ru\":\"\\u0411\\u043e\\u043a\\u0430 \\u0425\\u0443\\u043d\\u0438\\u043e\\u0440\\u0441\"},\"shortNameTranslation\":{}}},\"homeScore\":{},\"awayScore\":{},\"time\":{},\"changes\":{\"changeTimestamp\":0},\"hasGlobalHighlights\":false,\"crowdsourcingDataDisplayEnabled\":false,\"id\":17384552,\"slug\":\"boca-juniors-atletico-mineiro\",\"startTimestamp\":1795284000,\"finalResultOnly\":false,\"feedLocked\":true,\"cupMatchesInRound\":1,\"isEditor\":false}],\"hasNextPage\":false}",
+        "etag": "W/\"6b1a323fc2\"",
+        "meta": {
+          "page": 0,
+          "round": {
+            "name": "Final",
+            "slug": "final",
+            "round": 29
+          },
+          "events": [
+            "17384552"
+          ]
+        },
+        "path": "unique-tournament/480/season/87770/events/round/29/slug/final",
+        "family": "round",
+        "failures": 0,
+        "priority": 0,
+        "source_id": "3425bdb5-84b5-5e74-a631-605ddf1ecac4",
+        "generation": 3,
+        "last_error": null,
+        "cache_until": "2026-10-28T02:00:18.898406+00:00",
+        "next_due_at": "2026-11-04T01:59:18.898406+00:00",
+        "resource_key": "unique-tournament/480/season/87770/events/round/29/slug/final",
+        "last_modified": null,
+        "semantic_hash": "c26afba2d6d972e234cfaf4cdbe9100d72816bf21cc7f990df44849de303de91",
+        "last_change_at": "2026-10-28T01:59:19.690039+00:00",
+        "last_success_at": "2026-10-28T01:59:19.690039+00:00"
+      },
+      "provider_url": "https://www.sofascore.com/api/v1/unique-tournament/480/season/87770/events/round/29/slug/final"
+    }
+  ],
+  "new_phases": 2,
+  "new_groups": 2,
+  "memberships": 4,
+  "replays": 2,
+  "additional_requests": 0
+}

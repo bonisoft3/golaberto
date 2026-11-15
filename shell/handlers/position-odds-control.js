@@ -1,5 +1,5 @@
-(state, event, params) => {
-  const row = state.items[0];
+({ context, event }, params) => {
+  const row = context.items[0];
   if (!row) return params?.field?.startsWith('guard') ? false : -1;
   const from = String(event.from || '');
   const graph = from.startsWith('position-graph-');

@@ -4,6 +4,11 @@ import { assert, assertEquals, assertThrows } from "jsr:@std/assert@1.0.11";
 import { parseHTML } from "npm:linkedom@0.18.4";
 import { evaluateRole, batched, interpretScreen, parseFilter, parseLimit } from "./platform.ts";
 
+// The assertions below state a leaf's world and its event side by side; the
+// leaf itself takes them as XState's one argument.
+// deno-lint-ignore no-explicit-any
+const positional = (leaf: any) => (state: any, event?: any, ...rest: any[]) => leaf({ context: state, event }, ...rest);
+
 const app = new URL("../", import.meta.url);
 const screens = [
   "gerenciar",
@@ -146,10 +151,15 @@ async function mountScreen(
       }
       return Promise.resolve();
     },
-    put: (table: string, row: Record<string, unknown>) => {
+    put: (
+      table: string,
+      row: Record<string, unknown>,
+      _onRefused?: unknown,
+      absent?: Record<string, unknown>,
+    ) => {
       const saved = rows.get(table) ?? [];
       const index = saved.findIndex((prior) => prior.id === row.id);
-      if (index === -1) saved.push(row);
+      if (index === -1) saved.push({ ...absent, ...row });
       else saved[index] = { ...saved[index], ...row };
       rows.set(table, saved);
       notify(table);
@@ -284,10 +294,10 @@ Deno.test("the UTC kickoff adapter converts offsets and validates native local d
 });
 
 Deno.test("played requires two known scores including zero after clearing the other side", async () => {
-  const played = await evaluateRole(
+  const played = positional(await evaluateRole(
     await Deno.readTextFile(new URL("shell/handlers/editing-played.js", app)),
     "handler",
-  );
+  ));
   for (const unknown of [null, undefined, ""]) {
     assertEquals(
       played({ items: [{ away_score: unknown }] }, { value: "0" }, {

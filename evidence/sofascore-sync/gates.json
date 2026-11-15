@@ -1,0 +1,42 @@
+[
+  {
+    "command": "./saytw doctor",
+    "exit": 0,
+    "evidence": "Toolchain and target configuration"
+  },
+  {
+    "command": "./saytw generate",
+    "exit": 0,
+    "evidence": "CUE owns generated SQL, manifests and screens"
+  },
+  {
+    "command": "./saytw lint",
+    "exit": 0,
+    "evidence": "Types, policies, SQL, identity, pipelines and facts"
+  },
+  {
+    "command": "./saytw test",
+    "exit": 0,
+    "evidence": "Application unit suite, including 39 SofaScore Python tests"
+  },
+  {
+    "command": "./saytw integrate --jobs 1",
+    "exit": 0,
+    "evidence": "Retained migration replay, full visual, browser acceptance and constraints"
+  },
+  {
+    "command": "Updater image build: cargo test --release --locked",
+    "exit": 0,
+    "evidence": "4 Rust unit tests and 1 JSONL process test"
+  },
+  {
+    "command": "Focused database regressions",
+    "exit": 0,
+    "evidence": "7 passed; included in the broader 74-test SQL suite"
+  },
+  {
+    "command": "Seed reproducibility",
+    "exit": 0,
+    "evidence": "2 passed; the original seed remains unchanged"
+  }
+]

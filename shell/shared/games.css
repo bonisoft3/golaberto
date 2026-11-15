@@ -37,11 +37,6 @@
 .game-row .score, .scoreboard .score { grid-area: score; display: flex; gap: var(--sp-sm); justify-content: center; font-weight: 700; }
 .game-row .score i, .scoreboard .score i { font-style: normal; color: var(--secondary); font-weight: 400; }
 [data-played="false"] .score b { display: none; }
-.round-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--sp-lg); }
-.round .game-row { grid-template-columns: 6em minmax(0, 1fr) 4.5em minmax(0, 1fr); grid-template-areas: "when home score away"; }
-/* A track too narrow for day and hour side by side stacks them. */
-.round .game-row .when { flex-direction: column; gap: 0; }
-.round-next:not(:has(.round)) { display: none; }
 
 .tabs { display: flex; gap: var(--sp-sm); margin-block-end: var(--sp-md); }
 .tabs [role="tab"] {
@@ -83,7 +78,7 @@
 @media (max-width: 720px) {
   /* The championship drops to a line of its own under the teams: on a phone it
      is still what tells an Arsenal x Chelsea in one competition from another. */
-  .game-row, .round .game-row {
+  .game-row {
     grid-template-columns: 6em minmax(0, 1fr) 4em minmax(0, 1fr);
     grid-template-areas: "when home score away" "when where where where";
     row-gap: 0;

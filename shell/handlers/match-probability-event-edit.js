@@ -1,5 +1,5 @@
-(state, event, params) => {
-  const row = state.items[0];
+({ context, event }, params) => {
+  const row = context.items[0];
   if (!row) throw new Error("Hypothetical match event is missing");
   if (params.field === "side") {
     return event.from === `${row.id}-side` &&

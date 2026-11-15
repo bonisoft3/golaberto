@@ -2,7 +2,11 @@
 
 package golaberto
 
-import "strings"
+import (
+	"strings"
+
+	pronto "github.com/bonisoft3/pronto"
+)
 
 _matchContextSql:     string @embed(file="services/database/sql/038_match_context.sql", type=text)
 _matchContextUpgrade: strings.Replace(strings.Replace(_matchContextSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
@@ -132,7 +136,7 @@ code: state: migrations: "038_match_context": {
 
 loop: surface: checks: "match-context-renderer": {
 	verb: "test"
-	cmds: ["mise exec -- deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-env tests/match-context-renderer.ts"]
+	cmds: ["\(pronto.#Harness.rule); mise exec -- deno test \(pronto.#Harness.flags) --allow-env tests/match-context-renderer.ts"]
 	note: "the pure match renderer keeps validated coordinates, distance and route links inside the prose allowlist"
 }
 

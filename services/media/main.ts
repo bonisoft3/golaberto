@@ -12,7 +12,7 @@ try {
 } finally { await schema.end(); }
 const repository = nativeRepository(databaseUrl);
 const gateway = createNativeGateway(repository, jwtSecret);
-Deno.serve({ port: 3900 }, async (request) => {
+Deno.serve({ port: Number(Deno.env.get("PORT") || 3900) }, async (request) => {
   if (new URL(request.url).pathname === "/health" && request.method === "GET") return new Response("ok");
   return await gateway(adaptBlobRequest(request));
 });

@@ -1,0 +1,10 @@
+{
+  "operations": [
+    {
+      "sql": {
+        "up": "SET lock_timeout = '5s';\nSET statement_timeout = '60s';\n\nCREATE OR REPLACE FUNCTION game_archive(feed home_feed) RETURNS SETOF game_archive\nLANGUAGE sql STABLE ROWS 1 SET search_path=public,pg_temp AS $$\n  SELECT source.* FROM game_archive source WHERE source.id=feed.id\n$$;\nREVOKE ALL ON FUNCTION game_archive(home_feed) FROM PUBLIC;\nGRANT EXECUTE ON FUNCTION game_archive(home_feed) TO anon, app_user, service;\n",
+        "onComplete": true
+      }
+    }
+  ]
+}

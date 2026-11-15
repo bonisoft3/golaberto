@@ -5,7 +5,7 @@ services:
       additional_contexts:
         golaberto-launch: service:golaberto-launch
         plugins_omnishell-runtime-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.21.7@sha256:300583571c8a5434d59c7ada9a3b5c2f6319d5768b3950a9f06504d96237d1a8}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.24.0@sha256:17daf9f9ed4dd8269b0de24eb7d66289c253b7e26fe47b81e93faccbcd77270c}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}
       context: ..
       dockerfile: .bayt/Dockerfile.integrate
       target: integrate
@@ -33,8 +33,18 @@ services:
       golaberto-launch:
         condition: service_healthy
         restart: true
+    entrypoint:
+    - sh
+    - -c
+    - >-
+      deno run --config tests/deno.json --lock tests/deno.lock --frozen --cached-only
+      --allow-env --allow-net --allow-read --allow-sys tests/visual-ready.ts && exec
+      "$@"
+    - visual-fixture-ready
     environment:
       APP_URL: https://caddy:8443
+      DATABASE_URL: >-
+        postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}
       SETTLE_TIMEOUT_MS: "50000"
     image: bayt-golaberto-integrate:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
     scale: 0

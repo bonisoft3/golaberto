@@ -1,0 +1,168 @@
+doctor: exit 0
+generate: exit 0
+lint: exit 0
+test: exit 0
+focused Omnishell tests: exit 0
+focused Pronto route/SSR tests: exit 0
+ci-replay: exit 0, 74 seconds
+ci-visual: exit 0, 360 seconds
+ci-constraints: exit 0, 98 seconds
+ci-acceptance: exit 0, 207 seconds
+
+Final integration:
+/Users/robsonaraujo/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/robsonaraujo/.local/share/mise/http-tarballs/a3af5b05ceb3e7aa9374370c8db42a96a996ed632b0cee781273c7079840e468/nu.musl.toml -I /Users/robsonaraujo/.local/share/mise/http-tarballs/a3af5b05ceb3e7aa9374370c8db42a96a996ed632b0cee781273c7079840e468 /Users/robsonaraujo/.local/share/mise/http-tarballs/a3af5b05ceb3e7aa9374370c8db42a96a996ed632b0cee781273c7079840e468/integrate.nu --bake --no-up --with-buildx --target ci-constraints,ci-acceptance --jobs 1
+/Users/robsonaraujo/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/robsonaraujo/.local/share/mise/http-tarballs/a3af5b05ceb3e7aa9374370c8db42a96a996ed632b0cee781273c7079840e468/compose.toml --profile * config -o /var/folders/rh/ywdl5b9x4vz4n2bhkh0qhs_00000gn/T/tmp.hFg6uyA2Yz/compose.yaml
+✓ compose config (0 lines, 0 sec, log: /var/folders/rh/ywdl5b9x4vz4n2bhkh0qhs_00000gn/T/sayt.TmcXy8/mise.KzkDrY.log)
+… docker buildx bake still running (60 sec, log: /var/folders/rh/ywdl5b9x4vz4n2bhkh0qhs_00000gn/T/sayt.TmcXy8/docker.fFvjnr.log)
+✓ docker buildx bake (18903 lines, 98 sec, log: /var/folders/rh/ywdl5b9x4vz4n2bhkh0qhs_00000gn/T/sayt.TmcXy8/docker.fFvjnr.log)
+… docker buildx bake still running (60 sec, log: /var/folders/rh/ywdl5b9x4vz4n2bhkh0qhs_00000gn/T/sayt.TmcXy8/docker.2R45E0.log)
+… docker buildx bake still running (120 sec, log: /var/folders/rh/ywdl5b9x4vz4n2bhkh0qhs_00000gn/T/sayt.TmcXy8/docker.2R45E0.log)
+… docker buildx bake still running (180 sec, log: /var/folders/rh/ywdl5b9x4vz4n2bhkh0qhs_00000gn/T/sayt.TmcXy8/docker.2R45E0.log)
+✓ docker buildx bake (16891 lines, 207 sec, log: /var/folders/rh/ywdl5b9x4vz4n2bhkh0qhs_00000gn/T/sayt.TmcXy8/docker.2R45E0.log)
+integrate ✓ passed
+
+Focused framework tests:
+------- pre-test output -------
+SES Removing unpermitted intrinsics
+  Removing intrinsics.%SharedSymbol%.metadata
+  Removing intrinsics.%MapPrototype%.getOrInsert
+  Removing intrinsics.%MapPrototype%.getOrInsertComputed
+  Removing intrinsics.%ObjectPrototype%.__proto__<get>.prototype
+  Tolerating undeletable intrinsics.%ObjectPrototype%.__proto__<get>.prototype === undefined
+  Removing intrinsics.%ObjectPrototype%.__proto__<set>.prototype
+  Tolerating undeletable intrinsics.%ObjectPrototype%.__proto__<set>.prototype === undefined
+  Removing intrinsics.%WeakMapPrototype%.getOrInsert
+  Removing intrinsics.%WeakMapPrototype%.getOrInsertComputed
+  Removing intrinsics.%DatePrototype%.toTemporalInstant
+----- pre-test output end -----
+running 1 test from ../../plugins/omnishell/test/locale-current.test.ts
+a language switcher's current option ...
+  binds section destinations in the screen's language without waiting for a click ... ok (18ms)
+  is the one naming the locale the screen is in ... ok (1ms)
+  moves with the screen's locale ... ok (1ms)
+  is not written onto a link that names no locale ... ok (0ms)
+  leaves the href alone ... ok (0ms)
+a language switcher's current option ... ok (31ms)
+running 2 tests from ../../plugins/omnishell/test/render-demand.test.ts
+retained documents lease their lazy query until invalidation or eviction ...
+------- post-test output -------
+[Electric] Using HTTP (not HTTPS) typically limits browsers to ~6 concurrent connections per origin under HTTP/1.1. This can cause slow shapes and app freezes with multiple shapes. Use HTTPS for HTTP/2 support. See: https://electric-sql.com/r/electric-http2
+----- post-test output end -----
+retained documents lease their lazy query until invalidation or eviction ... ok (52ms)
+a stand-in answered while a view loads is redrawn when the load ends ... ok (16ms)
+running 5 tests from ../../plugins/omnishell/test/render-server.test.ts
+the server terminal ...
+  refuses matched non-public or non-SSR routes before rendering or caching ... ok (6ms)
+  becomes warm without querying archive snapshots or request-only rows ... ok (0ms)
+  propagates eager startup failures ... ok (2ms)
+  reads changed server rows on the next request for a region ... ok (0ms)
+  reads changed server rows on the next request for a named read ... ok (0ms)
+  shares an in-flight request-only document without retaining it afterward ... ok (15ms)
+  holds a document until a read that drew it changes ... ok (14ms)
+  keeps a document a change elsewhere does not touch ... ok (7ms)
+  listens to each read as the render read it, so the store decides what touches it ... ok (7ms)
+  answers an address naming no row 404, and does not keep it ... ok (14ms)
+  answers an address naming no route 404 without rendering ... ok (0ms)
+  spells every answer after the deployment's origin, whatever Host it was asked under ... ok (8ms)
+  answers every spelling of a query its screen does not read with one document ... ok (7ms)
+  keeps one document per value of a query key its screen reads ... ok (21ms)
+  keeps one document per value of a query key its screen read where the address had none ... ok (13ms)
+  answers 503 rather than queueing renders past its bound ... ok (14ms)
+  renders an address asked for again while it renders once ... ok (7ms)
+  does not hold a document a read moved under while it rendered ... ok (8ms)
+  drops a document a read moved under between the render letting go and the hold ... ok (19ms)
+  lets go of a render's reads when the render throws ... ok (8ms)
+  renders one document at a time ... ok (23ms)
+  lets go of the documents used longest ago, and of their reads ... ok (21ms)
+  says it may be kept by anyone and served by no one unasked, and answers a revalidation ... ok (7ms)
+the server terminal ... ok (236ms)
+the server terminal's origin ...
+  is the one ORIGIN states, exactly an origin ... ok (0ms)
+  ends the renderer at start where none is set, before it reads the door ... ok (1ms)
+the server terminal's origin ... ok (1ms)
+the renderer's reads through its door ...
+  give up on a door that never answers ... ok (21ms)
+  still give up when the caller does, on a Request's own signal too ... ok (0ms)
+  end the renderer at start where no bound is set ... ok (0ms)
+the renderer's reads through its door ... ok (22ms)
+the server terminal's guest ...
+  is minted again once half its token's life is gone ... ok (3ms)
+  ends the renderer when a renewal is refused ... ok (2ms)
+the server terminal's guest ... ok (5ms)
+the server terminal's store ...
+  ends the renderer when the door refuses its token ... ok (18ms)
+the server terminal's store ... ok (19ms)
+running 4 tests from ../../plugins/omnishell/test/route-address.test.ts
+a route's pattern ...
+  is the route's own where nothing translates it ... ok (0ms)
+  is the locale's where the route carries one per language ... ok (0ms)
+a route's pattern ... ok (9ms)
+a route's address ...
+  addresses a section before an asset base or a modified click can redirect it ... ok (1ms)
+  wears no prefix in the default locale ... ok (0ms)
+  wears the segment the locale declares, on the pattern that locale states ... ok (0ms)
+  is the prefix alone for the home route, not a trailing slash ... ok (0ms)
+  fills every :param, encoded ... ok (0ms)
+  has no prefix at all where the app declares no locales ... ok (0ms)
+  refuses a route this app does not have ... ok (1ms)
+  refuses a :param nothing gives a value ... ok (0ms)
+  has no address when a param is written and the row empties it ... ok (0ms)
+  refuses a locale a translated route has no pattern in ... ok (0ms)
+  refuses a locale the app does not declare ... ok (0ms)
+a route's address ... ok (1ms)
+the values a link carries ...
+  are its data-param-* attributes, under the names the pattern uses ... ok (2ms)
+  are empty on a link to a route that takes none ... ok (1ms)
+the values a link carries ... ok (2ms)
+a navigate form ...
+  fills its route's :params from its own inputs ... ok (1ms)
+a navigate form ... ok (949µs)
+running 4 tests from ../../plugins/omnishell/test/worker-document.test.ts
+native SSR refuses matched SPA and private routes before reading or streaming ... ok (11ms)
+native SSR renders an app without locale configuration and preserves its declared language ... ok (12ms)
+native SSR embeds snapshot /crud reads in #pronto-reads and omits them on 404 ... ok (13ms)
+native SSR streams top-down chunks and progressive prefetch reads before nested regions settle ...
+------- post-test output -------
+Error: database snapshot failed
+    at Object.read (file:///Users/robsonaraujo/work/trash/plugins/omnishell/test/worker-document.test.ts:224:21)
+    at file:///Users/robsonaraujo/work/trash/plugins/omnishell/server/snapshot-store.js:170:19
+Error: nested match read failed
+    at Object.read (file:///Users/robsonaraujo/work/trash/plugins/omnishell/test/worker-document.test.ts:246:21)
+    at file:///Users/robsonaraujo/work/trash/plugins/omnishell/server/snapshot-store.js:170:19
+SES Removing unpermitted intrinsics
+  Removing intrinsics.%SharedSymbol%.metadata
+  Removing intrinsics.%MapPrototype%.getOrInsert
+  Removing intrinsics.%MapPrototype%.getOrInsertComputed
+  Removing intrinsics.%ObjectPrototype%.__proto__<get>.prototype
+  Tolerating undeletable intrinsics.%ObjectPrototype%.__proto__<get>.prototype === undefined
+  Removing intrinsics.%ObjectPrototype%.__proto__<set>.prototype
+  Tolerating undeletable intrinsics.%ObjectPrototype%.__proto__<set>.prototype === undefined
+  Removing intrinsics.%WeakMapPrototype%.getOrInsert
+  Removing intrinsics.%WeakMapPrototype%.getOrInsertComputed
+  Removing intrinsics.%DatePrototype%.toTemporalInstant
+----- post-test output end -----
+native SSR streams top-down chunks and progressive prefetch reads before nested regions settle ... ok (79ms)
+
+ok | 16 passed (52 steps) | 0 failed (859ms)
+
+
+Check ../../plugins/pronto/route-segments.test.ts
+Check ../../plugins/pronto/ssr.test.ts
+running 1 test from ../../plugins/pronto/route-segments.test.ts
+nested resource routes translate every literal and preserve named parameters ... ok (8s)
+running 13 tests from ../../plugins/pronto/ssr.test.ts
+a public route's addresses reach the renderer, ahead of the entry ... ok (2s)
+every upstream the door dials is its own variable's when set, naming its service ... ok (2s)
+the renderer reads through the door, as a guest would ... ok (896ms)
+the renderer's image holds every file it reads, and an edit to its entry restarts it ... ok (1s)
+a route over a private top-level read is refused, naming what is pending ... ok (3s)
+a private read nested under a public row does not decide the route ... ok (3s)
+the door and the renderer spell the one origin the cluster states, and no request's ... ok (1s)
+a prerendered document is a template the door answers with the sitemap's origin ... ok (2s)
+every file the door serves is answered with its validator ... ok (683ms)
+a route prerendered over rows the server holds is refused, naming them ... ok (4s)
+a route prerendered over the browser's rows is left to the terminal's renderer ... ok (3s)
+the deployed review page carries its relative IR stylesheet ... ok (889ms)
+a screen's access and ssr derive from its top-level regions and govern rendering and crawlability ... ok (21s)
+
+ok | 14 passed | 0 failed (57s)

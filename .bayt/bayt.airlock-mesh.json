@@ -1,0 +1,349 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "compose": {
+    "up": false,
+    "manual": false,
+    "build": {
+      "additional_contexts": {
+        "libraries_mecha-mesh-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.23.1@sha256:8d39aa3543560232c52330152ba70a4d2c973b76d0ac97899d677704bc0e09a4}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}",
+        "libraries_mecha-airlock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-airlock:0.23.1@sha256:3c67d8822d64dfd469ed25cccf0db76e0d7d939d9d05486f5fe725332c2e1dd2}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image}"
+      },
+      "secrets": [],
+      "args": {}
+    },
+    "environment": {
+      "AIRLOCK_ORIGINS": "",
+      "AIRLOCK_BRIDGES": "sofascore",
+      "BRIDGE_SOFASCORE_URL": "http://sofascore:8080"
+    },
+    "ports": [],
+    "volumes": [],
+    "depends_on": {
+      "golaberto-sofascore": {
+        "condition": "service_started"
+      }
+    },
+    "networks": {
+      "airlock": {
+        "aliases": [
+          "airlock-mesh"
+        ]
+      },
+      "airlock-out": {
+        "aliases": [
+          "airlock-mesh"
+        ]
+      },
+      "airlock-egress": {
+        "aliases": [
+          "airlock-mesh"
+        ]
+      }
+    },
+    "restart": "on-failure",
+    "healthcheck": {
+      "test": [
+        "CMD",
+        "portcheck",
+        "--port",
+        "3500"
+      ],
+      "interval": "5s",
+      "timeout": "5s",
+      "retries": 30,
+      "start_period": "30s",
+      "start_interval": "500ms"
+    },
+    "develop": {
+      "watch": [
+        {
+          "action": "sync+restart",
+          "path": "../services/airlock/dapr/acquire.yaml",
+          "target": "/dapr/airlock/acquire.yaml"
+        }
+      ]
+    }
+  },
+  "dockerfile": {
+    "preamble": [
+      "COPY <<'WALL' /dapr/airlock/wall.yaml\napiVersion: dapr.io/v1alpha1\nkind: Component\nmetadata:\n  name: wall\nspec:\n  type: middleware.http.routerchecker\n  version: v1\n  metadata:\n    - {name: rule, value: \"^/v1[.]0/(healthz(/outbound)?|invoke/(acquire)/method/.*)$\"}\nWALL",
+      "COPY <<'RESILIENCY' /dapr/airlock/resiliency.yaml\napiVersion: dapr.io/v1alpha1\nkind: Resiliency\nmetadata:\n  name: airlock\nspec:\n  policies:\n    circuitBreakers:\n      sink:\n        maxRequests: 1\n        interval: 60s\n        timeout: 30s\n        trip: consecutiveFailures >= 10\n  targets:\n    apps:\n      acquire: {circuitBreaker: sink}\nRESILIENCY"
+    ],
+    "preambleCopyContexts": [],
+    "from": {
+      "name": "libraries_mecha-mesh-image"
+    },
+    "add": [],
+    "copy": [
+      {
+        "from": {
+          "name": "tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa"
+        },
+        "srcs": [
+          "/bin/portcheck"
+        ],
+        "dst": "/usr/local/bin/portcheck",
+        "chmod": "755",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-airlock-image"
+        },
+        "srcs": [
+          "/app/airlock/dapr.yaml"
+        ],
+        "dst": "/dapr/config.yaml",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "services/airlock/dapr/acquire.yaml"
+        ],
+        "dst": "/dapr/airlock/acquire.yaml",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      }
+    ],
+    "epilogue": [],
+    "extra_hosts": [],
+    "mounts": [],
+    "secrets": {},
+    "healthcheck": {
+      "test": [
+        "CMD",
+        "portcheck",
+        "--port",
+        "3500"
+      ],
+      "interval": "5s",
+      "timeout": "5s",
+      "retries": 30,
+      "start_period": "30s"
+    },
+    "expose": [],
+    "entrypoint": [
+      "/daprd",
+      "--app-id",
+      "airlock",
+      "--dapr-listen-addresses",
+      "0.0.0.0",
+      "--resources-path",
+      "/dapr/airlock",
+      "--config",
+      "/dapr/config.yaml",
+      "--dapr-http-port",
+      "3500",
+      "--max-body-size",
+      "64Mi",
+      "--log-level",
+      "info"
+    ],
+    "incremental": false,
+    "cmd": null
+  },
+  "entrypoint": {
+    "do": "let base = ($env.BAYT_LOCAL_WORK_DIR? | default $nu.temp-dir); let dir = ($base | path join $'airlock-mesh-($nu.pid)-(random int 1000..9999)'); mkdir ($dir | path join 'airlock'); let app = (if (($env.AIRLOCK_APP_DIR? | default '') != '') { $env.AIRLOCK_APP_DIR } else if ('services/airlock/dapr.yaml' | path exists) { 'services/airlock' } else { ((^mise where github:bonisoft3/mecha | str trim) | path join 'services/airlock') }); cp -f ($app | path join 'dapr.yaml') ($dir | path join 'config.yaml'); 'YXBpVmVyc2lvbjogZGFwci5pby92MWFscGhhMQpraW5kOiBDb21wb25lbnQKbWV0YWRhdGE6CiAgbmFtZTogd2FsbApzcGVjOgogIHR5cGU6IG1pZGRsZXdhcmUuaHR0cC5yb3V0ZXJjaGVja2VyCiAgdmVyc2lvbjogdjEKICBtZXRhZGF0YToKICAgIC0ge25hbWU6IHJ1bGUsIHZhbHVlOiAiXi92MVsuXTAvKGhlYWx0aHooL291dGJvdW5kKT98aW52b2tlLyhhY3F1aXJlKS9tZXRob2QvLiopJCJ9' | decode base64 | decode utf-8 | save -f ($dir | path join 'airlock/wall.yaml'); 'YXBpVmVyc2lvbjogZGFwci5pby92MWFscGhhMQpraW5kOiBSZXNpbGllbmN5Cm1ldGFkYXRhOgogIG5hbWU6IGFpcmxvY2sKc3BlYzoKICBwb2xpY2llczoKICAgIGNpcmN1aXRCcmVha2VyczoKICAgICAgc2luazoKICAgICAgICBtYXhSZXF1ZXN0czogMQogICAgICAgIGludGVydmFsOiA2MHMKICAgICAgICB0aW1lb3V0OiAzMHMKICAgICAgICB0cmlwOiBjb25zZWN1dGl2ZUZhaWx1cmVzID49IDEwCiAgdGFyZ2V0czoKICAgIGFwcHM6CiAgICAgIGFjcXVpcmU6IHtjaXJjdWl0QnJlYWtlcjogc2lua30=' | decode base64 | decode utf-8 | save -f ($dir | path join 'airlock/resiliency.yaml'); open --raw 'services/airlock/dapr/acquire.yaml' | str replace --all 'http://sofascore:8080' $env.BRIDGE_SOFASCORE_URL | save -f ($dir | path join 'airlock/acquire.yaml'); exec daprd --app-id airlock --dapr-listen-addresses 127.0.0.1 --dapr-internal-grpc-listen-address 127.0.0.1 --resources-path ($dir | path join 'airlock') --config ($dir | path join 'config.yaml') --dapr-http-port $env.DAPR_HTTP_PORT --dapr-grpc-port $env.DAPR_GRPC_PORT --dapr-internal-grpc-port $env.DAPR_INTERNAL_GRPC_PORT --metrics-port 0 --profile-port 0 --max-body-size 64Mi --log-level info",
+    "shell": "nu",
+    "env": {
+      "AIRLOCK_ORIGINS": "",
+      "AIRLOCK_BRIDGES": "sofascore",
+      "BRIDGE_SOFASCORE_URL": {
+        "peer": "sofascore",
+        "port": "http",
+        "part": "addr",
+        "prefix": "http://",
+        "suffix": ""
+      }
+    },
+    "after": {
+      "sofascore": "started"
+    },
+    "host": true
+  },
+  "expose": {
+    "http": {
+      "port": 3500,
+      "env": "DAPR_HTTP_PORT"
+    },
+    "api": {
+      "port": 50001,
+      "env": "DAPR_GRPC_PORT"
+    },
+    "grpc": {
+      "port": 50002,
+      "env": "DAPR_INTERNAL_GRPC_PORT"
+    }
+  },
+  "healthcheck": {
+    "template": "tcp",
+    "port": 3500,
+    "interval": "5s",
+    "start_interval": "500ms",
+    "timeout": "5s",
+    "retries": 30,
+    "start_period": "30s"
+  },
+  "name": "airlock-mesh",
+  "process-compose": {
+    "activate": "mise x --",
+    "availability": {
+      "restart": "on_failure",
+      "backoff_seconds": 1,
+      "max_restarts": 15
+    }
+  },
+  "project": "golaberto",
+  "dir": ".",
+  "activate": "",
+  "srcs": {
+    "globs": [
+      "services/airlock/dapr/acquire.yaml"
+    ],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {},
+  "synthetics": {
+    "bayt": {
+      "name": "airlock-mesh_bayt",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.airlock-mesh.yaml",
+          ".bayt/Dockerfile.airlock-mesh",
+          ".bayt/bayt.airlock-mesh.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/process-compose.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.airlock-mesh.yaml",
+        "./.bayt/compose.sofascore.yaml"
+      ]
+    },
+    "outs": {
+      "name": "airlock-mesh_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.airlock-mesh.yaml",
+        "./.bayt/compose.sofascore.yaml"
+      ]
+    },
+    "srcs": {
+      "name": "airlock-mesh_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          "services/airlock/dapr/acquire.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.airlock-mesh.yaml",
+        "./.bayt/compose.sofascore.yaml"
+      ]
+    }
+  },
+  "visibility": "internal",
+  "emitsSrcs": true,
+  "deps": [
+    "sofascore_outs"
+  ],
+  "sameProjectDeps": [
+    "sofascore_outs"
+  ],
+  "transitiveDeps": [
+    "sofascore_outs"
+  ],
+  "transitiveCrossDeps": [],
+  "upClosure": [
+    "./.bayt/compose.airlock-mesh.yaml",
+    "./.bayt/compose.sofascore.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "sofascore_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

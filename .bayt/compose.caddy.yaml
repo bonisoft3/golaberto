@@ -176,17 +176,17 @@ services:
         path: ../shell/screens/campeonato.css
         target: /srv/shell/screens/campeonato.css
       - action: rebuild
-        path: ../shell/screens/editar-arbitro.html
-        target: /srv/shell/screens/editar-arbitro.html
-      - action: rebuild
-        path: ../shell/screens/editar-arbitro.css
-        target: /srv/shell/screens/editar-arbitro.css
-      - action: rebuild
         path: ../shell/screens/editar-competicao.html
         target: /srv/shell/screens/editar-competicao.html
       - action: rebuild
         path: ../shell/screens/editar-competicao.css
         target: /srv/shell/screens/editar-competicao.css
+      - action: rebuild
+        path: ../shell/screens/editar-arbitro.html
+        target: /srv/shell/screens/editar-arbitro.html
+      - action: rebuild
+        path: ../shell/screens/editar-arbitro.css
+        target: /srv/shell/screens/editar-arbitro.css
       - action: rebuild
         path: ../shell/screens/editar-equipe.html
         target: /srv/shell/screens/editar-equipe.html
@@ -455,6 +455,9 @@ services:
         path: ../shell/renderers/weekday.js
         target: /srv/shell/renderers/weekday.js
       - action: rebuild
+        path: ../shell/renderers/zone-positions.js
+        target: /srv/shell/renderers/zone-positions.js
+      - action: rebuild
         path: ../shell/shared/catalog.css
         target: /srv/shell/shared/catalog.css
       - action: rebuild
@@ -481,6 +484,9 @@ services:
       - action: rebuild
         path: ../shell/shared/team.css
         target: /srv/shell/shared/team.css
+      - action: rebuild
+        path: ../shell/hatches/team-match-preview.js
+        target: /srv/shell/hatches/team-match-preview.js
       - action: rebuild
         path: ../messages/pt-BR.json
         target: /srv/messages/pt-BR.json
@@ -707,6 +713,69 @@ services:
         path: ../journal/2026-10-28-team-before.png
         target: /srv/docs/journal/2026-10-28-team-before.png
       - action: rebuild
+        path: ../journal/2026-11-05-sequence-before.png
+        target: /srv/docs/journal/2026-11-05-sequence-before.png
+      - action: rebuild
+        path: ../journal/2026-11-05-sequence-exhausted.png
+        target: /srv/docs/journal/2026-11-05-sequence-exhausted.png
+      - action: rebuild
+        path: ../journal/2026-11-07-cloudflare-standings-before.png
+        target: /srv/docs/journal/2026-11-07-cloudflare-standings-before.png
+      - action: rebuild
+        path: ../journal/2026-11-07-cloudflare-standings-changed.png
+        target: /srv/docs/journal/2026-11-07-cloudflare-standings-changed.png
+      - action: rebuild
+        path: ../journal/2026-11-07-cloudflare-standings-restored.png
+        target: /srv/docs/journal/2026-11-07-cloudflare-standings-restored.png
+      - action: rebuild
+        path: ../journal/2026-11-07-cloudflare-standings.html
+        target: /srv/docs/journal/2026-11-07-cloudflare-standings.html
+      - action: rebuild
+        path: ../journal/2026-11-08-cloudflare-optimized-before.png
+        target: /srv/docs/journal/2026-11-08-cloudflare-optimized-before.png
+      - action: rebuild
+        path: ../journal/2026-11-08-cloudflare-optimized-changed.png
+        target: /srv/docs/journal/2026-11-08-cloudflare-optimized-changed.png
+      - action: rebuild
+        path: ../journal/2026-11-08-pr-review.html
+        target: /srv/docs/journal/2026-11-08-pr-review.html
+      - action: rebuild
+        path: ../journal/2026-11-08-pr-review.png
+        target: /srv/docs/journal/2026-11-08-pr-review.png
+      - action: rebuild
+        path: ../journal/2026-11-09-bounded-duckdb.html
+        target: /srv/docs/journal/2026-11-09-bounded-duckdb.html
+      - action: rebuild
+        path: ../journal/2026-11-09-cloudflare-home.png
+        target: /srv/docs/journal/2026-11-09-cloudflare-home.png
+      - action: rebuild
+        path: ../journal/2026-11-09-cloudflare-live-before.png
+        target: /srv/docs/journal/2026-11-09-cloudflare-live-before.png
+      - action: rebuild
+        path: ../journal/2026-11-09-cloudflare-live-changed.png
+        target: /srv/docs/journal/2026-11-09-cloudflare-live-changed.png
+      - action: rebuild
+        path: ../journal/2026-11-09-cloudflare-live-restored.png
+        target: /srv/docs/journal/2026-11-09-cloudflare-live-restored.png
+      - action: rebuild
+        path: ../journal/2026-11-09-duckdb-vm-teams.png
+        target: /srv/docs/journal/2026-11-09-duckdb-vm-teams.png
+      - action: rebuild
+        path: ../journal/2026-11-09-duckdb-vm.html
+        target: /srv/docs/journal/2026-11-09-duckdb-vm.html
+      - action: rebuild
+        path: ../journal/2026-11-09-feldera-vm.html
+        target: /srv/docs/journal/2026-11-09-feldera-vm.html
+      - action: rebuild
+        path: ../journal/2026-11-09-vm-teams.png
+        target: /srv/docs/journal/2026-11-09-vm-teams.png
+      - action: rebuild
+        path: ../journal/2026-11-10-bounded-verification.html
+        target: /srv/docs/journal/2026-11-10-bounded-verification.html
+      - action: rebuild
+        path: ../journal/2026-11-10-duckdb-vm-teams.png
+        target: /srv/docs/journal/2026-11-10-duckdb-vm-teams.png
+      - action: rebuild
         path: ../robots.txt
         target: /srv/robots.txt
       - action: rebuild
@@ -728,8 +797,15 @@ services:
         path: ../llms-full.txt
         target: /srv/llms-full.txt
     environment:
-      ELECTRIC_SECRET: ${ELECTRIC_SECRET:-dev-electric-secret}
+      PORT: "8080"
       ORIGIN: ${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-17702}}
+      PRONTO_UPSTREAM_RENDER: render:8090
+      PRONTO_UPSTREAM_RCLONE_S3: rclone-s3:3900
+      ELECTRIC_SECRET: ${ELECTRIC_SECRET:-dev-electric-secret}
+      PRONTO_UPSTREAM_CRUD: crud:3000
+      PRONTO_UPSTREAM_ELECTRIC: electric:3000
+      PRONTO_UPSTREAM_AUTH: auth:9999
+      PRONTO_UPSTREAM_TICKER: ticker:9998
     healthcheck:
       test:
       - CMD

@@ -24,6 +24,7 @@ services:
         golaberto-setup_bayt: service:golaberto-setup_bayt
         golaberto-database_bayt: service:golaberto-database_bayt
         golaberto-migrate_bayt: service:golaberto-migrate_bayt
+        golaberto-airlock-upgrade_bayt: service:golaberto-airlock-upgrade_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.ci-replay
       target: ci-replay_bayt
@@ -38,6 +39,7 @@ services:
       additional_contexts:
         golaberto-setup_srcs: service:golaberto-setup_srcs
         golaberto-database_srcs: service:golaberto-database_srcs
+        golaberto-migrate_srcs: service:golaberto-migrate_srcs
       context: ..
       dockerfile: .bayt/Dockerfile.ci-replay
       target: ci-replay_srcs

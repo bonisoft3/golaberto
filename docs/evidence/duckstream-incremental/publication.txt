@@ -1,0 +1,27 @@
+Check libraries/mecha/services/compute/deltas_test.ts
+Check libraries/mecha/services/compute/publication_test.ts
+running 9 tests from ./libraries/mecha/services/compute/deltas_test.ts
+delta partitions retain bag multiplicity and canonical identity ... ok (8ms)
+a complete step cancels transient rows regardless of record order ... ok (0ms)
+invalid final multiplicity rolls back every relation in the step ... ok (0ms)
+partition moves invalidate both owners and retain an empty tombstone ... ok (0ms)
+capture remains immutable after incoming mutation and subsequent steps ... ok (0ms)
+unrelated history does not change work or captured input for an isolated delta ... ok (40ms)
+empty global bootstrap runs once and complete retraction captures empty inputs ... ok (0ms)
+delta admission refuses invalid keys, weights, values and implicit broadcasts ... ok (0ms)
+capture ordering and field names are deterministic without prototype setters ... ok (0ms)
+running 12 tests from ./libraries/mecha/services/compute/publication_test.ts
+publication changes only distinct rows and records completion in its transaction ... ok (3s)
+publication rolls back every sink and hook on failure, then can retry ... ok (3s)
+publication upserts all sinks before deleting old referenced rows ... ok (3s)
+publication enforces RLS, claims and pre-request under the service role, then restores authority ... ok (3s)
+publication refuses malformed output before changing any rows ... ok (3s)
+publication refuses incompatible role isolation and applies permitted role settings ... ok (7s)
+delta publication touches only supplied UUID keys and retains an indexed delete path ... ok (6s)
+delta publication rolls back sinks and completion hook together ... ok (6s)
+delta publication retains RLS, request settings and authority restoration ... ok (7s)
+delta publication refuses duplicate, overlapping or malformed keys before writing ... ok (7s)
+delta publication rejects UUID aliases across operation and chunk boundaries ... ok (8s)
+delta publication preserves portable byte and int64 transport ... ok (8s)
+
+ok | 21 passed | 0 failed (1m11s)

@@ -93,11 +93,11 @@ their own, which the page keeps while they type.
   its page, beside a word about how the site is kept.
 - [[campeonatos]]: the catalogue of every championship, with its level and
   category, narrowed by a name typed or a level picked.
-- [[campeonato]]: one championship: its name and season, its level and
-  category, the points a result is worth, and every phase in order with its
+- [[campeonato]]: one championship: its name and season, and every phase in reverse order with its
   groups, each a table — position, points, games, results, goals and the last
-  five — painted by its zones, and the games of the current round and the
-  next.
+  five — painted by its zones. Hovering or focusing a team-name cell opens
+  its last played and next scheduled match within the championship; touch
+  readers use the preview button. The preview has exactly two game rows, follows the pointer with a small offset, stays within the viewport, and passes hover through to the team names; the button pins it for clicking. The table page has no game lists.
 
 - [[jogos]]: the games, upcoming and played, across the archive.
 - [[jogo]]: one game: the score, its facts, the goals by minute, both

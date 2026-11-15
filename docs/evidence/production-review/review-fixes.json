@@ -1,0 +1,44 @@
+{
+  "scope": "PR 2079 review fixes; no deployment or UI changes",
+  "base": "8e666d3b5",
+  "fixes": [
+    "Harden new and existing native source mirrors against nonowner ACLs",
+    "Retire recorded CDC resources for removed or renamed computations with resumable cleanup",
+    "Retain cleanup alarms after committed publication errors without delaying pending work",
+    "Release staged-publication physical snapshots and current readers",
+    "Resolve pinned DuckDB WASM through the compute dependency graph with frozen lock"
+  ],
+  "validation": {
+    "compute": {
+      "command": "saytw test (libraries/mecha/services/compute)",
+      "exit": 0,
+      "passed": 158,
+      "ignored": 2
+    },
+    "computeBuild": {
+      "exit": 0
+    },
+    "computeLint": {
+      "exit": 0
+    },
+    "pagedCoordinator": {
+      "passed": 21,
+      "exit": 0
+    },
+    "workerdRetentionAndObject": {
+      "passed": 10,
+      "exit": 0
+    },
+    "generation": {
+      "golaberto": 0,
+      "plausible": 0,
+      "mechaNativePackaging": 0
+    },
+    "followupReview": "No actionable findings in independent cleanup and authority/packaging reviews"
+  },
+  "limitations": [
+    "Docker Feldera integration opt-ins were not run",
+    "No production deployment or new hosted end-to-end acceptance",
+    "Monthly large-publication capacity remains outside these fixes"
+  ]
+}

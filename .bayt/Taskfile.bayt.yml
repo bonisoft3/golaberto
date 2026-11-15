@@ -32,6 +32,10 @@ includes:
     taskfile: ./Taskfile.test.yaml
     dir: ../
     optional: true
+  launch:
+    taskfile: ./Taskfile.launch.yaml
+    dir: ../
+    optional: true
   integrate:
     taskfile: ./Taskfile.integrate.yaml
     dir: ../
@@ -44,6 +48,10 @@ includes:
     taskfile: ./Taskfile.ci.yaml
     dir: ../
     optional: true
+  compute:
+    taskfile: ./Taskfile.compute.yaml
+    dir: ../
+    optional: true
   launch-action:
     taskfile: ./Taskfile.launch-action.yaml
     dir: ../
@@ -52,20 +60,16 @@ includes:
     taskfile: ./Taskfile.integrate-action.yaml
     dir: ../
     optional: true
-  check-constraints:
-    taskfile: ./Taskfile.check-constraints.yaml
+  ci-acceptance:
+    taskfile: ./Taskfile.ci-acceptance.yaml
     dir: ../
     optional: true
   ci-constraints:
     taskfile: ./Taskfile.ci-constraints.yaml
     dir: ../
     optional: true
-  check-acceptance:
-    taskfile: ./Taskfile.check-acceptance.yaml
-    dir: ../
-    optional: true
-  ci-acceptance:
-    taskfile: ./Taskfile.ci-acceptance.yaml
+  ci-statistics-live:
+    taskfile: ./Taskfile.ci-statistics-live.yaml
     dir: ../
     optional: true
 version: "3"

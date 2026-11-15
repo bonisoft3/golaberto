@@ -1,0 +1,928 @@
+{
+  "captured_at": "2026-10-28T02:34:45.658260+00:00",
+  "active_as_of": "2026-10-27",
+  "status": [
+    {
+      "id": "9422fa1c-a1b6-5e11-88af-b782c7963d21",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 9,
+      "full_name": "Brazil - Campeonato Brasileiro - Série B 2026",
+      "season_id": 89840,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-29T01:59:19.699132+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 408106,
+      "championship_id": "a0200000-0000-4000-8000-0000000005f7",
+      "last_success_at": "2026-10-28T02:26:05.200515+00:00",
+      "unique_tournament_id": 390
+    },
+    {
+      "id": "8a32d4b3-d93f-50d0-ab02-b6904117c0b8",
+      "enabled": false,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 0,
+      "full_name": "Brazil - Campeonato Brasileiro - Série C 2026",
+      "season_id": 90642,
+      "event_scope": "competition",
+      "next_due_at": null,
+      "detail_after": "2026-10-28T00:28:08.413223+00:00",
+      "payload_bytes": 0,
+      "championship_id": "a0200000-0000-4000-8000-0000000005f8",
+      "last_success_at": null,
+      "unique_tournament_id": 1281
+    },
+    {
+      "id": "6791deab-3d61-560e-a8cc-a8e211e67302",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 8,
+      "full_name": "Brazil - Campeonato Brasileiro 2026",
+      "season_id": 87678,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-28T02:52:03.631468+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 288033,
+      "championship_id": "a0200000-0000-4000-8000-0000000005f3",
+      "last_success_at": "2026-10-28T02:32:06.067314+00:00",
+      "unique_tournament_id": 325
+    },
+    {
+      "id": "ec127c8c-d9fc-54b3-8213-daab6fe57388",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 3,
+      "full_name": "Brazil - Copa do Brasil 2026",
+      "season_id": 89353,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-29T01:48:05.572026+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 17782,
+      "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+      "last_success_at": "2026-10-28T01:59:13.256918+00:00",
+      "unique_tournament_id": 373
+    },
+    {
+      "id": "e1fb2eb0-f547-5152-a472-7bfc079b5973",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 7,
+      "full_name": "England - Championship 2026/2027",
+      "season_id": 97037,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-28T02:49:10.847812+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 345088,
+      "championship_id": "a0200000-0000-4000-8000-000000000605",
+      "last_success_at": "2026-10-28T02:29:12.971015+00:00",
+      "unique_tournament_id": 18
+    },
+    {
+      "id": "9ac71c84-8dd9-5715-928b-1381048b65ef",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 1,
+      "requests": 4,
+      "full_name": "England - Premier League 2026/2027",
+      "season_id": 96668,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-29T02:01:11.772519+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 149208,
+      "championship_id": "a0200000-0000-4000-8000-000000000600",
+      "last_success_at": "2026-10-28T02:27:20.934852+00:00",
+      "unique_tournament_id": 17
+    },
+    {
+      "id": "94feec50-e60b-5460-91a9-8365fba0c657",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 1,
+      "requests": 4,
+      "full_name": "Europe - Champions League 2026/2027",
+      "season_id": 96518,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-29T01:59:28.883023+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 241524,
+      "championship_id": "a0200000-0000-4000-8000-0000000005fb",
+      "last_success_at": "2026-10-28T02:26:12.430959+00:00",
+      "unique_tournament_id": 7
+    },
+    {
+      "id": "b75e7db3-5712-5bfd-8e71-56de758c6dab",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 4,
+      "full_name": "Europe - Conference League 2026/2027",
+      "season_id": 96529,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-29T02:00:09.285606+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 445468,
+      "championship_id": "a0200000-0000-4000-8000-0000000005fd",
+      "last_success_at": "2026-10-28T02:26:29.473779+00:00",
+      "unique_tournament_id": 17015
+    },
+    {
+      "id": "f69255d9-7d32-5e40-84ec-bf0ef91bde48",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 3,
+      "requests": 4,
+      "full_name": "Europe - Europa League 2026/2027",
+      "season_id": 96522,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-29T01:59:46.680199+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 282252,
+      "championship_id": "a0200000-0000-4000-8000-0000000005fc",
+      "last_success_at": "2026-10-28T02:26:20.891077+00:00",
+      "unique_tournament_id": 679
+    },
+    {
+      "id": "4d7a8d06-5c2c-52a4-b46f-cac0d4df7296",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 4,
+      "full_name": "Europe - Nations League 2026",
+      "season_id": 89945,
+      "event_scope": "stages",
+      "next_due_at": "2026-10-29T02:03:15.049437+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 371550,
+      "championship_id": "a0200000-0000-4000-8000-000000000608",
+      "last_success_at": "2026-10-28T02:30:12.267029+00:00",
+      "unique_tournament_id": 10783
+    },
+    {
+      "id": "878f36ae-3a1d-5cd8-86a8-cccb454f22a0",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 5,
+      "full_name": "France - Ligue 1 2026/2027",
+      "season_id": 96127,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-28T02:48:09.804987+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 152188,
+      "championship_id": "a0200000-0000-4000-8000-000000000603",
+      "last_success_at": "2026-10-28T02:28:17.159209+00:00",
+      "unique_tournament_id": 34
+    },
+    {
+      "id": "4c92af69-b1db-5819-93a0-d495b272b490",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 4,
+      "full_name": "Germany - 2. Bundesliga 2026/2027",
+      "season_id": 97406,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-29T02:03:05.592031+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 133018,
+      "championship_id": "a0200000-0000-4000-8000-000000000606",
+      "last_success_at": "2026-10-28T02:30:05.260691+00:00",
+      "unique_tournament_id": 44
+    },
+    {
+      "id": "4f8ebe32-889b-51c9-8a82-9fcd9249ad3b",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 4,
+      "full_name": "Germany - Bundesliga 2026/2027",
+      "season_id": 97464,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-29T02:02:10.254167+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 132696,
+      "championship_id": "a0200000-0000-4000-8000-000000000602",
+      "last_success_at": "2026-10-28T02:28:09.801381+00:00",
+      "unique_tournament_id": 35
+    },
+    {
+      "id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 11,
+      "full_name": "Italy - Serie A 2026/2027",
+      "season_id": 95836,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-28T03:48:13.651939+00:00",
+      "detail_after": "2026-10-27T21:30:16.440058+00:00",
+      "payload_bytes": 1042098,
+      "championship_id": "a0200000-0000-4000-8000-000000000604",
+      "last_success_at": "2026-10-27T23:48:32.792981+00:00",
+      "unique_tournament_id": 23
+    },
+    {
+      "id": "86311189-d3c8-58d1-8c9f-419c06557497",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 4,
+      "full_name": "Netherlands - Eredivisie 2026/2027",
+      "season_id": 96143,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-29T02:01:04.993888+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 125767,
+      "championship_id": "a0200000-0000-4000-8000-0000000005ff",
+      "last_success_at": "2026-10-28T02:27:14.345575+00:00",
+      "unique_tournament_id": 37
+    },
+    {
+      "id": "f91012d1-bcd8-5155-ac37-b500825528da",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 4,
+      "full_name": "Portugal - Liga Primeira 2026/2027",
+      "season_id": 97436,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-28T02:46:32.067015+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 137137,
+      "championship_id": "a0200000-0000-4000-8000-0000000005fe",
+      "last_success_at": "2026-10-28T02:26:33.968567+00:00",
+      "unique_tournament_id": 238
+    },
+    {
+      "id": "8d44c61c-6628-5756-93c8-38b4d37eaead",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 7,
+      "full_name": "South America - Copa Libertadores 2026",
+      "season_id": 87760,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-29T01:47:00.027406+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 31703,
+      "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+      "last_success_at": "2026-10-28T02:23:43.521928+00:00",
+      "unique_tournament_id": 384
+    },
+    {
+      "id": "3425bdb5-84b5-5e74-a631-605ddf1ecac4",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 7,
+      "full_name": "South America - Copa Sudamericana 2026",
+      "season_id": 87770,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-29T01:47:05.28748+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 32877,
+      "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+      "last_success_at": "2026-10-28T02:23:45.023587+00:00",
+      "unique_tournament_id": 480
+    },
+    {
+      "id": "35c44af5-6406-566c-9804-52efe27aa5db",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 1,
+      "requests": 5,
+      "full_name": "Spain - La Liga 2026/2027",
+      "season_id": 97268,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-28T02:47:20.940584+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 182170,
+      "championship_id": "a0200000-0000-4000-8000-000000000601",
+      "last_success_at": "2026-10-28T02:28:03.840484+00:00",
+      "unique_tournament_id": 8
+    },
+    {
+      "id": "1fe41153-9ab4-5cc9-bc91-d8cf7a14f8c1",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 2,
+      "full_name": "Spain - LaLiga 2 2026/2027",
+      "season_id": 97280,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-29T02:04:06.247575+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 51115,
+      "championship_id": "a0200000-0000-4000-8000-000000000609",
+      "last_success_at": "2026-10-28T02:04:12.103216+00:00",
+      "unique_tournament_id": 54
+    },
+    {
+      "id": "cb16abb9-605b-5b85-a989-b5e05a9eee4d",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 0,
+      "requests": 4,
+      "full_name": "Turkey - Süper Lig 2026/2027",
+      "season_id": 98080,
+      "event_scope": "competition",
+      "next_due_at": "2026-10-29T02:03:10.322907+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 123794,
+      "championship_id": "a0200000-0000-4000-8000-000000000607",
+      "last_success_at": "2026-10-28T02:30:09.031357+00:00",
+      "unique_tournament_id": 52
+    },
+    {
+      "id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+      "enabled": true,
+      "overdue": 0,
+      "reviews": 15,
+      "requests": 32,
+      "full_name": "World - National Friendlies 2026",
+      "season_id": 87155,
+      "event_scope": "fixtures",
+      "next_due_at": "2026-10-28T02:35:02.656512+00:00",
+      "detail_after": "2026-10-28T01:43:09.933045+00:00",
+      "payload_bytes": 105385,
+      "championship_id": "a0200000-0000-4000-8000-0000000005f9",
+      "last_success_at": "2026-10-28T02:32:07.029654+00:00",
+      "unique_tournament_id": 851
+    }
+  ],
+  "reviews": [
+    {
+      "id": "363b257c-6d22-46d6-bdf7-c8c99641b5ff",
+      "kind": "game",
+      "reason": "provider fixture has different teams",
+      "evidence": {
+        "sample": {
+          "phase": "Only",
+          "issues": [
+            "home_team_id_mismatch"
+          ],
+          "event_id": "16299815",
+          "phase_id": "a0300000-0000-4000-8000-000000001190",
+          "warnings": [],
+          "local_day": "2026-06-11",
+          "local_away": "Uganda",
+          "local_home": "Azerbaijan",
+          "normalized": {
+            "day": "2026-06-11",
+            "away": "Uganda",
+            "home": "Zanzibar",
+            "played": false,
+            "status": "postponed",
+            "kickoff": "2026-06-11T17:15:00Z",
+            "away_aet": null,
+            "away_pen": null,
+            "home_aet": null,
+            "home_pen": null,
+            "stage_id": "66",
+            "terminal": false,
+            "round_key": null,
+            "season_id": "87155",
+            "stage_key": "66",
+            "away_score": null,
+            "home_score": null,
+            "external_id": "16299815",
+            "away_external_id": "4726",
+            "home_external_id": "274048",
+            "unique_tournament_id": "851"
+          },
+          "local_round": null,
+          "championship": "World - National Friendlies 2026",
+          "local_season": "2026",
+          "provider_round": {
+            "slug": null,
+            "round": null,
+            "prefix": null
+          },
+          "championship_id": "a0200000-0000-4000-8000-0000000005f9",
+          "provider_season": {
+            "id": 87155,
+            "name": "Int. Friendly Games 2026",
+            "year": "2026",
+            "editor": false
+          },
+          "local_away_external_id": "4726",
+          "local_home_external_id": "4742"
+        },
+        "local_game": {
+          "day": "2026-06-11",
+          "away": "Uganda",
+          "home": "Azerbaijan",
+          "round": null,
+          "played": false,
+          "away_id": "a0700000-0000-4000-8000-000000000b24",
+          "game_id": "a0900000-0000-4000-8000-00000005942e",
+          "home_id": "a0700000-0000-4000-8000-000000000a82",
+          "event_id": "16299815",
+          "phase_id": "a0300000-0000-4000-8000-000000001190",
+          "phase_name": "Only",
+          "championship_id": "a0200000-0000-4000-8000-0000000005f9",
+          "away_external_id": "4726",
+          "home_external_id": "4742"
+        },
+        "verified_at": "2026-10-28T01:43:09.933045+00:00",
+        "provider_url": "https://www.sofascore.com/api/v1/event/16299815"
+      },
+      "resolved": false,
+      "source_id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+      "created_at": "2026-10-28T01:43:10.499064+00:00",
+      "external_id": "16299815",
+      "fingerprint": "48164098493964e0d520217018fbfbda"
+    },
+    {
+      "id": "35081ce1-2bfd-4afe-88c6-5873d9adf7d7",
+      "kind": "game",
+      "reason": "manual fixture fields conflict with provider",
+      "evidence": {
+        "fields": [
+          "played",
+          "home_score",
+          "away_score",
+          "home_aet",
+          "away_aet",
+          "home_pen",
+          "away_pen"
+        ],
+        "current": {
+          "played": true,
+          "away_aet": 0,
+          "away_pen": null,
+          "home_aet": 2,
+          "home_pen": null,
+          "away_score": 2,
+          "home_score": 3
+        },
+        "proposed": {
+          "played": true,
+          "away_aet": null,
+          "away_pen": null,
+          "home_aet": null,
+          "home_pen": null,
+          "away_score": 2,
+          "home_score": 3
+        }
+      },
+      "resolved": false,
+      "source_id": "94feec50-e60b-5460-91a9-8365fba0c657",
+      "created_at": "2026-10-28T01:59:45.144783+00:00",
+      "external_id": "a0900000-0000-4000-8000-00000005a57b",
+      "fingerprint": "95871fb77581c604041a3919dfb4bf68"
+    },
+    {
+      "id": "860d1aaa-5d9e-46cf-889e-ca55d9cf31c1",
+      "kind": "game",
+      "reason": "bound fixture conflicts with stage or teams",
+      "evidence": {
+        "game_id": "a0900000-0000-4000-8000-00000005a585"
+      },
+      "resolved": false,
+      "source_id": "f69255d9-7d32-5e40-84ec-bf0ef91bde48",
+      "created_at": "2026-10-28T02:00:08.159823+00:00",
+      "external_id": "16708142",
+      "fingerprint": "899ec49f260da0f77728b35330fdf907"
+    },
+    {
+      "id": "0d4b6988-6c33-46e8-9599-52386fef6d4a",
+      "kind": "game",
+      "reason": "bound fixture conflicts with stage or teams",
+      "evidence": {
+        "game_id": "a0900000-0000-4000-8000-00000005a58b"
+      },
+      "resolved": false,
+      "source_id": "f69255d9-7d32-5e40-84ec-bf0ef91bde48",
+      "created_at": "2026-10-28T02:00:08.59166+00:00",
+      "external_id": "16708167",
+      "fingerprint": "b301b77925f31af0b0bf2b2925eb7a7c"
+    },
+    {
+      "id": "3d1f9f3c-ab4d-48f4-b81c-cdbed2fd8d4d",
+      "kind": "game",
+      "reason": "manual fixture fields conflict with provider",
+      "evidence": {
+        "fields": [
+          "played",
+          "home_score",
+          "away_score",
+          "home_aet",
+          "away_aet",
+          "home_pen",
+          "away_pen"
+        ],
+        "current": {
+          "played": true,
+          "away_aet": 0,
+          "away_pen": null,
+          "home_aet": 1,
+          "home_pen": null,
+          "away_score": 1,
+          "home_score": 1
+        },
+        "proposed": {
+          "played": true,
+          "away_aet": null,
+          "away_pen": null,
+          "home_aet": null,
+          "home_pen": null,
+          "away_score": 1,
+          "home_score": 1
+        }
+      },
+      "resolved": false,
+      "source_id": "f69255d9-7d32-5e40-84ec-bf0ef91bde48",
+      "created_at": "2026-10-28T02:00:08.724863+00:00",
+      "external_id": "a0900000-0000-4000-8000-00000005a58d",
+      "fingerprint": "d284696c5de2c10aaead1ff684c48f98"
+    },
+    {
+      "id": "82d601b7-99cf-4857-a504-2259c53b2cd4",
+      "kind": "team",
+      "reason": "team is not bound",
+      "evidence": {
+        "name": "Lebanon",
+        "side": "home",
+        "event_id": "16246256",
+        "candidate_ids": [
+          "a0700000-0000-4000-8000-000000000b75"
+        ]
+      },
+      "resolved": false,
+      "source_id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+      "created_at": "2026-10-28T02:06:52.571819+00:00",
+      "external_id": "4774",
+      "fingerprint": "1d0cbb36e30546ab474ddd561ec8facc"
+    },
+    {
+      "id": "9afa90f8-cec1-4ed6-a7a5-4fb5643a4159",
+      "kind": "game",
+      "reason": "terminal outcome requires review",
+      "evidence": {
+        "status": "cancelled",
+        "game_id": "a0900000-0000-4000-8000-0000000593c4"
+      },
+      "resolved": false,
+      "source_id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+      "created_at": "2026-10-28T02:06:53.75483+00:00",
+      "external_id": "16223222",
+      "fingerprint": "14fc3aab98a78ce00dc2193137c14d1e"
+    },
+    {
+      "id": "52fab965-2ea2-404c-a9a0-5f00488619d0",
+      "kind": "team",
+      "reason": "team is not bound",
+      "evidence": {
+        "name": "Rwanda",
+        "side": "away",
+        "event_id": "16255647",
+        "candidate_ids": [
+          "a0700000-0000-4000-8000-000000000b8c"
+        ]
+      },
+      "resolved": false,
+      "source_id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+      "created_at": "2026-10-28T02:06:55.360872+00:00",
+      "external_id": "8037",
+      "fingerprint": "7d13490d1dadbdbd4f9b1adbebffb6fb"
+    },
+    {
+      "id": "ebfa8f81-a51b-4043-8d16-1e7591553b46",
+      "kind": "game",
+      "reason": "terminal outcome requires review",
+      "evidence": {
+        "status": "cancelled",
+        "game_id": "a0900000-0000-4000-8000-000000059278"
+      },
+      "resolved": false,
+      "source_id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+      "created_at": "2026-10-28T02:06:56.992466+00:00",
+      "external_id": "15831487",
+      "fingerprint": "374a904aab1d50d905df00998027d459"
+    },
+    {
+      "id": "58a7fb44-8ffe-459b-874c-a73b7bcec273",
+      "kind": "game",
+      "reason": "terminal outcome requires review",
+      "evidence": {
+        "status": "cancelled",
+        "game_id": "a0900000-0000-4000-8000-0000000593ba"
+      },
+      "resolved": false,
+      "source_id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+      "created_at": "2026-10-28T02:07:01.759924+00:00",
+      "external_id": "16182590",
+      "fingerprint": "5f4acdecfbb398a3ed53cdbe8b2d653a"
+    },
+    {
+      "id": "5397db8b-6467-4c4f-aa20-0a43bdc56d20",
+      "kind": "game",
+      "reason": "terminal outcome requires review",
+      "evidence": {
+        "status": "cancelled",
+        "game_id": "a0900000-0000-4000-8000-00000005942f"
+      },
+      "resolved": false,
+      "source_id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+      "created_at": "2026-10-28T02:07:03.379995+00:00",
+      "external_id": "16143343",
+      "fingerprint": "f516657cb5218eb6b0e47ef42ee56640"
+    },
+    {
+      "id": "9dc81f7b-0b8d-4a3a-aca0-b89ac7cca219",
+      "kind": "game",
+      "reason": "terminal outcome requires review",
+      "evidence": {
+        "status": "cancelled",
+        "game_id": "a0900000-0000-4000-8000-000000059419"
+      },
+      "resolved": false,
+      "source_id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+      "created_at": "2026-10-28T02:07:22.336897+00:00",
+      "external_id": "16242937",
+      "fingerprint": "bca1abcad55d8f827c7cd027273d03ea"
+    },
+    {
+      "id": "e68f5b68-091e-4173-8683-442e5b5ba7a0",
+      "kind": "game",
+      "reason": "terminal outcome requires review",
+      "evidence": {
+        "status": "cancelled",
+        "game_id": "a0900000-0000-4000-8000-00000005942d"
+      },
+      "resolved": false,
+      "source_id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+      "created_at": "2026-10-28T02:08:11.722409+00:00",
+      "external_id": "16298577",
+      "fingerprint": "d2abbd5f23da5fee6af3f66c17749432"
+    },
+    {
+      "id": "cf90e112-335c-49ae-8647-28dc9dee50d7",
+      "kind": "game",
+      "reason": "terminal outcome requires review",
+      "evidence": {
+        "status": "cancelled",
+        "game_id": "a0900000-0000-4000-8000-000000059415"
+      },
+      "resolved": false,
+      "source_id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+      "created_at": "2026-10-28T02:08:13.003906+00:00",
+      "external_id": "16205033",
+      "fingerprint": "3c15ff343267591cfce3b61d7759ed91"
+    },
+    {
+      "id": "92195eb6-173d-435c-82a4-ccdd97cde152",
+      "kind": "game",
+      "reason": "terminal outcome requires review",
+      "evidence": {
+        "status": "cancelled",
+        "game_id": "a0900000-0000-4000-8000-0000000593db"
+      },
+      "resolved": false,
+      "source_id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+      "created_at": "2026-10-28T02:08:14.503967+00:00",
+      "external_id": "16264241",
+      "fingerprint": "3e44ecd151b1a6354ad6415c6ec458b8"
+    },
+    {
+      "id": "e9605ece-98ba-49c9-9aae-0e7d5aac66ce",
+      "kind": "game",
+      "reason": "terminal outcome requires review",
+      "evidence": {
+        "status": "cancelled",
+        "game_id": "a0900000-0000-4000-8000-00000005941f"
+      },
+      "resolved": false,
+      "source_id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+      "created_at": "2026-10-28T02:09:03.374086+00:00",
+      "external_id": "16295022",
+      "fingerprint": "90914346cb36a37c74573bb3e63ab6f8"
+    },
+    {
+      "id": "0b105b60-2b24-4bd2-8dd1-9b71bf91304a",
+      "kind": "team",
+      "reason": "team is not bound",
+      "evidence": {
+        "name": "Rwanda",
+        "side": "away",
+        "event_id": "16255953",
+        "candidate_ids": [
+          "a0700000-0000-4000-8000-000000000b8c"
+        ]
+      },
+      "resolved": false,
+      "source_id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+      "created_at": "2026-10-28T02:09:04.423365+00:00",
+      "external_id": "8037",
+      "fingerprint": "16158980194abb78624c8bb7fb37d474"
+    },
+    {
+      "id": "93f3ec63-c47f-496c-9af9-6f599c9711eb",
+      "kind": "parse",
+      "reason": "response season differs from configured source",
+      "evidence": {},
+      "resolved": false,
+      "source_id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+      "created_at": "2026-10-28T02:23:42.183432+00:00",
+      "external_id": "event/16246261",
+      "fingerprint": "238c14f5b6202ef26b96bb789d49b241"
+    },
+    {
+      "id": "998c42ff-c443-4364-874e-107324da2f0d",
+      "kind": "game",
+      "reason": "terminal outcome requires review",
+      "evidence": {
+        "status": "abandoned",
+        "game_id": "a0900000-0000-4000-8000-000000059404"
+      },
+      "resolved": false,
+      "source_id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+      "created_at": "2026-10-28T02:24:56.940797+00:00",
+      "external_id": "16174772",
+      "fingerprint": "a72e80c1fadb2759d8bd16b098db0a36"
+    },
+    {
+      "id": "0b915eab-9e81-4ecf-a82c-c1f8d04b0a78",
+      "kind": "game",
+      "reason": "manual fixture fields conflict with provider",
+      "evidence": {
+        "fields": [
+          "played",
+          "home_score",
+          "away_score",
+          "home_aet",
+          "away_aet",
+          "home_pen",
+          "away_pen"
+        ],
+        "current": {
+          "played": true,
+          "away_aet": null,
+          "away_pen": null,
+          "home_aet": null,
+          "home_pen": null,
+          "away_score": 1,
+          "home_score": 2
+        },
+        "proposed": {
+          "played": true,
+          "away_aet": null,
+          "away_pen": null,
+          "home_aet": null,
+          "home_pen": null,
+          "away_score": 2,
+          "home_score": 0
+        }
+      },
+      "resolved": false,
+      "source_id": "9ac71c84-8dd9-5715-928b-1381048b65ef",
+      "created_at": "2026-10-28T02:27:15.522203+00:00",
+      "external_id": "a0900000-0000-4000-8000-000000059917",
+      "fingerprint": "e37fe027cf9b7f040f336828a947ca7a"
+    },
+    {
+      "id": "4e688d3b-4d83-4c84-adb8-3602c44e7b3f",
+      "kind": "game",
+      "reason": "terminal outcome requires review",
+      "evidence": {
+        "status": "abandoned",
+        "game_id": "a0900000-0000-4000-8000-000000059a9f"
+      },
+      "resolved": false,
+      "source_id": "35c44af5-6406-566c-9804-52efe27aa5db",
+      "created_at": "2026-10-28T02:28:01.028933+00:00",
+      "external_id": "16421065",
+      "fingerprint": "bff6a1abdac8e40b805d33f6a3a2db8f"
+    }
+  ],
+  "errors": [
+    {
+      "path": "event/15869977",
+      "failures": 3,
+      "last_error": "HTTP 404",
+      "next_due_at": "2026-10-28T02:35:02.656512+00:00",
+      "unique_tournament_id": 851
+    },
+    {
+      "path": "event/15910211",
+      "failures": 3,
+      "last_error": "HTTP 404",
+      "next_due_at": "2026-10-28T02:35:03.112276+00:00",
+      "unique_tournament_id": 851
+    },
+    {
+      "path": "event/16246261",
+      "failures": 0,
+      "last_error": "response season differs from configured source",
+      "next_due_at": null,
+      "unique_tournament_id": 851
+    },
+    {
+      "path": "event/16264228",
+      "failures": 3,
+      "last_error": "HTTP 404",
+      "next_due_at": "2026-10-28T02:36:12.626635+00:00",
+      "unique_tournament_id": 851
+    },
+    {
+      "path": "event/16273057",
+      "failures": 3,
+      "last_error": "HTTP 404",
+      "next_due_at": "2026-10-28T02:35:03.656028+00:00",
+      "unique_tournament_id": 851
+    },
+    {
+      "path": "event/16287420",
+      "failures": 3,
+      "last_error": "HTTP 404",
+      "next_due_at": "2026-10-28T02:35:04.182613+00:00",
+      "unique_tournament_id": 851
+    }
+  ],
+  "control": [
+    {
+      "id": true,
+      "used": 0,
+      "paused": false,
+      "minute_limit": 6,
+      "pause_reason": null,
+      "blocked_until": null,
+      "budget_minute": "2026-10-28T02:34:00+00:00"
+    }
+  ],
+  "finals": [
+    {
+      "day": "2026-11-21",
+      "away": "Boca Juniors",
+      "home": "Atlético-MG",
+      "slug": "2026-11-21-atletico-mg-boca-juniors",
+      "phase": "Final",
+      "played": false,
+      "kickoff": "2026-11-21T18:00:00+00:00",
+      "full_name": "South America - Copa Sudamericana 2026",
+      "external_id": "17384552"
+    },
+    {
+      "day": "2026-11-28",
+      "away": "Estudiantes",
+      "home": "Palmeiras-SP",
+      "slug": "2026-11-28-palmeiras-sp-estudiantes",
+      "phase": "Final",
+      "played": false,
+      "kickoff": "2026-11-28T18:00:00+00:00",
+      "full_name": "South America - Copa Libertadores 2026",
+      "external_id": "17391621"
+    }
+  ],
+  "states": [
+    {
+      "count": 118,
+      "state": "applied"
+    },
+    {
+      "count": 25,
+      "state": "failed"
+    }
+  ],
+  "coverage": [
+    {
+      "phases": 53,
+      "stage_bindings": 68,
+      "unbound_phases": 0,
+      "enabled_sources": 21,
+      "active_championships": 21
+    }
+  ],
+  "baselines": [
+    {
+      "count": 712,
+      "table_name": "game"
+    },
+    {
+      "count": 20,
+      "table_name": "goal"
+    },
+    {
+      "count": 4,
+      "table_name": "player"
+    },
+    {
+      "count": 192,
+      "table_name": "player_game"
+    },
+    {
+      "count": 40,
+      "table_name": "substitution"
+    },
+    {
+      "count": 192,
+      "table_name": "team_player"
+    }
+  ]
+}

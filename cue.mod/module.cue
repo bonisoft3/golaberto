@@ -7,7 +7,7 @@
 module: "github.com/bonisoft3/golaberto@v0"
 
 language: {
-	version: "v0.16.1"
+	version: "v0.18.0"
 }
 
 source: {
@@ -16,23 +16,23 @@ source: {
 
 deps: {
 	"github.com/bonisoft3/bayt@v0": {
-		v:       "v0.68.2"
+		v:       "v0.72.3"
 		default: true
 	}
 	"github.com/bonisoft3/mecha@v0": {
-		v:       "v0.20.6"
+		v:       "v0.23.1"
 		default: true
 	}
 	"github.com/bonisoft3/omnishell@v0": {
-		v:       "v0.21.7"
+		v:       "v0.24.0"
 		default: true
 	}
 	"github.com/bonisoft3/pronto@v1": {
-		v:       "v1.0.10"
+		v:       "v1.2.1"
 		default: true
 	}
 	"github.com/bonisoft3/sayt@v0": {
-		v:       "v0.45.3"
+		v:       "v0.49.1"
 		default: true
 	}
 }

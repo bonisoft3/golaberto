@@ -357,28 +357,19 @@ pairs:
     of: campeonato
     accepts:
       - accept-championship-page
-    says: 'a championship shows its phases, groups, teams, zones and points'
+    says: 'a championship shows its phases, groups, teams and zones'
     given: {}
     when: view
-    then: 'output.phases == ["Turno e Returno"] && output.members.size() == 20 && output.points == [3, 1, 0]'
-  - id: test-championship-old-points
-    ir: test-championship-old-points
-    of: campeonato
-    accepts:
-      - accept-championship-page
-    says: a championship from the two-point era states its own points
-    given: {}
-    when: view
-    then: 'output.points == [2, 1, 0]'
+    then: 'output.phases == ["Turno e Returno"] && output.members.size() == 20'
   - id: test-championship-no-groups
     ir: test-championship-no-groups
     of: campeonato
     accepts:
       - accept-championship-page
-    says: a phase with no groups says so
+    says: later phases come first and empty groups say so
     given: {}
     when: view
-    then: output.phases.size() == 2
+    then: 'output.phases == ["Oitavas de Final", "Fase de Grupos"]'
   - id: test-championship-gone
     ir: test-championship-gone
     of: campeonato
@@ -514,15 +505,15 @@ pairs:
     given: {}
     when: view
     then: output.empty == "Este jogo não existe ou foi removido."
-  - id: test-rounds
-    ir: test-rounds
+  - id: test-team-match-preview
+    ir: test-team-match-preview
     of: campeonato
     accepts:
-      - accept-rounds
-    says: the championship page shows the current round and the next
+      - accept-team-match-preview
+    says: standings preview the last played and next scheduled match for a team
     given: {}
     when: view
-    then: output.rounds.size() == 2
+    then: output.preview.sections.size() == 2
   - id: test-bench-whole
     ir: test-bench-whole
     of: PlayerGame

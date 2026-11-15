@@ -1,0 +1,108 @@
+{
+  "verdict": "changes-required",
+  "mergedMain": "fce5fb4981556deef703d4ac90fb4d99df306e3d",
+  "productionChanged": false,
+  "gates": {
+    "golabertoGenerate": 0,
+    "plausibleGenerate": 0,
+    "golabertoSaytTest": 0,
+    "prontoSaytTest": 0,
+    "prontoSaytLint": 0,
+    "pagedRuntime": {
+      "passed": 27,
+      "failed": 0
+    },
+    "latestQueryExecution": {
+      "passed": 10,
+      "failed": 0
+    },
+    "snapshotCoordinator": {
+      "passed": 38,
+      "failed": 0
+    },
+    "nativePublication": {
+      "passed": 14,
+      "failed": 0
+    },
+    "staticEmission": {
+      "passed": 3,
+      "failed": 0
+    },
+    "edgePackagingAndWorkerd": {
+      "passed": 14,
+      "failed": 0
+    },
+    "pgliteWorkerd": {
+      "passed": 11,
+      "steps": 36,
+      "failed": 0
+    },
+    "duckdbNative": {
+      "build": 0,
+      "lint": 0,
+      "testsPassed": 10,
+      "integrate": 0
+    },
+    "canonicalHostedRecovery": "passed: raw WAL, repeated checkpoints, append after recovery, paged execution",
+    "edgeSayt": {
+      "passed": 60,
+      "steps": 21,
+      "failed": 0
+    },
+    "latestPackaging": {
+      "passed": 15,
+      "failed": 0
+    },
+    "boundedNumerical": {
+      "passed": 10,
+      "failed": 0
+    },
+    "pagedComputeBudget": {
+      "passed": 6,
+      "failed": 0
+    },
+    "physicalCompiler": {
+      "passed": 12,
+      "failed": 0
+    },
+    "duckdbCheckpointProfile": {
+      "build": 0,
+      "lint": 0,
+      "testsPassed": 10,
+      "integrate": 0
+    }
+  },
+  "canonicalDuckdbWasmSha256": "6b9531fbaf8f846c01c619370607c81ae4f9d4dc3abaecb392936766e8cdf9c9",
+  "buildEvidence": "one canonical cold Docker build; verified artifact cache seeded after Docker init guard change; warm build and integration verification",
+  "remaining": [
+    "Implement and verify archive-sized publication that fits Cloudflare resource and serving-latency limits while preserving the multi-sink transaction contract, including chances onComplete and realtime propagation.",
+    "If adopting 8 KiB storage blocks, implement and validate an identity-preserving, crash-safe format migration; the offline comparison is not a production migration."
+  ],
+  "limitations": [
+    "Full ratings equality uses documented diagnostic forks/shards; a pristine full production run and live publication remain unproved.",
+    "No native Windows host test was run.",
+    "Local process CPU is not hosted isolate billing; WASM heap is not total isolate memory."
+  ],
+  "resolved": [
+    "All ratings SQL relations and narrow preparation joins fit the 32 MiB DuckDB budget.",
+    "Source physical snapshot cut and separate Reader materialization pass archive row-count, concurrent-edit and restart checks.",
+    "Largest real numerical evaluation passes hosted generated pipeline with exact output and replay.",
+    "Reader materialization uses durable heap ranges; all nine archive tables pass crash/resume with maximum1.67s materialize call.",
+    "Qualified indexed chunk ordering avoids sorting an entire retained table for each page.",
+    "Completed RPCs release deadline timers; 12,000-call actual-workerd regression passes.",
+    "All four archive chances SQL relations match the logical query results within the 32 MB budget.",
+    "Largest 218-team odds group passes actual hosted 128 MiB paged execution with exact outputs and stable done replay; candidate private 16 MiB stdout limit is now integrated in source.",
+    "Chance finish persists a compact checkpoint and emits 256 KiB pages without repeating committed WASM on restart.",
+    "Source invalidation uses nonempty statement transition tables, preserving no-op and rollback behavior without per-row notification bookkeeping; 38 coordinator tests pass.",
+    "Interrupted publication recovered with no receipt, unchanged public counts and all sealed outputs retained; sampled attempted rows remain invisible.",
+    "Full warm import of 8,672,468 rows and formerly failing join pass without reopen or eviction using DuckDB automatic checkpoint threshold 1 MB.",
+    "All 15,518 chances groups completed at revision 22036; all 1,134,231 output rows and canonical hashes exactly match the independent logical-SQL/pure-WASM reference."
+  ],
+  "currentCapacityEvidence": "bounded-runtime.json",
+  "firstFixCommit": "d01a18efd",
+  "review": {
+    "scope": "durable chance paging, private stdout budget, physical ASOF partitioning; statement-level source notifications and legacy trigger migration; bounded DuckDB checkpoint profile and reopen regression",
+    "route": "gpt-6-astra high",
+    "findings": []
+  }
+}

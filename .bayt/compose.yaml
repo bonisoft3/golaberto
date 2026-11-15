@@ -84,33 +84,33 @@ services:
     profiles:
     - ci
     scale: 1
-  served:
-    extends:
-      file: ./compose.served.yaml
-      service: golaberto-served
-    profiles:
-    - served
-    scale: 1
-  render:
-    extends:
-      file: ./compose.render.yaml
-      service: golaberto-render
-    profiles:
-    - render
-    scale: 1
-  served-release:
-    extends:
-      file: ./compose.served-release.yaml
-      service: golaberto-served-release
-    profiles:
-    - served-release
-    scale: 1
   database:
     extends:
       file: ./compose.database.yaml
       service: golaberto-database
     profiles:
     - database
+    scale: 1
+  migrate:
+    extends:
+      file: ./compose.migrate.yaml
+      service: golaberto-migrate
+    profiles:
+    - migrate
+    scale: 1
+  airlock-upgrade:
+    extends:
+      file: ./compose.airlock-upgrade.yaml
+      service: golaberto-airlock-upgrade
+    profiles:
+    - airlock-upgrade
+    scale: 1
+  timer-check:
+    extends:
+      file: ./compose.timer-check.yaml
+      service: golaberto-timer-check
+    profiles:
+    - timer-check
     scale: 1
   auth:
     extends:
@@ -154,26 +154,19 @@ services:
     profiles:
     - clock
     scale: 1
-  migrate:
+  airlock:
     extends:
-      file: ./compose.migrate.yaml
-      service: golaberto-migrate
+      file: ./compose.airlock.yaml
+      service: golaberto-airlock
     profiles:
-    - migrate
+    - airlock
     scale: 1
-  check-constraints:
+  airlock-mesh:
     extends:
-      file: ./compose.check-constraints.yaml
-      service: golaberto-check-constraints
+      file: ./compose.airlock-mesh.yaml
+      service: golaberto-airlock-mesh
     profiles:
-    - check-constraints
-    scale: 1
-  ci-constraints:
-    extends:
-      file: ./compose.ci-constraints.yaml
-      service: golaberto-ci-constraints
-    profiles:
-    - ci-constraints
+    - airlock-mesh
     scale: 1
   check-acceptance:
     extends:
@@ -189,12 +182,82 @@ services:
     profiles:
     - ci-acceptance
     scale: 1
+  check-constraints:
+    extends:
+      file: ./compose.check-constraints.yaml
+      service: golaberto-check-constraints
+    profiles:
+    - check-constraints
+    scale: 1
+  ci-constraints:
+    extends:
+      file: ./compose.ci-constraints.yaml
+      service: golaberto-ci-constraints
+    profiles:
+    - ci-constraints
+    scale: 1
+  check-statistics-live:
+    extends:
+      file: ./compose.check-statistics-live.yaml
+      service: golaberto-check-statistics-live
+    profiles:
+    - check-statistics-live
+    scale: 1
+  ci-statistics-live:
+    extends:
+      file: ./compose.ci-statistics-live.yaml
+      service: golaberto-ci-statistics-live
+    profiles:
+    - ci-statistics-live
+    scale: 1
   caddy:
     extends:
       file: ./compose.caddy.yaml
       service: golaberto-caddy
     profiles:
     - caddy
+    scale: 1
+  sofascore:
+    extends:
+      file: ./compose.sofascore.yaml
+      service: golaberto-sofascore
+    profiles:
+    - sofascore
+    scale: 1
+  sofascore-appliance:
+    extends:
+      file: ./compose.sofascore-appliance.yaml
+      service: golaberto-sofascore-appliance
+    profiles:
+    - sofascore-appliance
+    scale: 1
+  served:
+    extends:
+      file: ./compose.served.yaml
+      service: golaberto-served
+    profiles:
+    - served
+    scale: 1
+  served-release:
+    extends:
+      file: ./compose.served-release.yaml
+      service: golaberto-served-release
+    profiles:
+    - served-release
+    scale: 1
+  render:
+    extends:
+      file: ./compose.render.yaml
+      service: golaberto-render
+    profiles:
+    - render
+    scale: 1
+  rclone-s3:
+    extends:
+      file: ./compose.rclone-s3.yaml
+      service: golaberto-rclone-s3
+    profiles:
+    - rclone-s3
     scale: 1
   crud:
     extends:
@@ -216,13 +279,6 @@ services:
       service: golaberto-redis
     profiles:
     - redis
-    scale: 1
-  rclone-s3:
-    extends:
-      file: ./compose.rclone-s3.yaml
-      service: golaberto-rclone-s3
-    profiles:
-    - rclone-s3
     scale: 1
   transform:
     extends:

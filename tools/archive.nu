@@ -130,40 +130,10 @@ def "main up" [] {
   print $"GolAberto with the archive: ($s.env.ORIGIN) \(derived pages fill in as the projections finish)"
 }
 
-# The application's rows from a dump whose migrations are these: the tables
-# and sequences of every schema but pgroll's, whose ledger is the target's own.
-# A table the migrations do not make is no part of the archive (the auth
-# service creates its own credential store at runtime) and is named as left
-# out. The migrations seed rows (geography, clocks, RLS exemptions) the dump
-# holds too, so the tables are emptied in the same transaction as the restore.
-# Triggers stay off so the restore enqueues nothing the projections would
-# replay.
+# Restores only tables present in the archive; target-only runtime state remains.
 def restore-dump [py: string, target: string, dump: string] {
-  ^$py tools/archive_workflow.py check-dump --dump $dump --target $target
   step "restore the pg_dump"
-  let ours = sql $target "SELECT c.relkind::text || '|' || n.nspname || '.' || c.relname || '|' || format('%I.%I', n.nspname, c.relname) FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace WHERE c.relkind IN ('r', 'S') AND n.nspname NOT IN ('pgroll', 'information_schema') AND n.nspname !~ '^pg_'" | lines | split column "|" kind name quoted
-  let tables = $ours | where kind == "r"
-  let sequences = $ours | where kind == "S" | get name
-  # Copied in rather than piped: a pipe through the tool runners carries no stdin.
-  run-docker cp $dump $"($target):/tmp/archive.dump"
-  let entries = run-docker exec $target pg_restore -l /tmp/archive.dump | lines | each { |line|
-    let m = $line | parse -r '^\d+; \d+ \d+ (?<kind>TABLE DATA|SEQUENCE SET) (?<schema>\S+) (?<name>\S+) '
-    if ($m | is-empty) { null } else { $m | first | update name ($m.0.schema + "." + $m.0.name) | insert line $line }
-  } | compact
-  let wanted = $entries | where { |e| $e.name in (if $e.kind == "TABLE DATA" { $tables.name } else { $sequences }) } | get line
-  let left_out = $entries | where { |e| $e.kind == "TABLE DATA" and $e.schema != "pgroll" and $e.name not-in $tables.name } | get name
-  if ($left_out | is-not-empty) {
-    print -e $"left out, not made by these migrations: ($left_out | str join ', ')"
-  }
-  let list = mktemp -t archive.XXXXXX.list
-  $wanted | str join (char nl) | save -f $list
-  run-docker cp $list $"($target):/tmp/archive.list"
-  rm $list
-  # The dump becomes SQL first, so one that cannot be read fails before
-  # anything is emptied; psql then runs the TRUNCATE and the rows as one
-  # transaction.
-  let script = "set -e; trap 'rm -f /tmp/archive.dump /tmp/archive.list /tmp/archive.sql' EXIT; pg_restore -f /tmp/archive.sql --data-only --disable-triggers -L /tmp/archive.list /tmp/archive.dump; psql -X -q -v ON_ERROR_STOP=1 --single-transaction -U postgres -d golaberto -c 'TRUNCATE " + ($tables.quoted | str join ", ") + "' -f /tmp/archive.sql >/dev/null"
-  run-docker exec $target bash -c $script
+  ^$py tools/archive_workflow.py restore-dump --dump $dump --target $target
 }
 
 def import [s: record, py: string, target: string] {

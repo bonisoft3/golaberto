@@ -5,7 +5,7 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "libraries_mecha-ticker-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-ticker:0.20.6@sha256:ddb62e40bb03ac5b77a797c597ca8c088d72edc60154ac4f3ac57e0c8ebc7ce3}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image}"
+        "libraries_mecha-ticker-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-ticker:0.23.1@sha256:41772ec0aa998171a6b44b1cfec2bc8698cee0f7159f961e7cc004a4467add2d}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image}"
       },
       "secrets": [],
       "args": {}
@@ -13,7 +13,7 @@
     "environment": {
       "CRUD_URL": "http://crud:3000",
       "CALL_TIMEOUT_MS": "35000",
-      "WAKE_URLS": "http://mesh-events:3500/v1.0/healthz/outbound",
+      "WAKE_URLS": "http://mesh-events:3500/v1.0/healthz/outbound,http://airlock:9997/healthz",
       "SERVICE_JWT": "${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}"
     },
     "ports": [],
@@ -25,6 +25,11 @@
     },
     "networks": {
       "default": {
+        "aliases": [
+          "ticker"
+        ]
+      },
+      "airlock-wake": {
         "aliases": [
           "ticker"
         ]
@@ -51,7 +56,58 @@
     "incremental": false,
     "cmd": null
   },
+  "entrypoint": {
+    "do": "let app = (if (($env.TICKER_APP_DIR? | default '') != '') { $env.TICKER_APP_DIR } else if ('services/ticker/main.ts' | path exists) { 'services/ticker' } else { ((^mise where github:bonisoft3/mecha | str trim) | path join 'services/ticker') }); exec deno run --allow-net --allow-env --config ($app | path join 'deno.json') ($app | path join 'main.ts')",
+    "dockerfile": null,
+    "shell": "nu",
+    "env": {
+      "CRUD_URL": {
+        "peer": "crud",
+        "port": "http",
+        "part": "addr",
+        "prefix": "http://",
+        "suffix": ""
+      },
+      "CALL_TIMEOUT_MS": "35000",
+      "WAKE_URLS": [
+        {
+          "peer": "mesh-events",
+          "port": "http",
+          "part": "addr",
+          "prefix": "http://",
+          "suffix": "/v1.0/healthz/outbound"
+        },
+        ",",
+        {
+          "peer": "airlock",
+          "port": "tcp",
+          "part": "addr",
+          "prefix": "http://",
+          "suffix": "/healthz"
+        }
+      ],
+      "SERVICE_JWT": "${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}"
+    },
+    "after": {
+      "crud": "healthy"
+    },
+    "host": true
+  },
+  "expose": {
+    "http": {
+      "port": 9998,
+      "env": "PORT"
+    }
+  },
   "name": "ticker",
+  "process-compose": {
+    "activate": "mise x --",
+    "availability": {
+      "restart": "on_failure",
+      "backoff_seconds": 1,
+      "max_restarts": 15
+    }
+  },
   "project": "golaberto",
   "dir": ".",
   "activate": "",
@@ -102,8 +158,10 @@
       "upClosure": [
         "./.bayt/compose.ticker.yaml",
         "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml",
         "./.bayt/compose.database.yaml",
-        "./.bayt/compose.migrate.yaml"
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.timer-check.yaml"
       ]
     },
     "outs": {
@@ -133,8 +191,10 @@
       "upClosure": [
         "./.bayt/compose.ticker.yaml",
         "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml",
         "./.bayt/compose.database.yaml",
-        "./.bayt/compose.migrate.yaml"
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.timer-check.yaml"
       ]
     }
   },
@@ -153,8 +213,10 @@
   "upClosure": [
     "./.bayt/compose.ticker.yaml",
     "./.bayt/compose.crud.yaml",
+    "./.bayt/compose.airlock-upgrade.yaml",
     "./.bayt/compose.database.yaml",
-    "./.bayt/compose.migrate.yaml"
+    "./.bayt/compose.migrate.yaml",
+    "./.bayt/compose.timer-check.yaml"
   ],
   "chainedDeps": [
     {

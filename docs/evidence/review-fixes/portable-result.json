@@ -1,0 +1,36 @@
+{
+  "origin": "https://golaberto-duckstream-preview-d2c670b1.davi-d2c.workers.dev",
+  "counts": {
+    "game": 1522,
+    "team": 68,
+    "team_rating": 64,
+    "player_rating": 725,
+    "rating_eval": 6,
+    "team_chance": 82,
+    "zone_chance": 300,
+    "position_chance": 1604,
+    "game_importance": 513,
+    "standing": 82,
+    "game_card": 1522
+  },
+  "group": {
+    "id": "04000000-0000-4000-8000-000000000001",
+    "slug": "brasil-campeonato-brasileiro-2026-turno-e-returno-grupo-unico",
+    "teams": 20,
+    "zones": 100,
+    "positions": 400
+  },
+  "player": {
+    "slug": "k-viveros",
+    "name": "K. Viveros",
+    "goals": 18,
+    "minutes": 2286
+  },
+  "guestDerivedWrite": {
+    "status": 200,
+    "range": null,
+    "body": "[]"
+  },
+  "errors": [],
+  "elapsedMs": 9048
+}

@@ -7,7 +7,7 @@ import subprocess
 import unittest
 from unittest.mock import patch
 
-from archive_workflow import check_new_project,ledger_names,project_name,verify_archive,wait_for_source
+from archive_workflow import check_new_project,ledger_names,project_name,sequence_restart,verify_archive,wait_for_source
 
 
 class ArchiveWorkflowTest(unittest.TestCase):
@@ -34,6 +34,18 @@ class ArchiveWorkflowTest(unittest.TestCase):
         self.assertEqual(ledger_names(copy),{'00_initdb','041_native_media'})
         with self.assertRaises(ValueError):
             ledger_names('SET client_encoding = \'UTF8\';')
+        with self.assertRaisesRegex(ValueError, 'incomplete migration'):
+            ledger_names(copy.replace('00_initdb\t{}\tt0\tt0\t\\N\tt\t{}', '00_initdb\t{}\tt0\tt0\t\\N\tf\t{}'))
+
+    def test_sequence_restart_preserves_nextval_and_exhaustion(self):
+        self.assertEqual(sequence_restart(7, True, 2, 1, 9, False), 9)
+        self.assertEqual(sequence_restart(7, False, 2, 1, 9, False), 7)
+        self.assertEqual(sequence_restart(9, True, 2, 1, 9, True), 1)
+        self.assertEqual(sequence_restart(1, True, -2, 1, 9, True), 9)
+        with self.assertRaisesRegex(ValueError, 'exhausted'):
+            sequence_restart(9, True, 2, 1, 9, False)
+        with self.assertRaisesRegex(ValueError, 'unsupported'):
+            sequence_restart(10, False, 1, 1, 9, False)
 
     def test_temporary_initialization_daemon_is_not_restore_ready(self):
         with patch('archive_workflow.docker',side_effect=['docker-entrypoi','true','mysqld']) as docker, \
@@ -82,6 +94,7 @@ class ArchiveWorkflowTest(unittest.TestCase):
         profile = yaml.load((Path(__file__).parent/'archive'/'compose.preserve.yaml').read_text(),Loader=ComposeLoader)
         jobs = json.loads(profile['services']['golaberto-compute']['environment']['COMPUTATIONS'])
         self.assertEqual([job['name'] for job in jobs],['golaberto-chances'])
+        self.assertEqual(jobs[0]['feldera'],'/app/computations/golaberto-chances.feldera.json')
         self.assertNotIn('onComplete',jobs[0])
         self.assertNotIn('team_rating',jobs[0]['to'])
         self.assertEqual(profile['volumes']['archive-postgres'],{})

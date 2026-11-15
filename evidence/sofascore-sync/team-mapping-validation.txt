@@ -1,0 +1,10 @@
+Team identity research and local data repair
+Applied at: 2026-10-28T00:02:35.166391+00:00
+
+Rollback validation passed for 6 new teams, 12 confirmed mappings and 12 resolved reviews.
+{"confirmed_mappings": 12, "corrected_legacy_ids": 3, "teams_added": 6, "reviews_resolved": 12, "remaining_reviews": [{"kind": "binding", "count": 462, "detail": "missing target", "reason": "identity recovery conflict"}, {"kind": "binding", "count": 4, "detail": "'unique_tournament_id'", "reason": "identity recovery conflict"}, {"kind": "binding", "count": 1, "detail": "unverified stage scope", "reason": "identity recovery conflict"}, {"kind": "binding", "count": 1, "detail": "missing championship target", "reason": "identity recovery conflict"}], "updater_requests_before": 11, "updater_requests_after": 11}
+
+Backend review: no actionable findings.
+Post-commit assertions: all 12 bindings match researched IDs; all 12 reviews resolved; original six team rows and row versions preserved; six imported teams present; 468 non-team reviews remain.
+Background updater request count: 11 before / 11 after.
+Source MySQL was read only. No application code or schema changed.

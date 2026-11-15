@@ -1,0 +1,54 @@
+{
+  "scope": "local Workerd and native storage-backed DuckDB; 32MiB SQL budget; wall time, not hosted CPU",
+  "results": [
+    {
+      "size": 128,
+      "requests": 128,
+      "ms": 1027.8800419999998,
+      "rows": [
+        {
+          "n": 16384,
+          "total": 134209536
+        }
+      ],
+      "heap": 29097984
+    },
+    {
+      "size": 1024,
+      "requests": 16,
+      "ms": 285.73512499999924,
+      "rows": [
+        {
+          "n": 16384,
+          "total": 134209536
+        }
+      ],
+      "heap": 29097984
+    }
+  ],
+  "hosted_baseline": {
+    "capture": 29,
+    "source_generation": "b115ea7a-7d02-41c1-9592-ed7b3ffb334f",
+    "logical_database_bytes_approx": 7600000000,
+    "visible_insert_seconds": 2520.979,
+    "visible_rollback_seconds": 2542.554,
+    "sampling": "about one minute; phase boundaries are observations, not exact timings",
+    "observed_utc": {
+      "copy_first": "2026-11-07T09:46:52.891Z",
+      "reader_ready": "2026-11-07T10:00:18.789Z",
+      "source_transfer_finished_by": "2026-11-07T10:14:50.130Z",
+      "queries_finished_by": "2026-11-07T10:15:54.027Z",
+      "finish_done_by": "2026-11-07T10:24:15.657Z",
+      "visible": "2026-11-07T10:27:44.319Z"
+    }
+  },
+  "limits": [
+    "Local ingestion benchmark, not hosted end-to-end improvement",
+    "WASM heap is not whole-isolate memory",
+    "Full snapshot copies and full standings recount remain",
+    "Memory reset cause unresolved",
+    "New source cap requires compatible Query and Reader rollout; live companions not switched"
+  ],
+  "request_count_note": "Final repository benchmark excludes duplicate/rejected-replay checks from timed requests.",
+  "reproduce": "From libraries/mecha/packages/mecha-edge: SAYT_MISE_BIN=/Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise deno run -A --frozen test/source-transfer-benchmark.ts (Deno 2.9.7)"
+}

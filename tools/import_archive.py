@@ -6,7 +6,7 @@ goals and comments whose subjects have no public comment entity. Source users
 are exported only as public bylines, biographies and attachment metadata; credentials and sessions never leave MySQL.
 PyYAML 6.0.3 is required for safe, lossless legacy zone and odds parsing.
 Preserving imported originals requires a worker profile that disables the
-ratings replacement job and the chances job's computed snapshot capture hook.
+ratings recomputation job and the chances job's computed snapshot capture hook.
 """
 from __future__ import annotations
 
@@ -641,7 +641,7 @@ def build_snapshot(args, db: Database) -> dict:
                 'community_history':{'source_rows':counts['game_versions'],'projection':'Nonempty diffs of approved game fields between ordered retained versions; the first snapshot records known values against unknown. Goals-only revisions remain private legacy rows. Original version numbers, UTC timestamps and numeric author IDs are preserved.'},
                 'historical_avatar_assets':query("SELECT id AS legacy_user_id,avatar_file_name,avatar_content_type,avatar_file_size,avatar_updated_at FROM pg_temp.users WHERE avatar_file_name IS NOT NULL AND avatar_file_name<>'' ORDER BY id"),
                 'historical_avatar_requirement':'Source SQL stores attachment metadata only. Supply reviewed local users/avatars/<legacy_user_id>/medium.png and thumb.png assets for a separate guarded immutable-object promotion; never claim accounts by handle.',
-                'runtime_preservation_requirement':'Disable ratings replacement and omit chances onComplete snapshot capture when serving imported original ratings and odds; the default computation sink prunes outputs absent from recalculation.',
+                'runtime_preservation_requirement':'Disable ratings recomputation and omit chances onComplete snapshot capture when serving unchanged imported ratings and odds; normal ratings publication replaces the computed projection and removes omitted team/day values.',
                 'staging_assumption':'Restored source is immutable; reused typed legacy schema must originate from this exact source export. Counts, column types and positive unique source IDs are checked.',
                 'files_sha256':{path.name:hashlib.sha256(path.read_bytes()).hexdigest() for path in (*files.values(),args.output/'apply.sql')}}
     (args.output/'manifest.json').write_text(json.dumps(manifest,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')

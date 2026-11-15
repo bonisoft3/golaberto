@@ -5,7 +5,7 @@
     "manual": true,
     "build": {
       "additional_contexts": {
-        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.21.7@sha256:300583571c8a5434d59c7ada9a3b5c2f6319d5768b3950a9f06504d96237d1a8}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.24.0@sha256:17daf9f9ed4dd8269b0de24eb7d66289c253b7e26fe47b81e93faccbcd77270c}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
       },
       "secrets": [],
       "args": {}
@@ -14,24 +14,25 @@
       "mise",
       "x",
       "--",
-      "sh",
+      "nu",
       "-c",
-      "deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-all --unsafely-ignore-certificate-errors=caddy tests/acceptance.ts"
+      "let omnishell = (^mise where github:bonisoft3/omnishell | str trim); deno test --config ($$omnishell | path join test deno.json) --lock ($$omnishell | path join test deno.lock) --frozen --allow-all --unsafely-ignore-certificate-errors=caddy tests/acceptance.ts"
     ],
-    "depends_on": {
-      "golaberto-launch": {
-        "condition": "service_healthy"
-      }
-    },
     "environment": {
       "APP_URL": "https://caddy:8443",
       "DATABASE_URL": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
+      "DOOR": "http://caddy:8080",
       "ORIGIN": "${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT}}",
       "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}",
       "SETTLE_TIMEOUT_MS": "50000"
     },
     "ports": [],
-    "volumes": []
+    "volumes": [],
+    "depends_on": {
+      "golaberto-launch": {
+        "condition": "service_healthy"
+      }
+    }
   },
   "dockerfile": {
     "preamble": [],
@@ -65,7 +66,60 @@
     "incremental": false,
     "cmd": null
   },
+  "entrypoint": {
+    "do": "let omnishell = (^mise where github:bonisoft3/omnishell | str trim); deno test --config ($omnishell | path join test deno.json) --lock ($omnishell | path join test deno.lock) --frozen --allow-all --unsafely-ignore-certificate-errors=caddy,localhost,127.0.0.1 tests/acceptance.ts",
+    "shell": "nu",
+    "env": {
+      "APP_URL": {
+        "peer": "caddy",
+        "port": "door",
+        "part": "addr",
+        "host": "localhost",
+        "prefix": "https://",
+        "suffix": ""
+      },
+      "DATABASE_URL": [
+        "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@",
+        {
+          "peer": "database",
+          "port": "pg",
+          "part": "addr",
+          "prefix": "",
+          "suffix": ""
+        },
+        "/${POSTGRES_DB:-golaberto}"
+      ],
+      "DOOR": {
+        "peer": "caddy",
+        "port": "http",
+        "part": "addr",
+        "prefix": "http://",
+        "suffix": ""
+      },
+      "ORIGIN": [
+        "${ORIGIN:-https://",
+        {
+          "peer": "caddy",
+          "port": "door",
+          "part": "addr",
+          "host": "localhost",
+          "prefix": "",
+          "suffix": ""
+        },
+        "}"
+      ],
+      "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}",
+      "SETTLE_TIMEOUT_MS": "50000"
+    },
+    "after": {
+      "launch": "healthy"
+    },
+    "host": true
+  },
   "name": "check-acceptance",
+  "process-compose": {
+    "activate": "mise x --"
+  },
   "project": "golaberto",
   "dir": ".",
   "activate": "mise x --",
@@ -101,14 +155,14 @@
           ".bayt/bayt.check-acceptance.json",
           ".bayt/Taskfile.yml",
           ".bayt/Taskfile.bayt.yml",
-          ".bayt/Taskfile.check-acceptance.yaml",
           ".bayt/compose.check-acceptance.closure.yaml",
           ".bayt/process-compose.yaml",
           ".bayt/compose.*.yaml",
           ".bayt/Dockerfile.*",
           ".bayt/bayt.*.json",
           ".bayt/Taskfile.*.yaml",
-          "monorepo/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml"
+          "monorepo/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml",
+          "compose.networks.yaml"
         ],
         "exclude": []
       },
@@ -127,22 +181,30 @@
         "./.bayt/compose.check-acceptance.yaml",
         "./.bayt/compose.browser.yaml",
         "./.bayt/compose.launch.yaml",
+        "./.bayt/compose.airlock.yaml",
+        "./.bayt/compose.airlock-mesh.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml",
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.build.yaml",
         "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.conduit.yaml",
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
-        "./.bayt/compose.migrate.yaml",
-        "./.bayt/compose.served.yaml",
         "./.bayt/compose.electric.yaml",
-        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.generate.yaml",
         "./.bayt/compose.mesh-events.yaml",
-        "./.bayt/compose.conduit.yaml",
-        "./.bayt/compose.transform.yaml",
-        "./.bayt/compose.compute.yaml",
-        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.rclone-s3.yaml",
-        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.render.yaml",
+        "./.bayt/compose.served.yaml",
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.sofascore.yaml",
         "./.bayt/compose.ticker.yaml",
-        "./.bayt/compose.render.yaml"
+        "./.bayt/compose.timer-check.yaml",
+        "./.bayt/compose.transform.yaml"
       ]
     },
     "outs": {
@@ -173,22 +235,30 @@
         "./.bayt/compose.check-acceptance.yaml",
         "./.bayt/compose.browser.yaml",
         "./.bayt/compose.launch.yaml",
+        "./.bayt/compose.airlock.yaml",
+        "./.bayt/compose.airlock-mesh.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml",
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.build.yaml",
         "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.conduit.yaml",
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
-        "./.bayt/compose.migrate.yaml",
-        "./.bayt/compose.served.yaml",
         "./.bayt/compose.electric.yaml",
-        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.generate.yaml",
         "./.bayt/compose.mesh-events.yaml",
-        "./.bayt/compose.conduit.yaml",
-        "./.bayt/compose.transform.yaml",
-        "./.bayt/compose.compute.yaml",
-        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.rclone-s3.yaml",
-        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.render.yaml",
+        "./.bayt/compose.served.yaml",
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.sofascore.yaml",
         "./.bayt/compose.ticker.yaml",
-        "./.bayt/compose.render.yaml"
+        "./.bayt/compose.timer-check.yaml",
+        "./.bayt/compose.transform.yaml"
       ]
     },
     "srcs": {
@@ -207,7 +277,8 @@
           "[m]ise.toml",
           "[.]mise.toml",
           "[m]ise.lock",
-          "[.]tool-versions"
+          "[.]tool-versions",
+          "[m]ise.local.toml"
         ],
         "exclude": []
       },
@@ -215,8 +286,7 @@
       "visibility": "internal",
       "deps": [],
       "transitiveDeps": [
-        "browser_srcs",
-        "launch_outs_srcs"
+        "browser_srcs"
       ],
       "transitiveCrossDeps": [
         {
@@ -228,7 +298,8 @@
               "[m]ise.toml",
               "[.]mise.toml",
               "[m]ise.lock",
-              "[.]tool-versions"
+              "[.]tool-versions",
+              "[m]ise.local.toml"
             ],
             "exclude": []
           }
@@ -244,29 +315,32 @@
         "./.bayt/compose.check-acceptance.yaml",
         "./.bayt/compose.browser.yaml",
         "./.bayt/compose.launch.yaml",
+        "./.bayt/compose.airlock.yaml",
+        "./.bayt/compose.airlock-mesh.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml",
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.build.yaml",
         "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.conduit.yaml",
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
-        "./.bayt/compose.migrate.yaml",
-        "./.bayt/compose.served.yaml",
         "./.bayt/compose.electric.yaml",
-        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.generate.yaml",
         "./.bayt/compose.mesh-events.yaml",
-        "./.bayt/compose.conduit.yaml",
-        "./.bayt/compose.transform.yaml",
-        "./.bayt/compose.compute.yaml",
-        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.rclone-s3.yaml",
-        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.render.yaml",
+        "./.bayt/compose.served.yaml",
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.sofascore.yaml",
         "./.bayt/compose.ticker.yaml",
-        "./.bayt/compose.render.yaml"
+        "./.bayt/compose.timer-check.yaml",
+        "./.bayt/compose.transform.yaml"
       ]
     }
-  },
-  "taskfile": {
-    "run": "once",
-    "incremental": true,
-    "preconditions": []
   },
   "visibility": "internal",
   "emitsSrcs": true,
@@ -287,22 +361,30 @@
     "./.bayt/compose.check-acceptance.yaml",
     "./.bayt/compose.browser.yaml",
     "./.bayt/compose.launch.yaml",
+    "./.bayt/compose.airlock.yaml",
+    "./.bayt/compose.airlock-mesh.yaml",
+    "./.bayt/compose.airlock-upgrade.yaml",
+    "./.bayt/compose.auth.yaml",
+    "./.bayt/compose.build.yaml",
     "./.bayt/compose.caddy.yaml",
+    "./.bayt/compose.clock.yaml",
+    "./.bayt/compose.compute.yaml",
+    "./.bayt/compose.conduit.yaml",
     "./.bayt/compose.crud.yaml",
     "./.bayt/compose.database.yaml",
-    "./.bayt/compose.migrate.yaml",
-    "./.bayt/compose.served.yaml",
     "./.bayt/compose.electric.yaml",
-    "./.bayt/compose.redis.yaml",
+    "./.bayt/compose.generate.yaml",
     "./.bayt/compose.mesh-events.yaml",
-    "./.bayt/compose.conduit.yaml",
-    "./.bayt/compose.transform.yaml",
-    "./.bayt/compose.compute.yaml",
-    "./.bayt/compose.auth.yaml",
+    "./.bayt/compose.migrate.yaml",
     "./.bayt/compose.rclone-s3.yaml",
-    "./.bayt/compose.clock.yaml",
+    "./.bayt/compose.redis.yaml",
+    "./.bayt/compose.render.yaml",
+    "./.bayt/compose.served.yaml",
+    "./.bayt/compose.setup.yaml",
+    "./.bayt/compose.sofascore.yaml",
     "./.bayt/compose.ticker.yaml",
-    "./.bayt/compose.render.yaml"
+    "./.bayt/compose.timer-check.yaml",
+    "./.bayt/compose.transform.yaml"
   ],
   "chainedDeps": [
     {

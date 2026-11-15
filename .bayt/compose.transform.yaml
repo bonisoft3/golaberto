@@ -29,15 +29,6 @@ services:
     develop:
       watch:
       - action: sync+restart
-        path: ../docker/golaberto-standings.yaml
-        target: /pipelines/golaberto-standings.yaml
-      - action: sync+restart
-        path: ../docker/golaberto-game-cards.yaml
-        target: /pipelines/golaberto-game-cards.yaml
-      - action: sync+restart
-        path: ../docker/golaberto-player-stats.yaml
-        target: /pipelines/golaberto-player-stats.yaml
-      - action: sync+restart
         path: ../docker/golaberto-rounds.yaml
         target: /pipelines/golaberto-rounds.yaml
       - action: sync+restart
@@ -55,10 +46,13 @@ services:
       - action: sync+restart
         path: ../docker/golaberto-recent-championships.yaml
         target: /pipelines/golaberto-recent-championships.yaml
+      - action: sync+restart
+        path: ../docker/golaberto-sofascore-admission.yaml
+        target: /pipelines/golaberto-sofascore-admission.yaml
     environment:
-      COMPUTE_GROUP: golaberto-compute
       CRUD_URL: http://crud:3000
       REDIS_URL: redis://redis:6379
+      COMPUTE_GROUP: golaberto-compute
       SERVICE_JWT: >-
         ${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
     image: bayt-golaberto-transform:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}

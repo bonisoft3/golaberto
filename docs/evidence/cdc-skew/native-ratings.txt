@@ -1,0 +1,13 @@
+running 1 test from ./duckstream/native.integration.ts
+native ratings matches snapshot queries across bootstrap, updates and deletes ...
+------- output -------
+ratings: stage 0 matched
+ratings: stage 1 matched
+ratings: stage 2 matched
+ratings: stage 3 matched
+ratings: stage 4 matched
+ratings: stage 5 matched
+----- output end -----
+native ratings matches snapshot queries across bootstrap, updates and deletes ... ok (14s)
+
+ok | 1 passed | 0 failed | 1 filtered out (14s)

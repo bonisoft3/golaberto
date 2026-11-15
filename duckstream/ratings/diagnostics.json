@@ -1,0 +1,132 @@
+[
+  {
+    "view": "archive",
+    "final": [
+      "    LogicalProject(id=[$0], phase_id=[$1], home_id=[$2], away_id=[$3], home_field=[$4], home_score=[$5], away_score=[$6], home_aet=[$7], away_aet=[$8], played=[$9], utc=[$10], moment=[$11], date=[$12], four_years=[$13], cutoff=[$14]): rowcount = 316406.25, cumulative cost = 1627018.75, id = 614",
+      "      LogicalProject(id1=[$5], phase_id=[$6], home_id=[$7], away_id=[$8], home_field=[$9], home_score=[$10], away_score=[$11], home_aet=[$12], away_aet=[$13], played=[$14], utc=[$15], moment=[$16], date=[$17], four_years=[$18], cutoff=[$19], id=[$0], id000=[$20], id00=[$3], championship_id=[$4], id0=[$1], category_id=[$2]): rowcount = 316406.25, cumulative cost = 1310612.5, id = 612",
+      "        LogicalProject(id2=[$20], id=[$0], category_id=[$1], id0=[$2], championship_id=[$3], id1=[$4], phase_id=[$5], home_id=[$6], away_id=[$7], home_field=[$8], home_score=[$9], away_score=[$10], home_aet=[$11], away_aet=[$12], played=[$13], utc=[$14], moment=[$15], date=[$16], four_years=[$17], cutoff=[$18], id00=[$19]): rowcount = 316406.25, cumulative cost = 994206.25, id = 654",
+      "          LogicalProject(id1=[$1], category_id=[$2], id00=[$3], championship_id=[$4], id0=[$5], phase_id=[$6], home_id=[$7], away_id=[$8], home_field=[$9], home_score=[$10], away_score=[$11], home_aet=[$12], away_aet=[$13], played=[$14], utc=[$15], moment=[$16], date=[$17], four_years=[$18], cutoff=[$19], id01=[$20], id=[$0]): rowcount = 316406.25, cumulative cost = 677800.0, id = 671",
+      "            LogicalJoin(condition=[=($0, $7)], joinType=[inner]): rowcount = 316406.25, cumulative cost = 361393.75, id = 668",
+      "              LogicalTableScan(table=[[schema, source_team]], hints=[[[alias inheritPath:[] options:[h]]]])[[alias inheritPath:[] options:[h]]]: rowcount = 100.0, cumulative cost = 100.0, id = 89",
+      "              LogicalProject(id1=[$16], category_id=[$17], id00=[$18], championship_id=[$19], id=[$0], phase_id=[$1], home_id=[$2], away_id=[$3], home_field=[$4], home_score=[$5], away_score=[$6], home_aet=[$7], away_aet=[$8], played=[$9], utc=[$10], moment=[$11], date=[$12], four_years=[$13], cutoff=[$14], id0=[$15]): rowcount = 21093.75, cumulative cost = 44887.5, id = 649",
+      "                LogicalJoin(condition=[=($18, $1)], joinType=[inner]): rowcount = 21093.75, cumulative cost = 23793.75, id = 666",
+      "                  LogicalProject(id0=[$1], phase_id=[$2], home_id=[$3], away_id=[$4], home_field=[$5], home_score=[$6], away_score=[$7], home_aet=[$8], away_aet=[$9], played=[$10], utc=[$11], moment=[$12], date=[$13], four_years=[$14], cutoff=[$15], id=[$0]): rowcount = 375.0, cumulative cost = 1350.0, id = 639",
+      "                    LogicalProject(id0=[$15], id=[$0], phase_id=[$1], home_id=[$2], away_id=[$3], home_field=[$4], home_score=[$5], away_score=[$6], home_aet=[$7], away_aet=[$8], played=[$9], utc=[$10], moment=[$11], date=[$12], four_years=[$13], cutoff=[$14]): rowcount = 375.0, cumulative cost = 975.0, id = 659",
+      "                      LogicalJoin(condition=[=($15, $3)], joinType=[inner]): rowcount = 375.0, cumulative cost = 600.0, id = 656",
+      "                        LogicalFilter(condition=[$9]): rowcount = 25.0, cumulative cost = 125.0, id = 589",
+      "                          LogicalTableScan(table=[[schema, source_game]], hints=[[[alias inheritPath:[] options:[x]]]])[[alias inheritPath:[] options:[x]]]: rowcount = 100.0, cumulative cost = 100.0, id = 86",
+      "                        LogicalTableScan(table=[[schema, source_team]], hints=[[[alias inheritPath:[] options:[a]]]])[[alias inheritPath:[] options:[a]]]: rowcount = 100.0, cumulative cost = 100.0, id = 93",
+      "                  LogicalProject(id0=[$2], category_id=[$3], id=[$0], championship_id=[$1]): rowcount = 375.0, cumulative cost = 1350.0, id = 644",
+      "                    LogicalProject(id0=[$2], championship_id=[$3], id=[$0], category_id=[$1]): rowcount = 375.0, cumulative cost = 975.0, id = 664",
+      "                      LogicalJoin(condition=[=($0, $3)], joinType=[inner]): rowcount = 375.0, cumulative cost = 600.0, id = 661",
+      "                        LogicalFilter(condition=[IS NULL($1)]): rowcount = 25.0, cumulative cost = 125.0, id = 597",
+      "                          LogicalTableScan(table=[[schema, source_championship]], hints=[[[alias inheritPath:[] options:[c]]]])[[alias inheritPath:[] options:[c]]]: rowcount = 100.0, cumulative cost = 100.0, id = 101",
+      "                        LogicalTableScan(table=[[schema, source_phase]], hints=[[[alias inheritPath:[] options:[p]]]])[[alias inheritPath:[] options:[p]]]: rowcount = 100.0, cumulative cost = 100.0, id = 97"
+    ]
+  },
+  {
+    "view": "statistics_window",
+    "final": [
+      "    LogicalProject(latest=[$0], anchor=[FLOOR($0, FLAG(MONTH))]): rowcount = 1.0, cumulative cost = 202.125, id = 865",
+      "      LogicalAggregate(group=[{}], latest=[MAX($0)]): rowcount = 1.0, cumulative cost = 201.125, id = 864",
+      "        LogicalProject(utc=[$10]): rowcount = 100.0, cumulative cost = 200.0, id = 863",
+      "          LogicalTableScan(table=[[schema, archive]], hints=[[[alias inheritPath:[] options:[archive]]]])[[alias inheritPath:[] options:[archive]]]: rowcount = 100.0, cumulative cost = 100.0, id = 858"
+    ]
+  },
+  {
+    "view": "boundary",
+    "final": [
+      "    LogicalProject(latest=[$0], seven_years=[+($1, -84:INTERVAL YEAR)], cutoff=[$2]): rowcount = 158.5, cumulative cost = 3706.8125, id = 1061",
+      "      LogicalAggregate(group=[{0, 1}], cutoff=[MIN($2)]): rowcount = 158.5, cumulative cost = 3548.3125, id = 1060",
+      "        LogicalProject(latest=[$0], anchor=[$1], cutoff=[$16]): rowcount = 1585.0, cumulative cost = 3370.0, id = 1059",
+      "          LogicalJoin(condition=[=($12, $0)], joinType=[left]): rowcount = 1585.0, cumulative cost = 1785.0, id = 1054",
+      "            LogicalTableScan(table=[[schema, statistics_window]], hints=[[[alias inheritPath:[] options:[w]]]])[[alias inheritPath:[] options:[w]]]: rowcount = 100.0, cumulative cost = 100.0, id = 1050",
+      "            LogicalTableScan(table=[[schema, archive]], hints=[[[alias inheritPath:[] options:[x]]]])[[alias inheritPath:[] options:[x]]]: rowcount = 100.0, cumulative cost = 100.0, id = 1053"
+    ]
+  },
+  {
+    "view": "recent",
+    "final": [
+      "    LogicalProject(id=[$0], phase_id=[$1], home_id=[$2], away_id=[$3], home_field=[$4], home_score=[$5], away_score=[$6], home_aet=[$7], away_aet=[$8], played=[$9], utc=[$10], moment=[$11], date=[$12], four_years=[$13], cutoff=[$14]): rowcount = 5000.0, cumulative cost = 10200.0, id = 1417",
+      "      LogicalJoin(condition=[>($10, +($15, -125798400000:INTERVAL DAY))], joinType=[inner]): rowcount = 5000.0, cumulative cost = 5200.0, id = 1420",
+      "        LogicalTableScan(table=[[schema, archive]], hints=[[[alias inheritPath:[] options:[x]]]])[[alias inheritPath:[] options:[x]]]: rowcount = 100.0, cumulative cost = 100.0, id = 1330",
+      "        LogicalTableScan(table=[[schema, boundary]], hints=[[[alias inheritPath:[] options:[b]]]])[[alias inheritPath:[] options:[b]]]: rowcount = 100.0, cumulative cost = 100.0, id = 1333"
+    ]
+  },
+  {
+    "view": "result_games",
+    "final": [
+      "    LogicalProject(id=[$0], phase_id=[$1], home_id=[$2], away_id=[$3], home_field=[$4], home_score=[$5], away_score=[$6], home_aet=[$7], away_aet=[$8], moment=[$11], date=[$12], seven_years=[>=($10, $16)], recent=[>($10, +($15, -125798400000:INTERVAL DAY))]): rowcount = 10000.0, cumulative cost = 20200.0, id = 1532",
+      "      LogicalJoin(condition=[true], joinType=[inner]): rowcount = 10000.0, cumulative cost = 10200.0, id = 1529",
+      "        LogicalTableScan(table=[[schema, archive]], hints=[[[alias inheritPath:[] options:[x]]]])[[alias inheritPath:[] options:[x]]]: rowcount = 100.0, cumulative cost = 100.0, id = 1525",
+      "        LogicalTableScan(table=[[schema, boundary]], hints=[[[alias inheritPath:[] options:[b]]]])[[alias inheritPath:[] options:[b]]]: rowcount = 100.0, cumulative cost = 100.0, id = 1528"
+    ]
+  },
+  {
+    "view": "phase_bounds",
+    "final": [
+      "    LogicalAggregate(group=[{0}], earliest=[MIN($1)], until=[MAX($2)]): rowcount = 10.0, cumulative cost = 212.5, id = 1702",
+      "      LogicalProject(phase_id=[$1], utc=[$10], moment=[$11]): rowcount = 100.0, cumulative cost = 200.0, id = 1701",
+      "        LogicalTableScan(table=[[schema, archive]], hints=[[[alias inheritPath:[] options:[archive]]]])[[alias inheritPath:[] options:[archive]]]: rowcount = 100.0, cumulative cost = 100.0, id = 1697"
+    ]
+  },
+  {
+    "view": "result_phases",
+    "final": [
+      "    LogicalProject(id=[$0], since=[$2], until=[$1]): rowcount = 22.5, cumulative cost = 697.8125, id = 1846",
+      "      LogicalAggregate(group=[{0, 1}], since=[MIN($2)]): rowcount = 22.5, cumulative cost = 675.3125, id = 1845",
+      "        LogicalProject(id=[$0], until=[$2], four_years=[$16]): rowcount = 225.0, cumulative cost = 650.0, id = 1844",
+      "          LogicalJoin(condition=[AND(=($4, $0), =($13, $1))], joinType=[inner]): rowcount = 225.0, cumulative cost = 425.0, id = 1839",
+      "            LogicalTableScan(table=[[schema, phase_bounds]], hints=[[[alias inheritPath:[] options:[p]]]])[[alias inheritPath:[] options:[p]]]: rowcount = 100.0, cumulative cost = 100.0, id = 1835",
+      "            LogicalTableScan(table=[[schema, archive]], hints=[[[alias inheritPath:[] options:[x]]]])[[alias inheritPath:[] options:[x]]]: rowcount = 100.0, cumulative cost = 100.0, id = 1838"
+    ]
+  },
+  {
+    "view": "result_cutoff",
+    "final": [
+      "    LogicalProject(since=[$2]): rowcount = 100.0, cumulative cost = 200.0, id = 2118",
+      "      LogicalTableScan(table=[[schema, boundary]], hints=[[[alias inheritPath:[] options:[boundary]]]])[[alias inheritPath:[] options:[boundary]]]: rowcount = 100.0, cumulative cost = 100.0, id = 2115"
+    ]
+  },
+  {
+    "view": "result_teams",
+    "final": [
+      "    LogicalTableScan(table=[[schema, source_team]], hints=[[[alias inheritPath:[] options:[source_team]]]])[[alias inheritPath:[] options:[source_team]]]: rowcount = 100.0, cumulative cost = 100.0, id = 2199"
+    ]
+  },
+  {
+    "view": "result_players",
+    "final": [
+      "    LogicalProject(id=[$0]): rowcount = 100.0, cumulative cost = 200.0, id = 2286",
+      "      LogicalTableScan(table=[[schema, source_player]], hints=[[[alias inheritPath:[] options:[source_player]]]])[[alias inheritPath:[] options:[source_player]]]: rowcount = 100.0, cumulative cost = 100.0, id = 2283"
+    ]
+  },
+  {
+    "view": "result_appearances",
+    "final": [
+      "    LogicalProject(id=[$0], game_id=[$1], player_id=[$2], team_id=[CASE(=($3, _UTF-8'home'), $11, $12)], on=[$4], off=[$5], red=[$6], position=[COALESCE($8, _UTF-8'')]): rowcount = 11250.0, cumulative cost = 35600.0, id = 2612",
+      "      LogicalProject(id0=[$15], game_id=[$16], player_id=[$17], side=[$18], on_minute=[$19], off_minute=[$20], red=[$21], id00=[$22], position=[$23], id=[$0], phase_id=[$1], home_id=[$2], away_id=[$3], home_field=[$4], home_score=[$5], away_score=[$6], home_aet=[$7], away_aet=[$8], played=[$9], utc=[$10], moment=[$11], date=[$12], four_years=[$13], cutoff=[$14]): rowcount = 11250.0, cumulative cost = 24350.0, id = 2625",
+      "        LogicalJoin(condition=[=($0, $16)], joinType=[inner]): rowcount = 11250.0, cumulative cost = 13100.0, id = 2622",
+      "          LogicalTableScan(table=[[schema, recent]], hints=[[[alias inheritPath:[] options:[x]]]])[[alias inheritPath:[] options:[x]]]: rowcount = 100.0, cumulative cost = 100.0, id = 2374",
+      "          LogicalProject(id0=[$2], game_id=[$3], player_id=[$4], side=[$5], on_minute=[$6], off_minute=[$7], red=[$8], id=[$0], position=[$1]): rowcount = 750.0, cumulative cost = 1750.0, id = 2632",
+      "            LogicalJoin(condition=[=($0, $4)], joinType=[inner]): rowcount = 750.0, cumulative cost = 1000.0, id = 2629",
+      "              LogicalTableScan(table=[[schema, source_player]], hints=[[[alias inheritPath:[] options:[p]]]])[[alias inheritPath:[] options:[p]]]: rowcount = 100.0, cumulative cost = 100.0, id = 2370",
+      "              LogicalFilter(condition=[>($5, 0)]): rowcount = 50.0, cumulative cost = 150.0, id = 2604",
+      "                LogicalTableScan(table=[[schema, source_player_game]], hints=[[[alias inheritPath:[] options:[pg]]]])[[alias inheritPath:[] options:[pg]]]: rowcount = 100.0, cumulative cost = 100.0, id = 2367"
+    ]
+  },
+  {
+    "view": "result_goals",
+    "final": [
+      "    LogicalProject(__order=[$0], game_id=[$1], player_id=[$2], team_id=[CASE(<>(=($3, _UTF-8'home'), $6), $11, $12)], time=[$4], penalty=[$5], own_goal=[$6]): rowcount = 20250.0, cumulative cost = 63840.0, id = 2979",
+      "      LogicalProject(id0=[$15], game_id=[$16], player_id=[$17], side=[$18], minute=[$19], penalty=[$20], own_goal=[$21], id00=[$22], position=[$23], id=[$0], phase_id=[$1], home_id=[$2], away_id=[$3], home_field=[$4], home_score=[$5], away_score=[$6], home_aet=[$7], away_aet=[$8], played=[$9], utc=[$10], moment=[$11], date=[$12], four_years=[$13], cutoff=[$14]): rowcount = 20250.0, cumulative cost = 43590.0, id = 2992",
+      "        LogicalJoin(condition=[=($0, $16)], joinType=[inner]): rowcount = 20250.0, cumulative cost = 23340.0, id = 2989",
+      "          LogicalTableScan(table=[[schema, recent]], hints=[[[alias inheritPath:[] options:[x]]]])[[alias inheritPath:[] options:[x]]]: rowcount = 100.0, cumulative cost = 100.0, id = 2741",
+      "          LogicalProject(id0=[$2], game_id=[$3], player_id=[$4], side=[$5], minute=[$6], penalty=[$7], own_goal=[$8], id=[$0], position=[$1]): rowcount = 1350.0, cumulative cost = 2990.0, id = 2999",
+      "            LogicalJoin(condition=[=($0, $4)], joinType=[inner]): rowcount = 1350.0, cumulative cost = 1640.0, id = 2996",
+      "              LogicalTableScan(table=[[schema, source_player]], hints=[[[alias inheritPath:[] options:[p]]]])[[alias inheritPath:[] options:[p]]]: rowcount = 100.0, cumulative cost = 100.0, id = 2737",
+      "              LogicalFilter(condition=[IS NOT NULL($4)]): rowcount = 90.0, cumulative cost = 190.0, id = 2971",
+      "                LogicalTableScan(table=[[schema, source_goal]], hints=[[[alias inheritPath:[] options:[q]]]])[[alias inheritPath:[] options:[q]]]: rowcount = 100.0, cumulative cost = 100.0, id = 2734"
+    ]
+  }
+]

@@ -1,0 +1,10 @@
+{
+  "operations": [
+    {
+      "sql": {
+        "up": "-- One heading per championship in each selected homepage feed.\nSET lock_timeout = '5s';\nSET statement_timeout = '60s';\n\nALTER TABLE game_card ADD COLUMN IF NOT EXISTS home_upcoming_group boolean NOT NULL DEFAULT false;\nALTER TABLE game_card ADD COLUMN IF NOT EXISTS home_recent_group boolean NOT NULL DEFAULT false;\n\nCREATE OR REPLACE FUNCTION refresh_home_games() RETURNS void\nLANGUAGE sql SET search_path = public, pg_temp AS $$\n  WITH selected AS (\n    SELECT s.*, min(s.feed_rank) OVER (PARTITION BY s.is_played, g.championship_id) AS group_rank\n    FROM home_game_order(now()) s JOIN game_card g ON g.id = s.game_id\n  ), ranks AS (\n    SELECT g.id,\n      COALESCE(s.feed_rank, 0) * CASE WHEN NOT g.played THEN 1 ELSE 0 END AS upcoming,\n      COALESCE(s.feed_rank, 0) * CASE WHEN g.played THEN 1 ELSE 0 END AS recent,\n      COALESCE(NOT g.played AND s.feed_rank = s.group_rank, false) AS upcoming_group,\n      COALESCE(g.played AND s.feed_rank = s.group_rank, false) AS recent_group\n    FROM game_card g LEFT JOIN selected s ON s.game_id = g.id\n  )\n  UPDATE game_card g SET home_upcoming_rank = r.upcoming, home_recent_rank = r.recent,\n    home_upcoming_group = r.upcoming_group, home_recent_group = r.recent_group\n  FROM ranks r WHERE g.id = r.id\n    AND (g.home_upcoming_rank, g.home_recent_rank, g.home_upcoming_group, g.home_recent_group)\n      IS DISTINCT FROM (r.upcoming, r.recent, r.upcoming_group, r.recent_group);\n$$;\n\nREVOKE ALL ON FUNCTION refresh_home_games() FROM PUBLIC;\nGRANT EXECUTE ON FUNCTION refresh_home_games() TO service;\nNOTIFY pgrst, 'reload schema';\n",
+        "onComplete": true
+      }
+    }
+  ]
+}

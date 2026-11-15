@@ -1,0 +1,5444 @@
+{
+  "as_of": "2026-10-27",
+  "before": {
+    "captured_at": "2026-10-28T01:43:09.933045+00:00",
+    "sources": [
+      {
+        "id": "1fe41153-9ab4-5cc9-bc91-d8cf7a14f8c1",
+        "enabled": false,
+        "season_id": 97280,
+        "created_at": "2026-10-28T00:28:08.416191+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T00:28:08.416191+00:00",
+        "create_players": false,
+        "championship_id": "a0200000-0000-4000-8000-000000000609",
+        "unique_tournament_id": 54
+      },
+      {
+        "id": "4d7a8d06-5c2c-52a4-b46f-cac0d4df7296",
+        "enabled": false,
+        "season_id": 89945,
+        "created_at": "2026-10-28T00:28:08.415551+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T00:28:08.415551+00:00",
+        "create_players": false,
+        "championship_id": "a0200000-0000-4000-8000-000000000608",
+        "unique_tournament_id": 10783
+      },
+      {
+        "id": "8a32d4b3-d93f-50d0-ab02-b6904117c0b8",
+        "enabled": false,
+        "season_id": 90642,
+        "created_at": "2026-10-28T00:28:08.413223+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T00:28:08.413223+00:00",
+        "create_players": false,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f8",
+        "unique_tournament_id": 1281
+      },
+      {
+        "id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+        "enabled": true,
+        "season_id": 95836,
+        "created_at": "2026-10-27T21:30:16.440058+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-27T21:30:16.440058+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-000000000604",
+        "unique_tournament_id": 23
+      }
+    ],
+    "stage_bindings": [
+      {
+        "phase_id": "a0300000-0000-4000-8000-0000000011c7",
+        "source_id": "1fe41153-9ab4-5cc9-bc91-d8cf7a14f8c1",
+        "stage_key": "37"
+      },
+      {
+        "phase_id": "a0300000-0000-4000-8000-0000000011c6",
+        "source_id": "4d7a8d06-5c2c-52a4-b46f-cac0d4df7296",
+        "stage_key": "64378"
+      },
+      {
+        "phase_id": "a0300000-0000-4000-8000-0000000011c6",
+        "source_id": "4d7a8d06-5c2c-52a4-b46f-cac0d4df7296",
+        "stage_key": "64379"
+      },
+      {
+        "phase_id": "a0300000-0000-4000-8000-00000000118a",
+        "source_id": "8a32d4b3-d93f-50d0-ab02-b6904117c0b8",
+        "stage_key": "27213"
+      },
+      {
+        "phase_id": "a0300000-0000-4000-8000-0000000011c2",
+        "source_id": "8a32d4b3-d93f-50d0-ab02-b6904117c0b8",
+        "stage_key": "27214"
+      },
+      {
+        "phase_id": "a0300000-0000-4000-8000-0000000011c2",
+        "source_id": "8a32d4b3-d93f-50d0-ab02-b6904117c0b8",
+        "stage_key": "90333"
+      },
+      {
+        "phase_id": "a0300000-0000-4000-8000-0000000011b5",
+        "source_id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+        "stage_key": "33"
+      }
+    ],
+    "reviews": [],
+    "planned_sources": [
+      {
+        "id": "6791deab-3d61-560e-a8cc-a8e211e67302",
+        "championship_id": "a0200000-0000-4000-8000-0000000005f3",
+        "championship": "Brazil - Campeonato Brasileiro 2026",
+        "unique_tournament_id": 325,
+        "season_id": 87678,
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "83": "a0300000-0000-4000-8000-00000000117c"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "8d44c61c-6628-5756-93c8-38b4d37eaead",
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "championship": "South America - Copa Libertadores 2026",
+        "unique_tournament_id": 384,
+        "season_id": 87760,
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "14805|{\"slug\": \"qualification-round-1\"}": "a0300000-0000-4000-8000-00000000117f",
+          "14805|{\"slug\": \"qualification-round-2\"}": "a0300000-0000-4000-8000-000000001180",
+          "14805|{\"slug\": \"qualification-round-3\"}": "a0300000-0000-4000-8000-000000001187",
+          "2933": "a0300000-0000-4000-8000-000000001192",
+          "309|{\"slug\": \"round-of-16\"}": "a0300000-0000-4000-8000-0000000011a9",
+          "309|{\"slug\": \"quarterfinals\"}": "a0300000-0000-4000-8000-0000000011bd",
+          "309|{\"slug\": \"semifinals\"}": "a0300000-0000-4000-8000-0000000011c4",
+          "2928": "a0300000-0000-4000-8000-000000001192",
+          "2929": "a0300000-0000-4000-8000-000000001192",
+          "2930": "a0300000-0000-4000-8000-000000001192",
+          "2931": "a0300000-0000-4000-8000-000000001192",
+          "2932": "a0300000-0000-4000-8000-000000001192",
+          "2934": "a0300000-0000-4000-8000-000000001192",
+          "2935": "a0300000-0000-4000-8000-000000001192"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "3425bdb5-84b5-5e74-a631-605ddf1ecac4",
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "championship": "South America - Copa Sudamericana 2026",
+        "unique_tournament_id": 480,
+        "season_id": 87770,
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "91417|{\"slug\": \"qualification-round-1\"}": "a0300000-0000-4000-8000-000000001181",
+          "91436": "a0300000-0000-4000-8000-000000001193",
+          "91444|{\"slug\": \"playoff-round\"}": "a0300000-0000-4000-8000-0000000011aa",
+          "91444|{\"slug\": \"round-of-16\"}": "a0300000-0000-4000-8000-0000000011ab",
+          "91444|{\"slug\": \"quarterfinals\"}": "a0300000-0000-4000-8000-0000000011be",
+          "91444|{\"slug\": \"semifinals\"}": "a0300000-0000-4000-8000-0000000011c5",
+          "91437": "a0300000-0000-4000-8000-000000001193",
+          "91438": "a0300000-0000-4000-8000-000000001193",
+          "91439": "a0300000-0000-4000-8000-000000001193",
+          "91440": "a0300000-0000-4000-8000-000000001193",
+          "91441": "a0300000-0000-4000-8000-000000001193",
+          "91442": "a0300000-0000-4000-8000-000000001193",
+          "91443": "a0300000-0000-4000-8000-000000001193"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "ec127c8c-d9fc-54b3-8213-daab6fe57388",
+        "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+        "championship": "Brazil - Copa do Brasil 2026",
+        "unique_tournament_id": 373,
+        "season_id": 89353,
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "283|{\"slug\": \"round-1\"}": "a0300000-0000-4000-8000-000000001182",
+          "283|{\"slug\": \"round-2\"}": "a0300000-0000-4000-8000-000000001183",
+          "283|{\"slug\": \"round-3\"}": "a0300000-0000-4000-8000-000000001188",
+          "283|{\"slug\": \"round-4\"}": "a0300000-0000-4000-8000-00000000118b",
+          "283|{\"slug\": \"round-5\"}": "a0300000-0000-4000-8000-000000001195",
+          "283|{\"slug\": \"round-of-16\"}": "a0300000-0000-4000-8000-0000000011a6",
+          "283|{\"slug\": \"quarterfinals\"}": "a0300000-0000-4000-8000-0000000011bc",
+          "283|{\"slug\": \"semifinals\"}": "a0300000-0000-4000-8000-0000000011c3"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "9422fa1c-a1b6-5e11-88af-b782c7963d21",
+        "championship_id": "a0200000-0000-4000-8000-0000000005f7",
+        "championship": "Brazil - Campeonato Brasileiro - Série B 2026",
+        "unique_tournament_id": 390,
+        "season_id": 89840,
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "1449": "a0300000-0000-4000-8000-000000001189"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+        "championship_id": "a0200000-0000-4000-8000-0000000005f9",
+        "championship": "World - National Friendlies 2026",
+        "unique_tournament_id": 851,
+        "season_id": 87155,
+        "event_scope": "fixtures",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "66": "a0300000-0000-4000-8000-000000001190"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "94feec50-e60b-5460-91a9-8365fba0c657",
+        "championship_id": "a0200000-0000-4000-8000-0000000005fb",
+        "championship": "Europe - Champions League 2026/2027",
+        "unique_tournament_id": 7,
+        "season_id": 96518,
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "1339|{\"slug\": \"qualification-round-1\"}": "a0300000-0000-4000-8000-00000000119f",
+          "1339|{\"slug\": \"qualification-round-2\"}": "a0300000-0000-4000-8000-0000000011a3",
+          "1339|{\"slug\": \"qualification-round-3\"}": "a0300000-0000-4000-8000-0000000011ac",
+          "119880|{\"slug\": \"playoff-round\"}": "a0300000-0000-4000-8000-0000000011b9",
+          "138314": "a0300000-0000-4000-8000-0000000011bf"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "f69255d9-7d32-5e40-84ec-bf0ef91bde48",
+        "championship_id": "a0200000-0000-4000-8000-0000000005fc",
+        "championship": "Europe - Europa League 2026/2027",
+        "unique_tournament_id": 679,
+        "season_id": 96522,
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "10910|{\"slug\": \"qualification-round-1\"}": "a0300000-0000-4000-8000-0000000011a0",
+          "10910|{\"slug\": \"qualification-round-2\"}": "a0300000-0000-4000-8000-0000000011a7",
+          "10910|{\"slug\": \"qualification-round-3\"}": "a0300000-0000-4000-8000-0000000011ad",
+          "119516|{\"slug\": \"playoff-round\"}": "a0300000-0000-4000-8000-0000000011ba",
+          "138315": "a0300000-0000-4000-8000-0000000011c0"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "b75e7db3-5712-5bfd-8e71-56de758c6dab",
+        "championship_id": "a0200000-0000-4000-8000-0000000005fd",
+        "championship": "Europe - Conference League 2026/2027",
+        "unique_tournament_id": 17015,
+        "season_id": 96529,
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "93604|{\"slug\": \"qualification-round-1\"}": "a0300000-0000-4000-8000-0000000011a1",
+          "93604|{\"slug\": \"qualification-round-2\"}": "a0300000-0000-4000-8000-0000000011a8",
+          "93604|{\"slug\": \"qualification-round-3\"}": "a0300000-0000-4000-8000-0000000011ae",
+          "119973|{\"slug\": \"playoff-round\"}": "a0300000-0000-4000-8000-0000000011bb",
+          "138316": "a0300000-0000-4000-8000-0000000011c1"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "f91012d1-bcd8-5155-ac37-b500825528da",
+        "championship_id": "a0200000-0000-4000-8000-0000000005fe",
+        "championship": "Portugal - Liga Primeira 2026/2027",
+        "unique_tournament_id": 238,
+        "season_id": 97436,
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "52": "a0300000-0000-4000-8000-0000000011af"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "86311189-d3c8-58d1-8c9f-419c06557497",
+        "championship_id": "a0200000-0000-4000-8000-0000000005ff",
+        "championship": "Netherlands - Eredivisie 2026/2027",
+        "unique_tournament_id": 37,
+        "season_id": 96143,
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "39": "a0300000-0000-4000-8000-0000000011b0"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "9ac71c84-8dd9-5715-928b-1381048b65ef",
+        "championship_id": "a0200000-0000-4000-8000-000000000600",
+        "championship": "England - Premier League 2026/2027",
+        "unique_tournament_id": 17,
+        "season_id": 96668,
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "1": "a0300000-0000-4000-8000-0000000011b1"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "35c44af5-6406-566c-9804-52efe27aa5db",
+        "championship_id": "a0200000-0000-4000-8000-000000000601",
+        "championship": "Spain - La Liga 2026/2027",
+        "unique_tournament_id": 8,
+        "season_id": 97268,
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "36": "a0300000-0000-4000-8000-0000000011b2"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "4f8ebe32-889b-51c9-8a82-9fcd9249ad3b",
+        "championship_id": "a0200000-0000-4000-8000-000000000602",
+        "championship": "Germany - Bundesliga 2026/2027",
+        "unique_tournament_id": 35,
+        "season_id": 97464,
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "42": "a0300000-0000-4000-8000-0000000011b3"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "878f36ae-3a1d-5cd8-86a8-cccb454f22a0",
+        "championship_id": "a0200000-0000-4000-8000-000000000603",
+        "championship": "France - Ligue 1 2026/2027",
+        "unique_tournament_id": 34,
+        "season_id": 96127,
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "4": "a0300000-0000-4000-8000-0000000011b4"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+        "championship_id": "a0200000-0000-4000-8000-000000000604",
+        "championship": "Italy - Serie A 2026/2027",
+        "unique_tournament_id": 23,
+        "season_id": 95836,
+        "event_scope": "competition",
+        "detail_after": "2026-10-27T21:30:16.440058+00:00",
+        "stages": {
+          "33": "a0300000-0000-4000-8000-0000000011b5"
+        },
+        "previously_enabled": true
+      },
+      {
+        "id": "e1fb2eb0-f547-5152-a472-7bfc079b5973",
+        "championship_id": "a0200000-0000-4000-8000-000000000605",
+        "championship": "England - Championship 2026/2027",
+        "unique_tournament_id": 18,
+        "season_id": 97037,
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "2": "a0300000-0000-4000-8000-0000000011b6"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "4c92af69-b1db-5819-93a0-d495b272b490",
+        "championship_id": "a0200000-0000-4000-8000-000000000606",
+        "championship": "Germany - 2. Bundesliga 2026/2027",
+        "unique_tournament_id": 44,
+        "season_id": 97406,
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "41": "a0300000-0000-4000-8000-0000000011b7"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "cb16abb9-605b-5b85-a989-b5e05a9eee4d",
+        "championship_id": "a0200000-0000-4000-8000-000000000607",
+        "championship": "Turkey - Süper Lig 2026/2027",
+        "unique_tournament_id": 52,
+        "season_id": 98080,
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "62": "a0300000-0000-4000-8000-0000000011b8"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "4d7a8d06-5c2c-52a4-b46f-cac0d4df7296",
+        "championship_id": "a0200000-0000-4000-8000-000000000608",
+        "championship": "Europe - Nations League 2026",
+        "unique_tournament_id": 10783,
+        "season_id": 89945,
+        "event_scope": "stages",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "64378": "a0300000-0000-4000-8000-0000000011c6",
+          "64379": "a0300000-0000-4000-8000-0000000011c6"
+        },
+        "previously_enabled": false
+      },
+      {
+        "id": "1fe41153-9ab4-5cc9-bc91-d8cf7a14f8c1",
+        "championship_id": "a0200000-0000-4000-8000-000000000609",
+        "championship": "Spain - LaLiga 2 2026/2027",
+        "unique_tournament_id": 54,
+        "season_id": 97280,
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "stages": {
+          "37": "a0300000-0000-4000-8000-0000000011c7"
+        },
+        "previously_enabled": false
+      }
+    ],
+    "quarantined_samples": [
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f9",
+        "championship": "World - National Friendlies 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001190",
+        "phase": "Only",
+        "event_id": "16299815",
+        "local_day": "2026-06-11",
+        "local_round": null,
+        "local_home": "Azerbaijan",
+        "local_away": "Uganda",
+        "local_home_external_id": "4742",
+        "local_away_external_id": "4726",
+        "local_season": "2026",
+        "issues": [
+          "home_team_id_mismatch"
+        ],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16299815",
+          "home_external_id": "274048",
+          "away_external_id": "4726",
+          "home": "Zanzibar",
+          "away": "Uganda",
+          "stage_id": "66",
+          "season_id": "87155",
+          "unique_tournament_id": "851",
+          "stage_key": "66",
+          "round_key": null,
+          "day": "2026-06-11",
+          "kickoff": "2026-06-11T17:15:00Z",
+          "status": "postponed",
+          "played": false,
+          "terminal": false,
+          "home_score": null,
+          "away_score": null,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Int. Friendly Games 2026",
+          "year": "2026",
+          "editor": false,
+          "id": 87155
+        },
+        "provider_round": {
+          "round": null,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+        "championship": "Brazil - Copa do Brasil 2026",
+        "phase_id": "a0300000-0000-4000-8000-0000000011c3",
+        "phase": "Semis",
+        "event_id": "16988178",
+        "local_day": "2026-10-31",
+        "local_round": 28,
+        "local_home": "Vasco-RJ",
+        "local_away": "Palmeiras-SP",
+        "local_home_external_id": "1974",
+        "local_away_external_id": "1963",
+        "local_season": "2026",
+        "issues": [
+          "provider_response_failed"
+        ],
+        "warnings": [],
+        "response_status": 404
+      }
+    ]
+  },
+  "after": {
+    "captured_at": "2026-10-28T01:43:10.427061+00:00",
+    "sources": [
+      {
+        "id": "9422fa1c-a1b6-5e11-88af-b782c7963d21",
+        "enabled": true,
+        "full_name": "Brazil - Campeonato Brasileiro - Série B 2026",
+        "season_id": 89840,
+        "created_at": "2026-10-28T01:43:10.472075+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f7",
+        "unique_tournament_id": 390
+      },
+      {
+        "id": "8a32d4b3-d93f-50d0-ab02-b6904117c0b8",
+        "enabled": false,
+        "full_name": "Brazil - Campeonato Brasileiro - Série C 2026",
+        "season_id": 90642,
+        "created_at": "2026-10-28T00:28:08.413223+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T00:28:08.413223+00:00",
+        "create_players": false,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f8",
+        "unique_tournament_id": 1281
+      },
+      {
+        "id": "6791deab-3d61-560e-a8cc-a8e211e67302",
+        "enabled": true,
+        "full_name": "Brazil - Campeonato Brasileiro 2026",
+        "season_id": 87678,
+        "created_at": "2026-10-28T01:43:10.453809+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f3",
+        "unique_tournament_id": 325
+      },
+      {
+        "id": "ec127c8c-d9fc-54b3-8213-daab6fe57388",
+        "enabled": true,
+        "full_name": "Brazil - Copa do Brasil 2026",
+        "season_id": 89353,
+        "created_at": "2026-10-28T01:43:10.470126+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+        "unique_tournament_id": 373
+      },
+      {
+        "id": "e1fb2eb0-f547-5152-a472-7bfc079b5973",
+        "enabled": true,
+        "full_name": "England - Championship 2026/2027",
+        "season_id": 97037,
+        "created_at": "2026-10-28T01:43:10.485589+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-000000000605",
+        "unique_tournament_id": 18
+      },
+      {
+        "id": "9ac71c84-8dd9-5715-928b-1381048b65ef",
+        "enabled": true,
+        "full_name": "England - Premier League 2026/2027",
+        "season_id": 96668,
+        "created_at": "2026-10-28T01:43:10.481107+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-000000000600",
+        "unique_tournament_id": 17
+      },
+      {
+        "id": "94feec50-e60b-5460-91a9-8365fba0c657",
+        "enabled": true,
+        "full_name": "Europe - Champions League 2026/2027",
+        "season_id": 96518,
+        "created_at": "2026-10-28T01:43:10.47305+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-0000000005fb",
+        "unique_tournament_id": 7
+      },
+      {
+        "id": "b75e7db3-5712-5bfd-8e71-56de758c6dab",
+        "enabled": true,
+        "full_name": "Europe - Conference League 2026/2027",
+        "season_id": 96529,
+        "created_at": "2026-10-28T01:43:10.478499+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-0000000005fd",
+        "unique_tournament_id": 17015
+      },
+      {
+        "id": "f69255d9-7d32-5e40-84ec-bf0ef91bde48",
+        "enabled": true,
+        "full_name": "Europe - Europa League 2026/2027",
+        "season_id": 96522,
+        "created_at": "2026-10-28T01:43:10.477376+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-0000000005fc",
+        "unique_tournament_id": 679
+      },
+      {
+        "id": "4d7a8d06-5c2c-52a4-b46f-cac0d4df7296",
+        "enabled": true,
+        "full_name": "Europe - Nations League 2026",
+        "season_id": 89945,
+        "created_at": "2026-10-28T00:28:08.415551+00:00",
+        "event_scope": "stages",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-000000000608",
+        "unique_tournament_id": 10783
+      },
+      {
+        "id": "878f36ae-3a1d-5cd8-86a8-cccb454f22a0",
+        "enabled": true,
+        "full_name": "France - Ligue 1 2026/2027",
+        "season_id": 96127,
+        "created_at": "2026-10-28T01:43:10.484498+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-000000000603",
+        "unique_tournament_id": 34
+      },
+      {
+        "id": "4c92af69-b1db-5819-93a0-d495b272b490",
+        "enabled": true,
+        "full_name": "Germany - 2. Bundesliga 2026/2027",
+        "season_id": 97406,
+        "created_at": "2026-10-28T01:43:10.486367+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-000000000606",
+        "unique_tournament_id": 44
+      },
+      {
+        "id": "4f8ebe32-889b-51c9-8a82-9fcd9249ad3b",
+        "enabled": true,
+        "full_name": "Germany - Bundesliga 2026/2027",
+        "season_id": 97464,
+        "created_at": "2026-10-28T01:43:10.483965+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-000000000602",
+        "unique_tournament_id": 35
+      },
+      {
+        "id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+        "enabled": true,
+        "full_name": "Italy - Serie A 2026/2027",
+        "season_id": 95836,
+        "created_at": "2026-10-27T21:30:16.440058+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-27T21:30:16.440058+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-000000000604",
+        "unique_tournament_id": 23
+      },
+      {
+        "id": "86311189-d3c8-58d1-8c9f-419c06557497",
+        "enabled": true,
+        "full_name": "Netherlands - Eredivisie 2026/2027",
+        "season_id": 96143,
+        "created_at": "2026-10-28T01:43:10.480544+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-0000000005ff",
+        "unique_tournament_id": 37
+      },
+      {
+        "id": "f91012d1-bcd8-5155-ac37-b500825528da",
+        "enabled": true,
+        "full_name": "Portugal - Liga Primeira 2026/2027",
+        "season_id": 97436,
+        "created_at": "2026-10-28T01:43:10.4796+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-0000000005fe",
+        "unique_tournament_id": 238
+      },
+      {
+        "id": "8d44c61c-6628-5756-93c8-38b4d37eaead",
+        "enabled": true,
+        "full_name": "South America - Copa Libertadores 2026",
+        "season_id": 87760,
+        "created_at": "2026-10-28T01:43:10.457898+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "unique_tournament_id": 384
+      },
+      {
+        "id": "3425bdb5-84b5-5e74-a631-605ddf1ecac4",
+        "enabled": true,
+        "full_name": "South America - Copa Sudamericana 2026",
+        "season_id": 87770,
+        "created_at": "2026-10-28T01:43:10.462948+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "unique_tournament_id": 480
+      },
+      {
+        "id": "35c44af5-6406-566c-9804-52efe27aa5db",
+        "enabled": true,
+        "full_name": "Spain - La Liga 2026/2027",
+        "season_id": 97268,
+        "created_at": "2026-10-28T01:43:10.481484+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-000000000601",
+        "unique_tournament_id": 8
+      },
+      {
+        "id": "1fe41153-9ab4-5cc9-bc91-d8cf7a14f8c1",
+        "enabled": true,
+        "full_name": "Spain - LaLiga 2 2026/2027",
+        "season_id": 97280,
+        "created_at": "2026-10-28T00:28:08.416191+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-000000000609",
+        "unique_tournament_id": 54
+      },
+      {
+        "id": "cb16abb9-605b-5b85-a989-b5e05a9eee4d",
+        "enabled": true,
+        "full_name": "Turkey - Süper Lig 2026/2027",
+        "season_id": 98080,
+        "created_at": "2026-10-28T01:43:10.487133+00:00",
+        "event_scope": "competition",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-000000000607",
+        "unique_tournament_id": 52
+      },
+      {
+        "id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+        "enabled": true,
+        "full_name": "World - National Friendlies 2026",
+        "season_id": 87155,
+        "created_at": "2026-10-28T01:43:10.472615+00:00",
+        "event_scope": "fixtures",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "create_players": true,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f9",
+        "unique_tournament_id": 851
+      }
+    ],
+    "reviews": [
+      {
+        "id": "363b257c-6d22-46d6-bdf7-c8c99641b5ff",
+        "kind": "game",
+        "reason": "provider fixture has different teams",
+        "evidence": {
+          "sample": {
+            "phase": "Only",
+            "issues": [
+              "home_team_id_mismatch"
+            ],
+            "event_id": "16299815",
+            "phase_id": "a0300000-0000-4000-8000-000000001190",
+            "warnings": [],
+            "local_day": "2026-06-11",
+            "local_away": "Uganda",
+            "local_home": "Azerbaijan",
+            "normalized": {
+              "day": "2026-06-11",
+              "away": "Uganda",
+              "home": "Zanzibar",
+              "played": false,
+              "status": "postponed",
+              "kickoff": "2026-06-11T17:15:00Z",
+              "away_aet": null,
+              "away_pen": null,
+              "home_aet": null,
+              "home_pen": null,
+              "stage_id": "66",
+              "terminal": false,
+              "round_key": null,
+              "season_id": "87155",
+              "stage_key": "66",
+              "away_score": null,
+              "home_score": null,
+              "external_id": "16299815",
+              "away_external_id": "4726",
+              "home_external_id": "274048",
+              "unique_tournament_id": "851"
+            },
+            "local_round": null,
+            "championship": "World - National Friendlies 2026",
+            "local_season": "2026",
+            "provider_round": {
+              "slug": null,
+              "round": null,
+              "prefix": null
+            },
+            "championship_id": "a0200000-0000-4000-8000-0000000005f9",
+            "provider_season": {
+              "id": 87155,
+              "name": "Int. Friendly Games 2026",
+              "year": "2026",
+              "editor": false
+            },
+            "local_away_external_id": "4726",
+            "local_home_external_id": "4742"
+          },
+          "local_game": {
+            "day": "2026-06-11",
+            "away": "Uganda",
+            "home": "Azerbaijan",
+            "round": null,
+            "played": false,
+            "away_id": "a0700000-0000-4000-8000-000000000b24",
+            "game_id": "a0900000-0000-4000-8000-00000005942e",
+            "home_id": "a0700000-0000-4000-8000-000000000a82",
+            "event_id": "16299815",
+            "phase_id": "a0300000-0000-4000-8000-000000001190",
+            "phase_name": "Only",
+            "championship_id": "a0200000-0000-4000-8000-0000000005f9",
+            "away_external_id": "4726",
+            "home_external_id": "4742"
+          },
+          "verified_at": "2026-10-28T01:43:09.933045+00:00",
+          "provider_url": "https://www.sofascore.com/api/v1/event/16299815"
+        },
+        "resolved": false,
+        "source_id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+        "created_at": "2026-10-28T01:43:10.499064+00:00",
+        "external_id": "16299815",
+        "fingerprint": "48164098493964e0d520217018fbfbda"
+      },
+      {
+        "id": "c6c6d7b2-b21a-4a28-b382-3aa88aa96227",
+        "kind": "game",
+        "reason": "provider event is unavailable",
+        "evidence": {
+          "sample": {
+            "phase": "Semis",
+            "issues": [
+              "provider_response_failed"
+            ],
+            "event_id": "16988178",
+            "phase_id": "a0300000-0000-4000-8000-0000000011c3",
+            "warnings": [],
+            "local_day": "2026-10-31",
+            "local_away": "Palmeiras-SP",
+            "local_home": "Vasco-RJ",
+            "local_round": 28,
+            "championship": "Brazil - Copa do Brasil 2026",
+            "local_season": "2026",
+            "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+            "response_status": 404,
+            "local_away_external_id": "1963",
+            "local_home_external_id": "1974"
+          },
+          "local_game": {
+            "day": "2026-10-31",
+            "away": "Palmeiras-SP",
+            "home": "Vasco-RJ",
+            "round": 28,
+            "played": false,
+            "away_id": "a0700000-0000-4000-8000-000000000010",
+            "game_id": "a0900000-0000-4000-8000-00000005a7cb",
+            "home_id": "a0700000-0000-4000-8000-000000000012",
+            "event_id": "16988178",
+            "phase_id": "a0300000-0000-4000-8000-0000000011c3",
+            "phase_name": "Semis",
+            "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+            "away_external_id": "1963",
+            "home_external_id": "1974"
+          },
+          "verified_at": "2026-10-28T01:43:09.933045+00:00",
+          "provider_url": "https://www.sofascore.com/api/v1/event/16988178"
+        },
+        "resolved": false,
+        "source_id": "ec127c8c-d9fc-54b3-8213-daab6fe57388",
+        "created_at": "2026-10-28T01:43:10.500998+00:00",
+        "external_id": "16988178",
+        "fingerprint": "e38b22b76c7487967ab943eaa10b7bb3"
+      }
+    ],
+    "status": [
+      {
+        "id": "94feec50-e60b-5460-91a9-8365fba0c657",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 96518,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T01:43:10.476588+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-0000000005fb",
+        "last_success_at": null,
+        "unique_tournament_id": 7
+      },
+      {
+        "id": "35c44af5-6406-566c-9804-52efe27aa5db",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 97268,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T01:43:10.481705+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-000000000601",
+        "last_success_at": null,
+        "unique_tournament_id": 8
+      },
+      {
+        "id": "9ac71c84-8dd9-5715-928b-1381048b65ef",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 96668,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T01:43:10.481312+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-000000000600",
+        "last_success_at": null,
+        "unique_tournament_id": 17
+      },
+      {
+        "id": "e1fb2eb0-f547-5152-a472-7bfc079b5973",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 97037,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T01:43:10.48606+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-000000000605",
+        "last_success_at": null,
+        "unique_tournament_id": 18
+      },
+      {
+        "id": "ae3a8ff5-c270-5a4a-8653-f2080c3d264e",
+        "enabled": true,
+        "overdue": 0,
+        "reviews": 0,
+        "requests": 11,
+        "season_id": 95836,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T03:48:13.651939+00:00",
+        "detail_after": "2026-10-27T21:30:16.440058+00:00",
+        "payload_bytes": 1042098,
+        "championship_id": "a0200000-0000-4000-8000-000000000604",
+        "last_success_at": "2026-10-27T23:48:32.792981+00:00",
+        "unique_tournament_id": 23
+      },
+      {
+        "id": "878f36ae-3a1d-5cd8-86a8-cccb454f22a0",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 96127,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T01:43:10.48471+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-000000000603",
+        "last_success_at": null,
+        "unique_tournament_id": 34
+      },
+      {
+        "id": "4f8ebe32-889b-51c9-8a82-9fcd9249ad3b",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 97464,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T01:43:10.484253+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-000000000602",
+        "last_success_at": null,
+        "unique_tournament_id": 35
+      },
+      {
+        "id": "86311189-d3c8-58d1-8c9f-419c06557497",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 96143,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T01:43:10.480846+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-0000000005ff",
+        "last_success_at": null,
+        "unique_tournament_id": 37
+      },
+      {
+        "id": "4c92af69-b1db-5819-93a0-d495b272b490",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 97406,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T01:43:10.486742+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-000000000606",
+        "last_success_at": null,
+        "unique_tournament_id": 44
+      },
+      {
+        "id": "cb16abb9-605b-5b85-a989-b5e05a9eee4d",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 98080,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T01:43:10.487403+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-000000000607",
+        "last_success_at": null,
+        "unique_tournament_id": 52
+      },
+      {
+        "id": "1fe41153-9ab4-5cc9-bc91-d8cf7a14f8c1",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 97280,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T01:43:10.493513+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-000000000609",
+        "last_success_at": null,
+        "unique_tournament_id": 54
+      },
+      {
+        "id": "f91012d1-bcd8-5155-ac37-b500825528da",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 97436,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T01:43:10.480169+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-0000000005fe",
+        "last_success_at": null,
+        "unique_tournament_id": 238
+      },
+      {
+        "id": "6791deab-3d61-560e-a8cc-a8e211e67302",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 87678,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T01:43:10.457505+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f3",
+        "last_success_at": null,
+        "unique_tournament_id": 325
+      },
+      {
+        "id": "ec127c8c-d9fc-54b3-8213-daab6fe57388",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 1,
+        "requests": 0,
+        "season_id": 89353,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T01:43:10.471729+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+        "last_success_at": null,
+        "unique_tournament_id": 373
+      },
+      {
+        "id": "8d44c61c-6628-5756-93c8-38b4d37eaead",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 87760,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T01:43:10.462714+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "last_success_at": null,
+        "unique_tournament_id": 384
+      },
+      {
+        "id": "9422fa1c-a1b6-5e11-88af-b782c7963d21",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 89840,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T01:43:10.472372+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f7",
+        "last_success_at": null,
+        "unique_tournament_id": 390
+      },
+      {
+        "id": "3425bdb5-84b5-5e74-a631-605ddf1ecac4",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 87770,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T01:43:10.467493+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "last_success_at": null,
+        "unique_tournament_id": 480
+      },
+      {
+        "id": "f69255d9-7d32-5e40-84ec-bf0ef91bde48",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 96522,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T01:43:10.478229+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-0000000005fc",
+        "last_success_at": null,
+        "unique_tournament_id": 679
+      },
+      {
+        "id": "770d0322-8e73-53a7-afa0-fb752cc42c9c",
+        "enabled": true,
+        "overdue": 0,
+        "reviews": 1,
+        "requests": 0,
+        "season_id": 87155,
+        "event_scope": "fixtures",
+        "next_due_at": null,
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f9",
+        "last_success_at": null,
+        "unique_tournament_id": 851
+      },
+      {
+        "id": "8a32d4b3-d93f-50d0-ab02-b6904117c0b8",
+        "enabled": false,
+        "overdue": 0,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 90642,
+        "event_scope": "competition",
+        "next_due_at": null,
+        "detail_after": "2026-10-28T00:28:08.413223+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-0000000005f8",
+        "last_success_at": null,
+        "unique_tournament_id": 1281
+      },
+      {
+        "id": "4d7a8d06-5c2c-52a4-b46f-cac0d4df7296",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 89945,
+        "event_scope": "stages",
+        "next_due_at": "2026-10-28T01:43:10.491479+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-000000000608",
+        "last_success_at": null,
+        "unique_tournament_id": 10783
+      },
+      {
+        "id": "b75e7db3-5712-5bfd-8e71-56de758c6dab",
+        "enabled": true,
+        "overdue": 1,
+        "reviews": 0,
+        "requests": 0,
+        "season_id": 96529,
+        "event_scope": "competition",
+        "next_due_at": "2026-10-28T01:43:10.47941+00:00",
+        "detail_after": "2026-10-28T01:43:09.933045+00:00",
+        "payload_bytes": 0,
+        "championship_id": "a0200000-0000-4000-8000-0000000005fd",
+        "last_success_at": null,
+        "unique_tournament_id": 17015
+      }
+    ]
+  },
+  "mapping_evidence": {
+    "as_of": "2026-10-27",
+    "sources": [
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f3",
+        "championship": "Brazil - Campeonato Brasileiro 2026",
+        "unique_tournament_id": "325",
+        "season_id": "87678",
+        "stages": [
+          {
+            "stage_key": "83",
+            "phase_id": "a0300000-0000-4000-8000-00000000117c",
+            "sample_event_ids": [
+              "15238216"
+            ],
+            "warnings": [
+              "event_day_mismatch"
+            ]
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "championship": "South America - Copa Libertadores 2026",
+        "unique_tournament_id": "384",
+        "season_id": "87760",
+        "stages": [
+          {
+            "stage_key": "14805|{\"slug\": \"qualification-round-1\"}",
+            "phase_id": "a0300000-0000-4000-8000-00000000117f",
+            "sample_event_ids": [
+              "15253538"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "14805|{\"slug\": \"qualification-round-2\"}",
+            "phase_id": "a0300000-0000-4000-8000-000000001180",
+            "sample_event_ids": [
+              "15458727"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "14805|{\"slug\": \"qualification-round-3\"}",
+            "phase_id": "a0300000-0000-4000-8000-000000001187",
+            "sample_event_ids": [
+              "15458728"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "2933",
+            "phase_id": "a0300000-0000-4000-8000-000000001192",
+            "sample_event_ids": [
+              "15832849",
+              "15832849"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "309|{\"slug\": \"round-of-16\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011a9",
+            "sample_event_ids": [
+              "16799776"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "309|{\"slug\": \"quarterfinals\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011bd",
+            "sample_event_ids": [
+              "16924719"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "309|{\"slug\": \"semifinals\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011c4",
+            "sample_event_ids": [
+              "17125574"
+            ],
+            "warnings": [
+              "event_day_mismatch"
+            ]
+          },
+          {
+            "stage_key": "2928",
+            "phase_id": "a0300000-0000-4000-8000-000000001192",
+            "sample_event_ids": [
+              "15832767"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "2929",
+            "phase_id": "a0300000-0000-4000-8000-000000001192",
+            "sample_event_ids": [
+              "15832787"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "2930",
+            "phase_id": "a0300000-0000-4000-8000-000000001192",
+            "sample_event_ids": [
+              "15832819"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "2931",
+            "phase_id": "a0300000-0000-4000-8000-000000001192",
+            "sample_event_ids": [
+              "15832845"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "2932",
+            "phase_id": "a0300000-0000-4000-8000-000000001192",
+            "sample_event_ids": [
+              "15832844"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "2934",
+            "phase_id": "a0300000-0000-4000-8000-000000001192",
+            "sample_event_ids": [
+              "15832851"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "2935",
+            "phase_id": "a0300000-0000-4000-8000-000000001192",
+            "sample_event_ids": [
+              "15832852"
+            ],
+            "warnings": []
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "championship": "South America - Copa Sudamericana 2026",
+        "unique_tournament_id": "480",
+        "season_id": "87770",
+        "stages": [
+          {
+            "stage_key": "91417|{\"slug\": \"qualification-round-1\"}",
+            "phase_id": "a0300000-0000-4000-8000-000000001181",
+            "sample_event_ids": [
+              "15254187"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "91436",
+            "phase_id": "a0300000-0000-4000-8000-000000001193",
+            "sample_event_ids": [
+              "15832045",
+              "15832045"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "91444|{\"slug\": \"playoff-round\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011aa",
+            "sample_event_ids": [
+              "16251113"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "91444|{\"slug\": \"round-of-16\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011ab",
+            "sample_event_ids": [
+              "16799775"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "91444|{\"slug\": \"quarterfinals\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011be",
+            "sample_event_ids": [
+              "16883041"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "91444|{\"slug\": \"semifinals\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011c5",
+            "sample_event_ids": [
+              "17127428"
+            ],
+            "warnings": [
+              "event_day_mismatch"
+            ]
+          },
+          {
+            "stage_key": "91437",
+            "phase_id": "a0300000-0000-4000-8000-000000001193",
+            "sample_event_ids": [
+              "15832072"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "91438",
+            "phase_id": "a0300000-0000-4000-8000-000000001193",
+            "sample_event_ids": [
+              "15832115"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "91439",
+            "phase_id": "a0300000-0000-4000-8000-000000001193",
+            "sample_event_ids": [
+              "15832142"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "91440",
+            "phase_id": "a0300000-0000-4000-8000-000000001193",
+            "sample_event_ids": [
+              "15832146"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "91441",
+            "phase_id": "a0300000-0000-4000-8000-000000001193",
+            "sample_event_ids": [
+              "15832147"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "91442",
+            "phase_id": "a0300000-0000-4000-8000-000000001193",
+            "sample_event_ids": [
+              "15832154"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "91443",
+            "phase_id": "a0300000-0000-4000-8000-000000001193",
+            "sample_event_ids": [
+              "15832157"
+            ],
+            "warnings": []
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+        "championship": "Brazil - Copa do Brasil 2026",
+        "unique_tournament_id": "373",
+        "season_id": "89353",
+        "stages": [
+          {
+            "stage_key": "283|{\"slug\": \"round-1\"}",
+            "phase_id": "a0300000-0000-4000-8000-000000001182",
+            "sample_event_ids": [
+              "15462154"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "283|{\"slug\": \"round-2\"}",
+            "phase_id": "a0300000-0000-4000-8000-000000001183",
+            "sample_event_ids": [
+              "15573846"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "283|{\"slug\": \"round-3\"}",
+            "phase_id": "a0300000-0000-4000-8000-000000001188",
+            "sample_event_ids": [
+              "15677076"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "283|{\"slug\": \"round-4\"}",
+            "phase_id": "a0300000-0000-4000-8000-00000000118b",
+            "sample_event_ids": [
+              "15730748"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "283|{\"slug\": \"round-5\"}",
+            "phase_id": "a0300000-0000-4000-8000-000000001195",
+            "sample_event_ids": [
+              "15910039"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "283|{\"slug\": \"round-of-16\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011a6",
+            "sample_event_ids": [
+              "16240961"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "283|{\"slug\": \"quarterfinals\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011bc",
+            "sample_event_ids": [
+              "16795431"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "283|{\"slug\": \"semifinals\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011c3",
+            "sample_event_ids": [
+              "17008797"
+            ],
+            "warnings": []
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f7",
+        "championship": "Brazil - Campeonato Brasileiro - Série B 2026",
+        "unique_tournament_id": "390",
+        "season_id": "89840",
+        "stages": [
+          {
+            "stage_key": "1449",
+            "phase_id": "a0300000-0000-4000-8000-000000001189",
+            "sample_event_ids": [
+              "15526354"
+            ],
+            "warnings": [
+              "event_day_mismatch"
+            ]
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fb",
+        "championship": "Europe - Champions League 2026/2027",
+        "unique_tournament_id": "7",
+        "season_id": "96518",
+        "stages": [
+          {
+            "stage_key": "1339|{\"slug\": \"qualification-round-1\"}",
+            "phase_id": "a0300000-0000-4000-8000-00000000119f",
+            "sample_event_ids": [
+              "16343051"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "1339|{\"slug\": \"qualification-round-2\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011a3",
+            "sample_event_ids": [
+              "16350240"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "1339|{\"slug\": \"qualification-round-3\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011ac",
+            "sample_event_ids": [
+              "16578186"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "119880|{\"slug\": \"playoff-round\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011b9",
+            "sample_event_ids": [
+              "16707707"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "138314",
+            "phase_id": "a0300000-0000-4000-8000-0000000011bf",
+            "sample_event_ids": [
+              "16938853"
+            ],
+            "warnings": []
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fc",
+        "championship": "Europe - Europa League 2026/2027",
+        "unique_tournament_id": "679",
+        "season_id": "96522",
+        "stages": [
+          {
+            "stage_key": "10910|{\"slug\": \"qualification-round-1\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011a0",
+            "sample_event_ids": [
+              "16349559"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "10910|{\"slug\": \"qualification-round-2\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011a7",
+            "sample_event_ids": [
+              "16350385"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "10910|{\"slug\": \"qualification-round-3\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011ad",
+            "sample_event_ids": [
+              "16578798"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "119516|{\"slug\": \"playoff-round\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011ba",
+            "sample_event_ids": [
+              "16708159"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "138315",
+            "phase_id": "a0300000-0000-4000-8000-0000000011c0",
+            "sample_event_ids": [
+              "16945541"
+            ],
+            "warnings": []
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fd",
+        "championship": "Europe - Conference League 2026/2027",
+        "unique_tournament_id": "17015",
+        "season_id": "96529",
+        "stages": [
+          {
+            "stage_key": "93604|{\"slug\": \"qualification-round-1\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011a1",
+            "sample_event_ids": [
+              "16343574"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "93604|{\"slug\": \"qualification-round-2\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011a8",
+            "sample_event_ids": [
+              "16357231"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "93604|{\"slug\": \"qualification-round-3\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011ae",
+            "sample_event_ids": [
+              "16585864"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "119973|{\"slug\": \"playoff-round\"}",
+            "phase_id": "a0300000-0000-4000-8000-0000000011bb",
+            "sample_event_ids": [
+              "16821936"
+            ],
+            "warnings": []
+          },
+          {
+            "stage_key": "138316",
+            "phase_id": "a0300000-0000-4000-8000-0000000011c1",
+            "sample_event_ids": [
+              "16945613"
+            ],
+            "warnings": []
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fe",
+        "championship": "Portugal - Liga Primeira 2026/2027",
+        "unique_tournament_id": "238",
+        "season_id": "97436",
+        "stages": [
+          {
+            "stage_key": "52",
+            "phase_id": "a0300000-0000-4000-8000-0000000011af",
+            "sample_event_ids": [
+              "16450903"
+            ],
+            "warnings": [
+              "event_day_mismatch"
+            ]
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005ff",
+        "championship": "Netherlands - Eredivisie 2026/2027",
+        "unique_tournament_id": "37",
+        "season_id": "96143",
+        "stages": [
+          {
+            "stage_key": "39",
+            "phase_id": "a0300000-0000-4000-8000-0000000011b0",
+            "sample_event_ids": [
+              "16316851"
+            ],
+            "warnings": []
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000600",
+        "championship": "England - Premier League 2026/2027",
+        "unique_tournament_id": "17",
+        "season_id": "96668",
+        "stages": [
+          {
+            "stage_key": "1",
+            "phase_id": "a0300000-0000-4000-8000-0000000011b1",
+            "sample_event_ids": [
+              "16363891"
+            ],
+            "warnings": []
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000601",
+        "championship": "Spain - La Liga 2026/2027",
+        "unique_tournament_id": "8",
+        "season_id": "97268",
+        "stages": [
+          {
+            "stage_key": "36",
+            "phase_id": "a0300000-0000-4000-8000-0000000011b2",
+            "sample_event_ids": [
+              "16421081"
+            ],
+            "warnings": []
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000602",
+        "championship": "Germany - Bundesliga 2026/2027",
+        "unique_tournament_id": "35",
+        "season_id": "97464",
+        "stages": [
+          {
+            "stage_key": "42",
+            "phase_id": "a0300000-0000-4000-8000-0000000011b3",
+            "sample_event_ids": [
+              "16434078"
+            ],
+            "warnings": []
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000603",
+        "championship": "France - Ligue 1 2026/2027",
+        "unique_tournament_id": "34",
+        "season_id": "96127",
+        "stages": [
+          {
+            "stage_key": "4",
+            "phase_id": "a0300000-0000-4000-8000-0000000011b4",
+            "sample_event_ids": [
+              "16310990"
+            ],
+            "warnings": [
+              "event_day_mismatch"
+            ]
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000604",
+        "championship": "Italy - Serie A 2026/2027",
+        "unique_tournament_id": "23",
+        "season_id": "95836",
+        "stages": [
+          {
+            "stage_key": "33",
+            "phase_id": "a0300000-0000-4000-8000-0000000011b5",
+            "sample_event_ids": [
+              "16285063"
+            ],
+            "warnings": []
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000605",
+        "championship": "England - Championship 2026/2027",
+        "unique_tournament_id": "18",
+        "season_id": "97037",
+        "stages": [
+          {
+            "stage_key": "2",
+            "phase_id": "a0300000-0000-4000-8000-0000000011b6",
+            "sample_event_ids": [
+              "16391573"
+            ],
+            "warnings": []
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000606",
+        "championship": "Germany - 2. Bundesliga 2026/2027",
+        "unique_tournament_id": "44",
+        "season_id": "97406",
+        "stages": [
+          {
+            "stage_key": "41",
+            "phase_id": "a0300000-0000-4000-8000-0000000011b7",
+            "sample_event_ids": [
+              "16429210"
+            ],
+            "warnings": []
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000607",
+        "championship": "Turkey - Süper Lig 2026/2027",
+        "unique_tournament_id": "52",
+        "season_id": "98080",
+        "stages": [
+          {
+            "stage_key": "62",
+            "phase_id": "a0300000-0000-4000-8000-0000000011b8",
+            "sample_event_ids": [
+              "16483898"
+            ],
+            "warnings": []
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000608",
+        "championship": "Europe - Nations League 2026",
+        "unique_tournament_id": "10783",
+        "season_id": "89945",
+        "stages": [
+          {
+            "stage_key": "64378",
+            "phase_id": "a0300000-0000-4000-8000-0000000011c6",
+            "sample_event_ids": [
+              "15537775"
+            ],
+            "warnings": [
+              "reviewed_nations_league_partial_season"
+            ]
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000609",
+        "championship": "Spain - LaLiga 2 2026/2027",
+        "unique_tournament_id": "54",
+        "season_id": "97280",
+        "stages": [
+          {
+            "stage_key": "37",
+            "phase_id": "a0300000-0000-4000-8000-0000000011c7",
+            "sample_event_ids": [
+              "16418247"
+            ],
+            "warnings": []
+          }
+        ]
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f9",
+        "championship": "World - National Friendlies 2026",
+        "unique_tournament_id": "851",
+        "season_id": "87155",
+        "stages": [
+          {
+            "stage_key": "66",
+            "phase_id": "a0300000-0000-4000-8000-000000001190",
+            "sample_event_ids": [
+              "15598106"
+            ],
+            "warnings": []
+          }
+        ]
+      }
+    ],
+    "samples": [
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f3",
+        "championship": "Brazil - Campeonato Brasileiro 2026",
+        "phase_id": "a0300000-0000-4000-8000-00000000117c",
+        "phase": "Turno e Returno",
+        "event_id": "15238216",
+        "local_day": "2026-10-28",
+        "local_round": 33,
+        "local_home": "Atlético-MG",
+        "local_away": "Cruzeiro-MG",
+        "local_home_external_id": "1977",
+        "local_away_external_id": "1954",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [
+          "event_day_mismatch"
+        ],
+        "normalized": {
+          "external_id": "15238216",
+          "home_external_id": "1977",
+          "away_external_id": "1954",
+          "home": "Atlético Mineiro",
+          "away": "Cruzeiro",
+          "stage_id": "83",
+          "season_id": "87678",
+          "unique_tournament_id": "325",
+          "stage_key": "83",
+          "round_key": 33,
+          "day": "2026-10-29",
+          "kickoff": "2026-10-29T22:30:00Z",
+          "status": "scheduled",
+          "played": false,
+          "terminal": false,
+          "home_score": null,
+          "away_score": null,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Brasileiro Serie A 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87678
+        },
+        "provider_round": {
+          "round": 33,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "championship": "South America - Copa Libertadores 2026",
+        "phase_id": "a0300000-0000-4000-8000-00000000117f",
+        "phase": "1a Fase",
+        "event_id": "15253538",
+        "local_day": "2026-02-12",
+        "local_round": 1,
+        "local_home": "Universidad Católica-ECU",
+        "local_away": "Juventud",
+        "local_home_external_id": "21942",
+        "local_away_external_id": "3224",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15253538",
+          "home_external_id": "21942",
+          "away_external_id": "3224",
+          "home": "Universidad Católica del Ecuador",
+          "away": "Juventud de Las Piedras",
+          "stage_id": "14805",
+          "season_id": "87760",
+          "unique_tournament_id": "384",
+          "stage_key": "14805|{\"slug\": \"qualification-round-1\"}",
+          "round_key": 1,
+          "day": "2026-02-12",
+          "kickoff": "2026-02-13T00:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 3,
+          "away_score": 4,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": 3,
+          "away_pen": 4
+        },
+        "provider_season": {
+          "name": "CONMEBOL Libertadores 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87760
+        },
+        "provider_round": {
+          "round": 1,
+          "slug": "qualification-round-1",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "championship": "South America - Copa Libertadores 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001180",
+        "phase": "2a Fase",
+        "event_id": "15458727",
+        "local_day": "2026-02-26",
+        "local_round": 2,
+        "local_home": "Club Guaraní",
+        "local_away": "Juventud",
+        "local_home_external_id": "5994",
+        "local_away_external_id": "3224",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15458727",
+          "home_external_id": "5994",
+          "away_external_id": "3224",
+          "home": "Guaraní",
+          "away": "Juventud de Las Piedras",
+          "stage_id": "14805",
+          "season_id": "87760",
+          "unique_tournament_id": "384",
+          "stage_key": "14805|{\"slug\": \"qualification-round-2\"}",
+          "round_key": 2,
+          "day": "2026-02-26",
+          "kickoff": "2026-02-26T22:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 2,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Libertadores 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87760
+        },
+        "provider_round": {
+          "round": 2,
+          "slug": "qualification-round-2",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "championship": "South America - Copa Sudamericana 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001181",
+        "phase": "1a Fase",
+        "event_id": "15254187",
+        "local_day": "2026-03-05",
+        "local_round": 1,
+        "local_home": "Boston River",
+        "local_away": "Racing Montevideo",
+        "local_home_external_id": "174970",
+        "local_away_external_id": "25010",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15254187",
+          "home_external_id": "174970",
+          "away_external_id": "25010",
+          "home": "Boston River",
+          "away": "Racing de Montevideo",
+          "stage_id": "91417",
+          "season_id": "87770",
+          "unique_tournament_id": "480",
+          "stage_key": "91417|{\"slug\": \"qualification-round-1\"}",
+          "round_key": 1,
+          "day": "2026-03-05",
+          "kickoff": "2026-03-05T22:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Sudamericana 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87770
+        },
+        "provider_round": {
+          "round": 1,
+          "slug": "qualification-round-1",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+        "championship": "Brazil - Copa do Brasil 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001182",
+        "phase": "1a Fase",
+        "event_id": "15462154",
+        "local_day": "2026-02-19",
+        "local_round": 1,
+        "local_home": "Primavera-MT",
+        "local_away": "Bragantino-PA",
+        "local_home_external_id": "475020",
+        "local_away_external_id": "307485",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15462154",
+          "home_external_id": "475020",
+          "away_external_id": "307485",
+          "home": "Primavera AC",
+          "away": "Bragantino Clube do Pará",
+          "stage_id": "283",
+          "season_id": "89353",
+          "unique_tournament_id": "373",
+          "stage_key": "283|{\"slug\": \"round-1\"}",
+          "round_key": 1,
+          "day": "2026-02-19",
+          "kickoff": "2026-02-19T23:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 2,
+          "away_score": 1,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Copa do Brasil 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {
+            "editorCoverageLevel": 3
+          },
+          "id": 89353
+        },
+        "provider_round": {
+          "round": 1,
+          "slug": "round-1",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+        "championship": "Brazil - Copa do Brasil 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001183",
+        "phase": "2a Fase",
+        "event_id": "15573846",
+        "local_day": "2026-03-05",
+        "local_round": 2,
+        "local_home": "Trem-AP",
+        "local_away": "Fluminense-PI",
+        "local_home_external_id": "21865",
+        "local_away_external_id": "375317",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15573846",
+          "home_external_id": "21865",
+          "away_external_id": "375317",
+          "home": "Trem",
+          "away": "Fluminense-PI",
+          "stage_id": "283",
+          "season_id": "89353",
+          "unique_tournament_id": "373",
+          "stage_key": "283|{\"slug\": \"round-2\"}",
+          "round_key": 2,
+          "day": "2026-03-05",
+          "kickoff": "2026-03-05T19:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 0,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": 3,
+          "away_pen": 4
+        },
+        "provider_season": {
+          "name": "Copa do Brasil 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {
+            "editorCoverageLevel": 3
+          },
+          "id": 89353
+        },
+        "provider_round": {
+          "round": 2,
+          "slug": "round-2",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "championship": "South America - Copa Libertadores 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001187",
+        "phase": "3a Fase",
+        "event_id": "15458728",
+        "local_day": "2026-03-12",
+        "local_round": 3,
+        "local_home": "Independiente Medellín",
+        "local_away": "Juventud",
+        "local_home_external_id": "6115",
+        "local_away_external_id": "3224",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15458728",
+          "home_external_id": "6115",
+          "away_external_id": "3224",
+          "home": "Independiente Medellín",
+          "away": "Juventud de Las Piedras",
+          "stage_id": "14805",
+          "season_id": "87760",
+          "unique_tournament_id": "384",
+          "stage_key": "14805|{\"slug\": \"qualification-round-3\"}",
+          "round_key": 3,
+          "day": "2026-03-12",
+          "kickoff": "2026-03-13T00:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 2,
+          "away_score": 1,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Libertadores 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87760
+        },
+        "provider_round": {
+          "round": 3,
+          "slug": "qualification-round-3",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+        "championship": "Brazil - Copa do Brasil 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001188",
+        "phase": "3a Fase",
+        "event_id": "15677076",
+        "local_day": "2026-03-12",
+        "local_round": 3,
+        "local_home": "Madureira-RJ",
+        "local_away": "Águia de Marabá-PA",
+        "local_home_external_id": "6980",
+        "local_away_external_id": "33998",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15677076",
+          "home_external_id": "6980",
+          "away_external_id": "33998",
+          "home": "Madureira",
+          "away": "Águia de Marabá FC",
+          "stage_id": "283",
+          "season_id": "89353",
+          "unique_tournament_id": "373",
+          "stage_key": "283|{\"slug\": \"round-3\"}",
+          "round_key": 3,
+          "day": "2026-03-12",
+          "kickoff": "2026-03-12T21:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 0,
+          "away_score": 1,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Copa do Brasil 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {
+            "editorCoverageLevel": 3
+          },
+          "id": 89353
+        },
+        "provider_round": {
+          "round": 3,
+          "slug": "round-3",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f7",
+        "championship": "Brazil - Campeonato Brasileiro - Série B 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001189",
+        "phase": "Turno e Returno",
+        "event_id": "15526354",
+        "local_day": "2026-10-24",
+        "local_round": 35,
+        "local_home": "América-MG",
+        "local_away": "Cuiabá-MT",
+        "local_home_external_id": "1973",
+        "local_away_external_id": "49202",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [
+          "event_day_mismatch"
+        ],
+        "normalized": {
+          "external_id": "15526354",
+          "home_external_id": "1973",
+          "away_external_id": "49202",
+          "home": "América Mineiro",
+          "away": "Cuiabá",
+          "stage_id": "1449",
+          "season_id": "89840",
+          "unique_tournament_id": "390",
+          "stage_key": "1449",
+          "round_key": 35,
+          "day": "2026-10-26",
+          "kickoff": "2026-10-26T22:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Brasileiro Serie B 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 89840
+        },
+        "provider_round": {
+          "round": 35,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+        "championship": "Brazil - Copa do Brasil 2026",
+        "phase_id": "a0300000-0000-4000-8000-00000000118b",
+        "phase": "4a Fase",
+        "event_id": "15730748",
+        "local_day": "2026-03-19",
+        "local_round": 4,
+        "local_home": "Juventude-RS",
+        "local_away": "Águia de Marabá-PA",
+        "local_home_external_id": "1980",
+        "local_away_external_id": "33998",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15730748",
+          "home_external_id": "1980",
+          "away_external_id": "33998",
+          "home": "Juventude",
+          "away": "Águia de Marabá FC",
+          "stage_id": "283",
+          "season_id": "89353",
+          "unique_tournament_id": "373",
+          "stage_key": "283|{\"slug\": \"round-4\"}",
+          "round_key": 4,
+          "day": "2026-03-19",
+          "kickoff": "2026-03-19T22:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 3,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Copa do Brasil 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {
+            "editorCoverageLevel": 3
+          },
+          "id": 89353
+        },
+        "provider_round": {
+          "round": 4,
+          "slug": "round-4",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f9",
+        "championship": "World - National Friendlies 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001190",
+        "phase": "Only",
+        "event_id": "16299815",
+        "local_day": "2026-06-11",
+        "local_round": null,
+        "local_home": "Azerbaijan",
+        "local_away": "Uganda",
+        "local_home_external_id": "4742",
+        "local_away_external_id": "4726",
+        "local_season": "2026",
+        "issues": [
+          "home_team_id_mismatch"
+        ],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16299815",
+          "home_external_id": "274048",
+          "away_external_id": "4726",
+          "home": "Zanzibar",
+          "away": "Uganda",
+          "stage_id": "66",
+          "season_id": "87155",
+          "unique_tournament_id": "851",
+          "stage_key": "66",
+          "round_key": null,
+          "day": "2026-06-11",
+          "kickoff": "2026-06-11T17:15:00Z",
+          "status": "postponed",
+          "played": false,
+          "terminal": false,
+          "home_score": null,
+          "away_score": null,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Int. Friendly Games 2026",
+          "year": "2026",
+          "editor": false,
+          "id": 87155
+        },
+        "provider_round": {
+          "round": null,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "championship": "South America - Copa Libertadores 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001192",
+        "phase": "Fase de Grupos",
+        "event_id": "15832849",
+        "local_day": "2026-05-28",
+        "local_round": 6,
+        "local_home": "Cerro Porteño",
+        "local_away": "Sporting Cristal",
+        "local_home_external_id": "5991",
+        "local_away_external_id": "2302",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15832849",
+          "home_external_id": "5991",
+          "away_external_id": "2302",
+          "home": "Cerro Porteño",
+          "away": "Club Sporting Cristal",
+          "stage_id": "2933",
+          "season_id": "87760",
+          "unique_tournament_id": "384",
+          "stage_key": "2933",
+          "round_key": 6,
+          "day": "2026-05-28",
+          "kickoff": "2026-05-28T22:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 2,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Libertadores 2026",
+          "year": "2026",
+          "editor": false,
+          "id": 87760
+        },
+        "provider_round": {
+          "round": 6,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "championship": "South America - Copa Sudamericana 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001193",
+        "phase": "Fase de Grupos",
+        "event_id": "15832045",
+        "local_day": "2026-05-28",
+        "local_round": 6,
+        "local_home": "América de Cali",
+        "local_away": "Macará",
+        "local_home_external_id": "6102",
+        "local_away_external_id": "6001",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15832045",
+          "home_external_id": "6102",
+          "away_external_id": "6001",
+          "home": "América de Cali",
+          "away": "Macará",
+          "stage_id": "91436",
+          "season_id": "87770",
+          "unique_tournament_id": "480",
+          "stage_key": "91436",
+          "round_key": 6,
+          "day": "2026-05-28",
+          "kickoff": "2026-05-29T00:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 0,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Sudamericana 2026",
+          "year": "2026",
+          "editor": false,
+          "id": 87770
+        },
+        "provider_round": {
+          "round": 6,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+        "championship": "Brazil - Copa do Brasil 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001195",
+        "phase": "5a Fase",
+        "event_id": "15910039",
+        "local_day": "2026-05-14",
+        "local_round": 5,
+        "local_home": "Chapecoense-SC",
+        "local_away": "Botafogo-RJ",
+        "local_home_external_id": "21845",
+        "local_away_external_id": "1958",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15910039",
+          "home_external_id": "21845",
+          "away_external_id": "1958",
+          "home": "Chapecoense",
+          "away": "Botafogo",
+          "stage_id": "283",
+          "season_id": "89353",
+          "unique_tournament_id": "373",
+          "stage_key": "283|{\"slug\": \"round-5\"}",
+          "round_key": 5,
+          "day": "2026-05-14",
+          "kickoff": "2026-05-14T21:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 2,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Copa do Brasil 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {
+            "editorCoverageLevel": 3
+          },
+          "id": 89353
+        },
+        "provider_round": {
+          "round": 5,
+          "slug": "round-5",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fb",
+        "championship": "Europe - Champions League 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-00000000119f",
+        "phase": "1st Qualifying Round",
+        "event_id": "16343051",
+        "local_day": "2026-07-15",
+        "local_round": 1,
+        "local_home": "CS U Craiova",
+        "local_away": "ML Vitebsk",
+        "local_home_external_id": "116223",
+        "local_away_external_id": "381792",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16343051",
+          "home_external_id": "116223",
+          "away_external_id": "381792",
+          "home": "Universitatea Craiova",
+          "away": "ML Vitebsk",
+          "stage_id": "1339",
+          "season_id": "96518",
+          "unique_tournament_id": "7",
+          "stage_key": "1339|{\"slug\": \"qualification-round-1\"}",
+          "round_key": 1,
+          "day": "2026-07-15",
+          "kickoff": "2026-07-15T17:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "UEFA Champions League 26/27",
+          "year": "26/27",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 96518
+        },
+        "provider_round": {
+          "round": 1,
+          "slug": "qualification-round-1",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fc",
+        "championship": "Europe - Europa League 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011a0",
+        "phase": "1st Qualifying Round",
+        "event_id": "16349559",
+        "local_day": "2026-07-16",
+        "local_round": 1,
+        "local_home": "Derry City",
+        "local_away": "CSKA Sofia",
+        "local_home_external_id": "3170",
+        "local_away_external_id": "3275",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16349559",
+          "home_external_id": "3170",
+          "away_external_id": "3275",
+          "home": "Derry City",
+          "away": "CSKA Sofia",
+          "stage_id": "10910",
+          "season_id": "96522",
+          "unique_tournament_id": "679",
+          "stage_key": "10910|{\"slug\": \"qualification-round-1\"}",
+          "round_key": 1,
+          "day": "2026-07-16",
+          "kickoff": "2026-07-16T17:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 2,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "UEFA Europa League 26/27",
+          "year": "26/27",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 96522
+        },
+        "provider_round": {
+          "round": 1,
+          "slug": "qualification-round-1",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fd",
+        "championship": "Europe - Conference League 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011a1",
+        "phase": "1st Qualifying Round",
+        "event_id": "16343574",
+        "local_day": "2026-07-16",
+        "local_round": 1,
+        "local_home": "Inter Turku",
+        "local_away": "Sarajevo",
+        "local_home_external_id": "2247",
+        "local_away_external_id": "5237",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16343574",
+          "home_external_id": "2247",
+          "away_external_id": "5237",
+          "home": "Inter Turku",
+          "away": "FK Sarajevo",
+          "stage_id": "93604",
+          "season_id": "96529",
+          "unique_tournament_id": "17015",
+          "stage_key": "93604|{\"slug\": \"qualification-round-1\"}",
+          "round_key": 1,
+          "day": "2026-07-16",
+          "kickoff": "2026-07-16T15:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 2,
+          "away_score": 1,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "UEFA Conference League 26/27",
+          "year": "26/27",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 96529
+        },
+        "provider_round": {
+          "round": 1,
+          "slug": "qualification-round-1",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fb",
+        "championship": "Europe - Champions League 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011a3",
+        "phase": "2nd Qualifying Round",
+        "event_id": "16350240",
+        "local_day": "2026-07-29",
+        "local_round": 2,
+        "local_home": "Red Star Belgrade",
+        "local_away": "Larne",
+        "local_home_external_id": "5149",
+        "local_away_external_id": "5184",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16350240",
+          "home_external_id": "5149",
+          "away_external_id": "5184",
+          "home": "FK Crvena zvezda",
+          "away": "Larne FC",
+          "stage_id": "1339",
+          "season_id": "96518",
+          "unique_tournament_id": "7",
+          "stage_key": "1339|{\"slug\": \"qualification-round-2\"}",
+          "round_key": 2,
+          "day": "2026-07-29",
+          "kickoff": "2026-07-29T18:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 5,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "UEFA Champions League 26/27",
+          "year": "26/27",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 96518
+        },
+        "provider_round": {
+          "round": 2,
+          "slug": "qualification-round-2",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+        "championship": "Brazil - Copa do Brasil 2026",
+        "phase_id": "a0300000-0000-4000-8000-0000000011a6",
+        "phase": "Oitavas",
+        "event_id": "16240961",
+        "local_day": "2026-08-06",
+        "local_round": 5,
+        "local_home": "Corinthians-SP",
+        "local_away": "Internacional-RS",
+        "local_home_external_id": "1957",
+        "local_away_external_id": "1966",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16240961",
+          "home_external_id": "1957",
+          "away_external_id": "1966",
+          "home": "Corinthians",
+          "away": "Internacional",
+          "stage_id": "283",
+          "season_id": "89353",
+          "unique_tournament_id": "373",
+          "stage_key": "283|{\"slug\": \"round-of-16\"}",
+          "round_key": 5,
+          "day": "2026-08-06",
+          "kickoff": "2026-08-06T23:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 2,
+          "away_score": 1,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Copa do Brasil 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {
+            "editorCoverageLevel": 3
+          },
+          "id": 89353
+        },
+        "provider_round": {
+          "round": 5,
+          "slug": "round-of-16",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fc",
+        "championship": "Europe - Europa League 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011a7",
+        "phase": "2nd Qualifying Round",
+        "event_id": "16350385",
+        "local_day": "2026-07-30",
+        "local_round": 2,
+        "local_home": "Maccabi Tel Aviv",
+        "local_away": "Sheriff",
+        "local_home_external_id": "5198",
+        "local_away_external_id": "5173",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16350385",
+          "home_external_id": "5198",
+          "away_external_id": "5173",
+          "home": "Maccabi Tel Aviv",
+          "away": "Sheriff Tiraspol",
+          "stage_id": "10910",
+          "season_id": "96522",
+          "unique_tournament_id": "679",
+          "stage_key": "10910|{\"slug\": \"qualification-round-2\"}",
+          "round_key": 2,
+          "day": "2026-07-30",
+          "kickoff": "2026-07-30T16:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "UEFA Europa League 26/27",
+          "year": "26/27",
+          "editor": false,
+          "id": 96522
+        },
+        "provider_round": {
+          "round": 2,
+          "slug": "qualification-round-2",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fd",
+        "championship": "Europe - Conference League 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011a8",
+        "phase": "2nd Qualifying Round",
+        "event_id": "16357231",
+        "local_day": "2026-07-30",
+        "local_round": 2,
+        "local_home": "Atlètic Club d'Escaldes",
+        "local_away": "Vaduz",
+        "local_home_external_id": "37962",
+        "local_away_external_id": "2463",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16357231",
+          "home_external_id": "37962",
+          "away_external_id": "2463",
+          "home": "Atlètic Club Escaldes",
+          "away": "FC Vaduz",
+          "stage_id": "93604",
+          "season_id": "96529",
+          "unique_tournament_id": "17015",
+          "stage_key": "93604|{\"slug\": \"qualification-round-2\"}",
+          "round_key": 2,
+          "day": "2026-07-30",
+          "kickoff": "2026-07-30T14:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 0,
+          "away_score": 2,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "UEFA Conference League 26/27",
+          "year": "26/27",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 96529
+        },
+        "provider_round": {
+          "round": 2,
+          "slug": "qualification-round-2",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "championship": "South America - Copa Libertadores 2026",
+        "phase_id": "a0300000-0000-4000-8000-0000000011a9",
+        "phase": "Oitavas",
+        "event_id": "16799776",
+        "local_day": "2026-08-25",
+        "local_round": 5,
+        "local_home": "Independiente del Valle",
+        "local_away": "Tolima",
+        "local_home_external_id": "39723",
+        "local_away_external_id": "6111",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16799776",
+          "home_external_id": "39723",
+          "away_external_id": "6111",
+          "home": "Independiente del Valle",
+          "away": "Deportes Tolima",
+          "stage_id": "309",
+          "season_id": "87760",
+          "unique_tournament_id": "384",
+          "stage_key": "309|{\"slug\": \"round-of-16\"}",
+          "round_key": 5,
+          "day": "2026-08-25",
+          "kickoff": "2026-08-26T00:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 3,
+          "away_score": 1,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Libertadores 2026",
+          "year": "2026",
+          "editor": false,
+          "id": 87760
+        },
+        "provider_round": {
+          "round": 5,
+          "slug": "round-of-16",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "championship": "South America - Copa Sudamericana 2026",
+        "phase_id": "a0300000-0000-4000-8000-0000000011aa",
+        "phase": "Knockout",
+        "event_id": "16251113",
+        "local_day": "2026-07-30",
+        "local_round": 636,
+        "local_home": "Grêmio-RS",
+        "local_away": "Bolivar",
+        "local_home_external_id": "5926",
+        "local_away_external_id": "7059",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16251113",
+          "home_external_id": "5926",
+          "away_external_id": "7059",
+          "home": "Grêmio",
+          "away": "Bolívar",
+          "stage_id": "91444",
+          "season_id": "87770",
+          "unique_tournament_id": "480",
+          "stage_key": "91444|{\"slug\": \"playoff-round\"}",
+          "round_key": 636,
+          "day": "2026-07-30",
+          "kickoff": "2026-07-30T22:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 0,
+          "away_score": 1,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Sudamericana 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87770
+        },
+        "provider_round": {
+          "round": 636,
+          "slug": "playoff-round",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "championship": "South America - Copa Sudamericana 2026",
+        "phase_id": "a0300000-0000-4000-8000-0000000011ab",
+        "phase": "Round of 16",
+        "event_id": "16799775",
+        "local_day": "2026-08-26",
+        "local_round": 5,
+        "local_home": "River Plate",
+        "local_away": "Santa Fe",
+        "local_home_external_id": "3211",
+        "local_away_external_id": "6116",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16799775",
+          "home_external_id": "3211",
+          "away_external_id": "6116",
+          "home": "River Plate",
+          "away": "Independiente Santa Fe",
+          "stage_id": "91444",
+          "season_id": "87770",
+          "unique_tournament_id": "480",
+          "stage_key": "91444|{\"slug\": \"round-of-16\"}",
+          "round_key": 5,
+          "day": "2026-08-26",
+          "kickoff": "2026-08-27T00:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 1,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": 7,
+          "away_pen": 8
+        },
+        "provider_season": {
+          "name": "CONMEBOL Sudamericana 2026",
+          "year": "2026",
+          "editor": false,
+          "id": 87770
+        },
+        "provider_round": {
+          "round": 5,
+          "slug": "round-of-16",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fb",
+        "championship": "Europe - Champions League 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011ac",
+        "phase": "3rd Qualifying Round",
+        "event_id": "16578186",
+        "local_day": "2026-08-11",
+        "local_round": 3,
+        "local_home": "Kairat Almaty",
+        "local_away": "Levski Sofia",
+        "local_home_external_id": "5172",
+        "local_away_external_id": "3273",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16578186",
+          "home_external_id": "5172",
+          "away_external_id": "3273",
+          "home": "FC Kairat Almaty",
+          "away": "Levski Sofia",
+          "stage_id": "1339",
+          "season_id": "96518",
+          "unique_tournament_id": "7",
+          "stage_key": "1339|{\"slug\": \"qualification-round-3\"}",
+          "round_key": 3,
+          "day": "2026-08-11",
+          "kickoff": "2026-08-11T15:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 0,
+          "away_score": 1,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "UEFA Champions League 26/27",
+          "year": "26/27",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 96518
+        },
+        "provider_round": {
+          "round": 3,
+          "slug": "qualification-round-3",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fc",
+        "championship": "Europe - Europa League 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011ad",
+        "phase": "3rd Qualifying Round",
+        "event_id": "16578798",
+        "local_day": "2026-08-14",
+        "local_round": 3,
+        "local_home": "Klaksvíkar Ítróttarfelag",
+        "local_away": "Lech Poznań",
+        "local_home_external_id": "5194",
+        "local_away_external_id": "3121",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16578798",
+          "home_external_id": "5194",
+          "away_external_id": "3121",
+          "home": "Klaksvíkar Ítróttarfelag",
+          "away": "Lech Poznań",
+          "stage_id": "10910",
+          "season_id": "96522",
+          "unique_tournament_id": "679",
+          "stage_key": "10910|{\"slug\": \"qualification-round-3\"}",
+          "round_key": 3,
+          "day": "2026-08-14",
+          "kickoff": "2026-08-14T18:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 0,
+          "away_score": 5,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "UEFA Europa League 26/27",
+          "year": "26/27",
+          "editor": false,
+          "id": 96522
+        },
+        "provider_round": {
+          "round": 3,
+          "slug": "qualification-round-3",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fd",
+        "championship": "Europe - Conference League 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011ae",
+        "phase": "3rd Qualifying Round",
+        "event_id": "16585864",
+        "local_day": "2026-08-13",
+        "local_round": 3,
+        "local_home": "Tobol",
+        "local_away": "Partizan Belgrade",
+        "local_home_external_id": "5362",
+        "local_away_external_id": "5152",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16585864",
+          "home_external_id": "5362",
+          "away_external_id": "5152",
+          "home": "FC Tobyl",
+          "away": "FK Partizan",
+          "stage_id": "93604",
+          "season_id": "96529",
+          "unique_tournament_id": "17015",
+          "stage_key": "93604|{\"slug\": \"qualification-round-3\"}",
+          "round_key": 3,
+          "day": "2026-08-13",
+          "kickoff": "2026-08-13T15:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 2,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "UEFA Conference League 26/27",
+          "year": "26/27",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 96529
+        },
+        "provider_round": {
+          "round": 3,
+          "slug": "qualification-round-3",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fe",
+        "championship": "Portugal - Liga Primeira 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011af",
+        "phase": "Turno e Returno",
+        "event_id": "16450903",
+        "local_day": "2026-10-24",
+        "local_round": 9,
+        "local_home": "Nacional da Madeira",
+        "local_away": "Braga",
+        "local_home_external_id": "3013",
+        "local_away_external_id": "2999",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [
+          "event_day_mismatch"
+        ],
+        "normalized": {
+          "external_id": "16450903",
+          "home_external_id": "3013",
+          "away_external_id": "2999",
+          "home": "CD Nacional",
+          "away": "Sporting Braga",
+          "stage_id": "52",
+          "season_id": "97436",
+          "unique_tournament_id": "238",
+          "stage_key": "52",
+          "round_key": 9,
+          "day": "2026-10-25",
+          "kickoff": "2026-10-25T18:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Liga Portugal 26/27",
+          "year": "26/27",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 97436
+        },
+        "provider_round": {
+          "round": 9,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005ff",
+        "championship": "Netherlands - Eredivisie 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011b0",
+        "phase": "Turno e Returno",
+        "event_id": "16316851",
+        "local_day": "2026-10-25",
+        "local_round": 10,
+        "local_home": "Fortuna Sittard",
+        "local_away": "SBV Excelsior",
+        "local_home_external_id": "2957",
+        "local_away_external_id": "2967",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16316851",
+          "home_external_id": "2957",
+          "away_external_id": "2967",
+          "home": "Fortuna Sittard",
+          "away": "Excelsior",
+          "stage_id": "39",
+          "season_id": "96143",
+          "unique_tournament_id": "37",
+          "stage_key": "39",
+          "round_key": 10,
+          "day": "2026-10-25",
+          "kickoff": "2026-10-25T11:15:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Eredivisie 26/27",
+          "year": "26/27",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 96143
+        },
+        "provider_round": {
+          "round": 10,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000600",
+        "championship": "England - Premier League 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011b1",
+        "phase": "Turno e Returno",
+        "event_id": "16363891",
+        "local_day": "2026-10-24",
+        "local_round": 8,
+        "local_home": "Arsenal",
+        "local_away": "Everton",
+        "local_home_external_id": "42",
+        "local_away_external_id": "48",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16363891",
+          "home_external_id": "42",
+          "away_external_id": "48",
+          "home": "Arsenal",
+          "away": "Everton",
+          "stage_id": "1",
+          "season_id": "96668",
+          "unique_tournament_id": "17",
+          "stage_key": "1",
+          "round_key": 8,
+          "day": "2026-10-24",
+          "kickoff": "2026-10-24T14:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 2,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Premier League 26/27",
+          "year": "26/27",
+          "editor": false,
+          "id": 96668
+        },
+        "provider_round": {
+          "round": 8,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000601",
+        "championship": "Spain - La Liga 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011b2",
+        "phase": "Turno e Returno",
+        "event_id": "16421081",
+        "local_day": "2026-10-25",
+        "local_round": 10,
+        "local_home": "Athletic de Bilbao",
+        "local_away": "Getafe",
+        "local_home_external_id": "2825",
+        "local_away_external_id": "2859",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16421081",
+          "home_external_id": "2825",
+          "away_external_id": "2859",
+          "home": "Athletic Club",
+          "away": "Getafe",
+          "stage_id": "36",
+          "season_id": "97268",
+          "unique_tournament_id": "8",
+          "stage_key": "36",
+          "round_key": 10,
+          "day": "2026-10-25",
+          "kickoff": "2026-10-25T13:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 4,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "LaLiga 26/27",
+          "year": "26/27",
+          "editor": false,
+          "id": 97268
+        },
+        "provider_round": {
+          "round": 10,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000602",
+        "championship": "Germany - Bundesliga 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011b3",
+        "phase": "Turno e Returno",
+        "event_id": "16434078",
+        "local_day": "2026-10-24",
+        "local_round": 7,
+        "local_home": "FC Cologne",
+        "local_away": "Schalke 04",
+        "local_home_external_id": "2671",
+        "local_away_external_id": "2530",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16434078",
+          "home_external_id": "2671",
+          "away_external_id": "2530",
+          "home": "1. FC Köln",
+          "away": "FC Schalke 04",
+          "stage_id": "42",
+          "season_id": "97464",
+          "unique_tournament_id": "35",
+          "stage_key": "42",
+          "round_key": 7,
+          "day": "2026-10-24",
+          "kickoff": "2026-10-24T13:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 0,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Bundesliga 26/27",
+          "year": "26/27",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 97464
+        },
+        "provider_round": {
+          "round": 7,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000603",
+        "championship": "France - Ligue 1 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011b4",
+        "phase": "Turno e Returno",
+        "event_id": "16310990",
+        "local_day": "2026-10-25",
+        "local_round": 8,
+        "local_home": "Paris Saint-Germain",
+        "local_away": "Lyon",
+        "local_home_external_id": "1644",
+        "local_away_external_id": "1649",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [
+          "event_day_mismatch"
+        ],
+        "normalized": {
+          "external_id": "16310990",
+          "home_external_id": "1644",
+          "away_external_id": "1649",
+          "home": "Paris Saint-Germain",
+          "away": "Olympique Lyonnais",
+          "stage_id": "4",
+          "season_id": "96127",
+          "unique_tournament_id": "34",
+          "stage_key": "4",
+          "round_key": 8,
+          "day": "2026-10-26",
+          "kickoff": "2026-10-26T19:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 2,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Ligue 1 26/27",
+          "year": "26/27",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 96127
+        },
+        "provider_round": {
+          "round": 8,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000604",
+        "championship": "Italy - Serie A 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011b5",
+        "phase": "Turno e Returno",
+        "event_id": "16285063",
+        "local_day": "2026-10-27",
+        "local_round": 9,
+        "local_home": "Roma",
+        "local_away": "Cagliari",
+        "local_home_external_id": "2702",
+        "local_away_external_id": "2719",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16285063",
+          "home_external_id": "2702",
+          "away_external_id": "2719",
+          "home": "AS Roma",
+          "away": "Cagliari",
+          "stage_id": "33",
+          "season_id": "95836",
+          "unique_tournament_id": "23",
+          "stage_key": "33",
+          "round_key": 9,
+          "day": "2026-10-27",
+          "kickoff": "2026-10-27T19:45:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 4,
+          "away_score": 2,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Serie A 26/27",
+          "year": "26/27",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 95836
+        },
+        "provider_round": {
+          "round": 9,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000605",
+        "championship": "England - Championship 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011b6",
+        "phase": "Turno e Returno",
+        "event_id": "16391573",
+        "local_day": "2026-10-24",
+        "local_round": 12,
+        "local_home": "Charlton Athletic",
+        "local_away": "Norwich City",
+        "local_home_external_id": "47",
+        "local_away_external_id": "263",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16391573",
+          "home_external_id": "47",
+          "away_external_id": "263",
+          "home": "Charlton Athletic",
+          "away": "Norwich City",
+          "stage_id": "2",
+          "season_id": "97037",
+          "unique_tournament_id": "18",
+          "stage_key": "2",
+          "round_key": 12,
+          "day": "2026-10-24",
+          "kickoff": "2026-10-24T11:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 3,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Championship 26/27",
+          "year": "26/27",
+          "editor": false,
+          "id": 97037
+        },
+        "provider_round": {
+          "round": 12,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000606",
+        "championship": "Germany - 2. Bundesliga 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011b7",
+        "phase": "Turno e Returno",
+        "event_id": "16429210",
+        "local_day": "2026-10-24",
+        "local_round": 9,
+        "local_home": "1. FC Heidenheim",
+        "local_away": "Energie Cottbus",
+        "local_home_external_id": "5885",
+        "local_away_external_id": "2532",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16429210",
+          "home_external_id": "5885",
+          "away_external_id": "2532",
+          "home": "1. FC Heidenheim",
+          "away": "Energie Cottbus",
+          "stage_id": "41",
+          "season_id": "97406",
+          "unique_tournament_id": "44",
+          "stage_key": "41",
+          "round_key": 9,
+          "day": "2026-10-24",
+          "kickoff": "2026-10-24T11:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 1,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "2. Bundesliga 26/27",
+          "year": "26/27",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 97406
+        },
+        "provider_round": {
+          "round": 9,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000607",
+        "championship": "Turkey - Süper Lig 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011b8",
+        "phase": "Turno e Returno",
+        "event_id": "16483898",
+        "local_day": "2026-10-25",
+        "local_round": 9,
+        "local_home": "Konyaspor",
+        "local_away": "Gençlerbirliği",
+        "local_home_external_id": "3085",
+        "local_away_external_id": "7802",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16483898",
+          "home_external_id": "3085",
+          "away_external_id": "7802",
+          "home": "Konyaspor",
+          "away": "Gençlerbirliği",
+          "stage_id": "62",
+          "season_id": "98080",
+          "unique_tournament_id": "52",
+          "stage_key": "62",
+          "round_key": 9,
+          "day": "2026-10-25",
+          "kickoff": "2026-10-25T13:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 2,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Super Lig 26/27",
+          "year": "26/27",
+          "editor": false,
+          "id": 98080
+        },
+        "provider_round": {
+          "round": 9,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fb",
+        "championship": "Europe - Champions League 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011b9",
+        "phase": "Play-off round",
+        "event_id": "16707707",
+        "local_day": "2026-08-26",
+        "local_round": 636,
+        "local_home": "AEK Athens",
+        "local_away": "Levski Sofia",
+        "local_home_external_id": "3250",
+        "local_away_external_id": "3273",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16707707",
+          "home_external_id": "3250",
+          "away_external_id": "3273",
+          "home": "AEK Athens",
+          "away": "Levski Sofia",
+          "stage_id": "119880",
+          "season_id": "96518",
+          "unique_tournament_id": "7",
+          "stage_key": "119880|{\"slug\": \"playoff-round\"}",
+          "round_key": 636,
+          "day": "2026-08-26",
+          "kickoff": "2026-08-26T19:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 4,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "UEFA Champions League 26/27",
+          "year": "26/27",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 96518
+        },
+        "provider_round": {
+          "round": 636,
+          "slug": "playoff-round",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fc",
+        "championship": "Europe - Europa League 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011ba",
+        "phase": "Play-off round",
+        "event_id": "16708159",
+        "local_day": "2026-08-27",
+        "local_round": 636,
+        "local_home": "Ararat-Armenia",
+        "local_away": "CS U Craiova",
+        "local_home_external_id": "262229",
+        "local_away_external_id": "116223",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16708159",
+          "home_external_id": "262229",
+          "away_external_id": "116223",
+          "home": "FC Ararat-Armenia",
+          "away": "Universitatea Craiova",
+          "stage_id": "119516",
+          "season_id": "96522",
+          "unique_tournament_id": "679",
+          "stage_key": "119516|{\"slug\": \"playoff-round\"}",
+          "round_key": 636,
+          "day": "2026-08-27",
+          "kickoff": "2026-08-27T16:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "UEFA Europa League 26/27",
+          "year": "26/27",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 96522
+        },
+        "provider_round": {
+          "round": 636,
+          "slug": "playoff-round",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fd",
+        "championship": "Europe - Conference League 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011bb",
+        "phase": "Play-off round",
+        "event_id": "16821936",
+        "local_day": "2026-08-27",
+        "local_round": 636,
+        "local_home": "Qarabağ",
+        "local_away": "Twente",
+        "local_home_external_id": "5962",
+        "local_away_external_id": "2955",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16821936",
+          "home_external_id": "5962",
+          "away_external_id": "2955",
+          "home": "Qarabağ FK",
+          "away": "FC Twente",
+          "stage_id": "119973",
+          "season_id": "96529",
+          "unique_tournament_id": "17015",
+          "stage_key": "119973|{\"slug\": \"playoff-round\"}",
+          "round_key": 636,
+          "day": "2026-08-27",
+          "kickoff": "2026-08-27T16:15:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 2,
+          "home_aet": 0,
+          "away_aet": 2,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "UEFA Conference League 26/27",
+          "year": "26/27",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 96529
+        },
+        "provider_round": {
+          "round": 636,
+          "slug": "playoff-round",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+        "championship": "Brazil - Copa do Brasil 2026",
+        "phase_id": "a0300000-0000-4000-8000-0000000011bc",
+        "phase": "Quartas",
+        "event_id": "16795431",
+        "local_day": "2026-09-03",
+        "local_round": 27,
+        "local_home": "Grêmio-RS",
+        "local_away": "Internacional-RS",
+        "local_home_external_id": "5926",
+        "local_away_external_id": "1966",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16795431",
+          "home_external_id": "5926",
+          "away_external_id": "1966",
+          "home": "Grêmio",
+          "away": "Internacional",
+          "stage_id": "283",
+          "season_id": "89353",
+          "unique_tournament_id": "373",
+          "stage_key": "283|{\"slug\": \"quarterfinals\"}",
+          "round_key": 27,
+          "day": "2026-09-03",
+          "kickoff": "2026-09-03T23:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 3,
+          "away_score": 1,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Copa do Brasil 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {
+            "editorCoverageLevel": 3
+          },
+          "id": 89353
+        },
+        "provider_round": {
+          "round": 27,
+          "slug": "quarterfinals",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "championship": "South America - Copa Libertadores 2026",
+        "phase_id": "a0300000-0000-4000-8000-0000000011bd",
+        "phase": "Quartas",
+        "event_id": "16924719",
+        "local_day": "2026-09-17",
+        "local_round": 27,
+        "local_home": "Flamengo-RJ",
+        "local_away": "Independiente del Valle",
+        "local_home_external_id": "5981",
+        "local_away_external_id": "39723",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16924719",
+          "home_external_id": "5981",
+          "away_external_id": "39723",
+          "home": "Flamengo",
+          "away": "Independiente del Valle",
+          "stage_id": "309",
+          "season_id": "87760",
+          "unique_tournament_id": "384",
+          "stage_key": "309|{\"slug\": \"quarterfinals\"}",
+          "round_key": 27,
+          "day": "2026-09-17",
+          "kickoff": "2026-09-18T00:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 1,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Libertadores 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87760
+        },
+        "provider_round": {
+          "round": 27,
+          "slug": "quarterfinals",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "championship": "South America - Copa Sudamericana 2026",
+        "phase_id": "a0300000-0000-4000-8000-0000000011be",
+        "phase": "Quartas",
+        "event_id": "16883041",
+        "local_day": "2026-09-17",
+        "local_round": 27,
+        "local_home": "Torque",
+        "local_away": "Cienciano",
+        "local_home_external_id": "174972",
+        "local_away_external_id": "2301",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16883041",
+          "home_external_id": "174972",
+          "away_external_id": "2301",
+          "home": "Montevideo City Torque",
+          "away": "Cienciano",
+          "stage_id": "91444",
+          "season_id": "87770",
+          "unique_tournament_id": "480",
+          "stage_key": "91444|{\"slug\": \"quarterfinals\"}",
+          "round_key": 27,
+          "day": "2026-09-17",
+          "kickoff": "2026-09-18T00:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 3,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Sudamericana 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87770
+        },
+        "provider_round": {
+          "round": 27,
+          "slug": "quarterfinals",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fb",
+        "championship": "Europe - Champions League 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011bf",
+        "phase": "League Phase",
+        "event_id": "16938853",
+        "local_day": "2026-10-21",
+        "local_round": 3,
+        "local_home": "Aston Villa",
+        "local_away": "Viking",
+        "local_home_external_id": "40",
+        "local_away_external_id": "1164",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16938853",
+          "home_external_id": "40",
+          "away_external_id": "1164",
+          "home": "Aston Villa",
+          "away": "Viking FK",
+          "stage_id": "138314",
+          "season_id": "96518",
+          "unique_tournament_id": "7",
+          "stage_key": "138314",
+          "round_key": 3,
+          "day": "2026-10-21",
+          "kickoff": "2026-10-21T19:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 3,
+          "away_score": 1,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "UEFA Champions League 26/27",
+          "year": "26/27",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 96518
+        },
+        "provider_round": {
+          "round": 3,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fc",
+        "championship": "Europe - Europa League 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011c0",
+        "phase": "League Phase",
+        "event_id": "16945541",
+        "local_day": "2026-10-22",
+        "local_round": 3,
+        "local_home": "Beşiktaş",
+        "local_away": "Crystal Palace",
+        "local_home_external_id": "3050",
+        "local_away_external_id": "7",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16945541",
+          "home_external_id": "3050",
+          "away_external_id": "7",
+          "home": "Beşiktaş JK",
+          "away": "Crystal Palace",
+          "stage_id": "138315",
+          "season_id": "96522",
+          "unique_tournament_id": "679",
+          "stage_key": "138315",
+          "round_key": 3,
+          "day": "2026-10-22",
+          "kickoff": "2026-10-22T19:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 2,
+          "away_score": 2,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "UEFA Europa League 26/27",
+          "year": "26/27",
+          "editor": false,
+          "id": 96522
+        },
+        "provider_round": {
+          "round": 3,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005fd",
+        "championship": "Europe - Conference League 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011c1",
+        "phase": "League Phase",
+        "event_id": "16945613",
+        "local_day": "2026-10-22",
+        "local_round": 2,
+        "local_home": "Ajax",
+        "local_away": "Atalanta",
+        "local_home_external_id": "2953",
+        "local_away_external_id": "2686",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16945613",
+          "home_external_id": "2953",
+          "away_external_id": "2686",
+          "home": "AFC Ajax",
+          "away": "Atalanta",
+          "stage_id": "138316",
+          "season_id": "96529",
+          "unique_tournament_id": "17015",
+          "stage_key": "138316",
+          "round_key": 2,
+          "day": "2026-10-22",
+          "kickoff": "2026-10-22T19:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 2,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "UEFA Conference League 26/27",
+          "year": "26/27",
+          "editor": false,
+          "id": 96529
+        },
+        "provider_round": {
+          "round": 2,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+        "championship": "Brazil - Copa do Brasil 2026",
+        "phase_id": "a0300000-0000-4000-8000-0000000011c3",
+        "phase": "Semis",
+        "event_id": "16988178",
+        "local_day": "2026-10-31",
+        "local_round": 28,
+        "local_home": "Vasco-RJ",
+        "local_away": "Palmeiras-SP",
+        "local_home_external_id": "1974",
+        "local_away_external_id": "1963",
+        "local_season": "2026",
+        "issues": [
+          "provider_response_failed"
+        ],
+        "warnings": [],
+        "response_status": 404
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "championship": "South America - Copa Libertadores 2026",
+        "phase_id": "a0300000-0000-4000-8000-0000000011c4",
+        "phase": "Semis",
+        "event_id": "17125574",
+        "local_day": "2026-10-20",
+        "local_round": 28,
+        "local_home": "Flamengo-RJ",
+        "local_away": "Estudiantes",
+        "local_home_external_id": "5981",
+        "local_away_external_id": "3206",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [
+          "event_day_mismatch"
+        ],
+        "normalized": {
+          "external_id": "17125574",
+          "home_external_id": "5981",
+          "away_external_id": "3206",
+          "home": "Flamengo",
+          "away": "Estudiantes de La Plata",
+          "stage_id": "309",
+          "season_id": "87760",
+          "unique_tournament_id": "384",
+          "stage_key": "309|{\"slug\": \"semifinals\"}",
+          "round_key": 28,
+          "day": "2026-10-22",
+          "kickoff": "2026-10-23T00:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 0,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": 2,
+          "away_pen": 3
+        },
+        "provider_season": {
+          "name": "CONMEBOL Libertadores 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87760
+        },
+        "provider_round": {
+          "round": 28,
+          "slug": "semifinals",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "championship": "South America - Copa Sudamericana 2026",
+        "phase_id": "a0300000-0000-4000-8000-0000000011c5",
+        "phase": "Semis",
+        "event_id": "17127428",
+        "local_day": "2026-10-20",
+        "local_round": 28,
+        "local_home": "Torque",
+        "local_away": "Atlético-MG",
+        "local_home_external_id": "174972",
+        "local_away_external_id": "1977",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [
+          "event_day_mismatch"
+        ],
+        "normalized": {
+          "external_id": "17127428",
+          "home_external_id": "174972",
+          "away_external_id": "1977",
+          "home": "Montevideo City Torque",
+          "away": "Atlético Mineiro",
+          "stage_id": "91444",
+          "season_id": "87770",
+          "unique_tournament_id": "480",
+          "stage_key": "91444|{\"slug\": \"semifinals\"}",
+          "round_key": 28,
+          "day": "2026-10-21",
+          "kickoff": "2026-10-21T22:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 2,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Sudamericana 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87770
+        },
+        "provider_round": {
+          "round": 28,
+          "slug": "semifinals",
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000608",
+        "championship": "Europe - Nations League 2026",
+        "phase_id": "a0300000-0000-4000-8000-0000000011c6",
+        "phase": "D",
+        "event_id": "15537775",
+        "local_day": "2026-11-13",
+        "local_round": 5,
+        "local_home": "Andorra",
+        "local_away": "Gibraltar",
+        "local_home_external_id": "4818",
+        "local_away_external_id": "129264",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [
+          "reviewed_nations_league_partial_season"
+        ],
+        "normalized": {
+          "external_id": "15537775",
+          "home_external_id": "4818",
+          "away_external_id": "129264",
+          "home": "Andorra",
+          "away": "Gibraltar",
+          "stage_id": "64378",
+          "season_id": "89945",
+          "unique_tournament_id": "10783",
+          "stage_key": "64378",
+          "round_key": 5,
+          "day": "2026-11-13",
+          "kickoff": "2026-11-13T19:45:00Z",
+          "status": "scheduled",
+          "played": false,
+          "terminal": false,
+          "home_score": null,
+          "away_score": null,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "UEFA Nations League 26/27",
+          "year": "26/27",
+          "editor": false,
+          "id": 89945
+        },
+        "provider_round": {
+          "round": 5,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-000000000609",
+        "championship": "Spain - LaLiga 2 2026/2027",
+        "phase_id": "a0300000-0000-4000-8000-0000000011c7",
+        "phase": "Temporada regular",
+        "event_id": "16418247",
+        "local_day": "2026-10-26",
+        "local_round": 11,
+        "local_home": "FC Andorra",
+        "local_away": "Burgos",
+        "local_home_external_id": "324871",
+        "local_away_external_id": "2854",
+        "local_season": "2026/2027",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "16418247",
+          "home_external_id": "324871",
+          "away_external_id": "2854",
+          "home": "FC Andorra",
+          "away": "Burgos Club de Fútbol",
+          "stage_id": "37",
+          "season_id": "97280",
+          "unique_tournament_id": "54",
+          "stage_key": "37",
+          "round_key": 11,
+          "day": "2026-10-26",
+          "kickoff": "2026-10-26T19:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 2,
+          "away_score": 3,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "LaLiga 2 26/27",
+          "year": "26/27",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 97280
+        },
+        "provider_round": {
+          "round": 11,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "championship": "South America - Copa Libertadores 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001192",
+        "phase": "Fase de Grupos",
+        "event_id": "15832767",
+        "local_day": "2026-05-26",
+        "local_round": 6,
+        "local_home": "Estudiantes",
+        "local_away": "Independiente Medellín",
+        "local_home_external_id": "3206",
+        "local_away_external_id": "6115",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15832767",
+          "home_external_id": "3206",
+          "away_external_id": "6115",
+          "home": "Estudiantes de La Plata",
+          "away": "Independiente Medellín",
+          "stage_id": "2928",
+          "season_id": "87760",
+          "unique_tournament_id": "384",
+          "stage_key": "2928",
+          "round_key": 6,
+          "day": "2026-05-26",
+          "kickoff": "2026-05-27T00:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Libertadores 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87760
+        },
+        "provider_round": {
+          "round": 6,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "championship": "South America - Copa Libertadores 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001192",
+        "phase": "Fase de Grupos",
+        "event_id": "15832787",
+        "local_day": "2026-05-26",
+        "local_round": 6,
+        "local_home": "Nacional-URU",
+        "local_away": "Coquimbo Unido",
+        "local_home_external_id": "3230",
+        "local_away_external_id": "3165",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15832787",
+          "home_external_id": "3230",
+          "away_external_id": "3165",
+          "home": "Nacional",
+          "away": "Coquimbo Unido",
+          "stage_id": "2929",
+          "season_id": "87760",
+          "unique_tournament_id": "384",
+          "stage_key": "2929",
+          "round_key": 6,
+          "day": "2026-05-26",
+          "kickoff": "2026-05-27T00:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Libertadores 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87760
+        },
+        "provider_round": {
+          "round": 6,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "championship": "South America - Copa Libertadores 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001192",
+        "phase": "Fase de Grupos",
+        "event_id": "15832819",
+        "local_day": "2026-05-27",
+        "local_round": 6,
+        "local_home": "Bolivar",
+        "local_away": "Independiente Rivadavia",
+        "local_home_external_id": "7059",
+        "local_away_external_id": "36842",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15832819",
+          "home_external_id": "7059",
+          "away_external_id": "36842",
+          "home": "Bolívar",
+          "away": "Independiente Rivadavia",
+          "stage_id": "2930",
+          "season_id": "87760",
+          "unique_tournament_id": "384",
+          "stage_key": "2930",
+          "round_key": 6,
+          "day": "2026-05-27",
+          "kickoff": "2026-05-28T00:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 3,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Libertadores 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87760
+        },
+        "provider_round": {
+          "round": 6,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "championship": "South America - Copa Libertadores 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001192",
+        "phase": "Fase de Grupos",
+        "event_id": "15832845",
+        "local_day": "2026-05-28",
+        "local_round": 6,
+        "local_home": "Boca Juniors",
+        "local_away": "Universidad Católica",
+        "local_home_external_id": "3202",
+        "local_away_external_id": "3151",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15832845",
+          "home_external_id": "3202",
+          "away_external_id": "3151",
+          "home": "Boca Juniors",
+          "away": "Universidad Católica",
+          "stage_id": "2931",
+          "season_id": "87760",
+          "unique_tournament_id": "384",
+          "stage_key": "2931",
+          "round_key": 6,
+          "day": "2026-05-28",
+          "kickoff": "2026-05-29T00:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 0,
+          "away_score": 1,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Libertadores 2026",
+          "year": "2026",
+          "editor": false,
+          "id": 87760
+        },
+        "provider_round": {
+          "round": 6,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "championship": "South America - Copa Libertadores 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001192",
+        "phase": "Fase de Grupos",
+        "event_id": "15832844",
+        "local_day": "2026-05-27",
+        "local_round": 6,
+        "local_home": "Corinthians-SP",
+        "local_away": "Platense",
+        "local_home_external_id": "1957",
+        "local_away_external_id": "36837",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15832844",
+          "home_external_id": "1957",
+          "away_external_id": "36837",
+          "home": "Corinthians",
+          "away": "Club Atlético Platense",
+          "stage_id": "2932",
+          "season_id": "87760",
+          "unique_tournament_id": "384",
+          "stage_key": "2932",
+          "round_key": 6,
+          "day": "2026-05-27",
+          "kickoff": "2026-05-28T00:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 0,
+          "away_score": 2,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Libertadores 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87760
+        },
+        "provider_round": {
+          "round": 6,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "championship": "South America - Copa Libertadores 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001192",
+        "phase": "Fase de Grupos",
+        "event_id": "15832849",
+        "local_day": "2026-05-28",
+        "local_round": 6,
+        "local_home": "Cerro Porteño",
+        "local_away": "Sporting Cristal",
+        "local_home_external_id": "5991",
+        "local_away_external_id": "2302",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15832849",
+          "home_external_id": "5991",
+          "away_external_id": "2302",
+          "home": "Cerro Porteño",
+          "away": "Club Sporting Cristal",
+          "stage_id": "2933",
+          "season_id": "87760",
+          "unique_tournament_id": "384",
+          "stage_key": "2933",
+          "round_key": 6,
+          "day": "2026-05-28",
+          "kickoff": "2026-05-28T22:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 2,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Libertadores 2026",
+          "year": "2026",
+          "editor": false,
+          "id": 87760
+        },
+        "provider_round": {
+          "round": 6,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "championship": "South America - Copa Libertadores 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001192",
+        "phase": "Fase de Grupos",
+        "event_id": "15832851",
+        "local_day": "2026-05-26",
+        "local_round": 6,
+        "local_home": "Lanús",
+        "local_away": "Mirassol-SP",
+        "local_home_external_id": "3218",
+        "local_away_external_id": "21982",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15832851",
+          "home_external_id": "3218",
+          "away_external_id": "21982",
+          "home": "CA Lanús",
+          "away": "Mirassol",
+          "stage_id": "2934",
+          "season_id": "87760",
+          "unique_tournament_id": "384",
+          "stage_key": "2934",
+          "round_key": 6,
+          "day": "2026-05-26",
+          "kickoff": "2026-05-26T22:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Libertadores 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87760
+        },
+        "provider_round": {
+          "round": 6,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f4",
+        "championship": "South America - Copa Libertadores 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001192",
+        "phase": "Fase de Grupos",
+        "event_id": "15832852",
+        "local_day": "2026-05-27",
+        "local_round": 6,
+        "local_home": "Independiente del Valle",
+        "local_away": "Rosario Central",
+        "local_home_external_id": "39723",
+        "local_away_external_id": "3217",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15832852",
+          "home_external_id": "39723",
+          "away_external_id": "3217",
+          "home": "Independiente del Valle",
+          "away": "Rosario Central",
+          "stage_id": "2935",
+          "season_id": "87760",
+          "unique_tournament_id": "384",
+          "stage_key": "2935",
+          "round_key": 6,
+          "day": "2026-05-27",
+          "kickoff": "2026-05-27T22:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Libertadores 2026",
+          "year": "2026",
+          "editor": false,
+          "id": 87760
+        },
+        "provider_round": {
+          "round": 6,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "championship": "South America - Copa Sudamericana 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001193",
+        "phase": "Fase de Grupos",
+        "event_id": "15832045",
+        "local_day": "2026-05-28",
+        "local_round": 6,
+        "local_home": "América de Cali",
+        "local_away": "Macará",
+        "local_home_external_id": "6102",
+        "local_away_external_id": "6001",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15832045",
+          "home_external_id": "6102",
+          "away_external_id": "6001",
+          "home": "América de Cali",
+          "away": "Macará",
+          "stage_id": "91436",
+          "season_id": "87770",
+          "unique_tournament_id": "480",
+          "stage_key": "91436",
+          "round_key": 6,
+          "day": "2026-05-28",
+          "kickoff": "2026-05-29T00:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 0,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Sudamericana 2026",
+          "year": "2026",
+          "editor": false,
+          "id": 87770
+        },
+        "provider_round": {
+          "round": 6,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "championship": "South America - Copa Sudamericana 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001193",
+        "phase": "Fase de Grupos",
+        "event_id": "15832072",
+        "local_day": "2026-05-27",
+        "local_round": 6,
+        "local_home": "Atlético-MG",
+        "local_away": "Academia Puerto Cabello",
+        "local_home_external_id": "1977",
+        "local_away_external_id": "230725",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15832072",
+          "home_external_id": "1977",
+          "away_external_id": "230725",
+          "home": "Atlético Mineiro",
+          "away": "Academia Puerto Cabello",
+          "stage_id": "91437",
+          "season_id": "87770",
+          "unique_tournament_id": "480",
+          "stage_key": "91437",
+          "round_key": 6,
+          "day": "2026-05-27",
+          "kickoff": "2026-05-27T22:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Sudamericana 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87770
+        },
+        "provider_round": {
+          "round": 6,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "championship": "South America - Copa Sudamericana 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001193",
+        "phase": "Fase de Grupos",
+        "event_id": "15832115",
+        "local_day": "2026-05-26",
+        "local_round": 6,
+        "local_home": "Millonarios",
+        "local_away": "O'Higgins",
+        "local_home_external_id": "6117",
+        "local_away_external_id": "3163",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15832115",
+          "home_external_id": "6117",
+          "away_external_id": "3163",
+          "home": "Millonarios",
+          "away": "O'Higgins",
+          "stage_id": "91438",
+          "season_id": "87770",
+          "unique_tournament_id": "480",
+          "stage_key": "91438",
+          "round_key": 6,
+          "day": "2026-05-26",
+          "kickoff": "2026-05-26T22:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 2,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Sudamericana 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87770
+        },
+        "provider_round": {
+          "round": 6,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "championship": "South America - Copa Sudamericana 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001193",
+        "phase": "Fase de Grupos",
+        "event_id": "15832142",
+        "local_day": "2026-05-26",
+        "local_round": 6,
+        "local_home": "San Lorenzo",
+        "local_away": "Recoleta",
+        "local_home_external_id": "3201",
+        "local_away_external_id": "292595",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15832142",
+          "home_external_id": "3201",
+          "away_external_id": "292595",
+          "home": "San Lorenzo",
+          "away": "Recoleta FC",
+          "stage_id": "91439",
+          "season_id": "87770",
+          "unique_tournament_id": "480",
+          "stage_key": "91439",
+          "round_key": 6,
+          "day": "2026-05-26",
+          "kickoff": "2026-05-27T00:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 0,
+          "away_score": 1,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Sudamericana 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87770
+        },
+        "provider_round": {
+          "round": 6,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "championship": "South America - Copa Sudamericana 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001193",
+        "phase": "Fase de Grupos",
+        "event_id": "15832146",
+        "local_day": "2026-05-27",
+        "local_round": 6,
+        "local_home": "Caracas",
+        "local_away": "Botafogo-RJ",
+        "local_home_external_id": "6230",
+        "local_away_external_id": "1958",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15832146",
+          "home_external_id": "6230",
+          "away_external_id": "1958",
+          "home": "Caracas F.C.",
+          "away": "Botafogo",
+          "stage_id": "91440",
+          "season_id": "87770",
+          "unique_tournament_id": "480",
+          "stage_key": "91440",
+          "round_key": 6,
+          "day": "2026-05-27",
+          "kickoff": "2026-05-27T22:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 1,
+          "away_score": 3,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Sudamericana 2026",
+          "year": "2026",
+          "editor": false,
+          "id": 87770
+        },
+        "provider_round": {
+          "round": 6,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "championship": "South America - Copa Sudamericana 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001193",
+        "phase": "Fase de Grupos",
+        "event_id": "15832147",
+        "local_day": "2026-05-26",
+        "local_round": 6,
+        "local_home": "Grêmio-RS",
+        "local_away": "Torque",
+        "local_home_external_id": "5926",
+        "local_away_external_id": "174972",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15832147",
+          "home_external_id": "5926",
+          "away_external_id": "174972",
+          "home": "Grêmio",
+          "away": "Montevideo City Torque",
+          "stage_id": "91441",
+          "season_id": "87770",
+          "unique_tournament_id": "480",
+          "stage_key": "91441",
+          "round_key": 6,
+          "day": "2026-05-26",
+          "kickoff": "2026-05-26T22:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 2,
+          "away_score": 2,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Sudamericana 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87770
+        },
+        "provider_round": {
+          "round": 6,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "championship": "South America - Copa Sudamericana 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001193",
+        "phase": "Fase de Grupos",
+        "event_id": "15832154",
+        "local_day": "2026-05-27",
+        "local_round": 6,
+        "local_home": "Olimpia",
+        "local_away": "Audax Italiano",
+        "local_home_external_id": "5997",
+        "local_away_external_id": "3162",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15832154",
+          "home_external_id": "5997",
+          "away_external_id": "3162",
+          "home": "Olimpia",
+          "away": "Audax Italiano",
+          "stage_id": "91442",
+          "season_id": "87770",
+          "unique_tournament_id": "480",
+          "stage_key": "91442",
+          "round_key": 6,
+          "day": "2026-05-27",
+          "kickoff": "2026-05-27T22:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 3,
+          "away_score": 1,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Sudamericana 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87770
+        },
+        "provider_round": {
+          "round": 6,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f5",
+        "championship": "South America - Copa Sudamericana 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001193",
+        "phase": "Fase de Grupos",
+        "event_id": "15832157",
+        "local_day": "2026-05-27",
+        "local_round": 6,
+        "local_home": "Bragantino-SP",
+        "local_away": "Carabobo",
+        "local_home_external_id": "1999",
+        "local_away_external_id": "6229",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15832157",
+          "home_external_id": "1999",
+          "away_external_id": "6229",
+          "home": "Red Bull Bragantino",
+          "away": "Carabobo FC",
+          "stage_id": "91443",
+          "season_id": "87770",
+          "unique_tournament_id": "480",
+          "stage_key": "91443",
+          "round_key": 6,
+          "day": "2026-05-27",
+          "kickoff": "2026-05-28T00:30:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 2,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "CONMEBOL Sudamericana 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {},
+          "id": 87770
+        },
+        "provider_round": {
+          "round": 6,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f9",
+        "championship": "World - National Friendlies 2026",
+        "phase_id": "a0300000-0000-4000-8000-000000001190",
+        "phase": "Only",
+        "event_id": "15598106",
+        "local_day": "2026-06-10",
+        "local_round": null,
+        "local_home": "England",
+        "local_away": "Costa Rica",
+        "local_home_external_id": "4713",
+        "local_away_external_id": "4756",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "15598106",
+          "home_external_id": "4713",
+          "away_external_id": "4756",
+          "home": "England",
+          "away": "Costa Rica",
+          "stage_id": "66",
+          "season_id": "87155",
+          "unique_tournament_id": "851",
+          "stage_key": "66",
+          "round_key": null,
+          "day": "2026-06-10",
+          "kickoff": "2026-06-10T21:00:00Z",
+          "status": "finished",
+          "played": true,
+          "terminal": true,
+          "home_score": 3,
+          "away_score": 0,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Int. Friendly Games 2026",
+          "year": "2026",
+          "editor": false,
+          "id": 87155
+        },
+        "provider_round": {
+          "round": null,
+          "slug": null,
+          "prefix": null
+        }
+      },
+      {
+        "championship_id": "a0200000-0000-4000-8000-0000000005f6",
+        "championship": "Brazil - Copa do Brasil 2026",
+        "phase_id": "a0300000-0000-4000-8000-0000000011c3",
+        "phase": "Semis",
+        "event_id": "17008797",
+        "local_day": "2026-11-01",
+        "local_round": 28,
+        "local_home": "Grêmio-RS",
+        "local_away": "Atlético-MG",
+        "local_home_external_id": "5926",
+        "local_away_external_id": "1977",
+        "local_season": "2026",
+        "issues": [],
+        "warnings": [],
+        "normalized": {
+          "external_id": "17008797",
+          "home_external_id": "5926",
+          "away_external_id": "1977",
+          "home": "Grêmio",
+          "away": "Atlético Mineiro",
+          "stage_id": "283",
+          "season_id": "89353",
+          "unique_tournament_id": "373",
+          "stage_key": "283|{\"slug\": \"semifinals\"}",
+          "round_key": 28,
+          "day": "2026-11-01",
+          "kickoff": "2026-11-01T21:30:00Z",
+          "status": "scheduled",
+          "played": false,
+          "terminal": false,
+          "home_score": null,
+          "away_score": null,
+          "home_aet": null,
+          "away_aet": null,
+          "home_pen": null,
+          "away_pen": null
+        },
+        "provider_season": {
+          "name": "Copa do Brasil 2026",
+          "year": "2026",
+          "editor": false,
+          "seasonCoverageInfo": {
+            "editorCoverageLevel": 3
+          },
+          "id": 89353
+        },
+        "provider_round": {
+          "round": 28,
+          "slug": "semifinals",
+          "prefix": null
+        }
+      }
+    ],
+    "uncovered_phase_ids": [],
+    "uncovered_championship_ids": [],
+    "summary": {
+      "sources": 21,
+      "phases_covered": 51,
+      "samples": 69,
+      "clean_samples": 67,
+      "issue_counts": {
+        "home_team_id_mismatch": 1,
+        "provider_response_failed": 1
+      },
+      "warning_counts": {
+        "event_day_mismatch": 6,
+        "reviewed_nations_league_partial_season": 1
+      }
+    }
+  },
+  "rollback_validated": true
+}

@@ -1,0 +1,203 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "compose": {
+    "up": false,
+    "manual": true,
+    "environment": {},
+    "ports": [],
+    "volumes": [],
+    "depends_on": {}
+  },
+  "dockerfile": {
+    "preamble": [],
+    "preambleCopyContexts": [],
+    "from": {
+      "name": "rust:1.88.0-bookworm@sha256:af306cfa71d987911a781c37b59d7d67d934f49684058f96cf72079c3626bfe0"
+    },
+    "workdir": "/app",
+    "add": [],
+    "mounts": [],
+    "secrets": {},
+    "extra_hosts": [],
+    "copy": [
+      {
+        "from": null,
+        "srcs": [
+          "tools/sofascore-fetch/Cargo.toml",
+          "tools/sofascore-fetch/Cargo.lock"
+        ],
+        "dst": "/app/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "tools/sofascore-fetch/src/*.rs"
+        ],
+        "dst": "/app/src/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "tools/sofascore-fetch/tests/*.rs"
+        ],
+        "dst": "/app/tests/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      }
+    ],
+    "epilogue": [
+      "RUN apt-get update && apt-get install -y --no-install-recommends cmake clang libclang-dev perl ca-certificates && rm -rf /var/lib/apt/lists/*",
+      "RUN cargo test --release --locked --manifest-path /app/Cargo.toml && cargo build --release --locked --manifest-path /app/Cargo.toml && cp /app/target/release/sofascore_fetch /usr/local/bin/sofascore_fetch"
+    ],
+    "healthcheck": null,
+    "expose": [],
+    "entrypoint": null,
+    "incremental": false,
+    "cmd": [
+      "sofascore_fetch",
+      "--listen",
+      "0.0.0.0:8080"
+    ]
+  },
+  "name": "sofascore-appliance",
+  "project": "golaberto",
+  "dir": ".",
+  "activate": "",
+  "srcs": {
+    "globs": [
+      "tools/sofascore-fetch/Cargo.toml",
+      "tools/sofascore-fetch/Cargo.lock",
+      "tools/sofascore-fetch/src/*.rs",
+      "tools/sofascore-fetch/tests/*.rs"
+    ],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {},
+  "synthetics": {
+    "bayt": {
+      "name": "sofascore-appliance_bayt",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.sofascore-appliance.yaml",
+          ".bayt/Dockerfile.sofascore-appliance",
+          ".bayt/bayt.sofascore-appliance.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/process-compose.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "public",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.sofascore-appliance.yaml"
+      ]
+    },
+    "outs": {
+      "name": "sofascore-appliance_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "public",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.sofascore-appliance.yaml"
+      ]
+    },
+    "srcs": {
+      "name": "sofascore-appliance_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          "tools/sofascore-fetch/Cargo.toml",
+          "tools/sofascore-fetch/Cargo.lock",
+          "tools/sofascore-fetch/src/*.rs",
+          "tools/sofascore-fetch/tests/*.rs"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "public",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.sofascore-appliance.yaml"
+      ]
+    }
+  },
+  "visibility": "public",
+  "emitsSrcs": true,
+  "deps": [],
+  "sameProjectDeps": [],
+  "transitiveDeps": [],
+  "transitiveCrossDeps": [],
+  "upClosure": [
+    "./.bayt/compose.sofascore-appliance.yaml"
+  ],
+  "chainedDeps": [],
+  "cmds": [],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

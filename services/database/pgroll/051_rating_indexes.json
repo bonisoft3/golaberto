@@ -1,0 +1,10 @@
+{
+  "operations": [
+    {
+      "sql": {
+        "up": "-- The retained prefix serves both lookups; its rating payload also covers chart scans.\nSET LOCAL lock_timeout = '5s';\nSET LOCAL statement_timeout = '60s';\n\nDO $$ BEGIN\n  IF NOT EXISTS (\n    SELECT 1 FROM pg_index\n    WHERE indexrelid = to_regclass('public.team_rating_home_latest_idx')\n      AND indisvalid AND indisready\n  ) THEN\n    RAISE EXCEPTION 'rating history requires its valid covering index';\n  END IF;\nEND $$;\n\n-- squawk-ignore require-concurrent-index-deletion\nDROP INDEX IF EXISTS public.idx_team_rating_team_id;\n-- squawk-ignore require-concurrent-index-deletion\nDROP INDEX IF EXISTS public.team_rating_match_history_idx;\n\n",
+        "onComplete": true
+      }
+    }
+  ]
+}

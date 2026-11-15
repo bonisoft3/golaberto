@@ -2,7 +2,11 @@
 
 package golaberto
 
-import "strings"
+import (
+	"strings"
+
+	pronto "github.com/bonisoft3/pronto"
+)
 
 _teamOddsProgressSql:     string @embed(file="services/database/sql/042_team_odds_progress.sql", type=text)
 _teamOddsProgressUpgrade: strings.Replace(strings.Replace(_teamOddsProgressSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
@@ -74,7 +78,7 @@ code: state: migrations: "043_queued_odds_refresh": {operations: [{sql: {up: _qu
 
 loop: surface: checks: "odds-progress-renderer": {
 	verb: "test"
-	cmds: ["mise exec -- deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-read --allow-env tests/odds-progress-renderer.ts tests/odds-progress-controls.ts tests/position-odds-renderer.ts tests/position-odds-controls.ts tests/position-odds-hover.ts"]
+	cmds: ["\(pronto.#Harness.rule); mise exec -- deno test \(pronto.#Harness.flags) --allow-read --allow-env tests/odds-progress-renderer.ts tests/odds-progress-controls.ts tests/position-odds-renderer.ts tests/position-odds-controls.ts tests/position-odds-hover.ts"]
 	note: "shared-date stacks, zone paint by role or source hex, compact locale-aware odds, range totals and isolated chart controls"
 }
 

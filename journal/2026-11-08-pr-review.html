@@ -1,0 +1,9 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>GolAberto verification review</title><body><article>
+<time datetime="2026-11-08">8 November 2026</time>
+<h2>Follow-up review: local checks pass, hosted hydration blocks verification</h2>
+<p><a href="https://github.com/worldsense/trash/pull/2325">PR #2325</a> carries the bounded edge computation and hosted standings verification follow-up. The independent runtime review found no actionable issue. QA identified that automatic fixture recovery excludes partial cleanup; that documented limit remains.</p>
+<p>Doctor, generation, lint, build and the complete app test command exited successfully. The Docker replay gate passed; remaining integration gates and CI were still running when this entry was written. Two verification commands were corrected to resolve dependencies through the pinned Pronto runtime.</p>
+<p>The deployed site passed 382 immutable asset checks, six catalogues, 24 document routes and the negative cache probe. Browser verification failed: all 16 visited screens timed out, and seven additional routes could not be resolved. A homepage probe rendered populated content with no page exception, but retained <code>data-served</code> after boot while <code>POST /auth/guest</code> remained pending. Its backend cause is not established. No new mutation or rollback proof was obtained.</p>
+<figure><img src="2026-11-08-pr-review.png" alt="Populated Golaberto homepage still awaiting client hydration"><figcaption>The visible server-rendered homepage is not evidence of a functioning live subscription.</figcaption></figure>
+</article>
+</body></html>

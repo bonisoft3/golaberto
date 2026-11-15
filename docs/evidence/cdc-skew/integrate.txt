@@ -1,0 +1,51 @@
+echo | /Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/davi/.local/share/mise/http-tarballs/a3af5b05ceb3e7aa9374370c8db42a96a996ed632b0cee781273c7079840e468/cue.toml export .say.yaml ../../../../../../.local/share/mise/http-tarballs/a3af5b05ceb3e7aa9374370c8db42a96a996ed632b0cee781273c7079840e468/config.cue --out yaml -
+/Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/davi/.local/share/mise/http-tarballs/a3af5b05ceb3e7aa9374370c8db42a96a996ed632b0cee781273c7079840e468/nu.musl.toml -I ../../../../../../.local/share/mise/http-tarballs/a3af5b05ceb3e7aa9374370c8db42a96a996ed632b0cee781273c7079840e468 -c "hide-env -i MISE_LOCKED; use /Users/davi/.local/share/mise/http-tarballs/a3af5b05ceb3e7aa9374370c8db42a96a996ed632b0cee781273c7079840e468/./bayt-task.nu; bayt-task integrate-action --generate "
+/Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise exec -- task -t .bayt/Taskfile.yml bayt:generate
+task: Task "bayt:setup:default" is up to date
+task: [bayt:generate:default] mise x -- bayt cache run --manifest '/Users/davi/code/trash/.worktrees/duckstream/apps/golaberto/.bayt/bayt.generate.json' -- mise x -- nu -c "^nu -I (^mise where github:bonisoft3/sayt | str trim) -c 'use task-leaf.nu; task-leaf generate'"
+BAYT_CACHE MISS run ca2d5f4b4db8df37897258869615c13c675fe01ad26b9e5c43ad820c05a60fc4
+echo | /Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt/cue.toml export .bayt/checks.yaml ../../plugins/sayt/config.cue --out yaml -
+/Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt/nu.musl.toml -I ../../plugins/sayt -c "hide-env -i MISE_LOCKED; use /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt/./tools.nu; if ('pronto/generate_tool.cue' | path exists) { tools run-cue cmd generate ./pronto } "
+/Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt/cue.toml cmd generate ./pronto
+/Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt/nu.musl.toml -I ../../plugins/sayt -c "hide-env -i MISE_LOCKED;  deno run -A duckstream/build.ts --compile "
+✓ generate duckstream (0 lines, 5 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.UDhehb/mise.GLCXgj.log)
+/Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt/nu.musl.toml -I ../../plugins/sayt -c "hide-env -i MISE_LOCKED;  if ('program.cue' | path exists) { use tools.nu [run-mise]; run-mise exec -- omnishell mode . | save --force program_terminal.cue } "
+✓ generate omnishell (1 lines, 0 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.xmBrRL/mise.Nt3jGE.log)
+/Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt/nu.musl.toml -I ../../plugins/sayt -c "hide-env -i MISE_LOCKED;  if ('program.cue' | path exists) { use tools.nu [run-mise]; let pronto = (run-mise where github:bonisoft3/pronto | str trim); run-mise exec -- deno run --config ($pronto | path join deno.json) --allow-read --allow-write=. --allow-run --allow-env ($pronto | path join write.ts) . } "
+… generate pronto still running (60 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.elvA2K/mise.CfVZYF.log)
+✓ generate pronto (3 lines, 79 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.elvA2K/mise.CfVZYF.log)
+/Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt/nu.musl.toml -I ../../plugins/sayt -c "hide-env -i MISE_LOCKED; use /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt/./auto-bayt.nu; auto-bayt "
+/Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt/nu.musl.toml -I /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt -c "use /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt/../bayt/core/generate.nu; generate --runtime plugins/bayt"
+bayt: wrote files for project golaberto
+task: [bayt:generate:default] mise x -- bayt fingerprint --manifest '/Users/davi/code/trash/.worktrees/duckstream/apps/golaberto/.bayt/bayt.generate.json' --stamp-file .task/bayt/generate.hash --update-stamp
+/Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise exec -- task -t .bayt/Taskfile.yml bayt:integrate-action
+task: Task "bayt:setup:default" is up to date
+task: Task "bayt:generate:default" is up to date
+task: [bayt:build:default] mise x -- bayt cache run --manifest '/Users/davi/code/trash/.worktrees/duckstream/apps/golaberto/.bayt/bayt.build.json' -- mise x -- nu -c "^nu -I (^mise where github:bonisoft3/sayt | str trim) -c 'use task-leaf.nu; task-leaf build'"
+BAYT_CACHE MISS run d674b672c1706d7894af4b4db82194821c5e7b16dea35f2fcd2447be74fce8a1
+echo | /Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt/cue.toml export .bayt/checks.yaml ../../plugins/sayt/config.cue --out yaml -
+/Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt/nu.musl.toml -I ../../plugins/sayt -c "hide-env -i MISE_LOCKED; use /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt/./build.nu; null "
+task: [bayt:build:default] mise x -- bayt fingerprint --manifest '/Users/davi/code/trash/.worktrees/duckstream/apps/golaberto/.bayt/bayt.build.json' --stamp-file .task/bayt/build.hash --update-stamp
+task: [bayt:integrate-action:default] nu -c "^nu -I (^mise where github:bonisoft3/sayt | str trim) -c 'use task-leaf.nu; task-leaf integrate'"
+echo | /Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt/cue.toml export .bayt/checks.yaml ../../plugins/sayt/config.cue --out yaml -
+/Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt/nu.musl.toml -I ../../plugins/sayt -c "hide-env -i MISE_LOCKED;  use integrate.nu; integrate --bake --no-up --with-buildx --target ci-replay "
+✓ integrate replay (4 lines, 12 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.yr3MIu/mise.nxrZZi.log)
+/Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt/nu.musl.toml -I ../../plugins/sayt -c "hide-env -i MISE_LOCKED;  use integrate.nu; integrate --bake --no-up --with-buildx --target ci-visual "
+… integrate visual still running (60 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.wngLmT/mise.NqV2G7.log)
+… integrate visual still running (120 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.wngLmT/mise.NqV2G7.log)
+… integrate visual still running (180 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.wngLmT/mise.NqV2G7.log)
+… integrate visual still running (240 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.wngLmT/mise.NqV2G7.log)
+✓ integrate visual (7 lines, 241 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.wngLmT/mise.NqV2G7.log)
+/Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/davi/code/trash/.worktrees/duckstream/plugins/sayt/nu.musl.toml -I ../../plugins/sayt -c "hide-env -i MISE_LOCKED;  use integrate.nu; integrate --bake --no-up --with-buildx --target ci-acceptance,ci-constraints,ci-statistics-live "
+… integrate pronto-integrate-1 still running (60 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.ONvG2x/mise.06xg3X.log)
+… integrate pronto-integrate-1 still running (120 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.ONvG2x/mise.06xg3X.log)
+… integrate pronto-integrate-1 still running (180 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.ONvG2x/mise.06xg3X.log)
+… integrate pronto-integrate-1 still running (240 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.ONvG2x/mise.06xg3X.log)
+… integrate pronto-integrate-1 still running (300 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.ONvG2x/mise.06xg3X.log)
+… integrate pronto-integrate-1 still running (360 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.ONvG2x/mise.06xg3X.log)
+… integrate pronto-integrate-1 still running (420 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.ONvG2x/mise.06xg3X.log)
+… integrate pronto-integrate-1 still running (480 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.ONvG2x/mise.06xg3X.log)
+… integrate pronto-integrate-1 still running (540 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.ONvG2x/mise.06xg3X.log)
+… integrate pronto-integrate-1 still running (600 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.ONvG2x/mise.06xg3X.log)
+… integrate pronto-integrate-1 still running (660 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.ONvG2x/mise.06xg3X.log)
+✓ integrate pronto-integrate-1 (15 lines, 668 sec, log: /var/folders/ky/33ksnn9d1kg5q7d6v_vvfwcw0000gn/T/sayt.ONvG2x/mise.06xg3X.log)

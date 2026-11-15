@@ -122,6 +122,7 @@ shell:
   bg: "neutral"
   fg: "primary"
   rule: "band"
+  nav: "topbar"
 ---
 
 # GolAberto — identity
@@ -155,8 +156,9 @@ preset's editorial paper survives.
   laptop shows as a narrow strip in a brown field and a phone cannot show at
   all. The column is fluid up to 960px, which keeps the brown ground visible on
   a desktop and gives the table its phase-button row and the side column room
-  without a horizontal scroll (`measures.page`). Below 720px the side column
-  moves under the content, the strip scrolls, and a table keeps its
+  without a horizontal scroll (`measures.page`). Below 720px a contextual navigation column
+  becomes a wrapping strip before the content; informational side columns
+  follow the content. The global strip scrolls, and a table keeps its
   identifying columns.
 - **Contrast.** Upstream's link brown `#963` is 4.1:1 on the parchment and less on the zebra stripe; the
   `accent` is darkened to `#784d1e`, which holds 4.5:1 on the column, its stripe and a grey table row; a link in the side column wears the strip's ink (`strip-ink`), because no brown clears 4.5:1 on that olive.

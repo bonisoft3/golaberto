@@ -24,13 +24,13 @@ include:
   required: false
 - path: ./compose.ci.yaml
   required: false
-- path: ./compose.served.yaml
-  required: false
-- path: ./compose.render.yaml
-  required: false
-- path: ./compose.served-release.yaml
-  required: false
 - path: ./compose.database.yaml
+  required: false
+- path: ./compose.migrate.yaml
+  required: false
+- path: ./compose.airlock-upgrade.yaml
+  required: false
+- path: ./compose.timer-check.yaml
   required: false
 - path: ./compose.auth.yaml
   required: false
@@ -44,17 +44,35 @@ include:
   required: false
 - path: ./compose.clock.yaml
   required: false
-- path: ./compose.migrate.yaml
+- path: ./compose.airlock.yaml
   required: false
-- path: ./compose.check-constraints.yaml
-  required: false
-- path: ./compose.ci-constraints.yaml
+- path: ./compose.airlock-mesh.yaml
   required: false
 - path: ./compose.check-acceptance.yaml
   required: false
 - path: ./compose.ci-acceptance.yaml
   required: false
+- path: ./compose.check-constraints.yaml
+  required: false
+- path: ./compose.ci-constraints.yaml
+  required: false
+- path: ./compose.check-statistics-live.yaml
+  required: false
+- path: ./compose.ci-statistics-live.yaml
+  required: false
 - path: ./compose.caddy.yaml
+  required: false
+- path: ./compose.sofascore.yaml
+  required: false
+- path: ./compose.sofascore-appliance.yaml
+  required: false
+- path: ./compose.served.yaml
+  required: false
+- path: ./compose.served-release.yaml
+  required: false
+- path: ./compose.render.yaml
+  required: false
+- path: ./compose.rclone-s3.yaml
   required: false
 - path: ./compose.crud.yaml
   required: false
@@ -62,9 +80,9 @@ include:
   required: false
 - path: ./compose.redis.yaml
   required: false
-- path: ./compose.rclone-s3.yaml
-  required: false
 - path: ./compose.transform.yaml
   required: false
 - path: ../monorepo/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml
+  required: false
+- path: ../compose.networks.yaml
   required: false

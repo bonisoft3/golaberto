@@ -182,7 +182,7 @@
 <p class="store-error" role="alert" hidden data-text="{msg.manage_refused}"></p><button class="btn" type="submit" data-text="{msg.manage_add_zone}"></button>
  </form>
  <ul class="competition-records" data-live="zone" data-filter="group_id=eq.{id}" data-order="first.asc,last.asc,id.asc" data-empty="{msg.manage_zones_empty}"><template data-item><li><details>
-  <summary><span data-text="{name}"></span><small><span data-text="{first}" data-text-format="number"></span>–<span data-text="{last}" data-text-format="number"></span> · <span data-text="{positions}"></span></small></summary>
+  <summary><span data-text="{name}"></span><small><span data-text="{first}|{last}" data-text-format="zone-positions"></span> · <span data-text="{positions}"></span></small></summary>
   <form class="edit" data-form="competition-zone-{id}" data-entity="zone" data-action="update"><div class="fields">
    <label class="field wide"><span data-text="{msg.manage_zone_name}"></span>
 <input name="name" value="" type="text" data-value="{name}" data-value-adapter="editing-text" required maxlength="120">

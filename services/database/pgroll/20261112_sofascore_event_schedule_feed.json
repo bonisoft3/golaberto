@@ -1,0 +1,10 @@
+{
+  "operations": [
+    {
+      "sql": {
+        "up": "-- tier: container\nALTER PUBLICATION golaberto_cdc SET TABLE championship, phase, game, team, player, player_game, goal, stage_group, team_group, zone, team_rating, standing, stadium, referee, day_tick, game_card, geography_country, player_metric_dirty, sofa_provider_seat, sofa_resource_seat, sofa_tick, team_odds_chart_dirty, team_profile_dirty, team_rating_chart_dirty, team_roster_total_dirty;\n-- tier: any",
+        "onComplete": true
+      }
+    }
+  ]
+}

@@ -4,62 +4,219 @@ ADD --checksum=sha256:9b6dbc38324c0b0481f1cd1dd828ffdc78117129ec797678f4bf8c4023
 FROM scratch AS fetch_release-docker_0_arm64
 ADD --checksum=sha256:52fa7d5a2d5e0db470faec5976204fc215ed7e3d13689e930cf522becfb63778 --unpack=true https://github.com/F1bonacc1/process-compose/releases/download/v1.122.0/process-compose_linux_arm64.tar.gz /
 FROM fetch_release-docker_0_$TARGETARCH AS fetch_release-docker_0
-FROM opensuse/leap:16.0@sha256:7f3aeccb6a613c0fc1690d3d3e5eb493fd477ee4587de20640017fc36d72f9b0 AS release-docker
+FROM debian:13.7-slim@sha256:a72b4433de1cf7d6bae0c4cee74d0547f58601a643b3375f070c51600d63b6b2 AS release-docker
 ARG BAYT_DIR
 WORKDIR /monorepo/${BAYT_DIR}
-COPY --from=bonitao/lazybox:0.8.5@sha256:091a3b63ba222777000acc3bf8327faebfea4870e23ee07c6eb42431dadb2ac6 /lazybox/ /root/.local/share/lazybox/
+COPY --from=bonitao/lazybox:0.8.6@sha256:0f30c48513fac757f844f02c864802991dec045f9c4189e3db2ae4ac297544df /lazybox/ /root/.local/share/lazybox/
 ENV PATH=/root/.local/bin:/root/.local/share/lazybox/bin:$PATH
 ENV MISE_TRUSTED_CONFIG_PATHS=/monorepo
-RUN mv /root/.local/share/lazybox/libexec/static-curl /root/.local/share/lazybox/libexec/static-curl.bin
-COPY --chmod=0755 <<'STATIC_CURL' /root/.local/share/lazybox/libexec/static-curl
-#!/bin/sh
-OPENSSL_CONF="${OPENSSL_CONF:-/dev/null}" exec "$(dirname "$0")/static-curl.bin" "$@"
-STATIC_CURL
-RUN --mount=type=cache,target=/zypper-store,id=/zypper-store,sharing=shared --mount=type=cache,target=/var/cache/zypp,id=golaberto-release-docker:/var/cache/zypp,sharing=locked s=/zypper-store; d=/var/cache/zypp/packages; mkdir -p "$s" "$d"; cp -r "$s"/. "$d"/ 2>/dev/null || true; zypper -n modifyservice --no-refresh --all && sed -i 's|http://|https://|g' /etc/zypp/repos.d/*.repo || exit; zypper -n modifyrepo --keep-packages --all && zypper -n install findutils=4.10.0-160000.2.2 which=2.23-160000.2.2 git-core=2.51.0-160000.1.2 libatomic1=15.3.0+git11272-160000.1.1 || exit; cd "$d" && for f in */*.rpm */*/*.rpm; do [ -f "$f" ] || continue; o="$s/$f"; [ -e "$o" ] && continue; mkdir -p "$(dirname "$o")"; t="$(mktemp "$(dirname "$o")/.pXXXXXX")" && cp "$f" "$t" && mv -f "$t" "$o"; done; zypper -n modifyrepo --no-keep-packages --all || true
-RUN --mount=type=cache,target=/zypper-store,id=/zypper-store,sharing=shared --mount=type=cache,target=/var/cache/zypp,id=golaberto-release-docker:/var/cache/zypp,sharing=locked p="$PWD"; s=/zypper-store; d=/var/cache/zypp/packages; mkdir -p "$s" "$d"; cp -r "$s"/. "$d"/ 2>/dev/null || true; zypper -n modifyservice --no-refresh --all && sed -i 's|http://|https://|g' /etc/zypp/repos.d/*.repo || exit; zypper -n modifyrepo --keep-packages --all && zypper -n install postgresql18-server=18.6-160000.1.1 postgresql18-contrib=18.6-160000.1.1 libopenssl3=3.5.0-160000.10.1 || exit; cd "$d" && for f in */*.rpm */*/*.rpm; do [ -f "$f" ] || continue; o="$s/$f"; [ -e "$o" ] && continue; mkdir -p "$(dirname "$o")"; t="$(mktemp "$(dirname "$o")/.pXXXXXX")" && cp "$f" "$t" && mv -f "$t" "$o"; done; zypper -n modifyrepo --no-keep-packages --all || true; (cd "$p" && rm -rf /usr/lib/locale/* && mkdir -p /run/postgresql && chown -R postgres:postgres /run/postgresql) || exit
-ENV PATH=/usr/lib/postgresql18/bin:/usr/local/bin:$PATH
+RUN --mount=type=cache,target=/apt-store,id=/apt-store,sharing=shared --mount=type=cache,target=/var/cache/apt,id=golaberto-release-docker:/var/cache/apt,sharing=locked --mount=type=cache,target=/var/lib/apt/lists,id=golaberto-release-docker:/var/lib/apt/lists,sharing=locked s=/apt-store; d=/var/cache/apt/archives; mkdir -p "$s" "$d"; cp -r "$s"/. "$d"/ 2>/dev/null || true; rm -f /etc/apt/apt.conf.d/docker-clean && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache && apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends 'git=1:2.47.*' 'libatomic1=14.2.*' 'curl=8.14.*' 'ca-certificates=20250419*' 'procps=2:4.0.*' || exit; cd "$d" && for f in *.deb; do [ -f "$f" ] || continue; o="$s/$f"; [ -e "$o" ] && continue; t="$(mktemp "$s/.pXXXXXX")" && cp "$f" "$t" && mv -f "$t" "$o"; done; :
+COPY --from=postgres:18-trixie@sha256:073e7c8b84e2197f94c8083634640ab37105effe1bc853ca4d5fbece3219b0e8 /usr/local/share/keyrings/postgres.gpg.asc /usr/local/share/keyrings/
+COPY --from=postgres:18-trixie@sha256:073e7c8b84e2197f94c8083634640ab37105effe1bc853ca4d5fbece3219b0e8 /etc/apt/sources.list.d/pgdg.list /etc/apt/sources.list.d/
+RUN mkdir -p /etc/postgresql-common/createcluster.d && echo 'create_main_cluster = false' > /etc/postgresql-common/createcluster.d/appliance.conf
+RUN --mount=type=cache,target=/apt-store,id=/apt-store,sharing=shared --mount=type=cache,target=/var/cache/apt,id=golaberto-release-docker:/var/cache/apt,sharing=locked --mount=type=cache,target=/var/lib/apt/lists,id=golaberto-release-docker:/var/lib/apt/lists,sharing=locked p="$PWD"; s=/apt-store; d=/var/cache/apt/archives; mkdir -p "$s" "$d"; cp -r "$s"/. "$d"/ 2>/dev/null || true; rm -f /etc/apt/apt.conf.d/docker-clean && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache && apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends 'postgresql-18=18.*' 'redis-server=5:8.0.*' || exit; cd "$d" && for f in *.deb; do [ -f "$f" ] || continue; o="$s/$f"; [ -e "$o" ] && continue; t="$(mktemp "$s/.pXXXXXX")" && cp "$f" "$t" && mv -f "$t" "$o"; done; :; (cd "$p" && mkdir -p /run/postgresql && chown -R postgres:postgres /run/postgresql) || exit
+ENV COMPUTE_APP_DIR=/compute-app
+ENV COMPUTE_STATE_DIR=/var/lib/duckstream
+ENV BAYT_LOCAL_DUCKDB_EXTENSIONS=/compute-app/extensions
+ENV DENO_DIR=/deno-dir
+ENV MECHA_MESH_DIR=/mesh-events
+ENV MECHA_TRANSFORM_DIR=/transform
+COPY <<'APPLIANCE' /.bayt/process-compose.appliance.yaml
+version: "0.5"
+processes:
+  airlock-upgrade:
+    command: '''psql'' ''postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}'' ''-X'' ''--set=ON_ERROR_STOP=1'' ''--single-transaction'' ''--file=/airlock-upgrade.sql'''
+    depends_on:
+      database:
+        condition: process_healthy
+  airlock-mesh:
+    command: '''/daprd'' ''--app-id'' ''airlock'' ''--dapr-listen-addresses'' ''127.0.0.1'' ''--dapr-internal-grpc-listen-address'' ''127.0.0.1'' ''--resources-path'' ''/dapr/airlock'' ''--config'' ''/dapr/config.yaml'' ''--dapr-http-port'' ''3500'' ''--dapr-grpc-port'' ''50001'' ''--dapr-internal-grpc-port'' ''50002'' ''--metrics-port'' ''0'' ''--profile-port'' ''0'' ''--log-level'' ''info'''
+    depends_on:
+      sofascore:
+        condition: process_healthy
+    environment:
+      - BRIDGE_SOFASCORE_URL=http://sofascore:8081
+    readiness_probe:
+      exec:
+        command: portcheck --port 3500
+      period_seconds: 1
+      timeout_seconds: 5
+      failure_threshold: 120
+    availability:
+      restart: on_failure
+  airlock:
+    command: '''airlock-deno'' ''run'' ''--frozen'' ''--unstable-worker-options'' ''--allow-net=database:5432,airlock-mesh:3500,0.0.0.0:9997'' ''--allow-read'' ''--allow-env'' ''--allow-sys'' ''main.ts'''
+    working_dir: /app/airlock
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}
+      - MESH_URL=http://airlock-mesh:3500
+      - AIRLOCK_DIR=/airlock
+      - DENO_DIR=/airlock-deno-dir
+      - PORT=9997
+      - AIRLOCK_TARGET=docker
+    depends_on:
+      airlock-upgrade:
+        condition: process_completed_successfully
+      airlock-mesh:
+        condition: process_healthy
+    readiness_probe:
+      exec:
+        command: portcheck --port 9997
+      period_seconds: 1
+      timeout_seconds: 5
+      failure_threshold: 120
+    availability:
+      restart: on_failure
+  database:
+    command: '''docker-entrypoint.sh'' ''postgres'' ''-c'' ''session_preload_libraries=pg_ivm'' ''-c'' ''wal_level=logical'' ''-c'' ''max_replication_slots=128'' ''-c'' ''max_wal_senders=128'' ''-c'' ''fsync=off'' ''-c'' ''synchronous_commit=off'' ''-c'' ''full_page_writes=off'' ''-c'' ''shared_buffers=32MB'' ''-c'' ''max_connections=200'' ''-c'' ''fsync=on'' ''-c'' ''synchronous_commit=on'' ''-c'' ''full_page_writes=on'' ''-c'' ''shared_buffers=512MB'''
+  electric:
+    command: '''env'' ''DATABASE_URL=postgresql://electric:${ELECTRIC_PASSWORD:-dev-electric-password}@127.0.0.1:5432/${POSTGRES_DB:-golaberto}?sslmode=disable'' ''ELECTRIC_SECRET=${ELECTRIC_SECRET:-dev-electric-secret}'' ''ELECTRIC_MANUAL_TABLE_PUBLISHING=true'' ''ELECTRIC_PORT=3002'' ''ELECTRIC_STORAGE_DIR=${PGDATA:-/var/lib/pgsql/data}/electric'' ''LD_LIBRARY_PATH=/electric-libs'' ''ELIXIR_ERL_OPTIONS=+fnu'' ''/electric-app/bin/entrypoint'' ''start'''
+  ticker:
+    command: '''ticker-deno'' ''run'' ''--frozen'' ''--allow-net'' ''--allow-env'' ''main.ts'''
+    working_dir: /ticker-app
+    environment:
+      - CRUD_URL=http://crud:3000
+      - CALL_TIMEOUT_MS=35000
+      - SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
+      - DENO_DIR=/ticker-deno-dir
+      - PORT=9998
+      - WAKE_URLS=http://airlock:9997/healthz
+    depends_on:
+      crud:
+        condition: process_healthy
+    readiness_probe:
+      exec:
+        command: portcheck --port 9998
+      period_seconds: 1
+      timeout_seconds: 5
+      failure_threshold: 120
+    availability:
+      restart: on_failure
+  clock:
+    command: '''/usr/local/bin/appliance-clock.sh'''
+    environment:
+      - SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
+    depends_on:
+      ticker:
+        condition: process_healthy
+    availability:
+      restart: on_failure
+  timer-check:
+    command: '''psql'' ''-X'' ''--set=ON_ERROR_STOP=1'' ''--single-transaction'' ''--file=/timer-check.sql'''
+  sofascore:
+    command: '''/usr/local/bin/sofascore_fetch'' ''--listen'' ''127.0.0.1:8081'''
+    readiness_probe:
+      exec:
+        command: portcheck --port 8081
+      period_seconds: 1
+      timeout_seconds: 5
+      failure_threshold: 120
+    availability:
+      restart: on_failure
+APPLIANCE
+RUN printf '%s\n' '#!/bin/sh' 'set -e' 'while sleep "${POKE_INTERVAL_SECONDS:-60}"; do' '  curl -fsS -X POST -H "Authorization: Bearer ${SERVICE_JWT}" "http://ticker:9998/poke?caller=appliance" >/dev/null || { echo "clock: the ticker refused its poke" >&2; exit 1; }' 'done' > /usr/local/bin/appliance-clock.sh && chmod 755 /usr/local/bin/appliance-clock.sh
+ENV PATH=/usr/lib/postgresql/18/bin:/usr/local/bin:$PATH
 ENV PGDATA=/var/lib/pgsql/data
+ENV DATABASE_PG_PORT=5432
+ENV CRUD_HTTP_PORT=3000
+ENV CRUD_ADMIN_PORT=3001
+ENV ELECTRIC_HTTP_PORT=3002
+ENV PRONTO_UPSTREAM_ELECTRIC=127.0.0.1:3002
+ENV AUTH_HTTP_PORT=9999
+ENV CADDY_HTTP_PORT=8080
 ENV PORT=8080
 ENV ORIGIN=http://localhost:8080
 ENV CADDY_TLS_HOST_PORT=8080
+ENV CADDY_CONFIG_FILE=/etc/caddy/Caddyfile
+ENV CADDY_DATA_HOME=/var/lib/caddy
 ENV DENO_DIR=/deno-dir
 COPY --from=fetch_release-docker_0 /process-compose /usr/local/bin/process-compose
 COPY --from=tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa /bin/httpcheck /usr/local/bin/httpcheck
 COPY --from=tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa /bin/portcheck /usr/local/bin/portcheck
 COPY --link --from=golaberto-database /docker-entrypoint-initdb.d /docker-entrypoint-initdb.d
 COPY --from=golaberto-crud /bin/postgrest /usr/local/bin/postgrest
+COPY --from=golaberto-electric /app/ /electric-app/
+COPY --from=golaberto-electric /lib/*-linux-gnu/libtinfo.so.6* /electric-libs/
 COPY --link --from=golaberto-caddy /usr/bin/caddy /usr/bin/caddy
 COPY --link --from=golaberto-caddy /etc/caddy/Caddyfile /etc/caddy/Caddyfile
 COPY .bayt/process-compose.yaml /.bayt/process-compose.yaml
+COPY --from=libraries_mecha-extensions-image /pg-extensions/lib/ /usr/lib/postgresql/18/lib/
+COPY --from=libraries_mecha-extensions-image /pg-extensions/extension/ /usr/share/postgresql/18/extension/
 COPY --from=golaberto-served-release /served/omnishell/ /omnishell/
 COPY --from=golaberto-served-release /served/ /srv/
 COPY --from=golaberto-served-release /served.scripts /etc/caddy/release-scripts
 COPY --from=denoland/deno:bin-2.9.7@sha256:bc5aa4466e21b6d3021226a85ba2e1911f7c386254d97b9d797903ab74edace2 /deno /usr/local/bin/deno
 COPY --link --from=golaberto-auth /app /app
 COPY --link --from=golaberto-auth /deno-dir /deno-dir
+COPY --link --from=golaberto-migrate /pgroll /pgroll
+COPY --link --from=golaberto-migrate /migrate.sh /migrate.sh
+COPY --link --from=golaberto-migrate /usr/local/bin/pgroll /usr/local/bin/pgroll
+COPY --from=golaberto-airlock /usr/bin/deno /usr/local/bin/airlock-deno
+COPY --from=golaberto-airlock /deno-dir /airlock-deno-dir
+COPY --link --from=golaberto-airlock /app /app
+COPY --link --from=golaberto-airlock /airlock /airlock
+COPY --link --from=golaberto-airlock-mesh /daprd /daprd
+COPY --link --from=golaberto-airlock-mesh /dapr /dapr
+COPY --link --from=golaberto-airlock-upgrade /airlock-upgrade.sql /airlock-upgrade.sql
+COPY --from=golaberto-mesh-events /daprd /usr/local/bin/daprd
+COPY --from=golaberto-mesh-events /dapr/components/ /mesh-events/dapr/components/
+COPY --from=golaberto-conduit /app/conduit /usr/local/bin/conduit
+COPY --from=golaberto-conduit /app/connectors/ /usr/local/bin/
+COPY docker/*.yaml docker/
+COPY --from=golaberto-transform /redpanda-connect /usr/local/bin/redpanda-connect
+COPY --from=golaberto-transform /cdc-trace.yaml /transform/cdc-trace.yaml
+COPY --link --from=golaberto-timer-check /timer-check.sql /timer-check.sql
+COPY --from=golaberto-compute /app/ /compute-app/
+COPY --link --from=golaberto-compute /deno-dir /deno-dir
+COPY --link --from=golaberto-compute /durex /durex
+COPY --link --from=golaberto-compute /airlock /airlock
+COPY --link --from=golaberto-compute /packages /packages
+COPY computations/standings.js computations/standings.js
+COPY duckstream/standings.feldera.json duckstream/standings.feldera.json
+COPY duckstream/bounded-standings.ts.bundle.js duckstream/bounded-standings.ts.bundle.js
+COPY computations/ratings.js computations/ratings.js
+COPY computations/golaberto-odds.wasm computations/golaberto-odds.wasm
+COPY duckstream/ratings.feldera.json duckstream/ratings.feldera.json
+COPY duckstream/bounded-ratings.ts.bundle.js duckstream/bounded-ratings.ts.bundle.js
+COPY computations/chances.js computations/chances.js
+COPY duckstream/chances.feldera.json duckstream/chances.feldera.json
+COPY duckstream/bounded-chances.ts.bundle.js duckstream/bounded-chances.ts.bundle.js
+COPY computations/cards.js computations/cards.js
+COPY duckstream/cards.feldera.json duckstream/cards.feldera.json
+COPY duckstream/bounded-cards.ts.bundle.js duckstream/bounded-cards.ts.bundle.js
+COPY computations/player_stats.js computations/player_stats.js
+COPY duckstream/player_stats.feldera.json duckstream/player_stats.feldera.json
+COPY duckstream/bounded-player-stats.ts.bundle.js duckstream/bounded-player-stats.ts.bundle.js
+COPY --from=golaberto-ticker /usr/bin/deno /usr/local/bin/ticker-deno
+COPY --from=golaberto-ticker /deno-dir /ticker-deno-dir
+COPY --from=golaberto-ticker /app /ticker-app
+COPY --link --from=golaberto-sofascore-appliance /usr/local/bin/sofascore_fetch /usr/local/bin/sofascore_fetch
 COPY --from=golaberto-database --link /monorepo/${BAYT_DIR} /monorepo/${BAYT_DIR}
 COPY --from=golaberto-crud --link /monorepo/${BAYT_DIR} /monorepo/${BAYT_DIR}
 COPY --from=golaberto-caddy --link /monorepo/${BAYT_DIR} /monorepo/${BAYT_DIR}
-COPY --from=golaberto-served-release --link /monorepo/${BAYT_DIR} /monorepo/${BAYT_DIR}
-COPY --from=golaberto-auth --link /monorepo/${BAYT_DIR} /monorepo/${BAYT_DIR}
-COPY --parents .bayt/process-compose.yaml ./
+COPY --parents .bayt/process-compose.yaml docker/*.yaml computations/standings.js duckstream/standings.feldera.json duckstream/bounded-standings.ts.bundle.js computations/ratings.js computations/golaberto-odds.wasm duckstream/ratings.feldera.json duckstream/bounded-ratings.ts.bundle.js computations/chances.js duckstream/chances.feldera.json duckstream/bounded-chances.ts.bundle.js computations/cards.js duckstream/cards.feldera.json duckstream/bounded-cards.ts.bundle.js computations/player_stats.js duckstream/player_stats.feldera.json duckstream/bounded-player-stats.ts.bundle.js ./
 COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.release-docker.json ./.bayt/
 ENTRYPOINT ["/usr/local/bin/appliance-entrypoint.sh"]
-CMD ["/usr/local/bin/process-compose", "up", "-f", "/.bayt/process-compose.yaml", "-t=false", "--no-server", "caddy", "auth"]
-RUN printf '%s\n' '#!/bin/sh' 'set -e' 'export PGDATA="${PGDATA:-/var/lib/pgsql/data}"' 'export POSTGRES_DB="${POSTGRES_DB:-golaberto}"' 'export PATH="/usr/lib/postgresql18/bin:$PATH"' 'q=$(printf "\047")' 'if [ ! -s "$PGDATA/PG_VERSION" ]; then' '  mkdir -p "$PGDATA" /run/postgresql' '  chown -R postgres:postgres "$PGDATA" /run/postgresql' '  setpriv --reuid=postgres --regid=postgres --clear-groups initdb -D "$PGDATA" --no-sync --encoding=UTF8 --auth=trust --locale-provider=icu --icu-locale=und --locale=C' '  setpriv --reuid=postgres --regid=postgres --clear-groups pg_ctl -D "$PGDATA" -w -o "-c listen_addresses='\'''\''" start' '  if [ "$POSTGRES_DB" != "postgres" ]; then setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d postgres -c "CREATE DATABASE \"$POSTGRES_DB\""; fi' '  setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d "$POSTGRES_DB" -c "CREATE TABLE IF NOT EXISTS _pronto_migrations (name text primary key, applied_at timestamptz default now())"' '  for f in /docker-entrypoint-initdb.d/*.sql; do' '    if [ -f "$f" ]; then' '      echo "Applying $f..."' '      setpriv --reuid=postgres --regid=postgres --clear-groups psql -v ON_ERROR_STOP=1 -U postgres -d "$POSTGRES_DB" -f "$f"' '      base=$(basename "$f")' '      setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d "$POSTGRES_DB" -c "INSERT INTO _pronto_migrations (name) VALUES ($q$base$q) ON CONFLICT DO NOTHING"' '    fi' '  done' '  setpriv --reuid=postgres --regid=postgres --clear-groups pg_ctl -D "$PGDATA" -m fast -w stop' 'else' '  setpriv --reuid=postgres --regid=postgres --clear-groups pg_ctl -D "$PGDATA" -w -o "-c listen_addresses='\'''\''" start' '  setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d "$POSTGRES_DB" -c "CREATE TABLE IF NOT EXISTS _pronto_migrations (name text primary key, applied_at timestamptz default now())"' '  for f in /docker-entrypoint-initdb.d/*.sql; do' '    if [ -f "$f" ]; then' '      base=$(basename "$f")' '      case "$base" in *seed*) continue;; esac' '      applied=$(setpriv --reuid=postgres --regid=postgres --clear-groups psql -t -A -U postgres -d "$POSTGRES_DB" -c "SELECT count(*) FROM _pronto_migrations WHERE name = $q$base$q")' '      if [ "$applied" = "0" ]; then' '        echo "Applying pending migration $f..."' '        setpriv --reuid=postgres --regid=postgres --clear-groups psql -v ON_ERROR_STOP=1 -U postgres -d "$POSTGRES_DB" -f "$f"' '        setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d "$POSTGRES_DB" -c "INSERT INTO _pronto_migrations (name) VALUES ($q$base$q)"' '      fi' '    fi' '  done' '  setpriv --reuid=postgres --regid=postgres --clear-groups pg_ctl -D "$PGDATA" -m fast -w stop' 'fi' 'if [ "$1" = "postgres" ]; then shift; fi' 'exec setpriv --reuid=postgres --regid=postgres --clear-groups postgres -D "$PGDATA" -c listen_addresses=127.0.0.1 "$@"' > /usr/local/bin/docker-entrypoint.sh && chmod 755 /usr/local/bin/docker-entrypoint.sh
+CMD ["/usr/local/bin/process-compose", "up", "-f", "/.bayt/process-compose.yaml", "-f", "/.bayt/process-compose.appliance.yaml", "-t=false", "--no-server", "caddy", "electric", "auth", "airlock", "conduit", "transform", "compute", "ticker", "clock"]
+RUN printf '%s\n' '#!/bin/sh' 'set -e' 'if [ "$1" = "postgres" ]; then shift; fi' 'export PGDATA="${PGDATA:-/var/lib/pgsql/data}"' 'export POSTGRES_DB="${POSTGRES_DB:-golaberto}"' 'export PATH="/usr/lib/postgresql/18/bin:$PATH"' 'q=$(printf "\047")' 'if [ ! -s "$PGDATA/PG_VERSION" ]; then' '  mkdir -p "$PGDATA" /run/postgresql' '  chown -R postgres:postgres "$PGDATA" /run/postgresql' '  setpriv --reuid=postgres --regid=postgres --clear-groups initdb -D "$PGDATA" --no-sync --encoding=UTF8 --auth=trust --locale-provider=icu --icu-locale=und --locale=C' '  setpriv --reuid=postgres --regid=postgres --clear-groups pg_ctl -D "$PGDATA" -w -o "-c listen_addresses='\'''\'' $*" start' '  if [ "$POSTGRES_DB" != "postgres" ]; then setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d postgres -c "CREATE DATABASE \"$POSTGRES_DB\""; fi' '  setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d "$POSTGRES_DB" -c "CREATE TABLE IF NOT EXISTS _pronto_migrations (name text primary key, applied_at timestamptz default now())"' '  for f in /docker-entrypoint-initdb.d/*.sql; do' '    if [ -f "$f" ]; then' '      echo "Applying $f..."' '      setpriv --reuid=postgres --regid=postgres --clear-groups psql -v ON_ERROR_STOP=1 -U postgres -d "$POSTGRES_DB" -f "$f"' '      base=$(basename "$f")' '      setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d "$POSTGRES_DB" -c "INSERT INTO _pronto_migrations (name) VALUES ($q$base$q) ON CONFLICT DO NOTHING"' '    fi' '  done' '  setpriv --reuid=postgres --regid=postgres --clear-groups pg_ctl -D "$PGDATA" -m fast -w stop' 'else' '  setpriv --reuid=postgres --regid=postgres --clear-groups pg_ctl -D "$PGDATA" -w -o "-c listen_addresses='\'''\'' $*" start' '  setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d "$POSTGRES_DB" -c "CREATE TABLE IF NOT EXISTS _pronto_migrations (name text primary key, applied_at timestamptz default now())"' '  for f in /docker-entrypoint-initdb.d/*.sql; do' '    if [ -f "$f" ]; then' '      base=$(basename "$f")' '      case "$base" in *seed*) continue;; esac' '      applied=$(setpriv --reuid=postgres --regid=postgres --clear-groups psql -t -A -U postgres -d "$POSTGRES_DB" -c "SELECT count(*) FROM _pronto_migrations WHERE name = $q$base$q")' '      if [ "$applied" = "0" ]; then' '        echo "Applying pending migration $f..."' '        setpriv --reuid=postgres --regid=postgres --clear-groups psql -v ON_ERROR_STOP=1 -U postgres -d "$POSTGRES_DB" -f "$f"' '        setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d "$POSTGRES_DB" -c "INSERT INTO _pronto_migrations (name) VALUES ($q$base$q)"' '      fi' '    fi' '  done' '  setpriv --reuid=postgres --regid=postgres --clear-groups pg_ctl -D "$PGDATA" -m fast -w stop' 'fi' 'exec setpriv --reuid=postgres --regid=postgres --clear-groups postgres -D "$PGDATA" -c listen_addresses=127.0.0.1 "$@"' > /usr/local/bin/docker-entrypoint.sh && chmod 755 /usr/local/bin/docker-entrypoint.sh
 RUN printf '%s\n' '#!/bin/sh' 'if [ "$1" = "microcheck" ]; then' '  shift' '  exec "$@"' 'fi' 'exec "$@"' > /usr/local/bin/bayt && chmod 755 /usr/local/bin/bayt
-RUN printf '%s\n' '#!/bin/sh' 'set -e' 'if ! grep -q "crud" /etc/hosts 2>/dev/null; then' '  echo "127.0.0.1 crud database auth" >> /etc/hosts 2>/dev/null || true' 'fi' 'export PORT="${PORT:-8080}"' 'export CADDY_TLS_HOST_PORT="${PORT}"' 'if [ -n "$ORIGIN" ]; then' '  if [ -z "$WEBAUTHN_RP_ID" ]; then' '    h="${ORIGIN#*://}"' '    h="${h%%/*}"' '    h="${h%%:*}"' '    if [ -n "$h" ] && [ "$h" != "localhost" ]; then export WEBAUTHN_RP_ID="$h"; fi' '  fi' '  if [ -z "$WEBAUTHN_ORIGIN" ] && [ -n "$WEBAUTHN_RP_ID" ] && [ "$WEBAUTHN_RP_ID" != "localhost" ]; then export WEBAUTHN_ORIGIN="$ORIGIN"; fi' 'fi' 'exec "$@"' > /usr/local/bin/appliance-entrypoint.sh && chmod 755 /usr/local/bin/appliance-entrypoint.sh
-RUN sed -i 's|http://127.0.0.1:8080/health|http://127.0.0.1:${PORT:-8080}/health|g' /.bayt/process-compose.yaml
-RUN sed -i '/handle @rendered {/,/^[[:space:]]*}[[:space:]]*$/d' /etc/caddy/Caddyfile
-RUN awk '/handle \/electric\/\* \{/{p=1; print "  handle /electric/* {\n    header Content-Type application/json\n    header electric-handle stub\n    header electric-offset 0_0\n    header electric-cursor 0\n    header electric-schema `{\"id\":{\"type\":\"text\"}}`\n    header electric-up-to-date true\n    header Access-Control-Allow-Origin *\n    header Access-Control-Expose-Headers \"electric-handle, electric-offset, electric-cursor, electric-schema, electric-up-to-date, content-type, cache-control, x-txid\"\n\n    @subset query subset__where=*\n    handle @subset {\n      respond `{\"metadata\":{\"xmin\":\"1\",\"xmax\":\"1\",\"xip_list\":[],\"snapshot_mark\":0,\"database_lsn\":\"0\"},\"data\":[]}` 200\n    }\n    handle {\n      respond `[{\"headers\":{\"control\":\"up-to-date\"}}]` 200\n    }\n  }"; next} p && /^  \}/{p=0; next} !p{print}' /etc/caddy/Caddyfile > /etc/caddy/Caddyfile.tmp && mv /etc/caddy/Caddyfile.tmp /etc/caddy/Caddyfile
+RUN cp "$(/root/.local/share/lazybox/bin/nu -c '$nu.current-exe')" /usr/local/bin/nu && chmod 755 /usr/local/bin/nu && /usr/local/bin/nu --version
+RUN printf '%s\n' '#!/bin/sh' 'while [ $# -gt 0 ]; do if [ "$1" = "--" ]; then shift; break; fi; shift; done' 'exec "$@"' > /usr/local/bin/mise && chmod 755 /usr/local/bin/mise
+RUN printf '#!/bin/sh\nexit 0\n' > /usr/local/bin/task && chmod 755 /usr/local/bin/task
+RUN printf '%s\n' '#!/bin/sh' 'set -e' 'for n in crud database auth airlock-mesh airlock ticker sofascore; do' '  grep -Eq "^[^#]*[[:space:]]$n([[:space:]]|$)" /etc/hosts || echo "127.0.0.1 $n" >> /etc/hosts || { echo "appliance: cannot name $n in /etc/hosts" >&2; exit 1; }' 'done' 'export PORT="${PORT:-8080}"' 'export CADDY_HTTP_PORT="${PORT}"' 'export CADDY_TLS_HOST_PORT="${PORT}"' 'if [ -n "$ORIGIN" ]; then' '  if [ -z "$WEBAUTHN_RP_ID" ]; then' '    h="${ORIGIN#*://}"' '    h="${h%%/*}"' '    h="${h%%:*}"' '    if [ -n "$h" ] && [ "$h" != "localhost" ]; then export WEBAUTHN_RP_ID="$h"; fi' '  fi' '  if [ -z "$WEBAUTHN_ORIGIN" ] && [ -n "$WEBAUTHN_RP_ID" ] && [ "$WEBAUTHN_RP_ID" != "localhost" ]; then export WEBAUTHN_ORIGIN="$ORIGIN"; fi' 'fi' 'exec "$@"' > /usr/local/bin/appliance-entrypoint.sh && chmod 755 /usr/local/bin/appliance-entrypoint.sh
+RUN sed -Ei 's|http://127\.0\.0\.1:\$\{CADDY_HTTP_PORT:-[0-9]+\}/health|http://127.0.0.1:${PORT:-8080}/health|g' /.bayt/process-compose.yaml
+RUN awk 'skip { d += gsub(/\{/, "{") - gsub(/\}/, "}"); if (d <= 0) skip = 0; next } /handle @rendered \{/ { skip = 1; d = 1; next } { print }' /etc/caddy/Caddyfile > /tmp/Caddyfile && mv /tmp/Caddyfile /etc/caddy/Caddyfile
+RUN nu -c 'let f = "/dapr/airlock/acquire.yaml"; let b = (open $f); if $b.spec.baseUrl != "http://sofascore:8080" { error make {msg: "appliance: unexpected bridge endpoint in acquire"} }; $b | upsert spec.baseUrl "http://sofascore:8081" | to yaml | save -f $f'
+RUN --network=none deno check --cached-only --frozen --config /compute-app/deno.json /compute-app/main.ts /compute-app/cage.ts /compute-app/step-worker.ts && touch /compute-app/extensions/.installed-v1.5.6
+RUN ports="8081"; for p in $ports; do if grep -Eq ":-$p\}" /.bayt/process-compose.yaml; then echo "appliance: bridge port $p is one an appliance process takes; name another" >&2; exit 1; fi; done; dup="$(printf '%s\n' $ports | sort | uniq -d)"; if [ -n "$dup" ]; then echo "appliance: bridges share port $dup" >&2; exit 1; fi
+RUN ELECTRIC_SECRET=validation-only caddy validate --adapter caddyfile --config /etc/caddy/Caddyfile
 
 FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS release-docker_ctxs
 ARG BAYT_DIR
 WORKDIR /monorepo/${BAYT_DIR}
-COPY --parents .bayt/process-compose.yaml ./
+COPY --parents .bayt/process-compose.yaml docker/*.yaml computations/standings.js duckstream/standings.feldera.json duckstream/bounded-standings.ts.bundle.js computations/ratings.js computations/golaberto-odds.wasm duckstream/ratings.feldera.json duckstream/bounded-ratings.ts.bundle.js computations/chances.js duckstream/chances.feldera.json duckstream/bounded-chances.ts.bundle.js computations/cards.js duckstream/cards.feldera.json duckstream/bounded-cards.ts.bundle.js computations/player_stats.js duckstream/player_stats.feldera.json duckstream/bounded-player-stats.ts.bundle.js ./
 COPY --from=golaberto-database_srcs /monorepo /monorepo
 COPY --from=golaberto-caddy_srcs /monorepo /monorepo
-COPY --from=golaberto-served-release_srcs /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
 RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
@@ -73,9 +230,20 @@ COPY --parents .bayt/compose.release-docker.yaml .bayt/Dockerfile.release-docker
 COPY --from=golaberto-database_bayt /monorepo /monorepo
 COPY --from=golaberto-crud_bayt /monorepo /monorepo
 COPY --from=golaberto-caddy_bayt /monorepo /monorepo
+COPY --from=golaberto-electric_bayt /monorepo /monorepo
+COPY --from=golaberto-migrate_bayt /monorepo /monorepo
 COPY --from=golaberto-served-release_bayt /monorepo /monorepo
 COPY --from=golaberto-auth_bayt /monorepo /monorepo
-COPY --from=golaberto-migrate_bayt /monorepo /monorepo
+COPY --from=golaberto-airlock_bayt /monorepo /monorepo
+COPY --from=golaberto-airlock-mesh_bayt /monorepo /monorepo
+COPY --from=golaberto-airlock-upgrade_bayt /monorepo /monorepo
+COPY --from=golaberto-mesh-events_bayt /monorepo /monorepo
+COPY --from=golaberto-conduit_bayt /monorepo /monorepo
+COPY --from=golaberto-transform_bayt /monorepo /monorepo
+COPY --from=golaberto-ticker_bayt /monorepo /monorepo
+COPY --from=golaberto-timer-check_bayt /monorepo /monorepo
+COPY --from=golaberto-compute_bayt /monorepo /monorepo
+COPY --from=golaberto-sofascore-appliance_bayt /monorepo /monorepo
 COPY --from=golaberto-served_bayt /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1

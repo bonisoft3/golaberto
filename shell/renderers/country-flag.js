@@ -22,8 +22,9 @@ export default function render(value) {
     "Africa": "caf", "África": "caf", "Asia": "afc", "Ásia": "afc",
     "Oceania": "ofc", "North/Central America & Caribbean": "concacaf"
   };
-  const file = (aliases[country] || country).normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+  let file = (aliases[country] || country).normalize("NFD").replace(/[\u0300-\u036f]/g, "")
     .toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+  if (file === "guinea_bissau") file = "guinea-bissau";
   if (!file) return [];
   return [{tag: "img", attrs: {src: "https://d24oxbyqb2c11t.cloudfront.net/countries/flags/" + file + "_15.png",
     alt: "", width: 15, height: 15, loading: "lazy"}}];

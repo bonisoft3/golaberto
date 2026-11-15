@@ -1,0 +1,5 @@
+import /etc/caddy/Caddyfile
+
+https://golaberto.bonisoft3.com {
+	import app
+}

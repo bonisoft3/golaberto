@@ -1,0 +1,11 @@
+running 1 test from ./duckstream/native.integration.ts
+native chances matches snapshot queries across bootstrap, updates and deletes ...
+------- output -------
+chances: stage 0 matched
+chances: stage 1 matched
+chances: stage 2 matched
+chances: stage 3 matched
+----- output end -----
+native chances matches snapshot queries across bootstrap, updates and deletes ... ok (5s)
+
+ok | 1 passed | 0 failed | 1 filtered out (5s)

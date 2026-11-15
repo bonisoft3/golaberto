@@ -1,0 +1,52 @@
+[
+  {
+    "table": "game",
+    "status": 200,
+    "range": "0-0/318970"
+  },
+  {
+    "table": "player_game",
+    "status": 200,
+    "range": "0-0/3290664"
+  },
+  {
+    "table": "goal",
+    "status": 200,
+    "range": "0-0/225720"
+  },
+  {
+    "table": "player",
+    "status": 200,
+    "range": "0-0/90867"
+  },
+  {
+    "table": "team",
+    "status": 200,
+    "range": "0-0/3426"
+  },
+  {
+    "table": "championship",
+    "status": 200,
+    "range": "0-0/1514"
+  },
+  {
+    "table": "phase",
+    "status": 200,
+    "range": "0-0/4368"
+  },
+  {
+    "table": "stage_group",
+    "status": 200,
+    "range": "0-0/15566"
+  },
+  {
+    "table": "team_rating",
+    "status": 200,
+    "range": "0-0/8195365"
+  },
+  {
+    "table": "team_chance",
+    "status": 200,
+    "range": "0-0/58440"
+  }
+]

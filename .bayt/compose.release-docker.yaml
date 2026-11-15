@@ -6,8 +6,22 @@ services:
         golaberto-database: service:golaberto-database
         golaberto-crud: service:golaberto-crud
         golaberto-caddy: service:golaberto-caddy
+        golaberto-electric: service:golaberto-electric
         golaberto-served-release: service:golaberto-served-release
         golaberto-auth: service:golaberto-auth
+        golaberto-migrate: service:golaberto-migrate
+        golaberto-airlock: service:golaberto-airlock
+        golaberto-airlock-mesh: service:golaberto-airlock-mesh
+        golaberto-airlock-upgrade: service:golaberto-airlock-upgrade
+        golaberto-mesh-events: service:golaberto-mesh-events
+        golaberto-conduit: service:golaberto-conduit
+        golaberto-transform: service:golaberto-transform
+        golaberto-timer-check: service:golaberto-timer-check
+        golaberto-compute: service:golaberto-compute
+        golaberto-ticker: service:golaberto-ticker
+        golaberto-sofascore-appliance: service:golaberto-sofascore-appliance
+        libraries_mecha-extensions-image: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-extensions:0.23.1@sha256:d3fe4b3869ded07a410579c2928f951bb42c3bdc14ada1122b5cf0a7d7c11c9f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-extensions-image}
       context: ..
       dockerfile: .bayt/Dockerfile.release-docker
       target: release-docker
@@ -27,9 +41,20 @@ services:
         golaberto-database_bayt: service:golaberto-database_bayt
         golaberto-crud_bayt: service:golaberto-crud_bayt
         golaberto-caddy_bayt: service:golaberto-caddy_bayt
+        golaberto-electric_bayt: service:golaberto-electric_bayt
+        golaberto-migrate_bayt: service:golaberto-migrate_bayt
         golaberto-served-release_bayt: service:golaberto-served-release_bayt
         golaberto-auth_bayt: service:golaberto-auth_bayt
-        golaberto-migrate_bayt: service:golaberto-migrate_bayt
+        golaberto-airlock_bayt: service:golaberto-airlock_bayt
+        golaberto-airlock-mesh_bayt: service:golaberto-airlock-mesh_bayt
+        golaberto-airlock-upgrade_bayt: service:golaberto-airlock-upgrade_bayt
+        golaberto-mesh-events_bayt: service:golaberto-mesh-events_bayt
+        golaberto-conduit_bayt: service:golaberto-conduit_bayt
+        golaberto-transform_bayt: service:golaberto-transform_bayt
+        golaberto-ticker_bayt: service:golaberto-ticker_bayt
+        golaberto-timer-check_bayt: service:golaberto-timer-check_bayt
+        golaberto-compute_bayt: service:golaberto-compute_bayt
+        golaberto-sofascore-appliance_bayt: service:golaberto-sofascore-appliance_bayt
         golaberto-served_bayt: service:golaberto-served_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.release-docker
@@ -45,7 +70,6 @@ services:
       additional_contexts:
         golaberto-database_srcs: service:golaberto-database_srcs
         golaberto-caddy_srcs: service:golaberto-caddy_srcs
-        golaberto-served-release_srcs: service:golaberto-served-release_srcs
       context: ..
       dockerfile: .bayt/Dockerfile.release-docker
       target: release-docker_srcs

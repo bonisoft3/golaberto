@@ -1,5 +1,5 @@
-(state, event, params) => {
-  const row = state.items[0];
+({ context, event }, params) => {
+  const row = context.items[0];
   if (!row) throw new Error("Team chart state is missing");
   const matches = typeof event.from === "string" &&
     event.from === `${row.id}${params.suffix}`;

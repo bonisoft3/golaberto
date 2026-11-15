@@ -16,7 +16,21 @@
   <template data-item>
     <article class="game" data-played="{played}">
       <h1 class="band"><a data-route="campeonato" data-param-slug="{championship.slug}"><span class="archive-icon" data-text="{championship_name}" data-text-format="country-flag"></span><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span></a></h1>
-      <div class="page">
+      <div class="page page-with-local-nav">
+        <aside class="side local-side"><div class="local-nav-stack">
+<nav class="local-navigation" aria-label="{msg.local_page}">
+  <h2 data-text="{msg.local_page}"></h2>
+  <div class="local-links">
+<a data-route="jogo" data-route-fragment="match-context-location-{id}" data-param-slug="{param.slug}" data-text="{msg.match_context_location}"></a>
+<a data-route="jogo" data-route-fragment="game-goals-{id}" data-param-slug="{param.slug}" data-text="{msg.game_goals}"></a>
+<a data-route="jogo" data-route-fragment="match-probability-{id}" data-param-slug="{param.slug}" data-text="{msg.match_probability_title}"></a>
+<a data-route="jogo" data-route-fragment="game-lineups-{id}" data-param-slug="{param.slug}" data-text="{msg.game_lineups}"></a>
+<a data-route="jogo" data-route-fragment="game-history-{id}" data-param-slug="{param.slug}" data-text="{msg.match_context_previous}"></a>
+  </div>
+</nav>
+  <p class="local-back"><a data-route="campeonato" data-param-slug="{championship.slug}" data-text="{msg.back_championship}"></a></p>
+  <p class="local-about" data-text="{msg.about}"></p>
+</div></aside>
         <div class="content">
           <div class="game-head">
             <p class="phase-name" data-text="{phase_name}"></p>
@@ -60,7 +74,7 @@
   </div>
  </section>
 </section>
-          <section class="goals-sec">
+          <section id="game-goals-{id}" class="goals-sec">
             <h2 data-text="{msg.game_goals}"></h2>
             <ol class="goals" data-live="goal" data-select="*,player(name,slug)" data-filter="game_id=eq.{id}" data-order="aet.asc,minute.asc" data-empty="{msg.game_no_goals}">
               <template data-item>
@@ -95,12 +109,13 @@
     </template>
    </div>
    <p class="hint" data-text="{msg.match_probability_scenario_hint}"></p>
+   <div data-live="match_probability_scenario" data-filter="id=eq.{id}&event_sequence=eq.2147483647" data-empty=""><template data-item><p role="status" data-text="{msg.match_probability_sequence_exhausted}"></p></template></div>
   </fieldset>
   <div class="match-probability-source" data-live="match_probability" data-filter="id=eq.{id}&limit=1" data-empty="{msg.match_probability_no_data}"><template data-item><span hidden></span></template></div>
   <div data-text="{payload_json}{minute}{added_time}{events_json}{home_name}{away_name}{msg.match_probability_draw}{msg.match_probability_prematch}{msg.match_probability_rated_on}{msg.match_probability_timeline}{msg.match_probability_missing_rating}{msg.match_probability_ambiguous_rating}{msg.match_probability_unknown_minute}{msg.match_probability_event_limit}{msg.match_probability_invalid_scenario}{msg.chart_locale}{msg.match_probability_minute}" data-text-format="match-probability"></div>
  </div>
 </section>
-          <section class="lineups">
+          <section id="game-lineups-{id}" class="lineups">
             <h2 data-text="{msg.game_lineups}"></h2>
             <div class="sides">
               <table class="grid lineup" data-side="home">
@@ -119,7 +134,7 @@
 </table>
             </div>
           </section>
-          <section class="match-context-history">
+          <section id="game-history-{id}" class="match-context-history">
  <h2 data-text="{msg.match_context_previous}"></h2>
  <ol class="games" data-project='{"reader_day":{"date":["kickoff","day"]}}' data-live="match_head_to_head" data-filter="target_game_id=eq.{id}&limit=5" data-order="day.desc,kickoff.desc.nullslast,id.desc" data-empty="{msg.match_context_previous_empty}">
   <template data-item><li><a class="game-row" data-show-country="{show_country}" data-route="jogo" data-param-slug="{game_slug}" data-played="true">
@@ -133,10 +148,6 @@
 </section>
           <nav class="buttons"><a class="btn-quiet" data-route="historico-jogo" data-param-slug="{param.slug}" data-text="{msg.community_history}"></a></nav>
         </div>
-        <aside class="side">
-          <p><a data-route="jogos" data-text="{msg.back_games}"></a></p>
-          <p data-text="{msg.about}"></p>
-        </aside>
       </div>
   <section class="comments page-tail">
     <h2 data-text="{msg.comments_title}"></h2>

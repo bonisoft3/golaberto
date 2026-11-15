@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Golaberto — delivery journal</title>
+<style>
+:root{color-scheme:light;--ink:#24301d;--olive:#58682c;--gold:#e5b840}*{box-sizing:border-box}body{margin:0;background:#f4f4e9;color:var(--ink);font:16px/1.6 system-ui,sans-serif}main{max-width:1180px;margin:auto;padding:48px 24px}h1{font-size:clamp(34px,5vw,60px);line-height:1.1;margin:12px 0 20px}h2{font-size:28px;line-height:1.25}h3{margin-bottom:8px}a{color:#365d17}p{max-width:850px}.eyebrow{letter-spacing:.12em;text-transform:uppercase;font-size:12px;font-weight:700}.lead{font-size:22px}.status{display:inline-block;background:#e2e9c9;padding:7px 14px;border-radius:24px;font-weight:650}.metrics,.flow,.screens{display:grid;gap:16px;margin:30px 0}.metrics{grid-template-columns:repeat(3,1fr)}.metrics>div,.flow>div{background:white;border:1px solid #d7ddc7;border-radius:12px;padding:20px}.metrics strong{display:block;font-size:34px;color:var(--olive)}.flow{grid-template-columns:repeat(4,1fr)}.flow b{display:block}.screens{grid-template-columns:1fr 1fr}figure{margin:0;background:white;border:1px solid #d7ddc7;border-radius:12px;overflow:hidden}img{display:block;width:100%;height:auto}figcaption{padding:16px}.note{border-left:4px solid var(--gold);padding:12px 20px;background:#fffbea}table{width:100%;border-collapse:collapse;background:white}td,th{padding:12px;text-align:left;border-bottom:1px solid #d7ddc7}pre{overflow:auto;padding:16px;background:#edf0e0;font-size:13px}details{margin:36px 0;border-top:1px solid #ccd2bc;padding-top:20px}summary{cursor:pointer;font-size:22px;font-weight:650}footer{border-top:1px solid #ccd2bc;margin-top:40px;padding-top:20px;font-size:14px}@media(max-width:760px){.screens,.flow,.metrics{grid-template-columns:1fr}}
+</style></head><body><main>
+<header><h1>Golaberto — football results and statistics</h1><p>A collaborative football archive with match results, standings, ratings and odds.</p></header>
+<article id="cloudflare-verification-20261106">
+<p class="eyebrow">6 November 2026 · Cloudflare release · verification failed</p>
+<h2>A deployed archive is not yet a verified live computation</h2>
+<p>The release reached <a href="https://golaberto.bonisoft3.com">golaberto.bonisoft3.com</a>. Its existing database was compressed in place, retaining its generation and authentication state; measured SQLite storage fell from 8.79 GB to 4.38 GB. Migration ordering, the Reader's packaged loader, the renderer's batched-read RPC and authenticated editor claims were corrected. Database listeners now use the same serialized lane as transactions.</p>
+<p>A new hosted acceptance journey creates an isolated categorized competition, waits for a zero-goal standing, inserts a 1–0 match, verifies the same browser document changes, then compensates and verifies zero again. It refuses cleanup of concurrently edited rows and retains a recovery record on failure. Seven focused tests cover success and failure paths, including a timed-out insert that may commit later; that uncertain outcome retains recovery records and parent fixtures.</p>
+<figure><img src="journal/2026-11-06-cloudflare-verification.png" alt="The temporary Verification competition renders, but its standings show no teams."><figcaption>Actual hosted observation: the temporary competition rendered, but its initial standings did not appear. This is failure evidence, not a successful before/after comparison.</figcaption></figure>
+<p>The live run did not reach the match insert. A database probe found the first standings computation claimed but not completed, with a later revision pending. After more than five minutes without initial standings and stalled API cleanup, the run was interrupted. Operator cleanup compared the retained fixture contents, accounting for author fields nulled by removal of the temporary account. A subsequent database check confirmed zero remaining fixture rows, editor grants, account or passkeys. No existing archive match was edited.</p>
+<p>The final HTTP verification passed 381 immutable assets, six catalogues and the negative-cache probe, but failed with nine HTTP 503 responses using the default deadlines. A separate five-second-deadline run also reported nine timeouts. Earlier attempts also encountered memory resets and a full snapshot queue. The listener fix has a regression test; it is not established as the cause of these hosted failures. After clearing outstanding requests with an object restart, the home page returned HTTP 200 in 2.88 seconds; the full suite was not rerun after that restart. Live statistics, ratings and odds are not verified.</p>
+<p>App generation, lint and tests passed. Migration replay passed; native visual integration failed while starting the compute service. Focused renderer, Reader packaging, auth, public-snapshot and drain tests passed. <a href="journal/2026-11-06-cloudflare-verification.json">Recorded results and deployed version</a>.</p>
+</article>
+
+<section id="merge-review-20261024">
+<p class="eyebrow">24 October 2026 · merge review · changes required</p>
+<h2>The full archive changes the merge verdict</h2>
+<p>The MacBook archive was copied and all 1,502 files verified by SHA-256. Tests now exercise the actual millions of rows rather than extrapolating from seeded fixtures. The deployed application, database and JWT remain unchanged.</p>
+<table><tr><th>Finding</th><th>Current result</th></tr>
+<tr><td>Restart lost acknowledged DuckDB rows</td><td>Pinned native patches fix WAL deletion, append offsets and reopen flags. Nine automatic checkpoints, a crash, another committed append and a second crash retain all 1,025 rows.</td></tr>
+<tr><td>Rating replacement erased imported history</td><td>Team ratings now explicitly use upserts. Other statistics still replace their results; stale publications remain fenced. Native, direct snapshot and staged publication tests pass.</td></tr>
+<tr><td>SQL could escape the intended scratch boundary</td><td>DuckDB AST validation rejects dynamic SQL and sequence writes; explicit-column CTAS cannot bypass the guard. Regression tests pass.</td></tr>
+<tr><td>JSON compression exceeded the isolate budget</td><td>Uncompressed JSON payload columns reduce the full games result heap from 150,536,192 to 72,548,352 bytes. The later appearances join still loses its Worker connection; the full pipeline remains unproved.</td></tr>
+<tr><td>Capture blocks request serving</td><td>Durable compression coalescing reduces the chances capture from 427 to 315 seconds locally. The shared source queue still blocks interactive requests. A physical-copy experiment reduces this to 27 seconds, which is still unsuitable for interactive serving.</td></tr></table>
+<p>Large captures and unpublished output remain in tables; bounded transfers, numerical steps and generated relational stages retain durable cursors. The canonical DuckDB build uses pinned source hashes, patches, toolchain image and output digests. It is part of the release process. Windows can use the same Docker path, but a Windows host was not tested.</p>
+<p>After merging <code>origin/main</code> through release train 10 (<code>fce5fb498</code>), both apps regenerated; Golaberto's full test gate and Pronto's full test and lint gates passed. Final private-Worker packaging and restart integration passed 14 tests, snapshot coordination passed 25, native publication passed 14, and the final query/execution regressions passed 10. Native DuckDB build, lint, test and integration passed; hosted crash/recovery probes passed on the canonical binary. PGlite passed 11 tests with 32 steps. The static emitter now admits generated physical-plan metadata, as the final packaging gate required.</p>
+<p class="note">Do not merge or activate archive-scale live computation yet. The remaining gates are a successful full-archive computation within resource limits and capture isolation that keeps source requests responsive. A successful small fixture or durable WAL does not prove either. Native Feldera deployments retain the acknowledged per-table CDC consistency limit.</p>
+<p>No new visual design was introduced. The lead reviewed the cross-layer changes with focused backend review through the Pronto skill; Astra/high and the previously reported Sol/high substitution handled the specialist work. Failed paging and BLOB-patching experiments were removed. <a href="evidence/production-review/merge-review.json">Gate results</a> · <a href="evidence/production-review/query-memory.json">Query evidence</a> · <a href="evidence/production-review/source-capture.json">Capture evidence</a> · <a href="evidence/production-review/native-recovery.json">Hosted recovery</a> · <a href="evidence/production-review/physical-snapshot.json">Physical snapshot experiment</a>.</p>
+</section>
+
+<section id="production-review-20261024">
+<p class="eyebrow">24 October 2026 · production review</p><h2>The live archive is paged; computation capture must be too</h2>
+<p>The deployed Worker was downloaded read-only and inspected. PGlite stores files as SQLite blocks, starts with a 16 MiB heap and queries them with bounded PostgreSQL buffers. A public snapshot is a repeatable-read transaction over that storage. The archive’s offline-computed statistics are ordinary stored tables. There is no compute coordinator or computation companion binding in the live deployment.</p>
+<figure><img src="evidence/production-review/live-home.png" alt="Existing production Golaberto homepage with upcoming games and championship links"><figcaption>The unchanged live homepage returned HTTP 200 with no browser errors. Upcoming games and championship links are visible; this production dataset showed no featured standings. This is evidence of the existing deployment, not a new release.</figcaption></figure>
+<p>At the start of this review, computation capture materialized every declared source table in JavaScript, then serialized one JSON value. The merge-review entry above replaces that handoff with retained relations and bounded transfers. Production has 3,290,664 player appearances and 8,195,365 rating rows. The three mandatory appearance UUIDs alone require 338.93 MiB of text. Separate computation Workers and streamed RPC do not remove this allocation inside the database object. The full archive therefore needs bounded capture, query and publication working sets before activating these computations; this does not invalidate the existing page-backed serving design.</p>
+<table><tr><th>Review finding</th><th>Resolution</th></tr><tr><td>SSR composition rejected the new coordinator export</td><td>Preserve ComputeCoordinator while composing Cluster; regression passed</td></tr><tr><td>Native CDC hid graph edges from cycle detection</td><td>Share dependency validation with snapshot coordination; 17 batch tests and native cycle regression passed</td></tr><tr><td>Identifier quoting changed a ledgered migration</td><td>Preserve valid lowercase spellings, quote protected identifiers; PostgreSQL keyword integration passed and Golaberto’s historical migration is byte-identical</td></tr><tr><td>Production capture exceeds the isolate memory limit</td><td>Bounded handoff implemented; full-archive execution and source responsiveness remain blocked as recorded above</td></tr></table>
+<p>The production publisher can explicitly retain the deployed JWT secret after verifying its binding, without reading or rotating it. The renderer install uses pinned Node, physical release paths resolve correctly, and server rendering rejects kinetic execution through its complete role alias. Pronto lint and its full test suite passed, both apps regenerated, and the full production bundle, publisher preparation and Wrangler dry run passed. No production code, data or secrets were changed.</p>
+<p>Two Astra/high backend reviews covered native delivery and the edge upgrade path; the lead verified the live artifact, fixed deployment seams and inspected the screenshot. <a href="evidence/production-review/validation.json">Validation</a> · <a href="evidence/production-review/counts.json">Production counts</a> · <a href="evidence/production-review/reads.json">Live read checks</a>.</p>
+</section>
+
+<section id="review-fixes-20261024">
+<p class="note">CI follow-up, 24 October: the compiler now checks the authorization fixtures with pinned imports and excludes their checkout-only helper from installed modules. Mecha browser tests use their explicit import map and expect 403 for denied function execution. Native startup retains the optimized Feldera compiler and allows up to 20 minutes for optimized compilation and gives each sequential program 30 minutes of startup grace; Golaberto’s two programs receive 60 minutes. Starting and stopping pipelines retain their 10-minute deadlines. A fake-clock regression verifies late compilation success, bounded waits and immediate compiler errors. Pronto’s full local suite, the 42 cluster tests and the browser permission suite passed. <a href="evidence/review-fixes/ci-followup.json">Captured gate results</a>. Remote CI is being rerun; these local results do not claim a green remote run.</p>
+<p class="note">Homepage readiness: CI found that an empty feed finishing last could label the whole screen empty while games, standings and odds were visible. The interpreter now combines the state of all top-level lists. Three failing regression cases reproduce the race; the fixed ordering, live updates and cleanup pass 10 suites with 35 steps, plus 10 interpreter smoke tests and Omnishell type checks. The full local Golaberto acceptance gate passed. All applicable CI checks passed on 2d56e9cd0, including both complete app suites and all three bootstrap platforms. The subsequent merge from main preserves its release/presenter changes alongside Duckstream; both apps regenerated, Pronto lint and its full test suite passed, and focused release/workerd tests passed. The merged revision requires a fresh CI run; no new visual capture is claimed.</p>
+
+<p>24 October 2026 · review fixes · verified</p><h1>Compute independently. Publish coherently.</h1>
+<p>Golaberto keeps its incremental native Feldera relations and unchanged numerical WASM. Cloudflare now has a separate computation-coordinator Durable Object: auth, CRUD, shape delivery and the database clock continue while computation runs or an unrelated batch exhausts retries. Capture and publication still serialize against the database; query and WASM execution run elsewhere.</p>
+<p>Compact claims carry an identity and database generation. Snapshot and result bodies use streamed Responses; actual workerd tests moved 33 MiB in each direction. Retry inputs remain durable, independent successes do not erase failed-job diagnostics, and reset generations reject stale publications.</p>
+<div class="screens"><figure><img src="evidence/review-fixes/odds.png" alt="Golaberto odds in the retained Cloudflare database"><figcaption>Final Cloudflare odds: 20 teams, 100 zone probabilities and 400 position probabilities in this group.</figcaption></figure><figure><img src="evidence/review-fixes/player-statistics.png" alt="K. Viveros player statistics with 18 goals and 2286 minutes"><figcaption>K. Viveros: 18 goals and 2,286 minutes. The browser reported zero page errors.</figcaption></figure></div>
+<p>The deployed check verified 1,522 games, 64 team ratings, 725 player ratings, 82 team-chance rows, 300 zone-chance rows, 1,604 position-chance rows, 513 game-importance rows and the legacy projections. Guest writes could not alter derived rows. Publication preserved the existing preview database; no reset or production-route change was needed.</p>
+<p>Native bootstrap reads after acquiring source locks. First execution and retries consume persisted JSONB inputs. Full publication compares PostgreSQL keys by type and rejects canonical duplicates. Feldera SQL references its injected environment credential. Wrangler and Node resolve through checked-in pins and the bootstrapped mise, including fresh npm shim installations. SQL migration errors return definitive 422 responses; lost restart responses receive bounded retries.</p>
+<table><tr><th>Gate</th><th>Observed result</th></tr><tr><td>Golaberto generate, lint and test</td><td>Exit 0; real application CUE export and migration-cycle regression also passed</td></tr><tr><td>Final native integration</td><td>Exit 0: replay, visual, acceptance, constraints and live statistics</td></tr><tr><td>Cloudflare publish and browser</td><td>Exit 0; retained data, populated statistics and protected derived writes</td></tr><tr><td>Shared runtime/release checks</td><td>Pinned tools, bootstrap/publication, large payloads, failure isolation, migration refusal and native authorization upgrades passed</td></tr></table>
+<p>The first native visual run timed out on the new-player page. The isolated final visual run passed, followed by all acceptance and live-statistics checks. The established visual oracle was retained and screenshots were inspected. <a href="evidence/review-fixes/validation.json">Validation record</a> · <a href="evidence/review-fixes/portable-result.json">Browser assertions</a> · <a href="../../plausible/docs/evidence/review-fixes/validation.json">Shared runtime evidence</a>.</p>
+<p>Claude Opus 5.5/high completed two follow-up reviews. Confirmed findings were fixed with focused regressions and a final lead review, without a third external round. Astra/high and Sol/high handled bounded implementation slices; Sol substituted for the unavailable Terra route. <a href="../../plausible/docs/evidence/review-fixes/claude-first-followup.txt">First follow-up</a> · <a href="../../plausible/docs/evidence/review-fixes/claude-second-followup.txt">Second follow-up</a>.</p>
+<p>Cloudflare remains snapshot mode under the isolate memory limit. Paid was tested; Free admission and full-archive capacity remain unproved. Native CDC remains per-table. Kubernetes/GKE configuration and upgrade commands were tested without deploying a cluster; native Windows remains unverified. Golaberto intentionally has no Pages target. The PR remains ready for review and unmerged.</p>
+</section>
+
+<section id="durable-compute-20261024">
+<p>24 October 2026 · Cloudflare release integration</p><h1>Live computation without a Container.</h1>
+<p>The release now packages three Workers: the PGlite/Cortex coordinator, private DuckDB Queries and private static SES Compute Durable Objects. Service bindings isolate their memory and capabilities. The release statically bundles the pinned upstream DuckDB core, JSON/ICU extensions and computation closures; it does not rebuild DuckDB or compile JavaScript at runtime. The existing pure WASM algorithm stays unchanged.</p>
+<p>Durable captures and retries feed one transactional publication with its receipt. Queries preserve declared ordering and validate typed columns, nullability, bytes and exact integers before computation and publication. Companions deploy before the coordinator, and their names hash the emitted artifacts.</p>
+<div class="screens"><figure><img src="evidence/cloudflare-do/odds.png" alt="Verified golaberto Cloudflare view"><figcaption>Twenty teams, 100 zone cells and 400 position cells.</figcaption></figure><figure><img src="evidence/cloudflare-do/player-statistics.png" alt="Verified golaberto Cloudflare view"><figcaption>K. Viveros: 18 goals and 2,286 minutes.</figcaption></figure></div>
+<p>The browser verified 1,522 games, 64 team ratings, 725 player ratings and 82 team chance rows. Odds and player pages rendered; a guest derived-row overwrite changed nothing. Both pages reported zero browser errors. <a href="evidence/cloudflare-do/portable-result.json">Browser assertions</a> · <a href="evidence/cloudflare-do/validation.json">Validation record</a>.</p>
+<table><tr><th>Gate</th><th>Observed result</th></tr><tr><td>Application doctor, generate, lint, test and full native integration</td><td>Exit 0 for both applications</td></tr><tr><td>Pages and SSR regressions</td><td>30 passed under pinned Deno 2.9.7</td></tr><tr><td>Native portable boundaries, snapshots and static cages</td><td>17 passed</td></tr><tr><td>Actual workerd and deployed Cloudflare browsers</td><td>Packaging, restart/replay, typed boundary errors and successful computation passed</td></tr></table>
+<p>Claude Opus 5.5/high identified ordering and immutable artifact naming issues; Agy Gemini 4 Argon/high identified missing typed boundary checks and explicit error responses. All were fixed and both follow-up reviews cleared them. Agy ran with a TTY and its supported <code>--dangerously-skip-permissions</code> flag. <a href="../../plausible/docs/evidence/cloudflare-do/claude-review.txt">Claude follow-up</a> · <a href="../../plausible/docs/evidence/cloudflare-do/agy-review.txt">Agy follow-up</a>. Package and cage implementation received independent security review; the lead inspected screenshots and consolidated shared validation. The existing visual oracle was retained.</p>
+<p>Pages keeps snapshot execution; native Feldera keeps incremental maintenance. Cloudflare is still whole-snapshot work under the 128 MiB isolate limit. Tests used Paid: Free admission and full Golaberto archive capacity remain unproved. Old companion Workers remain available for in-flight captures and rollback, with manual retirement. Production routes were not changed. <a href="../../../libraries/mecha/docs/compute.md">Runtime contract</a>.</p>
+</section>
+<details><summary>Earlier Container release and evidence</summary>
+<section id="portable-deployments-20261023">
+<div class="eyebrow">23 October 2026 · portable runtime and deployment</div>
+<h1>Computed odds on Cloudflare.</h1>
+<p class="lead">The edge deployment at this stage computed statistics after source changes. Its Cortex coordinator captures PGlite inputs, a private DuckDB Container runs the existing pure WASM, and one database transaction publishes results with a receipt.</p>
+<p><a href="https://golaberto-duckstream-preview-d2c670b1.davi-d2c.workers.dev">Open the isolated Cloudflare preview</a>. Production routes were not changed. Native Kubernetes and GKE manifests now include Feldera and the remaining pipeline services; those cloud clusters were not deployed in this turn. Golaberto no longer advertises a Pages target.</p>
+<div class="flow"><div><b>Before</b>The archive release shipped frozen computed rows.</div><div><b>After</b>Durable alarms resume captured work after eviction; new changes schedule another batch.</div><div><b>Publication</b>Outputs and their receipt commit together. Retained revision counters reject stale responses after reinstallation.</div><div><b>Storage</b>Completed snapshot payloads are reclaimed. Pending retry inputs remain immutable.</div></div>
+<div class="metrics"><div><strong>1,522</strong>source games verified on Cloudflare</div><div><strong>82</strong>team chance rows computed</div><div><strong>725</strong>player ratings published</div></div>
+<div class="screens"><figure><img src="evidence/cloudflare/odds.png" alt="Cloudflare Brasileiro 2026 odds with twenty teams and a position heatmap"><figcaption>Twenty teams, 100 zone cells and 400 final-position cells rendered from computed data.</figcaption></figure><figure><img src="evidence/cloudflare/player-statistics.png" alt="Cloudflare player profile showing eighteen goals and 2286 minutes"><figcaption>The SQL projection drains populate player statistics alongside ratings and odds.</figcaption></figure></div>
+<p>The live browser check verified every expected table count, hydrated odds and player pages, and zero page errors. A guest overwrite returned an empty result and left the derived row unchanged. <a href="evidence/cloudflare/portable-result.json">Browser assertions</a> are reproducible with <code>tests/portable.ts --url &lt;preview&gt;</code>.</p>
+<table><tr><th>Gate</th><th>Observed result</th></tr><tr><td>Sayt doctor, generate, lint, test</td><td>Exit 0</td></tr><tr><td>Sayt integrate</td><td>Exit 0: replay, visual, acceptance, constraints and native live statistics</td></tr><tr><td>Portable coordinator</td><td>13 tests passed, including retry, atomic publication, removed/reinstalled definitions and bounded capture storage</td></tr><tr><td>Portable SQL projections</td><td>5 parity tests passed; native Conduit pipelines remain unchanged</td></tr><tr><td>Actual Container and deployment</td><td>Seeded ratings, chances and nine SQL drains completed; restart had no pending work; Cloudflare publication and live browser test passed</td></tr></table>
+<p>Independent Astra/high backend review found two lifecycle defects: retained full snapshots and reused identities after removal. Both were fixed and re-reviewed with no remaining actionable findings. The lead reviewed native deployment changes, inspected screenshots and made the final simplification pass. The established UI oracle stayed unchanged; Astra/high supplied the implementation/review seats where the preferred Terra route was unavailable.</p>
+<p class="note">This earlier release used whole-snapshot work and required Workers Paid plus Containers; the Durable Object release above supersedes it. This proves the seeded dataset, not the 7 GB production archive or production throughput. Native Feldera retains incremental relational maintenance and its documented per-table CDC boundary. See <a href="cloudflare-release.md">deployment limits</a> and <a href="../../../plugins/pronto/gcp/docs/index.md">GKE setup</a>.</p>
+</section>
+</details>
+
+<section id="cdc-skew-fix">
+<div class="eyebrow">23 October 2026 · CDC skew regression</div>
+<h1>Incomplete arrivals cannot poison a calculation.</h1>
+<p class="lead">Golaberto statistics keep their immutable retry protocol. The SQL now prevents missing related identities from entering a numerical request while CDC tables catch up.</p>
+<div class="flow"><div><b>Before</b>A game could arrive before its team. Capturing it made every retry repeat the same missing-team error.</div><div><b>Ratings</b>Games join both teams; goals join their player. Missing dependencies withhold those rows.</div><div><b>Odds</b>A ranked group requires every known member’s team. It cannot reach the calculator with a missing member array.</div><div><b>Convergence</b>Later parent arrivals change the maintained joins. Restored inputs match the settled baseline exactly.</div></div>
+<p><a href="statistics.md">The contract</a> still permits intermediate results from per-table progress. This is not a database-wide transaction cut, and previously poisoned durable claims are not migrated by changing the query. The WASM algorithms and coordinator retry policy are unchanged.</p>
+<table><thead><tr><th>Evidence</th><th>Result</th></tr></thead><tbody>
+<tr><td><a href="evidence/cdc-skew/queries.txt">DuckDB query regressions</a></td><td>8 passed. The new missing-team regression failed against the old generated queries, then passed after regeneration; missing players and restoration are covered too.</td></tr>
+<tr><td><a href="evidence/cdc-skew/numerical.txt">Numerical computations</a></td><td>33 passed.</td></tr>
+<tr><td><a href="evidence/cdc-skew/native-ratings.txt">Native ratings</a> · <a href="evidence/cdc-skew/native-chances.txt">Native odds</a></td><td>Both passed independently, including skew and restoration against the real Feldera engine.</td></tr>
+<tr><td><a href="evidence/cdc-skew/integrate.txt">Application integration</a></td><td>Replay, visual, acceptance, constraints and standalone live-statistics targets passed.</td></tr>
+<tr><td><a href="evidence/cdc-skew/validation.json">Verification record</a></td><td>Generation, lint, test and integration exited zero. Astra/high backend review found no actionable issue. The simplification pass kept the fix in the existing SQL views.</td></tr>
+</tbody></table>
+<p>The <a href="evidence/cdc-skew/native-combined.txt">combined native test invocation</a> hit a Deno pending-promise event-loop error after ratings passed. Each native test subsequently exited zero in its own process; the combined invocation is not claimed green. Existing screens supplied the oracle; no interface redesign was needed.</p>
+</section>
+<section id="incremental-runtime">
+<div class="eyebrow">23 October 2026 · Native CDC runtime</div>
+<h1>Incremental inputs. Live odds.</h1>
+<p class="lead">Feldera now consumes PostgreSQL CDC and maintains the pending relation changes. Cortex captures affected partitions, the unchanged WASM computes their results, and PostgreSQL publishes owned rows with the durable receipt.</p>
+<p class="status">Implemented · reviewed · Golaberto integration gates passed</p>
+<p><a href="statistics.md">Current contract and limits</a> · <a href="https://github.com/worldsense/trash/pull/2079">PR 2079 — draft</a> · <a href="evidence/duckstream-incremental/validation.json">Verification record</a></p>
+<div class="metrics"><div><strong>8 delta rows</strong>The first odds capture after one score edit, in one phase.</div><div><strong>0 restart work</strong>No partitions recalculated and no checked sink rows rewritten.</div><div><strong>19.2 seconds</strong>Observed live change in this local trial, without reload.</div></div>
+<div class="screens"><figure><img src="evidence/duckstream-incremental/before.png" alt="Flamengo title chance before the score edit: 73.06 percent"><figcaption>Before: 73.06%.</figcaption></figure><figure><img src="evidence/duckstream-incremental/after.png" alt="The same document after the edit: Flamengo title chance 59.55 percent"><figcaption>After: 59.55%. Undo restored the original value without navigation.</figcaption></figure></div>
+<p><a href="evidence/duckstream-incremental/live.json">Browser evidence</a> records the same document and zero browser errors. Both screenshots were inspected. <a href="evidence/duckstream-incremental/captures.json">Runtime captures</a> show ratings subsequently affected other dependent phases: the eight-row first capture is not the total cost of changing every rating dependency. The live stack uses the local source implementation; this is not a production benchmark.</p>
+<h2>What is incremental now</h2>
+<div class="flow"><div><b>Source CDC</b>Indexed row-local carriers, maintained in the source transaction, feed Feldera's native connector.</div><div><b>Pending difference</b>Maintained EXCEPT ALL relations identify unconsumed changes. No per-batch source snapshot or full-result extraction.</div><div><b>Durable partition</b>Inputs commit before acknowledgment. Phase-scoped odds and global ratings retain immutable retry inputs.</div><div><b>Atomic publication</b>Owned sink keys, outputs and receipt commit together. Indexed guards repair cascaded deletions.</div></div>
+<p>The original snapshot-fed adapter is replaced on the native path. Pages retains DuckDB snapshots. Conduit and Redis still serve other Golaberto pipelines; native statistics no longer use their wakeups. Durex and Cortex remain the internal execution boundary, with no Airlock dependency.</p>
+<h2>One consistent capture</h2>
+<p>Verification after storage recovery exposed a real race: pausing Feldera stops input readers asynchronously, while buffered circuit steps can continue. Capture now reads all additions, removals and validation relations in one query against one immutable circuit snapshot. A real-engine regression checks aggregate/detail agreement under concurrent writes and requires exactly one query.</p>
+<p>Fresh-start browser checks now wait for rated odds to converge: an idle coordinator does not mean that a prior ratings publication has reached downstream CDC. The numerical bounds, exact undo and no-reload assertions remain. Native legacy ingestion starts independently of compute; snapshot deployments retain their startup dependency.</p>
+<h2>Recovery and evidence</h2>
+<p><a href="evidence/duckstream-incremental/restart.json">The actual application restart</a> rebuilt the OSS circuit in 58 seconds under test load. Both subsequent captures had zero partitions and zero delta rows. Fingerprints including PostgreSQL row versions stayed equal for ratings, zone chances, position chances and game importance. Source reconstruction remains a startup cost.</p>
+<table><thead><tr><th>Check</th><th>Observed result</th></tr></thead><tbody>
+<tr><td><a href="evidence/duckstream-incremental/native.txt">Real PostgreSQL → Feldera → Cortex/Durex → PostgreSQL</a></td><td>2 tests passed: bootstrap, scoped update, deletion, restart, repair, source ownership and slot cleanup.</td></tr>
+<tr><td><a href="evidence/duckstream-incremental/runtime.txt">Partition runtime with real PostgreSQL</a></td><td>9 passed, including ambiguous acknowledgment, retained work, UUID ownership, FK supersession and cascade repair.</td></tr>
+<tr><td><a href="evidence/duckstream-incremental/coordinator.txt">Coordinator</a> / <a href="evidence/duckstream-incremental/publication.txt">delta and publication</a></td><td>15 / 21 passed.</td></tr>
+<tr><td><a href="evidence/duckstream-incremental/sources.txt">Native source projections</a></td><td>8 passed. A point update with 10,000 unrelated rows read zero sequential tuples and one indexed tuple.</td></tr>
+<tr><td>App generation and lint</td><td>Golaberto and Plausible passed. Both builds passed; Plausible’s complete appearance/live-replay, replay and visual integration passed.</td></tr>
+<tr><td>Golaberto integration</td><td>Replay, visual, full acceptance, constraints and standalone live-statistics targets passed. The latter passed after its startup-readiness correction.</td></tr>
+<tr><td><a href="evidence/duckstream-incremental/capture.txt">Concurrent native capture</a></td><td>Detail rows and aggregates agreed through 12,288 source-row updates. All deltas and validation checks used one HTTP SQL request.</td></tr>
+</tbody></table>
+<p>Backend review used Astra/high. Its cascade-repair and interrupted-bootstrap ownership findings were fixed and re-reviewed without blockers. Live testing also exposed and fixed paused-pipeline resume and replication-backend disconnect races. The capture fix received a further Astra/high review with no actionable findings. The lead simplification pass retained shared row normalization and publication helpers. Existing screens supplied the visual oracle.</p>
+<p class="note"><b>Limits.</b> Native CDC has per-table progress, not an atomic PostgreSQL-wide source cut. It is not admitted for computations requiring the latter. Ratings can still require global numerical work; source reconstruction scans current data. No archive-scale throughput claim, production deployment or native Windows verification is made. The disk-exhaustion blocker is resolved. The local app and legacy transform are running again at <a href="https://localhost:17702">localhost:17702</a>. The PR remains draft for handoff; no merge or deployment was performed.</p>
+</section>
+<details><summary>Earlier snapshot-fed Feldera delivery</summary>
+
+<div class="eyebrow">23 October 2026 · Golaberto · Duckstream</div><h1>Live odds, backed by Feldera.</h1>
+<p class="lead">Golaberto now runs its ratings and odds relations through authored Feldera SQL, keeps the original numerical WASM, and delivers committed statistics to an open browser through Electric.</p>
+<p class="status">Implemented · reviewed · verified locally · not deployed</p>
+<p><a href="https://localhost:17702/chances/brasil-campeonato-brasileiro-2026-turno-e-returno-grupo-unico">Open the running seeded app</a> · <a href="statistics.md">Implementation and limits</a> · <a href="https://github.com/worldsense/trash/pull/2079">PR 2079</a></p>
+<div class="metrics"><div><strong>73.06 → 52.33%</strong>Flamengo title probability after recording a defeat</div><div><strong>9.6 seconds</strong>Observed update and settlement, with no reload</div><div><strong>0 browser errors</strong>Undo restored the original odds in the same document</div></div>
+<div class="screens"><figure><a href="evidence/feldera-statistics/before.png"><img src="evidence/feldera-statistics/before.png" alt="Before recording the result, Flamengo has a 73.06 percent title probability"></a><figcaption><b>Before.</b> Seeded standings and the original probability.</figcaption></figure><figure><a href="evidence/feldera-statistics/after.png"><img src="evidence/feldera-statistics/after.png" alt="The same page after recording the result, Flamengo has a 52.33 percent title probability"></a><figcaption><b>After.</b> Odds and table order change in the same browser document.</figcaption></figure></div>
+<h2>One SQL program, two deployments</h2>
+<div class="flow"><div><b>PostgreSQL</b>One consistent source snapshot; retained durable work.</div><div><b>Feldera SQL</b>Maintained joins and aggregates. The stock plan also generates DuckDB snapshot queries.</div><div><b>Pure WASM</b>Unchanged fits and simulations. Exact successful requests can reuse durable cached answers.</div><div><b>PostgreSQL → Electric</b>Atomic replacement, freshness guard and receipt; live browser updates.</div></div>
+<p>Ratings and chances declare typed sources and sinks. Cortex and Durex coordinate internal work; Airlock is not part of this publication boundary. Pages selects DuckDB snapshot mode and removes Feldera runtime dependencies.</p>
+<p>Historical rating selection remains strictly before kickoff, including the one-microsecond boundary after midnight. Duplicate team/day ratings fail explicitly. The pinned engine cannot compile text or UUID ASOF keys, so four exact 32-bit integer pieces preserve every UUID bit in the join. Calendar windows, UTC conversion, f32 rounding and numerical request order remain equivalent to the previous implementation.</p>
+<h2>What changed from the previous path</h2>
+<p>Handwritten DuckDB queries are now generated from stock-Feldera plans. Successful pure jobs are retained in a bounded private PostgreSQL cache keyed by module bytes, exact input, command and execution host. Changed requests still compute; complete sink publication still applies freshness and deletion rules. The numerical JavaScript helpers and WASM module are unchanged.</p>
+<p>The browser trial used 1,522 games and 68 teams. After restoring the score, the instance had no pending computations. Repeated unchanged jobs in the acceptance stack produced zero row updates; this is correctness and reuse evidence, not a production capacity measurement.</p>
+<div class="note"><b>Known limits.</b> Source capture, materialized-view extraction and complete publication still do snapshot-sized work. A changed historical rating fit remains a full numerical fit. No production archive was available locally, so archive-scale timings are unmeasured. The archive preservation profile still disables ratings replacement and history capture. Conduit and Redis still serve the remaining legacy pipelines.</div>
+<h2>Verification</h2>
+<table><thead><tr><th>Check</th><th>Observed result</th></tr></thead><tbody>
+<tr><td>Golaberto doctor, generate, build, lint, test</td><td>All exit 0</td></tr><tr><td>Full integration</td><td>Replay, visual, constraints, browser acceptance and live-statistics targets exit 0</td></tr>
+<tr><td><a href="evidence/feldera-statistics/numerical.txt">Numerical and query equivalence</a></td><td>31 tests passed</td></tr><tr><td><a href="evidence/feldera-statistics/native.txt">Real Feldera execution</a></td><td>Both computations match DuckDB across bootstrap, updates, deletion and empty input</td></tr><tr><td>Runtime and publication</td><td>50 focused tests passed, including cache restart, changed inputs, phases, failures and eviction</td></tr><tr><td>Compiler profile</td><td>ASOF build/lint/test passed; 38 comparisons and refusal cases</td></tr><tr><td><a href="evidence/feldera-statistics/pages.json">Pages composition</a></td><td>Both computations retained; DuckDB snapshots selected; Feldera removed</td></tr><tr><td><a href="evidence/feldera-statistics/live.json">Live browser</a></td><td>9,584 ms, same document, no errors; rollback restored the probability</td></tr>
+</tbody></table>
+<p>The first app integration exposed two SSR tests racing initial statistics publication. They now wait for the durable completion boundary before checking server-rendered rows; hydration equality and live-update assertions remain intact. The full rerun passed.</p>
+<p>Backend review found ambiguous equal-date ratings; the shared carrier now refuses them and both paths have regressions. Re-review found no remaining findings. QA reviewed the startup wait without findings. Existing screens and the IR remained the visual oracle; both screenshots were inspected. The simplification pass removed the unused UUID-cast extension and avoided allocations in Unicode ordering.</p>
+
+<section id="calendar-cutoff">
+<h2>Calendar boundaries repaired; cold startup made explicit</h2>
+<p>Agy caught a seven-year cutoff changing when leap-day subtraction clamps two timestamps onto the same day. The fix selects the latest game before taking its shifted value. The same rule now protects the earliest phase game at the four-year century boundary (2104 → 2100). Both regression cases failed before the change and pass against the legacy query oracle afterward.</p>
+<div class="metrics"><div><strong>33 tests</strong>Numerical and query equivalence passed</div><div><strong>2 native tests</strong>Feldera matched snapshots across ten fixture stages</div><div><strong>5.5 seconds</strong>Warm-cache browser update; no reload</div></div>
+<div class="screens"><figure><a href="evidence/calendar-cutoff/before.png"><img src="evidence/calendar-cutoff/before.png" alt="Flamengo title odds before the score change: 73.06 percent"></a><figcaption>Before: 73.06% title probability.</figcaption></figure><figure><a href="evidence/calendar-cutoff/after.png"><img src="evidence/calendar-cutoff/after.png" alt="Flamengo title odds after the score change: 52.33 percent"></a><figcaption>After: 52.33%, delivered to the same document. Undo restored the original value.</figcaption></figure></div>
+<p><a href="evidence/calendar-cutoff/live.json">Browser evidence</a> records 5,475 ms and zero browser errors. The retained pure-job cache stayed at 17 entries: this is warm seeded evidence, not a production latency promise. Both screenshots were inspected. <a href="evidence/calendar-cutoff/numerical.txt">Numerical results</a> and <a href="evidence/calendar-cutoff/native.txt">native engine results</a> preserve the focused checks.</p>
+<p>Golaberto doctor, generate, build, lint, test and full integration all exited 0. Acceptance includes the previously failing timezone case and the separate live-statistics target. Initial publication now has a cold-compilation budget before browser assertions; subsequent updates retain their 180-second limits. The broken plugin documentation link was fixed and both link tests pass. A broader plugin test run encountered untrusted temporary Mise configurations; that run is not claimed green.</p>
+<p>Plausible's full integration passed in an isolated rerun, including cold-start/realtime, appearance, replay and visual targets. An earlier concurrent invocation lost its Docker bridge even though its test container exited successfully; sequential execution avoids that runner interference. After these full integrations, origin/main advanced to ebcf98ca8. Its release-pin merge conflicted only in a generated Plausible manifest; regeneration resolved it. Both app generate/lint gates and all six query tests passed after the merge. Application runtime files remain unchanged from the integrated revision. GitHub checks must pass on the pushed revision before merge.</p>
+<p>Agy's focused re-review and the Astra/high backend review found no further actionable issues. The simplification pass retained the small extrema joins and shared regression fixture without extending the translator. The existing screen remains the visual oracle.</p>
+<p class="note">The deployment audit confirms that Conduit/Redis still carry compute wakeups and four remaining Golaberto pipelines. Snapshot capture/diffing, complete output extraction and numerical work remain scaling limits. Native Windows is not validated; the default compiler still assumes Unix UID/GID. See <a href="statistics.md">Statistics</a> for the current contract.</p>
+</section>
+<details><summary>Earlier delivery entries</summary><p class="note">Historical record: older entries describe the previous implementation. Internal durable work now uses Durex, native Feldera is adopted for these relations, and unchanged pure jobs can be reused. The current contract and remaining limits are described above and in <a href="statistics.md">Statistics</a>.</p><h2>2026-10-20 — PR integration and review</h2>
+<p>Status: verified locally against current main; not deployed.</p>
+<p><a href="../../../plugins/pronto/compute/docs/index.md">The coordinator</a> now follows the
+current Mecha compiler&#39;s serializable transaction contract. Serialization
+failures and deadlocks retry publication without recalculating frozen inputs.
+The compiler retains browser machine surfaces and contracts while omitting those
+surfaces for server-only work. The generated artifact and release toolchain lock
+were refreshed after integrating upstream changes.</p>
+<p>Independent backend and QA reviews found no actionable findings; a second backend
+review of the integration also found none. These seats used Astra/high. The lead
+performed the simplification pass and inspected the screenshots; existing screens
+remained the visual oracle. A real PostgreSQL conflict regression captures and
+calculates once, publishes twice after rollback, and verifies the committed sink,
+machine and Airlock outcome share one transaction ID.</p>
+<p>App doctor, generate, build, lint and test exited 0. The hybrid suite passed 21
+tests; focused compiler/contract/spike tests passed 18; coordinator/publication
+passed 18, including 12 coordinator cases; main compute runtime passed 18. The
+final artifact whitespace normalization passed five focused tests including seven
+PostgreSQL steps. Docs links and diff whitespace checks passed.</p>
+<p>Fresh-stack source integration passed all four browser cases in 26 seconds:</p>
+<pre><code class="language-sh">MONOREPO_COMPOSE_MODE=service COMPOSE_PROJECT_NAME=duckstream-pr-live CADDY_TLS_HOST_PORT=0 \
+  just sayt -d apps/golaberto --script integrate.nu --target check-statistics-live
+</code></pre>
+<p>Two earlier attempts stopped during build setup: an outdated release lock, then
+an omitted monorepo source-mode environment setting. The lock was regenerated
+and the explicit source-mode command passed. The running compute container&#39;s
+coordinator, publisher, Airlock adapter and generated SQL matched this checkout.</p>
+<p>Using the same built images, Flamengo&#39;s title probability changed from 73.06%
+to 52.33% in 8.2 seconds without reloading:
+<a href="evidence/pr-integration-chances-before.png">before</a> and
+<a href="evidence/pr-integration-chances-after.png">after</a>. Goals and goals per 90 changed
+from 18/0.709 to 19/0.748 in two original reader documents in 1.2 seconds:
+<a href="evidence/pr-integration-goals-before.png">before</a>,
+<a href="evidence/pr-integration-goals-after.png">after</a> and
+<a href="evidence/pr-integration-goals-second-reader.png">second reader</a>. Undo restored
+the values. These are observed timings, not guarantees. After undo, both machines
+were idle and all 11 Airlock records had completed outcomes. The isolated test
+containers, volumes and network were removed; the original local stack remained
+healthy and unchanged.</p>
+<p>The <a href="../../../plugins/pronto/docs/decisions/2026-10-19-duckstream-runtime.md">design</a>
+now explicitly bounds the proposed DuckDB adapter to full relation recomputation
+and result comparison. Reusing existing CDC with retained DuckLake snapshots and
+append-only history is the next direction; this PR does not implement that
+history path or incremental Feldera execution.</p>
+<h2>2026-10-20 — Cortex coordinates Airlock work</h2>
+<p>Status: implemented and verified locally; not deployed.</p>
+<p>The minibatch lifecycle now uses a compiled Cortex machine through Mecha&#39;s
+bounded reducer runtime. Airlock gained internal durable work: entering an
+invoking state enqueues a Graphile delivery, and publication commits the sinks,
+hook, work outcome and machine completion together. The TypeScript worker
+captures inputs, calculates and publishes; it no longer owns lifecycle
+transitions. See the
+<a href="../../../plugins/pronto/compute/docs/index.md">compute machine contract</a> and
+<a href="../../../libraries/mecha/services/airlock/README.md">Airlock contract</a>.</p>
+<p>The local upgrade preserved completed revisions from the drained previous
+coordinator. Undrained legacy state and incompatible installed compiler
+fingerprints fail explicitly. After browser edits and undo, both machines were
+idle with requested and completed revisions equal; all 17 recorded Airlock
+invocations had committed completion outcomes.</p>
+<h3>What using it showed</h3>
+<p>The same live tests passed after replacing only the compute container. Flamengo&#39;s
+title probability changed from 73.06% to 52.33% in 8.5 seconds without reloading:
+<a href="evidence/cortex-chances-before.png">before</a> and
+<a href="evidence/cortex-chances-after.png">after</a>. Goals changed from 18 to 19 and
+goals per 90 from 0.709 to 0.748 in both original reader documents in 948 ms:
+<a href="evidence/cortex-goals-before.png">before</a>,
+<a href="evidence/cortex-goals-after.png">after</a> and
+<a href="evidence/cortex-goals-second-reader.png">second reader</a>. Undo restored the
+values. All screenshots were inspected. These timings are local observations;
+the goal projection and dependent metric still arrive separately.</p>
+<h3>Verification</h3>
+<ul>
+<li>App Sayt doctor, generate, build, lint and test: exit 0.</li>
+<li>Mecha generation and Pronto doctor: exit 0.</li>
+<li>Machine/compiler suite: 22 tests passed, including generated-artifact parity.</li>
+<li>Airlock suite: 36 tests passed, including internal worker SIGKILL recovery,
+transactional outcome rollback and isolation from other workers.</li>
+<li>Compute suite: 64 tests passed; the final expanded coordinator suite passed
+all 11 cases after the review fixes, including legacy migration, same-transaction
+publication, forged-completion rejection and permissive-default-ACL isolation.</li>
+<li>Host browser suite: four tests passed in 22 seconds.</li>
+<li>Fresh-stack current-source integration using the command below: exit 0,
+four browser tests passed in 26 seconds. Its containers and volumes were
+removed; the primary local stack remains healthy.</li>
+</ul>
+<pre><code class="language-sh">COMPOSE_PROJECT_NAME=golaberto-statistics-source CADDY_TLS_HOST_PORT=0 \
+  just sayt -d apps/golaberto --script integrate.nu --target check-statistics-live
+</code></pre>
+<p>Review found inherited default grants could expose private machine objects,
+and automatic outcome transitions could bypass fresh invocation entry. Both
+were fixed with regressions; the second backend review had no remaining
+findings. Durable implementation and review used Astra/high; the lead verified
+evidence and performed the simplification pass. Existing screens remained the
+visual oracle.</p>
+<h3>Remaining scope</h3>
+<p>Golaberto still runs handwritten DuckDB SQL and coalesced full numerical fits.
+The Feldera typed-plan translation remains a separate compiler probe, with
+HOP/TUMBLE lowering and type equivalence unfinished. Production CDC bootstrap,
+recovery, event-time progress and change publication are still required.
+Conduit and Redis remain in the transport/projection path. Machine receipts and
+Airlock outcomes also need a retention policy before sustained production use.</p>
+<h2>2026-10-19 — Live statistics through durable minibatches</h2>
+<p>Status: implemented and verified locally; not deployed.</p>
+<p>Golaberto now uses the compute service&#39;s durable minibatches for ratings and
+chances. Previously, transport delivery waited for a full computation and its
+separate HTTP writes. Now PostgreSQL accepts a coalesced request, Graphile runs
+it against retained inputs, and one transaction publishes the numerical sinks,
+completion hook and revision receipt. Existing screens remain the visual
+oracle: committed changes reach open readers through Electric.</p>
+<p>The runtime contract belongs to
+<a href="../../../plugins/pronto/docs/pipelines-and-schedules.md#computations">computations</a>;
+the wider migration remains in the
+<a href="../../../plugins/pronto/docs/decisions/2026-10-19-duckstream-runtime.md">Duckstream decision</a>.</p>
+<h3>What using it showed</h3>
+<p>Recording a heavy Flamengo defeat changed its title probability from 73.06% to
+52.33% in 9.0 seconds on the same document. Undo restored the original probability.
+Compare <a href="evidence/statistics-chances-before.png">before</a> with
+<a href="evidence/statistics-chances-after.png">after</a>.</p>
+<p>Adding a K. Viveros goal changed 18 to 19 goals and goals per 90 from 0.709 to
+0.748 in two already-open readers. The dependent metric settled in 1.1 seconds
+in the final capture; undo restored both values. Compare
+<a href="evidence/statistics-goals-before.png">before</a>,
+<a href="evidence/statistics-goals-after.png">after</a> and the
+<a href="evidence/statistics-goals-second-reader.png">second reader</a>. These are observed
+local timings, not latency guarantees. The raw goal projection and its metric
+drain arrive separately; the test waits for both and rejects a page reload.</p>
+<p>All screenshots were inspected. The four live acceptance tests cover chances,
+standings, goals with their dependent rate, and appearances, including undo.</p>
+<h3>Verification</h3>
+<p>Commands ran from the repository root unless stated otherwise.</p>
+<ul>
+<li><code>just sayt -d apps/golaberto doctor</code>, <code>generate</code>, <code>build</code>, <code>lint</code>, and <code>test</code>: exit 0.</li>
+<li><code>just sayt -d libraries/mecha generate</code>: exit 0.</li>
+<li><code>LC_ALL=C LANG=C mise x -- task test:compute</code>, from <code>libraries/mecha</code>: exit 0, 61 tests. After the isolation review fix, all eight coordinator tests and six publication tests passed again; type checks and lint passed.</li>
+<li>Real Redis/Connect transport integration: five tests passed.</li>
+<li>Final host browser run: four tests passed, including dependent goals-per-90 updates in both readers.</li>
+<li>Fresh-stack current-source integration: exit 0, four browser tests passed in 27 seconds:</li>
+</ul>
+<pre><code class="language-sh">COMPOSE_PROJECT_NAME=golaberto-statistics-source CADDY_TLS_HOST_PORT=0 \
+  just sayt -d apps/golaberto --script integrate.nu --target check-statistics-live
+</code></pre>
+<p>The app lock now matches its existing Pronto and Sayt version pins. The Docker
+CI envelope using released Mecha images could not validate this unreleased core
+change: its pinned database image lacked an initialization script. The successful
+Compose integration above builds the current local sources. A Docker Desktop
+BuildKit panic interrupted one attempt; restarting the daemon preserved the
+original app data, and the retry passed.</p>
+<p>The Pronto backend review found a transaction-isolation compatibility issue;
+publication now resolves the service role&#39;s isolation before beginning its
+transaction. A real coordinator test verifies read committed, repeatable read
+and serializable, including runtime role changes and a shared transaction ID
+for sinks, hook and receipt. Re-review had no remaining findings. Implementation,
+live evidence and durable review used Astra/high; the lead coordinated gates
+and the simplification pass. No new visual-design choice was required.</p>
+<h3>Remaining scope</h3>
+<p>Conduit and Redis still carry invalidations and existing projections/drains.
+The solvers still perform full fits, coalesced into minibatches; partial group
+replacement, the Feldera runtime/replay adapter and transport retirement remain
+future work. Publication is atomic within each numerical batch, not across all
+raw pipelines and drains. Retained inputs consume PostgreSQL space, and the
+initial runtime deliberately runs one numerical computation at a time.</p>
+<h2>2026-10-20 — Typed computation boundaries and broader SQL admission</h2>
+<p>Status: implemented and verified locally; not deployed.</p>
+<p>Ratings and chances now validate their seven numerical sinks against the entity
+schemas. Ratings&#39; UUID query inputs also use typed capture. Mecha reuses its
+portable value contract; Pronto supplies the table and declarations without
+becoming a Mecha dependency. The numerical modules and WASM binary are unchanged.
+The existing screens remain the visual oracle; no new visual design was needed.</p>
+<p>Recording a heavy Flamengo defeat changed its title chance from 73.06% to 59.55%
+in 6.4 seconds in the same open document. Undo restored 73.06%. The inspected
+<a href="evidence/typed-chances-before.png">before</a> and
+<a href="evidence/typed-chances-after.png">after</a> captures show the updated probabilities
+and standings. This is a local observation, not a latency guarantee.</p>
+<p>Microbatching remains the Cortex scheduling policy. HOP/TUMBLE describe event-time
+membership and are not required for these numerical batches. Native PostgreSQL
+and DuckDB stages can cover operations outside the admitted Feldera subset;
+those dependencies and typed boundaries must remain explicit. The
+<a href="../../../libraries/mecha/docs/compute.md">native contract</a> and
+<a href="../../../plugins/pronto/docs/decisions/2026-10-20-duckstream-backend-contract.md">backend design</a>
+record that division. Golaberto still uses native DuckDB queries; the expanded
+Feldera translator is a spike, not its production query path.</p>
+<p>Verification completed with exit 0:</p>
+<ul>
+<li>App Sayt doctor, generate, build, lint and test; Pronto CUE emission fixtures;
+Mecha generation. Generated container specs contain all fifteen types and all
+seven sink schemas. Built compute source hashes match the worktree.</li>
+<li>Compute Sayt doctor/build/lint/test/integrate under pinned Deno 2.9.7: 72 tests
+and a real PostgreSQL → DuckDB → PostgreSQL round trip for all fifteen types.</li>
+<li>Stock JSON compiler Sayt doctor/build/lint/test: 36 fixtures, 16 translations,
+31 comparisons and 17 refusal cases.</li>
+<li>Fresh-stack browser acceptance: four tests passed in 25 seconds, covering
+chances, standings, goals/rates and appearances with undo and no reload.</li>
+<li>Separate host-browser chances capture and undo: exit 0; both screenshots
+inspected. Documentation links and diff whitespace checks passed.</li>
+</ul>
+<p>The fresh-stack command was:</p>
+<pre><code class="language-sh">BUILDX_BUILDER=container MONOREPO_COMPOSE_MODE=service \
+  COMPOSE_PROJECT_NAME=duckstream-types-live CADDY_TLS_HOST_PORT=0 \
+  just sayt -d apps/golaberto --script integrate.nu --target check-statistics-live
+</code></pre>
+<p>The default Docker builder timed out fetching image metadata; the existing
+container builder completed the same current-source test. Earlier app admission
+failed because Deno discovered the browser package workspace through import-map
+paths; a local source-import bridge resolved that without duplicating contracts
+or changing dependencies. An emitted-config inspection caught stale generated
+metadata; explicit regeneration preceded the successful stack test.</p>
+<p>Implementation and backend review used Astra/high through the Pronto skill;
+the lead handled cross-layer wiring, gates, visual inspection and simplification.
+Review caught a bounded VARCHAR cast losing its width during translation. The
+translator now refuses it, with numeric and text stock-export regressions.
+Re-review found no remaining actionable issues. The simplification pass kept the
+shared canonicalizers and avoided introducing another type implementation.</p>
+<p>Conduit and Redis remain. Production Feldera artifact loading, CDC/DuckLake
+integration, retention and a general multi-engine stage graph remain follow-up
+work; numerical fits still recompute complete results per accepted batch.</p>
+</details>
+<footer>Merged origin/main at <code>f19cb4d00</code> in the dedicated Duckstream worktree. Pronto skill workflow: lead for implementation and QA (Terra unavailable); Astra/high for durable design and backend review. No new visual design or deployment approval was needed. Evidence is from the local seeded application.</footer>
+</details>
+<section id="bounded-odds-20261025">
+<h2>25 October 2026 — large odds results fit; archive publication remains blocked</h2>
+<p>The numerical algorithm is unchanged. Physical ASOF joins now partition equal keys into 64 buckets, and the disk-backed engine avoids a window optimization that expanded source validation into a large self-join. All four full-archive chances relations match the original logical SQL at a 32 MB engine budget. A sufficiently skewed key can still exceed that budget and fail.</p>
+<p>Previously a large odds group exceeded the output limit. The Compute Worker now permits 16 MiB of private WASM stdout, retains only finish-relevant fields in a checkpoint of at most 4 MiB, and emits 256 KiB pages. Commits and RPC remain capped at 8 MiB. Restarting after the compact checkpoint does not repeat WASM.</p>
+<table><thead><tr><th>Observed proof</th><th>Result</th></tr></thead><tbody>
+<tr><td>All ratings outputs against the independent reference</td><td>1,382,587 team-history rows, 41,155 player ratings and 3,931 phase evaluations match exactly. Diagnostic forks and four disjoint shards are explicit; production execution remains sequential.</td></tr>
+<tr><td>Largest odds group on hosted Cloudflare, 128 MiB</td><td>218 teams; 43 durable steps; all 47,762 output rows exact; completed replay stable. Both temporary Workers deleted. The tested bundle used the same 16 MiB stdout threshold now integrated in source.</td></tr>
+<tr><td>Full chances archive</td><td>Paused at revision 13814 after 11,528 of 15,518 groups; the resumed verification below subsequently completed the comparison.</td></tr>
+<tr><td>Atomic ratings publication</td><td>All three sinks staged, sealed and survived restart. Final publication was interrupted after about 596 seconds wall time and 505 seconds of local worker-process CPU, with a source read still queued. Receipt and rollback recovery remain unverified.</td></tr>
+</tbody></table>
+<p>The publication experiment crossed the 15 GiB disk-headroom floor. Completed diagnostic copies were removed; original archives, output evidence and resumable state are preserved. All owned archive Workers are stopped. Process CPU and RSS are not hosted isolate billing or memory measurements.</p>
+<p>A narrow additional fix replaces per-row source notifications with nonempty statement transition tables. Bulk writes now avoid repeating identical table-level bookkeeping, while zero-row writes, conflict no-ops, rollback, truncation and trigger migration retain their tested behavior. This optimization has not yet been measured on full archive publication and is not claimed to resolve that blocker.</p>
+<p>Gates observed at exit 0: Golaberto full Sayt tests; Pronto full Sayt tests and lint; edge suite (60 tests, 21 steps); bounded numerical tests (10); paged-compute budget tests (6); snapshot coordinator (38). The compiler's 12 physical regressions passed. Astra/high backend reviews returned no findings for paging/ASOF and the notification migration. The lead handled integration and one simplification pass; no visual design changed.</p>
+<p><strong>No deployment or merge.</strong> Remaining acceptance includes interrupted-publication recovery and capacity, the remaining chances groups, and first-query memory after sustained ingestion. <a href="evidence/production-review/bounded-runtime.json">Capacity evidence</a> · <a href="evidence/production-review/merge-review.json">Merge review</a></p>
+</section>
+
+<section id="archive-resume-20261025">
+<h2>25 October 2026 — the complete numerical archive matches</h2>
+<p>Resuming the retained computation completed every one of the 15,518 chances groups, including the largest 218-team group, without replaying completed history. The final state is revision 22036. All 1,134,231 output rows match the independent original logical-SQL/pure-WASM reference exactly, including canonical file hashes.</p>
+<table><thead><tr><th>Output</th><th>Exact rows</th></tr></thead><tbody>
+<tr><td>Team chances</td><td>58,440</td></tr><tr><td>Zone chances</td><td>81,522</td></tr>
+<tr><td>Position chances</td><td>988,850</td></tr><tr><td>Game importance</td><td>5,419</td></tr>
+</tbody></table>
+<p>The actual Query/Compute execution retained its 32 MB DuckDB budget. Native DuckDB was used only after completion to export finalized outputs from a read-only SQLite snapshot. Retained capture identities and controlled artifact adaptations remain explicit in the evidence; this is not a pristine production deployment.</p>
+<h3>The warm-import failure is fixed</h3>
+<p>A fresh uninterrupted import reproduced the failure: DuckDB exhausted its budget while creating an automatic checkpoint. Its built-in checkpoint threshold is now 1 MB in the disk-backed profile. With only that setting changed, 8,672,468 source rows imported in 926 seconds in the same worker; the formerly failing join then took 98 ms. No reopen, eviction or fallback was used. The numerical engine binary and memory limit are unchanged.</p>
+<p>The package build, lint, ten unit tests and workerd integration all exited zero. Integration now exercises repeated batch inserts and their persisted contents after reopen. The focused backend review returned no findings; the lead's simplification pass kept the existing configuration mechanism.</p>
+<h3>Publication recovery works; full publication is still the blocker</h3>
+<p>The interrupted publication recovered without a receipt. Public table counts were unchanged, sampled attempted outputs remained invisible, and every sealed output stage survived. A source read completed in 6.27 ms after recovery. This closes the recovery check, not the large-publication capacity requirement.</p>
+<p>A controlled filesystem experiment preserved all 8,864,202,847 logical PostgreSQL bytes and node metadata while changing compressed blocks from 128 KiB to 8 KiB. The same 1,024-row rollback profile improved from 20.12 seconds to 2.75 seconds, with identical PostgreSQL buffer activity. An 8,192-row profile took 15.56 seconds. The SQLite image grew from 2.52 GB to 4.65 GB; both comparison clones had their own snapshot pins released. No production format migration was performed.</p>
+<p><strong>At this checkpoint, the PR remained blocked for deployment and merge.</strong> The later prepared-baseline deployment below supersedes the deployment status, but not the large-publication limit. These measurements do not prove that 1.38 million ratings can publish within one Cloudflare request while source requests remain responsive. A format migration must preserve active captures, source identity, receipts and authentication. A different publication design must preserve declared multi-sink atomicity and downstream visibility; directly committing chunks to current tables would change that contract.</p>
+<p>At that checkpoint, diagnostic workers were stopped, original data and resumable evidence were preserved, and production was unchanged. The later release below replaces the hosted installation. <a href="evidence/production-review/bounded-runtime.json">Complete evidence and provenance</a> · <a href="cloudflare-release.md">Release constraints</a> · <a href="evidence/production-review/merge-review.json">Remaining merge requirements</a></p>
+</section>
+<section id="isolated-duckstream-release-20261025">
+<h2>25 October 2026 — The archive is live with isolated computation and rendering</h2>
+<p>GolAberto now serves its archive, standings, odds and rating charts at <a href="https://golaberto.bonisoft3.com">golaberto.bonisoft3.com</a>. The release restores five real computation receipts prepared locally, so boot does not trigger an unnecessary archive recount. The original football archive was not modified.</p>
+<h3>Keep the work outside request-serving memory</h3>
+<p>Standings joins and aggregates moved from the PostgreSQL serving drain into Duckstream. All 58,440 rows matched the PostgreSQL oracle across 19 fields under a 32 MB SQL budget. Ratings, chances, cards and player counters already had their separate compute path. Six smaller database drains remain.</p>
+<p>A combined renderer still exceeded memory during a render RPC. Rendering now has its own Worker, alongside the separate Reader, DuckDB and numerical Workers. This exposed an RPC lifetime bug: a reader argument was disposed when headers returned, while the renderer still needed it. A real two-Worker test reproduced a 200,021-byte body truncated to its opening fragment. The fix retains the reader through stream completion and defers conditional 304 responses until all snapshot reads finish.</p>
+<figure><img src="evidence/production-review/standings-release/championship.png" alt="Live Brazilian championship standings with twenty teams" loading="lazy"><figcaption>Live standings after removing their serving-side aggregation drain.</figcaption></figure>
+<h3>A screenshot caught what hashes did not</h3>
+<p>The odds screenshot exposed an old diagnostic suffix in 562 team labels. Source and output hashes had been verified separately, but that did not prove producer lineage. The audit compared consumed source fields and reran all 332 simulations: every numerical output remained identical, and only those labels changed. An additive migration repaired the labels; the bootstrap helper now rejects mismatched labels even when file hashes are valid or a receipt already exists.</p>
+<figure><img src="evidence/production-review/standings-release/odds-before.png" alt="Before correction, Atlético-MG had a diagnostic suffix in the odds table" loading="lazy"><figcaption>Before: the diagnostic suffix was visible in the odds table.</figcaption></figure>
+<figure><img src="evidence/production-review/standings-release/odds.png" alt="Corrected live odds table with Atlético-MG and unchanged probabilities" loading="lazy"><figcaption>After: authoritative team names, unchanged probabilities.</figcaption></figure>
+<figure><img src="evidence/production-review/standings-release/team.png" alt="Flamengo historical rating chart in the live deployment" loading="lazy"><figcaption>The rating chart reads the prepared monthly-window history.</figcaption></figure>
+<h3>What passed, and what remains</h3>
+<p>Generation, full app tests for standings and lint passed. The final publisher/bootstrap slice passed 17 tests; the SSR slice passed nine, including real RPC streaming, HEAD, 304, failure, cancellation and disposal. Backend reviews had no remaining findings. No visual redesign was needed; existing pages were the oracle. Work used the current Codex lead and bounded inherited-model implementation/backend reviewers.</p>
+<p>The archive upload verified 1,559 files and 3,280 chunks. The final Worker is <code>55619f1a-d42d-4253-bce3-95d04264098c</code>. Its first publisher page check failed during one startup hang; the identical deployed configuration check passed on rerun. Subsequent browser checks passed for home, championship, team and odds. Twelve complete uncached documents passed at concurrency two, taking 0.78–3.22 seconds. The separate renderer recorded 52 events with no exceptions; no memory or disposed-reader errors appeared in the final observation.</p>
+<p>These are serving checks, not a full hosted edit-to-computation-to-browser acceptance test. Large month-transition atomic publication still lacks a hosted capacity proof; full standings recount currently requires 49,608 durable steps. Full native Docker integration was not completed after disk-limited attempts. One rollout startup hang remains unexplained. The PR is pushed but not merged, and its main-branch conflict is separate from this deployment.</p>
+<p><a href="evidence/production-review/bounded-runtime.json">Release measurements and limitations</a> · <a href="evidence/standings.json">Standings parity</a> · <a href="cloudflare-release.md">Current release procedure</a> · <a href="statistics.md">Computation contract</a></p>
+</section>
+<section id="main-merge-20261025">
+<h2>25 October 2026 — Merge main without changing the live deployment</h2>
+<p>Merged origin/main at <code>ef4980853</code> into the Duckstream branch. Conflict resolution preserves main’s portable runtime discovery and tracked form submissions, together with separate rendering, bounded bootstrap validation, explicit update-row targeting and all Duckstream gates. Generated Plausible targets were regenerated rather than retaining duplicate pinned definitions.</p>
+<p>Golaberto doctor, generation, full tests and lint exited zero. Plausible doctor, generation and lint exited zero. Focused publisher tests passed five cases; form tests passed four suites and nineteen steps; the installed-runtime boundary test passed. No deployment or new browser acceptance run was part of this merge; the preceding release’s screenshots remain its evidence.</p>
+<p>The month-transition limit is unchanged. Output chunks are bounded, but final publication still applies all staged changes in one transaction. The first played match in a new month moves the seven-year boundary and can make that transaction large. Versioned result generations with a small atomic visibility switch are the proposed direction, not an implemented guarantee.</p>
+</section>
+<section id="review-fixes-20261025">
+<h2>25 October 2026 — Close the publication and ingestion review findings</h2>
+<p>Native CDC mirrors now remove inherited nonowner grants on both creation and reuse, while source-trigger ingestion retains its authority. Startup retires recorded pipelines, slots, publications, carrier schemas and repair triggers for removed or renamed computations, keeping the ownership ledger until cleanup succeeds.</p>
+<p>Cloudflare staged publication releases its completed snapshot and reader immediately. Lost publication or cleanup acknowledgements keep a durable cleanup wake without marking committed work as a failed calculation or delaying already-due computations. Paged tests resolve their pinned DuckDB WASM directly through the compute dependency graph and use the frozen lock.</p>
+<p>Validation: the full compute suite passed 158 tests with two opt-in tests ignored; build and lint passed. Twenty-one paged coordinator tests and ten real workerd retention/object tests passed. Golaberto, Plausible and native image packaging generation passed. Independent follow-up reviews found no actionable issues. <a href="evidence/production-review/review-fixes.json">Review-fix evidence</a>.</p>
+<p>This was a backend correction: no deployment, rendered UI change or new hosted acceptance run. The live app and the separate partition-publication spike remain unchanged.</p>
+</section>
+<section id="ci-review-followup-2026-10-26">
+<h2>26 October — CI review follow-up</h2>
+<p>The shared DuckDB test fixture now resolves the pinned WASM asset independently of sibling node_modules. PostgreSQL serialization retries have their own budget, so a computation configured for one attempt can still recover from transaction contention. A forced serialization-conflict regression verifies one calculation and successful publication; the failure test now observes both promises without masking invalidation errors.</p>
+<p>Visual fixture discovery now waits within one deadline for Duckstream projections to appear, preserving related route parameters and immediately surfacing API errors and active-read timeouts. CI had queried the missing fixtures four to six seconds before their first publications.</p>
+<p>Compute doctor, build and lint passed; its suite passed 159 tests with two opt-in tests ignored. Golaberto doctor and the complete unit gate passed, including all 27 Duckstream tests. Sixteen visual resolver regression steps and type checks passed. The live browser checker found no missing fixtures. Two phone-layout clipping findings also occur with the unchanged checker, so the visual gate remains red. The full container integration build was stopped to limit disk use; the browser check ran against the existing local stack. <a href="evidence/production-review/ci-review-fixes.json">Validation details</a>.</p>
+<p>No deployment or application UI change was made.</p>
+</section>
+</main></body></html>

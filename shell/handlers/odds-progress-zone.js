@@ -1,5 +1,5 @@
-(state, event) => {
-  const row = state.items[0];
+({ context, event }) => {
+  const row = context.items[0];
   if (!row) return '*';
   if (event.value === '*') return '*';
   if (typeof event.value !== 'string' || event.value === '') return row.zone_id;

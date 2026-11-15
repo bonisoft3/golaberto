@@ -7,7 +7,7 @@ Publicly accessible web application.
 
 ## Screens Specification
 ### Screen: Game archive
-- Route: `/arquivo`
+- Route: `/jogos/arquivo`
 - Reads: Category, GameArchive
 
 ### Screen: Principal
@@ -43,31 +43,31 @@ Publicly accessible web application.
 - Reads: Team, PlayerDirectory, Stadium, Referee, GameArchive
 
 ### Screen: Manage championships
-- Route: `/gerenciar-competicoes`
+- Route: `/gerenciar/campeonatos`
 - Reads: Championship
 
 ### Screen: New championship
-- Route: `/nova-competicao`
+- Route: `/campeonatos/novo`
 - Reads: Category
 
 ### Screen: novo-arbitro
-- Route: `/novo-arbitro`
+- Route: `/arbitros/novo`
 - Reads: none
 
 ### Screen: novo-equipe
-- Route: `/novo-equipe`
+- Route: `/equipes/novo`
 - Reads: Stadium
 
 ### Screen: novo-estadio
-- Route: `/novo-estadio`
+- Route: `/estadios/novo`
 - Reads: none
 
 ### Screen: novo-jogador
-- Route: `/novo-jogador`
+- Route: `/jogadores/novo`
 - Reads: none
 
 ### Screen: novo-jogo
-- Route: `/novo-jogo`
+- Route: `/jogos/novo`
 - Reads: PhaseDirectory, Team, Stadium, Referee
 
 ### Screen: usuarios
@@ -335,6 +335,7 @@ Fields:
   - `slug` (string)
   - `created_by` (uuid)
   - `updated_by` (uuid)
+  - `sync_status` (string)
 
 ### Entity: Goal
 Fields:
@@ -348,6 +349,9 @@ Fields:
   - `aet` (bool)
   - `created_by` (uuid)
   - `updated_by` (uuid)
+  - `period` (string)
+  - `added_time` (int32)
+  - `source_order` (int32)
 
 ### Entity: PlayerGame
 Fields:
@@ -564,6 +568,7 @@ Fields:
   - `category_id` (uuid)
   - `phase_key` (string)
   - `category_key` (string)
+  - `fixture_available` (bool)
 
 ### Entity: Comment
 Fields:
@@ -924,6 +929,7 @@ Fields:
   - `referee_name` (string)
   - `home_logo_key` (string)
   - `away_logo_key` (string)
+  - `fixture_available` (bool)
 
 ### Entity: PlayerAppearance
 Fields:

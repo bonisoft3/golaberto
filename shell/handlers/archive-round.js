@@ -1,4 +1,4 @@
-(_state, event) => {
+({ event }) => {
   const value = event.value?.trim() ?? "";
   if (value === "") return "*";
   if (!/^\d+$/.test(value)) throw new Error(`Invalid archive round: ${value}`);

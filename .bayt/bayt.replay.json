@@ -1,9 +1,23 @@
 {
   "_generated_from": "bayt.cue (do not edit)",
   "entrypoint": {
-    "do": "deno run --config \"$(mise where github:bonisoft3/pronto)/deno.json\" --allow-read --allow-write --allow-run --allow-env \"$(mise where github:bonisoft3/pronto)/check-replay.ts\" .",
-    "shell": "sh",
+    "do": "let pronto = (if (($env.PRONTO_DIR? | default '') != '') { $env.PRONTO_DIR } else { (^mise where github:bonisoft3/pronto | str trim) }); if (($env.BAYT_LOCAL_WORK_DIR? | default '') != '') { let work = $env.BAYT_LOCAL_WORK_DIR; let pgroll = ($work | path join 'pgroll'); if ('.bayt/bayt.migrate.json' | path exists) and (not ($pgroll | path exists)) { mkdir $pgroll; let m = (open .bayt/bayt.migrate.json | get dockerfile); ($m | get -o copy | default []) | each {|c| cp ($c.srcs.0) ($pgroll | path join ($c.dst | path basename)) } | ignore; ($m | get -o epilogue | default []) | each {|e| let lines = ($e | lines); if ($lines.0 | str starts-with \"COPY <<'PGROLL' /tmp/\") { let name = ($lines.0 | parse \"COPY <<'PGROLL' /tmp/{name}.parts\" | get 0.name); ($lines | skip 1 | take while {|l| $l != \"PGROLL\" } | str join \"\" | decode base64) | save --raw -f ($pgroll | path join $name) } else if ($lines.0 | str starts-with \"COPY <<'PGROLL' /pgroll/\") { let name = ($lines.0 | parse \"COPY <<'PGROLL' /pgroll/{name}\" | get 0.name); $lines.1 | save --raw -f ($pgroll | path join $name) } else if ($lines.0 | str starts-with \"COPY <<'RECONCILE' /pgroll/\") { let name = ($lines.0 | parse \"COPY <<'RECONCILE' /pgroll/{name}\" | get 0.name); ($lines | skip 1 | drop 1 | str join \"\\n\") | save --raw -f ($pgroll | path join $name) } } | ignore }; let os = (match $nu.os-info.name { 'macos' => 'macos', 'windows' => 'windows', _ => 'linux' }); let sh = (if ('services/migrate/migrate.nu' | path exists) { 'services/migrate/migrate.nu' } else if ('services/migrate/migrate.sh' | path exists) and ($os != 'windows') { 'services/migrate/migrate.sh' } else { ((^mise where github:bonisoft3/mecha | str trim) | path join 'services/migrate/migrate.nu') }); with-env { PRONTO_REPLAY_INITDB: ($work | path join 'initdb.d'), PRONTO_REPLAY_PGROLL_DIR: $pgroll, PRONTO_MIGRATE_SH: $sh } { ^deno run --config ($pronto | path join 'deno.json') --allow-read --allow-write --allow-run --allow-env ($pronto | path join 'check-replay.ts') . } } else { ^deno run --config ($pronto | path join 'deno.json') --allow-read --allow-write --allow-run --allow-env ($pronto | path join 'check-replay.ts') . }",
+    "shell": "nu",
     "env": {
+      "PGHOST": {
+        "peer": "database",
+        "port": "pg",
+        "part": "host",
+        "prefix": "",
+        "suffix": ""
+      },
+      "PGPORT": {
+        "peer": "database",
+        "port": "pg",
+        "part": "port",
+        "prefix": "",
+        "suffix": ""
+      },
       "POSTGRES_USER": "${POSTGRES_USER:-postgres}",
       "POSTGRES_PASSWORD": "${POSTGRES_PASSWORD:-postgres}",
       "POSTGRES_DB": "${POSTGRES_DB:-golaberto}",

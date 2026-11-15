@@ -1,0 +1,24 @@
+Check libraries/mecha/services/compute/native-feldera_test.ts
+running 2 tests from ./libraries/mecha/services/compute/native-feldera_test.ts
+native CDC identity matches pinned ETL IDs ... ok (8ms)
+native CDC runtime captures deltas, restores baseline, and retires only owned slots ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+'native CDC runtime captures deltas, restores baseline, and retires only owned slots' has been running for over (1m0s)
+{"computation":"native-runtime-publication","capture":"5fc3049b-4bab-47d9-8f77-7800e91882f6","partitions":2,"deltaRows":2}
+[worker(worker-668e1a61f41c82f083)] INFO: Completed task 1 (compute_batch, 145.19ms) with success
+{"computation":"native-runtime-publication","capture":"ac2dc845-cb87-48c4-8ead-dcacc08a7dca","partitions":1,"deltaRows":2}
+[worker(worker-668e1a61f41c82f083)] INFO: Completed task 2 (compute_batch, 142.57ms) with success
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+{"computation":"native-runtime-publication","capture":"0586bbe8-adce-4ee2-acc9-b6591169b44b","partitions":0,"deltaRows":0}
+[worker(worker-f413fa293426968c2f)] INFO: Completed task 3 (compute_batch, 120.98ms) with success
+{"computation":"native-runtime-publication","capture":"4e476dd0-7477-4ad7-9ca7-e2ffa38fb0f9","partitions":1,"deltaRows":1}
+[worker(worker-f413fa293426968c2f)] INFO: Completed task 4 (compute_batch, 229.42ms) with success
+{"computation":"native-runtime-publication","capture":"d38c13e8-89d8-491c-b357-80afcad85e31","partitions":1,"deltaRows":0}
+[worker(worker-f413fa293426968c2f)] INFO: Completed task 5 (compute_batch, 120.73ms) with success
+{"computation":"native-runtime-publication","capture":"b2651bba-786e-438a-b36b-7ebc3dc3bd3b","partitions":1,"deltaRows":0}
+[worker(worker-f413fa293426968c2f)] INFO: Completed task 6 (compute_batch, 118.67ms) with success
+----- output end -----
+native CDC runtime captures deltas, restores baseline, and retires only owned slots ... ok (1m38s)
+
+ok | 2 passed | 0 failed (1m38s)

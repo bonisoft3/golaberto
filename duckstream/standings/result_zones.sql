@@ -1,0 +1,2 @@
+WITH "__duckstream_0" AS (SELECT "id" AS c0, "group_id" AS c1, "color" AS c2, "first" AS c3, "last" AS c4, "positions" AS c5 FROM "source_zone")
+SELECT CAST(result.c0 AS VARCHAR) AS "id", CAST(result.c1 AS VARCHAR) AS "group_id", CAST(result.c2 AS VARCHAR) AS "color", CAST(result.c3 AS INTEGER) AS "first", CAST(result.c4 AS INTEGER) AS "last", CAST(result.c5 AS VARCHAR) AS "positions" FROM (SELECT v.c0 AS c0, v.c1 AS c1, v.c2 AS c2, v.c3 AS c3, v.c4 AS c4, v.c5 AS c5 FROM "__duckstream_0" v) result;

@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-24",
+  "runtime": "PGlite coordinator, private DuckDB Queries Durable Object, private static SES Compute Durable Object",
+  "toolchain": {
+    "deno": "2.9.7",
+    "node": "26.11.1",
+    "wrangler": "4.149.0"
+  },
+  "gates": {
+    "doctor": 0,
+    "generate": 0,
+    "lint": 0,
+    "test": 0,
+    "native_integrate": 0,
+    "cloudflare_browser": 0,
+    "pages_and_ssr_tests": {
+      "passed": 30,
+      "failed": 0
+    },
+    "portable_boundary_snapshot_static_tests": {
+      "passed": 17,
+      "failed": 0
+    },
+    "cloudflare_packaging_workerd_tests": 0
+  },
+  "reviews": {
+    "claude": "Opus 5.5 high: ordering and artifact naming fixed; follow-up clear",
+    "agy": "Gemini 4 Argon high, TTY, --dangerously-skip-permissions: typed boundaries and error responses fixed; follow-up no findings"
+  },
+  "limits": [
+    "Cloudflare uses whole snapshots; native Feldera remains incremental.",
+    "128 MiB isolate memory includes JS and WASM.",
+    "Validated on Paid; Free admission and full Golaberto archive capacity unproved.",
+    "Old content-addressed companion Workers retained for rollback; retirement is manual."
+  ],
+  "serviceDigest": "06a2717a2769",
+  "rootVersion": "01d2ccde-02c1-4844-ad48-783eab9ad929"
+}

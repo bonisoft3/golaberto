@@ -1,0 +1,2797 @@
+{
+  "archive": {
+    "rels": [
+      {
+        "id": 0,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "source_team"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 1,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "source_game"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 2,
+        "relOp": "LogicalFilter",
+        "condition": {
+          "input": 9,
+          "name": "$9"
+        },
+        "inputs": [
+          1
+        ]
+      },
+      {
+        "id": 3,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "source_team"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 4,
+        "relOp": "LogicalJoin",
+        "condition": {
+          "pos": {
+            "line": 18,
+            "column": 24,
+            "end_line": 18,
+            "end_column": 37
+          },
+          "op": {
+            "name": "=",
+            "kind": "EQUALS",
+            "syntax": "BINARY"
+          },
+          "operands": [
+            {
+              "input": 15,
+              "name": "$15"
+            },
+            {
+              "input": 3,
+              "name": "$3"
+            }
+          ]
+        },
+        "joinType": "inner",
+        "inputs": [
+          2,
+          3
+        ]
+      },
+      {
+        "id": 5,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id0",
+          "id",
+          "phase_id",
+          "home_id",
+          "away_id",
+          "home_field",
+          "home_score",
+          "away_score",
+          "home_aet",
+          "away_aet",
+          "played",
+          "utc",
+          "moment",
+          "date",
+          "four_years",
+          "cutoff"
+        ],
+        "exprs": [
+          {
+            "input": 15,
+            "name": "$15"
+          },
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "input": 1,
+            "name": "$1"
+          },
+          {
+            "input": 2,
+            "name": "$2"
+          },
+          {
+            "input": 3,
+            "name": "$3"
+          },
+          {
+            "input": 4,
+            "name": "$4"
+          },
+          {
+            "input": 5,
+            "name": "$5"
+          },
+          {
+            "input": 6,
+            "name": "$6"
+          },
+          {
+            "input": 7,
+            "name": "$7"
+          },
+          {
+            "input": 8,
+            "name": "$8"
+          },
+          {
+            "input": 9,
+            "name": "$9"
+          },
+          {
+            "input": 10,
+            "name": "$10"
+          },
+          {
+            "input": 11,
+            "name": "$11"
+          },
+          {
+            "input": 12,
+            "name": "$12"
+          },
+          {
+            "input": 13,
+            "name": "$13"
+          },
+          {
+            "input": 14,
+            "name": "$14"
+          }
+        ],
+        "inputs": [
+          4
+        ]
+      },
+      {
+        "id": 6,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id0",
+          "phase_id",
+          "home_id",
+          "away_id",
+          "home_field",
+          "home_score",
+          "away_score",
+          "home_aet",
+          "away_aet",
+          "played",
+          "utc",
+          "moment",
+          "date",
+          "four_years",
+          "cutoff",
+          "id"
+        ],
+        "exprs": [
+          {
+            "input": 1,
+            "name": "$1"
+          },
+          {
+            "input": 2,
+            "name": "$2"
+          },
+          {
+            "input": 3,
+            "name": "$3"
+          },
+          {
+            "input": 4,
+            "name": "$4"
+          },
+          {
+            "input": 5,
+            "name": "$5"
+          },
+          {
+            "input": 6,
+            "name": "$6"
+          },
+          {
+            "input": 7,
+            "name": "$7"
+          },
+          {
+            "input": 8,
+            "name": "$8"
+          },
+          {
+            "input": 9,
+            "name": "$9"
+          },
+          {
+            "input": 10,
+            "name": "$10"
+          },
+          {
+            "input": 11,
+            "name": "$11"
+          },
+          {
+            "input": 12,
+            "name": "$12"
+          },
+          {
+            "input": 13,
+            "name": "$13"
+          },
+          {
+            "input": 14,
+            "name": "$14"
+          },
+          {
+            "input": 15,
+            "name": "$15"
+          },
+          {
+            "input": 0,
+            "name": "$0"
+          }
+        ],
+        "inputs": [
+          5
+        ]
+      },
+      {
+        "id": 7,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "source_championship"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 8,
+        "relOp": "LogicalFilter",
+        "condition": {
+          "pos": {
+            "line": 21,
+            "column": 8,
+            "end_line": 21,
+            "end_column": 28
+          },
+          "op": {
+            "name": "IS NULL",
+            "kind": "IS_NULL",
+            "syntax": "POSTFIX"
+          },
+          "operands": [
+            {
+              "input": 1,
+              "name": "$1"
+            }
+          ]
+        },
+        "inputs": [
+          7
+        ]
+      },
+      {
+        "id": 9,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "source_phase"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 10,
+        "relOp": "LogicalJoin",
+        "condition": {
+          "pos": {
+            "line": 20,
+            "column": 32,
+            "end_line": 20,
+            "end_column": 53
+          },
+          "op": {
+            "name": "=",
+            "kind": "EQUALS",
+            "syntax": "BINARY"
+          },
+          "operands": [
+            {
+              "input": 0,
+              "name": "$0"
+            },
+            {
+              "input": 3,
+              "name": "$3"
+            }
+          ]
+        },
+        "joinType": "inner",
+        "inputs": [
+          8,
+          9
+        ]
+      },
+      {
+        "id": 11,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id0",
+          "championship_id",
+          "id",
+          "category_id"
+        ],
+        "exprs": [
+          {
+            "input": 2,
+            "name": "$2"
+          },
+          {
+            "input": 3,
+            "name": "$3"
+          },
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "input": 1,
+            "name": "$1"
+          }
+        ],
+        "inputs": [
+          10
+        ]
+      },
+      {
+        "id": 12,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id0",
+          "category_id",
+          "id",
+          "championship_id"
+        ],
+        "exprs": [
+          {
+            "input": 2,
+            "name": "$2"
+          },
+          {
+            "input": 3,
+            "name": "$3"
+          },
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "input": 1,
+            "name": "$1"
+          }
+        ],
+        "inputs": [
+          11
+        ]
+      },
+      {
+        "id": 13,
+        "relOp": "LogicalJoin",
+        "condition": {
+          "pos": {
+            "line": 19,
+            "column": 25,
+            "end_line": 19,
+            "end_column": 39
+          },
+          "op": {
+            "name": "=",
+            "kind": "EQUALS",
+            "syntax": "BINARY"
+          },
+          "operands": [
+            {
+              "input": 18,
+              "name": "$18"
+            },
+            {
+              "input": 1,
+              "name": "$1"
+            }
+          ]
+        },
+        "joinType": "inner",
+        "inputs": [
+          6,
+          12
+        ]
+      },
+      {
+        "id": 14,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id1",
+          "category_id",
+          "id00",
+          "championship_id",
+          "id",
+          "phase_id",
+          "home_id",
+          "away_id",
+          "home_field",
+          "home_score",
+          "away_score",
+          "home_aet",
+          "away_aet",
+          "played",
+          "utc",
+          "moment",
+          "date",
+          "four_years",
+          "cutoff",
+          "id0"
+        ],
+        "exprs": [
+          {
+            "input": 16,
+            "name": "$16"
+          },
+          {
+            "input": 17,
+            "name": "$17"
+          },
+          {
+            "input": 18,
+            "name": "$18"
+          },
+          {
+            "input": 19,
+            "name": "$19"
+          },
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "input": 1,
+            "name": "$1"
+          },
+          {
+            "input": 2,
+            "name": "$2"
+          },
+          {
+            "input": 3,
+            "name": "$3"
+          },
+          {
+            "input": 4,
+            "name": "$4"
+          },
+          {
+            "input": 5,
+            "name": "$5"
+          },
+          {
+            "input": 6,
+            "name": "$6"
+          },
+          {
+            "input": 7,
+            "name": "$7"
+          },
+          {
+            "input": 8,
+            "name": "$8"
+          },
+          {
+            "input": 9,
+            "name": "$9"
+          },
+          {
+            "input": 10,
+            "name": "$10"
+          },
+          {
+            "input": 11,
+            "name": "$11"
+          },
+          {
+            "input": 12,
+            "name": "$12"
+          },
+          {
+            "input": 13,
+            "name": "$13"
+          },
+          {
+            "input": 14,
+            "name": "$14"
+          },
+          {
+            "input": 15,
+            "name": "$15"
+          }
+        ],
+        "inputs": [
+          13
+        ]
+      },
+      {
+        "id": 15,
+        "relOp": "LogicalJoin",
+        "condition": {
+          "pos": {
+            "line": 17,
+            "column": 24,
+            "end_line": 17,
+            "end_column": 37
+          },
+          "op": {
+            "name": "=",
+            "kind": "EQUALS",
+            "syntax": "BINARY"
+          },
+          "operands": [
+            {
+              "input": 0,
+              "name": "$0"
+            },
+            {
+              "input": 7,
+              "name": "$7"
+            }
+          ]
+        },
+        "joinType": "inner",
+        "inputs": [
+          0,
+          14
+        ]
+      },
+      {
+        "id": 16,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id1",
+          "category_id",
+          "id00",
+          "championship_id",
+          "id0",
+          "phase_id",
+          "home_id",
+          "away_id",
+          "home_field",
+          "home_score",
+          "away_score",
+          "home_aet",
+          "away_aet",
+          "played",
+          "utc",
+          "moment",
+          "date",
+          "four_years",
+          "cutoff",
+          "id01",
+          "id"
+        ],
+        "exprs": [
+          {
+            "input": 1,
+            "name": "$1"
+          },
+          {
+            "input": 2,
+            "name": "$2"
+          },
+          {
+            "input": 3,
+            "name": "$3"
+          },
+          {
+            "input": 4,
+            "name": "$4"
+          },
+          {
+            "input": 5,
+            "name": "$5"
+          },
+          {
+            "input": 6,
+            "name": "$6"
+          },
+          {
+            "input": 7,
+            "name": "$7"
+          },
+          {
+            "input": 8,
+            "name": "$8"
+          },
+          {
+            "input": 9,
+            "name": "$9"
+          },
+          {
+            "input": 10,
+            "name": "$10"
+          },
+          {
+            "input": 11,
+            "name": "$11"
+          },
+          {
+            "input": 12,
+            "name": "$12"
+          },
+          {
+            "input": 13,
+            "name": "$13"
+          },
+          {
+            "input": 14,
+            "name": "$14"
+          },
+          {
+            "input": 15,
+            "name": "$15"
+          },
+          {
+            "input": 16,
+            "name": "$16"
+          },
+          {
+            "input": 17,
+            "name": "$17"
+          },
+          {
+            "input": 18,
+            "name": "$18"
+          },
+          {
+            "input": 19,
+            "name": "$19"
+          },
+          {
+            "input": 20,
+            "name": "$20"
+          },
+          {
+            "input": 0,
+            "name": "$0"
+          }
+        ],
+        "inputs": [
+          15
+        ]
+      },
+      {
+        "id": 17,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id2",
+          "id",
+          "category_id",
+          "id0",
+          "championship_id",
+          "id1",
+          "phase_id",
+          "home_id",
+          "away_id",
+          "home_field",
+          "home_score",
+          "away_score",
+          "home_aet",
+          "away_aet",
+          "played",
+          "utc",
+          "moment",
+          "date",
+          "four_years",
+          "cutoff",
+          "id00"
+        ],
+        "exprs": [
+          {
+            "input": 20,
+            "name": "$20"
+          },
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "input": 1,
+            "name": "$1"
+          },
+          {
+            "input": 2,
+            "name": "$2"
+          },
+          {
+            "input": 3,
+            "name": "$3"
+          },
+          {
+            "input": 4,
+            "name": "$4"
+          },
+          {
+            "input": 5,
+            "name": "$5"
+          },
+          {
+            "input": 6,
+            "name": "$6"
+          },
+          {
+            "input": 7,
+            "name": "$7"
+          },
+          {
+            "input": 8,
+            "name": "$8"
+          },
+          {
+            "input": 9,
+            "name": "$9"
+          },
+          {
+            "input": 10,
+            "name": "$10"
+          },
+          {
+            "input": 11,
+            "name": "$11"
+          },
+          {
+            "input": 12,
+            "name": "$12"
+          },
+          {
+            "input": 13,
+            "name": "$13"
+          },
+          {
+            "input": 14,
+            "name": "$14"
+          },
+          {
+            "input": 15,
+            "name": "$15"
+          },
+          {
+            "input": 16,
+            "name": "$16"
+          },
+          {
+            "input": 17,
+            "name": "$17"
+          },
+          {
+            "input": 18,
+            "name": "$18"
+          },
+          {
+            "input": 19,
+            "name": "$19"
+          }
+        ],
+        "inputs": [
+          16
+        ]
+      },
+      {
+        "id": 18,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id1",
+          "phase_id",
+          "home_id",
+          "away_id",
+          "home_field",
+          "home_score",
+          "away_score",
+          "home_aet",
+          "away_aet",
+          "played",
+          "utc",
+          "moment",
+          "date",
+          "four_years",
+          "cutoff",
+          "id",
+          "id000",
+          "id00",
+          "championship_id",
+          "id0",
+          "category_id"
+        ],
+        "exprs": [
+          {
+            "input": 5,
+            "name": "$5"
+          },
+          {
+            "input": 6,
+            "name": "$6"
+          },
+          {
+            "input": 7,
+            "name": "$7"
+          },
+          {
+            "input": 8,
+            "name": "$8"
+          },
+          {
+            "input": 9,
+            "name": "$9"
+          },
+          {
+            "input": 10,
+            "name": "$10"
+          },
+          {
+            "input": 11,
+            "name": "$11"
+          },
+          {
+            "input": 12,
+            "name": "$12"
+          },
+          {
+            "input": 13,
+            "name": "$13"
+          },
+          {
+            "input": 14,
+            "name": "$14"
+          },
+          {
+            "input": 15,
+            "name": "$15"
+          },
+          {
+            "input": 16,
+            "name": "$16"
+          },
+          {
+            "input": 17,
+            "name": "$17"
+          },
+          {
+            "input": 18,
+            "name": "$18"
+          },
+          {
+            "input": 19,
+            "name": "$19"
+          },
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "input": 20,
+            "name": "$20"
+          },
+          {
+            "input": 3,
+            "name": "$3"
+          },
+          {
+            "input": 4,
+            "name": "$4"
+          },
+          {
+            "input": 1,
+            "name": "$1"
+          },
+          {
+            "input": 2,
+            "name": "$2"
+          }
+        ],
+        "inputs": [
+          17
+        ]
+      },
+      {
+        "id": 19,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id",
+          "phase_id",
+          "home_id",
+          "away_id",
+          "home_field",
+          "home_score",
+          "away_score",
+          "home_aet",
+          "away_aet",
+          "played",
+          "utc",
+          "moment",
+          "date",
+          "four_years",
+          "cutoff"
+        ],
+        "exprs": [
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "input": 1,
+            "name": "$1"
+          },
+          {
+            "input": 2,
+            "name": "$2"
+          },
+          {
+            "input": 3,
+            "name": "$3"
+          },
+          {
+            "input": 4,
+            "name": "$4"
+          },
+          {
+            "input": 5,
+            "name": "$5"
+          },
+          {
+            "input": 6,
+            "name": "$6"
+          },
+          {
+            "input": 7,
+            "name": "$7"
+          },
+          {
+            "input": 8,
+            "name": "$8"
+          },
+          {
+            "input": 9,
+            "name": "$9"
+          },
+          {
+            "input": 10,
+            "name": "$10"
+          },
+          {
+            "input": 11,
+            "name": "$11"
+          },
+          {
+            "input": 12,
+            "name": "$12"
+          },
+          {
+            "input": 13,
+            "name": "$13"
+          },
+          {
+            "input": 14,
+            "name": "$14"
+          }
+        ],
+        "inputs": [
+          18
+        ]
+      }
+    ]
+  },
+  "boundary": {
+    "rels": [
+      {
+        "id": 20,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "statistics_window"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 21,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "archive"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 22,
+        "relOp": "LogicalJoin",
+        "condition": {
+          "pos": {
+            "line": 25,
+            "column": 50,
+            "end_line": 25,
+            "end_column": 63
+          },
+          "op": {
+            "name": "=",
+            "kind": "EQUALS",
+            "syntax": "BINARY"
+          },
+          "operands": [
+            {
+              "input": 12,
+              "name": "$12"
+            },
+            {
+              "input": 0,
+              "name": "$0"
+            }
+          ]
+        },
+        "joinType": "left",
+        "inputs": [
+          20,
+          21
+        ]
+      },
+      {
+        "id": 23,
+        "relOp": "LogicalProject",
+        "fields": [
+          "latest",
+          "anchor",
+          "cutoff"
+        ],
+        "exprs": [
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "input": 1,
+            "name": "$1"
+          },
+          {
+            "input": 16,
+            "name": "$16"
+          }
+        ],
+        "inputs": [
+          22
+        ]
+      },
+      {
+        "id": 24,
+        "relOp": "LogicalAggregate",
+        "group": [
+          0,
+          1
+        ],
+        "aggs": [
+          {
+            "agg": {
+              "name": "MIN",
+              "kind": "MIN",
+              "syntax": "FUNCTION"
+            },
+            "type": {
+              "type": "VARCHAR",
+              "nullable": true,
+              "precision": -1
+            },
+            "distinct": false,
+            "operands": [
+              2
+            ],
+            "name": "cutoff"
+          }
+        ],
+        "inputs": [
+          23
+        ]
+      },
+      {
+        "id": 25,
+        "relOp": "LogicalProject",
+        "fields": [
+          "latest",
+          "seven_years",
+          "cutoff"
+        ],
+        "exprs": [
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "pos": {
+              "line": 24,
+              "column": 18,
+              "end_line": 24,
+              "end_column": 46
+            },
+            "op": {
+              "name": "+",
+              "kind": "PLUS",
+              "syntax": "SPECIAL"
+            },
+            "operands": [
+              {
+                "input": 1,
+                "name": "$1"
+              },
+              {
+                "literal": -84,
+                "type": {
+                  "type": "INTERVAL_YEAR",
+                  "nullable": false
+                }
+              }
+            ]
+          },
+          {
+            "input": 2,
+            "name": "$2"
+          }
+        ],
+        "inputs": [
+          24
+        ]
+      }
+    ]
+  },
+  "error_view": {
+    "rels": [
+      {
+        "id": 26,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "feldera_error_table"
+        ],
+        "inputs": []
+      }
+    ]
+  },
+  "phase_bounds": {
+    "rels": [
+      {
+        "id": 27,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "archive"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 28,
+        "relOp": "LogicalProject",
+        "fields": [
+          "phase_id",
+          "utc",
+          "moment"
+        ],
+        "exprs": [
+          {
+            "input": 1,
+            "name": "$1"
+          },
+          {
+            "input": 10,
+            "name": "$10"
+          },
+          {
+            "input": 11,
+            "name": "$11"
+          }
+        ],
+        "inputs": [
+          27
+        ]
+      },
+      {
+        "id": 29,
+        "relOp": "LogicalAggregate",
+        "group": [
+          0
+        ],
+        "aggs": [
+          {
+            "agg": {
+              "name": "MIN",
+              "kind": "MIN",
+              "syntax": "FUNCTION"
+            },
+            "type": {
+              "type": "TIMESTAMP",
+              "nullable": true,
+              "precision": 6
+            },
+            "distinct": false,
+            "operands": [
+              1
+            ],
+            "name": "earliest"
+          },
+          {
+            "agg": {
+              "name": "MAX",
+              "kind": "MAX",
+              "syntax": "FUNCTION"
+            },
+            "type": {
+              "type": "BIGINT",
+              "nullable": true
+            },
+            "distinct": false,
+            "operands": [
+              2
+            ],
+            "name": "until"
+          }
+        ],
+        "inputs": [
+          28
+        ]
+      }
+    ]
+  },
+  "recent": {
+    "rels": [
+      {
+        "id": 30,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "archive"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 31,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "boundary"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 32,
+        "relOp": "LogicalJoin",
+        "condition": {
+          "pos": {
+            "line": 27,
+            "column": 56,
+            "end_line": 27,
+            "end_column": 94
+          },
+          "op": {
+            "name": ">",
+            "kind": "GREATER_THAN",
+            "syntax": "BINARY"
+          },
+          "operands": [
+            {
+              "input": 10,
+              "name": "$10"
+            },
+            {
+              "pos": {
+                "line": 27,
+                "column": 64,
+                "end_line": 27,
+                "end_column": 94
+              },
+              "op": {
+                "name": "+",
+                "kind": "PLUS",
+                "syntax": "SPECIAL"
+              },
+              "operands": [
+                {
+                  "input": 15,
+                  "name": "$15"
+                },
+                {
+                  "literal": -125798400000,
+                  "type": {
+                    "type": "INTERVAL_DAY",
+                    "nullable": false,
+                    "precision": 10,
+                    "scale": 6
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        "joinType": "inner",
+        "inputs": [
+          30,
+          31
+        ]
+      },
+      {
+        "id": 33,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id",
+          "phase_id",
+          "home_id",
+          "away_id",
+          "home_field",
+          "home_score",
+          "away_score",
+          "home_aet",
+          "away_aet",
+          "played",
+          "utc",
+          "moment",
+          "date",
+          "four_years",
+          "cutoff"
+        ],
+        "exprs": [
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "input": 1,
+            "name": "$1"
+          },
+          {
+            "input": 2,
+            "name": "$2"
+          },
+          {
+            "input": 3,
+            "name": "$3"
+          },
+          {
+            "input": 4,
+            "name": "$4"
+          },
+          {
+            "input": 5,
+            "name": "$5"
+          },
+          {
+            "input": 6,
+            "name": "$6"
+          },
+          {
+            "input": 7,
+            "name": "$7"
+          },
+          {
+            "input": 8,
+            "name": "$8"
+          },
+          {
+            "input": 9,
+            "name": "$9"
+          },
+          {
+            "input": 10,
+            "name": "$10"
+          },
+          {
+            "input": 11,
+            "name": "$11"
+          },
+          {
+            "input": 12,
+            "name": "$12"
+          },
+          {
+            "input": 13,
+            "name": "$13"
+          },
+          {
+            "input": 14,
+            "name": "$14"
+          }
+        ],
+        "inputs": [
+          32
+        ]
+      }
+    ]
+  },
+  "result_appearances": {
+    "rels": [
+      {
+        "id": 34,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "recent"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 35,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "source_player"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 36,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "source_player_game"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 37,
+        "relOp": "LogicalFilter",
+        "condition": {
+          "pos": {
+            "line": 45,
+            "column": 8,
+            "end_line": 45,
+            "end_column": 22
+          },
+          "op": {
+            "name": ">",
+            "kind": "GREATER_THAN",
+            "syntax": "BINARY"
+          },
+          "operands": [
+            {
+              "input": 5,
+              "name": "$5"
+            },
+            {
+              "literal": 0,
+              "type": {
+                "type": "INTEGER",
+                "nullable": false
+              }
+            }
+          ]
+        },
+        "inputs": [
+          36
+        ]
+      },
+      {
+        "id": 38,
+        "relOp": "LogicalJoin",
+        "condition": {
+          "pos": {
+            "line": 44,
+            "column": 53,
+            "end_line": 44,
+            "end_column": 69
+          },
+          "op": {
+            "name": "=",
+            "kind": "EQUALS",
+            "syntax": "BINARY"
+          },
+          "operands": [
+            {
+              "input": 0,
+              "name": "$0"
+            },
+            {
+              "input": 4,
+              "name": "$4"
+            }
+          ]
+        },
+        "joinType": "inner",
+        "inputs": [
+          35,
+          37
+        ]
+      },
+      {
+        "id": 39,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id0",
+          "game_id",
+          "player_id",
+          "side",
+          "on_minute",
+          "off_minute",
+          "red",
+          "id",
+          "position"
+        ],
+        "exprs": [
+          {
+            "input": 2,
+            "name": "$2"
+          },
+          {
+            "input": 3,
+            "name": "$3"
+          },
+          {
+            "input": 4,
+            "name": "$4"
+          },
+          {
+            "input": 5,
+            "name": "$5"
+          },
+          {
+            "input": 6,
+            "name": "$6"
+          },
+          {
+            "input": 7,
+            "name": "$7"
+          },
+          {
+            "input": 8,
+            "name": "$8"
+          },
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "input": 1,
+            "name": "$1"
+          }
+        ],
+        "inputs": [
+          38
+        ]
+      },
+      {
+        "id": 40,
+        "relOp": "LogicalJoin",
+        "condition": {
+          "pos": {
+            "line": 44,
+            "column": 88,
+            "end_line": 44,
+            "end_column": 102
+          },
+          "op": {
+            "name": "=",
+            "kind": "EQUALS",
+            "syntax": "BINARY"
+          },
+          "operands": [
+            {
+              "input": 0,
+              "name": "$0"
+            },
+            {
+              "input": 16,
+              "name": "$16"
+            }
+          ]
+        },
+        "joinType": "inner",
+        "inputs": [
+          34,
+          39
+        ]
+      },
+      {
+        "id": 41,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id0",
+          "game_id",
+          "player_id",
+          "side",
+          "on_minute",
+          "off_minute",
+          "red",
+          "id00",
+          "position",
+          "id",
+          "phase_id",
+          "home_id",
+          "away_id",
+          "home_field",
+          "home_score",
+          "away_score",
+          "home_aet",
+          "away_aet",
+          "played",
+          "utc",
+          "moment",
+          "date",
+          "four_years",
+          "cutoff"
+        ],
+        "exprs": [
+          {
+            "input": 15,
+            "name": "$15"
+          },
+          {
+            "input": 16,
+            "name": "$16"
+          },
+          {
+            "input": 17,
+            "name": "$17"
+          },
+          {
+            "input": 18,
+            "name": "$18"
+          },
+          {
+            "input": 19,
+            "name": "$19"
+          },
+          {
+            "input": 20,
+            "name": "$20"
+          },
+          {
+            "input": 21,
+            "name": "$21"
+          },
+          {
+            "input": 22,
+            "name": "$22"
+          },
+          {
+            "input": 23,
+            "name": "$23"
+          },
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "input": 1,
+            "name": "$1"
+          },
+          {
+            "input": 2,
+            "name": "$2"
+          },
+          {
+            "input": 3,
+            "name": "$3"
+          },
+          {
+            "input": 4,
+            "name": "$4"
+          },
+          {
+            "input": 5,
+            "name": "$5"
+          },
+          {
+            "input": 6,
+            "name": "$6"
+          },
+          {
+            "input": 7,
+            "name": "$7"
+          },
+          {
+            "input": 8,
+            "name": "$8"
+          },
+          {
+            "input": 9,
+            "name": "$9"
+          },
+          {
+            "input": 10,
+            "name": "$10"
+          },
+          {
+            "input": 11,
+            "name": "$11"
+          },
+          {
+            "input": 12,
+            "name": "$12"
+          },
+          {
+            "input": 13,
+            "name": "$13"
+          },
+          {
+            "input": 14,
+            "name": "$14"
+          }
+        ],
+        "inputs": [
+          40
+        ]
+      },
+      {
+        "id": 42,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id",
+          "game_id",
+          "player_id",
+          "team_id",
+          "on",
+          "off",
+          "red",
+          "position"
+        ],
+        "exprs": [
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "input": 1,
+            "name": "$1"
+          },
+          {
+            "input": 2,
+            "name": "$2"
+          },
+          {
+            "pos": {
+              "line": 42,
+              "column": 39,
+              "end_line": 42,
+              "end_column": 96
+            },
+            "op": {
+              "name": "CASE",
+              "kind": "CASE",
+              "syntax": "SPECIAL"
+            },
+            "operands": [
+              {
+                "pos": {
+                  "line": 42,
+                  "column": 49,
+                  "end_line": 42,
+                  "end_column": 62
+                },
+                "op": {
+                  "name": "=",
+                  "kind": "EQUALS",
+                  "syntax": "BINARY"
+                },
+                "operands": [
+                  {
+                    "input": 3,
+                    "name": "$3"
+                  },
+                  {
+                    "literal": "home",
+                    "type": {
+                      "type": "VARCHAR",
+                      "nullable": false,
+                      "precision": -1
+                    }
+                  }
+                ]
+              },
+              {
+                "input": 11,
+                "name": "$11"
+              },
+              {
+                "input": 12,
+                "name": "$12"
+              }
+            ]
+          },
+          {
+            "input": 4,
+            "name": "$4"
+          },
+          {
+            "input": 5,
+            "name": "$5"
+          },
+          {
+            "input": 6,
+            "name": "$6"
+          },
+          {
+            "pos": {
+              "line": 43,
+              "column": 53,
+              "end_line": 43,
+              "end_column": 75
+            },
+            "op": {
+              "name": "COALESCE",
+              "kind": "COALESCE",
+              "syntax": "FUNCTION"
+            },
+            "operands": [
+              {
+                "input": 8,
+                "name": "$8"
+              },
+              {
+                "literal": "",
+                "type": {
+                  "type": "CHAR",
+                  "nullable": false,
+                  "precision": 0
+                }
+              }
+            ]
+          }
+        ],
+        "inputs": [
+          41
+        ]
+      }
+    ]
+  },
+  "result_cutoff": {
+    "rels": [
+      {
+        "id": 43,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "boundary"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 44,
+        "relOp": "LogicalProject",
+        "fields": [
+          "since"
+        ],
+        "exprs": [
+          {
+            "input": 2,
+            "name": "$2"
+          }
+        ],
+        "inputs": [
+          43
+        ]
+      }
+    ]
+  },
+  "result_games": {
+    "rels": [
+      {
+        "id": 45,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "archive"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 46,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "boundary"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 47,
+        "relOp": "LogicalJoin",
+        "condition": {
+          "literal": true,
+          "type": {
+            "type": "BOOLEAN",
+            "nullable": false
+          }
+        },
+        "joinType": "inner",
+        "inputs": [
+          45,
+          46
+        ]
+      },
+      {
+        "id": 48,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id",
+          "phase_id",
+          "home_id",
+          "away_id",
+          "home_field",
+          "home_score",
+          "away_score",
+          "home_aet",
+          "away_aet",
+          "moment",
+          "date",
+          "seven_years",
+          "recent"
+        ],
+        "exprs": [
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "input": 1,
+            "name": "$1"
+          },
+          {
+            "input": 2,
+            "name": "$2"
+          },
+          {
+            "input": 3,
+            "name": "$3"
+          },
+          {
+            "input": 4,
+            "name": "$4"
+          },
+          {
+            "input": 5,
+            "name": "$5"
+          },
+          {
+            "input": 6,
+            "name": "$6"
+          },
+          {
+            "input": 7,
+            "name": "$7"
+          },
+          {
+            "input": 8,
+            "name": "$8"
+          },
+          {
+            "input": 11,
+            "name": "$11"
+          },
+          {
+            "input": 12,
+            "name": "$12"
+          },
+          {
+            "pos": {
+              "line": 30,
+              "column": 20,
+              "end_line": 30,
+              "end_column": 39
+            },
+            "op": {
+              "name": ">=",
+              "kind": "GREATER_THAN_OR_EQUAL",
+              "syntax": "BINARY"
+            },
+            "operands": [
+              {
+                "input": 10,
+                "name": "$10"
+              },
+              {
+                "input": 16,
+                "name": "$16"
+              }
+            ]
+          },
+          {
+            "pos": {
+              "line": 30,
+              "column": 56,
+              "end_line": 30,
+              "end_column": 90
+            },
+            "op": {
+              "name": ">",
+              "kind": "GREATER_THAN",
+              "syntax": "BINARY"
+            },
+            "operands": [
+              {
+                "input": 10,
+                "name": "$10"
+              },
+              {
+                "pos": {
+                  "line": 30,
+                  "column": 62,
+                  "end_line": 30,
+                  "end_column": 90
+                },
+                "op": {
+                  "name": "+",
+                  "kind": "PLUS",
+                  "syntax": "SPECIAL"
+                },
+                "operands": [
+                  {
+                    "input": 15,
+                    "name": "$15"
+                  },
+                  {
+                    "literal": -125798400000,
+                    "type": {
+                      "type": "INTERVAL_DAY",
+                      "nullable": false,
+                      "precision": 10,
+                      "scale": 6
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "inputs": [
+          47
+        ]
+      }
+    ]
+  },
+  "result_goals": {
+    "rels": [
+      {
+        "id": 49,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "recent"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 50,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "source_player"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 51,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "source_goal"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 52,
+        "relOp": "LogicalFilter",
+        "condition": {
+          "pos": {
+            "line": 51,
+            "column": 40,
+            "end_line": 51,
+            "end_column": 59
+          },
+          "op": {
+            "name": "IS NOT NULL",
+            "kind": "IS_NOT_NULL",
+            "syntax": "POSTFIX"
+          },
+          "operands": [
+            {
+              "input": 4,
+              "name": "$4"
+            }
+          ]
+        },
+        "inputs": [
+          51
+        ]
+      },
+      {
+        "id": 53,
+        "relOp": "LogicalJoin",
+        "condition": {
+          "pos": {
+            "line": 50,
+            "column": 45,
+            "end_line": 50,
+            "end_column": 60
+          },
+          "op": {
+            "name": "=",
+            "kind": "EQUALS",
+            "syntax": "BINARY"
+          },
+          "operands": [
+            {
+              "input": 0,
+              "name": "$0"
+            },
+            {
+              "input": 4,
+              "name": "$4"
+            }
+          ]
+        },
+        "joinType": "inner",
+        "inputs": [
+          50,
+          52
+        ]
+      },
+      {
+        "id": 54,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id0",
+          "game_id",
+          "player_id",
+          "side",
+          "minute",
+          "penalty",
+          "own_goal",
+          "id",
+          "position"
+        ],
+        "exprs": [
+          {
+            "input": 2,
+            "name": "$2"
+          },
+          {
+            "input": 3,
+            "name": "$3"
+          },
+          {
+            "input": 4,
+            "name": "$4"
+          },
+          {
+            "input": 5,
+            "name": "$5"
+          },
+          {
+            "input": 6,
+            "name": "$6"
+          },
+          {
+            "input": 7,
+            "name": "$7"
+          },
+          {
+            "input": 8,
+            "name": "$8"
+          },
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "input": 1,
+            "name": "$1"
+          }
+        ],
+        "inputs": [
+          53
+        ]
+      },
+      {
+        "id": 55,
+        "relOp": "LogicalJoin",
+        "condition": {
+          "pos": {
+            "line": 51,
+            "column": 19,
+            "end_line": 51,
+            "end_column": 32
+          },
+          "op": {
+            "name": "=",
+            "kind": "EQUALS",
+            "syntax": "BINARY"
+          },
+          "operands": [
+            {
+              "input": 0,
+              "name": "$0"
+            },
+            {
+              "input": 16,
+              "name": "$16"
+            }
+          ]
+        },
+        "joinType": "inner",
+        "inputs": [
+          49,
+          54
+        ]
+      },
+      {
+        "id": 56,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id0",
+          "game_id",
+          "player_id",
+          "side",
+          "minute",
+          "penalty",
+          "own_goal",
+          "id00",
+          "position",
+          "id",
+          "phase_id",
+          "home_id",
+          "away_id",
+          "home_field",
+          "home_score",
+          "away_score",
+          "home_aet",
+          "away_aet",
+          "played",
+          "utc",
+          "moment",
+          "date",
+          "four_years",
+          "cutoff"
+        ],
+        "exprs": [
+          {
+            "input": 15,
+            "name": "$15"
+          },
+          {
+            "input": 16,
+            "name": "$16"
+          },
+          {
+            "input": 17,
+            "name": "$17"
+          },
+          {
+            "input": 18,
+            "name": "$18"
+          },
+          {
+            "input": 19,
+            "name": "$19"
+          },
+          {
+            "input": 20,
+            "name": "$20"
+          },
+          {
+            "input": 21,
+            "name": "$21"
+          },
+          {
+            "input": 22,
+            "name": "$22"
+          },
+          {
+            "input": 23,
+            "name": "$23"
+          },
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "input": 1,
+            "name": "$1"
+          },
+          {
+            "input": 2,
+            "name": "$2"
+          },
+          {
+            "input": 3,
+            "name": "$3"
+          },
+          {
+            "input": 4,
+            "name": "$4"
+          },
+          {
+            "input": 5,
+            "name": "$5"
+          },
+          {
+            "input": 6,
+            "name": "$6"
+          },
+          {
+            "input": 7,
+            "name": "$7"
+          },
+          {
+            "input": 8,
+            "name": "$8"
+          },
+          {
+            "input": 9,
+            "name": "$9"
+          },
+          {
+            "input": 10,
+            "name": "$10"
+          },
+          {
+            "input": 11,
+            "name": "$11"
+          },
+          {
+            "input": 12,
+            "name": "$12"
+          },
+          {
+            "input": 13,
+            "name": "$13"
+          },
+          {
+            "input": 14,
+            "name": "$14"
+          }
+        ],
+        "inputs": [
+          55
+        ]
+      },
+      {
+        "id": 57,
+        "relOp": "LogicalProject",
+        "fields": [
+          "__order",
+          "game_id",
+          "player_id",
+          "team_id",
+          "time",
+          "penalty",
+          "own_goal"
+        ],
+        "exprs": [
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "input": 1,
+            "name": "$1"
+          },
+          {
+            "input": 2,
+            "name": "$2"
+          },
+          {
+            "pos": {
+              "line": 48,
+              "column": 2,
+              "end_line": 48,
+              "end_column": 72
+            },
+            "op": {
+              "name": "CASE",
+              "kind": "CASE",
+              "syntax": "SPECIAL"
+            },
+            "operands": [
+              {
+                "pos": {
+                  "line": 48,
+                  "column": 12,
+                  "end_line": 48,
+                  "end_column": 38
+                },
+                "op": {
+                  "name": "<>",
+                  "kind": "NOT_EQUALS",
+                  "syntax": "BINARY"
+                },
+                "operands": [
+                  {
+                    "pos": {
+                      "line": 48,
+                      "column": 12,
+                      "end_line": 48,
+                      "end_column": 26
+                    },
+                    "op": {
+                      "name": "=",
+                      "kind": "EQUALS",
+                      "syntax": "BINARY"
+                    },
+                    "operands": [
+                      {
+                        "input": 3,
+                        "name": "$3"
+                      },
+                      {
+                        "literal": "home",
+                        "type": {
+                          "type": "VARCHAR",
+                          "nullable": false,
+                          "precision": -1
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "input": 6,
+                    "name": "$6"
+                  }
+                ]
+              },
+              {
+                "input": 11,
+                "name": "$11"
+              },
+              {
+                "input": 12,
+                "name": "$12"
+              }
+            ]
+          },
+          {
+            "input": 4,
+            "name": "$4"
+          },
+          {
+            "input": 5,
+            "name": "$5"
+          },
+          {
+            "input": 6,
+            "name": "$6"
+          }
+        ],
+        "inputs": [
+          56
+        ]
+      }
+    ]
+  },
+  "result_phases": {
+    "rels": [
+      {
+        "id": 58,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "phase_bounds"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 59,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "archive"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 60,
+        "relOp": "LogicalJoin",
+        "condition": {
+          "pos": {
+            "line": 36,
+            "column": 40,
+            "end_line": 36,
+            "end_column": 81
+          },
+          "op": {
+            "name": "AND",
+            "kind": "AND",
+            "syntax": "BINARY"
+          },
+          "operands": [
+            {
+              "pos": {
+                "line": 36,
+                "column": 40,
+                "end_line": 36,
+                "end_column": 60
+              },
+              "op": {
+                "name": "=",
+                "kind": "EQUALS",
+                "syntax": "BINARY"
+              },
+              "operands": [
+                {
+                  "input": 4,
+                  "name": "$4"
+                },
+                {
+                  "input": 0,
+                  "name": "$0"
+                }
+              ]
+            },
+            {
+              "pos": {
+                "line": 36,
+                "column": 66,
+                "end_line": 36,
+                "end_column": 81
+              },
+              "op": {
+                "name": "=",
+                "kind": "EQUALS",
+                "syntax": "BINARY"
+              },
+              "operands": [
+                {
+                  "input": 13,
+                  "name": "$13"
+                },
+                {
+                  "input": 1,
+                  "name": "$1"
+                }
+              ]
+            }
+          ]
+        },
+        "joinType": "inner",
+        "inputs": [
+          58,
+          59
+        ]
+      },
+      {
+        "id": 61,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id",
+          "until",
+          "four_years"
+        ],
+        "exprs": [
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "input": 2,
+            "name": "$2"
+          },
+          {
+            "input": 16,
+            "name": "$16"
+          }
+        ],
+        "inputs": [
+          60
+        ]
+      },
+      {
+        "id": 62,
+        "relOp": "LogicalAggregate",
+        "group": [
+          0,
+          1
+        ],
+        "aggs": [
+          {
+            "agg": {
+              "name": "MIN",
+              "kind": "MIN",
+              "syntax": "FUNCTION"
+            },
+            "type": {
+              "type": "BIGINT",
+              "nullable": true
+            },
+            "distinct": false,
+            "operands": [
+              2
+            ],
+            "name": "since"
+          }
+        ],
+        "inputs": [
+          61
+        ]
+      },
+      {
+        "id": 63,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id",
+          "since",
+          "until"
+        ],
+        "exprs": [
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "input": 2,
+            "name": "$2"
+          },
+          {
+            "input": 1,
+            "name": "$1"
+          }
+        ],
+        "inputs": [
+          62
+        ]
+      }
+    ]
+  },
+  "result_players": {
+    "rels": [
+      {
+        "id": 64,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "source_player"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 65,
+        "relOp": "LogicalProject",
+        "fields": [
+          "id"
+        ],
+        "exprs": [
+          {
+            "input": 0,
+            "name": "$0"
+          }
+        ],
+        "inputs": [
+          64
+        ]
+      }
+    ]
+  },
+  "result_teams": {
+    "rels": [
+      {
+        "id": 66,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "source_team"
+        ],
+        "inputs": []
+      }
+    ]
+  },
+  "statistics_window": {
+    "rels": [
+      {
+        "id": 67,
+        "relOp": "LogicalTableScan",
+        "table": [
+          "schema",
+          "archive"
+        ],
+        "inputs": []
+      },
+      {
+        "id": 68,
+        "relOp": "LogicalProject",
+        "fields": [
+          "utc"
+        ],
+        "exprs": [
+          {
+            "input": 10,
+            "name": "$10"
+          }
+        ],
+        "inputs": [
+          67
+        ]
+      },
+      {
+        "id": 69,
+        "relOp": "LogicalAggregate",
+        "group": [],
+        "aggs": [
+          {
+            "agg": {
+              "name": "MAX",
+              "kind": "MAX",
+              "syntax": "FUNCTION"
+            },
+            "type": {
+              "type": "TIMESTAMP",
+              "nullable": true,
+              "precision": 6
+            },
+            "distinct": false,
+            "operands": [
+              0
+            ],
+            "name": "latest"
+          }
+        ],
+        "inputs": [
+          68
+        ]
+      },
+      {
+        "id": 70,
+        "relOp": "LogicalProject",
+        "fields": [
+          "latest",
+          "anchor"
+        ],
+        "exprs": [
+          {
+            "input": 0,
+            "name": "$0"
+          },
+          {
+            "pos": {
+              "line": 22,
+              "column": 66,
+              "end_line": 22,
+              "end_column": 89
+            },
+            "op": {
+              "name": "FLOOR",
+              "kind": "FLOOR",
+              "syntax": "FUNCTION"
+            },
+            "operands": [
+              {
+                "input": 0,
+                "name": "$0"
+              },
+              {
+                "literal": "MONTH",
+                "type": {
+                  "type": "SYMBOL",
+                  "nullable": false
+                }
+              }
+            ]
+          }
+        ],
+        "inputs": [
+          69
+        ]
+      }
+    ]
+  }
+}

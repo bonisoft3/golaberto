@@ -21,7 +21,11 @@ const config = JSON.parse(
 ) as { imports: Record<string, string> };
 const imports: Record<string, string> = {};
 for (const [specifier, target] of Object.entries(config.imports)) {
-  if (!target.startsWith(".")) imports[specifier] = target;
+  if (!specifier.startsWith(".")) {
+    imports[specifier] = target.startsWith(".")
+      ? new URL(target, pathToFileURL(`${root}/packages/mecha-browser/`)).href
+      : target;
+  }
 }
 imports["mecha/"] = pathToFileURL(`${root}/`).href;
 

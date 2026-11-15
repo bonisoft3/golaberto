@@ -16,7 +16,21 @@
   <template data-item>
     <article class="team">
       <h1 class="band"><span class="archive-icon" data-text="{id}|{name}|{logo_key}" data-text-format="team-badge"></span><span data-text="{name}"></span></h1>
-      <div class="page">
+      <div class="page page-with-local-nav">
+        <aside class="side local-side"><div class="local-nav-stack">
+<nav class="local-navigation" aria-label="{msg.local_page}">
+  <h2 data-text="{msg.local_page}"></h2>
+  <div class="local-links">
+<a data-route="equipe" data-route-fragment="team-rating-history-{id}" data-param-slug="{param.slug}" data-text="{msg.team_rating_history}"></a>
+<a data-route="equipe" data-route-fragment="team-fixtures-{id}" data-param-slug="{param.slug}" data-text="{msg.games_title}"></a>
+<a data-route="equipe" data-route-fragment="team-championships-{id}" data-param-slug="{param.slug}" data-text="{msg.nav_championships}"></a>
+<a data-route="equipe" data-route-fragment="team-players-{id}" data-param-slug="{param.slug}" data-text="{msg.players_title}"></a>
+<a data-route="equipe" data-route-fragment="team-comments-{id}" data-param-slug="{param.slug}" data-text="{msg.comments_title}"></a>
+  </div>
+</nav>
+  <p class="local-back"><a data-route="equipes" data-text="{msg.back_teams}"></a></p>
+  <p class="local-about" data-text="{msg.about}"></p>
+</div></aside>
         <div class="content">
           <div class="community-media" data-text="{logo_key}" data-text-format="media-image"></div>
           <dl class="game-facts">
@@ -28,7 +42,7 @@
             <dt data-text="{msg.game_stadium}"></dt><dd data-live="stadium" data-filter="id=eq.{stadium_id}" data-empty=""><template data-item><a data-route="estadio" data-param-slug="{slug}" data-text="{name}"></a></template></dd>
           </dl>
           <div data-text="{latitude}|{longitude}|{msg.team_location}|{msg.team_location_none}" data-text-format="team-location"></div>
-          <section class="team-rating-history"><h2 data-text="{msg.team_rating_history}"></h2>
+          <section id="team-rating-history-{id}" class="team-rating-history"><h2 data-text="{msg.team_rating_history}"></h2>
 <div class="paged-read" data-live="archive_page" data-filter="id=eq.team-rating-history-{id}" data-machine='{"field":"state","initial":"browsing","states":{"browsing":{"on":{"change@team-rating-period":{"assign":{"period":{"type":"event","params":{"field":"value"}},"date_from":"","date_to":""}},"change@team-rating-from":{"assign":{"date_from":{"type":"event","params":{"field":"value"}},"period":"all"}},"change@team-rating-to":{"assign":{"date_to":{"type":"event","params":{"field":"value"}},"period":"all"}},"click@team-rating-reset":{"assign":{"period":"1y","date_from":"","date_to":""}},"click@team-rating-history-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@team-rating-history-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}' data-empty-row='{"id":"team-rating-history-{id}","offset":0,"next_offset":40,"owner_id":"{id}","page":1,"period":"1y","date_from":"","date_to":"","series_json":"{}","state":"browsing"}'>
   <div class="page-window">
 <div class="team-filters"><label><span data-text="{msg.team_period}"></span><select id="team-rating-period" data-value="{period}"><option value="1m" data-text="{msg.period_1m}"></option><option value="3m" data-text="{msg.period_3m}"></option><option value="6m" data-text="{msg.period_6m}"></option><option value="1y" data-text="{msg.period_1y}"></option><option value="5y" data-text="{msg.period_5y}"></option><option value="all" data-text="{msg.all}"></option></select></label><label><span data-text="{msg.team_date_from}"></span><input id="team-rating-from" type="date" value="{date_from}"></label><label><span data-text="{msg.team_date_to}"></span><input id="team-rating-to" type="date" value="{date_to}"></label><button id="team-rating-reset" class="btn-quiet" type="button" data-text="{msg.team_chart_reset}"></button></div>
@@ -45,14 +59,14 @@
   </div>
 </div>
 </section>
-          <section><h2 data-text="{msg.games_upcoming}"></h2><div class="paged-read" data-live="archive_page" data-filter="id=eq.team-upcoming-{id}" data-machine='{"field":"state","initial":"browsing","states":{"browsing":{"on":{"click@team-upcoming-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@team-upcoming-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}},"change@team-upcoming-category":{"assign":{"category":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}},"change@team-upcoming-side":{"assign":{"side":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}},"change@team-upcoming-phase":{"assign":{"phase":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}}}}}}' data-empty-row='{"category":"*","id":"team-upcoming-{id}","offset":0,"next_offset":40,"owner_id":"{id}","page":1,"side":"*","phase":"*","state":"browsing"}'>
+          <section id="team-fixtures-{id}"><h2 data-text="{msg.games_upcoming}"></h2><div class="paged-read" data-live="archive_page" data-filter="id=eq.team-upcoming-{id}" data-machine='{"field":"state","initial":"browsing","states":{"browsing":{"on":{"click@team-upcoming-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@team-upcoming-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}},"change@team-upcoming-category":{"assign":{"category":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}},"change@team-upcoming-side":{"assign":{"side":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}}}}}}' data-empty-row='{"category":"*","id":"team-upcoming-{id}","offset":0,"next_offset":40,"owner_id":"{id}","page":1,"side":"*","phase":"*","state":"browsing"}'>
   <div class="page-window">
 <div class="team-filters">
 <label><span data-text="{msg.team_category}"></span><select id="team-upcoming-category" data-value="{category}"><option value="*" data-text="{msg.all}"></option><option value="professional" data-text="{msg.team_professional}"></option><optgroup data-live="category" data-filter="id=not.is.null&limit=40" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select></label>
 <label><span data-text="{msg.team_venue}"></span><select id="team-upcoming-side" data-value="{side}"><option value="*" data-text="{msg.all}"></option><option value="home" data-text="{msg.home}"></option><option value="away" data-text="{msg.away}"></option></select></label>
 
 </div>
-<ol class="games team-games" data-project='{"reader_day":{"date":["kickoff","day"]}}' data-live="team_game" data-select="*,game:game_id(slug),championship(show_country,slug),opponent:opponent_id(country,logo_key)" data-filter="team_id=eq.{owner_id}&played=is.false&side=like.{side}&phase_key=like.{phase}&category_key=like.{category}&offset={offset}&limit=40" data-order="day.asc,kickoff.asc,id.asc" data-empty="{msg.games_none_upcoming}">
+<ol class="games team-games" data-project='{"reader_day":{"date":["kickoff","day"]}}' data-live="team_game" data-select="*,game:game_id(slug),championship(show_country,slug),opponent:opponent_id(country,logo_key)" data-filter="team_id=eq.{owner_id}&played=is.false&side=like.{side}&phase_key=like.{phase}&fixture_available=is.true&category_key=like.{category}&offset={offset}&limit=40" data-order="day.asc,kickoff.asc,id.asc" data-empty="{msg.games_none_upcoming}">
   <template data-item>
     <li><a class="game-row" data-show-country="{championship.show_country}" data-route="jogo" data-param-slug="{game.slug}" data-played="{played}" data-result="{result}">
       <span class="when"><span class="day" data-text="{reader_day}" data-text-format="date"></span> <span class="hour" data-text="{kickoff}" data-text-format="time"></span></span>
@@ -66,12 +80,12 @@
 <nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
   <button id="team-upcoming-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
   <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
-  <span data-live="team_game" data-filter="team_id=eq.{owner_id}&played=is.false&side=like.{side}&phase_key=like.{phase}&category_key=like.{category}&amp;offset={next_offset}&amp;limit=1" data-select="id" data-order='day.asc,kickoff.asc,id.asc' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+  <span data-live="team_game" data-filter="team_id=eq.{owner_id}&played=is.false&side=like.{side}&phase_key=like.{phase}&fixture_available=is.true&category_key=like.{category}&amp;offset={next_offset}&amp;limit=1" data-select="id" data-order='day.asc,kickoff.asc,id.asc' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
   <button id="team-upcoming-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
 </nav>
   </div>
 </div></section>
-          <section><h2 data-text="{msg.games_results}"></h2><div class="paged-read" data-live="archive_page" data-filter="id=eq.team-results-{id}" data-machine='{"field":"state","initial":"browsing","states":{"browsing":{"on":{"click@team-results-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@team-results-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}},"change@team-results-category":{"assign":{"category":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}},"change@team-results-side":{"assign":{"side":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}},"change@team-results-phase":{"assign":{"phase":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}}}}}}' data-empty-row='{"category":"*","id":"team-results-{id}","offset":0,"next_offset":40,"owner_id":"{id}","page":1,"side":"*","phase":"*","state":"browsing"}'>
+          <section><h2 data-text="{msg.games_results}"></h2><div class="paged-read" data-live="archive_page" data-filter="id=eq.team-results-{id}" data-machine='{"field":"state","initial":"browsing","states":{"browsing":{"on":{"click@team-results-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@team-results-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}},"change@team-results-category":{"assign":{"category":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}},"change@team-results-side":{"assign":{"side":{"type":"event","params":{"field":"value"}},"offset":0,"next_offset":40,"page":1}}}}}}' data-empty-row='{"category":"*","id":"team-results-{id}","offset":0,"next_offset":40,"owner_id":"{id}","page":1,"side":"*","phase":"*","state":"browsing"}'>
   <div class="page-window">
 <div class="team-filters">
 <label><span data-text="{msg.team_category}"></span><select id="team-results-category" data-value="{category}"><option value="*" data-text="{msg.all}"></option><option value="professional" data-text="{msg.team_professional}"></option><optgroup data-live="category" data-filter="id=not.is.null&limit=40" data-order="name.asc" data-empty=""><template data-item><option value="{id}" data-text="{name}"></option></template></optgroup></select></label>
@@ -97,7 +111,7 @@
 </nav>
   </div>
 </div></section>
-          <section class="team-current-championships">
+          <section id="team-championships-{id}" class="team-current-championships">
             <h2 data-text="{msg.team_current_championships}"></h2>
             <div class="paged-read" data-live="archive_page" data-filter="id=eq.team-current-championships-{id}" data-machine='{"field":"state","initial":"browsing","states":{"browsing":{"on":{"click@team-current-championships-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@team-current-championships-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}' data-empty-row='{"id":"team-current-championships-{id}","offset":0,"next_offset":40,"owner_id":"{id}","page":1,"state":"browsing"}'>
   <div class="page-window">
@@ -131,7 +145,7 @@
   </div>
 </div>
           </section>
-          <section class="team-current-players">
+          <section id="team-players-{id}" class="team-current-players">
             <h2 data-text="{msg.team_current_players}"></h2>
             <div class="paged-read" data-live="archive_page" data-filter="id=eq.team-current-players-{id}" data-machine='{"field":"state","initial":"browsing","states":{"browsing":{"on":{"click@team-current-players-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@team-current-players-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}},"input@team-current-players-q":{"assign":{"q":{"type":"event","params":{"field":"value"}},"q_key":{"type":"search-key"},"offset":0,"next_offset":40,"page":1}}}}}}' data-empty-row='{"id":"team-current-players-{id}","offset":0,"next_offset":40,"owner_id":"{id}","page":1,"q":"","q_key":"","state":"browsing"}'>
   <div class="page-window">
@@ -166,7 +180,7 @@
 </div>
           </section>
 
-          <section class="comments"><h2 data-text="{msg.comments_title}"></h2>
+          <section id="team-comments-{id}" class="comments"><h2 data-text="{msg.comments_title}"></h2>
 <div class="composer" data-live="team_comment_draft" data-filter="id=eq.{id}" data-machine='{"field":"state","initial":"writing","on":{"refused":{"target":"refused"}},"states":{"writing":{"on":{"input@team-comment-body":{"assign":{"body":{"type":"event","params":{"field":"value"}}}},"click@team-comment-post":{"target":"sending","effect":{"op":"create","entity":"team_comment","values":{"team_id":"{id}","body":"{body}"}}}}},"sending":{"on":{"sync_ack":{"target":"writing","assign":{"body":""}}}},"refused":{"on":{"input@team-comment-body":{"assign":{"body":{"type":"event","params":{"field":"value"}}},"target":"writing"},"click@team-comment-post":{"target":"sending","effect":{"op":"create","entity":"team_comment","values":{"team_id":"{id}","body":"{body}"}}}}}}}' data-empty-row='{"id":"{id}","body":"","state":"writing"}' data-state="{state}"><label class="field" for="team-comment-body"><span data-text="{msg.comment_label}"></span><textarea id="team-comment-body" data-value="{body}" maxlength="1000" rows="3" placeholder="{msg.team_comment_placeholder}"></textarea></label><p class="refusal" role="alert" data-text="{msg.comment_refused}"></p><button id="team-comment-post" type="button" class="btn post"><span class="idle" data-text="{msg.comment_post}"></span><span class="busy" data-text="{msg.comment_posting}"></span></button></div>
 <div class="paged-read" data-live="archive_page" data-filter="id=eq.team-comments-{id}" data-machine='{"field":"state","initial":"browsing","states":{"browsing":{"on":{"click@team-comments-previous":{"assign":{"offset":{"type":"page-value","params":{"step":-40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":-40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":-40,"field":"page"}}}},"click@team-comments-next":{"assign":{"offset":{"type":"page-value","params":{"step":40,"field":"offset"}},"next_offset":{"type":"page-value","params":{"step":40,"field":"next_offset"}},"page":{"type":"page-value","params":{"step":40,"field":"page"}}}}}}}}' data-empty-row='{"id":"team-comments-{id}","offset":0,"next_offset":40,"owner_id":"{id}","page":1,"state":"browsing"}'>
   <div class="page-window">
@@ -188,10 +202,6 @@
 </div>
 </section>
         </div>
-        <aside class="side">
-          <p><a data-route="equipes" data-text="{msg.back_teams}"></a></p>
-          <p data-text="{msg.about}"></p>
-        </aside>
       </div>
     </article>
   </template>

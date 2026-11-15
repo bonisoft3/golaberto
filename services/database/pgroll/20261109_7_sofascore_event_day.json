@@ -1,0 +1,10 @@
+{
+  "operations": [
+    {
+      "sql": {
+        "up": "\nSET lock_timeout='5s';\nSET statement_timeout='120s';\n-- An event's calendar day, from fn_sofascore_normalize's output: the kickoff's\n-- day in Sao Paulo, or the UTC day of a start the provider has not confirmed.\nCREATE OR REPLACE FUNCTION sofa.event_day(p_event jsonb) RETURNS date\nLANGUAGE sql STABLE STRICT SET search_path=pg_catalog AS $$\n SELECT CASE WHEN p_event->>'kickoff' IS NULL\n   THEN ((p_event->>'start_at')::timestamptz AT TIME ZONE 'UTC')::date\n   ELSE ((p_event->>'start_at')::timestamptz AT TIME ZONE 'America/Sao_Paulo')::date END\n$$;\n\n",
+        "onComplete": true
+      }
+    }
+  ]
+}

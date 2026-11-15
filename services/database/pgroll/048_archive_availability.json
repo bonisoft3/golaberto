@@ -1,0 +1,10 @@
+{
+  "operations": [
+    {
+      "sql": {
+        "up": "-- A fixture the source cancelled, abandoned or awarded is not available to\n-- the upcoming feeds. The archive view gains the flag as a column appended to\n-- whatever shape it has: production's game_archive lists the game columns\n-- 035 saw, a fresh database's lists today's.\nSET lock_timeout = '5s';\nSET statement_timeout = '60s';\n\nALTER TABLE game ADD COLUMN IF NOT EXISTS sync_status text;\n\nDO $$ DECLARE definition text; BEGIN\n  IF NOT EXISTS (SELECT 1 FROM information_schema.columns\n                 WHERE table_schema='public' AND table_name='game_archive' AND column_name='fixture_available') THEN\n    SELECT trim(trailing ';' FROM pg_get_viewdef('public.game_archive'::regclass, true)) INTO definition;\n    EXECUTE 'CREATE OR REPLACE VIEW public.game_archive WITH (security_invoker=true) AS SELECT archive.*, '\n      || '(game.played OR coalesce(game.sync_status, ''scheduled'') NOT IN (''cancelled'', ''abandoned'', ''awarded'')) AS fixture_available '\n      || 'FROM (' || definition || ') archive JOIN public.game game ON game.id=archive.id';\n  END IF;\nEND $$;\nNOTIFY pgrst, 'reload schema';\n",
+        "onComplete": true
+      }
+    }
+  ]
+}

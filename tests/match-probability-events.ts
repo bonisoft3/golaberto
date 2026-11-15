@@ -1,13 +1,20 @@
-import { assertEquals, assertThrows } from "jsr:@std/assert@1.0.11";
-import { evaluateRole } from "./platform.ts";
+/// <reference lib="dom" />
+import { assert, assertEquals, assertThrows } from "jsr:@std/assert@1.0.11";
+import { parseHTML } from "npm:linkedom@0.18.4";
+import { batched, evaluateRole, interpretScreen, parseFilter } from "./platform.ts";
+
+// The assertions below state a leaf's world and its event side by side; the
+// leaf itself takes them as XState's one argument.
+// deno-lint-ignore no-explicit-any
+const positional = (leaf: any) => (state: any, event?: any, ...rest: any[]) => leaf({ context: state, event }, ...rest);
 
 const handler = async (name: string) =>
-  await evaluateRole(
+  positional(await evaluateRole(
     await Deno.readTextFile(
       new URL(`../shell/handlers/${name}.js`, import.meta.url),
     ),
     "handler",
-  );
+  ));
 
 const control = await handler("match-probability-event-control");
 const edit = await handler("match-probability-event-edit");
@@ -36,10 +43,84 @@ Deno.test("event control derives stable identities and enforces the twenty-event
     ),
     false,
   );
+  const exhausted = { items: [{ ...row, event_sequence: 2147483647 }] };
+  assertEquals(control(exhausted, {}, { operation: "can-add" }), false);
+  assertEquals(control(exhausted, {}, { operation: "next-sequence" }), 2147483647);
+  assertEquals(control(exhausted, {}, { operation: "next-id" }), `${row.id}:hyp:2147483647`);
+  const last = { items: [{ ...row, event_sequence: 2147483646 }] };
+  assertEquals(control(last, {}, { operation: "can-add" }), true);
+  assertEquals(control(last, {}, { operation: "next-sequence" }), 2147483647);
+  assertEquals(control(last, {}, { operation: "next-id" }), `${row.id}:hyp:2147483647`);
+  assertEquals(control({ items: [{ ...row, event_count: 20 }] }, {}, { operation: "next-count" }), 20);
+  assertThrows(() => control({ items: [{ ...row, event_sequence: 2147483648 }] }, {}, { operation: "can-add" }), RangeError);
   assertThrows(
     () => control(state, {}, { operation: "unknown" }),
     RangeError,
   );
+});
+
+Deno.test("exhaustion is visible and the mounted chart never creates a duplicate event", async () => {
+  const app = new URL("../", import.meta.url);
+  const markup = await Deno.readTextFile(new URL("shell/screens/jogo.html", app));
+  const emitted = parseHTML(markup.slice(markup.indexOf('<section class="match-probability-shell"'))).document;
+  const source = emitted.querySelector('[data-live="match_probability_scenario"][data-machine]')!;
+  const notice = source.querySelector('[data-live="match_probability_scenario"][data-filter*="event_sequence="]')!;
+  assert(notice, "generated screen must carry the exhaustion notice");
+  const machine = source.getAttribute("data-machine")!;
+  const html = `<section data-screen="fixture"><div data-live="match_probability_scenario" data-filter="id=eq.game" data-machine='${machine}'><button id="match-probability-add-goal">Add</button>${notice.outerHTML}</div></section>`;
+  const { document, window } = parseHTML('<html><head></head><body><div id="app"></div></body></html>');
+  const previousDocument = globalThis.document, previousFetch = globalThis.fetch;
+  globalThis.document = document;
+  globalThis.fetch = async (url) => {
+    const path = new URL(String(url)).pathname;
+    if (path.endsWith("fixture.html")) return new Response(html);
+    if (path.endsWith("fixture.css")) return new Response("");
+    if (path.endsWith("match-probability-event-control.js")) return new Response(await Deno.readTextFile(new URL("shell/handlers/match-probability-event-control.js", app)));
+    throw new Error(`Unexpected fixture request ${url}`);
+  };
+  const row = { id: "game", state: "ready", event_sequence: 2147483646, event_count: 0 };
+  const created: unknown[] = [];
+  const subscribers = new Map<string, Set<() => void>>();
+  const store = batched({
+    query: async (table: string, _order: unknown, options: {filter?: string} = {}) => {
+      const predicates = parseFilter(options.filter ?? "");
+      return table === "match_probability_scenario" && (!predicates || predicates.every((match: (row: unknown) => boolean) => match(row))) ? [row] : [];
+    },
+    subscribe: (table: string, wake: () => void) => {
+      const group = subscribers.get(table) ?? new Set();
+      group.add(wake);
+      subscribers.set(table, group);
+      return () => group.delete(wake);
+    },
+    put: async (table: string, value: object) => {
+      Object.assign(row, value);
+      for (const wake of subscribers.get(table) ?? []) wake();
+    },
+    create: async (_table: string, value: unknown) => { created.push(value); },
+  });
+  let runtime: Awaited<ReturnType<typeof interpretScreen>> | undefined;
+  try {
+    const messages = JSON.parse(await Deno.readTextFile(new URL("messages/en-US.json", app)));
+    runtime = await interpretScreen(document.getElementById("app"), "http://fixture/", {
+      screen: "fixture", files: {html: "fixture.html", css: "fixture.css", handlers: ["shell/handlers/match-probability-event-control.js"]},
+    }, store, {}, {messages, locale: "en-US"});
+    await runtime.settle();
+    assertEquals(document.querySelector('[role="status"]'), null);
+    document.getElementById("match-probability-add-goal")!.dispatchEvent(new window.Event("click", {bubbles: true}));
+    await runtime.settle();
+    assertEquals(created.length, 1);
+    assertEquals((created[0] as {id: string}).id, "game:hyp:2147483647");
+    assertEquals(row.event_sequence, 2147483647);
+    assert(document.querySelector('[role="status"]')?.textContent?.includes("identifier limit"));
+    document.getElementById("match-probability-add-goal")!.dispatchEvent(new window.Event("click", {bubbles: true}));
+    await runtime.settle();
+    assertEquals(created.length, 1);
+    assertEquals(row.event_sequence, 2147483647);
+  } finally {
+    runtime?.stop();
+    globalThis.document = previousDocument;
+    globalThis.fetch = previousFetch;
+  }
 });
 
 Deno.test("event edits change only the native control's own field", () => {

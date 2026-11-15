@@ -14,7 +14,6 @@ import { localhostDoor } from "./localhost-door.ts";
 const { chromium } = await import("npm:playwright@1.61.1");
 const { SignJWT } = await import("npm:jose@6.0.11");
 const base = await baseUrl(Deno.args[0] ?? ".");
-const browser = await chromium.launch({ args: ["--ignore-certificate-errors"] });
 
 // deno-lint-ignore no-explicit-any
 type Page = any;
@@ -34,6 +33,7 @@ const MUTATING = new Set([
   "test-home-levels",
   "test-home-feed-api",
   "test-standings-live",
+  "test-team-match-preview",
   "test-games-timezone",
   "test-player-stats-live",
   "test-appearance-live",
@@ -179,7 +179,6 @@ const said = (page: Page, selector: string): Promise<string[]> =>
 
 // The seeded championships' ids, as tools/seed.py mints them.
 const BRASILEIRO_2026 = "02000000-0000-4000-8000-000000000001";
-const BRASILEIRO_1971 = "02000000-0000-4000-8000-000000000004";
 const LIBERTADORES_2026 = "02000000-0000-4000-8000-000000000006";
 
 // A played 0–0, Botafogo-RJ at home to Vitória-BA, whose result the live
@@ -202,19 +201,33 @@ const DERBY_2006 = "0a000000-0000-4000-8000-000000001015";
 
 const pointsOf = (page: Page, team: string): Promise<string> =>
   page.$$eval(".standings tbody tr", (rows: Element[], team: string) => {
-    const row = rows.find((r) => r.querySelector(".name")?.textContent?.trim() === team);
+    const row = rows.find((r) => r.querySelector(".name .team-name")?.textContent?.trim() === team);
     return row?.querySelector(".pts")?.textContent?.trim() ?? "";
   }, team);
 
-// A stream answers a change after the recount it runs at start: on a cluster
-// just brought up, every live case waits behind that first pass.
 const STREAM_MS = 180_000;
+
+const statisticsReady = async (budget = STREAM_MS) => {
+  const deadline = Date.now() + budget;
+  while (Date.now() < deadline) {
+    if (await query(`SELECT count(*)=2 AND bool_and(completed=requested AND completed>0 AND claimed IS NULL)
+      FROM compute.batch WHERE name IN ('golaberto-ratings','golaberto-chances')`) === "t") return;
+    await new Promise((resolve) => setTimeout(resolve, 250));
+  }
+  const batches = await query(`SELECT name, requested, completed, claimed FROM compute.batch
+    WHERE name IN ('golaberto-ratings','golaberto-chances') ORDER BY name`);
+  throw new Error(`statistics publication did not complete within ${budget}ms: ${batches}`);
+};
+
+const loadedAt = (page: Page): Promise<number> => page.evaluate(() => performance.timeOrigin);
+const stayedOpen = async (page: Page, before: number) =>
+  assertEquals(await loadedAt(page), before, "the statistic changed in the original document without a reload");
 
 const awaitPoints = (page: Page, team: string, want: number) =>
   page.waitForFunction(
     ([team, want]: [string, string]) =>
       [...document.querySelectorAll(".standings tbody tr")].some((r) =>
-        r.querySelector(".name")?.textContent?.trim() === team && r.querySelector(".pts")?.textContent?.trim() === want),
+        r.querySelector(".name .team-name")?.textContent?.trim() === team && r.querySelector(".pts")?.textContent?.trim() === want),
     [team, String(want)],
     { timeout: STREAM_MS },
   );
@@ -241,10 +254,19 @@ const percent = (text: string) => Number(text.replace(/\./g, "").replace(",", ".
 // The first zone of the first line: the leader's title chance.
 const titleOf = (page: Page) => page.$eval(".zone-odds .rows .row:first-child .pct .exact", (e: Element) => e.textContent ?? "");
 
+// An idle coordinator can precede downstream CDC delivery of freshly published ratings.
+const awaitRatedChances = (page: Page) => page.waitForFunction(() => {
+  const text = document.querySelector(".zone-odds .rows .row:first-child .pct .exact")?.textContent ?? "";
+  const title = Number(text.replace(/\./g, "").replace(",", "."));
+  return title >= 60 && title <= 90 && document.querySelector('.heat [data-reach="reachable"]') !== null;
+}, null, { timeout: STREAM_MS });
+
 test("test-chances: the 2026 Série A's chances lead with Flamengo, near golaberto's own figure, and each team's positions sum to whole seasons", async () => {
-  const page = await open(`/chances/${SERIE_A_2026}`);
-  await page.waitForSelector(".zone-odds .rows .row .pct", { timeout: STREAM_MS });
+  const page = await open(`/grupo/${SERIE_A_2026}/chances`);
+  await awaitRatedChances(page);
   assertEquals((await said(page, ".zone-odds .rows .row:first-child .name"))[0], "Flamengo-RJ");
+  await page.locator(".zone-odds .head .zone small").nth(4).waitFor();
+  assertEquals(await page.locator(".zone-odds .head .zone small").allInnerTexts(), ["1", "1–4", "5", "6–11", "17–20"]);
   const title = percent(await titleOf(page));
   // golaberto.com.br published 73.4% for this table; the ratings are refit
   // on the same 7-year archive, but from a zero prior and with their own
@@ -286,7 +308,8 @@ test("test-chances: the 2026 Série A's chances lead with Flamengo, near golaber
 });
 
 test("test-chances-reach: in the 2026 Série A every chance that shows 0 says whether it can still happen, marked * when it can and unmarked when the points rule it out", async () => {
-  const page = await open(`/chances/${SERIE_A_2026}`);
+  const page = await open(`/grupo/${SERIE_A_2026}/chances`);
+  await awaitRatedChances(page);
   await page.waitForFunction(() => document.querySelectorAll(".heat .rows .heat-cell").length === 400, null, { timeout: STREAM_MS });
   // Each position cell: what it shows, its reach, the reach said, and the mark drawn.
   const cells: string[][] = await page.$$eval(".heat .rows .heat-cell", (els: Element[]) =>
@@ -315,19 +338,31 @@ const CHANCES_SETTLE_MS = 2 * STREAM_MS;
 test("test-chances-live: a result recorded for a game still to play moves the chances on a page left open, and undoing it brings them back", async () => {
   // Flamengo's next home game, lost heavily: the leader's title chance must fall.
   const game = await query(`SELECT g.id FROM game g JOIN team t ON t.id = g.home_id JOIN stage_group sg ON sg.phase_id = g.phase_id WHERE sg.id = '${SERIE_A_2026}' AND t.name = 'Flamengo-RJ' AND NOT g.played ORDER BY g.day LIMIT 1`);
-  const page = await open(`/chances/${SERIE_A_2026}`);
-  await page.waitForSelector(".zone-odds .rows .row .pct", { timeout: STREAM_MS });
-  const before = await titleOf(page);
+  const page = await open(`/grupo/${SERIE_A_2026}/chances`);
+  await awaitRatedChances(page);
+  const origin = await loadedAt(page);
+  const leader = page.locator(".zone-odds .rows .row").filter({ has: page.locator(".name", { hasText: /^Flamengo-RJ$/ }) });
+  const title = leader.locator(".pct .exact").first();
+  const before = (await title.textContent())!;
   try {
     await query(`UPDATE game SET played = true, home_score = 0, away_score = 5 WHERE id = '${game}'`);
-    await page.waitForFunction((before: string) =>
-      document.querySelector(".zone-odds .rows .row:first-child .pct .exact")?.textContent !== before, before, { timeout: STREAM_MS });
-    assert(percent(await titleOf(page)) < percent(before), "a heavy home defeat lowered the leader's title chance");
+    await page.waitForFunction((before: string) => {
+      const row = [...document.querySelectorAll(".zone-odds .rows .row")]
+        .find((row) => row.querySelector(".name")?.textContent?.trim() === "Flamengo-RJ");
+      const value = row?.querySelector(".pct .exact")?.textContent?.trim();
+      return value !== undefined && value !== "" && value !== before;
+    }, before, { timeout: STREAM_MS });
+    assert(percent((await title.textContent())!) < percent(before), "a heavy home defeat lowered Flamengo's title chance");
+    await stayedOpen(page, origin);
   } finally {
     await query(`UPDATE game SET played = false, home_score = NULL, away_score = NULL WHERE id = '${game}'`);
   }
-  await page.waitForFunction((before: string) =>
-    document.querySelector(".zone-odds .rows .row:first-child .pct .exact")?.textContent === before, before, { timeout: CHANCES_SETTLE_MS });
+  await page.waitForFunction((before: string) => {
+    const row = [...document.querySelectorAll(".zone-odds .rows .row")]
+      .find((row) => row.querySelector(".name")?.textContent?.trim() === "Flamengo-RJ");
+    return row?.querySelector(".pct .exact")?.textContent === before;
+  }, before, { timeout: CHANCES_SETTLE_MS });
+  await stayedOpen(page, origin);
 });
 
 test("test-home-feed-api: home feed relationships resolve through PostgREST for a guest", async () => {
@@ -370,7 +405,7 @@ test("test-home-featured: the front page keeps the featured season and its top s
   try {
     for (const zone of colors) await query(`UPDATE zone SET color='#90EE90' WHERE id='${zone.id}'`);
     const page = await open("/");
-    await page.waitForSelector(".feature .standings tbody tr", { timeout: 30_000 });
+    await page.waitForFunction(() => document.querySelectorAll(".feature .standings tbody .name").length === 6, null, { timeout: STREAM_MS });
     const top = await said(page, ".feature .standings tbody .name");
     assertEquals(top.length, 6);
     assertEquals(top[0], "Flamengo-RJ");
@@ -476,44 +511,192 @@ test("test-catalog-kept: what was typed survives a trip and back", async () => {
   await page.waitForFunction(() => (document.querySelector('#catalog-q') as HTMLInputElement | null)?.value === "brasileiro");
 });
 
-test("test-championship-structure: phases, groups, teams, zones and points", async () => {
+test("test-championship-structure: phases, groups, teams and zones", async () => {
   const page = await championship(BRASILEIRO_2026);
   assertEquals(await texts(page, ".championship h1"), ["Brasil - Campeonato Brasileiro 2026"]);
   assertEquals(await texts(page, ".phase h2"), ["Turno e Returno"]);
   await page.waitForFunction(() => document.querySelectorAll(".standings tbody tr").length === 20);
   assertEquals((await texts(page, ".zones li")).length, 5);
-  assertEquals(await texts(page, ".points b"), ["3", "1", "0"]);
+  assertEquals(await page.locator(".championship .facts, .championship .points").count(), 0);
+});
+
+test("navigation: championship views retain their local context on desktop and mobile", async () => {
+  const path = `/en/championship/${await address("championship", BRASILEIRO_2026)}`;
+  const page = await open(path);
+  // A screen the shell is still loading or leaving is inert: it swallows clicks,
+  // and a cold navigation keeps the outgoing one presented until the next is ready.
+  const screen = '.shell-screen:not([hidden]):not([inert]):not([data-entering]):not([data-served]) .screen';
+  const navigation = () => page.locator(`${screen} .local-navigation[aria-label="This championship"]`);
+  assertEquals(await navigation().locator(".local-links a").allTextContents(), ["Table", "Matches", "Players", "Attendance"]);
+  assert(await page.locator(`${screen} .page-with-local-nav`).evaluate((el: Element) => {
+    const nav = el.querySelector(".local-side")!.getBoundingClientRect();
+    const content = el.querySelector(".content")!.getBoundingClientRect();
+    return nav.left >= content.right;
+  }));
+  for (const [name, target] of [["Matches", "arquivo-campeonato"], ["Players", "campeonato-jogadores"], ["Attendance", "publico"], ["Table", "campeonato"]]) {
+    await navigation().getByRole("link", { name, exact: true }).click();
+    await page.locator(`${screen}[data-screen="${target}"]`).waitFor();
+    assertEquals(await navigation().locator('[aria-current="page"]').innerText(), name);
+    if (target === "arquivo-campeonato" || target === "publico") {
+      assertEquals(new URL(page.url()).pathname, `${path}/${target === "publico" ? "attendance" : "matches"}`);
+    }
+    const hrefs = await navigation().locator(".local-links a").evaluateAll((links: Element[]) => links.map(link => link.getAttribute("href")!));
+    assert(hrefs.every((href: string) => new URL(href, base).pathname.startsWith("/en/") && href.includes(path.split("/").at(-1)!)), hrefs.join("\n"));
+
+  }
+  const stageHref = await page.locator(`${screen} .local-stages a`).first().getAttribute("href");
+  const stageAddress = new URL(stageHref!, base);
+  assertEquals(stageAddress.pathname, new URL(path, base).pathname);
+  assert(stageAddress.hash.startsWith("#fase-"));
+  const linked = await page.context().newPage();
+  currentOpened().push(linked);
+  // A fresh client mount must reach the fragment without the served document's native scroll.
+  await linked.addInitScript(() => {
+    const hideServed = () => document.querySelectorAll<HTMLElement>("[data-served]").forEach(el => {
+      el.removeAttribute("data-served");
+      el.hidden = true;
+    });
+    const observer = new MutationObserver(hideServed);
+    observer.observe(document, { childList: true, subtree: true });
+    document.addEventListener("DOMContentLoaded", () => { hideServed(); observer.disconnect(); }, { once: true });
+  });
+  await visit(linked, stageAddress.pathname + stageAddress.search + stageAddress.hash);
+  const reachedSection = () => {
+    const visible = document.querySelector('.shell-screen:not([hidden])');
+    const id = decodeURIComponent(location.hash.slice(1));
+    const target = Array.from(visible?.querySelectorAll('[id]') ?? []).find(el => el.id === id);
+    if (!target) return false;
+    const margin = parseFloat(getComputedStyle(target).scrollMarginTop);
+    const maximum = Math.max(0, document.documentElement.scrollHeight - innerHeight);
+    // Short tables can reach the document end before a phase reaches its scroll margin.
+    const wanted = Math.min(maximum, Math.max(0, target.getBoundingClientRect().top + scrollY - margin));
+    return Math.abs(scrollY - wanted) < 2;
+  };
+  await linked.waitForFunction(reachedSection);
+  const englishContext = await browser.newContext({ locale: "en-US", viewport: { width: 1280, height: 720 } });
+  currentOpened().push(englishContext);
+  const negotiated = await englishContext.newPage();
+  await visit(negotiated, `/campeonato/${await address("championship", BRASILEIRO_2026)}${stageAddress.hash}`);
+  assert(new URL(negotiated.url()).pathname.startsWith("/en/"));
+  assertEquals(new URL(negotiated.url()).hash, stageAddress.hash);
+  await negotiated.waitForFunction(reachedSection);
+  const teamHref = await page.locator(`${screen} .standings tbody tr .name a`).first().getAttribute("href");
+  await page.locator(`${screen} .standings tbody tr .name a`).first().click();
+  await page.locator(`${screen}[data-screen="equipe-campeonato"] .team-switch`).waitFor();
+  assertEquals(await navigation().locator(".local-links a").allTextContents(), ["Table", "Matches", "Players", "Attendance"]);
+  assertEquals(await navigation().locator('[aria-current="page"]').count(), 0);
+  assertEquals(await navigation().locator(".local-links a").evaluateAll((links: Element[]) => links.map(link => new URL(link.getAttribute("href")!, location.href).pathname)), [path, `${path}/matches`, `${path}/players`, `${path}/attendance`]);
+  await navigation().getByRole("link", { name: "Players", exact: true }).click();
+  await page.locator(`${screen}[data-screen="campeonato-jogadores"]`).waitFor();
+  assertEquals(new URL(page.url()).pathname, `${path}/players`);
+  await page.locator(`${screen} .squad-table a[data-route="jogador-campeonato"]`).first().click();
+  await page.locator(`${screen}[data-screen="jogador-campeonato"][data-state="populated"]`).waitFor();
+  assertEquals(await navigation().locator(".local-links a").allTextContents(), ["Table", "Matches", "Players", "Attendance"]);
+  assertEquals(await navigation().locator('[aria-current="page"]').count(), 0);
+  assertEquals(await navigation().locator(".local-links a").evaluateAll((links: Element[]) => links.map(link => new URL(link.getAttribute("href")!, location.href).pathname)), [path, `${path}/matches`, `${path}/players`, `${path}/attendance`]);
+  assert(await page.locator(`${screen} .content a[data-route="jogador"]`).isVisible());
+  await navigation().getByRole("link", { name: "Attendance", exact: true }).click();
+  await page.locator(`${screen}[data-screen="publico"]`).waitFor();
+  assertEquals(new URL(page.url()).pathname, `${path}/attendance`);
+  const removed = await page.request.get(`${base}${path}/teams`, { maxRedirects: 0, ignoreHTTPSErrors: true });
+  assertEquals(removed.status(), 404);
+  await removed.dispose();
+  const fallback = await (await context()).newPage();
+  currentOpened().push(fallback);
+  await fallback.addInitScript(() => {
+    let owner: object | null = window;
+    while (owner && !Object.hasOwn(owner, "navigation")) owner = Object.getPrototypeOf(owner);
+    if (owner) Reflect.deleteProperty(owner, "navigation");
+  });
+  await visit(fallback, new URL(teamHref!, base).pathname);
+  assert(await fallback.evaluate(() => !("navigation" in window)));
+  await fallback.locator(`${screen} .team-championship-links a[data-route="equipe"]`).click();
+  await fallback.locator(`${screen}[data-screen="equipe"][data-state="populated"]`).waitFor();
+  await fallback.locator(`${screen} .local-links a[data-route-fragment^="team-rating-history-"]`).click();
+  await fallback.waitForFunction(reachedSection);
+  await fallback.locator(`${screen} .local-links a[data-route-fragment^="team-fixtures-"]`).click();
+  await fallback.waitForFunction(reachedSection);
+  await fallback.goBack();
+  assert(new URL(fallback.url()).hash.startsWith("#team-rating-history-"));
+  await fallback.waitForFunction(reachedSection);
+  await fallback.goForward();
+  assert(new URL(fallback.url()).hash.startsWith("#team-fixtures-"));
+  await fallback.waitForFunction(reachedSection);
+  await visit(linked, path + "#%");
+  assertEquals(await linked.locator(`${screen}[data-screen="campeonato"]`).count(), 1);
+  const mobile = await open(path, { width: 390, dark: true });
+  assert(await mobile.locator(`${screen} .page-with-local-nav`).evaluate((el: Element) => {
+    const nav = el.querySelector(".local-side")!;
+    const content = el.querySelector(".content")!;
+    return Boolean(nav.compareDocumentPosition(content) & Node.DOCUMENT_POSITION_FOLLOWING)
+      && nav.getBoundingClientRect().bottom <= content.getBoundingClientRect().top
+      && document.documentElement.scrollWidth <= innerWidth;
+  }));
+  await mobile.locator(`${screen} .standings tbody tr .name a`).first().click();
+  await mobile.locator(`${screen}[data-screen="equipe-campeonato"] .team-switch`).waitFor();
+  const mobileNavigation = mobile.locator(`${screen} .local-navigation[aria-label="This championship"]`);
+  assertEquals(await mobileNavigation.locator(".local-links a").allTextContents(), ["Table", "Matches", "Players", "Attendance"]);
+  await mobileNavigation.getByRole("link", { name: "Players", exact: true }).click();
+  await mobile.locator(`${screen}[data-screen="campeonato-jogadores"][data-state="populated"] .squad-table a[data-route="jogador-campeonato"]`).first().click();
+  await mobile.locator(`${screen}[data-screen="jogador-campeonato"][data-state="populated"]`).waitFor();
+  assertEquals(await mobileNavigation.locator(".local-links a").allTextContents(), ["Table", "Matches", "Players", "Attendance"]);
+  assert(await mobile.locator(`${screen} .page-with-local-nav`).evaluate((el: Element) => {
+    const nav = el.querySelector(".local-side")!.getBoundingClientRect();
+    const content = el.querySelector(".content")!.getBoundingClientRect();
+    return nav.bottom <= content.top && document.documentElement.scrollWidth <= innerWidth;
+  }));
+  await mobileNavigation.getByRole("link", { name: "Matches", exact: true }).click();
+  await mobile.locator(`${screen}[data-screen="arquivo-campeonato"]`).waitFor();
+  assertEquals(new URL(mobile.url()).pathname, `${path}/matches`);
+  const portuguese = await open(`/campeonato/${await address("championship", BRASILEIRO_2026)}?lang=pt-BR`, { width: 390 });
+  await portuguese.locator(`${screen} .standings tbody tr .name a`).first().click();
+  await portuguese.locator(`${screen}[data-screen="equipe-campeonato"] .team-switch`).waitFor();
+  const portugueseNavigation = portuguese.locator(`${screen} .local-navigation[aria-label="Neste campeonato"]`);
+  assertEquals(await portugueseNavigation.locator(".local-links a").allTextContents(), ["Tabela", "Jogos", "Jogadores", "Público"]);
+  await portugueseNavigation.getByRole("link", { name: "Jogadores", exact: true }).click();
+  await portuguese.locator(`${screen}[data-screen="campeonato-jogadores"]`).waitFor();
+  await portuguese.locator(`${screen} .squad-table a[data-route="jogador-campeonato"]`).first().click();
+  await portuguese.locator(`${screen}[data-screen="jogador-campeonato"][data-state="populated"]`).waitFor();
+  assertEquals(await portugueseNavigation.locator(".local-links a").allTextContents(), ["Tabela", "Jogos", "Jogadores", "Público"]);
+  await portugueseNavigation.getByRole("link", { name: "Tabela", exact: true }).click();
+  await portuguese.locator(`${screen}[data-screen="campeonato"]`).waitFor();
+  assert(new URL(portuguese.url()).searchParams.get("lang") === "pt-BR");
 });
 
 test("test-standings-page: the championship page shows the recounted table", async () => {
   const page = await championship(BRASILEIRO_2026);
   await page.waitForFunction(() => document.querySelectorAll(".standings tbody tr").length === 20);
   const first = await page.$eval(".standings tbody tr", (tr: Element) =>
-    [".pos", ".name", ".pts"].map((c) => tr.querySelector(c)?.textContent?.trim()).concat(tr.getAttribute("data-zone") ?? ""));
+    [".pos", ".name .team-name", ".pts"].map((c) => tr.querySelector(c)?.textContent?.trim()).concat(tr.getAttribute("data-zone") ?? ""));
   assertEquals(first, ["1", "Flamengo-RJ", "60", "champion"]);
+  await page.locator(".zones .range").nth(4).waitFor();
+  assertEquals(await page.locator(".zones .range").allInnerTexts(), ["1", "1–4", "5", "6–11", "17–20"]);
 });
 
 test("test-standings-live: a result recorded after the fact moves the table", async () => {
   const page = await championship(BRASILEIRO_2026);
+  const origin = await loadedAt(page);
   await page.waitForFunction(() => document.querySelectorAll(".standings tbody tr").length === 20);
   const before = Number(await pointsOf(page, "Botafogo-RJ"));
   try {
     await query(`UPDATE game SET home_score = 1 WHERE id = '${DRAW}'`);
     await awaitPoints(page, "Botafogo-RJ", before + 2);
+    await stayedOpen(page, origin);
   } finally {
     await query(`UPDATE game SET home_score = 0 WHERE id = '${DRAW}'`);
   }
   await awaitPoints(page, "Botafogo-RJ", before);
+  await stayedOpen(page, origin);
 });
 
-test("test-championship-old-points: the two-point era", async () => {
-  const page = await championship(BRASILEIRO_1971);
-  assertEquals(await texts(page, ".points b"), ["2", "1", "0"]);
-});
 
 test("test-championship-no-groups: a phase with no groups says so", async () => {
   const page = await championship(LIBERTADORES_2026);
   await page.waitForFunction(() => document.querySelectorAll(".phase").length === 2);
+  const expected = ["Oitavas de Final", "Fase de Grupos"];
+  assertEquals(await texts(page, ".phase h2"), expected);
+  await page.locator(".local-stages .local-links a").nth(1).waitFor();
+  assertEquals(await texts(page, ".local-stages .local-links a"), expected);
   const phases = await texts(page, ".phase");
   assert(phases.every((p) => p.includes("Esta fase ainda não tem grupos cadastrados.")), phases.join(" | "));
 });
@@ -831,10 +1014,198 @@ test("test-game-page: a game's page shows its score, facts, goals and line-ups",
 
 test("test-game-gone: an address naming no game says so", () => gone("/jogo", "Este jogo não existe ou foi removido."));
 
-test("test-rounds: the championship page shows the current round and the next", async () => {
+test("test-team-match-preview: standings preview the last played and next scheduled match for a team", async () => {
   const page = await championship(BRASILEIRO_2026);
-  await page.waitForFunction(() => document.querySelectorAll(".round .game-row").length === 20);
-  assertEquals(await said(page, ".round h3"), ["Rodada 28", "Rodada 29"]);
+  assertEquals(await page.locator(".rounds, .round .game-row").count(), 0);
+  const cell = page.locator(`td[data-team-match-preview]:has(a[data-param-slug="${await address("team", ATHLETICO)}"])`).first();
+  const popover = cell.locator(".team-match-preview");
+  const expected = JSON.parse(await query(`SELECT json_agg(slug ORDER BY played DESC) FROM (
+    (SELECT g.slug,tg.played FROM team_game tg JOIN game g ON g.id=tg.game_id
+      WHERE tg.team_id='${ATHLETICO}' AND tg.championship_id='${BRASILEIRO_2026}' AND tg.played
+      ORDER BY tg.day DESC,tg.kickoff DESC NULLS LAST,tg.game_id DESC LIMIT 1)
+    UNION ALL
+    (SELECT g.slug,tg.played FROM team_game tg JOIN game g ON g.id=tg.game_id
+      WHERE tg.team_id='${ATHLETICO}' AND tg.championship_id='${BRASILEIRO_2026}' AND NOT tg.played
+      ORDER BY tg.day,tg.kickoff NULLS LAST,tg.game_id LIMIT 1)
+  ) matches`));
+  await popover.locator(".team-match-preview-game").nth(1).waitFor({ state: "attached" });
+  assertEquals(await popover.locator(".team-match-preview-game").evaluateAll((nodes: Element[]) => nodes.map(n => n.getAttribute("data-param-slug"))), expected);
+  const followingSlug = await cell.evaluate((node: Element) => node.parentElement!.nextElementSibling!.querySelector('.team-name')!.getAttribute('data-param-slug'));
+  const following = page.locator(`td[data-team-match-preview]:has(a[data-param-slug="${followingSlug}"])`).first();
+  const followingPopover = following.locator('.team-match-preview');
+  const twoRows = async (card: Page) => {
+    assertEquals(await card.locator('h3,h4').count(), 0);
+    assert(await card.evaluate((node: Element) => {
+      const reads = [...node.querySelectorAll('.team-match-preview-read')];
+      const rows = [...node.querySelectorAll('.team-match-preview-game')];
+      const css = getComputedStyle(node);
+      const frame = parseFloat(css.paddingTop) + parseFloat(css.paddingBottom) + parseFloat(css.borderTopWidth) + parseFloat(css.borderBottomWidth);
+      return reads.length === 2 && rows.length === 2 &&
+        Math.abs(node.getBoundingClientRect().height - frame - reads.reduce((height, read) => height + read.getBoundingClientRect().height, 0)) < 2 &&
+        rows.every(row => {
+          const date = row.querySelector('.team-match-preview-day')!.getBoundingClientRect();
+          const game = row.querySelector('.team-match-preview-home')!.getBoundingClientRect();
+          return date.top < game.bottom && game.top < date.bottom;
+        });
+    }), 'each game occupies one row, with no title or section headings');
+    assert(await card.evaluate((node: Element) => {
+      const rows = [...node.querySelectorAll('.team-match-preview-game')];
+      return ['day', 'time', 'home', 'score', 'away'].every(field => {
+        const boxes = rows.map(row => row.querySelector(`.team-match-preview-${field}`)!.getBoundingClientRect());
+        return boxes[0].width > 0 && Math.abs(boxes[0].left - boxes[1].left) < 1 && Math.abs(boxes[0].right - boxes[1].right) < 1;
+      });
+    }), 'date, reserved time, teams and score use the same columns in both games');
+  };
+  await cell.hover();
+  await page.waitForSelector('.team-match-preview[data-preview-mode="hover-passive"]:popover-open');
+  assertEquals(await popover.locator('.team-match-preview-read').evaluateAll((nodes: Element[]) => nodes.map(node => node.getAttribute('aria-label'))), ['Último jogo disputado', 'Próximo jogo marcado']);
+  assert(await popover.getByRole('link', { name: /^Último jogo disputado:/ }).isVisible());
+  assert(await popover.getByRole('link', { name: /^Próximo jogo marcado:/ }).isVisible());
+  await twoRows(popover);
+  const initial = await popover.boundingBox();
+  const source = await cell.boundingBox();
+  await page.mouse.move(source.x + source.width / 2 + 30, source.y + source.height / 2 + 5);
+  const moved = await popover.boundingBox();
+  assert(Math.abs(moved.x - initial.x - 30) < 1 && Math.abs(moved.y - initial.y - 5) < 1,
+    'hover previews track pointer movement inside the same team cell');
+  assertEquals(await popover.evaluate((node: Element) => getComputedStyle(node).pointerEvents), 'none');
+  const sourceBox = await cell.boundingBox();
+  const followingBox = await following.boundingBox();
+  const sweepX = sourceBox.x + sourceBox.width / 3;
+  await page.mouse.move(sweepX, sourceBox.y + sourceBox.height / 2);
+  await page.mouse.move(sweepX, followingBox.y + followingBox.height / 2, { steps: 12 });
+  await followingPopover.waitFor({ state: 'visible' });
+  assert(!(await popover.isVisible()), 'sweeping down the name column switches directly to the next team');
+  await cell.hover();
+  await cell.locator('.team-match-preview-toggle').focus();
+  await page.keyboard.press('Tab');
+  assertEquals(await popover.getAttribute('data-preview-mode'), 'focused');
+  assert(await popover.evaluate((node: Element) => {
+    const bounds = node.getBoundingClientRect();
+    return bounds.top >= 0 && bounds.left >= 0 && bounds.right <= innerWidth && bounds.bottom <= innerHeight;
+  }));
+  await popover.locator('.team-match-preview-game').first().focus();
+  await page.keyboard.press('Tab');
+  await following.hover();
+  assertEquals(await popover.getAttribute('data-preview-mode'), 'focused');
+  assert(await popover.isVisible(), 'incidental mouse movement does not replace keyboard-focused links');
+  await cell.hover();
+  await page.locator('.local-links a').first().focus();
+  assertEquals(await popover.getAttribute('data-preview-mode'), 'hover-passive');
+  await following.hover();
+  await followingPopover.waitFor({ state: 'visible' });
+  assert(!(await popover.isVisible()), 'leaving keyboard focus restores ordinary pointer browsing');
+  await page.keyboard.press('Escape');
+  await page.waitForSelector('.team-match-preview:popover-open', { state: 'hidden' });
+  await page.locator('.championship h1').hover();
+  await cell.hover();
+  await cell.locator('.team-match-preview-toggle').click();
+  assertEquals(await popover.getAttribute('data-preview-mode'), 'pinned');
+  assertEquals(await cell.locator('.team-match-preview-toggle').getAttribute('aria-pressed'), 'true');
+  assertEquals(await cell.locator('.team-match-preview-toggle').getAttribute('title'), 'Desafixar prévia dos jogos');
+  const pinned = await popover.boundingBox();
+  await following.hover();
+  assert(await popover.isVisible(), 'pinning holds the selected team');
+  assertEquals(await popover.boundingBox(), pinned, 'pinned links stay stationary while the pointer moves');
+  await cell.locator('.team-match-preview-toggle').press('Enter');
+  await page.waitForSelector('.team-match-preview:popover-open', { state: 'hidden' });
+  await cell.hover();
+  await page.waitForSelector('.team-match-preview[data-preview-mode="hover-passive"]:popover-open');
+  await page.locator('.local-links a').first().focus();
+  await page.locator('.championship h1').hover();
+  await page.waitForSelector('.team-match-preview:popover-open', { state: 'hidden' });
+  await cell.locator('.team-name').focus();
+  await page.keyboard.press('Tab');
+  await page.waitForSelector('.team-match-preview:popover-open');
+  await page.keyboard.press('Escape');
+  await cell.locator('.team-match-preview-toggle').click();
+  await page.locator('.championship h1').click();
+  await page.waitForSelector('.team-match-preview:popover-open', { state: 'hidden' });
+  await cell.hover();
+  await page.waitForSelector('.team-match-preview[data-preview-mode="hover-passive"]:popover-open');
+  await page.locator('.championship h1').hover();
+  await page.waitForSelector('.team-match-preview:popover-open', { state: 'hidden' });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await cell.hover();
+  await page.waitForSelector('.team-match-preview[data-preview-mode="hover-passive"]:popover-open');
+  const narrowSource = await cell.boundingBox();
+  const narrowFollowing = await following.boundingBox();
+  await page.mouse.move(narrowSource.x + 4, narrowSource.y + narrowSource.height / 2);
+  const narrowCard = await popover.boundingBox();
+  const point = { x: Math.max(narrowCard.x, narrowFollowing.x) + 4, y: narrowFollowing.y + narrowFollowing.height / 2 };
+  assert(await popover.evaluate((node: Element, point: { x: number; y: number }) => {
+    const box = node.getBoundingClientRect();
+    return point.x > box.left && point.x < box.right && point.y > box.top && point.y < box.bottom;
+  }, point), 'the regression point is covered by the passive card');
+  assertEquals(await page.evaluate(({ x, y }: { x: number; y: number }) => document.elementFromPoint(x, y)?.closest('td[data-team-match-preview]')?.querySelector('.team-name')?.getAttribute('data-param-slug'), point), followingSlug, 'the card and its backdrop pass hit testing through to the covered team');
+  await page.mouse.move(point.x, point.y, { steps: 12 });
+  await followingPopover.waitFor({ state: 'visible' });
+  assert(!(await popover.isVisible()));
+  await cell.hover();
+  await cell.locator('.team-match-preview-toggle').click();
+  assertEquals(await popover.getAttribute('data-preview-mode'), 'pinned');
+  await twoRows(popover);
+  await popover.locator('.team-match-preview-game').first().hover();
+  assert(await popover.isVisible());
+  await cell.locator('.team-match-preview-toggle').click();
+  await page.waitForSelector('.team-match-preview:popover-open', { state: 'hidden' });
+  const touch = await browser.newContext({
+    viewport: { width: 390, height: 844 }, hasTouch: true,
+    locale: "pt-BR", timezoneId: "America/Sao_Paulo", serviceWorkers: "block",
+  });
+  currentOpened().push(touch);
+  const mobile = await touch.newPage();
+  await visit(mobile, `/campeonato/${BRASILEIRO_2026}`);
+  const mobileCell = mobile.locator(`td[data-team-match-preview]:has(a[data-param-slug="${await address("team", ATHLETICO)}"])`).first();
+  const toggle = mobileCell.locator(".team-match-preview-toggle");
+  await toggle.tap();
+  await mobile.waitForSelector(".team-match-preview:popover-open");
+  assertEquals(await mobileCell.locator('.team-match-preview').getAttribute('data-preview-mode'), 'pinned');
+  await twoRows(mobileCell.locator('.team-match-preview'));
+  assert(await mobileCell.locator(".team-match-preview").evaluate((node: Element) => {
+    const bounds = node.getBoundingClientRect();
+    return bounds.left >= 0 && bounds.right <= innerWidth && bounds.top >= 0 && bounds.bottom <= innerHeight;
+  }));
+  await mobile.locator(".championship h1").tap();
+  await mobile.waitForSelector(".team-match-preview:popover-open", { state: "hidden" });
+  await toggle.tap();
+  await mobileCell.locator(".team-match-preview-game").first().tap();
+  await mobile.waitForSelector(".game h1");
+  // A cold navigation previews the game while the championship keeps its
+  // presentation, so the popover is released when the game is presented, not
+  // when its heading first paints.
+  await mobile.waitForFunction(() => document.querySelectorAll(".team-match-preview:popover-open").length === 0);
+
+  const missingTime = await championship(BRASILEIRO_2026);
+  const missingCell = missingTime.locator(`td[data-team-match-preview]:has(a[data-param-slug="${await address("team", "07000000-0000-4000-8000-000000000016")}"])`).first();
+  const missingCard = missingCell.locator('.team-match-preview');
+  await missingCard.locator('.team-match-preview-game').nth(1).waitFor({ state: 'attached' });
+  await missingCell.hover();
+  await missingCard.waitFor({ state: 'visible' });
+  assert((await missingCard.locator('.team-match-preview-time').first().innerText()).length > 0);
+  assertEquals(await missingCard.locator('.team-match-preview-time').nth(1).innerText(), '');
+  await twoRows(missingCard);
+
+  const membership = crypto.randomUUID();
+  await query(`INSERT INTO team_group (id,group_id,team_id) VALUES ('${membership}','04000000-0000-4000-8000-000000000002','${ATHLETICO}')`);
+  try {
+    const empty = await championship("02000000-0000-4000-8000-000000000009");
+    const emptyCell = empty.locator(`td[data-team-match-preview]:has(a[data-param-slug="${await address("team", ATHLETICO)}"])`).first();
+    await emptyCell.waitFor({ timeout: STREAM_MS });
+    await emptyCell.hover();
+    await empty.waitForSelector(".team-match-preview:popover-open");
+    await emptyCell.locator(".team-match-preview .empty").nth(1).waitFor();
+    assertEquals(await emptyCell.locator(".team-match-preview .empty").allTextContents(), ["Nenhum resultado registrado ainda.", "Nenhum jogo marcado ainda."]);
+    assertEquals(await emptyCell.locator(".team-match-preview-game").count(), 0, "other championships do not fill an empty preview");
+    const errors: string[] = [];
+    empty.on("pageerror", (error: Error) => errors.push(error.message));
+    await emptyCell.evaluate((node: Element) => node.replaceChildren());
+    await empty.evaluate(() => new Promise(requestAnimationFrame));
+    assertEquals(errors, [], "live subtree removal releases the open card without assuming its button remains");
+    assertEquals(await empty.locator(".team-match-preview:popover-open").count(), 0);
+  } finally {
+    await query(`DELETE FROM team_group WHERE id='${membership}'`);
+  }
 });
 
 test("test-teams: part of a name narrows the teams", async () => {
@@ -866,7 +1237,7 @@ test("test-team-page: a team's profile shows facts, championships and deduplicat
     .evaluateAll((links: HTMLAnchorElement[]) => links.map((link) => link.getAttribute("data-param-slug")));
   assertEquals(new Set(currentPlayers).size, currentPlayers.length, "the profile lists each current player once across seasons");
   await page.locator(`.team-current-championships a[data-param-championship="${await address("championship", BRASILEIRO_2026)}"]`).click();
-  await page.waitForURL(await fixturePath(`**/equipe-campeonato/${ATHLETICO}/${BRASILEIRO_2026}**`));
+  await page.waitForURL(await fixturePath(`**/campeonato/${BRASILEIRO_2026}/equipe/${ATHLETICO}**`));
   await page.waitForFunction(() => document.querySelectorAll(".team-roster .squad-table tbody tr").length > 11);
   const viveros = await page.$$eval(".team-roster .squad-table tbody tr", (rows: Element[]) =>
     rows.map((r) => {
@@ -901,19 +1272,26 @@ const season = (page: Page, column: string, want: string) =>
 const GOALS = "goals", PLAYED = "played";
 
 test("test-player-stats-live: a goal recorded after the fact moves the season with no reload", async () => {
-  const page = await open(`/jogador/${VIVEROS}`);
-  await season(page, GOALS, "18");
+  const pages = await Promise.all([open(`/jogador/${VIVEROS}`), open(`/jogador/${VIVEROS}`)]);
+  await Promise.all(pages.map((page) => season(page, GOALS, "18")));
+  await Promise.all(pages.map((page) => season(page, "goals_per90", "0,709")));
+  const documents = await Promise.all(pages.map(loadedAt));
   try {
     await query(`INSERT INTO goal (id, game_id, player_id, side, minute) VALUES ('0e000000-0000-4000-8000-0000000fffff', '${WIN}', '${VIVEROS}', 'home', 90)`);
-    await season(page, GOALS, "19");
+    await Promise.all(pages.map((page) => season(page, GOALS, "19")));
+    await Promise.all(pages.map((page) => season(page, "goals_per90", "0,748")));
+    await Promise.all(pages.map((page, index) => stayedOpen(page, documents[index])));
   } finally {
     await query(`DELETE FROM goal WHERE id = '0e000000-0000-4000-8000-0000000fffff'`);
   }
-  await season(page, GOALS, "18");
+  await Promise.all(pages.map((page) => season(page, GOALS, "18")));
+  await Promise.all(pages.map((page) => season(page, "goals_per90", "0,709")));
+  await Promise.all(pages.map((page, index) => stayedOpen(page, documents[index])));
 });
 
 test("test-appearance-live: an appearance removed after the fact moves the season with no reload", async () => {
   const page = await open(`/jogador/${VIVEROS}`);
+  const origin = await loadedAt(page);
   const played = (n: string) => season(page, PLAYED, n);
   await played("26");
   const cols = "id, game_id, player_id, side, on_minute, off_minute, yellow, red, bench";
@@ -922,10 +1300,12 @@ test("test-appearance-live: an appearance removed after the fact moves the seaso
   try {
     await query(`DELETE FROM player_game WHERE id IN (SELECT id FROM kept_appearance)`);
     await played("25");
+    await stayedOpen(page, origin);
   } finally {
     await query(`INSERT INTO player_game (${cols}) SELECT ${cols} FROM kept_appearance; DROP TABLE kept_appearance`);
   }
   await played("26");
+  await stayedOpen(page, origin);
 });
 
 test("test-team-gone: an address naming no team says so", () => gone("/equipe", "Esta equipe não existe ou foi removida."));
@@ -1019,7 +1399,7 @@ test("test-edit-game: an editor's correction of the score and the crowd reaches 
   const before = await query(`SELECT home_score || ',' || coalesce(attendance::text, 'NULL') FROM game WHERE id = '${WIN}'`);
   const [score, crowd] = before.split(",");
   try {
-    const page = await open(`/editar/${WIN}`, { session: ed });
+    const page = await open(`/jogo/${WIN}/placar/editar`, { session: ed });
     const reader = await open(`/jogo/${WIN}`);
     await page.waitForSelector('.edit[data-state="editing"]');
     assertEquals(await page.inputValue("#edit-home"), score);
@@ -1047,7 +1427,7 @@ test("test-edit-goal: a goal an editor adds and then removes moves the game's go
   // A home starter of the game, whose season this championship's first row is.
   const player = await query(`SELECT player_id FROM player_game WHERE game_id = '${WIN}' AND side = 'home' AND NOT bench ORDER BY on_minute, player_id LIMIT 1`);
   try {
-    const page = await open(`/editar/${WIN}`, { session: ed });
+    const page = await open(`/jogo/${WIN}/placar/editar`, { session: ed });
     const reader = await open(`/jogo/${WIN}`);
     const scorer = await open(`/jogador/${player}`);
     await page.waitForSelector('.edit[data-state="editing"]');
@@ -1077,7 +1457,7 @@ test("test-edit-refused: a non-editor's save and a goal with no scorer are refus
   const ed = await editor(`editor-${Date.now()}`);
   const score = await query(`SELECT home_score FROM game WHERE id = '${WIN}'`);
   try {
-    const page = await open(`/editar/${WIN}`, { session: plain });
+    const page = await open(`/jogo/${WIN}/placar/editar`, { session: plain });
     await page.waitForSelector('.edit[data-state="editing"]');
     await page.$eval("#edit-home", (el: Element) => el.addEventListener("input", () => el.setAttribute("data-test-input", "received"), { once: true }));
     await page.fill("#edit-home", "7");
@@ -1090,7 +1470,7 @@ test("test-edit-refused: a non-editor's save and a goal with no scorer are refus
 
     // An editor's goal with a minute and no scorer: the archive refuses a
     // goal nobody scored, and the minute stays to be given its scorer.
-    const mine = await open(`/editar/${WIN}`, { session: ed });
+    const mine = await open(`/jogo/${WIN}/placar/editar`, { session: ed });
     await mine.waitForSelector('.edit[data-state="editing"]');
     await mine.fill("#goal-minute", "77");
     await mine.click("#goal-add-away");
@@ -1191,7 +1571,10 @@ test("test-sign-in: explicit passkey creation preserves a guest, and an unknown 
     assertEquals(recovered.user.handle, recoveryGuest.user.handle);
     assertEquals(ceremonies.slice(2), ["/auth/register/start", "/auth/register/verify"]);
     assertEquals(await query(`SELECT count(*) FROM webauthn_credential WHERE user_id = '${recovered.user.id}'`), "1");
-    await cdp.send("WebAuthn.removeCredential", { authenticatorId, credentialId: credentials[0].credentialId });
+    const { credentials: afterRecovery } = await cdp.send("WebAuthn.getCredentials", { authenticatorId });
+    if (afterRecovery.some((c: { credentialId: string }) => c.credentialId === credentials[0].credentialId)) {
+      await cdp.send("WebAuthn.removeCredential", { authenticatorId, credentialId: credentials[0].credentialId });
+    }
     await signOut();
     const accepted = page.waitForResponse((response: { url(): string }) => new URL(response.url()).pathname === "/auth/login/verify");
     await page.locator("body > nav .shell-signin").click();
@@ -1246,6 +1629,29 @@ test("test-comment-refused: a guest's comment is refused and what was typed is k
   await page.click("#comment-post");
   await page.waitForSelector('.composer[data-state="refused"] .refusal', { state: "visible" });
   assertEquals(await page.$eval("#comment-body", (e: Element) => (e as HTMLTextAreaElement).value), "Golaço!");
+});
+
+test("navigation: resource routes use one hierarchy in every site language", async () => {
+  const page = await newPage();
+  const response = await page.request.get(`${base}/shell/shell.json`, { ignoreHTTPSErrors: true });
+  assertEquals(response.status(), 200);
+  const config = await response.json();
+  await response.dispose();
+  const active = '.shell-screen:not([hidden]):not([data-served])';
+  await visit(page, "/en/community", `${active} .screen[data-screen="usuarios"]`);
+  const community = config.routes.find((route: { screen: string }) => route.screen === "usuarios");
+  for (const [locale, spec] of Object.entries(config.i18n.locales) as [string, { path: string }][]) {
+    const prefix = locale === config.i18n.default ? "" : `/${spec.path}`;
+    const target = `${prefix}${community.paths[locale]}`;
+    await page.click(`${active} .masthead .langs a[data-locale="${locale}"]`);
+    await page.waitForURL(`${base}${target}${locale === config.i18n.default ? `?lang=${locale}` : ""}`);
+    await page.waitForFunction((locale: string) => document.documentElement.lang === locale, locale);
+  }
+  for (const path of ["/it/campionato-giocatori/championship-slug", "/en/championship-teams/championship-slug", "/en/team-championship/team-slug/championship-slug", "/en/campeonato/championship-slug/arquivo"]) {
+    const response = await page.request.get(`${base}${path}`, { maxRedirects: 0, ignoreHTTPSErrors: true });
+    assertEquals(response.status(), 404, path);
+    await response.dispose();
+  }
 });
 
 test("test-languages: selected languages keep routes and localize date order", async () => {
@@ -1312,11 +1718,13 @@ test("test-dark: stacked match probabilities and native inspectors work in both 
     for (const dark of [false, true]) {
       const page = await open(`/jogo/${WIN}`, { dark });
       const active = '.shell-screen:not([hidden]):not([data-served])';
+      const chart = page.locator(`${active} .match-probability__chart`);
+      // Source-backed scenario initialization can outlast the outer screen's populated state.
+      await chart.waitFor({ state: 'visible' });
       const minuteInput = page.locator(`${active} #match-probability-minute`);
       await minuteInput.fill('30');
       await page.waitForFunction((active: string) =>
         document.querySelector(`${active} .match-probability__snapshot`)?.textContent?.startsWith('Minuto 30:'), active);
-      const chart = page.locator(`${active} .match-probability__chart`);
       const snapshotLocator = page.locator(`${active} .match-probability__snapshot`);
       const snapshot = (await snapshotLocator.textContent())!;
       const expectedValues = snapshot.match(/[0-9]+,[0-9]%/g)!.reverse();
@@ -1592,8 +2000,11 @@ const origin = Deno.env.get("ORIGIN");
 if (origin === undefined) throw new Error("ORIGIN is unset: the check runs beside the stack, which sets it");
 // What the door's plain listener answers under a Host of the asker's choosing,
 // which fetch will not send: the listener a deployment's balancer reaches.
+const door = Deno.env.get("DOOR");
+if (door === undefined) throw new Error("DOOR is unset: the check runs beside the stack, which sets it");
+const doorUrl = new URL(door);
 const underHost = async (host: string, path: string) => {
-  const conn = await Deno.connect({ hostname: new URL(base).hostname, port: 8080 });
+  const conn = await Deno.connect({ hostname: doorUrl.hostname, port: Number(doorUrl.port) });
   await conn.write(new TextEncoder().encode(`GET ${await fixturePath(path)} HTTP/1.1\r\nHost: ${host}\r\nAccept-Language: pt-BR\r\nConnection: close\r\n\r\n`));
   const raw = new TextDecoder().decode(await new Response(conn.readable).arrayBuffer());
   const [head, body] = [raw.slice(0, raw.indexOf("\r\n\r\n")), raw.slice(raw.indexOf("\r\n\r\n") + 4)];
@@ -1639,6 +2050,7 @@ test("door: every public route is answered with its document, rows and all, in i
 });
 
 test("door: readable detail addresses render their records and missing addresses return 404", async () => {
+  await statisticsReady();
   for (const [fixture, words] of [
     [`/equipe/${ATHLETICO}`, "Athletico-PR"],
     [`/campeonato/${BRASILEIRO_2026}`, "Campeonato Brasileiro"],
@@ -1646,8 +2058,8 @@ test("door: readable detail addresses render their records and missing addresses
     [`/jogador/${VIVEROS}`, "Viveros"],
     [`/estadio/${PACAEMBU}`, "Pacaembu"],
     [`/arbitro/${ABADE}`, "Abade"],
-    [`/chances/${SERIE_A_2026}`, "Flamengo-RJ"],
-    [`/equipe-campeonato/${ATHLETICO}/${BRASILEIRO_2026}`, "Athletico-PR"],
+    [`/grupo/${SERIE_A_2026}/chances`, "Flamengo-RJ"],
+    [`/campeonato/${BRASILEIRO_2026}/equipe/${ATHLETICO}`, "Athletico-PR"],
   ]) {
     const path = await fixturePath(fixture);
     const page = await served(path);
@@ -1660,17 +2072,33 @@ test("door: readable detail addresses render their records and missing addresses
   for (const path of [
     "/equipe/missing-address", "/campeonato/missing-address", "/jogo/missing-address",
     "/jogador/missing-address", "/estadio/missing-address", "/arbitro/missing-address",
-    "/chances/missing-address", "/equipe-campeonato/missing-address/missing-address",
-    `/equipe-campeonato/${await address("team", ATHLETICO)}/missing-address`,
-    `/equipe-campeonato/missing-address/${await address("championship", BRASILEIRO_2026)}`,
+    "/grupo/missing-address/chances", "/campeonato/missing-address/equipe/missing-address",
+    `/campeonato/missing-address/equipe/${await address("team", ATHLETICO)}`,
+    `/campeonato/${await address("championship", BRASILEIRO_2026)}/equipe/missing-address`,
   ]) {
     assertEquals((await served(path)).status, 404, path);
   }
 });
 
+test("door: nested match editors receive the client entry without server-rendered editor content", async () => {
+  const match = `/en/match/${WIN}`;
+  const record = await served(match);
+  assertEquals(record.status, 200);
+  assert(record.html.includes('data-served=""'));
+  for (const action of ["edit", "score/edit", "goals/edit", "lineup/edit"]) {
+    const editor = await served(`${match}/${action}`);
+    assertEquals(editor.status, 200, action);
+    assert(editor.html.includes('id="app"'), action);
+    assert(!editor.html.includes('data-served=""'), `${action} was server rendered`);
+    assert(!editor.html.includes('id="pronto-reads"'), `${action} exposed renderer reads`);
+  }
+  assertEquals((await served(`${match}/unknown-child`)).status, 404);
+});
+
 test("door: team statistics and derived charts arrive before JavaScript and survive hydration", async () => {
+  await statisticsReady();
   const team = "07000000-0000-4000-8000-000000000001";
-  const path = `/en/team-championship/${team}/${BRASILEIRO_2026}`;
+  const path = `/en/championship/${BRASILEIRO_2026}/team/${team}`;
   const profile = await served(`/en/team/${team}`);
   assertEquals([profile.status, profile.cache], [200, "public, no-cache"]);
   assert(profile.html.includes('data-served=""'), "the team profile is not server rendered");
@@ -1824,6 +2252,11 @@ test("door: a page the worker kept stays the page in a tab opened offline", asyn
   assert((await offline.$$eval("#app .games li[data-id]", (els: Element[]) => els.length)) > 0, "the kept rows are gone");
   await c.setOffline(false);
 });
+
+// Two native programs can each spend ten minutes compiling before publication.
+// Keep cold startup outside the browser's steady-state latency assertions.
+await statisticsReady(2 * 600_000 + STREAM_MS);
+const browser = await chromium.launch({ args: ["--ignore-certificate-errors"] });
 
 Deno.test("readonly acceptance", async () => {
   const guest = await fetch(`${base}/auth/guest`, {

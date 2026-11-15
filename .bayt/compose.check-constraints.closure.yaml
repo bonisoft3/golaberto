@@ -8,15 +8,41 @@ include:
   required: false
 - path: .././.bayt/compose.crud.yaml
   required: false
-- path: .././.bayt/compose.migrate.yaml
-  required: false
 - path: .././.bayt/compose.caddy.yaml
   required: false
-- path: .././.bayt/compose.served.yaml
+- path: .././.bayt/compose.electric.yaml
+  required: false
+- path: .././.bayt/compose.migrate.yaml
   required: false
 - path: .././.bayt/compose.served-release.yaml
   required: false
 - path: .././.bayt/compose.auth.yaml
+  required: false
+- path: .././.bayt/compose.airlock.yaml
+  required: false
+- path: .././.bayt/compose.airlock-mesh.yaml
+  required: false
+- path: .././.bayt/compose.airlock-upgrade.yaml
+  required: false
+- path: .././.bayt/compose.mesh-events.yaml
+  required: false
+- path: .././.bayt/compose.conduit.yaml
+  required: false
+- path: .././.bayt/compose.transform.yaml
+  required: false
+- path: .././.bayt/compose.ticker.yaml
+  required: false
+- path: .././.bayt/compose.timer-check.yaml
+  required: false
+- path: .././.bayt/compose.compute.yaml
+  required: false
+- path: .././.bayt/compose.sofascore-appliance.yaml
+  required: false
+- path: .././.bayt/compose.redis.yaml
+  required: false
+- path: .././.bayt/compose.served.yaml
+  required: false
+- path: .././.bayt/compose.sofascore.yaml
   required: false
 - path: .././.bayt/compose.ci-replay.yaml
   required: false
@@ -32,33 +58,23 @@ include:
   required: false
 - path: .././.bayt/compose.launch.yaml
   required: false
-- path: .././.bayt/compose.electric.yaml
-  required: false
-- path: .././.bayt/compose.redis.yaml
-  required: false
-- path: .././.bayt/compose.mesh-events.yaml
-  required: false
-- path: .././.bayt/compose.conduit.yaml
-  required: false
-- path: .././.bayt/compose.transform.yaml
-  required: false
-- path: .././.bayt/compose.compute.yaml
+- path: .././.bayt/compose.render.yaml
   required: false
 - path: .././.bayt/compose.rclone-s3.yaml
   required: false
 - path: .././.bayt/compose.clock.yaml
   required: false
-- path: .././.bayt/compose.ticker.yaml
-  required: false
-- path: .././.bayt/compose.render.yaml
-  required: false
 - path: .././.bayt/compose.integrate.yaml
-  required: false
-- path: .././.bayt/compose.check-constraints.yaml
   required: false
 - path: .././.bayt/compose.check-acceptance.yaml
   required: false
+- path: .././.bayt/compose.check-constraints.yaml
+  required: false
+- path: .././.bayt/compose.check-statistics-live.yaml
+  required: false
 - path: ../monorepo/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml
+  required: false
+- path: ../compose.networks.yaml
   required: false
 services:
   bayt:

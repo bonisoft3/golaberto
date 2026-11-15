@@ -1,0 +1,10 @@
+{
+  "operations": [
+    {
+      "sql": {
+        "up": "\nSET lock_timeout='5s';\nSET statement_timeout='120s';\nCREATE OR REPLACE FUNCTION sofa.reject_parse(p_id uuid,p_token uuid,p_error text) RETURNS void\nLANGUAGE plpgsql SET search_path=sofa,public,pg_temp AS $$\nDECLARE v_resource_id uuid;\nBEGIN\n UPDATE sofa.attempt a SET state='failed',error=p_error WHERE a.id=p_id AND a.token=p_token AND a.state='fetched' RETURNING a.resource_id INTO v_resource_id;\n IF NOT FOUND THEN RAISE EXCEPTION 'stale SofaScore parse'; END IF;\n UPDATE sofa.resource r SET next_due_at=NULL,last_error=p_error WHERE r.id=v_resource_id;\n PERFORM sofa.review_item(r.source_id,'parse',r.resource_key,p_error,'{}') FROM sofa.resource r WHERE r.id=v_resource_id;\nEND $$;\nREVOKE ALL ON FUNCTION sofa.reject_parse(uuid,uuid,text) FROM PUBLIC;\n\n",
+        "onComplete": true
+      }
+    }
+  ]
+}

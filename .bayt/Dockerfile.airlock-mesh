@@ -1,0 +1,63 @@
+# generated from bayt.cue — do not edit
+FROM libraries_mecha-mesh-image AS airlock-mesh
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY <<'WALL' /dapr/airlock/wall.yaml
+apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: wall
+spec:
+  type: middleware.http.routerchecker
+  version: v1
+  metadata:
+    - {name: rule, value: "^/v1[.]0/(healthz(/outbound)?|invoke/(acquire)/method/.*)$"}
+WALL
+COPY <<'RESILIENCY' /dapr/airlock/resiliency.yaml
+apiVersion: dapr.io/v1alpha1
+kind: Resiliency
+metadata:
+  name: airlock
+spec:
+  policies:
+    circuitBreakers:
+      sink:
+        maxRequests: 1
+        interval: 60s
+        timeout: 30s
+        trip: consecutiveFailures >= 10
+  targets:
+    apps:
+      acquire: {circuitBreaker: sink}
+RESILIENCY
+COPY --chmod=755 --from=tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa /bin/portcheck /usr/local/bin/portcheck
+COPY --from=libraries_mecha-airlock-image /app/airlock/dapr.yaml /dapr/config.yaml
+COPY services/airlock/dapr/acquire.yaml /dapr/airlock/acquire.yaml
+COPY --parents services/airlock/dapr/acquire.yaml ./
+COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.airlock-mesh.json ./.bayt/
+EXPOSE 3500
+EXPOSE 50001
+EXPOSE 50002
+ENTRYPOINT ["/daprd", "--app-id", "airlock", "--dapr-listen-addresses", "0.0.0.0", "--resources-path", "/dapr/airlock", "--config", "/dapr/config.yaml", "--dapr-http-port", "3500", "--max-body-size", "64Mi", "--log-level", "info"]
+HEALTHCHECK --interval=5s --timeout=5s --retries=30 --start-period=30s CMD ["portcheck","--port","3500"]
+
+FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS airlock-mesh_ctxs
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY --parents services/airlock/dapr/acquire.yaml ./
+ARG SOURCE_DATE_EPOCH
+ARG BAYT_CLAMP=1
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
+FROM scratch AS airlock-mesh_srcs
+COPY --from=airlock-mesh_ctxs /monorepo /monorepo
+
+FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS airlock-mesh_bayt_ctxs
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY --parents .bayt/compose.airlock-mesh.yaml .bayt/Dockerfile.airlock-mesh .bayt/bayt.airlock-mesh.json .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/process-compose.yaml ./
+COPY --from=golaberto-sofascore_bayt /monorepo /monorepo
+ARG SOURCE_DATE_EPOCH
+ARG BAYT_CLAMP=1
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
+FROM scratch AS airlock-mesh_bayt
+COPY --from=airlock-mesh_bayt_ctxs /monorepo /monorepo

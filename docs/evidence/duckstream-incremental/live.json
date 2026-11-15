@@ -1,0 +1,16 @@
+{
+  "before": "73,06",
+  "after": "59,55",
+  "elapsedMs": 19154,
+  "sameDocument": true,
+  "url": "https://localhost:17702/chances/brasil-campeonato-brasileiro-2026-turno-e-returno-grupo-unico",
+  "cacheBefore": {
+    "entries": 14,
+    "bytes": 1242812
+  },
+  "cacheAfter": {
+    "entries": 18,
+    "bytes": 1757375
+  },
+  "errors": []
+}

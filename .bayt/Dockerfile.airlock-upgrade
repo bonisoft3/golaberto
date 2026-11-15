@@ -1,0 +1,119 @@
+# generated from bayt.cue — do not edit
+FROM libraries_mecha-database-image AS airlock-upgrade
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.airlock-upgrade.json ./.bayt/
+ENTRYPOINT ["psql"]
+CMD ["-X", "--set=ON_ERROR_STOP=1", "--single-transaction", "--file=/airlock-upgrade.sql"]
+COPY <<'AIRLOCK' /airlock-upgrade.sql
+SET LOCAL lock_timeout = '5s';
+SET LOCAL statement_timeout = '60s';
+LOCK TABLE airlock.external_effect_ledger IN ACCESS EXCLUSIVE MODE;
+DO E'BEGIN
+  IF EXISTS (SELECT FROM information_schema.columns WHERE table_schema = ''airlock'' AND table_name = ''external_effect_ledger'' AND column_name = ''request'') THEN
+    ALTER TABLE airlock.external_effect_ledger RENAME COLUMN request TO input;
+    EXECUTE E''ALTER TABLE "sofa_request" DROP CONSTRAINT IF EXISTS "sofa_request_status_check";
+ALTER TABLE "sofa_request" ADD CONSTRAINT "sofa_request_status_check" CHECK ("status" IN (''''acquiring'''', ''''applied'''', ''''failed'''')) NOT VALID;
+
+CREATE OR REPLACE FUNCTION "trg_sofa_request_status_machine"() RETURNS trigger
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, pg_catalog
+SET TimeZone = ''''UTC''''
+SET DateStyle = ''''ISO, YMD'''' AS $$
+DECLARE
+  outcome jsonb;
+BEGIN
+  IF TG_OP = ''''DELETE'''' THEN
+    IF OLD."status" IN (''''acquiring'''') THEN
+      RAISE EXCEPTION ''''% in % awaits an outcome and is not deleted'''', ''''sofa_request'''', OLD."status" USING ERRCODE = ''''check_violation'''';
+    END IF;
+    RETURN OLD;
+  END IF;
+  IF TG_OP = ''''UPDATE'''' AND OLD."status" = ''''acquiring'''' AND (OLD."id" IS DISTINCT FROM NEW."id") THEN
+    RAISE EXCEPTION ''''% in acquiring keeps its key until the outcome of %'''', ''''sofa_request'''', ''''acquire:'''' || OLD."id"::text USING ERRCODE = ''''check_violation'''';
+  END IF;
+  IF TG_OP = ''''UPDATE'''' AND OLD."status" = NEW."status" THEN
+    RETURN NEW;
+  END IF;
+
+  IF TG_OP = ''''INSERT'''' THEN
+    IF NEW."status" <> ''''acquiring'''' THEN
+      RAISE EXCEPTION ''''new % must start in initial state % (got %)'''', ''''sofa_request'''', ''''acquiring'''', NEW."status" USING ERRCODE = ''''check_violation'''';
+    END IF;
+        INSERT INTO "airlock"."external_effect_ledger" ("key", "effect", "row", "input")
+        VALUES (''''acquire:'''' || NEW."id"::text, ''''acquire'''', jsonb_build_object(''''id'''', NEW."id"), jsonb_build_object(''''id'''', NEW."id", ''''path'''', NEW."path"))
+        ON CONFLICT ("key") DO NOTHING;
+        IF NOT FOUND THEN
+          RAISE EXCEPTION ''''external effect % was already performed: entering acquiring again needs a new key'''', ''''acquire:'''' || NEW."id"::text USING ERRCODE = ''''unique_violation'''';
+        END IF;
+        PERFORM graphile_worker.add_job(''''external_effect'''', json_build_object(''''key'''', ''''acquire:'''' || NEW."id"::text), job_key => airlock.job_key(''''acquire:'''' || NEW."id"::text), max_attempts => 30);
+        UPDATE "public"."schedule" SET "due_at" = date_trunc(''''milliseconds'''', clock_timestamp()), "last_tick_at" = NULL
+         WHERE "name" = ''''airlock'''' AND "last_tick_at" IS NOT NULL
+           AND "name" IN (SELECT "name" FROM "public"."schedule" WHERE "name" = ''''airlock'''' FOR UPDATE SKIP LOCKED);
+    RETURN NEW;
+  END IF;
+
+  IF TG_OP = ''''UPDATE'''' THEN
+    IF OLD."status" = ''''acquiring'''' THEN
+      SELECT l."outcome" INTO outcome FROM "airlock"."external_effect_ledger" l WHERE l."key" = ''''acquire:'''' || OLD."id"::text;
+      IF outcome IS NULL OR outcome->>''''target'''' IS DISTINCT FROM NEW."status" THEN
+        RAISE EXCEPTION ''''% leaves acquiring only by the recorded outcome of %'''', ''''sofa_request'''', ''''acquire:'''' || OLD."id"::text USING ERRCODE = ''''check_violation'''';
+      END IF;
+
+      IF NEW."status" = ''''applied'''' AND outcome->>''''kind'''' = ''''done'''' THEN
+
+        NEW."status" := ''''applied'''';
+        PERFORM sofa.receive(NEW.id, NEW.source_id, NEW.family, NEW.resource_key, NEW.seq, outcome);
+        RETURN NEW;
+      END IF;
+      IF NEW."status" = ''''failed'''' AND outcome->>''''kind'''' <> ''''done'''' THEN
+
+        NEW."status" := ''''failed'''';
+        NEW."failure" := coalesce(outcome->''''data''''->>''''error'''', outcome->''''data''''->>''''reason'''', outcome->>''''kind'''');
+        PERFORM sofa.fail(NEW.resource_id, outcome);
+        RETURN NEW;
+      END IF;
+
+      RAISE EXCEPTION ''''invalid transition on % from % to %'''', ''''sofa_request'''', OLD."status", NEW."status" USING ERRCODE = ''''check_violation'''';
+    END IF;
+    IF OLD."status" = ''''applied'''' THEN
+      RAISE EXCEPTION ''''cannot transition from final state % on %'''', OLD."status", ''''sofa_request'''' USING ERRCODE = ''''check_violation'''';
+    END IF;
+    IF OLD."status" = ''''failed'''' THEN
+      RAISE EXCEPTION ''''cannot transition from final state % on %'''', OLD."status", ''''sofa_request'''' USING ERRCODE = ''''check_violation'''';
+    END IF;
+  END IF;
+
+  RETURN NEW;
+END $$;
+
+DROP TRIGGER IF EXISTS "trg_sofa_request_status_machine" ON "sofa_request";
+CREATE TRIGGER "trg_sofa_request_status_machine"
+  BEFORE INSERT OR UPDATE OR DELETE ON "sofa_request"
+  FOR EACH ROW
+  EXECUTE FUNCTION "trg_sofa_request_status_machine"();'';
+  END IF;
+  PERFORM input FROM airlock.external_effect_ledger LIMIT 0;
+END';
+-- The Graphile job key of a ledger key: its SHA-256 as hex, since Graphile
+-- caps a job key at 512 bytes and a ledger key carries the effect's key fields
+-- whole, a translation's every card among them. Every enqueue, lease, claim
+-- and removal of a key's job goes through it; the job's payload names the
+-- ledger key as it is.
+CREATE OR REPLACE FUNCTION airlock.job_key(key text) RETURNS text
+LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
+RETURN encode(sha256(convert_to(key, 'UTF8')), 'hex');
+
+AIRLOCK
+
+FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS airlock-upgrade_bayt_ctxs
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY --parents .bayt/compose.airlock-upgrade.yaml .bayt/Dockerfile.airlock-upgrade .bayt/bayt.airlock-upgrade.json .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/process-compose.yaml ./
+COPY --from=golaberto-database_bayt /monorepo /monorepo
+ARG SOURCE_DATE_EPOCH
+ARG BAYT_CLAMP=1
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
+FROM scratch AS airlock-upgrade_bayt
+COPY --from=airlock-upgrade_bayt_ctxs /monorepo /monorepo

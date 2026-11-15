@@ -1,0 +1,161 @@
+[
+  {
+    "check": "guest",
+    "clientMs": 2190
+  },
+  {
+    "check": "home: recent cards",
+    "rows": 0,
+    "clientMs": 292,
+    "againMs": 73,
+    "againCache": "hit",
+    "agedOut": true
+  },
+  {
+    "check": "home: upcoming cards",
+    "rows": 20,
+    "clientMs": 202,
+    "againMs": 68,
+    "againCache": "hit"
+  },
+  {
+    "check": "home: championships",
+    "rows": 20,
+    "clientMs": 218,
+    "againMs": 42,
+    "againCache": "hit"
+  },
+  {
+    "check": "archive: played games",
+    "rows": 20,
+    "clientMs": 209,
+    "againMs": 83,
+    "againCache": "hit"
+  },
+  {
+    "check": "championship: standing",
+    "rows": 20,
+    "clientMs": 257,
+    "againMs": 37,
+    "againCache": "hit"
+  },
+  {
+    "check": "championship: games",
+    "rows": 40,
+    "clientMs": 203,
+    "againMs": 42,
+    "againCache": "hit"
+  },
+  {
+    "check": "championship: position chances",
+    "rows": 100,
+    "clientMs": 228,
+    "againMs": 40,
+    "againCache": "hit"
+  },
+  {
+    "check": "championship: team chances",
+    "rows": 20,
+    "clientMs": 188,
+    "againMs": 38,
+    "againCache": "hit"
+  },
+  {
+    "check": "championship: zone chances",
+    "rows": 40,
+    "clientMs": 211,
+    "againMs": 49,
+    "againCache": "hit"
+  },
+  {
+    "check": "team: games",
+    "rows": 40,
+    "clientMs": 934,
+    "againMs": 43,
+    "againCache": "hit"
+  },
+  {
+    "check": "team: championships",
+    "rows": 40,
+    "clientMs": 180,
+    "againMs": 39,
+    "againCache": "hit"
+  },
+  {
+    "check": "team: rating chart",
+    "rows": 6,
+    "clientMs": 336,
+    "againMs": 42,
+    "againCache": "hit"
+  },
+  {
+    "check": "team: odds chart",
+    "rows": 40,
+    "clientMs": 205,
+    "againMs": 42,
+    "againCache": "hit"
+  },
+  {
+    "check": "team: odds history",
+    "rows": 40,
+    "clientMs": 217,
+    "againMs": 47,
+    "againCache": "hit"
+  },
+  {
+    "check": "team: roster",
+    "rows": 40,
+    "clientMs": 233,
+    "againMs": 42,
+    "againCache": "hit"
+  },
+  {
+    "check": "team: campaign points",
+    "rows": 40,
+    "clientMs": 188,
+    "againMs": 80,
+    "againCache": "hit"
+  },
+  {
+    "check": "directory: teams \"sao\"",
+    "rows": 40,
+    "clientMs": 234,
+    "againMs": 40,
+    "againCache": "hit"
+  },
+  {
+    "check": "player: stats",
+    "rows": 21,
+    "clientMs": 207,
+    "againMs": 40,
+    "againCache": "hit"
+  },
+  {
+    "check": "player: games",
+    "rows": 40,
+    "clientMs": 254,
+    "againMs": 47,
+    "againCache": "hit"
+  },
+  {
+    "check": "player: appearances",
+    "rows": 40,
+    "clientMs": 308,
+    "againMs": 50,
+    "againCache": "hit"
+  },
+  {
+    "check": "matches: cards",
+    "rows": 40,
+    "clientMs": 220,
+    "againMs": 56,
+    "againCache": "hit"
+  },
+  {
+    "check": "accent search: \"GREMIO-rs\"",
+    "rows": 1,
+    "clientMs": 202,
+    "againMs": 44,
+    "againCache": "hit"
+  }
+]

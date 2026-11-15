@@ -57,10 +57,10 @@ pipelines:
           logrepl.publicationName: golaberto_cdc
           logrepl.slotName: golaberto_conduit_slot
           logrepl.withAvroSchema: 'false'
-          tables: 'championship,phase,game,team,player,player_game,goal,stage_group,team_group,zone,team_rating,standing,stadium,referee,day_tick,game_card,geography_country,player_metric_dirty,team_odds_chart_dirty,team_profile_dirty,team_rating_chart_dirty,team_roster_total_dirty'
+          tables: 'championship,phase,game,team,player,player_game,goal,stage_group,team_group,zone,team_rating,standing,stadium,referee,day_tick,game_card,geography_country,player_metric_dirty,sofa_provider_seat,sofa_resource_seat,sofa_tick,team_odds_chart_dirty,team_profile_dirty,team_rating_chart_dirty,team_roster_total_dirty'
       - id: bus-destination
         type: destination
         plugin: 'standalone:http'
         settings:
-          url: 'http://mesh-events:3500/v1.0/publish/redis-streams/cdc-events'
+          url: '${MESH_EVENTS_URL}/v1.0/publish/redis-streams/cdc-events'
           validateConnection: 'false'

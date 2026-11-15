@@ -1,0 +1,32 @@
+# generated from bayt.cue — do not edit
+FROM rust:1.88.0-bookworm@sha256:af306cfa71d987911a781c37b59d7d67d934f49684058f96cf72079c3626bfe0 AS sofascore-appliance
+ARG BAYT_DIR
+WORKDIR /app
+COPY tools/sofascore-fetch/Cargo.toml tools/sofascore-fetch/Cargo.lock /app/
+COPY tools/sofascore-fetch/src/*.rs /app/src/
+COPY tools/sofascore-fetch/tests/*.rs /app/tests/
+COPY --parents tools/sofascore-fetch/Cargo.toml tools/sofascore-fetch/Cargo.lock tools/sofascore-fetch/src/*.rs tools/sofascore-fetch/tests/*.rs ./
+COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.sofascore-appliance.json ./.bayt/
+CMD ["sofascore_fetch", "--listen", "0.0.0.0:8080"]
+RUN apt-get update && apt-get install -y --no-install-recommends cmake clang libclang-dev perl ca-certificates && rm -rf /var/lib/apt/lists/*
+RUN cargo test --release --locked --manifest-path /app/Cargo.toml && cargo build --release --locked --manifest-path /app/Cargo.toml && cp /app/target/release/sofascore_fetch /usr/local/bin/sofascore_fetch
+
+FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS sofascore-appliance_ctxs
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY --parents tools/sofascore-fetch/Cargo.toml tools/sofascore-fetch/Cargo.lock tools/sofascore-fetch/src/*.rs tools/sofascore-fetch/tests/*.rs ./
+ARG SOURCE_DATE_EPOCH
+ARG BAYT_CLAMP=1
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
+FROM scratch AS sofascore-appliance_srcs
+COPY --from=sofascore-appliance_ctxs /monorepo /monorepo
+
+FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS sofascore-appliance_bayt_ctxs
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY --parents .bayt/compose.sofascore-appliance.yaml .bayt/Dockerfile.sofascore-appliance .bayt/bayt.sofascore-appliance.json .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/process-compose.yaml ./
+ARG SOURCE_DATE_EPOCH
+ARG BAYT_CLAMP=1
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
+FROM scratch AS sofascore-appliance_bayt
+COPY --from=sofascore-appliance_bayt_ctxs /monorepo /monorepo

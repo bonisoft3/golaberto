@@ -1,0 +1,91 @@
+./saytw doctor — exit 0 — Target toolchain verified before the expansion.
+./saytw generate — exit 0 — Owned SQL and container artifacts regenerated, including migrations 054 and 055.
+./saytw lint — exit 0 — Final run after migration 055.
+./saytw test — exit 0 — Final serial run; includes 49 SofaScore Python tests.
+ci-replay / ci-constraints --jobs 1 — exit 0 — Final serial integration: replay 169 seconds, constraints 118 seconds; migration 055 and all nine SofaScore tests visible. Aggregate output clipped by BuildKit.
+Focused real-database SofaScore regressions — exit 0 — 9 passed, 0 failed against the migrated imported database, each transaction rolled back.
+Fixture cadence generated SQL rollback check — exit 0 — Failure backoff, healthy acceleration, settled NULL deadlines and active-attempt deadlines preserved.
+Updater image build / cargo test --release --locked — exit 0 — 4 Rust unit tests and 1 JSONL process test passed; deployed Python module hashes match tested source.
+Operational configuration and cached replay — exit 0 — 21 sources, 53 phases, 68 stage bindings, zero unbound phases; two cup finals imported from saved responses; malformed friendly parked.
+
+Download https://jsr.io/@std/assert/meta.json
+Download https://registry.npmjs.org/postgres
+Download https://jsr.io/@std/assert/1.0.19_meta.json
+Download https://jsr.io/@std/internal/meta.json
+Download https://jsr.io/@std/internal/1.0.14_meta.json
+Download https://jsr.io/@std/assert/1.0.19/mod.ts
+Download https://jsr.io/@std/assert/1.0.19/almost_equals.ts
+Download https://jsr.io/@std/assert/1.0.19/array_includes.ts
+Download https://jsr.io/@std/assert/1.0.19/equals.ts
+Download https://jsr.io/@std/assert/1.0.19/exists.ts
+Download https://jsr.io/@std/assert/1.0.19/false.ts
+Download https://jsr.io/@std/assert/1.0.19/greater_or_equal.ts
+Download https://jsr.io/@std/assert/1.0.19/greater.ts
+Download https://jsr.io/@std/assert/1.0.19/instance_of.ts
+Download https://jsr.io/@std/assert/1.0.19/is_error.ts
+Download https://jsr.io/@std/assert/1.0.19/less_or_equal.ts
+Download https://jsr.io/@std/assert/1.0.19/less.ts
+Download https://jsr.io/@std/assert/1.0.19/match.ts
+Download https://jsr.io/@std/assert/1.0.19/not_equals.ts
+Download https://jsr.io/@std/assert/1.0.19/not_instance_of.ts
+Download https://jsr.io/@std/assert/1.0.19/not_match.ts
+Download https://jsr.io/@std/assert/1.0.19/not_strict_equals.ts
+Download https://jsr.io/@std/assert/1.0.19/object_match.ts
+Download https://jsr.io/@std/assert/1.0.19/rejects.ts
+Download https://jsr.io/@std/assert/1.0.19/strict_equals.ts
+Download https://jsr.io/@std/assert/1.0.19/string_includes.ts
+Download https://jsr.io/@std/assert/1.0.19/throws.ts
+Download https://jsr.io/@std/assert/1.0.19/assert.ts
+Download https://jsr.io/@std/assert/1.0.19/assertion_error.ts
+Download https://jsr.io/@std/assert/1.0.19/equal.ts
+Download https://jsr.io/@std/assert/1.0.19/fail.ts
+Download https://jsr.io/@std/assert/1.0.19/unimplemented.ts
+Download https://jsr.io/@std/assert/1.0.19/unreachable.ts
+Download https://jsr.io/@std/internal/1.0.14/format.ts
+Download https://jsr.io/@std/internal/1.0.14/build_message.ts
+Download https://jsr.io/@std/internal/1.0.14/diff.ts
+Download https://jsr.io/@std/internal/1.0.14/diff_str.ts
+Download https://jsr.io/@std/internal/1.0.14/styles.ts
+Download https://jsr.io/@std/internal/1.0.14/types.ts
+Download https://registry.npmjs.org/postgres/-/postgres-3.4.9.tgz
+Download https://registry.npmjs.org/jose/-/jose-6.0.11.tgz
+Download https://registry.npmjs.org/playwright/-/playwright-1.61.1.tgz
+Download https://registry.npmjs.org/linkedom/-/linkedom-0.18.4.tgz
+Download https://registry.npmjs.org/playwright-core/-/playwright-core-1.61.1.tgz
+Download https://registry.npmjs.org/html-escaper/-/html-escaper-3.0.3.tgz
+Download https://registry.npmjs.org/htmlparser2/-/htmlparser2-9.1.0.tgz
+Download https://registry.npmjs.org/css-select/-/css-select-5.2.2.tgz
+Download https://registry.npmjs.org/cssom/-/cssom-0.5.0.tgz
+Download https://registry.npmjs.org/uhyphen/-/uhyphen-0.2.0.tgz
+Download https://registry.npmjs.org/entities/-/entities-4.5.0.tgz
+Download https://registry.npmjs.org/domutils/-/domutils-3.2.2.tgz
+Download https://registry.npmjs.org/domelementtype/-/domelementtype-2.3.0.tgz
+Download https://registry.npmjs.org/domhandler/-/domhandler-5.0.3.tgz
+Download https://registry.npmjs.org/nth-check/-/nth-check-2.1.1.tgz
+Download https://registry.npmjs.org/boolbase/-/boolbase-1.0.0.tgz
+Download https://registry.npmjs.org/css-what/-/css-what-6.2.2.tgz
+Download https://registry.npmjs.org/dom-serializer/-/dom-serializer-2.0.0.tgz
+Check tests/sofascore.ts
+running 9 tests from ./tests/sofascore.ts
+Sofa queue coalesces work, fences expired claims, and keeps 304 out of domain writes ... ok (174ms)
+Sofa source scope is constrained and summaries precede queued details ... ok (53ms)
+Sofa parse rejection fences tokens, isolates bad resources and leaves domain rows untouched ... ok (58ms)
+Sofa patches preserve editor changes and avoid repeated domain writes ... ok (80ms)
+Sofa details reuse natural appearances and protect manual collections ... ok (76ms)
+Sofa source stage keys are season scoped and refresh is service only ... ok (157ms)
+Sofa schedule is authoritative while result and reviews remain guarded ... ok (302ms)
+Sofa fills missing kickoff and status for unplayed fixtures ... ok (456ms)
+editor game updates remove unavailable fixtures from projections ... ok (325ms)
+
+ok | 9 passed | 0 failed (1s)
+
+
+/Users/robsonaraujo/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/robsonaraujo/.local/share/mise/http-tarballs/a3af5b05ceb3e7aa9374370c8db42a96a996ed632b0cee781273c7079840e468/nu.musl.toml -I /Users/robsonaraujo/.local/share/mise/http-tarballs/a3af5b05ceb3e7aa9374370c8db42a96a996ed632b0cee781273c7079840e468 /Users/robsonaraujo/.local/share/mise/http-tarballs/a3af5b05ceb3e7aa9374370c8db42a96a996ed632b0cee781273c7079840e468/integrate.nu --bake --no-up --with-buildx --target ci-replay,ci-constraints --jobs 1
+/Users/robsonaraujo/Library/Caches/sayt/mise-v2026.8.11/mise tool-stub /Users/robsonaraujo/.local/share/mise/http-tarballs/a3af5b05ceb3e7aa9374370c8db42a96a996ed632b0cee781273c7079840e468/compose.toml --profile * config -o /var/folders/rh/ywdl5b9x4vz4n2bhkh0qhs_00000gn/T/tmp.1hfiPwB4Wq/compose.yaml
+✓ compose config (0 lines, 0 sec, log: /var/folders/rh/ywdl5b9x4vz4n2bhkh0qhs_00000gn/T/sayt.3laMct/mise.bQKEvZ.log)
+… docker buildx bake still running (60 sec, log: /var/folders/rh/ywdl5b9x4vz4n2bhkh0qhs_00000gn/T/sayt.3laMct/docker.LR81eZ.log)
+… docker buildx bake still running (120 sec, log: /var/folders/rh/ywdl5b9x4vz4n2bhkh0qhs_00000gn/T/sayt.3laMct/docker.LR81eZ.log)
+✓ docker buildx bake (766 lines, 169 sec, log: /var/folders/rh/ywdl5b9x4vz4n2bhkh0qhs_00000gn/T/sayt.3laMct/docker.LR81eZ.log)
+… docker buildx bake still running (60 sec, log: /var/folders/rh/ywdl5b9x4vz4n2bhkh0qhs_00000gn/T/sayt.3laMct/docker.A6b4Fq.log)
+✓ docker buildx bake (18834 lines, 118 sec, log: /var/folders/rh/ywdl5b9x4vz4n2bhkh0qhs_00000gn/T/sayt.3laMct/docker.A6b4Fq.log)
+integrate ✓ passed

@@ -1,0 +1,82 @@
+# generated from bayt.cue — do not edit
+services:
+  golaberto-airlock-mesh:
+    build:
+      additional_contexts:
+        golaberto-sofascore: service:golaberto-sofascore
+        libraries_mecha-mesh-image: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.23.1@sha256:8d39aa3543560232c52330152ba70a4d2c973b76d0ac97899d677704bc0e09a4}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}
+        libraries_mecha-airlock-image: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-airlock:0.23.1@sha256:3c67d8822d64dfd469ed25cccf0db76e0d7d939d9d05486f5fe725332c2e1dd2}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image}
+      context: ..
+      dockerfile: .bayt/Dockerfile.airlock-mesh
+      target: airlock-mesh
+      tags:
+      - bayt-golaberto-airlock-mesh:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-golaberto-airlock-mesh:latest
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    depends_on:
+      golaberto-sofascore:
+        condition: service_started
+    develop:
+      watch:
+      - action: sync+restart
+        path: ../services/airlock/dapr/acquire.yaml
+        target: /dapr/airlock/acquire.yaml
+    environment:
+      DAPR_HTTP_PORT: "3500"
+      DAPR_GRPC_PORT: "50001"
+      DAPR_INTERNAL_GRPC_PORT: "50002"
+      AIRLOCK_ORIGINS: ""
+      AIRLOCK_BRIDGES: sofascore
+      BRIDGE_SOFASCORE_URL: http://sofascore:8080
+    healthcheck:
+      test:
+      - CMD
+      - portcheck
+      - --port
+      - "3500"
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+      start_interval: 500ms
+    image: bayt-golaberto-airlock-mesh:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    networks:
+      airlock:
+        aliases:
+        - airlock-mesh
+      airlock-out:
+        aliases:
+        - airlock-mesh
+      airlock-egress:
+        aliases:
+        - airlock-mesh
+    restart: on-failure
+  golaberto-airlock-mesh_bayt:
+    build:
+      additional_contexts:
+        golaberto-sofascore_bayt: service:golaberto-sofascore_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.airlock-mesh
+      target: airlock-mesh_bayt
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    image: bayt-golaberto-airlock-mesh_bayt:latest
+    scale: 0
+  golaberto-airlock-mesh_srcs:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.airlock-mesh
+      target: airlock-mesh_srcs
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    image: bayt-golaberto-airlock-mesh_srcs:latest
+    scale: 0

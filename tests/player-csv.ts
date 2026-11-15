@@ -16,7 +16,10 @@ const role = async (name: string, kind: "handler" | "renderer") =>
       ),
     ),
     kind,
-  );
+    // A handler's world and event are stated side by side below; the handler
+    // itself takes them as XState's one argument.
+    // deno-lint-ignore no-explicit-any
+  ).then((leaf: any) => kind === "handler" ? (state: any, event?: any, ...rest: any[]) => leaf({ context: state, event }, ...rest) : leaf);
 const row = (name: string, goals: number) => ({
   player_name: name,
   championship: { season: "2026" },

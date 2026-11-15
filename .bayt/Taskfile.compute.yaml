@@ -1,0 +1,14 @@
+# generated from bayt.cue — do not edit
+tasks:
+  default:
+    run: once
+    status:
+    - >-
+      mise x -- bayt fingerprint --manifest '{{.TASKFILE_DIR}}/bayt.compute.json'
+      --stamp-file .task/bayt/compute.hash
+    vars:
+      BAYTW: mise x -- bayt cache run --manifest '{{.TASKFILE_DIR}}/bayt.compute.json' --
+    cmds:
+    - "{{.BAYTW}} nu -c \"let ext_dir = (if ((\\$env.BAYT_LOCAL_DUCKDB_EXTENSIONS? | default '') != '') { \\$env.BAYT_LOCAL_DUCKDB_EXTENSIONS } else { ((^mise where http:duckdb | str trim) | path join 'extensions') }); let app = (if ((\\$env.COMPUTE_APP_DIR? | default '') != '') { \\$env.COMPUTE_APP_DIR } else if ('services/compute/main.ts' | path exists) { 'services/compute' } else { ((^mise where github:bonisoft3/mecha | str trim) | path join 'services/compute') }); let marker = (\\$ext_dir | path join '.installed-v1.5.6'); if (not (\\$marker | path exists)) { mkdir \\$ext_dir; with-env { DUCKDB_EXTENSIONS_DIR: \\$ext_dir } { ^mise x -- deno run --allow-ffi --allow-read --allow-write --allow-net --allow-env --allow-sys=homedir --config (\\$app | path join 'deno.json') (\\$app | path join 'install.ts') }; '' | save -f \\$marker }; ^mise x -- deno cache --config (\\$app | path join 'deno.json') (\\$app | path join 'main.ts') (\\$app | path join 'cage.ts') (\\$app | path join 'job.ts')\""
+    - defer: "{{if not .EXIT_CODE}}mise x -- bayt fingerprint --manifest '{{.TASKFILE_DIR}}/bayt.compute.json' --stamp-file .task/bayt/compute.hash --update-stamp{{end}}"
+version: "3"

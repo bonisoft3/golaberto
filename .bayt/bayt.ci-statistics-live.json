@@ -1,0 +1,1855 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "compose": {
+    "up": false,
+    "manual": false,
+    "build": {
+      "additional_contexts": {
+        "workspaceroot-pronto-sources_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:workspaceroot-pronto-sources_srcs}",
+        "libraries_mecha-database-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image_bayt}",
+        "libraries_mecha-extensions-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-extensions-image_bayt}",
+        "libraries_mecha-mesh-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image_bayt}",
+        "libraries_mecha-conduit-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image_bayt}",
+        "libraries_mecha-auth-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image_bayt}",
+        "libraries_mecha-ticker-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image_bayt}",
+        "libraries_mecha-clock-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-clock-image_bayt}",
+        "libraries_mecha-compute-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image_bayt}",
+        "libraries_mecha-airlock-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image_bayt}",
+        "libraries_mecha-activepieces-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-activepieces-image_bayt}",
+        "libraries_mecha-database-image_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image_srcs}",
+        "libraries_mecha-extensions-image_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-extensions-image_srcs}",
+        "libraries_mecha-mesh-image_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image_srcs}",
+        "libraries_mecha-auth-image_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image_srcs}",
+        "libraries_mecha-ticker-image_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image_srcs}",
+        "libraries_mecha-clock-image_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-clock-image_srcs}",
+        "libraries_mecha-compute-image_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image_srcs}",
+        "libraries_mecha-airlock-image_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image_srcs}",
+        "libraries_mecha-activepieces-image_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-activepieces-image_srcs}",
+        "plugins_omnishell-runtime-image_srcs": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image_srcs}",
+        "plugins_omnishell-runtime-image_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image_bayt}",
+        "workspaceroot-pronto-sources_bayt": "${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:workspaceroot-pronto-sources_bayt}"
+      },
+      "secrets": [],
+      "args": {
+        "MONOREPO_COMPOSE_MODE": "${MONOREPO_COMPOSE_MODE:-}",
+        "BAYT_RUNTIME": "${BAYT_RUNTIME:-}"
+      }
+    },
+    "environment": {},
+    "ports": [],
+    "volumes": [],
+    "depends_on": {}
+  },
+  "dockerfile": {
+    "preamble": [
+      "COPY --from=bonitao/lazybox:0.8.6@sha256:0f30c48513fac757f844f02c864802991dec045f9c4189e3db2ae4ac297544df /lazybox/ /root/.local/share/lazybox/",
+      "COPY --from=alpine/socat:1.8.0.0@sha256:a6be4c0262b339c53ddad723cdd178a1a13271e1137c65e27f90a08c16de02b8 /usr/bin/socat1 /usr/local/bin/socat",
+      "COPY --from=alpine/socat:1.8.0.0@sha256:a6be4c0262b339c53ddad723cdd178a1a13271e1137c65e27f90a08c16de02b8 /usr/lib/libreadline.so.8 /usr/lib/libncursesw.so.6 /usr/lib/",
+      "ENV PATH=$PATH:/root/.local/bin:/root/.local/share/lazybox/bin",
+      "COPY <<'BKID_MISE' /opt/bkid/mise.toml\n[settings]\nexperimental = true\ngithub_attestations = false\nlocked = true\nlockfile = true\nslsa = false\n\n[settings.github]\ngithub_attestations = false\nslsa = false\n\n[tools]\n'github:depot/cli' = '2.102.25'\n'github:go-task/task' = 'v3.54.0'\nBKID_MISE\nCOPY <<'BKID_LOCK' /opt/bkid/mise.lock\n[tools]\n[[tools.'github:depot/cli']]\nbackend = 'github:depot/cli'\nversion = '2.102.25'\n\n[tools.'github:depot/cli'.platforms]\n[tools.'github:depot/cli'.platforms.linux-arm64]\nchecksum = 'sha256:52abe04ef24cd06f2ed37e15dbaa1d52d282db26ead04ff2493faf181347d6eb'\nurl = 'https://github.com/depot/cli/releases/download/v2.102.25/depot_2.102.25_linux_arm64.tar.gz'\nurl_api = 'https://api.github.com/repos/depot/cli/releases/assets/660782767'\n\n[tools.'github:depot/cli'.platforms.linux-arm64-musl]\nchecksum = 'sha256:52abe04ef24cd06f2ed37e15dbaa1d52d282db26ead04ff2493faf181347d6eb'\nurl = 'https://github.com/depot/cli/releases/download/v2.102.25/depot_2.102.25_linux_arm64.tar.gz'\nurl_api = 'https://api.github.com/repos/depot/cli/releases/assets/660782767'\n\n[tools.'github:depot/cli'.platforms.linux-x64]\nchecksum = 'sha256:b62952f5951a0bcd4f48597b59fe29a4b7d84cac4e82710ee19d79262bf271af'\nurl = 'https://github.com/depot/cli/releases/download/v2.102.25/depot_2.102.25_linux_amd64.tar.gz'\nurl_api = 'https://api.github.com/repos/depot/cli/releases/assets/660782770'\n\n[tools.'github:depot/cli'.platforms.linux-x64-musl]\nchecksum = 'sha256:b62952f5951a0bcd4f48597b59fe29a4b7d84cac4e82710ee19d79262bf271af'\nurl = 'https://github.com/depot/cli/releases/download/v2.102.25/depot_2.102.25_linux_amd64.tar.gz'\nurl_api = 'https://api.github.com/repos/depot/cli/releases/assets/660782770'\n\n[[tools.'github:go-task/task']]\nbackend = 'github:go-task/task'\nversion = 'v3.54.0'\n\n[tools.'github:go-task/task'.platforms]\n[tools.'github:go-task/task'.platforms.linux-arm64]\nchecksum = 'sha256:d7189d439d4a6058e39e1b2acd7c8b27acd4856691b408f23b242e4294e1df5b'\nurl = 'https://github.com/go-task/task/releases/download/v3.54.0/task_linux_arm64.tar.gz'\nurl_api = 'https://api.github.com/repos/go-task/task/releases/assets/604090041'\n\n[tools.'github:go-task/task'.platforms.linux-arm64-musl]\nchecksum = 'sha256:d7189d439d4a6058e39e1b2acd7c8b27acd4856691b408f23b242e4294e1df5b'\nurl = 'https://github.com/go-task/task/releases/download/v3.54.0/task_linux_arm64.tar.gz'\nurl_api = 'https://api.github.com/repos/go-task/task/releases/assets/604090041'\n\n[tools.'github:go-task/task'.platforms.linux-x64]\nchecksum = 'sha256:680859dbb4d881a9c72d4d9a8f510825450849af8567deacd7302c01124416fb'\nurl = 'https://github.com/go-task/task/releases/download/v3.54.0/task_linux_amd64.tar.gz'\nurl_api = 'https://api.github.com/repos/go-task/task/releases/assets/604090073'\n\n[tools.'github:go-task/task'.platforms.linux-x64-musl]\nchecksum = 'sha256:680859dbb4d881a9c72d4d9a8f510825450849af8567deacd7302c01124416fb'\nurl = 'https://github.com/go-task/task/releases/download/v3.54.0/task_linux_amd64.tar.gz'\nurl_api = 'https://api.github.com/repos/go-task/task/releases/assets/604090073'\nBKID_LOCK",
+      "COPY --from=bayt . /monorepo/plugins/bayt/runtime",
+      "RUN cd /opt/bkid && mise trust -y && mise install && mise exec -- sh -c 'cp \"$(mise which task)\" /usr/local/bin/task && cp \"$(mise which depot)\" /usr/local/bin/depot'",
+      "ENV PATH=/monorepo/plugins/bayt/runtime:${PATH}",
+      "ARG MONOREPO_COMPOSE_MODE",
+      "ENV MONOREPO_COMPOSE_MODE=$MONOREPO_COMPOSE_MODE",
+      "ARG BAYT_RUNTIME",
+      "ENV BAYT_RUNTIME=$BAYT_RUNTIME",
+      "ENV FELDERA_COMPILATION_PROFILE=unoptimized"
+    ],
+    "preambleCopyContexts": [
+      {
+        "name": "bayt",
+        "image": "bonitao/bayt-runtime:1.5.1@sha256:21e3851bcc32a4e56460ef51724385b2ba80999ad73accbf6ae2af53975d9547"
+      },
+      {
+        "name": "alpine/socat:1.8.0.0@sha256:a6be4c0262b339c53ddad723cdd178a1a13271e1137c65e27f90a08c16de02b8"
+      },
+      {
+        "name": "alpine/socat:1.8.0.0@sha256:a6be4c0262b339c53ddad723cdd178a1a13271e1137c65e27f90a08c16de02b8"
+      }
+    ],
+    "from": {
+      "name": "docker:29.9.1-cli@sha256:6fae2214c3121a28d5aa639d09032f61310b7c9c75ffbad1025f261a1b621800"
+    },
+    "add": [],
+    "mounts": [],
+    "secrets": {
+      "docker_host": {
+        "environment": "DOCKER_HOST_TCP"
+      },
+      "buildx_builder": {
+        "environment": "BUILDX_BUILDER"
+      },
+      "buildx_instance": {
+        "environment": "BUILDX_INSTANCE"
+      },
+      "docker_config": {
+        "environment": "DOCKER_AUTH_CONFIG"
+      },
+      "testcontainers_host": {
+        "environment": "TESTCONTAINERS_HOST_OVERRIDE"
+      },
+      "cache_scope": {
+        "environment": "CACHE_SCOPE"
+      },
+      "cache_scope_fallback": {
+        "environment": "CACHE_SCOPE_FALLBACK"
+      },
+      "sayt_buildkit_syntax": {
+        "environment": "BUILDKIT_SYNTAX"
+      },
+      "sayt_no_cache": {
+        "environment": "SAYT_NO_CACHE"
+      },
+      "bayt_image_tag": {
+        "environment": "BAYT_IMAGE_TAG"
+      },
+      "bayt_pull_policy": {
+        "environment": "BAYT_PULL_POLICY"
+      },
+      "sayt_no_cache_from": {
+        "environment": "SAYT_NO_CACHE_FROM"
+      },
+      "sayt_no_cache_to": {
+        "environment": "SAYT_NO_CACHE_TO"
+      },
+      "depot_token": {
+        "environment": "DEPOT_TOKEN"
+      },
+      "depot_project_id": {
+        "environment": "DEPOT_PROJECT_ID"
+      },
+      "depot_org_id": {
+        "environment": "DEPOT_ORG_ID"
+      },
+      "depot_disable_otel": {
+        "environment": "DEPOT_DISABLE_OTEL"
+      },
+      "actions_results_url": {
+        "environment": "ACTIONS_RESULTS_URL"
+      },
+      "actions_runtime_token": {
+        "environment": "ACTIONS_RUNTIME_TOKEN"
+      },
+      "bkid_project": {
+        "environment": "BKID_PROJECT"
+      }
+    },
+    "extra_hosts": [],
+    "epilogue": [],
+    "copy": [
+      {
+        "from": {
+          "name": "libraries_mecha-activepieces-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-activepieces-image_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-airlock-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-airlock-image_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-auth-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-auth-image_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-clock-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-clock-image_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-compute-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-compute-image_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-conduit-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-database-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-database-image_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-extensions-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-extensions-image_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-mesh-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-mesh-image_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-ticker-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-ticker-image_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "workspaceroot-pronto-sources_bayt"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "workspaceroot-pronto-sources_srcs"
+        },
+        "srcs": [
+          "/monorep[o]"
+        ],
+        "dst": "/monorepo/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "monorepo/*.yaml"
+        ],
+        "dst": "./",
+        "link": true,
+        "parents": true,
+        "exclude": []
+      }
+    ],
+    "healthcheck": null,
+    "expose": [],
+    "entrypoint": null,
+    "incremental": true,
+    "cmd": null
+  },
+  "name": "ci-statistics-live",
+  "project": "golaberto",
+  "dir": ".",
+  "activate": "",
+  "srcs": {
+    "globs": [],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {
+    "BUILDX_BAKE_ENTITLEMENTS_FS": "0",
+    "COMPOSE_BAKE": "true"
+  },
+  "synthetics": {
+    "bayt": {
+      "name": "ci-statistics-live_bayt",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.ci-statistics-live.yaml",
+          ".bayt/Dockerfile.ci-statistics-live",
+          ".bayt/bayt.ci-statistics-live.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/Taskfile.ci-statistics-live.yaml",
+          ".bayt/process-compose.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.ci-statistics-live.yaml",
+        "./.bayt/compose.check-statistics-live.yaml",
+        "./.bayt/compose.sofascore.yaml",
+        "./.bayt/compose.sofascore-appliance.yaml",
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.served.yaml",
+        "./.bayt/compose.served-release.yaml",
+        "./.bayt/compose.render.yaml",
+        "./.bayt/compose.rclone-s3.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.conduit.yaml",
+        "./.bayt/compose.transform.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.airlock.yaml",
+        "./.bayt/compose.airlock-mesh.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml",
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.browser.yaml",
+        "./.bayt/compose.build.yaml",
+        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.generate.yaml",
+        "./.bayt/compose.launch.yaml",
+        "./.bayt/compose.mesh-events.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.ticker.yaml",
+        "./.bayt/compose.timer-check.yaml"
+      ]
+    },
+    "outs": {
+      "name": "ci-statistics-live_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.ci-statistics-live.yaml",
+        "./.bayt/compose.check-statistics-live.yaml",
+        "./.bayt/compose.sofascore.yaml",
+        "./.bayt/compose.sofascore-appliance.yaml",
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.served.yaml",
+        "./.bayt/compose.served-release.yaml",
+        "./.bayt/compose.render.yaml",
+        "./.bayt/compose.rclone-s3.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.conduit.yaml",
+        "./.bayt/compose.transform.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.airlock.yaml",
+        "./.bayt/compose.airlock-mesh.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml",
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.browser.yaml",
+        "./.bayt/compose.build.yaml",
+        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.generate.yaml",
+        "./.bayt/compose.launch.yaml",
+        "./.bayt/compose.mesh-events.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.ticker.yaml",
+        "./.bayt/compose.timer-check.yaml"
+      ]
+    }
+  },
+  "taskfile": {
+    "run": "once",
+    "incremental": false,
+    "preconditions": []
+  },
+  "visibility": "internal",
+  "emitsSrcs": false,
+  "deps": [
+    "check-statistics-live_srcs",
+    "check-statistics-live_bayt",
+    "sofascore_srcs",
+    "sofascore-appliance_srcs",
+    "caddy_srcs",
+    "served_srcs",
+    "served-release_srcs",
+    "render_srcs",
+    "rclone-s3_srcs",
+    "database_srcs",
+    "migrate_srcs",
+    "conduit_srcs",
+    "transform_srcs",
+    "compute_srcs",
+    "airlock_srcs",
+    "airlock-mesh_srcs"
+  ],
+  "sameProjectDeps": [
+    "check-statistics-live_srcs",
+    "check-statistics-live_bayt",
+    "sofascore_srcs",
+    "sofascore-appliance_srcs",
+    "caddy_srcs",
+    "served_srcs",
+    "served-release_srcs",
+    "render_srcs",
+    "rclone-s3_srcs",
+    "database_srcs",
+    "migrate_srcs",
+    "conduit_srcs",
+    "transform_srcs",
+    "compute_srcs",
+    "airlock_srcs",
+    "airlock-mesh_srcs"
+  ],
+  "transitiveDeps": [
+    "check-statistics-live_srcs",
+    "check-statistics-live_bayt",
+    "sofascore_srcs",
+    "sofascore-appliance_srcs",
+    "caddy_srcs",
+    "served_srcs",
+    "served-release_srcs",
+    "render_srcs",
+    "rclone-s3_srcs",
+    "database_srcs",
+    "migrate_srcs",
+    "conduit_srcs",
+    "transform_srcs",
+    "compute_srcs",
+    "airlock_srcs",
+    "airlock-mesh_srcs",
+    "browser_srcs"
+  ],
+  "transitiveCrossDeps": [],
+  "upClosure": [
+    "./.bayt/compose.ci-statistics-live.yaml",
+    "./.bayt/compose.check-statistics-live.yaml",
+    "./.bayt/compose.sofascore.yaml",
+    "./.bayt/compose.sofascore-appliance.yaml",
+    "./.bayt/compose.caddy.yaml",
+    "./.bayt/compose.served.yaml",
+    "./.bayt/compose.served-release.yaml",
+    "./.bayt/compose.render.yaml",
+    "./.bayt/compose.rclone-s3.yaml",
+    "./.bayt/compose.database.yaml",
+    "./.bayt/compose.migrate.yaml",
+    "./.bayt/compose.conduit.yaml",
+    "./.bayt/compose.transform.yaml",
+    "./.bayt/compose.compute.yaml",
+    "./.bayt/compose.airlock.yaml",
+    "./.bayt/compose.airlock-mesh.yaml",
+    "./.bayt/compose.airlock-upgrade.yaml",
+    "./.bayt/compose.auth.yaml",
+    "./.bayt/compose.browser.yaml",
+    "./.bayt/compose.build.yaml",
+    "./.bayt/compose.clock.yaml",
+    "./.bayt/compose.crud.yaml",
+    "./.bayt/compose.electric.yaml",
+    "./.bayt/compose.generate.yaml",
+    "./.bayt/compose.launch.yaml",
+    "./.bayt/compose.mesh-events.yaml",
+    "./.bayt/compose.redis.yaml",
+    "./.bayt/compose.setup.yaml",
+    "./.bayt/compose.ticker.yaml",
+    "./.bayt/compose.timer-check.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "check-statistics-live_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "tests/**",
+          "bayt.json"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "check-statistics-live_bayt",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          ".bayt/compose.check-statistics-live.yaml",
+          ".bayt/Dockerfile.check-statistics-live",
+          ".bayt/bayt.check-statistics-live.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/compose.check-statistics-live.closure.yaml",
+          ".bayt/process-compose.yaml",
+          ".bayt/compose.*.yaml",
+          ".bayt/Dockerfile.*",
+          ".bayt/bayt.*.json",
+          ".bayt/Taskfile.*.yaml",
+          "monorepo/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml",
+          "compose.networks.yaml"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "sofascore_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "simulators/sofascore/*"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "sofascore-appliance_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "tools/sofascore-fetch/Cargo.toml",
+          "tools/sofascore-fetch/Cargo.lock",
+          "tools/sofascore-fetch/src/*.rs",
+          "tools/sofascore-fetch/tests/*.rs"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "caddy_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "docker/Caddyfile"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "served_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "shell/index.html",
+          "shell/shell.css",
+          "shell/boot.js",
+          "offline-first-sw.js",
+          "shell/shell.yaml",
+          "shell/shell.json",
+          "shell/design.css",
+          "shell/screens/arquivo.html",
+          "shell/screens/arquivo.css",
+          "shell/screens/arquivo-campeonato.html",
+          "shell/screens/arquivo-campeonato.css",
+          "shell/screens/publico.html",
+          "shell/screens/publico.css",
+          "shell/screens/campeonato-jogadores.html",
+          "shell/screens/campeonato-jogadores.css",
+          "shell/screens/jogador-campeonato.html",
+          "shell/screens/jogador-campeonato.css",
+          "shell/screens/principal.html",
+          "shell/screens/principal.css",
+          "shell/screens/campeonatos.html",
+          "shell/screens/campeonatos.css",
+          "shell/screens/jogos.html",
+          "shell/screens/jogos.css",
+          "shell/screens/jogo.html",
+          "shell/screens/jogo.css",
+          "shell/screens/chances.html",
+          "shell/screens/chances.css",
+          "shell/screens/editar.html",
+          "shell/screens/editar.css",
+          "shell/screens/equipes.html",
+          "shell/screens/equipes.css",
+          "shell/screens/jogadores.html",
+          "shell/screens/jogadores.css",
+          "shell/screens/estadios.html",
+          "shell/screens/estadios.css",
+          "shell/screens/estadio.html",
+          "shell/screens/estadio.css",
+          "shell/screens/arbitros.html",
+          "shell/screens/arbitros.css",
+          "shell/screens/arbitro.html",
+          "shell/screens/arbitro.css",
+          "shell/screens/equipe.html",
+          "shell/screens/equipe.css",
+          "shell/screens/equipe-campeonato.html",
+          "shell/screens/equipe-campeonato.css",
+          "shell/screens/jogador.html",
+          "shell/screens/jogador.css",
+          "shell/screens/campeonato.html",
+          "shell/screens/campeonato.css",
+          "shell/screens/editar-competicao.html",
+          "shell/screens/editar-competicao.css",
+          "shell/screens/editar-arbitro.html",
+          "shell/screens/editar-arbitro.css",
+          "shell/screens/editar-equipe.html",
+          "shell/screens/editar-equipe.css",
+          "shell/screens/editar-estadio.html",
+          "shell/screens/editar-estadio.css",
+          "shell/screens/editar-jogador.html",
+          "shell/screens/editar-jogador.css",
+          "shell/screens/editar-jogo.html",
+          "shell/screens/editar-jogo.css",
+          "shell/screens/escalacao-jogo.html",
+          "shell/screens/escalacao-jogo.css",
+          "shell/screens/gerenciar.html",
+          "shell/screens/gerenciar.css",
+          "shell/screens/gerenciar-competicoes.html",
+          "shell/screens/gerenciar-competicoes.css",
+          "shell/screens/gols-jogo.html",
+          "shell/screens/gols-jogo.css",
+          "shell/screens/historico-jogo.html",
+          "shell/screens/historico-jogo.css",
+          "shell/screens/inscricoes-jogador.html",
+          "shell/screens/inscricoes-jogador.css",
+          "shell/screens/nova-competicao.html",
+          "shell/screens/nova-competicao.css",
+          "shell/screens/novo-arbitro.html",
+          "shell/screens/novo-arbitro.css",
+          "shell/screens/novo-equipe.html",
+          "shell/screens/novo-equipe.css",
+          "shell/screens/novo-estadio.html",
+          "shell/screens/novo-estadio.css",
+          "shell/screens/novo-jogador.html",
+          "shell/screens/novo-jogador.css",
+          "shell/screens/novo-jogo.html",
+          "shell/screens/novo-jogo.css",
+          "shell/screens/usuario.html",
+          "shell/screens/usuario.css",
+          "shell/screens/usuarios.html",
+          "shell/screens/usuarios.css",
+          "shell/handlers/archive-round.js",
+          "shell/handlers/archive-week.js",
+          "shell/handlers/blank-null.js",
+          "shell/handlers/both-scored.js",
+          "shell/handlers/chart-compare.js",
+          "shell/handlers/chart-position-bound.js",
+          "shell/handlers/count-or-null.js",
+          "shell/handlers/country-option.js",
+          "shell/handlers/editing-choice-event.js",
+          "shell/handlers/editing-integer.js",
+          "shell/handlers/editing-played.js",
+          "shell/handlers/editing-text.js",
+          "shell/handlers/editing-timestamp.js",
+          "shell/handlers/editing-uuid.js",
+          "shell/handlers/geography-selection.js",
+          "shell/handlers/match-probability-event-control.js",
+          "shell/handlers/match-probability-event-edit.js",
+          "shell/handlers/match-probability-event-fold.js",
+          "shell/handlers/match-probability-seed.js",
+          "shell/handlers/odds-progress-point.js",
+          "shell/handlers/odds-progress-snapshot.js",
+          "shell/handlers/odds-progress-zone.js",
+          "shell/handlers/page-value.js",
+          "shell/handlers/parity-minutes.js",
+          "shell/handlers/player-csv-fold.js",
+          "shell/handlers/player-csv-seed.js",
+          "shell/handlers/position-odds-control.js",
+          "shell/handlers/position-odds-fold.js",
+          "shell/handlers/position-odds-source.js",
+          "shell/handlers/row-id.js",
+          "shell/handlers/search-key.js",
+          "shell/handlers/team-chart-fold.js",
+          "shell/handlers/team-chart-seed.js",
+          "shell/handlers/team-rating-series.js",
+          "shell/renderers/community-history.js",
+          "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js",
+          "shell/renderers/match-context-map.js",
+          "shell/renderers/match-final-score.js",
+          "shell/renderers/match-probability.js",
+          "shell/renderers/match-shootout.js",
+          "shell/renderers/media-image.js",
+          "shell/renderers/odds-progress.js",
+          "shell/renderers/player-csv.js",
+          "shell/renderers/player-event-label.js",
+          "shell/renderers/player-height.js",
+          "shell/renderers/player-position.js",
+          "shell/renderers/player-rate-per90.js",
+          "shell/renderers/position-odds.js",
+          "shell/renderers/team-badge.js",
+          "shell/renderers/team-chart.js",
+          "shell/renderers/team-location.js",
+          "shell/renderers/weekday.js",
+          "shell/renderers/zone-positions.js",
+          "shell/shared/catalog.css",
+          "shell/shared/chrome.css",
+          "shell/shared/community.css",
+          "shell/shared/competition.css",
+          "shell/shared/editing.css",
+          "shell/shared/games.css",
+          "shell/shared/match-context.css",
+          "shell/shared/match-probability.css",
+          "shell/shared/team.css",
+          "shell/hatches/team-match-preview.js",
+          "messages/pt-BR.json",
+          "messages/es-AR.json",
+          "messages/en-US.json",
+          "messages/it-IT.json",
+          "messages/de-DE.json",
+          "messages/fr-FR.json",
+          "branding/favicon.svg",
+          "branding/favicon.ico",
+          "brief.md",
+          "brief.html",
+          "journal.html",
+          "ir.html",
+          "ir/card.css",
+          "acceptance.md",
+          "DESIGN.md",
+          "ir/neighbourhood-app.svg",
+          "ir/neighbourhood-arbitro.svg",
+          "ir/neighbourhood-arbitros.svg",
+          "ir/neighbourhood-arquivo-campeonato.svg",
+          "ir/neighbourhood-arquivo.svg",
+          "ir/neighbourhood-campeonato-jogadores.svg",
+          "ir/neighbourhood-campeonato.svg",
+          "ir/neighbourhood-campeonatos.svg",
+          "ir/neighbourhood-chances.svg",
+          "ir/neighbourhood-editar-arbitro.svg",
+          "ir/neighbourhood-editar-competicao.svg",
+          "ir/neighbourhood-editar-equipe.svg",
+          "ir/neighbourhood-editar-estadio.svg",
+          "ir/neighbourhood-editar-jogador.svg",
+          "ir/neighbourhood-editar-jogo.svg",
+          "ir/neighbourhood-editar.svg",
+          "ir/neighbourhood-equipe-campeonato.svg",
+          "ir/neighbourhood-equipe.svg",
+          "ir/neighbourhood-equipes.svg",
+          "ir/neighbourhood-escalacao-jogo.svg",
+          "ir/neighbourhood-estadio.svg",
+          "ir/neighbourhood-estadios.svg",
+          "ir/neighbourhood-gerenciar-competicoes.svg",
+          "ir/neighbourhood-gerenciar.svg",
+          "ir/neighbourhood-gols-jogo.svg",
+          "ir/neighbourhood-historico-jogo.svg",
+          "ir/neighbourhood-inscricoes-jogador.svg",
+          "ir/neighbourhood-jogador-campeonato.svg",
+          "ir/neighbourhood-jogador.svg",
+          "ir/neighbourhood-jogadores.svg",
+          "ir/neighbourhood-jogo.svg",
+          "ir/neighbourhood-jogos.svg",
+          "ir/neighbourhood-nova-competicao.svg",
+          "ir/neighbourhood-novo-arbitro.svg",
+          "ir/neighbourhood-novo-equipe.svg",
+          "ir/neighbourhood-novo-estadio.svg",
+          "ir/neighbourhood-novo-jogador.svg",
+          "ir/neighbourhood-novo-jogo.svg",
+          "ir/neighbourhood-principal.svg",
+          "ir/neighbourhood-publico.svg",
+          "ir/neighbourhood-usuario.svg",
+          "ir/neighbourhood-usuarios.svg",
+          "journal/2026-10-16-date-heading-after.png",
+          "journal/2026-10-16-date-heading-before.png",
+          "journal/2026-10-16-legend-away-first.png",
+          "journal/2026-10-16-matches-after.png",
+          "journal/2026-10-16-matches-before.png",
+          "journal/2026-10-16-pointer-score-events.png",
+          "journal/2026-10-28-archive-after.png",
+          "journal/2026-10-28-archive-before.png",
+          "journal/2026-10-28-catalog-after.png",
+          "journal/2026-10-28-catalog-before.png",
+          "journal/2026-10-28-championship-after.png",
+          "journal/2026-10-28-championship-before.png",
+          "journal/2026-10-28-match-after.png",
+          "journal/2026-10-28-match-before.png",
+          "journal/2026-10-28-odds-after.png",
+          "journal/2026-10-28-odds-before.png",
+          "journal/2026-10-28-team-after.png",
+          "journal/2026-10-28-team-before.png",
+          "journal/2026-11-05-sequence-before.png",
+          "journal/2026-11-05-sequence-exhausted.png",
+          "journal/2026-11-07-cloudflare-standings-before.png",
+          "journal/2026-11-07-cloudflare-standings-changed.png",
+          "journal/2026-11-07-cloudflare-standings-restored.png",
+          "journal/2026-11-07-cloudflare-standings.html",
+          "journal/2026-11-08-cloudflare-optimized-before.png",
+          "journal/2026-11-08-cloudflare-optimized-changed.png",
+          "journal/2026-11-08-pr-review.html",
+          "journal/2026-11-08-pr-review.png",
+          "journal/2026-11-09-bounded-duckdb.html",
+          "journal/2026-11-09-cloudflare-home.png",
+          "journal/2026-11-09-cloudflare-live-before.png",
+          "journal/2026-11-09-cloudflare-live-changed.png",
+          "journal/2026-11-09-cloudflare-live-restored.png",
+          "journal/2026-11-09-duckdb-vm-teams.png",
+          "journal/2026-11-09-duckdb-vm.html",
+          "journal/2026-11-09-feldera-vm.html",
+          "journal/2026-11-09-vm-teams.png",
+          "journal/2026-11-10-bounded-verification.html",
+          "journal/2026-11-10-duckdb-vm-teams.png",
+          "robots.txt",
+          "sitemap.xml",
+          "shell/favicon.ico",
+          "shell/manifest.webmanifest",
+          "llms.txt",
+          "llms-full.txt"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "served-release_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "shell/index.html",
+          "shell/shell.css",
+          "shell/boot.js",
+          "offline-first-sw.js",
+          "shell/shell.yaml",
+          "shell/shell.json",
+          "shell/design.css",
+          "shell/screens/arquivo.html",
+          "shell/screens/arquivo.css",
+          "shell/screens/arquivo-campeonato.html",
+          "shell/screens/arquivo-campeonato.css",
+          "shell/screens/publico.html",
+          "shell/screens/publico.css",
+          "shell/screens/campeonato-jogadores.html",
+          "shell/screens/campeonato-jogadores.css",
+          "shell/screens/jogador-campeonato.html",
+          "shell/screens/jogador-campeonato.css",
+          "shell/screens/principal.html",
+          "shell/screens/principal.css",
+          "shell/screens/campeonatos.html",
+          "shell/screens/campeonatos.css",
+          "shell/screens/jogos.html",
+          "shell/screens/jogos.css",
+          "shell/screens/jogo.html",
+          "shell/screens/jogo.css",
+          "shell/screens/chances.html",
+          "shell/screens/chances.css",
+          "shell/screens/editar.html",
+          "shell/screens/editar.css",
+          "shell/screens/equipes.html",
+          "shell/screens/equipes.css",
+          "shell/screens/jogadores.html",
+          "shell/screens/jogadores.css",
+          "shell/screens/estadios.html",
+          "shell/screens/estadios.css",
+          "shell/screens/estadio.html",
+          "shell/screens/estadio.css",
+          "shell/screens/arbitros.html",
+          "shell/screens/arbitros.css",
+          "shell/screens/arbitro.html",
+          "shell/screens/arbitro.css",
+          "shell/screens/equipe.html",
+          "shell/screens/equipe.css",
+          "shell/screens/equipe-campeonato.html",
+          "shell/screens/equipe-campeonato.css",
+          "shell/screens/jogador.html",
+          "shell/screens/jogador.css",
+          "shell/screens/campeonato.html",
+          "shell/screens/campeonato.css",
+          "shell/screens/editar-competicao.html",
+          "shell/screens/editar-competicao.css",
+          "shell/screens/editar-arbitro.html",
+          "shell/screens/editar-arbitro.css",
+          "shell/screens/editar-equipe.html",
+          "shell/screens/editar-equipe.css",
+          "shell/screens/editar-estadio.html",
+          "shell/screens/editar-estadio.css",
+          "shell/screens/editar-jogador.html",
+          "shell/screens/editar-jogador.css",
+          "shell/screens/editar-jogo.html",
+          "shell/screens/editar-jogo.css",
+          "shell/screens/escalacao-jogo.html",
+          "shell/screens/escalacao-jogo.css",
+          "shell/screens/gerenciar.html",
+          "shell/screens/gerenciar.css",
+          "shell/screens/gerenciar-competicoes.html",
+          "shell/screens/gerenciar-competicoes.css",
+          "shell/screens/gols-jogo.html",
+          "shell/screens/gols-jogo.css",
+          "shell/screens/historico-jogo.html",
+          "shell/screens/historico-jogo.css",
+          "shell/screens/inscricoes-jogador.html",
+          "shell/screens/inscricoes-jogador.css",
+          "shell/screens/nova-competicao.html",
+          "shell/screens/nova-competicao.css",
+          "shell/screens/novo-arbitro.html",
+          "shell/screens/novo-arbitro.css",
+          "shell/screens/novo-equipe.html",
+          "shell/screens/novo-equipe.css",
+          "shell/screens/novo-estadio.html",
+          "shell/screens/novo-estadio.css",
+          "shell/screens/novo-jogador.html",
+          "shell/screens/novo-jogador.css",
+          "shell/screens/novo-jogo.html",
+          "shell/screens/novo-jogo.css",
+          "shell/screens/usuario.html",
+          "shell/screens/usuario.css",
+          "shell/screens/usuarios.html",
+          "shell/screens/usuarios.css",
+          "shell/handlers/archive-round.js",
+          "shell/handlers/archive-week.js",
+          "shell/handlers/blank-null.js",
+          "shell/handlers/both-scored.js",
+          "shell/handlers/chart-compare.js",
+          "shell/handlers/chart-position-bound.js",
+          "shell/handlers/count-or-null.js",
+          "shell/handlers/country-option.js",
+          "shell/handlers/editing-choice-event.js",
+          "shell/handlers/editing-integer.js",
+          "shell/handlers/editing-played.js",
+          "shell/handlers/editing-text.js",
+          "shell/handlers/editing-timestamp.js",
+          "shell/handlers/editing-uuid.js",
+          "shell/handlers/geography-selection.js",
+          "shell/handlers/match-probability-event-control.js",
+          "shell/handlers/match-probability-event-edit.js",
+          "shell/handlers/match-probability-event-fold.js",
+          "shell/handlers/match-probability-seed.js",
+          "shell/handlers/odds-progress-point.js",
+          "shell/handlers/odds-progress-snapshot.js",
+          "shell/handlers/odds-progress-zone.js",
+          "shell/handlers/page-value.js",
+          "shell/handlers/parity-minutes.js",
+          "shell/handlers/player-csv-fold.js",
+          "shell/handlers/player-csv-seed.js",
+          "shell/handlers/position-odds-control.js",
+          "shell/handlers/position-odds-fold.js",
+          "shell/handlers/position-odds-source.js",
+          "shell/handlers/row-id.js",
+          "shell/handlers/search-key.js",
+          "shell/handlers/team-chart-fold.js",
+          "shell/handlers/team-chart-seed.js",
+          "shell/handlers/team-rating-series.js",
+          "shell/renderers/community-history.js",
+          "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js",
+          "shell/renderers/match-context-map.js",
+          "shell/renderers/match-final-score.js",
+          "shell/renderers/match-probability.js",
+          "shell/renderers/match-shootout.js",
+          "shell/renderers/media-image.js",
+          "shell/renderers/odds-progress.js",
+          "shell/renderers/player-csv.js",
+          "shell/renderers/player-event-label.js",
+          "shell/renderers/player-height.js",
+          "shell/renderers/player-position.js",
+          "shell/renderers/player-rate-per90.js",
+          "shell/renderers/position-odds.js",
+          "shell/renderers/team-badge.js",
+          "shell/renderers/team-chart.js",
+          "shell/renderers/team-location.js",
+          "shell/renderers/weekday.js",
+          "shell/renderers/zone-positions.js",
+          "shell/shared/catalog.css",
+          "shell/shared/chrome.css",
+          "shell/shared/community.css",
+          "shell/shared/competition.css",
+          "shell/shared/editing.css",
+          "shell/shared/games.css",
+          "shell/shared/match-context.css",
+          "shell/shared/match-probability.css",
+          "shell/shared/team.css",
+          "shell/hatches/team-match-preview.js",
+          "messages/pt-BR.json",
+          "messages/es-AR.json",
+          "messages/en-US.json",
+          "messages/it-IT.json",
+          "messages/de-DE.json",
+          "messages/fr-FR.json",
+          "branding/favicon.svg",
+          "branding/favicon.ico",
+          "brief.md",
+          "brief.html",
+          "journal.html",
+          "ir.html",
+          "ir/card.css",
+          "acceptance.md",
+          "DESIGN.md",
+          "ir/neighbourhood-app.svg",
+          "ir/neighbourhood-arbitro.svg",
+          "ir/neighbourhood-arbitros.svg",
+          "ir/neighbourhood-arquivo-campeonato.svg",
+          "ir/neighbourhood-arquivo.svg",
+          "ir/neighbourhood-campeonato-jogadores.svg",
+          "ir/neighbourhood-campeonato.svg",
+          "ir/neighbourhood-campeonatos.svg",
+          "ir/neighbourhood-chances.svg",
+          "ir/neighbourhood-editar-arbitro.svg",
+          "ir/neighbourhood-editar-competicao.svg",
+          "ir/neighbourhood-editar-equipe.svg",
+          "ir/neighbourhood-editar-estadio.svg",
+          "ir/neighbourhood-editar-jogador.svg",
+          "ir/neighbourhood-editar-jogo.svg",
+          "ir/neighbourhood-editar.svg",
+          "ir/neighbourhood-equipe-campeonato.svg",
+          "ir/neighbourhood-equipe.svg",
+          "ir/neighbourhood-equipes.svg",
+          "ir/neighbourhood-escalacao-jogo.svg",
+          "ir/neighbourhood-estadio.svg",
+          "ir/neighbourhood-estadios.svg",
+          "ir/neighbourhood-gerenciar-competicoes.svg",
+          "ir/neighbourhood-gerenciar.svg",
+          "ir/neighbourhood-gols-jogo.svg",
+          "ir/neighbourhood-historico-jogo.svg",
+          "ir/neighbourhood-inscricoes-jogador.svg",
+          "ir/neighbourhood-jogador-campeonato.svg",
+          "ir/neighbourhood-jogador.svg",
+          "ir/neighbourhood-jogadores.svg",
+          "ir/neighbourhood-jogo.svg",
+          "ir/neighbourhood-jogos.svg",
+          "ir/neighbourhood-nova-competicao.svg",
+          "ir/neighbourhood-novo-arbitro.svg",
+          "ir/neighbourhood-novo-equipe.svg",
+          "ir/neighbourhood-novo-estadio.svg",
+          "ir/neighbourhood-novo-jogador.svg",
+          "ir/neighbourhood-novo-jogo.svg",
+          "ir/neighbourhood-principal.svg",
+          "ir/neighbourhood-publico.svg",
+          "ir/neighbourhood-usuario.svg",
+          "ir/neighbourhood-usuarios.svg",
+          "journal/2026-10-16-date-heading-after.png",
+          "journal/2026-10-16-date-heading-before.png",
+          "journal/2026-10-16-legend-away-first.png",
+          "journal/2026-10-16-matches-after.png",
+          "journal/2026-10-16-matches-before.png",
+          "journal/2026-10-16-pointer-score-events.png",
+          "journal/2026-10-28-archive-after.png",
+          "journal/2026-10-28-archive-before.png",
+          "journal/2026-10-28-catalog-after.png",
+          "journal/2026-10-28-catalog-before.png",
+          "journal/2026-10-28-championship-after.png",
+          "journal/2026-10-28-championship-before.png",
+          "journal/2026-10-28-match-after.png",
+          "journal/2026-10-28-match-before.png",
+          "journal/2026-10-28-odds-after.png",
+          "journal/2026-10-28-odds-before.png",
+          "journal/2026-10-28-team-after.png",
+          "journal/2026-10-28-team-before.png",
+          "journal/2026-11-05-sequence-before.png",
+          "journal/2026-11-05-sequence-exhausted.png",
+          "journal/2026-11-07-cloudflare-standings-before.png",
+          "journal/2026-11-07-cloudflare-standings-changed.png",
+          "journal/2026-11-07-cloudflare-standings-restored.png",
+          "journal/2026-11-07-cloudflare-standings.html",
+          "journal/2026-11-08-cloudflare-optimized-before.png",
+          "journal/2026-11-08-cloudflare-optimized-changed.png",
+          "journal/2026-11-08-pr-review.html",
+          "journal/2026-11-08-pr-review.png",
+          "journal/2026-11-09-bounded-duckdb.html",
+          "journal/2026-11-09-cloudflare-home.png",
+          "journal/2026-11-09-cloudflare-live-before.png",
+          "journal/2026-11-09-cloudflare-live-changed.png",
+          "journal/2026-11-09-cloudflare-live-restored.png",
+          "journal/2026-11-09-duckdb-vm-teams.png",
+          "journal/2026-11-09-duckdb-vm.html",
+          "journal/2026-11-09-feldera-vm.html",
+          "journal/2026-11-09-vm-teams.png",
+          "journal/2026-11-10-bounded-verification.html",
+          "journal/2026-11-10-duckdb-vm-teams.png",
+          "robots.txt",
+          "sitemap.xml",
+          "shell/favicon.ico",
+          "shell/manifest.webmanifest",
+          "llms.txt",
+          "llms-full.txt"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "render_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "shell/index.html",
+          "shell/shell.css",
+          "shell/boot.js",
+          "shell/shell.yaml",
+          "shell/shell.json",
+          "shell/design.css",
+          "shell/screens/arquivo.html",
+          "shell/screens/arquivo.css",
+          "shell/screens/arquivo-campeonato.html",
+          "shell/screens/arquivo-campeonato.css",
+          "shell/screens/publico.html",
+          "shell/screens/publico.css",
+          "shell/screens/campeonato-jogadores.html",
+          "shell/screens/campeonato-jogadores.css",
+          "shell/screens/jogador-campeonato.html",
+          "shell/screens/jogador-campeonato.css",
+          "shell/screens/principal.html",
+          "shell/screens/principal.css",
+          "shell/screens/campeonatos.html",
+          "shell/screens/campeonatos.css",
+          "shell/screens/jogos.html",
+          "shell/screens/jogos.css",
+          "shell/screens/jogo.html",
+          "shell/screens/jogo.css",
+          "shell/screens/chances.html",
+          "shell/screens/chances.css",
+          "shell/screens/editar.html",
+          "shell/screens/editar.css",
+          "shell/screens/equipes.html",
+          "shell/screens/equipes.css",
+          "shell/screens/jogadores.html",
+          "shell/screens/jogadores.css",
+          "shell/screens/estadios.html",
+          "shell/screens/estadios.css",
+          "shell/screens/estadio.html",
+          "shell/screens/estadio.css",
+          "shell/screens/arbitros.html",
+          "shell/screens/arbitros.css",
+          "shell/screens/arbitro.html",
+          "shell/screens/arbitro.css",
+          "shell/screens/equipe.html",
+          "shell/screens/equipe.css",
+          "shell/screens/equipe-campeonato.html",
+          "shell/screens/equipe-campeonato.css",
+          "shell/screens/jogador.html",
+          "shell/screens/jogador.css",
+          "shell/screens/campeonato.html",
+          "shell/screens/campeonato.css",
+          "shell/screens/editar-competicao.html",
+          "shell/screens/editar-competicao.css",
+          "shell/screens/editar-arbitro.html",
+          "shell/screens/editar-arbitro.css",
+          "shell/screens/editar-equipe.html",
+          "shell/screens/editar-equipe.css",
+          "shell/screens/editar-estadio.html",
+          "shell/screens/editar-estadio.css",
+          "shell/screens/editar-jogador.html",
+          "shell/screens/editar-jogador.css",
+          "shell/screens/editar-jogo.html",
+          "shell/screens/editar-jogo.css",
+          "shell/screens/escalacao-jogo.html",
+          "shell/screens/escalacao-jogo.css",
+          "shell/screens/gerenciar.html",
+          "shell/screens/gerenciar.css",
+          "shell/screens/gerenciar-competicoes.html",
+          "shell/screens/gerenciar-competicoes.css",
+          "shell/screens/gols-jogo.html",
+          "shell/screens/gols-jogo.css",
+          "shell/screens/historico-jogo.html",
+          "shell/screens/historico-jogo.css",
+          "shell/screens/inscricoes-jogador.html",
+          "shell/screens/inscricoes-jogador.css",
+          "shell/screens/nova-competicao.html",
+          "shell/screens/nova-competicao.css",
+          "shell/screens/novo-arbitro.html",
+          "shell/screens/novo-arbitro.css",
+          "shell/screens/novo-equipe.html",
+          "shell/screens/novo-equipe.css",
+          "shell/screens/novo-estadio.html",
+          "shell/screens/novo-estadio.css",
+          "shell/screens/novo-jogador.html",
+          "shell/screens/novo-jogador.css",
+          "shell/screens/novo-jogo.html",
+          "shell/screens/novo-jogo.css",
+          "shell/screens/usuario.html",
+          "shell/screens/usuario.css",
+          "shell/screens/usuarios.html",
+          "shell/screens/usuarios.css",
+          "shell/handlers/archive-round.js",
+          "shell/handlers/archive-week.js",
+          "shell/handlers/blank-null.js",
+          "shell/handlers/both-scored.js",
+          "shell/handlers/chart-compare.js",
+          "shell/handlers/chart-position-bound.js",
+          "shell/handlers/count-or-null.js",
+          "shell/handlers/country-option.js",
+          "shell/handlers/editing-choice-event.js",
+          "shell/handlers/editing-integer.js",
+          "shell/handlers/editing-played.js",
+          "shell/handlers/editing-text.js",
+          "shell/handlers/editing-timestamp.js",
+          "shell/handlers/editing-uuid.js",
+          "shell/handlers/geography-selection.js",
+          "shell/handlers/match-probability-event-control.js",
+          "shell/handlers/match-probability-event-edit.js",
+          "shell/handlers/match-probability-event-fold.js",
+          "shell/handlers/match-probability-seed.js",
+          "shell/handlers/odds-progress-point.js",
+          "shell/handlers/odds-progress-snapshot.js",
+          "shell/handlers/odds-progress-zone.js",
+          "shell/handlers/page-value.js",
+          "shell/handlers/parity-minutes.js",
+          "shell/handlers/player-csv-fold.js",
+          "shell/handlers/player-csv-seed.js",
+          "shell/handlers/position-odds-control.js",
+          "shell/handlers/position-odds-fold.js",
+          "shell/handlers/position-odds-source.js",
+          "shell/handlers/row-id.js",
+          "shell/handlers/search-key.js",
+          "shell/handlers/team-chart-fold.js",
+          "shell/handlers/team-chart-seed.js",
+          "shell/handlers/team-rating-series.js",
+          "shell/renderers/community-history.js",
+          "shell/renderers/country-flag.js",
+          "shell/renderers/geography-label.js",
+          "shell/renderers/match-context-map.js",
+          "shell/renderers/match-final-score.js",
+          "shell/renderers/match-probability.js",
+          "shell/renderers/match-shootout.js",
+          "shell/renderers/media-image.js",
+          "shell/renderers/odds-progress.js",
+          "shell/renderers/player-csv.js",
+          "shell/renderers/player-event-label.js",
+          "shell/renderers/player-height.js",
+          "shell/renderers/player-position.js",
+          "shell/renderers/player-rate-per90.js",
+          "shell/renderers/position-odds.js",
+          "shell/renderers/team-badge.js",
+          "shell/renderers/team-chart.js",
+          "shell/renderers/team-location.js",
+          "shell/renderers/weekday.js",
+          "shell/renderers/zone-positions.js",
+          "shell/shared/catalog.css",
+          "shell/shared/chrome.css",
+          "shell/shared/community.css",
+          "shell/shared/competition.css",
+          "shell/shared/editing.css",
+          "shell/shared/games.css",
+          "shell/shared/match-context.css",
+          "shell/shared/match-probability.css",
+          "shell/shared/team.css",
+          "shell/hatches/team-match-preview.js",
+          "messages/pt-BR.json",
+          "messages/es-AR.json",
+          "messages/en-US.json",
+          "messages/it-IT.json",
+          "messages/de-DE.json",
+          "messages/fr-FR.json",
+          "branding/favicon.svg",
+          "branding/favicon.ico",
+          "shell/favicon.ico",
+          "shell/manifest.webmanifest"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "rclone-s3_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "services/media/*.ts",
+          "services/media/deno.json",
+          "services/media/deno.lock"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "database_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "services/database/migrations/000_extensions.sql",
+          "services/database/migrations/001_roles.sql",
+          "services/database/migrations/002_grants.sql",
+          "services/database/migrations/004_types.sql",
+          "services/database/migrations/005_create_tables.sql",
+          "services/database/migrations/006_policies.sql",
+          "services/database/migrations/007_txid.sql",
+          "services/database/migrations/008_publication.sql",
+          "services/database/migrations/009_functions.sql",
+          "services/database/migrations/003_rls.sql",
+          "services/database/migrations/063_mecha_actors.sql",
+          "services/database/migrations/010_game_days.sql",
+          "services/database/migrations/011_comment_writes.sql",
+          "services/database/migrations/012_editor_writes.sql",
+          "services/database/migrations/013_home_games.sql",
+          "services/database/migrations/014_home_championships.sql",
+          "services/database/migrations/015_home_performance.sql",
+          "services/database/migrations/016_matches_performance.sql",
+          "services/database/migrations/017_game_countries.sql",
+          "services/database/migrations/018_route_performance.sql",
+          "services/database/migrations/019_normalized_game_flags.sql",
+          "services/database/migrations/020_home_reference_order.sql",
+          "services/database/migrations/021_home_highlights.sql",
+          "services/database/migrations/022_recent_championships.sql",
+          "services/database/migrations/023_search_collation.sql",
+          "services/database/migrations/024_team_directory.sql",
+          "services/database/migrations/025_search_letter_equivalences.sql",
+          "services/database/migrations/026_team_geography.sql",
+          "services/database/migrations/027_team_directory_type.sql",
+          "services/database/migrations/028_team_profiles.sql",
+          "services/database/migrations/029_team_enrichment.sql",
+          "services/database/migrations/030_campaign_read.sql",
+          "services/database/migrations/031_readable_addresses.sql",
+          "services/database/migrations/032_archive_compatibility.sql",
+          "services/database/migrations/034_idempotent_odds_capture.sql",
+          "services/database/migrations/035_read_parity.sql",
+          "services/database/migrations/036_editing_parity.sql",
+          "services/database/migrations/037_competition_admin.sql",
+          "services/database/migrations/038_match_context.sql",
+          "services/database/migrations/039_match_probability.sql",
+          "services/database/migrations/040_community.sql",
+          "services/database/migrations/041_native_media.sql",
+          "services/database/migrations/042_team_odds_progress.sql",
+          "services/database/migrations/043_queued_odds_refresh.sql",
+          "services/database/migrations/044_heavy_reads.sql",
+          "services/database/migrations/045_drain_feed.sql",
+          "services/database/migrations/046_team_projection_turn.sql",
+          "services/database/migrations/047_home_games_at_read.sql",
+          "services/database/migrations/048_matches_start.sql",
+          "services/database/migrations/049_match_rating_history_bound.sql",
+          "services/database/migrations/050_home_feed_relationships.sql",
+          "services/database/migrations/051_home_feed_relationship_names.sql",
+          "services/database/migrations/052_sofascore_sync.sql",
+          "services/database/migrations/053_sofascore_apply.sql",
+          "services/database/migrations/054_fixture_availability.sql",
+          "services/database/migrations/055_sofa_seats.sql",
+          "services/database/migrations/062_player_directory_read.sql",
+          "services/database/migrations/900_seed.sql",
+          "services/database/migrations/801_schedule_seed.sql"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "migrate_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "services/database/pgroll/045_drain_feed.json",
+          "services/database/pgroll/20261110_drain_feed.json",
+          "services/database/pgroll/20261112_sofascore_event_schedule_feed.json",
+          "services/database/pgroll/052_blob_claims.json",
+          "services/database/pgroll/046_team_projection_turn.json",
+          "services/database/pgroll/048_team_projection_clock.json",
+          "services/database/pgroll/047_team_projection_writers.json",
+          "services/database/pgroll/013_home_games.json",
+          "services/database/pgroll/20261108_sofa_request.json",
+          "services/database/pgroll/20261113_sofa_request_job_keys.json",
+          "services/database/pgroll/20261113_sofa_request_once.json",
+          "services/database/pgroll/20261114_rule_argument_engines.json",
+          "services/database/pgroll/014_home_championships.json",
+          "services/database/pgroll/015_home_performance.json",
+          "services/database/pgroll/016_matches_performance.json",
+          "services/database/pgroll/017_game_countries.json",
+          "services/database/pgroll/018_route_performance.json",
+          "services/database/pgroll/019_normalized_game_flags.json",
+          "services/database/pgroll/020_home_reference_order.json",
+          "services/database/pgroll/021_home_highlights.json",
+          "services/database/pgroll/022_recent_championships.json",
+          "services/database/pgroll/023_search_collation.json",
+          "services/database/pgroll/024_team_directory.json",
+          "services/database/pgroll/025_search_letter_equivalences.json",
+          "services/database/pgroll/026_team_geography.json",
+          "services/database/pgroll/027_team_directory_type.json",
+          "services/database/pgroll/029_team_enrichment.json",
+          "services/database/pgroll/028_team_profiles.json",
+          "services/database/pgroll/030_campaign_read.json",
+          "services/database/pgroll/032_archive_compatibility.json",
+          "services/database/pgroll/033_cdc_outputs.json",
+          "services/database/pgroll/048_matches_start.json",
+          "services/database/pgroll/047_home_games_at_read.json",
+          "services/database/pgroll/050_home_feed_relationships.json",
+          "services/database/pgroll/051_home_feed_relationship_names.json",
+          "services/database/pgroll/035_read_parity.json",
+          "services/database/pgroll/048_archive_availability.json",
+          "services/database/pgroll/034_idempotent_odds_capture.json",
+          "services/database/pgroll/031_readable_addresses.json",
+          "services/database/pgroll/052_chance_team_names.json",
+          "services/database/pgroll/040_community.json",
+          "services/database/pgroll/037_competition_admin.json",
+          "services/database/pgroll/036_editing_parity.json",
+          "services/database/pgroll/044_heavy_reads.json",
+          "services/database/pgroll/20261113_player_directory_read.json",
+          "services/database/pgroll/038_match_context.json",
+          "services/database/pgroll/039_match_probability.json",
+          "services/database/pgroll/049_match_rating_history_bound.json",
+          "services/database/pgroll/041_native_media.json",
+          "services/database/pgroll/042_team_odds_progress.json",
+          "services/database/pgroll/043_queued_odds_refresh.json",
+          "services/database/pgroll/050_portable_projections.json",
+          "services/database/pgroll/051_rating_indexes.json",
+          "services/database/pgroll/20261109_1_sofascore_sync.json",
+          "services/database/pgroll/20261109_2_sofascore_apply.json",
+          "services/database/pgroll/20261109_3_fixture_availability.json",
+          "services/database/pgroll/20261109_4_sofascore_schedule_authority.json",
+          "services/database/pgroll/20261109_5_sofascore_event_scope.json",
+          "services/database/pgroll/20261109_6_sofascore_parse_rejection.json",
+          "services/database/pgroll/20261109_7_sofascore_event_day.json",
+          "services/database/pgroll/20261109_9_sofascore_requests.json",
+          "services/database/pgroll/20261111_sofascore_lock_order.json",
+          "services/database/pgroll/20261112_sofascore_event_schedule.json",
+          "services/database/pgroll/20261108_substitution.json",
+          "services/database/pgroll/20261108_sofa_tick.json"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "conduit_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "docker/golaberto-cdc.yaml"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "transform_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "docker/golaberto-rounds.yaml",
+          "docker/golaberto-team-enrichment.yaml",
+          "docker/golaberto-team-profiles.yaml",
+          "docker/golaberto-team-directory.yaml",
+          "docker/golaberto-matches-games.yaml",
+          "docker/golaberto-recent-championships.yaml",
+          "docker/golaberto-sofascore-admission.yaml"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "compute_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "computations/standings.js",
+          "computations/ratings.js",
+          "computations/chances.js",
+          "computations/cards.js",
+          "computations/player_stats.js",
+          "computations/golaberto-odds.wasm",
+          "duckstream/standings.feldera.json",
+          "duckstream/ratings.feldera.json",
+          "duckstream/chances.feldera.json",
+          "duckstream/cards.feldera.json",
+          "duckstream/player_stats.feldera.json",
+          "duckstream/bounded-standings.ts.bundle.js",
+          "duckstream/bounded-ratings.ts.bundle.js",
+          "duckstream/bounded-chances.ts.bundle.js",
+          "duckstream/bounded-cards.ts.bundle.js",
+          "duckstream/bounded-player-stats.ts.bundle.js"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "airlock_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "services/airlock/effects.json",
+          "effects/acquire.js"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "airlock-mesh_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "services/airlock/dapr/acquire.yaml"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "browser_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "[m]ise.toml",
+          "[.]mise.toml",
+          "[m]ise.lock",
+          "[.]tool-versions",
+          "[m]ise.local.toml"
+        ],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [
+    {
+      "srcs": {
+        "globs": [],
+        "exclude": [],
+        "defaultGlobs": null,
+        "defaultExclude": null
+      },
+      "name": "builtin",
+      "shell": "sh",
+      "do": "if [ -n \"$BUILDKIT_SYNTAX\" ]; then\n  # depot frontend-pin workaround (full rationale in stacks/sayt/sayt.cue)\n  find /monorepo -path '*/.bayt/Dockerfile.*' -type f -exec sed -i \"1i # syntax=$BUILDKIT_SYNTAX\" {} \\;\nfi\n[ -n \"$BKID_PROJECT\" ] || { echo \"bkid: BKID_PROJECT is unset; sayt integrate names the inner stack\" >&2; exit 1; }\np=\"${BKID_PROJECT}_statistics-live\"\nf=.bayt/compose.check-statistics-live.closure.yaml\n[ -n \"$DEPOT_TOKEN\" ] && bake=\"depot bake --project $DEPOT_PROJECT_ID\" || bake=\"docker buildx bake\"\ndocker compose -p \"$p\" --profile '*' -f \"$f\" config | docker buildx bake --allow=fs.read=/monorepo -f - --print bayt | $bake -f - --set \"*.output=type=cacheonly\" ${SAYT_NO_CACHE:+--no-cache --set \"*.cache-from=\" --set \"*.cache-to=\"} ${SAYT_NO_CACHE_FROM:+--set \"*.cache-from=\"} ${SAYT_NO_CACHE_TO:+--set \"*.cache-to=\"} bayt\ndocker compose -p \"$p\" --profile '*' -f \"$f\" down -v --timeout 0 --remove-orphans\ns=0\ndocker compose -p \"$p\" --profile '*' -f \"$f\" up bayt --build --abort-on-container-failure --exit-code-from bayt --remove-orphans --attach-dependencies || s=$?\ndocker compose -p \"$p\" --profile '*' -f \"$f\" down -v --timeout 0 --remove-orphans\nexit \"$s\"",
+      "dockerfile": {
+        "inject": {
+          "secrets": [
+            {
+              "id": "docker_host",
+              "var": {
+                "contents": "DOCKER_HOST"
+              }
+            },
+            {
+              "id": "buildx_builder",
+              "var": {
+                "contents": "BUILDX_BUILDER"
+              }
+            },
+            {
+              "id": "testcontainers_host",
+              "var": {
+                "contents": "TESTCONTAINERS_HOST_OVERRIDE"
+              }
+            },
+            {
+              "id": "cache_scope",
+              "var": {
+                "contents": "CACHE_SCOPE"
+              }
+            },
+            {
+              "id": "cache_scope_fallback",
+              "var": {
+                "contents": "CACHE_SCOPE_FALLBACK"
+              }
+            },
+            {
+              "id": "sayt_buildkit_syntax",
+              "var": {
+                "contents": "BUILDKIT_SYNTAX"
+              }
+            },
+            {
+              "id": "sayt_no_cache",
+              "var": {
+                "contents": "SAYT_NO_CACHE"
+              }
+            },
+            {
+              "id": "bayt_image_tag",
+              "var": {
+                "contents": "BAYT_IMAGE_TAG"
+              }
+            },
+            {
+              "id": "bayt_pull_policy",
+              "var": {
+                "contents": "BAYT_PULL_POLICY"
+              }
+            },
+            {
+              "id": "sayt_no_cache_from",
+              "var": {
+                "contents": "SAYT_NO_CACHE_FROM"
+              }
+            },
+            {
+              "id": "sayt_no_cache_to",
+              "var": {
+                "contents": "SAYT_NO_CACHE_TO"
+              }
+            },
+            {
+              "id": "depot_token",
+              "var": {
+                "contents": "DEPOT_TOKEN"
+              }
+            },
+            {
+              "id": "depot_project_id",
+              "var": {
+                "contents": "DEPOT_PROJECT_ID"
+              }
+            },
+            {
+              "id": "depot_org_id",
+              "var": {
+                "contents": "DEPOT_ORG_ID"
+              }
+            },
+            {
+              "id": "depot_disable_otel",
+              "var": {
+                "contents": "DEPOT_DISABLE_OTEL"
+              }
+            },
+            {
+              "id": "actions_results_url",
+              "var": {
+                "contents": "ACTIONS_RESULTS_URL"
+              }
+            },
+            {
+              "id": "actions_runtime_token",
+              "var": {
+                "contents": "ACTIONS_RUNTIME_TOKEN"
+              }
+            },
+            {
+              "id": "bkid_project",
+              "var": {
+                "contents": "BKID_PROJECT"
+              }
+            },
+            {
+              "id": "buildx_instance",
+              "var": {
+                "contents": "BUILDX_INSTANCE"
+              }
+            },
+            {
+              "id": "docker_config",
+              "var": {
+                "contents": "DOCKER_AUTH_CONFIG",
+                "path": "/root/.docker/config.json"
+              },
+              "mode": "0600"
+            }
+          ],
+          "defaultSteps": {
+            "buildx-instance": {
+              "name": "buildx-instance",
+              "priority": 11,
+              "pre": "if [ -n \"$BUILDX_BUILDER\" ] && [ -n \"$BUILDX_INSTANCE\" ]; then\n  install -d -m 0700 /root/.docker/buildx/instances\n  printf '%s' \"$BUILDX_INSTANCE\" > \"/root/.docker/buildx/instances/$BUILDX_BUILDER\"\n  chmod 0600 \"/root/.docker/buildx/instances/$BUILDX_BUILDER\"\nfi"
+            },
+            "unix-socket-forward": {
+              "name": "unix-socket-forward",
+              "priority": 10,
+              "pre": "if [ -n \"$DOCKER_HOST\" ] && [ ! -e /var/run/docker.sock ]; then\n  ulimit -n 1048576 2>/dev/null || true\n  addr=${DOCKER_HOST#tcp://}\n  [ -n \"$addr\" ] || { echo \"bkid: DOCKER_HOST=$DOCKER_HOST has no tcp:// address\" >&2; exit 1; }\n  socat -d0 -t 86400 UNIX-LISTEN:/var/run/docker.sock,fork,backlog=1024,reuseaddr \"TCP:$addr,keepalive,keepidle=30,keepintvl=15,keepcnt=4\" &\n  SOCAT_PID=$!\n  trap 'kill $SOCAT_PID 2>/dev/null || true' EXIT INT TERM\n  socat -u OPEN:/dev/null UNIX-CONNECT:/var/run/docker.sock,retry=20,interval=0.2 >/dev/null 2>&1 \\\n    || { echo \"bkid: socat bridge to /var/run/docker.sock not ready\" >&2; exit 1; }\nfi"
+            }
+          },
+          "steps": []
+        }
+      },
+      "stop": false
+    }
+  ],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

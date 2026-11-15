@@ -1,0 +1,59 @@
+{
+  "captured_at": "2026-10-28T02:36:24.336209+00:00",
+  "records": [
+    {
+      "gate": "./saytw doctor",
+      "exit": 0,
+      "evidence": "Target toolchain verified before the expansion."
+    },
+    {
+      "gate": "./saytw generate",
+      "exit": 0,
+      "evidence": "Owned SQL and container artifacts regenerated, including migrations 054 and 055."
+    },
+    {
+      "gate": "./saytw lint",
+      "exit": 0,
+      "evidence": "Final run after migration 055."
+    },
+    {
+      "gate": "./saytw test",
+      "exit": 0,
+      "evidence": "Final serial run; includes 49 SofaScore Python tests."
+    },
+    {
+      "gate": "ci-replay / ci-constraints --jobs 1",
+      "exit": 0,
+      "evidence": "Final serial integration: replay 169 seconds, constraints 118 seconds; migration 055 and all nine SofaScore tests visible. Aggregate output clipped by BuildKit."
+    },
+    {
+      "gate": "Focused real-database SofaScore regressions",
+      "exit": 0,
+      "evidence": "9 passed, 0 failed against the migrated imported database, each transaction rolled back."
+    },
+    {
+      "gate": "Fixture cadence generated SQL rollback check",
+      "exit": 0,
+      "evidence": "Failure backoff, healthy acceleration, settled NULL deadlines and active-attempt deadlines preserved."
+    },
+    {
+      "gate": "Updater image build / cargo test --release --locked",
+      "exit": 0,
+      "evidence": "4 Rust unit tests and 1 JSONL process test passed; deployed Python module hashes match tested source."
+    },
+    {
+      "gate": "Operational configuration and cached replay",
+      "exit": 0,
+      "evidence": "21 sources, 53 phases, 68 stage bindings, zero unbound phases; two cup finals imported from saved responses; malformed friendly parked."
+    }
+  ],
+  "python_tests": 49,
+  "focused_database_tests": 9,
+  "integration_aggregate_test_count": null,
+  "integration_log_clipped": true,
+  "notes": [
+    "The initial concurrent lint/test generation raced over shared .pronto files. That test run failed and the overlapping integration was cancelled. The final gates ran serially and passed.",
+    "No visual redesign was made. The running championship archive was used to inspect completed cup results and the newly imported final.",
+    "Backend review used GPT-6 Astra; implementation and focused QA used GPT-6.1 Terra, the available substitute for the skill routing. Final review had no actionable findings."
+  ]
+}

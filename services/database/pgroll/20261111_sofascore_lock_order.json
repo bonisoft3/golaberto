@@ -1,0 +1,10 @@
+{
+  "operations": [
+    {
+      "sql": {
+        "up": "SET lock_timeout='5s';\nSET statement_timeout='120s';\nCREATE OR REPLACE FUNCTION sofa.tick() RETURNS integer\nLANGUAGE plpgsql SET search_path=sofa,public,pg_temp SET timezone='UTC' AS $$\nDECLARE v_now timestamptz := clock_timestamp(); r record;\nBEGIN\n PERFORM 1 FROM sofa.control WHERE id FOR UPDATE;\n DELETE FROM public.sofa_tick WHERE tick_at<v_now-interval '7 days';\n UPDATE sofa.source s SET enabled=false FROM public.championship c WHERE c.id=s.championship_id AND s.enabled\n  AND c.ends<current_date-30 AND NOT EXISTS(SELECT 1 FROM sofa.event e WHERE e.source_id=s.id AND e.snapshot->>'status' NOT IN ('finished','cancelled','abandoned','awarded'))\n  AND NOT EXISTS(SELECT 1 FROM public.game g JOIN public.phase p ON p.id=g.phase_id WHERE p.championship_id=s.championship_id\n   AND NOT g.played AND coalesce(g.sync_status,'scheduled') NOT IN ('cancelled','abandoned','awarded'));\n FOR r IN UPDATE public.sofa_request q SET stuck_at=v_now WHERE q.id IN (\n  SELECT id FROM public.sofa_request WHERE status='acquiring' AND stuck_at IS NULL AND admitted_at<v_now-interval '30 minutes' FOR UPDATE SKIP LOCKED)\n  RETURNING q.source_id,q.resource_key,q.id LOOP\n  PERFORM sofa.review_item(r.source_id,'request',r.resource_key,'request never answered',jsonb_build_object('request',r.id));\n END LOOP;\n PERFORM sofa.seed_fixtures(v_now);\n RETURN sofa.admit();\nEND $$;\n",
+        "onComplete": true
+      }
+    }
+  ]
+}

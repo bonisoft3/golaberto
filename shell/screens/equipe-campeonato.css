@@ -28,7 +28,7 @@
 .odds-position-data { margin-top: var(--sp-md); border-top: var(--border-size-1) solid var(--border); padding-top: var(--sp-md); }
 .odds-position-data summary { cursor: pointer; font-size: var(--type-label); font-weight: 700; }
 .odds-values-select { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-sm) var(--sp-md); margin-block: var(--sp-md); font-size: var(--type-label); }
-.odds-values-select select { max-width: 100%; }
+.odds-values-select select { box-sizing: border-box; height: var(--control-h); max-width: 100%; border: var(--border-size-1) solid var(--border); background: var(--surface); color: var(--primary); padding: var(--sp-sm); font: inherit; }
 .position-odds__table { width: 100%; border-collapse: collapse; font-size: var(--type-label); font-variant-numeric: tabular-nums; }
 .position-odds__table caption { text-align: start; padding-bottom: var(--sp-sm); font-weight: 700; }
 .position-odds__table th, .position-odds__table td { padding: var(--sp-sm) var(--sp-md); border-bottom: var(--border-size-1) solid var(--border); text-align: end; }

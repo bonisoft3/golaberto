@@ -1,0 +1,194 @@
+# generated from bayt.cue — do not edit
+secrets:
+  docker_host:
+    environment: DOCKER_HOST_TCP
+  buildx_builder:
+    environment: BUILDX_BUILDER
+  buildx_instance:
+    environment: BUILDX_INSTANCE
+  docker_config:
+    environment: DOCKER_AUTH_CONFIG
+  testcontainers_host:
+    environment: TESTCONTAINERS_HOST_OVERRIDE
+  cache_scope:
+    environment: CACHE_SCOPE
+  cache_scope_fallback:
+    environment: CACHE_SCOPE_FALLBACK
+  sayt_buildkit_syntax:
+    environment: BUILDKIT_SYNTAX
+  sayt_no_cache:
+    environment: SAYT_NO_CACHE
+  bayt_image_tag:
+    environment: BAYT_IMAGE_TAG
+  bayt_pull_policy:
+    environment: BAYT_PULL_POLICY
+  sayt_no_cache_from:
+    environment: SAYT_NO_CACHE_FROM
+  sayt_no_cache_to:
+    environment: SAYT_NO_CACHE_TO
+  depot_token:
+    environment: DEPOT_TOKEN
+  depot_project_id:
+    environment: DEPOT_PROJECT_ID
+  depot_org_id:
+    environment: DEPOT_ORG_ID
+  depot_disable_otel:
+    environment: DEPOT_DISABLE_OTEL
+  actions_results_url:
+    environment: ACTIONS_RESULTS_URL
+  actions_runtime_token:
+    environment: ACTIONS_RUNTIME_TOKEN
+  bkid_project:
+    environment: BKID_PROJECT
+services:
+  golaberto-ci-statistics-live:
+    build:
+      additional_contexts:
+        golaberto-check-statistics-live_srcs: service:golaberto-check-statistics-live_srcs
+        golaberto-check-statistics-live_bayt: service:golaberto-check-statistics-live_bayt
+        golaberto-sofascore_srcs: service:golaberto-sofascore_srcs
+        golaberto-sofascore-appliance_srcs: service:golaberto-sofascore-appliance_srcs
+        golaberto-caddy_srcs: service:golaberto-caddy_srcs
+        golaberto-served_srcs: service:golaberto-served_srcs
+        golaberto-served-release_srcs: service:golaberto-served-release_srcs
+        golaberto-render_srcs: service:golaberto-render_srcs
+        golaberto-rclone-s3_srcs: service:golaberto-rclone-s3_srcs
+        golaberto-database_srcs: service:golaberto-database_srcs
+        golaberto-migrate_srcs: service:golaberto-migrate_srcs
+        golaberto-conduit_srcs: service:golaberto-conduit_srcs
+        golaberto-transform_srcs: service:golaberto-transform_srcs
+        golaberto-compute_srcs: service:golaberto-compute_srcs
+        golaberto-airlock_srcs: service:golaberto-airlock_srcs
+        golaberto-airlock-mesh_srcs: service:golaberto-airlock-mesh_srcs
+        golaberto-browser_srcs: service:golaberto-browser_srcs
+        bayt: >-
+          ${BAYT_RUNTIME:-docker-image://bonitao/bayt-runtime:1.5.1@sha256:21e3851bcc32a4e56460ef51724385b2ba80999ad73accbf6ae2af53975d9547}
+        workspaceroot-pronto-sources_srcs: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:workspaceroot-pronto-sources_srcs}
+        libraries_mecha-database-image_bayt: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image_bayt}
+        libraries_mecha-extensions-image_bayt: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-extensions-image_bayt}
+        libraries_mecha-mesh-image_bayt: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image_bayt}
+        libraries_mecha-conduit-image_bayt: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image_bayt}
+        libraries_mecha-auth-image_bayt: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image_bayt}
+        libraries_mecha-ticker-image_bayt: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image_bayt}
+        libraries_mecha-clock-image_bayt: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-clock-image_bayt}
+        libraries_mecha-compute-image_bayt: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image_bayt}
+        libraries_mecha-airlock-image_bayt: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image_bayt}
+        libraries_mecha-activepieces-image_bayt: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-activepieces-image_bayt}
+        libraries_mecha-database-image_srcs: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image_srcs}
+        libraries_mecha-extensions-image_srcs: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-extensions-image_srcs}
+        libraries_mecha-mesh-image_srcs: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image_srcs}
+        libraries_mecha-auth-image_srcs: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image_srcs}
+        libraries_mecha-ticker-image_srcs: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image_srcs}
+        libraries_mecha-clock-image_srcs: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-clock-image_srcs}
+        libraries_mecha-compute-image_srcs: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image_srcs}
+        libraries_mecha-airlock-image_srcs: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image_srcs}
+        libraries_mecha-activepieces-image_srcs: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-activepieces-image_srcs}
+        plugins_omnishell-runtime-image_srcs: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image_srcs}
+        plugins_omnishell-runtime-image_bayt: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image_bayt}
+        workspaceroot-pronto-sources_bayt: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223}${MONOREPO_COMPOSE_MODE:+:workspaceroot-pronto-sources_bayt}
+      context: ..
+      dockerfile: .bayt/Dockerfile.ci-statistics-live
+      secrets:
+      - docker_host
+      - buildx_builder
+      - buildx_instance
+      - docker_config
+      - testcontainers_host
+      - cache_scope
+      - cache_scope_fallback
+      - sayt_buildkit_syntax
+      - sayt_no_cache
+      - bayt_image_tag
+      - bayt_pull_policy
+      - sayt_no_cache_from
+      - sayt_no_cache_to
+      - depot_token
+      - depot_project_id
+      - depot_org_id
+      - depot_disable_otel
+      - actions_results_url
+      - actions_runtime_token
+      - bkid_project
+      target: ci-statistics-live
+      tags:
+      - bayt-golaberto-ci-statistics-live:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-golaberto-ci-statistics-live:latest
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+        MONOREPO_COMPOSE_MODE: ${MONOREPO_COMPOSE_MODE:-}
+        BAYT_RUNTIME: ${BAYT_RUNTIME:-}
+    image: bayt-golaberto-ci-statistics-live:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    secrets:
+    - docker_host
+    - buildx_builder
+    - buildx_instance
+    - docker_config
+    - testcontainers_host
+    - cache_scope
+    - cache_scope_fallback
+    - sayt_buildkit_syntax
+    - sayt_no_cache
+    - bayt_image_tag
+    - bayt_pull_policy
+    - sayt_no_cache_from
+    - sayt_no_cache_to
+    - depot_token
+    - depot_project_id
+    - depot_org_id
+    - depot_disable_otel
+    - actions_results_url
+    - actions_runtime_token
+    - bkid_project
+  golaberto-ci-statistics-live_bayt:
+    build:
+      additional_contexts:
+        golaberto-check-statistics-live_bayt: service:golaberto-check-statistics-live_bayt
+        golaberto-sofascore_bayt: service:golaberto-sofascore_bayt
+        golaberto-sofascore-appliance_bayt: service:golaberto-sofascore-appliance_bayt
+        golaberto-caddy_bayt: service:golaberto-caddy_bayt
+        golaberto-served_bayt: service:golaberto-served_bayt
+        golaberto-served-release_bayt: service:golaberto-served-release_bayt
+        golaberto-render_bayt: service:golaberto-render_bayt
+        golaberto-rclone-s3_bayt: service:golaberto-rclone-s3_bayt
+        golaberto-database_bayt: service:golaberto-database_bayt
+        golaberto-migrate_bayt: service:golaberto-migrate_bayt
+        golaberto-conduit_bayt: service:golaberto-conduit_bayt
+        golaberto-transform_bayt: service:golaberto-transform_bayt
+        golaberto-compute_bayt: service:golaberto-compute_bayt
+        golaberto-airlock_bayt: service:golaberto-airlock_bayt
+        golaberto-airlock-mesh_bayt: service:golaberto-airlock-mesh_bayt
+        golaberto-browser_bayt: service:golaberto-browser_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.ci-statistics-live
+      target: ci-statistics-live_bayt
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    image: bayt-golaberto-ci-statistics-live_bayt:latest
+    scale: 0

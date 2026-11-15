@@ -312,6 +312,7 @@ CREATE TABLE IF NOT EXISTS game (
   "slug" text DEFAULT '' NOT NULL UNIQUE CHECK (slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'),
   "created_by" uuid REFERENCES app_user(id) ON DELETE CASCADE,
   "updated_by" uuid REFERENCES app_user(id) ON DELETE CASCADE,
+  "sync_status" text CHECK (sync_status IN ('scheduled', 'in_progress', 'finished', 'postponed', 'cancelled', 'abandoned', 'awarded', 'unknown')),
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL,
   CHECK (home_id <> away_id AND played = (home_score IS NOT NULL AND away_score IS NOT NULL) AND (home_score IS NOT NULL) = (away_score IS NOT NULL) AND (home_aet IS NOT NULL) = (away_aet IS NOT NULL) AND (home_pen IS NOT NULL) = (away_pen IS NOT NULL) AND ((home_aet IS NOT NULL) = false OR played) AND ((home_pen IS NOT NULL) = false OR played))
@@ -328,6 +329,9 @@ CREATE TABLE IF NOT EXISTS goal (
   "aet" boolean DEFAULT false NOT NULL,
   "created_by" uuid REFERENCES app_user(id) ON DELETE CASCADE,
   "updated_by" uuid REFERENCES app_user(id) ON DELETE CASCADE,
+  "period" text,
+  "added_time" integer CHECK (added_time >= 0),
+  "source_order" integer CHECK (source_order >= 0),
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL,
   CHECK (penalty = false OR own_goal = false)
@@ -591,6 +595,7 @@ CREATE TABLE IF NOT EXISTS team_game (
   "category_id" uuid REFERENCES category(id) ON DELETE CASCADE,
   "phase_key" text NOT NULL,
   "category_key" text NOT NULL,
+  "fixture_available" boolean DEFAULT true NOT NULL,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
@@ -840,6 +845,30 @@ CREATE TABLE IF NOT EXISTS match_probability (
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS sofa_resource_seat (
+  "id" TEXT PRIMARY KEY CHECK (char_length(id) <= 64),
+  "instance_id" uuid NOT NULL,
+  "actor" uuid NOT NULL,
+  "seat" TEXT NOT NULL CHECK (char_length(seat) <= 16),
+  "revision" BIGINT NOT NULL,
+  "phase" TEXT NOT NULL CHECK (char_length(phase) <= 16),
+  "view" json NOT NULL CONSTRAINT "sofa_resource_seat_view_type" CHECK ("view" IS NULL OR public.portable_json_valid("view") IS TRUE) CHECK (public.portable_shape_valid(view, '{"kind":"object","fields":{"checks":{"kind":"integer","intMin":0,"intMax":1000000},"complete":{"kind":"boolean"},"complete_checks":{"kind":"integer","intMin":0,"intMax":1000000},"due":{"kind":"integer","intMin":0,"intMax":9007199254740991},"failures":{"kind":"integer","intMin":0,"intMax":1000000},"family":{"kind":"string","enumValues":["rounds","round","event","lineups","incidents"]},"phase":{"kind":"string","enumValues":["due","acquiring","idle","backoff","review","done","answered","refused"]},"settled":{"kind":"boolean"},"status":{"kind":"integer","intMin":0,"intMax":999}}}'::jsonb)),
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('user:' || "actor") STORED NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS sofa_provider_seat (
+  "id" TEXT PRIMARY KEY CHECK (char_length(id) <= 64),
+  "instance_id" uuid NOT NULL,
+  "actor" uuid NOT NULL,
+  "seat" TEXT NOT NULL CHECK (char_length(seat) <= 16),
+  "revision" BIGINT NOT NULL,
+  "phase" TEXT NOT NULL CHECK (char_length(phase) <= 16),
+  "view" json NOT NULL CONSTRAINT "sofa_provider_seat_view_type" CHECK ("view" IS NULL OR public.portable_json_valid("view") IS TRUE) CHECK (public.portable_shape_valid(view, '{"kind":"object","fields":{"phase":{"kind":"string","enumValues":["open","paused","blocked","judged"]},"reason":{"kind":"string","sizeMax":32},"until":{"kind":"integer","intMin":0,"intMax":9007199254740991}}}'::jsonb)),
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('user:' || "actor") STORED NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS user_directory (
   "id" uuid PRIMARY KEY,
   "handle" text NOT NULL,
@@ -1041,6 +1070,7 @@ CREATE TABLE IF NOT EXISTS game_archive (
   "referee_name" text,
   "home_logo_key" text,
   "away_logo_key" text,
+  "fixture_available" boolean NOT NULL,
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );

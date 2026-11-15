@@ -3,6 +3,8 @@ services:
   golaberto-launch:
     build:
       additional_contexts:
+        golaberto-render: service:golaberto-render
+        golaberto-rclone-s3: service:golaberto-rclone-s3
         golaberto-caddy: service:golaberto-caddy
         golaberto-database: service:golaberto-database
         golaberto-crud: service:golaberto-crud
@@ -13,9 +15,8 @@ services:
         golaberto-transform: service:golaberto-transform
         golaberto-compute: service:golaberto-compute
         golaberto-auth: service:golaberto-auth
-        golaberto-rclone-s3: service:golaberto-rclone-s3
         golaberto-clock: service:golaberto-clock
-        golaberto-render: service:golaberto-render
+        golaberto-airlock: service:golaberto-airlock
       context: ..
       dockerfile: .bayt/Dockerfile.launch
       target: launch
@@ -27,6 +28,12 @@ services:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
     depends_on:
+      golaberto-render:
+        condition: service_healthy
+        restart: true
+      golaberto-rclone-s3:
+        condition: service_healthy
+        restart: true
       golaberto-caddy:
         condition: service_healthy
         restart: true
@@ -55,12 +62,9 @@ services:
         restart: true
       golaberto-auth:
         condition: service_started
-      golaberto-rclone-s3:
-        condition: service_healthy
-        restart: true
       golaberto-clock:
         condition: service_started
-      golaberto-render:
+      golaberto-airlock:
         condition: service_healthy
         restart: true
     healthcheck:
@@ -79,6 +83,9 @@ services:
   golaberto-launch_bayt:
     build:
       additional_contexts:
+        golaberto-build_bayt: service:golaberto-build_bayt
+        golaberto-render_bayt: service:golaberto-render_bayt
+        golaberto-rclone-s3_bayt: service:golaberto-rclone-s3_bayt
         golaberto-caddy_bayt: service:golaberto-caddy_bayt
         golaberto-database_bayt: service:golaberto-database_bayt
         golaberto-crud_bayt: service:golaberto-crud_bayt
@@ -89,9 +96,8 @@ services:
         golaberto-transform_bayt: service:golaberto-transform_bayt
         golaberto-compute_bayt: service:golaberto-compute_bayt
         golaberto-auth_bayt: service:golaberto-auth_bayt
-        golaberto-rclone-s3_bayt: service:golaberto-rclone-s3_bayt
         golaberto-clock_bayt: service:golaberto-clock_bayt
-        golaberto-render_bayt: service:golaberto-render_bayt
+        golaberto-airlock_bayt: service:golaberto-airlock_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.launch
       target: launch_bayt

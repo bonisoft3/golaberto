@@ -1,0 +1,48 @@
+/Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise where github:bonisoft3/pronto
+/Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise where github:bonisoft3/mecha
+/Users/davi/Library/Caches/sayt/mise-v2026.8.11/mise exec -- deno test --config /Users/davi/code/trash/.worktrees/duckstream/apps/golaberto/../../libraries/mecha/services/compute/deno.json --frozen --permit-no-files --unstable-worker-options --allow-read --allow-ffi --allow-env computations
+Check computations/tests/chances_test.ts
+Check computations/tests/odds_wasm_test.ts
+Check computations/tests/ratings_output_test.ts
+Check computations/tests/ratings_test.ts
+running 18 tests from ./computations/tests/chances_test.ts
+powers follow Rails' Game#home_power ... ok (5ms)
+powers floor the scale and clamp ... ok (489µs)
+the request is Rails' Group#odds ... ok (122ms)
+sparse zones aggregate only their exact positions ... ok (2ms)
+zones beyond current membership stay impossible without stopping other groups ...Check ../../libraries/mecha/services/compute/job.ts
+Check ../../libraries/mecha/services/compute/cage.ts
+ ok (704ms)
+powers read the latest rating before the game, in f32 ... ok (123ms)
+the sinks hold the estimate ... ok (276ms)
+rank, points and played are the standing's ... ok (277µs)
+rank follows the standings' ladder, not points ... ok (280ms)
+a group the standing does not rank has no chances ... ok (481ms)
+a finished group is its final table ... ok (587µs)
+the last result turns the chances into the final table ... ok (243ms)
+a played game leaves the importance ... ok (262ms)
+game importance covers the games left ... ok (296µs)
+a cell that shows 0 says whether it can still be reached ... ok (189µs)
+a zero's reach is upstream's: an estimate under the cent or a witness is reachable, all proofs impossible, else undecided ... ok (936µs)
+an answer without a cell's reachability fails the run ... ok (216µs)
+a seed is an answer ... ok (273ms)
+running 6 tests from ./computations/tests/odds_wasm_test.ts
+spi matches the Go oracle ... ok (15ms)
+eval matches the Go oracle ... ok (64ms)
+historic rows, upserted as the service persists them, match the Go oracle ... ok (84ms)
+player ratings reproduce the stats service's frozen f32 bits ... ok (7ms)
+odds is the native binary's response at the same seed ... ok (102ms)
+odds game importance is the native binary's at the same seed ... ok (55ms)
+running 2 tests from ./computations/tests/ratings_output_test.ts
+current player components retain unsquashed per90 values and player identity ... ok (751µs)
+zero observed contribution remains zero while unplayed players stay absent ... ok (118µs)
+running 7 tests from ./computations/tests/ratings_test.ts
+team ratings are the persisted historic series ... ok (271ms)
+player ratings cover who played and only them ... ok (447µs)
+an evaluation per professional phase ... ok (93µs)
+ratings are a function of the lake, not the seed ... ok (233ms)
+no professional game, no rows ... ok (202ms)
+the chances price games with the ratings ... ok (150ms)
+windows count calendar years ... ok (114ms)
+
+ok | 33 passed | 0 failed (4s)

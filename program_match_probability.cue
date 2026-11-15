@@ -2,7 +2,11 @@
 
 package golaberto
 
-import "strings"
+import (
+	"strings"
+
+	pronto "github.com/bonisoft3/pronto"
+)
 
 _matchProbabilitySql:     string @embed(file="services/database/sql/039_match_probability.sql", type=text)
 _matchProbabilityUpgrade: strings.Replace(strings.Replace(_matchProbabilitySql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
@@ -32,7 +36,7 @@ code: state: entities: {
 			{ordinal: 2, name: "state", type: "string", default: "'ready'", cel: "this == 'ready'"},
 			{ordinal: 3, name: "minute", type: "string", default: "'0'", cel: "this == '' || this.matches('^(0|[1-9]|[1-9][0-9]|1[0-2][0-9]|130)$')"},
 			{ordinal: 4, name: "added_time", type: "string", default: "'5'", cel: "this == '' || this.matches('^(0|[1-9]|[1-3][0-9]|40)$')"},
-			{ordinal: 5, name: "event_sequence", type: "int32", default: "0", cel: "this >= 0"},
+			{ordinal: 5, name: "event_sequence", type: "int32", default: "0", cel: "this >= 0 && this < 2147483647"},
 			{ordinal: 6, name: "next_event_id", type: "string", default: "''", cel: "this.size() <= 80"},
 			{ordinal: 7, name: "event_count", type: "int32", default: "0", cel: "this >= 0 && this <= 20"},
 			{ordinal: 8, name: "events_json", type: "string", default: "'[]'", cel: "this.size() <= 4000"},
@@ -90,7 +94,7 @@ code: state: migrations: "039_match_probability": {
 
 loop: surface: checks: "match-probability-renderer": {
 	verb: "test"
-	cmds: ["mise exec -- deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-read --allow-env tests/match-probability-renderer.ts tests/match-probability-events.ts"]
+	cmds: ["\(pronto.#Harness.rule); mise exec -- deno test \(pronto.#Harness.flags) --allow-read --allow-env tests/match-probability-renderer.ts tests/match-probability-events.ts"]
 	note: "Rails probability vectors, individually editable scenarios and accessible Jessie SVG output stay pure and bounded"
 }
 

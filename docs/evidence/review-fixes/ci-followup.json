@@ -1,0 +1,82 @@
+{
+  "date": "2026-10-24",
+  "scope": "compiler test configuration, native startup grace and homepage readiness",
+  "gates": [
+    {
+      "command": "just sayt -d plugins/pronto test",
+      "environment": "pinned Deno 2.9.7, SAYT_VERBOSITY=verbose, isolated BAYT_CACHE_DIR, trusted worktree",
+      "exit": 0
+    },
+    {
+      "command": "just sayt -d plugins/pronto lint",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- deno test --no-config --no-lock --allow-read --allow-run=cue cluster_test.ts",
+      "cwd": "libraries/mecha",
+      "exit": 0,
+      "passed": 42
+    },
+    {
+      "command": "mise exec -- task test:browser",
+      "cwd": "libraries/mecha",
+      "exit": 0,
+      "passed": 2,
+      "steps": 16
+    },
+    {
+      "command": "just sayt -d apps/golaberto --script task-leaf.nu generate",
+      "exit": 0
+    },
+    {
+      "command": "mise exec -- deno test -A native-feldera_test.ts",
+      "cwd": "libraries/mecha/services/compute",
+      "exit": 0,
+      "passed": 4,
+      "ignored": 1,
+      "coverage": "fake-clock public initialization: late compile success, bounded timeout, shorter deployment deadline, immediate terminal error"
+    },
+    {
+      "command": "just sayt -d plugins/pronto integrate --bake --no-up --target build",
+      "exit": 0
+    },
+    {
+      "command": "just sayt -d plugins/omnishell lint",
+      "exit": 0
+    },
+    {
+      "command": "just sayt -d apps/golaberto integrate --bake --no-up --target ci-acceptance",
+      "exit": 0,
+      "revision": "2d56e9cd0"
+    }
+  ],
+  "priorFailures": [
+    "Missing authorization-test imports in compiler type-check; fixed with pinned mappings and lockfile.",
+    "Checkout-only authorization helper classified as installed code; corrected classification and fixture assertion.",
+    "Deno npm workspace discovery conflicted with browser import map; tests now use no-config and explicit import-map.",
+    "Computed relationship permission test expected500 instead of403; corrected expectation.",
+    "Golaberto first optimized Rust compilation took559.55s and second was still compiling when shared15m startup grace expired.",
+    "Consumer build image lacks Mecha sources; checkout-only authorization integration test excluded from image check but retained in checkout-wide check.",
+    "Plausible optimized Rust compilation exceeded the 10-minute runtime compile deadline; compilation now has a separate 20-minute deadline."
+  ],
+  "remoteStatus": "2d56e9cd0: all applicable CI checks passed, including Golaberto full integration and Windows bootstrap. origin/main merge requires a fresh run.",
+  "runtimeChange": "Optimized compilation has a 20-minute deadline; Running/Stopped retain 10 minutes. Native health grace is 30 minutes per sequential computation; snapshot grace remains 15 minutes. Actual readiness and computation semantics unchanged.",
+  "homepageRegression": {
+    "cause": "The last top-level list to settle overwrote the screen state, even when other lists contained rows.",
+    "fix": "Derive list-owned screen state from all populated top-level lists.",
+    "before": "Three regression failures reproduced.",
+    "after": "10 focused suites / 35 steps and 10 interpreter smoke tests passed.",
+    "integration": "just sayt -d apps/golaberto integrate --bake --no-up --target ci-acceptance: exit 0 on 2d56e9cd0."
+  },
+  "mergeValidation": {
+    "base": "44ed2d35b",
+    "gates": [
+      "Both app generations: exit 0",
+      "Pronto lint and full test: exit 0",
+      "Kubernetes release tests: exit 0",
+      "Homepage/state-owner regressions: 2 suites, 8 steps passed",
+      "Cloudflare merge checks: 28 focused and 25 bundle/reducer tests passed",
+      "Real computation Workers integration with pinned mise: 1 passed"
+    ]
+  }
+}

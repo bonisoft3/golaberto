@@ -17,9 +17,11 @@
   },
   "dockerfile": {
     "preamble": [
-      "COPY --from=bonitao/lazybox:0.8.5@sha256:091a3b63ba222777000acc3bf8327faebfea4870e23ee07c6eb42431dadb2ac6 /lazybox/ /root/.local/share/lazybox/",
+      "COPY --from=bonitao/lazybox:0.8.6@sha256:0f30c48513fac757f844f02c864802991dec045f9c4189e3db2ae4ac297544df /lazybox/ /root/.local/share/lazybox/",
       "ENV PATH=/root/.local/bin:/root/.local/share/lazybox/bin:$PATH",
-      "ENV MISE_TRUSTED_CONFIG_PATHS=/monorepo"
+      "ENV MISE_TRUSTED_CONFIG_PATHS=/monorepo",
+      "ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright",
+      "ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1"
     ],
     "preambleCopyContexts": [],
     "from": {
@@ -31,7 +33,11 @@
     "extra_hosts": [],
     "epilogue": [
       "COPY --from=workspaceroot-pronto-sources_srcs /monorep[o] /monorepo/",
-      "COPY [m]ise.local.toml ./",
+      {
+        "srcs": [
+          "[m]ise.local.toml"
+        ]
+      },
       "RUN mise install"
     ],
     "copy": [],
@@ -138,7 +144,8 @@
           "[m]ise.toml",
           "[.]mise.toml",
           "[m]ise.lock",
-          "[.]tool-versions"
+          "[.]tool-versions",
+          "[m]ise.local.toml"
         ],
         "exclude": []
       },
@@ -160,7 +167,7 @@
   },
   "taskfile": {
     "run": "when_changed",
-    "incremental": true,
+    "incremental": false,
     "preconditions": []
   },
   "visibility": "internal",
@@ -186,6 +193,7 @@
         "defaultGlobs": null,
         "defaultExclude": null
       },
+      "name": "builtin",
       "do": "mise install",
       "dockerfile": {
         "do": "d=/root/.local/share/mise/downloads; s=/mise-tarball-store; mkdir -p \"$d\" \"$s\"; cp -r \"$s\"/. \"$d\"/ 2>/dev/null || true; mise install || exit; cd \"$d\" && for f in */*/*; do [ -f \"$f\" ] || continue; o=\"$s/$f\"; [ -e \"$o\" ] && continue; mkdir -p \"$(dirname \"$o\")\"; t=\"$(mktemp \"$(dirname \"$o\")/.pXXXXXX\")\" && cp \"$f\" \"$t\" && mv -f \"$t\" \"$o\"; done; :",
@@ -205,8 +213,20 @@
         ],
         "shell": "sh"
       },
-      "name": "builtin",
       "shell": "exec",
+      "stop": false
+    },
+    {
+      "srcs": {
+        "globs": [],
+        "exclude": [],
+        "defaultGlobs": null,
+        "defaultExclude": null
+      },
+      "name": "playwright",
+      "shell": "nu",
+      "dockerfile": null,
+      "do": "let os = (match $nu.os-info.name { \"macos\" => \"macos\", \"windows\" => \"windows\", _ => \"linux\" })\nlet home = ($env.HOME? | default ($env.USERPROFILE? | default ('~' | path expand)))\nlet default_pw = (match $os {\n  \"macos\" => ($home | path join \"Library/Caches/ms-playwright\")\n  \"windows\" => (($env.LOCALAPPDATA? | default ($home | path join \"AppData/Local\")) | path join \"ms-playwright\")\n  _ => ($home | path join \".cache/ms-playwright\")\n})\nlet pw_dir = (if (($env.PLAYWRIGHT_BROWSERS_PATH? | default \"\") != \"\") { $env.PLAYWRIGHT_BROWSERS_PATH } else { $default_pw })\nmkdir $pw_dir\nlet marker = ($pw_dir | path join \".playwright-chromium-1.61.1\")\nlet has_chromium = ((glob ($pw_dir | path join \"chromium-*\" | str replace -a (char -u 5c) \"/\") | length) > 0)\nif (not ($marker | path exists)) or (not $has_chromium) {\n  if $os == \"linux\" {\n    ^mise x -- deno run -A --node-modules-dir=none npm:playwright@1.61.1 install --with-deps chromium\n  } else {\n    ^mise x -- deno run -A --node-modules-dir=none npm:playwright@1.61.1 install chromium\n  }\n  \"\" | save -f $marker\n}\nlet omnishell = (if (($env.OMNISHELL_DIR? | default \"\") != \"\") { $env.OMNISHELL_DIR } else { (^mise where github:bonisoft3/omnishell | str trim) })\nlet check_visual = ($omnishell | path join \"check-visual.ts\")\nlet nm_marker = ($omnishell | path join \"node_modules/.omnishell-visual-nm-v1\")\nif ($check_visual | path exists) and (not ($nm_marker | path exists)) {\n  let deno_bin = (which deno | get 0.path)\n  do { cd $omnishell; ^$deno_bin install --node-modules-dir=auto --entrypoint $check_visual }\n  \"\" | save -f $nm_marker\n}",
       "stop": false
     }
   ],

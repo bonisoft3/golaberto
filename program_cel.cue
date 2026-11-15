@@ -368,6 +368,7 @@ code: state: entities: {
 			away_pen?: >=0 & <100
 			attendance?: >=0 & <=250000
 			slug?: =~ "^[a-z0-9]+(-[a-z0-9]+)*$"
+			sync_status?: ("scheduled" | "in_progress" | "finished" | "postponed" | "cancelled" | "abandoned" | "awarded" | "unknown")
 		}]
 		cel: {
 			checks: {
@@ -381,9 +382,11 @@ code: state: entities: {
 				away_pen: "away_pen >= 0 AND away_pen < 100"
 				attendance: "attendance >= 0 AND attendance <= 250000"
 				slug: "slug ~ '^[a-z0-9]+(-[a-z0-9]+)*$'"
+				sync_status: "sync_status IN ('scheduled', 'in_progress', 'finished', 'postponed', 'cancelled', 'abandoned', 'awarded', 'unknown')"
 			}
 			enums: {
 				home_field: ["left","neutral","right"]
+				sync_status: ["scheduled","in_progress","finished","postponed","cancelled","abandoned","awarded","unknown"]
 			}
 			bounds: {
 				round: {intMin: 1}
@@ -403,17 +406,23 @@ code: state: entities: {
 		seed: [...{
 			side?: ("home" | "away")
 			minute?: >=0 & <=130
+			added_time?: >=0
+			source_order?: >=0
 		}]
 		cel: {
 			checks: {
 				side: "side IN ('home', 'away')"
 				minute: "minute >= 0 AND minute <= 130"
+				added_time: "added_time >= 0"
+				source_order: "source_order >= 0"
 			}
 			enums: {
 				side: ["home","away"]
 			}
 			bounds: {
 				minute: {intMin: 0, intMax: 130}
+				added_time: {intMin: 0}
+				source_order: {intMin: 0}
 			}
 		}
 	}
@@ -1206,7 +1215,7 @@ code: state: entities: {
 			state?: "ready"
 			minute?: ("" | =~ "^(0|[1-9]|[1-9][0-9]|1[0-2][0-9]|130)$")
 			added_time?: ("" | =~ "^(0|[1-9]|[1-3][0-9]|40)$")
-			event_sequence?: >=0
+			event_sequence?: >=0 & <2147483647
 			next_event_id?: strings.MaxRunes(80)
 			event_count?: >=0 & <=20
 			events_json?: strings.MaxRunes(4000)
@@ -1216,7 +1225,7 @@ code: state: entities: {
 				state: ["ready"]
 			}
 			bounds: {
-				event_sequence: {intMin: 0}
+				event_sequence: {intMin: 0, intMax: 2147483646}
 				next_event_id: {sizeMax: 80}
 				event_count: {intMin: 0, intMax: 20}
 				events_json: {sizeMax: 4000}
@@ -1270,6 +1279,88 @@ code: state: entities: {
 				position_last: {intMin: 0, intMax: 10000}
 				range_from: {sizeMax: 12}
 				range_to: {sizeMax: 12}
+			}
+		}
+	}
+	Substitution: {
+		invariant: check: "player_off_id <> player_on_id"
+		seed: [...{
+			side?: ("home" | "away")
+			minute?: >=0 & <=130
+			added_time?: >=0
+			source_order?: >=0
+		}]
+		cel: {
+			checks: {
+				side: "side IN ('home', 'away')"
+				minute: "minute >= 0 AND minute <= 130"
+				added_time: "added_time >= 0"
+				source_order: "source_order >= 0"
+			}
+			enums: {
+				side: ["home","away"]
+			}
+			bounds: {
+				minute: {intMin: 0, intMax: 130}
+				added_time: {intMin: 0}
+				source_order: {intMin: 0}
+			}
+		}
+	}
+	SofaRequest: {
+		seed: [...{
+			seq?: >0
+		}]
+		cel: {
+			checks: {
+				seq: "seq > 0"
+			}
+			bounds: {
+				seq: {intMin: 1}
+			}
+		}
+	}
+	SofaResourceSeat: {
+		seed: [...{
+			id?: strings.MaxRunes(64)
+			seat?: strings.MaxRunes(16)
+			phase?: strings.MaxRunes(16)
+			view?: close({checks: int & >=0 & <=1000000, complete: bool, complete_checks: int & >=0 & <=1000000, due: int & >=0 & <=9007199254740991, failures: int & >=0 & <=1000000, family: ("rounds" | "round" | "event" | "lineups" | "incidents"), phase: ("due" | "acquiring" | "idle" | "backoff" | "review" | "done" | "answered" | "refused"), settled: bool, status: int & >=0 & <=999})
+		}]
+		cel: {
+			checks: {
+				id: "char_length(id) <= 64"
+				seat: "char_length(seat) <= 16"
+				phase: "char_length(phase) <= 16"
+				view: "public.portable_shape_valid(view, '{\"kind\":\"object\",\"fields\":{\"checks\":{\"kind\":\"integer\",\"intMin\":0,\"intMax\":1000000},\"complete\":{\"kind\":\"boolean\"},\"complete_checks\":{\"kind\":\"integer\",\"intMin\":0,\"intMax\":1000000},\"due\":{\"kind\":\"integer\",\"intMin\":0,\"intMax\":9007199254740991},\"failures\":{\"kind\":\"integer\",\"intMin\":0,\"intMax\":1000000},\"family\":{\"kind\":\"string\",\"enumValues\":[\"rounds\",\"round\",\"event\",\"lineups\",\"incidents\"]},\"phase\":{\"kind\":\"string\",\"enumValues\":[\"due\",\"acquiring\",\"idle\",\"backoff\",\"review\",\"done\",\"answered\",\"refused\"]},\"settled\":{\"kind\":\"boolean\"},\"status\":{\"kind\":\"integer\",\"intMin\":0,\"intMax\":999}}}'::jsonb)"
+			}
+			bounds: {
+				id: {sizeMax: 64}
+				seat: {sizeMax: 16}
+				phase: {sizeMax: 16}
+				view: {kind: "object", fields: {"checks":{"kind":"integer","intMin":0,"intMax":1000000},"complete":{"kind":"boolean"},"complete_checks":{"kind":"integer","intMin":0,"intMax":1000000},"due":{"kind":"integer","intMin":0,"intMax":9007199254740991},"failures":{"kind":"integer","intMin":0,"intMax":1000000},"family":{"kind":"string","enumValues":["rounds","round","event","lineups","incidents"]},"phase":{"kind":"string","enumValues":["due","acquiring","idle","backoff","review","done","answered","refused"]},"settled":{"kind":"boolean"},"status":{"kind":"integer","intMin":0,"intMax":999}}}
+			}
+		}
+	}
+	SofaProviderSeat: {
+		seed: [...{
+			id?: strings.MaxRunes(64)
+			seat?: strings.MaxRunes(16)
+			phase?: strings.MaxRunes(16)
+			view?: close({phase: ("open" | "paused" | "blocked" | "judged"), reason: strings.MaxRunes(32), until: int & >=0 & <=9007199254740991})
+		}]
+		cel: {
+			checks: {
+				id: "char_length(id) <= 64"
+				seat: "char_length(seat) <= 16"
+				phase: "char_length(phase) <= 16"
+				view: "public.portable_shape_valid(view, '{\"kind\":\"object\",\"fields\":{\"phase\":{\"kind\":\"string\",\"enumValues\":[\"open\",\"paused\",\"blocked\",\"judged\"]},\"reason\":{\"kind\":\"string\",\"sizeMax\":32},\"until\":{\"kind\":\"integer\",\"intMin\":0,\"intMax\":9007199254740991}}}'::jsonb)"
+			}
+			bounds: {
+				id: {sizeMax: 64}
+				seat: {sizeMax: 16}
+				phase: {sizeMax: 16}
+				view: {kind: "object", fields: {"phase":{"kind":"string","enumValues":["open","paused","blocked","judged"]},"reason":{"kind":"string","sizeMax":32},"until":{"kind":"integer","intMin":0,"intMax":9007199254740991}}}
 			}
 		}
 	}

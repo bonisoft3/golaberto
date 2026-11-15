@@ -13,7 +13,25 @@
   </nav>
 </header>
 <div data-live="player_stat" data-select="*,player!inner(full_name,slug),team!inner(slug,logo_key),championship!inner(slug,season,category_id,begins)" data-filter="player.slug=eq.{param.slug}&team.slug=eq.{param.team}&championship.slug=eq.{param.championship}&limit=1" data-empty="{msg.player_scope_gone}" data-exit-motion="none"><template data-item><article>
-  <h1 class="band" data-text="{player_name}"></h1><div class="page"><div class="content">
+  <h1 class="band" data-text="{player_name}"></h1><div class="page page-with-local-nav">
+  <aside class="side local-side">
+  <div class="local-nav-stack">
+<nav class="local-navigation" aria-label="{msg.local_championship}">
+  <h2 data-text="{msg.local_championship}"></h2>
+  <div class="local-links">
+<a data-route="campeonato" data-param-slug="{param.championship}" data-text="{msg.team_table}"></a>
+<a data-route="arquivo-campeonato" data-param-slug="{param.championship}" data-text="{msg.games_title}"></a>
+<a data-route="campeonato-jogadores" data-param-slug="{param.championship}" data-text="{msg.players_title}"></a>
+<a data-route="publico" data-param-slug="{param.championship}" data-text="{msg.archive_attendance_title}"></a>
+  </div>
+</nav>
+
+    <p class="local-back"><a data-route="campeonatos" data-text="{msg.back_catalog}"></a></p>
+    <p class="local-about" data-text="{msg.about}"></p>
+  </div>
+</aside>
+  <div class="content">
+    <p><a class="btn-quiet" data-route="jogador" data-param-slug="{player.slug}" data-text="{msg.player_profile}"></a></p>
     <h2><a data-route="equipe-campeonato" data-param-slug="{team.slug}" data-param-championship="{championship.slug}" data-text="{team_name}"></a> · <a data-route="campeonato" data-param-slug="{championship.slug}"><span data-text="{championship_name}|{msg.geography_names}" data-text-format="geography-label"></span></a></h2>
     <div class="table-wrap"><table class="grid squad-table"><thead><tr><th scope="col" class="num"><abbr title="{msg.col_pos_long}" data-text="{msg.col_pos}"></abbr></th><th scope="col" class="num"><abbr title="{msg.col_played_long}" data-text="{msg.col_played}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_started_long}" data-text="{msg.col_started}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_came_on_long}" data-text="{msg.col_came_on}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_bench_long}" data-text="{msg.col_bench}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_minutes_long}" data-text="{msg.col_minutes}"></abbr></th><th scope="col" class="num"><abbr title="{msg.col_goals_long}" data-text="{msg.col_goals}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_goals_per90_long}" data-text="{msg.col_goals_per90}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_contribution_long}" data-text="{msg.col_contribution}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_contribution_per90_long}" data-text="{msg.col_contribution_per90}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_off_rating_long}" data-text="{msg.col_off_rating}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_def_rating_long}" data-text="{msg.col_def_rating}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_penalties_long}" data-text="{msg.col_penalties}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_own_goals_long}" data-text="{msg.col_own_goals}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_yellow_long}" data-text="{msg.col_yellow}"></abbr></th><th scope="col" class="num wide"><abbr title="{msg.col_red_long}" data-text="{msg.col_red}"></abbr></th></tr></thead><tbody><tr><td class="num" data-text="{position}|{msg.player_positions}" data-text-format="player-position"></td><td class="num" data-text="{played}" data-text-format="number"></td><td class="num wide" data-text="{started}" data-text-format="number"></td><td class="num wide" data-text="{came_on}" data-text-format="number"></td><td class="num wide" data-text="{bench}" data-text-format="number"></td><td class="num wide" data-text="{minutes}" data-text-format="number"></td><td class="num" data-text="{goals}" data-text-format="number"></td><td class="num wide" data-text="{goals_per90}" data-text-format="number"></td><td class="num wide" data-text="{contribution}" data-text-format="number"></td><td class="num wide" data-text="{contribution_per90}" data-text-format="number"></td><td class="num wide" data-text="{off_rating}" data-text-format="number"></td><td class="num wide" data-text="{def_rating}" data-text-format="number"></td><td class="num wide" data-text="{penalties}" data-text-format="number"></td><td class="num wide" data-text="{own_goals}" data-text-format="number"></td><td class="num wide" data-text="{yellow}" data-text-format="number"></td><td class="num wide" data-text="{red}" data-text-format="number"></td></tr></tbody></table></div>
     <p data-text="{msg.team_contribution_note}"></p>
@@ -49,6 +67,6 @@
 </nav>
   </div>
 </div></section>
-  </div><aside class="side"><p><a data-route="jogador" data-param-slug="{player.slug}" data-text="{msg.player_profile}"></a></p><p><a data-route="campeonato-jogadores" data-param-slug="{championship.slug}" data-text="{msg.players_title}"></a></p><p data-text="{msg.about}"></p></aside></div>
+  </div></div>
 </article></template></div>
 </section>

@@ -186,6 +186,7 @@ message Game {
   optional string slug = 21 [json_name = "slug"];
   optional string created_by = 22 [json_name = "created_by"];
   optional string updated_by = 23 [json_name = "updated_by"];
+  optional string sync_status = 24 [json_name = "sync_status"];
 }
 
 message GameArchive {
@@ -231,6 +232,7 @@ message GameArchive {
   optional string referee_name = 40 [json_name = "referee_name"];
   optional string home_logo_key = 41 [json_name = "home_logo_key"];
   optional string away_logo_key = 42 [json_name = "away_logo_key"];
+  optional bool fixture_available = 43 [json_name = "fixture_available"];
 }
 
 message GameCard {
@@ -349,6 +351,9 @@ message Goal {
   optional bool aet = 8 [json_name = "aet"];
   optional string created_by = 9 [json_name = "created_by"];
   optional string updated_by = 10 [json_name = "updated_by"];
+  optional string period = 11 [json_name = "period"];
+  optional int32 added_time = 12 [json_name = "added_time"];
+  optional int32 source_order = 13 [json_name = "source_order"];
 }
 
 message Group {
@@ -810,6 +815,48 @@ message Referee {
   optional string updated_by = 8 [json_name = "updated_by"];
 }
 
+message SofaProviderSeat {
+  optional string id = 1 [json_name = "id"];
+  optional string instance_id = 2 [json_name = "instance_id"];
+  optional string actor = 3 [json_name = "actor"];
+  optional string seat = 4 [json_name = "seat"];
+  optional int64 revision = 5 [json_name = "revision"];
+  optional string phase = 6 [json_name = "phase"];
+  google.protobuf.Value view = 7 [json_name = "view"];
+}
+
+message SofaRequest {
+  optional string id = 1 [json_name = "id"];
+  optional string status = 2 [json_name = "status"];
+  optional string source_id = 3 [json_name = "source_id"];
+  optional string resource_id = 4 [json_name = "resource_id"];
+  optional string family = 5 [json_name = "family"];
+  optional string resource_key = 6 [json_name = "resource_key"];
+  optional string path = 7 [json_name = "path"];
+  optional int64 seq = 8 [json_name = "seq"];
+  optional string failure = 9 [json_name = "failure"];
+  google.protobuf.Timestamp admitted_at = 10 [json_name = "admitted_at"];
+  google.protobuf.Timestamp stuck_at = 11 [json_name = "stuck_at"];
+}
+
+message SofaResourceSeat {
+  optional string id = 1 [json_name = "id"];
+  optional string instance_id = 2 [json_name = "instance_id"];
+  optional string actor = 3 [json_name = "actor"];
+  optional string seat = 4 [json_name = "seat"];
+  optional int64 revision = 5 [json_name = "revision"];
+  optional string phase = 6 [json_name = "phase"];
+  google.protobuf.Value view = 7 [json_name = "view"];
+}
+
+message SofaTick {
+  optional string id = 1 [json_name = "id"];
+  optional string schedule = 2 [json_name = "schedule"];
+  google.protobuf.Timestamp tick_at = 3 [json_name = "tick_at"];
+  optional bool late = 4 [json_name = "late"];
+  optional string caller = 5 [json_name = "caller"];
+}
+
 message Stadium {
   optional string id = 1 [json_name = "id"];
   optional string name = 2 [json_name = "name"];
@@ -843,6 +890,18 @@ message Standing {
   optional string form4 = 17 [json_name = "form4"];
   optional string form5 = 18 [json_name = "form5"];
   optional string zone = 19 [json_name = "zone"];
+}
+
+message Substitution {
+  optional string id = 1 [json_name = "id"];
+  optional string game_id = 2 [json_name = "game_id"];
+  optional string player_off_id = 3 [json_name = "player_off_id"];
+  optional string player_on_id = 4 [json_name = "player_on_id"];
+  optional string side = 5 [json_name = "side"];
+  optional int32 minute = 6 [json_name = "minute"];
+  optional int32 added_time = 7 [json_name = "added_time"];
+  optional string period = 8 [json_name = "period"];
+  optional int32 source_order = 9 [json_name = "source_order"];
 }
 
 message Team {
@@ -968,6 +1027,7 @@ message TeamGame {
   optional string category_id = 19 [json_name = "category_id"];
   optional string phase_key = 20 [json_name = "phase_key"];
   optional string category_key = 21 [json_name = "category_key"];
+  optional bool fixture_available = 22 [json_name = "fixture_available"];
 }
 
 message TeamGroup {

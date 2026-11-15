@@ -1,0 +1,115 @@
+{
+ "e2e/910001/round/1": {
+  "status": 200,
+  "body": {
+   "events": [
+    {
+     "id": 910001,
+     "homeTeam": {
+      "id": 910011,
+      "name": "E2E home"
+     },
+     "awayTeam": {
+      "id": 910021,
+      "name": "E2E away"
+     },
+     "tournament": {
+      "id": 910031,
+      "uniqueTournament": {
+       "id": 910001
+      }
+     },
+     "season": {
+      "id": 1
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1793120400,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 2,
+      "current": 2
+     },
+     "awayScore": {
+      "normaltime": 1,
+      "current": 1
+     }
+    }
+   ]
+  }
+ },
+ "e2e/910002/round/1": {
+  "status": 200,
+  "body": {
+   "events": [
+    {
+     "id": 910002,
+     "homeTeam": {
+      "id": 910012,
+      "name": "E2E home"
+     },
+     "awayTeam": {
+      "id": 910022,
+      "name": "E2E away"
+     },
+     "tournament": {
+      "id": 910032,
+      "uniqueTournament": {
+       "id": 910002
+      }
+     },
+     "season": {
+      "id": 1
+     },
+     "roundInfo": {
+      "round": 1
+     },
+     "startTimestamp": 1793120400,
+     "status": {
+      "type": "finished"
+     },
+     "homeScore": {
+      "normaltime": 3,
+      "current": 3
+     },
+     "awayScore": {
+      "normaltime": 0,
+      "current": 0
+     }
+    }
+   ]
+  },
+  "redirects": [
+   {
+    "status": 301,
+    "url": "https://www.sofascore.com/api/v1/e2e/910002/round/1/moved"
+   },
+   {
+    "status": 302,
+    "url": "https://www.sofascore.com/api/v1/e2e/910002/round/1/final"
+   }
+  ]
+ },
+ "e2e/910003/round/1": {
+  "status": 200,
+  "body": "<html>not the provider's json</html>"
+ },
+ "e2e/910004/round/1": {
+  "status": 503,
+  "body": ""
+ },
+ "e2e/910005/round/1": {
+  "status": 200,
+  "body": "",
+  "error": "read response: connection closed",
+  "redirects": [
+   {
+    "status": 302,
+    "url": "https://www.sofascore.com/api/v1/e2e/910005/round/1/final"
+   }
+  ]
+ }
+}

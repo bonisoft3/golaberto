@@ -1,0 +1,10 @@
+{
+  "operations": [
+    {
+      "sql": {
+        "up": "UPDATE public.team_chance AS chance\nSET team_name = team.name\nFROM public.team AS team\nWHERE chance.team_id = team.id\n  AND chance.team_name IS DISTINCT FROM team.name;\n",
+        "onComplete": true
+      }
+    }
+  ]
+}

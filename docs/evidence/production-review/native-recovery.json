@@ -1,0 +1,288 @@
+{
+  "passed": true,
+  "at": "2026-10-25T01:46:00.111Z",
+  "wasmSha256": "6b9531fbaf8f846c01c619370607c81ae4f9d4dc3abaecb392936766e8cdf9c9",
+  "disk": {
+    "passed": true,
+    "databaseBytes": 170930176,
+    "payloadBytes": 320000000,
+    "pagedCapture": true,
+    "heaps": [
+      104529920,
+      104529920,
+      104529920,
+      104529920,
+      104529920
+    ],
+    "evidence": [
+      {
+        "sql": "SELECT count(*)::INTEGER n,sum(id)::DOUBLE total FROM (SELECT id FROM large ORDER BY k,id DESC) t",
+        "spillWrites": 223,
+        "heap": 104529920
+      },
+      {
+        "sql": "SELECT count(*)::INTEGER n,sum(a.id)::DOUBLE total FROM large a JOIN large b ON a.id=b.id",
+        "spillWrites": 588,
+        "heap": 104529920
+      },
+      {
+        "sql": "SELECT count(*)::INTEGER n,sum(id)::DOUBLE total FROM (SELECT id,count(*) c FROM large GROUP BY id) t",
+        "spillWrites": 156,
+        "heap": 104529920
+      }
+    ]
+  },
+  "raw": {
+    "first": {
+      "instance": "ff7914db-6dba-496d-8cda-6465f613d702",
+      "rows": [
+        {
+          "value": 42
+        }
+      ],
+      "files": [
+        {
+          "path": "/",
+          "size": 0
+        },
+        {
+          "path": "/database.duckdb",
+          "size": 12288
+        },
+        {
+          "path": "/database.duckdb.wal",
+          "size": 229
+        }
+      ]
+    },
+    "second": {
+      "instance": "069337a7-94a8-4527-9ed1-61bb9f065320",
+      "rows": [
+        {
+          "value": 42
+        },
+        {
+          "value": 42
+        }
+      ],
+      "files": [
+        {
+          "path": "/",
+          "size": 0
+        },
+        {
+          "path": "/database.duckdb",
+          "size": 12288
+        },
+        {
+          "path": "/database.duckdb.wal",
+          "size": 339
+        }
+      ]
+    },
+    "third": {
+      "instance": "faf71d2a-36c4-48c8-838b-7eb0da915e5a",
+      "rows": [
+        {
+          "value": 42
+        },
+        {
+          "value": 42
+        }
+      ],
+      "files": [
+        {
+          "path": "/",
+          "size": 0
+        },
+        {
+          "path": "/database.duckdb",
+          "size": 12288
+        },
+        {
+          "path": "/database.duckdb.wal",
+          "size": 339
+        }
+      ]
+    }
+  },
+  "rotation": {
+    "rotated": {
+      "instance": "8709902a-b7b3-4acf-9175-6d30edfcc35a",
+      "checkpoints": 9,
+      "heap": 29097984,
+      "rows": [
+        {
+          "n": 1024,
+          "total": 523776
+        }
+      ],
+      "files": [
+        {
+          "path": "/",
+          "size": 0
+        },
+        {
+          "path": "/database.duckdb",
+          "size": 2371584
+        },
+        {
+          "path": "/database.duckdb.wal",
+          "size": 66408
+        }
+      ]
+    },
+    "appended": {
+      "instance": "e597d78a-2cc8-487f-959d-020023a9dcc4",
+      "checkpoints": 0,
+      "heap": 20185088,
+      "rows": [
+        {
+          "n": 1025,
+          "total": 524800
+        }
+      ],
+      "files": [
+        {
+          "path": "/",
+          "size": 0
+        },
+        {
+          "path": "/database.duckdb",
+          "size": 2371584
+        },
+        {
+          "path": "/database.duckdb.wal",
+          "size": 67558
+        }
+      ]
+    },
+    "recovered": {
+      "instance": "c7e8b2d0-4b55-4d88-9454-6eeec4ff641a",
+      "checkpoints": 0,
+      "heap": 20185088,
+      "rows": [
+        {
+          "n": 1025,
+          "total": 524800
+        }
+      ],
+      "files": [
+        {
+          "path": "/",
+          "size": 0
+        },
+        {
+          "path": "/database.duckdb",
+          "size": 2371584
+        },
+        {
+          "path": "/database.duckdb.wal",
+          "size": 67558
+        }
+      ]
+    }
+  },
+  "execution": {
+    "first": {
+      "instance": "c5cf2ab2-d965-4e36-986f-1f192a1bb687",
+      "before": {
+        "revision": 1,
+        "checkpoint": {
+          "phase": 1
+        },
+        "done": false
+      },
+      "state": {
+        "revision": 1,
+        "checkpoint": {
+          "phase": 1
+        },
+        "done": false
+      }
+    },
+    "second": {
+      "instance": "57bd1168-b8bb-434d-915e-9e6c4943e642",
+      "before": {
+        "revision": 1,
+        "checkpoint": {
+          "phase": 1
+        },
+        "done": false
+      },
+      "state": {
+        "revision": 2,
+        "checkpoint": null,
+        "done": true
+      },
+      "duplicate": {
+        "revision": 2,
+        "checkpoint": null,
+        "done": true
+      },
+      "output": {
+        "after": 0,
+        "next": 2,
+        "done": true,
+        "rows": [
+          {
+            "id": "one",
+            "value": 2
+          },
+          {
+            "id": "two",
+            "value": 3
+          }
+        ]
+      },
+      "manifest": {
+        "sink": {
+          "rows": 2
+        }
+      },
+      "scratch": [
+        {
+          "value": 3
+        }
+      ]
+    },
+    "third": {
+      "instance": "c32d5629-66b3-4f68-8be0-0049c471bd56",
+      "before": {
+        "revision": 2,
+        "checkpoint": null,
+        "done": true
+      },
+      "state": {
+        "revision": 2,
+        "checkpoint": null,
+        "done": true
+      },
+      "output": {
+        "after": 0,
+        "next": 2,
+        "done": true,
+        "rows": [
+          {
+            "id": "one",
+            "value": 2
+          },
+          {
+            "id": "two",
+            "value": 3
+          }
+        ]
+      },
+      "manifest": {
+        "sink": {
+          "rows": 2
+        }
+      },
+      "scratch": [
+        {
+          "value": 3
+        }
+      ]
+    }
+  }
+}

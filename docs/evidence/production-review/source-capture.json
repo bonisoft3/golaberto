@@ -1,0 +1,530 @@
+{
+  "format": {
+    "version": 1,
+    "blockSize": 131072,
+    "codec": "deflate"
+  },
+  "baselineSqliteBytes": 2114514944,
+  "ratings": {
+    "before": {
+      "sqliteBytes": 2114514944,
+      "wasmHeapBytes": null,
+      "peakWasmHeapBytes": 0
+    },
+    "identity": {
+      "id": "[\"golaberto-ratings\",\"62ff82e72dcc3ab32390e7dbf082026a0e15facd56029f44aaa804d3c630dc54\",1]",
+      "name": "golaberto-ratings",
+      "version": "62ff82e72dcc3ab32390e7dbf082026a0e15facd56029f44aaa804d3c630dc54",
+      "revision": 1
+    },
+    "counts": {
+      "championship": 1514,
+      "game": 318970,
+      "goal": 225720,
+      "phase": 4368,
+      "player": 90867,
+      "player_game": 3290664,
+      "team": 3426
+    },
+    "relations": [
+      {
+        "source": "championship",
+        "rows": "1514",
+        "bytes": "524288"
+      },
+      {
+        "source": "game",
+        "rows": "318970",
+        "bytes": "75948032"
+      },
+      {
+        "source": "goal",
+        "rows": "225720",
+        "bytes": "33579008"
+      },
+      {
+        "source": "phase",
+        "rows": "4368",
+        "bytes": "778240"
+      },
+      {
+        "source": "player",
+        "rows": "90867",
+        "bytes": "14737408"
+      },
+      {
+        "source": "player_game",
+        "rows": "3290664",
+        "bytes": "595525632"
+      },
+      {
+        "source": "team",
+        "rows": "3426",
+        "bytes": "892928"
+      }
+    ],
+    "sqliteBytes": 2414129152,
+    "wasmHeapBytes": 64225280,
+    "peakWasmHeapBytes": 64225280,
+    "hostWallMilliseconds": 147992
+  },
+  "chancesBaseline": [
+    {
+      "status": 200,
+      "body": {
+        "identity": {
+          "id": "[\"golaberto-chances\",\"c63d47d96458e7facd57bdf03910a3d02110a8cb04af678580a6cf8836556d77\",1]",
+          "name": "golaberto-chances",
+          "version": "c63d47d96458e7facd57bdf03910a3d02110a8cb04af678580a6cf8836556d77",
+          "revision": 1
+        },
+        "counts": {
+          "championship": 1514,
+          "game": 318970,
+          "phase": 4368,
+          "stage_group": 15566,
+          "standing": 58440,
+          "team": 3426,
+          "team_group": 58440,
+          "team_rating": 8195365,
+          "zone": 16379
+        },
+        "relations": [
+          {
+            "source": "championship",
+            "rows": "1514",
+            "bytes": "524288"
+          },
+          {
+            "source": "game",
+            "rows": "318970",
+            "bytes": "75948032"
+          },
+          {
+            "source": "phase",
+            "rows": "4368",
+            "bytes": "778240"
+          },
+          {
+            "source": "stage_group",
+            "rows": "15566",
+            "bytes": "2932736"
+          },
+          {
+            "source": "standing",
+            "rows": "58440",
+            "bytes": "14639104"
+          },
+          {
+            "source": "team",
+            "rows": "3426",
+            "bytes": "892928"
+          },
+          {
+            "source": "team_group",
+            "rows": "58440",
+            "bytes": "8232960"
+          },
+          {
+            "source": "team_rating",
+            "rows": "8195365",
+            "bytes": "1143226368"
+          },
+          {
+            "source": "zone",
+            "rows": "16379",
+            "bytes": "2514944"
+          }
+        ],
+        "sqliteBytes": 3036323840,
+        "wasmHeapBytes": 64225280,
+        "peakWasmHeapBytes": 64225280
+      },
+      "ms": 427278.300708
+    },
+    {
+      "event": "reopened",
+      "status": 200,
+      "body": {
+        "identity": {
+          "id": "[\"golaberto-chances\",\"c63d47d96458e7facd57bdf03910a3d02110a8cb04af678580a6cf8836556d77\",1]",
+          "name": "golaberto-chances",
+          "version": "c63d47d96458e7facd57bdf03910a3d02110a8cb04af678580a6cf8836556d77",
+          "revision": 1
+        },
+        "counts": {
+          "championship": 1514,
+          "game": 318970,
+          "phase": 4368,
+          "stage_group": 15566,
+          "standing": 58440,
+          "team": 3426,
+          "team_group": 58440,
+          "team_rating": 8195365,
+          "zone": 16379
+        },
+        "relations": [
+          {
+            "source": "championship",
+            "rows": "1514",
+            "bytes": "548864"
+          },
+          {
+            "source": "game",
+            "rows": "318970",
+            "bytes": "75988992"
+          },
+          {
+            "source": "phase",
+            "rows": "4368",
+            "bytes": "802816"
+          },
+          {
+            "source": "stage_group",
+            "rows": "15566",
+            "bytes": "2957312"
+          },
+          {
+            "source": "standing",
+            "rows": "58440",
+            "bytes": "14663680"
+          },
+          {
+            "source": "team",
+            "rows": "3426",
+            "bytes": "917504"
+          },
+          {
+            "source": "team_group",
+            "rows": "58440",
+            "bytes": "8257536"
+          },
+          {
+            "source": "team_rating",
+            "rows": "8195365",
+            "bytes": "1143480320"
+          },
+          {
+            "source": "zone",
+            "rows": "16379",
+            "bytes": "2539520"
+          }
+        ],
+        "sqliteBytes": 2904924160,
+        "wasmHeapBytes": 44564480,
+        "peakWasmHeapBytes": 44564480
+      }
+    }
+  ],
+  "chancesCoalescing": [
+    {
+      "status": 200,
+      "body": {
+        "identity": {
+          "id": "[\"golaberto-chances\",\"c63d47d96458e7facd57bdf03910a3d02110a8cb04af678580a6cf8836556d77\",1]",
+          "name": "golaberto-chances",
+          "version": "c63d47d96458e7facd57bdf03910a3d02110a8cb04af678580a6cf8836556d77",
+          "revision": 1
+        },
+        "counts": {
+          "championship": 1514,
+          "game": 318970,
+          "phase": 4368,
+          "stage_group": 15566,
+          "standing": 58440,
+          "team": 3426,
+          "team_group": 58440,
+          "team_rating": 8195365,
+          "zone": 16379
+        },
+        "relations": [
+          {
+            "source": "championship",
+            "rows": "1514",
+            "bytes": "524288"
+          },
+          {
+            "source": "game",
+            "rows": "318970",
+            "bytes": "75948032"
+          },
+          {
+            "source": "phase",
+            "rows": "4368",
+            "bytes": "778240"
+          },
+          {
+            "source": "stage_group",
+            "rows": "15566",
+            "bytes": "2932736"
+          },
+          {
+            "source": "standing",
+            "rows": "58440",
+            "bytes": "14639104"
+          },
+          {
+            "source": "team",
+            "rows": "3426",
+            "bytes": "892928"
+          },
+          {
+            "source": "team_group",
+            "rows": "58440",
+            "bytes": "8232960"
+          },
+          {
+            "source": "team_rating",
+            "rows": "8195365",
+            "bytes": "1143226368"
+          },
+          {
+            "source": "zone",
+            "rows": "16379",
+            "bytes": "2514944"
+          }
+        ],
+        "sqliteBytes": 3036475392,
+        "wasmHeapBytes": 64225280,
+        "peakWasmHeapBytes": 64225280
+      },
+      "ms": 315372.6945
+    },
+    {
+      "event": "reopened",
+      "status": 200,
+      "body": {
+        "identity": {
+          "id": "[\"golaberto-chances\",\"c63d47d96458e7facd57bdf03910a3d02110a8cb04af678580a6cf8836556d77\",1]",
+          "name": "golaberto-chances",
+          "version": "c63d47d96458e7facd57bdf03910a3d02110a8cb04af678580a6cf8836556d77",
+          "revision": 1
+        },
+        "counts": {
+          "championship": 1514,
+          "game": 318970,
+          "phase": 4368,
+          "stage_group": 15566,
+          "standing": 58440,
+          "team": 3426,
+          "team_group": 58440,
+          "team_rating": 8195365,
+          "zone": 16379
+        },
+        "relations": [
+          {
+            "source": "championship",
+            "rows": "1514",
+            "bytes": "548864"
+          },
+          {
+            "source": "game",
+            "rows": "318970",
+            "bytes": "75988992"
+          },
+          {
+            "source": "phase",
+            "rows": "4368",
+            "bytes": "802816"
+          },
+          {
+            "source": "stage_group",
+            "rows": "15566",
+            "bytes": "2957312"
+          },
+          {
+            "source": "standing",
+            "rows": "58440",
+            "bytes": "14663680"
+          },
+          {
+            "source": "team",
+            "rows": "3426",
+            "bytes": "917504"
+          },
+          {
+            "source": "team_group",
+            "rows": "58440",
+            "bytes": "8257536"
+          },
+          {
+            "source": "team_rating",
+            "rows": "8195365",
+            "bytes": "1143480320"
+          },
+          {
+            "source": "zone",
+            "rows": "16379",
+            "bytes": "2539520"
+          }
+        ],
+        "sqliteBytes": 2904776704,
+        "wasmHeapBytes": 44564480,
+        "peakWasmHeapBytes": 44564480
+      }
+    }
+  ],
+  "chancesRejectedBlobPatch": [
+    {
+      "status": 200,
+      "body": {
+        "identity": {
+          "id": "[\"golaberto-chances\",\"c63d47d96458e7facd57bdf03910a3d02110a8cb04af678580a6cf8836556d77\",1]",
+          "name": "golaberto-chances",
+          "version": "c63d47d96458e7facd57bdf03910a3d02110a8cb04af678580a6cf8836556d77",
+          "revision": 1
+        },
+        "counts": {
+          "championship": 1514,
+          "game": 318970,
+          "phase": 4368,
+          "stage_group": 15566,
+          "standing": 58440,
+          "team": 3426,
+          "team_group": 58440,
+          "team_rating": 8195365,
+          "zone": 16379
+        },
+        "relations": [
+          {
+            "source": "championship",
+            "rows": "1514",
+            "bytes": "524288"
+          },
+          {
+            "source": "game",
+            "rows": "318970",
+            "bytes": "75948032"
+          },
+          {
+            "source": "phase",
+            "rows": "4368",
+            "bytes": "778240"
+          },
+          {
+            "source": "stage_group",
+            "rows": "15566",
+            "bytes": "2932736"
+          },
+          {
+            "source": "standing",
+            "rows": "58440",
+            "bytes": "14639104"
+          },
+          {
+            "source": "team",
+            "rows": "3426",
+            "bytes": "892928"
+          },
+          {
+            "source": "team_group",
+            "rows": "58440",
+            "bytes": "8232960"
+          },
+          {
+            "source": "team_rating",
+            "rows": "8195365",
+            "bytes": "1143226368"
+          },
+          {
+            "source": "zone",
+            "rows": "16379",
+            "bytes": "2514944"
+          }
+        ],
+        "sqliteBytes": 3036475392,
+        "pendingRecompression": 0,
+        "wasmHeapBytes": 64225280,
+        "peakWasmHeapBytes": 64225280
+      },
+      "ms": 318284.854417
+    },
+    {
+      "event": "reopened",
+      "status": 200,
+      "body": {
+        "identity": {
+          "id": "[\"golaberto-chances\",\"c63d47d96458e7facd57bdf03910a3d02110a8cb04af678580a6cf8836556d77\",1]",
+          "name": "golaberto-chances",
+          "version": "c63d47d96458e7facd57bdf03910a3d02110a8cb04af678580a6cf8836556d77",
+          "revision": 1
+        },
+        "counts": {
+          "championship": 1514,
+          "game": 318970,
+          "phase": 4368,
+          "stage_group": 15566,
+          "standing": 58440,
+          "team": 3426,
+          "team_group": 58440,
+          "team_rating": 8195365,
+          "zone": 16379
+        },
+        "relations": [
+          {
+            "source": "championship",
+            "rows": "1514",
+            "bytes": "548864"
+          },
+          {
+            "source": "game",
+            "rows": "318970",
+            "bytes": "75988992"
+          },
+          {
+            "source": "phase",
+            "rows": "4368",
+            "bytes": "802816"
+          },
+          {
+            "source": "stage_group",
+            "rows": "15566",
+            "bytes": "2957312"
+          },
+          {
+            "source": "standing",
+            "rows": "58440",
+            "bytes": "14663680"
+          },
+          {
+            "source": "team",
+            "rows": "3426",
+            "bytes": "917504"
+          },
+          {
+            "source": "team_group",
+            "rows": "58440",
+            "bytes": "8257536"
+          },
+          {
+            "source": "team_rating",
+            "rows": "8195365",
+            "bytes": "1143480320"
+          },
+          {
+            "source": "zone",
+            "rows": "16379",
+            "bytes": "2539520"
+          }
+        ],
+        "sqliteBytes": 2904776704,
+        "pendingRecompression": 0,
+        "wasmHeapBytes": 44564480,
+        "peakWasmHeapBytes": 44564480
+      }
+    }
+  ],
+  "coalescingProcessCpuSecondsUpperBound": 287.06,
+  "rejectedBlobPatchProcessCpuSecondsUpperBound": 292.36,
+  "concurrentStatus": {
+    "error": "Remote end closed connection without response",
+    "seconds": 294.26541687499997
+  },
+  "limitations": [
+    "Native workerd process CPU includes SQLite/runtime and is not hosted isolate billing.",
+    "WASM heap is not total isolate memory.",
+    "Capture holds shared source database queue for its entire transaction.",
+    "BLOB patch reverted because it did not improve CPU.",
+    "No deployment or public data publication performed."
+  ]
+}

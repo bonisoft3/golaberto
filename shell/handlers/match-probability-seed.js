@@ -1,14 +1,14 @@
-(state) => {
-  const source = state.rows.source?.[0];
+({ context }) => {
+  const source = context.rows.source?.[0];
   const payload = {
     payload_json: source?.payload_json ?? "",
     home_name: source?.home_name ?? "",
     away_name: source?.away_name ?? "",
   };
-  const stored = state.rows.stored?.[0];
+  const stored = context.rows.stored?.[0];
   if (!stored) {
-    if (!state.items[0]) return { updates: [] };
-    const { id, ...row } = state.items[0];
+    if (!context.items[0]) return { updates: [] };
+    const { id, ...row } = context.items[0];
     return {
       updates: [{
         op: "put",

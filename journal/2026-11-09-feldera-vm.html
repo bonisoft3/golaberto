@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Golaberto — native streaming VM trial</title>
+<style>body{font:17px/1.55 system-ui;max-width:1000px;margin:2rem auto;padding:0 1rem;color:#202516}img{max-width:100%;height:auto}code{overflow-wrap:anywhere}dt{font-weight:bold}dd{margin-bottom:1rem}</style>
+<header><h1>Golaberto</h1><p>A football archive with live statistics, rankings, and match history.</p></header>
+<main>
+<article>
+<h2>Teams remain available while native streaming state rebuilds</h2>
+<p><time datetime="2026-11-09">9 November 2026</time>. The private GCP VM serves the imported archive from native PostgreSQL while precompiled Feldera pipelines consume CDC. The runtime image contains the pipeline executables; compilation stays in the build.</p>
+<figure><img src="2026-11-09-vm-teams.png" alt="Golaberto Teams page on the VM, showing populated rankings led by Arsenal"><figcaption>The current VM image displayed 40 teams, led by Arsenal at 91.31. This shows retained archive data during bootstrap; it is not evidence of a newly computed statistic.</figcaption></figure>
+<dl>
+<dt>Deployment checks</dt><dd>The final bounded-batch image passed the HTTP sweep: 294 immutable assets, six catalogues, 17 document routes, and the negative cache-poisoning probe. Golaberto build and tests passed. The appliance integration passed all 12 steps, including PostgreSQL durability, Electric recovery, and Caddy data-directory configuration.</dd>
+<dt>Memory finding</dt><dd>The CDC library's emergency guard counts the full container memory charge, including file cache. A smaller container limit stalled ingestion despite empty input queues. Reclaiming that cache resumed ingestion immediately. The dedicated 4 GiB VM trial now uses host-memory accounting, with the guard still enabled, 1 MiB connector batches, and bounded input queues.</dd>
+<dt>Observed progress</dt><dd>Standings processed 418,663 baseline records and ratings processed 3,935,529. Both drained their input queues. At that point the appliance used about 1.5 GiB; all five pipelines and computation publication still need to be verified together.</dd>
+<dt>Bootstrap timeout</dt><dd>A follow-up changes the total ten-minute bootstrap deadline into a per-source no-progress watchdog. Nine unit tests pass, including a source that stalls while another continues advancing. This follow-up image is not yet deployed.</dd>
+<dt>Remaining verification</dt><dd>The browser mutation-and-rollback journey has not run against this VM. Public traffic at golaberto.bonisoft3.com still goes to the existing deployment. Full capacity, publication, and public cutover remain open.</dd>
+</dl>
+</article>
+</main>
+</html>

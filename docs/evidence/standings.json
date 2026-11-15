@@ -1,0 +1,111 @@
+{
+  "contract": "Feldera SQL computes standings relations; pure per-group ranking and bounded top-five form preserve the PostgreSQL projection.",
+  "source": "Read-only native PGlite APFS clone of /tmp/2079-fresh-bootstrap/pgdata; clone removed after export. Original untouched.",
+  "sourceFields": {
+    "championship": {
+      "rows": 1514,
+      "sha256": "226f22e254c4e1d7d5452b8823084d52991f4dae13bdfadefa9cf2ed6226fe1c",
+      "ms": 57.04170899999997
+    },
+    "phase": {
+      "rows": 4368,
+      "sha256": "7fc95456ace3dbf3333ff311e99240395bec1c5525bb30e3d3525be71e488061",
+      "ms": 37.496125000000006
+    },
+    "stage_group": {
+      "rows": 15566,
+      "sha256": "6fb8f695d345d1571905214697c031c4668c699180af59aa5ed312c503faec71",
+      "ms": 53.79170899999997
+    },
+    "team_group": {
+      "rows": 58440,
+      "sha256": "b4e7c926e7c2c39dc788e4aaa7bd3f036221483b52bf5e62474f52ce0677b7f6",
+      "ms": 241.11541699999998
+    },
+    "team": {
+      "rows": 3426,
+      "sha256": "3f8c49c6e00c9bd522758fbda1eca6110d008460b15aad9c5b5a23293d1de0dd",
+      "ms": 18.193082999999888
+    },
+    "game": {
+      "rows": 318970,
+      "sha256": "1427c00ac65750b9e8f402b4b58f1861ba7be33e2f1b72f719c76ee26063e8b5",
+      "ms": 2906.513083
+    },
+    "zone": {
+      "rows": 16379,
+      "sha256": "0b9ee34de6849f7c100b9b808d29043eae975a0885c735db50ef05e7bd9287d4",
+      "ms": 91.38629200000014
+    }
+  },
+  "oracle": {
+    "table": "standing",
+    "rows": 58440,
+    "fields": [
+      "id",
+      "group_id",
+      "team_id",
+      "team_name",
+      "position",
+      "points",
+      "played",
+      "wins",
+      "draws",
+      "losses",
+      "goals_for",
+      "goals_against",
+      "goal_diff",
+      "form1",
+      "form2",
+      "form3",
+      "form4",
+      "form5",
+      "zone"
+    ],
+    "excludedDatabaseMetadata": [
+      "txid",
+      "scope_id"
+    ],
+    "fileSHA256": "9f0e5c1491e69b3d43ee5046e6ac2ef0d5a1af6b46fd01e7bf3995cb300f1d11"
+  },
+  "outputs": {
+    "standing": {
+      "rows": 58440,
+      "sha256": "cbde4a297b590caf8685ffb8d43238e03bb9537b075134087835d23fdd1b58c5",
+      "allOwnedFieldsEqual": true
+    }
+  },
+  "bounded": {
+    "rows": 58440,
+    "count": 49608,
+    "ms": 70671.242708,
+    "maxCheckpoint": 152760,
+    "maxWrites": 49664,
+    "parity": true,
+    "preparation": "66 CTAS-only checkpoints: members, zones and 64 disjoint same-engine group-hash form partitions",
+    "queryMemoryLimit": "32MB",
+    "engine": "@duckdb/node-api@1.5.6-r.1",
+    "scope": "Full archive native diagnostic; not hosted Cloudflare CPU or isolate-heap proof"
+  },
+  "regressions": [
+    "PostgreSQL null/timezone/Unicode/ladder/zone parity",
+    "former Conduit table and comparator goldens",
+    "218 teams and 21800 events retain at most five form records per team",
+    "real PagedExecution commit admission, durable restart and stale replay",
+    "PostgreSQL intermediate NUMERIC division rounding before six-place goal-average ladder rounding"
+  ],
+  "artifacts": {
+    "duckstream/standings.sql": "48dd96c9ebe83699d5663c68b16a88583ca1dcfa5168907e76c77735018726ed",
+    "duckstream/standings.pure.js": "a13e9a304debf3eb7b080e67244c77c470c15b173115ad9b2efa9b91f2314075",
+    "duckstream/bounded-standings.ts": "346bddc52d9d10ce0ed878c776b7d024b914edcceced7aebd476cbcabe2fb51a",
+    "duckstream/standings.feldera.json": "8f8c8766a6cbdb853f1178118883bd0c01700450c8aa39b3f750f0d756fe4008",
+    "duckstream/standings/manifest.json": "b909e58a782621aa70557e04c0b788f0d2bb5c0d0d504ec5e77a79c16213f874"
+  },
+  "nativeCompiler": {
+    "version": "0.367.0",
+    "sqlExitCode": 0,
+    "status": "Success",
+    "pipelineRemoved": true
+  },
+  "numericScaleReference": "https://github.com/postgres/postgres/blob/REL_17_STABLE/src/backend/utils/adt/numeric.c#L9305-L9362"
+}

@@ -1,0 +1,57 @@
+{
+  "scope": "Native archive physical SQL32MB and exact PostgreSQL SELECT parity; not hosted128MiB or publication capacity proof",
+  "source": "APFS clone of immutable verification-2079/pgdata",
+  "sourceRows": {
+    "game": 318970,
+    "phase": 4368,
+    "championship": 1514,
+    "team": 3426,
+    "stadium": 1108,
+    "referee": 398,
+    "player_game": 3290664,
+    "goal": 225720,
+    "player": 90867
+  },
+  "outputRows": {
+    "game_card": 318970,
+    "team_game": 637940,
+    "player_stat": 302234
+  },
+  "outputSha256": {
+    "game_card": "f4afea3a3f1e014fdd975229446b534af3329732c40b1ca785c83b77005c5e8e",
+    "team_game": "2e17451f2f767c0ca7539b8b8efcacda59664034d4b4d94ddf89aeba146922ea",
+    "player_stat": "d8f861c23297b0ba6af4c0387639c944b2ba8dd43860d63eec2590eb7ba014aa"
+  },
+  "reference": {
+    "game_card": {
+      "rows": 318970,
+      "sha256": "f0c081c033e3c93103bbd3865a849d0f85a55ffe36539727740e9dafcf5f9363",
+      "ms": 8884.748042
+    },
+    "team_game": {
+      "rows": 637940,
+      "sha256": "6d0d9fc7ec141eb90f0757510702ec08bb15421f380838a5fe5d89782662f57e",
+      "ms": 13342.925791000001
+    },
+    "player_stat": {
+      "rows": 302234,
+      "sha256": "484ec819e8247b6decbfaac26b79ba6cd1f6174d367c92d6d15201ef81c86414",
+      "ms": 14584.170291999995
+    }
+  },
+  "artifacts": {
+    "apps/golaberto/computations/cards.js": "78f8c3af81ab8a24ea298dc32745fd7fe65b7a738759710afbbf127e184cc67d",
+    "apps/golaberto/computations/player_stats.js": "f997d45aa5983c58ff2c31a8da2cb127f8f4644622944f1ecf0ef908f90e8581",
+    "apps/golaberto/duckstream/cards.sql": "4886eafbfa7f4f46e5e4543f2c97c211f2726469fce12af19636fc14e282b9e8",
+    "apps/golaberto/duckstream/player_stats.sql": "e4d664613f3ed98ddd8d9ad451cc5d964121673d0a1b15b9f49ab1d27b164da9",
+    "plugins/pronto/duckstream/translator.ts": "b0a2c73c646ed1b8e8abddd8638c4f46c32cbee0a7d2bc3fa4c925475c48ca2e"
+  },
+  "physicalProfile": {
+    "memoryLimit": "32MB",
+    "threads": 1,
+    "groupPartitions": 16,
+    "emptyGlobalAggregate": "unpartitioned",
+    "nativeOnly": true
+  },
+  "evidenceDirectory": "/tmp/2079-projection-archive"
+}

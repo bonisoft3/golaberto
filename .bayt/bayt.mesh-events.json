@@ -5,12 +5,14 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "libraries_mecha-mesh-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.20.6@sha256:04ad88869e10f421813db7af7f32102ec233095205f37ae5f2103587e669aeb3}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}"
+        "libraries_mecha-mesh-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.23.1@sha256:8d39aa3543560232c52330152ba70a4d2c973b76d0ac97899d677704bc0e09a4}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}"
       },
       "secrets": [],
       "args": {}
     },
-    "environment": {},
+    "environment": {
+      "REDIS_HOST": "redis:6379"
+    },
     "ports": [],
     "volumes": [],
     "depends_on": {
@@ -44,7 +46,9 @@
     }
   },
   "dockerfile": {
-    "preamble": [],
+    "preamble": [
+      "COPY <<'REDIS' /dapr/components/redis-streams.yaml\napiVersion: dapr.io/v1alpha1\nkind: Component\nmetadata:\n  name: env\nspec:\n  type: secretstores.local.env\n  version: v1\n  metadata: []\n---\napiVersion: dapr.io/v1alpha1\nkind: Component\nmetadata:\n  name: redis-streams\nspec:\n  type: pubsub.redis\n  version: v1\n  metadata:\n    - name: redisHost\n      secretKeyRef:\n        name: REDIS_HOST\n        key: REDIS_HOST\n    - name: redisPassword\n      value: \"\"\n    - name: consumerID\n      value: \"mecha\"\n    - name: enableTLS\n      value: \"false\"\n    - name: processingTimeout\n      value: \"30s\"\n    - name: redeliverInterval\n      value: \"5s\"\n    - name: maxRetries\n      value: \"5\"\n    - name: concurrency\n      value: \"1\"\nauth:\n  secretStore: env\n\nREDIS"
+    ],
     "preambleCopyContexts": [],
     "from": {
       "name": "libraries_mecha-mesh-image"
@@ -86,7 +90,62 @@
     "incremental": false,
     "cmd": null
   },
+  "entrypoint": {
+    "do": "let base = ($env.BAYT_LOCAL_WORK_DIR? | default $nu.temp-dir); let dir = ($base | path join $'mesh-events-($nu.pid)-(random int 1000..9999)'); mkdir $dir; let mdir = (if (($env.MECHA_MESH_DIR? | default '') != '') { $env.MECHA_MESH_DIR } else if ('services/mesh/dapr/components/resiliency.yaml' | path exists) { 'services/mesh' } else { ((^mise where github:bonisoft3/mecha | str trim) | path join 'services/mesh') }); cp -f ($mdir | path join 'dapr/components/resiliency.yaml') ($dir | path join 'resiliency.yaml'); cp -f ($mdir | path join 'dapr/components/redis-streams.yaml') ($dir | path join 'redis-streams.yaml'); exec daprd --app-id mechaed --dapr-listen-addresses 127.0.0.1 --dapr-internal-grpc-listen-address 127.0.0.1 --resources-path $dir --app-channel-address 127.0.0.1 --app-port $env.CADDY_PORT --dapr-http-port $env.DAPR_HTTP_PORT --dapr-grpc-port 0 --dapr-internal-grpc-port $env.DAPR_INTERNAL_GRPC_PORT --metrics-port 0 --profile-port 0 --log-level info --enable-api-logging",
+    "dockerfile": null,
+    "shell": "nu",
+    "env": {
+      "REDIS_HOST": {
+        "peer": "redis",
+        "port": "redis",
+        "part": "addr",
+        "prefix": "",
+        "suffix": ""
+      }
+    },
+    "after": {
+      "caddy": "started",
+      "redis": "started"
+    },
+    "host": true
+  },
+  "expose": {
+    "http": {
+      "port": 3500,
+      "env": "DAPR_HTTP_PORT"
+    },
+    "grpc": {
+      "port": 50002,
+      "env": "DAPR_INTERNAL_GRPC_PORT"
+    }
+  },
+  "healthcheck": {
+    "template": "tcp",
+    "port": 3500,
+    "interval": "5s",
+    "start_interval": "500ms",
+    "timeout": "5s",
+    "retries": 30,
+    "start_period": "30s"
+  },
   "name": "mesh-events",
+  "process-compose": {
+    "activate": "mise x --",
+    "env": {
+      "CADDY_PORT": {
+        "peer": "caddy",
+        "port": "http",
+        "part": "port",
+        "prefix": "",
+        "suffix": ""
+      }
+    },
+    "availability": {
+      "restart": "on_failure",
+      "backoff_seconds": 1,
+      "max_restarts": 15
+    }
+  },
   "project": "golaberto",
   "dir": ".",
   "activate": "",
@@ -137,11 +196,13 @@
       "upClosure": [
         "./.bayt/compose.mesh-events.yaml",
         "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml",
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
         "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.served.yaml",
-        "./.bayt/compose.redis.yaml"
+        "./.bayt/compose.timer-check.yaml"
       ]
     },
     "outs": {
@@ -171,11 +232,13 @@
       "upClosure": [
         "./.bayt/compose.mesh-events.yaml",
         "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml",
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
         "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.served.yaml",
-        "./.bayt/compose.redis.yaml"
+        "./.bayt/compose.timer-check.yaml"
       ]
     }
   },
@@ -197,11 +260,13 @@
   "upClosure": [
     "./.bayt/compose.mesh-events.yaml",
     "./.bayt/compose.caddy.yaml",
+    "./.bayt/compose.redis.yaml",
+    "./.bayt/compose.airlock-upgrade.yaml",
     "./.bayt/compose.crud.yaml",
     "./.bayt/compose.database.yaml",
     "./.bayt/compose.migrate.yaml",
     "./.bayt/compose.served.yaml",
-    "./.bayt/compose.redis.yaml"
+    "./.bayt/compose.timer-check.yaml"
   ],
   "chainedDeps": [
     {

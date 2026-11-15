@@ -1,0 +1,24 @@
+{
+  "elapsedMs": 58054,
+  "unchangedSinkRows": true,
+  "before": {
+    "game_importance": "e4db32728635086b0223a798c2640578",
+    "position_chance": "d68decd99c34374462d2f1f7d6c1fb50",
+    "team_rating": "f90f3ff0584e4085915ea897fe8c18a8",
+    "zone_chance": "193a432c4b4da6299362d473ebf34989"
+  },
+  "captures": [
+    {
+      "computation": "golaberto-ratings",
+      "capture": "9eee38fc-6f3a-4c70-a027-742b7d149023",
+      "partitions": 0,
+      "deltaRows": 0
+    },
+    {
+      "computation": "golaberto-chances",
+      "capture": "8f49ba57-b644-4224-9641-5c50076df469",
+      "partitions": 0,
+      "deltaRows": 0
+    }
+  ]
+}

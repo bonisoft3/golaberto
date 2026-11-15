@@ -1,0 +1,16 @@
+./saytw doctor
+  exit 0: Toolchain and target configuration
+./saytw generate
+  exit 0: CUE owns generated SQL, manifests and screens
+./saytw lint
+  exit 0: Types, policies, SQL, identity, pipelines and facts
+./saytw test
+  exit 0: Application unit suite, including 39 SofaScore Python tests
+./saytw integrate --jobs 1
+  exit 0: Retained migration replay, full visual, browser acceptance and constraints
+Updater image build: cargo test --release --locked
+  exit 0: 4 Rust unit tests and 1 JSONL process test
+Focused database regressions
+  exit 0: 7 passed; included in the broader 74-test SQL suite
+Seed reproducibility
+  exit 0: 2 passed; the original seed remains unchanged

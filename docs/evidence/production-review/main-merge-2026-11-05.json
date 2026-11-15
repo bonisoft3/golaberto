@@ -1,0 +1,48 @@
+{
+  "scope": "PR2079 merge of origin/main 7173544443; no deployment",
+  "changes": [
+    "Preserve isolated renderer, query and computation resources alongside progressive rendering and publisher support",
+    "Preserve private computation inputs, sink declarations and reconciliation migrations in merged generators",
+    "Adapt runtime tests and coordinator SQL to current hybrid Statechart/precondition contracts",
+    "Regenerate Golaberto, Plausible and Mecha outputs",
+    "Generated Cloudflare release applies archive storage/CPU policy before publication while retaining GCP and Kubernetes release commands"
+  ],
+  "passed": {
+    "mecha_cluster": 49,
+    "browser_incremental_views": 37,
+    "compute_snapshot": 38,
+    "edge_source": 11,
+    "public_snapshot": {
+      "tests": 6,
+      "steps": 8
+    },
+    "local_compute_subset": 42,
+    "bundle": 36,
+    "ssr_publisher": 36,
+    "compute_reader_packaging": 3,
+    "renderer_rpc_lifecycle": 1,
+    "omnishell": {
+      "tests": 7,
+      "steps": 17
+    },
+    "gcp_schema": 39,
+    "access": 6,
+    "reducer_durable": 3,
+    "golaberto_duckstream": 27,
+    "plausible_duckstream": 18,
+    "cue_emit": "passed",
+    "k8s_release_suite": "passed",
+    "gcp_release_parse": "passed",
+    "compute_sayt_build": "exit 0",
+    "compute_sayt_lint": "exit 0",
+    "app_pronto_generation": "completed",
+    "app_task_leaf_lint": "passed",
+    "golaberto_publisher_recipe": 4
+  },
+  "blocked": [
+    "Full Sayt generation cannot invoke pinned Feldera compiler: Docker Desktop startup fails with invalid-page-type engine panic",
+    "Docker native-runtime tests and full application integration unavailable while daemon is down",
+    "Local PGlite Workerd dist predates required pg_ivm extension; retention tests require rebuilding it",
+    "No new browser playtest or deployment; large monthly atomic publication capacity remains unproved"
+  ]
+}

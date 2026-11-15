@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-24",
+  "reviewedHead": "f72ef3992",
+  "productionMutated": false,
+  "liveVersion": "b83c0909-fb7b-4e72-a9cb-5879c91ce15a",
+  "liveCodeSha256": "71a67ab93b26510080d193ff38a2b1e748b18593dd3cd80ee165712e965196bf",
+  "liveImplementation": {
+    "filesystem": "PGlite over SqliteFS blocks in Durable Object SQLite",
+    "initialMemoryMiB": 16,
+    "sharedBuffersMiB": 16,
+    "workMemMiB": 8,
+    "publicSnapshot": "repeatable-read read-only transaction; selected reads, no complete-table copy",
+    "computeCoordinatorBinding": false,
+    "statistics": "stored offline results"
+  },
+  "capacityFinding": {
+    "playerGameRows": 3290664,
+    "mandatoryUuidTextBytes": 355391712,
+    "capture": "complete source tables become JS rows and JSON in database object",
+    "status": "unresolved for full archive; page-backed serving remains proven"
+  },
+  "fixedFindings": [
+    "SSR composition preserves ComputeCoordinator export",
+    "Native runtime validates actual source/sink graph",
+    "CEL identifier quoting preserves historical migration bytes",
+    "SSR renderer install uses pinned Node through Sayt mise",
+    "App publisher resolves physical release paths",
+    "Server role alias exports the kinetic entrypoint and refuses server execution"
+  ],
+  "migrationSha256": "bfbeffcc98553547a70c86689a62922a7a8ed893ea1216d194de64d35813bbe9",
+  "validation": {
+    "prontoTest": 0,
+    "prontoLint": 0,
+    "batchTests": 17,
+    "nativeCycleRegression": "passed",
+    "publisherAndSecretTests": 14,
+    "postgresKeywordIntegration": "passed against complete PostgreSQL18 keyword catalog",
+    "liveReadChecks": "passed",
+    "liveBrowser": "HTTP200, no page errors; screenshot captured and inspected",
+    "productionBundleBuild": 0,
+    "productionPublisherPreparation": 0,
+    "productionWranglerDryRun": 0
+  },
+  "deployment": "not performed; computation handoff requires bounded working sets or explicit offline-results deployment policy"
+}

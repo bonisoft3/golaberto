@@ -1,0 +1,135 @@
+Check libraries/mecha/services/compute/batches_test.ts
+running 15 tests from ./libraries/mecha/services/compute/batches_test.ts
+a burst coalesces; edits during a claim become one successor ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+[worker(worker-bdf3dd5ba0a3d1c16e)] INFO: Completed task 1 (compute_batch, 170.91ms) with success
+[worker(worker-bdf3dd5ba0a3d1c16e)] INFO: Completed task 2 (compute_batch, 8.15ms) with success
+----- output end -----
+a burst coalesces; edits during a claim become one successor ... ok (41s)
+redelivery after publication cannot republish a removed computation ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+[worker(worker-9be96bf7c2d1025e0e)] INFO: Completed task 1 (compute_batch, 27.87ms) with success
+----- output end -----
+redelivery after publication cannot republish a removed computation ... ok (5s)
+publication rollback retains the frozen claim through retry and restart ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+[worker(worker-cc93c3b2da85eb0c02)] ERROR: Failed task 1 (compute_batch, 10.47ms, attempt 1 of 25) with error 'publication refused after writing':
+  Error: publication refused after writing
+      at Object.publish (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches_test.ts:142:23)
+      at async file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:275:6
+      at async transaction (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:78:20)
+      at async Object.task (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:274:5)
+      at async doNext (file:///Users/davi/Library/Caches/deno/npm/registry.npmjs.org/graphile-worker/0.18.0/dist/worker.js:255:18)
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+[worker(worker-97053d24e3157b32e7)] INFO: Completed task 1 (compute_batch, 142.64ms, attempt 2 of 25) with success
+[worker(worker-97053d24e3157b32e7)] INFO: Completed task 3 (compute_batch, 11.87ms) with success
+----- output end -----
+publication rollback retains the frozen claim through retry and restart ... ok (4s)
+dependent computations wait for a producer publication and converge after edits stop ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+[worker(worker-072962b1811b3deba3)] INFO: Completed task 1 (compute_batch, 23.16ms) with success
+[worker(worker-072962b1811b3deba3)] INFO: Completed task 2 (compute_batch, 11.17ms) with success
+[worker(worker-072962b1811b3deba3)] INFO: Completed task 3 (compute_batch, 9.52ms) with success
+----- output end -----
+dependent computations wait for a producer publication and converge after edits stop ... ok (3s)
+continuous producer invalidations cannot starve consumers or lose the final publication ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+[worker(worker-4d2b88ccb3b45b7968)] INFO: Completed task 1 (compute_batch, 18.41ms) with success
+[worker(worker-4d2b88ccb3b45b7968)] INFO: Completed task 2 (compute_batch, 23.60ms) with success
+[worker(worker-4d2b88ccb3b45b7968)] INFO: Completed task 3 (compute_batch, 10.19ms) with success
+[worker(worker-4d2b88ccb3b45b7968)] INFO: Completed task 4 (compute_batch, 15.10ms) with success
+[worker(worker-4d2b88ccb3b45b7968)] INFO: Completed task 5 (compute_batch, 8.73ms) with success
+----- output end -----
+continuous producer invalidations cannot starve consumers or lose the final publication ... ok (3s)
+exhausted retries fail the service and remain visible at restart ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+[worker(worker-8903a9f44d4bd58450)] ERROR: Failed task 1 (compute_batch, 10.74ms, attempt 1 of 1) with error 'invalid numerical input':
+  Error: invalid numerical input
+      at Object.calculate (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches_test.ts:298:61)
+      at Object.task (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:272:36)
+      at async doNext (file:///Users/davi/Library/Caches/deno/npm/registry.npmjs.org/graphile-worker/0.18.0/dist/worker.js:255:18)
+----- output end -----
+exhausted retries fail the service and remain visible at restart ... ok (12s)
+source deletion supersedes a frozen FK failure only after a newer invalidation ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+[worker(worker-e01495984a5be7fb1d)] ERROR: Failed task 1 (compute_batch, 23.02ms, attempt 1 of 25) with error 'insert or update on table "projected" violates foreign key constraint "projected_id_fkey"':
+  error: insert or update on table "projected" violates foreign key constraint "projected_id_fkey"
+      at file:///Users/davi/Library/Caches/deno/npm/registry.npmjs.org/pg/8.16.3/lib/client.js:545:17
+      at async Object.publish (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches_test.ts:343:52)
+      at async file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:275:6
+      at async transaction (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:78:20)
+      at async Object.task (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:274:5)
+      at async doNext (file:///Users/davi/Library/Caches/deno/npm/registry.npmjs.org/graphile-worker/0.18.0/dist/worker.js:255:18)
+[worker(worker-e01495984a5be7fb1d)] INFO: Completed task 1 (compute_batch, 20.92ms, attempt 2 of 25) with success
+[worker(worker-e01495984a5be7fb1d)] INFO: Completed task 2 (compute_batch, 16.43ms) with success
+----- output end -----
+source deletion supersedes a frozen FK failure only after a newer invalidation ... ok (10s)
+publication stays serializable across role isolation changes and commits sinks with the machine receipt ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+[worker(worker-900f4e19dd2ad44875)] INFO: Completed task 1 (compute_batch, 21.21ms) with success
+[worker(worker-900f4e19dd2ad44875)] INFO: Completed task 2 (compute_batch, 17.59ms) with success
+[worker(worker-900f4e19dd2ad44875)] INFO: Completed task 3 (compute_batch, 15.25ms) with success
+----- output end -----
+publication stays serializable across role isolation changes and commits sinks with the machine receipt ... ok (3s)
+a serialization conflict retries atomic publication without recapturing or recalculating ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+[worker(worker-b4846d6fcdfd05f8b5)] INFO: Completed task 1 (compute_batch, 17.37ms) with success
+----- output end -----
+a serialization conflict retries atomic publication without recapturing or recalculating ... ok (8s)
+an idle previous coordinator migrates into the Cortex instance without resetting revisions ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+[worker(worker-a4faefefcdab842356)] INFO: Completed task 1 (compute_batch, 14.68ms) with success
+----- output end -----
+an idle previous coordinator migrates into the Cortex instance without resetting revisions ... ok (6s)
+an active previous coordinator refuses migration without changing its work ... ok (3s)
+permissive default grants cannot expose captured inputs or authorize machine transitions ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+[worker(worker-86a038ca6217ba73f3)] INFO: Completed task 1 (compute_batch, 28.54ms) with success
+----- output end -----
+permissive default grants cannot expose captured inputs or authorize machine transitions ... ok (3s)
+capture changes commit with the claim and post-commit delivery retries retained inputs ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+[worker(worker-7b9e6b0f61ae07ae43)] ERROR: Failed task 1 (compute_batch, 5.71ms, attempt 1 of 25) with error 'capture fails after baseline write':
+  Error: capture fails after baseline write
+      at Object.capture (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches_test.ts:614:17)
+      at async file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:257:32
+      at async transaction (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:78:20)
+      at async Object.task (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:243:18)
+      at async doNext (file:///Users/davi/Library/Caches/deno/npm/registry.npmjs.org/graphile-worker/0.18.0/dist/worker.js:255:18)
+[worker(worker-7b9e6b0f61ae07ae43)] ERROR: Failed task 1 (compute_batch, 10.30ms, attempt 2 of 25) with error 'acknowledgment failed after claim commit':
+  Error: acknowledgment failed after claim commit
+      at Object.captured (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches_test.ts:629:17)
+      at async Object.task (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:271:4)
+      at async doNext (file:///Users/davi/Library/Caches/deno/npm/registry.npmjs.org/graphile-worker/0.18.0/dist/worker.js:255:18)
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+[worker(worker-22eaa11a475597e5cd)] INFO: Completed task 1 (compute_batch, 59.82ms, attempt 3 of 25) with success
+----- output end -----
+capture changes commit with the claim and post-commit delivery retries retained inputs ... ok (6s)
+a failed initializer rolls back every spec and coordinator definition ... ok (4s)
+native claims retain acknowledged inputs after foreign-key failures despite a newer invalidation ...
+------- output -------
+[core] INFO: Worker connected and looking for jobs... (task names: 'compute_batch')
+[worker(worker-eec4caeedde37f3070)] ERROR: Failed task 1 (compute_batch, 28.11ms, attempt 1 of 25) with error 'insert or update on table "sink" violates foreign key constraint "sink_id_fkey"':
+  error: insert or update on table "sink" violates foreign key constraint "sink_id_fkey"
+      at file:///Users/davi/Library/Caches/deno/npm/registry.npmjs.org/pg/8.16.3/lib/client.js:545:17
+      at async Object.publish (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches_test.ts:752:9)
+      at async file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:275:6
+      at async transaction (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:78:20)
+      at async Object.task (file:///Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/services/compute/batches.ts:274:5)
+      at async doNext (file:///Users/davi/Library/Caches/deno/npm/registry.npmjs.org/graphile-worker/0.18.0/dist/worker.js:255:18)
+----- output end -----
+native claims retain acknowledged inputs after foreign-key failures despite a newer invalidation ... ok (3s)
+
+ok | 15 passed | 0 failed (2m2s)

@@ -24,13 +24,9 @@ END $$;
 REVOKE ALL ON FUNCTION take_team_projection_turn() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION take_team_projection_turn() TO service;
 
--- The call's own clock bounds the batch: the service role's statement_timeout
--- runs from the call's start, a function's SET cannot re-arm it, and a batch
--- it cancelled would roll back and be retried whole. Stopping short of it
--- commits what was done, and the queue's change wakes the drain for the rest.
 CREATE OR REPLACE FUNCTION refresh_team_profiles(batch_size integer DEFAULT 50) RETURNS integer
 LANGUAGE plpgsql SET search_path = public, pg_temp
-SET lock_timeout = '2s' AS $$
+SET statement_timeout = '20s' SET lock_timeout = '2s' AS $$
 DECLARE
   v_local_day date := (now() AT TIME ZONE 'America/Sao_Paulo')::date;
   v_previous_day date;
@@ -57,7 +53,6 @@ BEGIN
     PERFORM refresh_one_team_profile(item.team_id);
     DELETE FROM team_profile_dirty WHERE team_id = item.team_id AND revision = item.revision;
     processed := processed + 1;
-    EXIT WHEN clock_timestamp() - statement_timestamp() > interval '20s';
   END LOOP;
   RETURN processed;
 END $$;
@@ -65,16 +60,14 @@ END $$;
 CREATE OR REPLACE FUNCTION refresh_team_enrichment(roster_batch integer DEFAULT 50,
   rating_batch integer DEFAULT 10,odds_batch integer DEFAULT 5) RETURNS jsonb
 LANGUAGE plpgsql SECURITY DEFINER SET search_path = public,pg_temp
-SET lock_timeout='2s' AS $$
-DECLARE roster_count integer:=0; rating_count integer:=0; odds_count integer:=0; metric_count integer;
+SET statement_timeout='25s' SET lock_timeout='2s' AS $$
+DECLARE roster_count integer; rating_count integer; odds_count integer; metric_count integer;
 BEGIN
   PERFORM take_team_projection_turn();
-  -- As refresh_team_profiles: a stage the call's clock leaves no room for
-  -- waits for the next call, which the earlier stages' queue changes wake.
   metric_count:=refresh_player_metric_queue(roster_batch);
-  IF clock_timestamp()-statement_timestamp() < interval '20s' THEN roster_count:=refresh_team_roster_totals(roster_batch); END IF;
-  IF clock_timestamp()-statement_timestamp() < interval '20s' THEN rating_count:=refresh_team_rating_charts(rating_batch); END IF;
-  IF clock_timestamp()-statement_timestamp() < interval '20s' THEN odds_count:=refresh_team_odds_chart_queue(odds_batch); END IF;
+  roster_count:=refresh_team_roster_totals(roster_batch);
+  rating_count:=refresh_team_rating_charts(rating_batch);
+  odds_count:=refresh_team_odds_chart_queue(odds_batch);
   RETURN jsonb_build_object('roster_totals',roster_count,'rating_charts',rating_count,'odds_charts',odds_count,'player_metrics',metric_count);
 END $$;
 COMMIT;

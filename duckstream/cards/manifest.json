@@ -1,0 +1,33 @@
+{
+  "format": 1,
+  "compiler": {
+    "version": "0.367.0",
+    "sha256": "d08430de8b34ae997b72c44eb9a9274b25955a41af35e7c6997e7e459d3283ab",
+    "image": "images.feldera.com/feldera/pipeline-manager:0.367.0@sha256:42819714d16f7d5d37c17c87812ce98fb23efd2b1bfbf95b4889877f14693272",
+    "jar": "/home/ubuntu/feldera/build/sql2dbsp-jar-with-dependencies.jar",
+    "flags": [
+      "-i",
+      "--alltables",
+      "-v",
+      "1",
+      "-T",
+      "SqlToRelCompiler=2",
+      "--noRust"
+    ]
+  },
+  "views": [
+    "result_game_card",
+    "result_team_game"
+  ],
+  "hashes": {
+    "translator": "b0a2c73c646ed1b8e8abddd8638c4f46c32cbee0a7d2bc3fa4c925475c48ca2e",
+    "driver": "fdbb894b318894f4b1cad8f3a1f7c761cc9f6fbbe4c0ff8a41562a0ba29c7206",
+    "admission": "5e2dda79587a6a4edbf6b19d303ce41a074b2e534467c1f62bef196958d6d0e4",
+    "source": "e53066e5b72bc09006638e380d5c90c2b6185a786a424bc2f1059409cad800c2",
+    "plan": "3fc31b87aebed793a874299cc2149ce8e9f4acc1fc9b24c5b754af57620cc47f",
+    "schema": "5302267db69e2d6a36cfee2e19d9cb022b29963e46ef913f6d7712dee9fdbe0d",
+    "diagnostics": "b76fa3dd5b78cc24ebe43b3a67c271905979677baf763ce781a1b4f52236bcff",
+    "result_game_card.sql": "a6ff29eca899b9efb319f8be86a39e9cb7768d55899568dacc5c39abd2c0d7a9",
+    "result_team_game.sql": "e6cb60dde0263bdf1a3d52aee700d0c6ca42095a58e9ce650b14b3e0768db42d"
+  }
+}

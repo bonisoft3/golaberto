@@ -1,0 +1,11 @@
+# SofaScore transport
+
+Build with Rust 1.88 and native C/C++, CMake, Perl, and libclang: `cargo build --release --locked`. [[../../program_sofascore.cue]] owns the container builds and supplies those dependencies.
+
+Run `sofascore_fetch` without arguments as a persistent JSONL process. Each input line is an object with `id` (any JSON value), `path` (a relative path below `/api/v1/`, optionally including a query), optional `etag`, optional `last_modified`, and optional `max_requests` (unsigned integer, default 10). Each line produces and flushes one JSON object containing the same `id`, `status` (HTTP status or null), `headers` (lowercase header names), `body` (raw UTF-8 text), `final_url` (last attempted URL or null), `redirects` (each followed hop as `{status, url}`), `requests` (HTTP attempts, including redirects), `elapsed_ms`, and `error` (null or a string). Non-2xx statuses, including 304 and 429, are returned as HTTP responses; inspect `status` and headers. Invalid JSON returns a null ID, while valid JSON with invalid fields preserves its ID when possible. No request is made when the budget is zero or headers are invalid. Redirects are followed up to five hops, each target checked against the same SofaScore API scope as the request; a sixth redirect is an error. The 15-second deadline covers all redirects and body reads; the body limit is 8 MiB. Transport errors can include a response status and headers if they were received before the error.
+
+The initial target is `https://www.sofascore.com/api/v1/` plus `path`. Redirect targets must remain HTTPS under `/api/v1/` on `www.sofascore.com`, `sofascore.com`, or `api.sofascore.com`. There are no automatic retries. A single client is shared across input lines.
+
+Run `sofascore_fetch --listen ADDRESS` to serve the same protocol over HTTP for the bridge: `POST /fetch` with one request object as its body (at most 64 KiB) answers 200 with one response object; `GET /healthz` answers 200; any other path or method is refused. One request is served per connection.
+
+For legacy use, pass one allowed absolute URL as the only argument. Successful response text is written directly to stdout; errors and non-2xx statuses exit nonzero.

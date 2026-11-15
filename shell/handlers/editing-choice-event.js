@@ -1,1 +1,1 @@
-(world, event, params) => event.from === world.items[0].id + params.suffix
+({ context, event }, params) => event.from === context.items[0].id + params.suffix

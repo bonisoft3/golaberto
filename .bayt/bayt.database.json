@@ -5,7 +5,7 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.20.6@sha256:d3eb729237d5bcdead34c500e4f482b86f4cfce00994b98a7c5a27745880b624}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+        "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.23.1@sha256:ab98bb1431e05361e30e73583335c01170c17d8dcddbb666b2f57bb837f63f77}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
       },
       "secrets": [],
       "args": {}
@@ -25,6 +25,11 @@
     "depends_on": {},
     "networks": {
       "default": {
+        "aliases": [
+          "database"
+        ]
+      },
+      "airlock": {
         "aliases": [
           "database"
         ]
@@ -89,6 +94,21 @@
         {
           "action": "rebuild",
           "path": "../services/database/migrations/008_publication.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
+          "path": "../services/database/migrations/009_functions.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
+          "path": "../services/database/migrations/003_rls.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
+          "path": "../services/database/migrations/063_mecha_actors.sql",
           "target": "/docker-entrypoint-initdb.d"
         },
         {
@@ -298,6 +318,31 @@
         },
         {
           "action": "rebuild",
+          "path": "../services/database/migrations/052_sofascore_sync.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
+          "path": "../services/database/migrations/053_sofascore_apply.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
+          "path": "../services/database/migrations/054_fixture_availability.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
+          "path": "../services/database/migrations/055_sofa_seats.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
+          "path": "../services/database/migrations/062_player_directory_read.sql",
+          "target": "/docker-entrypoint-initdb.d"
+        },
+        {
+          "action": "rebuild",
           "path": "../services/database/migrations/900_seed.sql",
           "target": "/docker-entrypoint-initdb.d"
         },
@@ -332,6 +377,9 @@
           "services/database/migrations/006_policies.sql",
           "services/database/migrations/007_txid.sql",
           "services/database/migrations/008_publication.sql",
+          "services/database/migrations/009_functions.sql",
+          "services/database/migrations/003_rls.sql",
+          "services/database/migrations/063_mecha_actors.sql",
           "services/database/migrations/010_game_days.sql",
           "services/database/migrations/011_comment_writes.sql",
           "services/database/migrations/012_editor_writes.sql",
@@ -373,6 +421,11 @@
           "services/database/migrations/049_match_rating_history_bound.sql",
           "services/database/migrations/050_home_feed_relationships.sql",
           "services/database/migrations/051_home_feed_relationship_names.sql",
+          "services/database/migrations/052_sofascore_sync.sql",
+          "services/database/migrations/053_sofascore_apply.sql",
+          "services/database/migrations/054_fixture_availability.sql",
+          "services/database/migrations/055_sofa_seats.sql",
+          "services/database/migrations/062_player_directory_read.sql",
           "services/database/migrations/900_seed.sql",
           "services/database/migrations/801_schedule_seed.sql"
         ],
@@ -404,6 +457,42 @@
         "link": true,
         "parents": false,
         "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-database-image"
+        },
+        "srcs": [
+          "/usr/share/mecha/initdb/011_graphile_worker.sql"
+        ],
+        "dst": "/docker-entrypoint-initdb.d/060_graphile_worker.sql",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-database-image"
+        },
+        "srcs": [
+          "/usr/share/mecha/initdb/012_airlock.sql"
+        ],
+        "dst": "/docker-entrypoint-initdb.d/061_airlock.sql",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-database-image"
+        },
+        "srcs": [
+          "/usr/share/mecha/initdb/013_airlock_job_key.sql"
+        ],
+        "dst": "/docker-entrypoint-initdb.d/064_airlock_job_key.sql",
+        "link": true,
+        "parents": false,
+        "exclude": []
       }
     ],
     "healthcheck": {
@@ -430,8 +519,12 @@
     "cmd": null
   },
   "entrypoint": {
-    "do": "docker-entrypoint.sh postgres -c wal_level=logical -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c shared_buffers=32MB -c max_connections=200",
-    "shell": "exec",
+    "do": "if ('/docker-entrypoint-initdb.d' | path exists) { exec docker-entrypoint.sh postgres -c session_preload_libraries=pg_ivm -c wal_level=logical -c max_replication_slots=128 -c max_wal_senders=128 -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c shared_buffers=32MB -c max_connections=200 }\nlet mecha = (if (($env.PRONTO_INITDB_SRC_DIR? | default '') != '') { $env.PRONTO_INITDB_SRC_DIR } else if ('services/database/rls/rls.sql' | path exists) { $env.PWD } else { (^mise where github:bonisoft3/mecha | str trim) })\nlet initdb = (($env.BAYT_LOCAL_WORK_DIR? | default $nu.temp-dir) | path join 'initdb.d')\nrm -rf $initdb; mkdir $initdb\ncp -f ($mecha | path join 'services/database/rls/rls.sql') ($initdb | path join '003_rls.sql')\ncp -f ($mecha | path join 'services/database/role_passwords.sh') ($initdb | path join '899_role_passwords.sh')\ncp -f ($mecha | path join 'services/ticker/schedule.sql') ($initdb | path join '800_schedule.sql')\ncp -f ($mecha | path join 'services/durex/graphile.sql') ($initdb | path join '060_graphile_worker.sql')\n[(open --raw ($mecha | path join 'services/ticker/schedule.sql')) (open --raw ($mecha | path join 'services/airlock/airlock.sql'))] | str join '' | save --raw -f ($initdb | path join '061_airlock.sql')\ncp -f ($mecha | path join 'services/airlock/job_key.sql') ($initdb | path join '064_airlock_job_key.sql')\nopen .bayt/bayt.database.json | get dockerfile.copy.0.srcs | each {|s| cp -f $s ($initdb | path join ($s | path basename)) } | ignore\nexec nu ($mecha | path join 'services/database/entrypoint.nu') $initdb postgres -c session_preload_libraries=pg_ivm -c wal_level=logical -c max_replication_slots=128 -c max_wal_senders=128 -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c shared_buffers=32MB -c max_connections=200",
+    "dockerfile": {
+      "do": "docker-entrypoint.sh postgres -c session_preload_libraries=pg_ivm -c wal_level=logical -c max_replication_slots=128 -c max_wal_senders=128 -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c shared_buffers=32MB -c max_connections=200",
+      "shell": "exec"
+    },
+    "shell": "nu",
     "env": {
       "POSTGRES_USER": "${POSTGRES_USER:-postgres}",
       "POSTGRES_PASSWORD": "${POSTGRES_PASSWORD:-postgres}",
@@ -445,7 +538,8 @@
   },
   "expose": {
     "pg": {
-      "port": 5432
+      "port": 5432,
+      "env": "PGPORT"
     }
   },
   "healthcheck": {
@@ -461,6 +555,13 @@
     "start_period": "5m"
   },
   "name": "database",
+  "process-compose": {
+    "activate": "mise x --",
+    "shutdown": {
+      "signal": 2,
+      "timeout_seconds": 5
+    }
+  },
   "project": "golaberto",
   "dir": ".",
   "activate": "",
@@ -474,6 +575,9 @@
       "services/database/migrations/006_policies.sql",
       "services/database/migrations/007_txid.sql",
       "services/database/migrations/008_publication.sql",
+      "services/database/migrations/009_functions.sql",
+      "services/database/migrations/003_rls.sql",
+      "services/database/migrations/063_mecha_actors.sql",
       "services/database/migrations/010_game_days.sql",
       "services/database/migrations/011_comment_writes.sql",
       "services/database/migrations/012_editor_writes.sql",
@@ -515,6 +619,11 @@
       "services/database/migrations/049_match_rating_history_bound.sql",
       "services/database/migrations/050_home_feed_relationships.sql",
       "services/database/migrations/051_home_feed_relationship_names.sql",
+      "services/database/migrations/052_sofascore_sync.sql",
+      "services/database/migrations/053_sofascore_apply.sql",
+      "services/database/migrations/054_fixture_availability.sql",
+      "services/database/migrations/055_sofa_seats.sql",
+      "services/database/migrations/062_player_directory_read.sql",
       "services/database/migrations/900_seed.sql",
       "services/database/migrations/801_schedule_seed.sql"
     ],
@@ -611,6 +720,9 @@
           "services/database/migrations/006_policies.sql",
           "services/database/migrations/007_txid.sql",
           "services/database/migrations/008_publication.sql",
+          "services/database/migrations/009_functions.sql",
+          "services/database/migrations/003_rls.sql",
+          "services/database/migrations/063_mecha_actors.sql",
           "services/database/migrations/010_game_days.sql",
           "services/database/migrations/011_comment_writes.sql",
           "services/database/migrations/012_editor_writes.sql",
@@ -652,6 +764,11 @@
           "services/database/migrations/049_match_rating_history_bound.sql",
           "services/database/migrations/050_home_feed_relationships.sql",
           "services/database/migrations/051_home_feed_relationship_names.sql",
+          "services/database/migrations/052_sofascore_sync.sql",
+          "services/database/migrations/053_sofascore_apply.sql",
+          "services/database/migrations/054_fixture_availability.sql",
+          "services/database/migrations/055_sofa_seats.sql",
+          "services/database/migrations/062_player_directory_read.sql",
           "services/database/migrations/900_seed.sql",
           "services/database/migrations/801_schedule_seed.sql"
         ],

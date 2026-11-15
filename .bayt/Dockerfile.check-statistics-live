@@ -1,0 +1,30 @@
+# generated from bayt.cue — do not edit
+FROM golaberto-browser AS check-statistics-live
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY --from=plugins_omnishell-runtime-image / /omnishell
+COPY --parents tests/** bayt.json ./
+COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.check-statistics-live.json ./.bayt/
+
+FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS check-statistics-live_ctxs
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY --parents tests/** bayt.json ./
+COPY --from=golaberto-browser_srcs /monorepo /monorepo
+ARG SOURCE_DATE_EPOCH
+ARG BAYT_CLAMP=1
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
+FROM scratch AS check-statistics-live_srcs
+COPY --from=check-statistics-live_ctxs /monorepo /monorepo
+
+FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS check-statistics-live_bayt_ctxs
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY --parents .bayt/compose.check-statistics-live.yaml .bayt/Dockerfile.check-statistics-live .bayt/bayt.check-statistics-live.json .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/compose.check-statistics-live.closure.yaml .bayt/process-compose.yaml .bayt/compose.*.yaml .bayt/Dockerfile.* .bayt/bayt.*.json .bayt/Taskfile.*.yaml monorepo/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml compose.networks.yaml ./
+COPY --from=golaberto-browser_bayt /monorepo /monorepo
+COPY --from=golaberto-launch_bayt /monorepo /monorepo
+ARG SOURCE_DATE_EPOCH
+ARG BAYT_CLAMP=1
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
+FROM scratch AS check-statistics-live_bayt
+COPY --from=check-statistics-live_bayt_ctxs /monorepo /monorepo

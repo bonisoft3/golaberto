@@ -1,0 +1,31 @@
+{
+  "format": 1,
+  "compiler": {
+    "version": "0.367.0",
+    "sha256": "d08430de8b34ae997b72c44eb9a9274b25955a41af35e7c6997e7e459d3283ab",
+    "image": "images.feldera.com/feldera/pipeline-manager:0.367.0@sha256:42819714d16f7d5d37c17c87812ce98fb23efd2b1bfbf95b4889877f14693272",
+    "jar": "/home/ubuntu/feldera/build/sql2dbsp-jar-with-dependencies.jar",
+    "flags": [
+      "-i",
+      "--alltables",
+      "-v",
+      "1",
+      "-T",
+      "SqlToRelCompiler=2",
+      "--noRust"
+    ]
+  },
+  "views": [
+    "result_player_stat"
+  ],
+  "hashes": {
+    "translator": "b0a2c73c646ed1b8e8abddd8638c4f46c32cbee0a7d2bc3fa4c925475c48ca2e",
+    "driver": "fdbb894b318894f4b1cad8f3a1f7c761cc9f6fbbe4c0ff8a41562a0ba29c7206",
+    "admission": "5e2dda79587a6a4edbf6b19d303ce41a074b2e534467c1f62bef196958d6d0e4",
+    "source": "e4d664613f3ed98ddd8d9ad451cc5d964121673d0a1b15b9f49ab1d27b164da9",
+    "plan": "e22e9915b8764fbb50707b188932abcf77dbfc7c0e4fcc03ccffef84a411ae4c",
+    "schema": "9977768be472b69e39c1a40b0e22a8892a377176b811020c2e1cc33b02cc4928",
+    "diagnostics": "519302afda5a753e4994cb85d77e0f6c492c0835fb1849cac8c853cdd8842393",
+    "result_player_stat.sql": "2dcfa33027cdf70cc2d832073e1e158c01d1435007be000a09b55450ad152665"
+  }
+}

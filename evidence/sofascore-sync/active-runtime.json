@@ -1,0 +1,23 @@
+{
+  "captured_at": "2026-10-28T02:34:48.803177+00:00",
+  "image": "bayt-golaberto-sofascore-updater:sync-aa12f9045",
+  "state": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 2804604,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-10-28T02:24:54.710427142Z",
+    "FinishedAt": "2026-10-28T02:16:03.326578514Z"
+  },
+  "restart_count_since_resume": 0,
+  "verified_source_hashes": {
+    "runtime.py": "b764ccb940562e485338f850aa2812c95da44d7187a7ae5780a5d1ebe4ab5999",
+    "reconcile.py": "82fc6ff651ad867121f42a5b2fc2baee1f37253f28feb56d7d2f4a383ff4db9b",
+    "schedule.py": "44fd16ed214d563caffaac386f23d3a9c8aa8cc57929d1f03580c94b0dd48272"
+  }
+}

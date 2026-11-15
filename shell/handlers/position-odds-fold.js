@@ -1,9 +1,9 @@
-(state) => {
-  const stored = state.rows.view?.[0];
-  const seed = state.items.find(row => typeof row.id === 'string' && row.id.includes(':') && row.group_id && row.team_id);
+({ context }) => {
+  const stored = context.rows.view?.[0];
+  const seed = context.items.find(row => typeof row.id === 'string' && row.id.includes(':') && row.group_id && row.team_id);
   const view = stored || seed;
   if (!view) return {updates: []};
-  const source = state.rows.source?.[0];
+  const source = context.rows.source?.[0];
   if (!source) return {updates: []};
   const {positions = [], zones = []} = JSON.parse(source.current_json);
   const current_json = JSON.stringify({positions,zones});

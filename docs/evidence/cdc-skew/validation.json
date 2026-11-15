@@ -1,0 +1,35 @@
+{
+  "change": "Close Golaberto numerical inputs over identities under per-table CDC skew",
+  "gates": {
+    "./saytw generate": 0,
+    "./saytw lint": 0,
+    "./saytw test": 0,
+    "./saytw integrate": 0
+  },
+  "queries": {
+    "passed": 8,
+    "failed": 0
+  },
+  "numerical": {
+    "passed": 33,
+    "failed": 0
+  },
+  "native": {
+    "ratings_isolated_exit": 0,
+    "chances_isolated_exit": 0,
+    "combined_exit": 1,
+    "combined_limitation": "Deno exited with a pending-promise event-loop error after ratings passed; both programs passed in separate processes."
+  },
+  "review": {
+    "seat": "backend",
+    "model": "gpt-6-astra",
+    "effort": "high",
+    "result": "No actionable findings"
+  },
+  "simplification": "Kept dependency closure in existing SQL views; no new retry mechanism or DSL.",
+  "limitations": [
+    "Per-table progress remains non-atomic across source tables.",
+    "Existing poisoned claims are not migrated by this query change.",
+    "No cloud deployment was performed."
+  ]
+}

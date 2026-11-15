@@ -6,8 +6,10 @@ services:
         golaberto-database: service:golaberto-database
         golaberto-mesh-events: service:golaberto-mesh-events
         golaberto-migrate: service:golaberto-migrate
+        golaberto-airlock-upgrade: service:golaberto-airlock-upgrade
+        golaberto-timer-check: service:golaberto-timer-check
         libraries_mecha-conduit-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-conduit:0.20.6@sha256:c18a81780ff1c066c2dc2f7ed1115ac0333b28b2f6c9fe4c9390708c8f7810a1}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-conduit:0.23.1@sha256:922b908bf57ac1fdd195c414aa352d180956d3636e6ee4168f1cafa9a51a7327}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image}
       context: ..
       dockerfile: .bayt/Dockerfile.conduit
       target: conduit
@@ -26,16 +28,22 @@ services:
         condition: service_started
       golaberto-migrate:
         condition: service_completed_successfully
+      golaberto-airlock-upgrade:
+        condition: service_completed_successfully
+      golaberto-timer-check:
+        condition: service_completed_successfully
     develop:
       watch:
       - action: sync+restart
         path: ../docker/golaberto-cdc.yaml
         target: /conduit/cdc-to-bus.yaml.tmpl
     environment:
-      DATABASE_URL: >-
-        postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}
+      CONDUIT_API_HTTP_ADDRESS_PORT: "8080"
       CONDUIT_PIPELINES_PATH: /conduit/pipelines
       CONDUIT_DB_TYPE: inmemory
+      DATABASE_URL: >-
+        postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}
+      MESH_EVENTS_URL: http://mesh-events:3500
     healthcheck:
       test:
       - CMD
@@ -58,6 +66,8 @@ services:
         golaberto-database_bayt: service:golaberto-database_bayt
         golaberto-mesh-events_bayt: service:golaberto-mesh-events_bayt
         golaberto-migrate_bayt: service:golaberto-migrate_bayt
+        golaberto-airlock-upgrade_bayt: service:golaberto-airlock-upgrade_bayt
+        golaberto-timer-check_bayt: service:golaberto-timer-check_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.conduit
       target: conduit_bayt

@@ -99,6 +99,7 @@ _matchProbabilityMarkup: """
 	    </template>
 	   </div>
 	   <p class="hint" data-text="{msg.match_probability_scenario_hint}"></p>
+	   <div data-live="match_probability_scenario" data-filter="id=eq.{id}&event_sequence=eq.2147483647" data-empty=""><template data-item><p role="status" data-text="{msg.match_probability_sequence_exhausted}"></p></template></div>
 	  </fieldset>
 	  <div class="match-probability-source" data-live="match_probability" data-filter="id=eq.{id}&limit=1" data-empty="{msg.match_probability_no_data}"><template data-item><span hidden></span></template></div>
 	  <div data-text="{payload_json}\u001f{minute}\u001f{added_time}\u001f{events_json}\u001f{home_name}\u001f{away_name}\u001f{msg.match_probability_draw}\u001f{msg.match_probability_prematch}\u001f{msg.match_probability_rated_on}\u001f{msg.match_probability_timeline}\u001f{msg.match_probability_missing_rating}\u001f{msg.match_probability_ambiguous_rating}\u001f{msg.match_probability_unknown_minute}\u001f{msg.match_probability_event_limit}\u001f{msg.match_probability_invalid_scenario}\u001f{msg.chart_locale}\u001f{msg.match_probability_minute}" data-text-format="match-probability"></div>

@@ -1,0 +1,3501 @@
+{
+  "status": "full archive ratings and chances exactly match references; warm ingestion and interrupted publication recovery pass; full archive publication remains blocked",
+  "archiveManifestSha256": "4ab9f4883362e4a2f2d74a7ad42b896fa7e01b7fec08fc3edeb264306bf40ca4",
+  "physicalReader": {
+    "status": "passed",
+    "freezeMilliseconds": 10,
+    "claimMilliseconds": 23.195208000000093,
+    "concurrentPingMilliseconds": 27.327499999999873,
+    "logicalBytes": 8932360287,
+    "nodeCount": 1645,
+    "checks": [
+      "all seven source counts",
+      "captured row unchanged after source edit",
+      "restart preserves complete manifest"
+    ],
+    "scope": "disposable archive clone; diagnostic capture version; not whole production release"
+  },
+  "hostedEvaluation": {
+    "mode": "hosted",
+    "capture": {
+      "generation": "largest-eval-2079",
+      "identity": {
+        "id": "largest-eval",
+        "name": "streamed-eval",
+        "version": "c9d1bd1ad6c37d17c660791d93b28376aa4851c2d4819823001708aaddb3974a",
+        "revision": 1
+      }
+    },
+    "rows": 128179,
+    "exactOutput": true,
+    "inputBytes": 18502957,
+    "wasmBufferCap": 25165824,
+    "execution": {
+      "revision": 1,
+      "checkpoint": null,
+      "done": true
+    },
+    "elapsedMs": 230688,
+    "output": {
+      "rps": 0.18953416356714844,
+      "team_rps": {
+        "214": 0.2855614967917017,
+        "218": 0.17486484268606364,
+        "225": 0.18362088129077736,
+        "240": 0.17604503857723128,
+        "242": 0.13987414549180774,
+        "422": 0.09902706065129924,
+        "867": 0.2085609595163844,
+        "869": 0.20559187338441476,
+        "986": 0.16210023582056052,
+        "1011": 0.2269714012540515,
+        "1244": 0.13532609788390085,
+        "1245": 0.17245955871976285,
+        "1246": 0.24954010765513734,
+        "1247": 0.27135477879444186,
+        "1248": 0.2699538041913941,
+        "1249": 0.12747825702106266,
+        "1250": 0.3466840253140467,
+        "1486": 0.09160899814234241,
+        "2800": 0.05804340424928708,
+        "2801": 0.07757662642840012,
+        "2802": 0.18543490877925084,
+        "2803": 0.17498899328510634,
+        "2804": 0.14327335543799558,
+        "2805": 0.2231169931942196,
+        "2806": 0.20089585089718096,
+        "2808": 0.09565430478089396,
+        "2809": 0.20953166105293727,
+        "2810": 0.1815820044353096,
+        "2811": 0.21337704693525783,
+        "2812": 0.2625051375690867,
+        "2813": 0.24894281520351214,
+        "2814": 0.2020450636186403,
+        "2881": 0.26622921630465624,
+        "2882": 0.3099459702351967,
+        "2883": 0.12246716476805242,
+        "2890": 0.28036611355417845,
+        "2904": 0.22972674284988184,
+        "2905": 0.2200055497260581,
+        "2906": 0.1852727439761934,
+        "2907": 0.18026706410439775,
+        "2908": 0.2859995568220635,
+        "2911": 0.09036906671511598,
+        "2912": 0.22020777206945286,
+        "2913": 0.2065451600242051,
+        "2918": 0.17209059519033187,
+        "2921": 0.10404631511227543,
+        "2935": 0.023275564375418733
+      }
+    }
+  },
+  "provenance": {
+    "canonicalEngine": "6b9531fbaf8f846c01c619370607c81ae4f9d4dc3abaecb392936766e8cdf9c9",
+    "files": {
+      "package/compute/queries/worker.js": "4be6255cd69add21911647ded5fb9116713b695b48dc3585c20704352657c5d3",
+      "package/compute/execution/worker.js": "f382caae28709f75da6346c618f060b435c92286bc7ec5f813c5f4a8db52e613",
+      "app/golaberto-odds.wasm": "53bbb38ad80d18fbefe4c94ac96f2e9bdc83736b4c3bbd28eaf79fa1c7cce9c5",
+      "app/steps.ts": "27107f4b51cc818311058c1f0c51d4defcb30262a72364e67d0e149f10a699c9",
+      "app/compute.js": "a5bcd78688c14640ed75db11ab31c36a5b2a066b72d2781deae3a73b92c8eabe"
+    },
+    "localStepWallMs": 4159,
+    "hostedStepWallMs": 7249,
+    "hostedWorkerMemoryLimitMiB": 128,
+    "queryDuckDBBudgetMiB": 32,
+    "inputBufferLimitMiB": 24,
+    "pageRows": 4096,
+    "pageBytes": 1048576,
+    "wasmInputBytes": 18502957,
+    "rows": 128179,
+    "completeOutputEquality": true,
+    "committedReplayEqual": true,
+    "wrangler": "4.149.0",
+    "workersDeleted": [
+      "golaberto-streamed-eval-2079-compute-a6b49f1d395a",
+      "golaberto-streamed-eval-2079-queries-a6b49f1d395a"
+    ],
+    "assetUpload": "initial asset upload session401; fresh deploy session succeeded without any config or asset shim"
+  },
+  "limitations": [
+    "Numerical equality uses documented diagnostic forks, retained captures and controlled artifact adapters. Final computation output is proved; complete production publication and realtime full-archive behavior are not.",
+    "Local multi-worker development shares a process; hosted separate-worker isolation was tested separately.",
+    "No production deployment or reset."
+  ],
+  "actualTeamHistory": {
+    "actualExecutionRevision": "2814",
+    "executionDone": false,
+    "stage": "eval",
+    "sinkFinalized": true,
+    "fullPublicationAllowed": false,
+    "rows": 1382587,
+    "bytes": 247853183,
+    "sha256": "7eb00dcde83210675e8e3c262a0704f3e660c2169bcb4e1ff0c0788d54e61e25",
+    "exactPureWasmEquality": true,
+    "source": "Consistent read-only SqliteFilesystem snapshot of actual archived computation. No execution state mutation."
+  },
+  "historyStaging": {
+    "scope": "local workerd staging only; not final atomic publication",
+    "initial": {
+      "team_rating": {
+        "rows": 1382587,
+        "chunks": 10802,
+        "sha256": "7eb00dcde83210675e8e3c262a0704f3e660c2169bcb4e1ff0c0788d54e61e25",
+        "milliseconds": 163379.41175,
+        "before": {
+          "milliseconds": 3.3456670000000486,
+          "result": {
+            "sqliteBytes": 2296868864,
+            "heap": 44564480
+          }
+        },
+        "after": {
+          "milliseconds": 2.1092079999798443,
+          "result": {
+            "sqliteBytes": 2508541952,
+            "heap": 44564480
+          }
+        },
+        "processCpuSeconds": 156.4
+      }
+    },
+    "restart": {
+      "team_rating": {
+        "rows": 1382587,
+        "chunks": 10802,
+        "sha256": "7eb00dcde83210675e8e3c262a0704f3e660c2169bcb4e1ff0c0788d54e61e25",
+        "milliseconds": 2430.215874999998,
+        "before": {
+          "milliseconds": 41.27275000000009,
+          "result": {
+            "sqliteBytes": 2421325824,
+            "heap": 44564480
+          }
+        },
+        "after": {
+          "milliseconds": 2.909749999998894,
+          "result": {
+            "sqliteBytes": 2421428224,
+            "heap": 44564480
+          }
+        },
+        "processCpuSeconds": 0.16000000000000014
+      }
+    },
+    "concurrentSourceReads": {
+      "kind": "source SQL query during actual output staging",
+      "samples": [
+        35.106249999999996,
+        44.079290999999984,
+        9.821124999999995,
+        17.468249999999898,
+        19.98133299999995,
+        16.21900000000005,
+        9.654500000000098,
+        24.13387499999999,
+        15.446875000000091,
+        17.642708000000084,
+        39.98683299999993,
+        18.094040999999834,
+        7.666791999999987,
+        16.584749999999985,
+        29.12783300000001,
+        14.313750000000255,
+        16.125417000000198,
+        14.884000000000015,
+        24.059957999999824,
+        27.51000000000022,
+        11.240875000000415,
+        21.824416000000383,
+        24.283833000000413,
+        20.650791999999456,
+        19.605875000000196,
+        19.87920900000063,
+        16.976957999999286,
+        21.96600000000035,
+        23.35595899999953,
+        23.462916999999834
+      ],
+      "count": 30,
+      "min": 7.666791999999987,
+      "median": 19.87920900000063,
+      "max": 44.079290999999984
+    }
+  },
+  "boundedReaderMaterialization": {
+    "passed": true,
+    "successfulCalls": 477,
+    "maxCallWallMilliseconds": 1673.3012500000186,
+    "maxCallProcessCpuSeconds": 1.6299999999999955,
+    "totalCallWallMilliseconds": 311937.158536,
+    "totalCallProcessCpuSeconds": 306.9200000000004,
+    "maxHeapBytes": 53477376,
+    "finalRestartMilliseconds": 28011.317291999992,
+    "sqliteBytesAfter": 2863857664,
+    "limitations": [
+      "Diagnostic metadata-only chances claim on the already immutable imported Reader image; no new physical transfer.",
+      "Local workerd process CPU includes runtime and proxy, not hosted billed CPU.",
+      "Reader clone has no live source writes or snapshot preimage overhead."
+    ],
+    "eligibilityGuard": "Phase1 used ordinary relkind guard; resumedPhase2 additionally checked heapAM. All sources were heap tables.",
+    "partialCrashResume": {
+      "milliseconds": 78611.127084,
+      "progress": [
+        {
+          "source": "team_rating",
+          "next_block": 81664,
+          "total_blocks": 109328,
+          "row_count": 6124800
+        }
+      ]
+    },
+    "verifiedCounts": [
+      {
+        "source": "championship",
+        "expected": 1514,
+        "rows": 1514,
+        "first": 1,
+        "last": 1514
+      },
+      {
+        "source": "phase",
+        "expected": 4368,
+        "rows": 4368,
+        "first": 1,
+        "last": 4368
+      },
+      {
+        "source": "stage_group",
+        "expected": 15566,
+        "rows": 15566,
+        "first": 1,
+        "last": 15566
+      },
+      {
+        "source": "team_group",
+        "expected": 58440,
+        "rows": 58440,
+        "first": 1,
+        "last": 58440
+      },
+      {
+        "source": "standing",
+        "expected": 58440,
+        "rows": 58440,
+        "first": 1,
+        "last": 58440
+      },
+      {
+        "source": "team",
+        "expected": 3426,
+        "rows": 3426,
+        "first": 1,
+        "last": 3426
+      },
+      {
+        "source": "zone",
+        "expected": 16379,
+        "rows": 16379,
+        "first": 1,
+        "last": 16379
+      },
+      {
+        "source": "game",
+        "expected": 318970,
+        "rows": 318970,
+        "first": 1,
+        "last": 318970
+      },
+      {
+        "source": "team_rating",
+        "expected": 8195365,
+        "rows": 8195365,
+        "first": 1,
+        "last": 8195365
+      }
+    ],
+    "diagnosticCountVerificationMilliseconds": 134829.73629200002
+  },
+  "actualRatings": {
+    "diagnosticOnly": true,
+    "capture": {
+      "generation": "archive-12f3b64e684b47fecee5b9b5",
+      "identity": {
+        "id": "78736828-57b7-5c85-8698-1899938b0cba",
+        "name": "golaberto-ratings",
+        "version": "62ff82e72dcc3ab32390e7dbf082026a0e15facd56029f44aaa804d3c630dc54",
+        "revision": 1
+      }
+    },
+    "sinks": {
+      "team_rating": {
+        "actualFile": "/tmp/2079-native-join-spike/actual-history/team_rating.jsonl",
+        "oracleFile": "/tmp/2079-native-join-spike/oracle/team_rating.jsonl",
+        "rows": 1382587,
+        "bytes": 247853183,
+        "sha256": "7eb00dcde83210675e8e3c262a0704f3e660c2169bcb4e1ff0c0788d54e61e25",
+        "byteEqualPureWasmOracle": true
+      },
+      "player_rating": {
+        "actualFile": "/tmp/2079-native-join-spike/actual-player-diagnostic/player_rating.jsonl",
+        "oracleFile": "/tmp/2079-native-join-spike/oracle/player_rating.jsonl",
+        "rows": 41155,
+        "bytes": 5977731,
+        "sha256": "bd6d04ca0fc86a255c8523b443c94ff04b08523ff904c5661c1813fc9b85c38d",
+        "byteEqualPureWasmOracle": true
+      },
+      "rating_eval": {
+        "actualFile": "/tmp/2079-native-join-spike/phase-shards/rating_eval.jsonl",
+        "oracleFile": "/tmp/2079-native-join-spike/oracle/rating_eval.jsonl",
+        "rows": 3931,
+        "bytes": 281652,
+        "sha256": "6cab179b693191b11fbbeefd6b029a75e13709b0e332c09c5e83973f65b245f6",
+        "byteEqualPureWasmOracle": true
+      }
+    },
+    "provenance": {
+      "team_rating": "Original actual historic computation; finalized before phase evaluation.",
+      "player_rating": "Actual Query+Compute fork using identical immutable inputs; fork advanced past unfinished phase evaluation only, then executed all player preparation and partitions.",
+      "rating_eval": "Original 2724 actual phase rows plus 1207 actual disjoint four-shard Query+Compute phase rows; full exact union.",
+      "artifact": "Current canonical runtime and app adapted explicitly to the retained historical capture identity; not a pristine deployment artifact."
+    },
+    "originalCheckpointPreserved": {
+      "revision": 3843,
+      "checkpoint": {
+        "stage": "eval",
+        "after": "a0300000-0000-4000-8000-000000000cf5"
+      },
+      "done": false
+    },
+    "originalExecutionDone": false,
+    "productionPublicationPerformed": false
+  },
+  "phaseShardTiming": {
+    "scope": "actual local Query+Compute four-shard remaining phase evaluation only",
+    "phaseRows": 1207,
+    "start": "2026-10-25T10:43:29.741000+00:00",
+    "finish": "2026-10-25T11:14:18.571000+00:00",
+    "wallSeconds": 1848.83,
+    "recordedStoppedGapSeconds": 789.376,
+    "activeObservedSeconds": 1059.454,
+    "pausedGaps": [
+      {
+        "from": "2026-10-25T10:51:14.646Z",
+        "to": "2026-10-25T11:04:24.022Z",
+        "seconds": 789.376,
+        "reason": "resource guard stop and explicit diagnostic resume"
+      }
+    ],
+    "includesLocalProxyReplyLossAndReadonlyStatusRetries": true,
+    "fullRecomputationBenchmark": false,
+    "nativeOracleSeconds": 1919,
+    "hostedLargestPhaseStepSeconds": 7.249,
+    "hostedLargestPhaseWithIngestSeconds": 230.688
+  },
+  "chancesPhysicalQueries": {
+    "adapter": {
+      "testOnly": true,
+      "captureVersion": "504b7a8810806c6041881af4ed15898f4ff1ebca8e907341042d031e6fbbb5b5",
+      "currentVersion": "a7143e4291503e9335f95b52dc2f6b0771838d8439ab101ae49240a994db03e4",
+      "reason": "Use immutable imported baseline for exact current generated physical SQL and current pinned low-memory optimizer profile. Query relation semantics, source declarations and sink types checked equal; physical stages intentionally differ. No production artifact.",
+      "translator": "de3eccfe188a26f88445484c8939bb822d2680843021276d453fbb7000ed1613",
+      "engine": "6b9531fbaf8f846c01c619370607c81ae4f9d4dc3abaecb392936766e8cdf9c9",
+      "stages": {
+        "groups": 19,
+        "members": 12,
+        "games": 155,
+        "zones": 12
+      }
+    },
+    "relations": {
+      "groups": {
+        "rows": 15518,
+        "exact": true
+      },
+      "members": {
+        "rows": 58440,
+        "exact": true
+      },
+      "games": {
+        "rows": 19743,
+        "exact": true
+      },
+      "zones": {
+        "rows": 16379,
+        "exact": true
+      }
+    },
+    "materializeCalls": {
+      "groups": 20,
+      "members": 14,
+      "games": 156,
+      "zones": 13
+    },
+    "materializeTotalMs": 134065.14542000013,
+    "slowestCalls": [
+      {
+        "query": "games",
+        "ms": 24258.209834
+      },
+      {
+        "query": "games",
+        "ms": 24027.193667
+      },
+      {
+        "query": "games",
+        "ms": 3929.955667
+      },
+      {
+        "query": "games",
+        "ms": 3622.374958999999
+      },
+      {
+        "query": "groups",
+        "ms": 1462.119416
+      },
+      {
+        "query": "groups",
+        "ms": 708.2992920000002
+      },
+      {
+        "query": "games",
+        "ms": 643.9438749999972
+      },
+      {
+        "query": "games",
+        "ms": 638.9473750000034
+      }
+    ],
+    "knownLocalProxyFailure": "Network connection lost on request immediately after successful24s source barrier; durable resume; subsequent read-only status checks absorbed same local fault. No SQL fallback.",
+    "sqlMemoryBytes": 32000000
+  },
+  "hostedPagedChances": {
+    "mode": "hosted",
+    "capture": {
+      "generation": "largest-chances-2079",
+      "identity": {
+        "id": "largest-chances",
+        "name": "golaberto-chances",
+        "version": "3bcac2aed42d081a84c4ac5d44eb95cf13dd62bc2202fb5d7f6b9cc2f2da3cb4",
+        "revision": 1
+      }
+    },
+    "exactAllRows": true,
+    "steps": 43,
+    "maxCheckpointBytes": 1957444,
+    "elapsedMs": 415809,
+    "stdoutBytes": 14972161,
+    "wasmUnchanged": true,
+    "groupOrdinal": 15135,
+    "outputs": {
+      "team_chance": {
+        "rows": 218,
+        "sha256": "b031707f5f9e174c14f7cc9b7b9131e050ff483cbe35372155bf085d5f3be6a5"
+      },
+      "zone_chance": {
+        "rows": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "position_chance": {
+        "rows": 47524,
+        "sha256": "41ec68aeb38baa5c7f66063ad15b3d110d4ca79a5c11d0ee6837d7a903ad8813"
+      },
+      "game_importance": {
+        "rows": 20,
+        "sha256": "894cae6653de4ca232f2cba2f93b322f739f8ae49f7b807e0682e7730d31c79a"
+      }
+    },
+    "execution": {
+      "revision": 43,
+      "done": true
+    }
+  },
+  "hostedPagedChancesProvenance": {
+    "testOnly": true,
+    "candidatePrivateStdoutBytes": 16777216,
+    "originalPrivateStdoutBytes": 8388608,
+    "rpcLimitUnchanged": 8388608,
+    "engineMemoryBudgetUnchanged": 32000000,
+    "beforeComputeSha": "ae28ab326a5935fc211a737912754e3085c79e0d11676c6b8a1807c3058083e5",
+    "candidateComputeSha": "3d3c13330a4677ffbd072a58a540e3d48533b57031cd6ecf2e9416224c30eec9",
+    "wasmSha": "53bbb38ad80d18fbefe4c94ac96f2e9bdc83736b4c3bbd28eaf79fa1c7cce9c5",
+    "reason": "Isolated candidate private stdout cap capacity proof while root owns source integration; only stdout length comparison changed in disposablebundle. Actual app paging/unchangedWASM/QueryWorker; fixture carries captured largest group with originalseed/globalordinal and asserts exactWASMinput.",
+    "appSources": {
+      "bounded-chances.ts": "8580acae2b383deeb0b9487fb8520b930e2ff03b3412433cf1a066ef2907fdb9",
+      "chances.pure.js": "e9f23babae1251db9c3cadfdf8f8d8874f1758e4aa1e5aa5a151358e004a5fda",
+      "bounded-ratings.ts": "45afd836343099db74aa3653296ea3c52191b31f7e161281ccd0eb1757d576ea"
+    }
+  },
+  "chancesPause": {
+    "execution": {
+      "revision": 13814,
+      "checkpoint": {
+        "stage": "groups",
+        "after": 11527
+      },
+      "done": false
+    },
+    "completedGroups": 11528,
+    "totalGroups": 15518,
+    "reason": "Below 15 GiB disk headroom; all owned workers stopped, retained state preserved.",
+    "resumedToCompletionRevision": 22036
+  },
+  "archivePublication": {
+    "kind": "full-archive actual ratings publication diagnostic",
+    "accepted": false,
+    "publication": "interrupted without acknowledgment; receipt and rollback recovery not yet checked",
+    "reason": "Source query serialized behind publication for more than9minutes; worker processCPU504.98s since freshstartup. Disk below15GiB safetyfloor forced stopping both disposable workers.",
+    "originalSourcesUnchanged": true,
+    "stagedAndSealed": {
+      "team_rating": {
+        "chunks": 10802,
+        "rows": 1382587
+      },
+      "player_rating": {
+        "chunks": 322,
+        "rows": 41155
+      },
+      "rating_eval": {
+        "chunks": 31,
+        "rows": 3931
+      }
+    },
+    "sealedRestart": {
+      "milliseconds": 1632.8005839999987,
+      "result": [
+        {
+          "sink": "player_rating",
+          "chunks": 322,
+          "rows": 41155
+        },
+        {
+          "sink": "rating_eval",
+          "chunks": 31,
+          "rows": 3931
+        },
+        {
+          "sink": "team_rating",
+          "chunks": 10802,
+          "rows": 1382587
+        }
+      ]
+    },
+    "initialPublicCounts": {
+      "counts": {
+        "team_rating": 8195365,
+        "player_rating": 77238,
+        "rating_eval": 0
+      },
+      "receipts": []
+    },
+    "overlapSample": {
+      "team_rating": {
+        "rows": 129024,
+        "inserted": 12160,
+        "updated": 116864,
+        "identical": 0,
+        "pages": 126,
+        "maxMilliseconds": 2712.534415999995,
+        "totalMilliseconds": 65063.43704100001
+      }
+    },
+    "measurements": {
+      "publicationWorkerCumulativeCpuSecondsAtStop": 504.98,
+      "publicationWorkerFinalRssKiB": 556112,
+      "publicationWorkerObservedPeakRssKiB": 4838416,
+      "publicationPgHeapBeforeBytes": 44564480,
+      "publicationPgHeapAfterBytes": null,
+      "stop": "2026-10-25T12:00:54.474768+00:00",
+      "sourcePingCompleted": false
+    },
+    "limitations": [
+      "CPU is localworkerdprocess measurement, not hostedbilledisolateCPU; RSS is not isolate or PGheap.",
+      "PGlite/coordinator fixture does not instantiatefullEdgeCluster realtime listeners.",
+      "Actualoutputs combine originalhistoric output and diagnosticplayer/phase executions; all exact vsunchangedfulloracle, originalmaincheckpoint stilldonefalse.",
+      "No atomicpublicationpass: restartreceipt/rollback/sourcevisibilitychecks remainblockedbydiskfloor.",
+      "Overlap129024rows is sorted-ID prefix, not fullsinkpopulation."
+    ],
+    "preserved": [
+      "state",
+      "runtime",
+      "runtime-provenance.json",
+      "actual-ratings-acceptance.json",
+      "failed-publication-evidence.json",
+      "interrupted.json",
+      "final-run.log",
+      "recover.ts",
+      "/tmp/2079-publication-overlap/evidence.json"
+    ],
+    "cleanedOwnDisposableStates": [
+      "/tmp/2079-reader-materialize-bounded/state",
+      "/tmp/2079-publication-overlap/state"
+    ],
+    "activeOwnWorkers": false
+  },
+  "warmIngestion": {
+    "completed": true,
+    "gitHead": "c0ab203633de6afe84edfb0e067296296c7a0d58",
+    "baseline": {
+      "failedAppend": {
+        "table": "game",
+        "after": 37376,
+        "next": 37504,
+        "rows": 128,
+        "derivedFrom": "1539 HTTP200 responses minus1247 setup/previous-table responses"
+      },
+      "seconds": 27,
+      "error": "Error: AggregateError: Error: FATAL Error: Failed to create checkpoint because of error: FATAL Error: Failed to create checkpoint: Out of Memory Error: failed to pin block of size 256.0 KiB (30.4 MiB/30.5 MiB used)\n\nPossible solutions:\n* Reducing the number of threads (SET threads=X)\n* Disabling insertion-order preservation (SET preserve_insertion_order=false)\n* Increasing the memory limit (SET memory_limit='...GB')\n\nSee also https://duckdb.org/docs/stable/guides/performance/how_to_tune_workloads; rollback failed: Error: FATAL Error: Failed: database has been invalidated because of a previous fatal error. The database must be restarted prior to being used again.\nOriginal error: \"Failed to create checkpoint because of error: FATAL Error: Failed to create checkpoint: Out of Memory Error: failed to pin block of size 256.0 KiB (30.4 MiB/30.5 MiB used)\n\nPossible solutions:\n* Reducing the number of threads (SET threads=X)\n* Disabling insertion-order preservation (SET preserve_insertion_order=false)\n* Increasing the memory limit (SET memory_limit='...GB')\n\nSee also https://duckdb.org/docs/stable/guides/performance/how_to_tune_workloads\""
+    },
+    "candidate": {
+      "setting": "SET checkpoint_threshold='1MB'",
+      "profile": [
+        {
+          "name": "checkpoint_threshold",
+          "value": "976.5 KiB"
+        },
+        {
+          "name": "disabled_optimizers",
+          "value": "window_self_join"
+        },
+        {
+          "name": "max_temp_directory_size",
+          "value": "1.0 GiB"
+        },
+        {
+          "name": "memory_limit",
+          "value": "30.5 MiB"
+        },
+        {
+          "name": "preserve_insertion_order",
+          "value": "false"
+        },
+        {
+          "name": "threads",
+          "value": "1"
+        }
+      ],
+      "rows": {
+        "championship": 1514,
+        "phase": 4368,
+        "stage_group": 15566,
+        "team_group": 58440,
+        "standing": 58440,
+        "team": 3426,
+        "zone": 16379,
+        "game": 318970,
+        "team_rating": 8195365
+      },
+      "totalRows": 8672468,
+      "expected128RowChunks": 67757,
+      "durationSeconds": 926,
+      "boot": "21a03ab4-318a-416a-893c-1db82423a4e3",
+      "sameBootFencedEveryResponse": true,
+      "reopened": false,
+      "warmHeapBytes": 72548352,
+      "warmStages": [
+        {
+          "event": "warm-stage-pass",
+          "seconds": 926,
+          "stage": 0,
+          "ms": 221,
+          "result": {
+            "materialized": null,
+            "done": false
+          }
+        },
+        {
+          "event": "warm-stage-pass",
+          "seconds": 926,
+          "stage": 1,
+          "ms": 98,
+          "result": {
+            "materialized": null,
+            "done": false
+          }
+        }
+      ]
+    },
+    "limitations": [
+      "Local workerd investigation; not a hosted total-memory proof.",
+      "Source rows reconstructed as lossless DuckDB VARCHAR transport from retained original input values in rowid order; PostgreSQL text spellings can differ.",
+      "Runtime memory_limit remains32MB;1MB is decimal checkpoint threshold976.5KiB.",
+      "Elapsed durations are local wall time under concurrent work; no publication speedup is claimed."
+    ],
+    "sha256": {
+      "/tmp/2079-warm-ingestion/duckdb/duckdb.wasm": "6b9531fbaf8f846c01c619370607c81ae4f9d4dc3abaecb392936766e8cdf9c9",
+      "/tmp/2079-warm-ingestion/duckdb/runtime.js": "5e5abb5175c1360f091671e327221a8040fdd0d539cf06ed145778e7fcba5eb9",
+      "/tmp/2079-warm-ingestion/programs.json": "14de0222b35a47f77b5183955321f2babfaa87a5fa5b4eff6a70fe5e60c018c5",
+      "/tmp/2079-warm-ingestion/worker.ts": "d1792bf747ae770952f8131557a2be5f54304c0da8b0e6bf12d9aa892d2187e2",
+      "/tmp/2079-warm-ingestion/run.ts": "e347e4674626b89564fe074308b5d7bc4ea69513a9e43e76ffb8df62ce7db461",
+      "/tmp/2079-warm-ingestion/threshold-1mb/worker.ts": "d91f11abde2ecb4f9e77057a984fec0ddb0d1ca8bf3691a59d554cae65c226b5",
+      "/tmp/2079-warm-ingestion/threshold-1mb/run.ts": "d4b6b6ee22f27ea47e5b61277120242fa556f958fc5ab2ba33af7ef14afc4973",
+      "/Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/packages/mecha-edge/src/paged-query.ts": "aa772b83601c2d0aa668ea28328a76fe2388e9a9578ba6136d9fb69cf0d02510",
+      "/Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/packages/mecha-edge/src/paged-query-action.ts": "1d16a859fd46bcd949fd225786026c85fb008a961a7fa65d581dbe57e58c3fcb",
+      "/Users/davi/code/trash/.worktrees/duckstream/libraries/mecha/packages/mecha-edge/src/paged-execution.ts": "6509ae138139945d1350346e774f372d0fd6df7e32390f93adc537b5de123036"
+    }
+  },
+  "publicationRecovery": {
+    "started": "2026-10-25T12:29:09.007Z",
+    "diskBefore": 80621129728,
+    "kind": "recovery after interrupted atomic publication; no publish call",
+    "limitations": [
+      "Count invariance plus sampled output invisibility; PostgreSQL transaction rollback provides the full atomicity contract.",
+      "Local workerd only."
+    ],
+    "status": {
+      "milliseconds": 1089.4557089999998,
+      "result": {
+        "publication": "pending",
+        "capture": {
+          "generation": "fc9f242b-e641-4a9f-b5cd-2ea2f961128b",
+          "identity": {
+            "id": "[\"golaberto-ratings\",\"62ff82e72dcc3ab32390e7dbf082026a0e15facd56029f44aaa804d3c630dc54-physical-probe\",2]",
+            "name": "golaberto-ratings",
+            "version": "62ff82e72dcc3ab32390e7dbf082026a0e15facd56029f44aaa804d3c630dc54-physical-probe",
+            "revision": 2
+          }
+        },
+        "attempt": "actual-ratings-archive-publication",
+        "spec": {
+          "name": "golaberto-ratings",
+          "version": "62ff82e72dcc3ab32390e7dbf082026a0e15facd56029f44aaa804d3c630dc54-physical-probe",
+          "reads": [
+            "championship",
+            "phase",
+            "game",
+            "team",
+            "player",
+            "player_game",
+            "goal"
+          ],
+          "to": [
+            "team_rating",
+            "player_rating",
+            "rating_eval"
+          ],
+          "sinkWrites": {
+            "team_rating": "upsert",
+            "player_rating": "replace",
+            "rating_eval": "replace"
+          }
+        }
+      }
+    },
+    "progress": {
+      "milliseconds": 310.59958300000017,
+      "result": [
+        {
+          "sink": "player_rating",
+          "chunks": 322,
+          "rows": 41155
+        },
+        {
+          "sink": "rating_eval",
+          "chunks": 31,
+          "rows": 3931
+        },
+        {
+          "sink": "team_rating",
+          "chunks": 10802,
+          "rows": 1382587
+        }
+      ]
+    },
+    "counts": {
+      "milliseconds": 2417.804625,
+      "result": {
+        "counts": {
+          "team_rating": 8195365,
+          "player_rating": 77238,
+          "rating_eval": 0
+        },
+        "receipts": []
+      }
+    },
+    "sample": {
+      "milliseconds": 343.16754199999923,
+      "result": {
+        "matched": 0
+      }
+    },
+    "metrics": {
+      "milliseconds": 4.974083000000064,
+      "result": {
+        "sqliteBytes": 2422005760,
+        "heap": 44564480
+      }
+    },
+    "ping": {
+      "milliseconds": 6.2673750000003565,
+      "result": {
+        "ready": 1
+      }
+    },
+    "passed": true
+  },
+  "publicationBlockSizeComparison": {
+    "128k": {
+      "wallMilliseconds": 20117.010209,
+      "processCpuSeconds": 17.91,
+      "pgExecutionMilliseconds": 17600,
+      "modifyTableMilliseconds": 12181,
+      "readBlocks": 4702,
+      "dirtiedBlocks": 3800,
+      "writtenBlocks": 2308,
+      "triggers": [
+        {
+          "Trigger Name": "RI_ConstraintTrigger_c_29058",
+          "Constraint Name": "team_rating_team_id_fkey",
+          "Relation": "team_rating",
+          "Time": 444,
+          "Calls": 95
+        },
+        {
+          "Trigger Name": "compute_snapshot_inserted",
+          "Relation": "team_rating",
+          "Time": 1,
+          "Calls": 1
+        },
+        {
+          "Trigger Name": "compute_snapshot_updated",
+          "Relation": "team_rating",
+          "Time": 69,
+          "Calls": 1
+        },
+        {
+          "Trigger Name": "mark_txn",
+          "Relation": "team_rating",
+          "Time": 16,
+          "Calls": 2
+        },
+        {
+          "Trigger Name": "restamp_txid",
+          "Relation": "team_rating",
+          "Time": 25,
+          "Calls": 929
+        },
+        {
+          "Trigger Name": "team_latest_rating_insert",
+          "Relation": "team_rating",
+          "Time": 166,
+          "Calls": 1
+        },
+        {
+          "Trigger Name": "team_latest_rating_update",
+          "Relation": "team_rating",
+          "Time": 4686,
+          "Calls": 1
+        },
+        {
+          "Trigger Name": "team_rating_chart_dirty_insert",
+          "Relation": "team_rating",
+          "Time": 8,
+          "Calls": 1
+        },
+        {
+          "Trigger Name": "team_rating_chart_dirty_update",
+          "Relation": "team_rating",
+          "Time": 44,
+          "Calls": 1
+        }
+      ],
+      "heapBytes": 44564480,
+      "sqliteBytes": 2350997504,
+      "overlap": {
+        "rows": 1024,
+        "inserted": 95,
+        "updated": 929
+      },
+      "afterRollbackMatches": 0
+    },
+    "8k": {
+      "wallMilliseconds": 2748.988541,
+      "processCpuSeconds": 2.45,
+      "pgExecutionMilliseconds": 1687,
+      "modifyTableMilliseconds": 1285,
+      "readBlocks": 4702,
+      "dirtiedBlocks": 3800,
+      "writtenBlocks": 2308,
+      "triggers": [
+        {
+          "Trigger Name": "RI_ConstraintTrigger_c_29058",
+          "Constraint Name": "team_rating_team_id_fkey",
+          "Relation": "team_rating",
+          "Time": 40,
+          "Calls": 95
+        },
+        {
+          "Trigger Name": "compute_snapshot_inserted",
+          "Relation": "team_rating",
+          "Time": 0,
+          "Calls": 1
+        },
+        {
+          "Trigger Name": "compute_snapshot_updated",
+          "Relation": "team_rating",
+          "Time": 6,
+          "Calls": 1
+        },
+        {
+          "Trigger Name": "mark_txn",
+          "Relation": "team_rating",
+          "Time": 5,
+          "Calls": 2
+        },
+        {
+          "Trigger Name": "restamp_txid",
+          "Relation": "team_rating",
+          "Time": 10,
+          "Calls": 929
+        },
+        {
+          "Trigger Name": "team_latest_rating_insert",
+          "Relation": "team_rating",
+          "Time": 16,
+          "Calls": 1
+        },
+        {
+          "Trigger Name": "team_latest_rating_update",
+          "Relation": "team_rating",
+          "Time": 330,
+          "Calls": 1
+        },
+        {
+          "Trigger Name": "team_rating_chart_dirty_insert",
+          "Relation": "team_rating",
+          "Time": 1,
+          "Calls": 1
+        },
+        {
+          "Trigger Name": "team_rating_chart_dirty_update",
+          "Relation": "team_rating",
+          "Time": 9,
+          "Calls": 1
+        }
+      ],
+      "heapBytes": 44564480,
+      "sqliteBytes": 4652335104,
+      "overlap": {
+        "rows": 1024,
+        "inserted": 95,
+        "updated": 929
+      },
+      "afterRollbackMatches": 0
+    },
+    "ratios": {
+      "wallMilliseconds": 7.317968012220971,
+      "processCpuSeconds": 7.310204081632652,
+      "pgExecutionMilliseconds": 10.43272080616479,
+      "modifyTableMilliseconds": 9.479377431906615
+    },
+    "provenance": {
+      "runtimeCommit": "c0ab20363",
+      "inputRows": "actual finalized ratings exports, retained diagnosticcaptureidentity",
+      "logicalBytesEqual": true,
+      "sourcePinsReleasedBoth": true,
+      "transactions": "all real constraints/triggers enabled; profile transaction explicitly rolled back",
+      "originalSourcesUnchanged": true,
+      "workerStatus": "both stopped",
+      "limitations": [
+        "Local workerd processCPU, not hosted billedisolateCPU; PGheap excludesotherJS/nativeallocations.",
+        "Single1024-rowbatch, not full1.38m-rowpublication or productionmigrationproof.",
+        "BothclonesnoactiveCOWpins; productionpin-overhead mustbechecked separately."
+      ]
+    }
+  },
+  "publication8192Profile": {
+    "rows": 8192,
+    "wallMilliseconds": 15556.14125,
+    "processCpuSeconds": 12.84,
+    "pgExecutionMilliseconds": 12780,
+    "modifyTableMilliseconds": 12008,
+    "readBlocks": 36663,
+    "dirtiedBlocks": 29974,
+    "writtenBlocks": 28641,
+    "triggers": [
+      {
+        "Trigger Name": "RI_ConstraintTrigger_c_29058",
+        "Constraint Name": "team_rating_team_id_fkey",
+        "Relation": "team_rating",
+        "Time": 67,
+        "Calls": 800
+      },
+      {
+        "Trigger Name": "compute_snapshot_inserted",
+        "Relation": "team_rating",
+        "Time": 0,
+        "Calls": 1
+      },
+      {
+        "Trigger Name": "compute_snapshot_updated",
+        "Relation": "team_rating",
+        "Time": 7,
+        "Calls": 1
+      },
+      {
+        "Trigger Name": "mark_txn",
+        "Relation": "team_rating",
+        "Time": 12,
+        "Calls": 2
+      },
+      {
+        "Trigger Name": "restamp_txid",
+        "Relation": "team_rating",
+        "Time": 44,
+        "Calls": 7392
+      },
+      {
+        "Trigger Name": "team_latest_rating_insert",
+        "Relation": "team_rating",
+        "Time": 83,
+        "Calls": 1
+      },
+      {
+        "Trigger Name": "team_latest_rating_update",
+        "Relation": "team_rating",
+        "Time": 589,
+        "Calls": 1
+      },
+      {
+        "Trigger Name": "team_rating_chart_dirty_insert",
+        "Relation": "team_rating",
+        "Time": 7,
+        "Calls": 1
+      },
+      {
+        "Trigger Name": "team_rating_chart_dirty_update",
+        "Relation": "team_rating",
+        "Time": 18,
+        "Calls": 1
+      }
+    ],
+    "heapBytes": 53477376,
+    "sqliteBytes": 4636762112,
+    "overlap": {
+      "rows": 8192,
+      "inserted": 800,
+      "updated": 7392
+    },
+    "matchedAfterRollback": 0,
+    "guard": {
+      "cpuSeconds": 12.629999999999999,
+      "wallMilliseconds": 15053.746042000002,
+      "freeBytes": 46968303616
+    },
+    "naiveFullOutputCpuMinutes": 36.11738500976562,
+    "naiveFullOutputWallMinutes": 43.75756563804881,
+    "extrapolationLimitation": "Arithmetic scaling only; one full transaction has different cache/trigger amortization; no full-run prediction or hosted bound."
+  },
+  "publicationFormatMigrationConstraints": {
+    "status": "Read-only design constraints; no production migration implemented or authorized by this diagnostic",
+    "formatChange": "Existing v1 deflate format supports 8192-byte blocks, but changing fs_format alone would reinterpret every existing block offset and corrupt the filesystem.",
+    "requirements": [
+      {
+        "id": "atomic_format_activation",
+        "must": "Build a separately named block relation using bounded, replayable conversion steps. Preserve all logical file bytes, sparse holes, file lengths, inode identities, modes and mtimes. Verify conversion before atomically activating the new block relation and its matching fs_format metadata. A crash must always expose one complete format, never mixed indices.",
+        "evidence": "The offline comparison verified 8,864,202,847 logical bytes and node metadata with identical SHA256 before and after conversion. This proves byte conversion, not a hosted migration protocol."
+      },
+      {
+        "id": "snapshot_and_import_lifecycle",
+        "must": "Existing physical snapshot manifests encode block size and their preimages use the old block indices. The minimal implementation must wait for all active snapshot pins and incomplete imports to finish and be reclaimed through their owners before format activation. Do not forcibly release a live capture or reader merely to migrate. Supporting concurrent old-format snapshots instead requires retaining an explicit old-format block generation and its export/GC protocol. Preserve release tombstones and reader ownership records.",
+        "evidence": "Both diagnostic clones deliberately released their own pins; no original pins were changed. They therefore do not validate migration with active captures."
+      },
+      {
+        "id": "postgres_writer_fence",
+        "must": "Drain the source serializer, stop admitting new PostgreSQL transactions, finish committed filesystem sync, and close the existing PGlite instance before activating changed block geometry. Reopen with a new DataDirectory/SqliteFS instance after activation; the existing instance caches its format, file handles and decoded blocks. Retain PostgreSQL WAL and other files exactly so normal recovery remains possible. Do not mix a running old-format writer with a new-format block relation."
+      },
+      {
+        "id": "responsive_bulk_conversion",
+        "must": "A full offline conversion held under the source serializer is not a responsiveness solution. If conversion runs while source CRUD continues, it needs an immutable starting image plus complete tracking/replay of changed blocks, new/truncated/unlinked files and inode reuse, followed by a bounded final writer fence. Without that mechanism, require an explicit maintenance window rather than claiming a brief cut. Per-step durable cursor updates and writes must commit together and tolerate lost acknowledgments."
+      },
+      {
+        "id": "identity_and_authority",
+        "must": "Keep the same Durable Object identity and data_directory generation/complete markers: this is a physical encoding change, not a source reset. Preserve all business tables, computation identities, receipts, sealed output stages, reader-owner ledgers, KV contents, alarms and authentication configuration. Use an existing authorized infrastructure path; do not introduce an unauthenticated migration or arbitrary-SQL endpoint. Do not read, replace or regenerate JWT secrets."
+      },
+      {
+        "id": "storage_and_runtime_bounds",
+        "must": "Budget simultaneous old and new block relations, SQLite indices/free pages, PostgreSQL WAL, staging and any retained preimages against the hosted object limit. Track storage during every bounded step and stop before quota exhaustion. The offline probe used native SQLite VACUUM; its compaction behavior and availability through hosted SqlStorage have not been established, so do not assume the same temporary or final size in a production migration.",
+        "evidence": "Offline image grew from 2.52GB at 128KiB blocks to 4.65GB at 8KiB blocks. Cloudflare documents a 10GB limit per paid SQLite-backed Durable Object; sql.databaseSize reports its current SQLite size.",
+        "sources": [
+          "https://developers.cloudflare.com/durable-objects/platform/limits/",
+          "https://developers.cloudflare.com/durable-objects/api/sqlite-storage-api/#databasesize"
+        ]
+      },
+      {
+        "id": "deployment_and_recovery",
+        "must": "Deploy a reader compatible with both persisted geometries before migration. Explicitly handle callers that currently request 131072-byte blocks, since SqliteFS rejects a requested format that differs from storage. Confirm rollback builds can read the promoted format or document that code downgrade is fenced. Test crash/replay before, during and after activation; cold reopen; all active-capture restrictions; byte equality; source CRUD; and preserved authentication and computation receipts. A full-database restore must not silently erase intervening source writes or KV state."
+      }
+    ],
+    "publicationConclusion": "8KiB blocks materially improve the measured write path, but the 8192-row profile still took 12.84 local process CPU seconds. No full 1.38-million-row atomic publication, hosted capacity, or source-serving latency acceptance follows from this diagnostic. Chunking statements inside the same PostgreSQL transaction would still hold the source serializer.",
+    "localCodeReferences": [
+      "libraries/mecha/packages/pglite-workerd/src/sqlite-fs.ts: SqliteFS constructor and persisted-format equality guard",
+      "libraries/mecha/packages/pglite-workerd/src/data-directory.ts: open, freeze, snapshot import/release and generation handling",
+      "libraries/mecha/packages/pglite-workerd/src/physical-snapshot.ts: manifests, block indices, preimages, inode guards and release tombstones",
+      "libraries/mecha/packages/mecha-edge/src/object.ts: DataDirectory construction and source serializer"
+    ]
+  },
+  "actualChances": {
+    "parity": {
+      "capture": {
+        "generation": "fc9f242b-e641-4a9f-b5cd-2ea2f961128b",
+        "identity": {
+          "id": "[\"golaberto-chances\",\"504b7a8810806c6041881af4ed15898f4ff1ebca8e907341042d031e6fbbb5b5\",3]",
+          "name": "golaberto-chances",
+          "version": "504b7a8810806c6041881af4ed15898f4ff1ebca8e907341042d031e6fbbb5b5",
+          "revision": 3
+        }
+      },
+      "results": {
+        "team_chance": {
+          "rows": 58440,
+          "exact": true,
+          "expected": {
+            "rows": 58440,
+            "bytes": 11894349,
+            "sha256": "d688561c50eb7af0cc23d52735d15712ceb1f1891ff656c5583c3cbe151a2ff0"
+          }
+        },
+        "zone_chance": {
+          "rows": 81522,
+          "exact": true,
+          "expected": {
+            "rows": 81522,
+            "bytes": 22081078,
+            "sha256": "3b03d43039cfa801ed9dc6b78995e0f44056e85e386d32d33877846e1b266f60"
+          }
+        },
+        "position_chance": {
+          "rows": 988850,
+          "exact": true,
+          "expected": {
+            "rows": 988850,
+            "bytes": 213223534,
+            "sha256": "ab2c55239b1c25bdc5acb334cb1907604f4c9aad1ceb1416755cca14711addde"
+          }
+        },
+        "game_importance": {
+          "rows": 5419,
+          "exact": true,
+          "expected": {
+            "rows": 5419,
+            "bytes": 482741,
+            "sha256": "9b67f457b819e3fa9f2205b3939581c49120456169bba0b3334db3b77b3b4a41"
+          }
+        }
+      },
+      "exactPureWasmEquality": true
+    },
+    "outputs": {
+      "execution": {
+        "revision": "22036",
+        "checkpoint": {
+          "stage": "done"
+        },
+        "done": true
+      },
+      "evidence": {
+        "team_chance": {
+          "rows": 58440,
+          "bytes": 11894349,
+          "sha256": "d688561c50eb7af0cc23d52735d15712ceb1f1891ff656c5583c3cbe151a2ff0"
+        },
+        "zone_chance": {
+          "rows": 81522,
+          "bytes": 22081078,
+          "sha256": "3b03d43039cfa801ed9dc6b78995e0f44056e85e386d32d33877846e1b266f60"
+        },
+        "position_chance": {
+          "rows": 988850,
+          "bytes": 213223534,
+          "sha256": "ab2c55239b1c25bdc5acb334cb1907604f4c9aad1ceb1416755cca14711addde"
+        },
+        "game_importance": {
+          "rows": 5419,
+          "bytes": 482741,
+          "sha256": "9b67f457b819e3fa9f2205b3939581c49120456169bba0b3334db3b77b3b4a41"
+        }
+      },
+      "source": "Consistent read-only SQLite export of actual QueryWorker state; native API only exports completed output rows."
+    },
+    "continuation": {
+      "capture": {
+        "generation": "fc9f242b-e641-4a9f-b5cd-2ea2f961128b",
+        "identity": {
+          "id": "[\"golaberto-chances\",\"504b7a8810806c6041881af4ed15898f4ff1ebca8e907341042d031e6fbbb5b5\",3]",
+          "name": "golaberto-chances",
+          "version": "504b7a8810806c6041881af4ed15898f4ff1ebca8e907341042d031e6fbbb5b5",
+          "revision": 3
+        }
+      },
+      "execution": {
+        "revision": 22036,
+        "checkpoint": {
+          "stage": "done"
+        },
+        "done": true
+      },
+      "outputs": {
+        "game_importance": {
+          "rows": 5419
+        },
+        "position_chance": {
+          "rows": 988850
+        },
+        "team_chance": {
+          "rows": 58440
+        },
+        "zone_chance": {
+          "rows": 81522
+        }
+      },
+      "seconds": 2079
+    },
+    "sourceRepack": {
+      "testOnly": true,
+      "sourceVersion": "dad7cec9c6a5020b5cb1158f73dd38558ff20fe46423aeb496a2d1f4a7bd6959",
+      "retainedCaptureVersion": "504b7a8810806c6041881af4ed15898f4ff1ebca8e907341042d031e6fbbb5b5",
+      "resumeRevision": 13814,
+      "resumeCheckpoint": {
+        "stage": "groups",
+        "after": 11527
+      },
+      "sourcePrivateStdoutBytes": 16777216,
+      "queriesReadsSinkTypesUnchanged": true,
+      "reason": "Controlled current-source runtime repack; diagnostic identity adapter preserves existing captured data and durable checkpoint. No production deployment.",
+      "physicalStagesUnchanged": true,
+      "currentSourceHashes": {
+        "apps/golaberto/duckstream/bounded-chances.ts": "8580acae2b383deeb0b9487fb8520b930e2ff03b3412433cf1a066ef2907fdb9",
+        "apps/golaberto/duckstream/chances.pure.js": "e9f23babae1251db9c3cadfdf8f8d8874f1758e4aa1e5aa5a151358e004a5fda",
+        "libraries/mecha/packages/mecha-edge/src/paged-compute.ts": "fcab4d2783c0f32fe5ebcf49a24806bad68c9e8a293a2238464a2b057ba6fb49"
+      }
+    }
+  },
+  "liveStorage": {
+    "format": {
+      "version": 1,
+      "blockSize": 8192,
+      "codec": "raw"
+    },
+    "sampledSqliteBytes": 8716251000,
+    "sampledAt": "2026-10-25T13:03:22Z",
+    "limitBytes": 10000000000,
+    "sourceGeneration": "a228212b-c28a-4355-961e-de78dc5c74c5",
+    "readOnlyEvidence": "Data Studio rows_written=0; namespace storage metric; one object in namespace",
+    "diagnosticGeometryCorrection": "Prior 128KiB deflate profiles were not production geometry"
+  },
+  "storageMaintenance": {
+    "status": "passed locally; not deployed",
+    "from": {
+      "version": 1,
+      "blockSize": 8192,
+      "codec": "raw"
+    },
+    "to": {
+      "version": 1,
+      "blockSize": 8192,
+      "codec": "deflate"
+    },
+    "beforeBytes": 8689205248,
+    "afterBytes": 4310286336,
+    "peakBytes": 8689205248,
+    "milliseconds": 288023.03904099995,
+    "batches": 967,
+    "maxBatchMilliseconds": 949.2621250000084,
+    "eviction": {
+      "converted": 13312,
+      "preserved": true
+    },
+    "logicalVerification": {
+      "passed": true,
+      "files": 1502,
+      "blocks": 989968,
+      "logicalBytes": 8109729936,
+      "logicalFilesSha256": "6edd56517ce925886120936735249bcc5d0233908dc1c0ef5cf08ebcb83a2ebc",
+      "allFileMetadataPreserved": true,
+      "seconds": 17.181476625
+    },
+    "postgresReopen": {
+      "generation": "steady-publication-diagnostic",
+      "teams": 3426,
+      "game": [
+        {
+          "id": "a0900000-0000-4000-8000-000000000001"
+        }
+      ],
+      "heap": 44564480
+    },
+    "coreGate": {
+      "tests": 2,
+      "steps": 37,
+      "exit": 0
+    },
+    "edgeIntegrationGate": {
+      "tests": 1,
+      "exit": 0
+    },
+    "backendReview": []
+  },
+  "currentResultPublication": {
+    "sourceChange": "scheduled 2026-10-07 match becomes played with score 2-1; actual global standings refresh",
+    "teamRating": {
+      "updated": 1265636,
+      "inserted": 3318,
+      "unchanged": 3778
+    },
+    "changedOdds": {
+      "teamChance": 3,
+      "zoneChance": 1604,
+      "positionChance": 24490,
+      "gameImportance": 3554
+    },
+    "note": "Native diagnostic correctness; not hosted end-to-end latency; retained legacy ratings intentionally remain"
+  },
+  "archiveStartup": {
+    "status": "Memory fixed in local archive run; concurrent serving requires fairness verification",
+    "runtime": "canonical createEdgeCluster, 59 declared tables, 72 schema entries, all9 actual drains, bounded shapes and statement drain notifications",
+    "storage": "8KiB deflate, two retained team_rating indexes",
+    "firstPass": {
+      "wallMilliseconds": 233048.267958,
+      "retryAt": null,
+      "errors": [],
+      "wasmHeapBytes": 159973376,
+      "sqlitePeakBytes": 4992327680
+    },
+    "readDuringDrainsMilliseconds": 245933.185,
+    "idleGuard": {
+      "wallMilliseconds": 324240.53462500003,
+      "processCpuSeconds": 300.43,
+      "scope": "cumulative startup and subsequent drain passes, not a single-invocation CPU verdict"
+    },
+    "isolatedSteadyBoot": {
+      "scope": "Actual canonical cluster/drains on disposable archive; steady boot after completed prior first pass; synchronous console-only instrumentation",
+      "result": "128MiB guard abort inside refresh_standings before its transaction completes",
+      "heapBeforeStandingsBytes": 64225280,
+      "heapGuardBytes": 159973376,
+      "guardBytes": 134217728,
+      "drainMarkers": [
+        {
+          "diagnostic": "drain-begin",
+          "name": "team-enrichment",
+          "heap": 44564480
+        },
+        {
+          "diagnostic": "drain-end",
+          "name": "team-enrichment",
+          "heap": 53477376
+        },
+        {
+          "diagnostic": "drain-begin",
+          "name": "team-profiles",
+          "heap": 53477376
+        },
+        {
+          "diagnostic": "drain-end",
+          "name": "team-profiles",
+          "heap": 53477376
+        },
+        {
+          "diagnostic": "drain-begin",
+          "name": "team-directory",
+          "heap": 53477376
+        },
+        {
+          "diagnostic": "drain-end",
+          "name": "team-directory",
+          "heap": 64225280
+        },
+        {
+          "diagnostic": "drain-begin",
+          "name": "matches-games",
+          "heap": 64225280
+        },
+        {
+          "diagnostic": "drain-end",
+          "name": "matches-games",
+          "heap": 64225280
+        },
+        {
+          "diagnostic": "drain-begin",
+          "name": "recent-championships",
+          "heap": 64225280
+        },
+        {
+          "diagnostic": "drain-end",
+          "name": "recent-championships",
+          "heap": 64225280
+        },
+        {
+          "diagnostic": "drain-begin",
+          "name": "standings",
+          "heap": 64225280
+        }
+      ],
+      "lastExternalSample": {
+        "at": "2026-10-25T15:22:01.319Z",
+        "wallMs": 14266.359542,
+        "cpuSeconds": 13.87,
+        "process": [
+          {
+            "pid": 63540,
+            "cpu": 0.07,
+            "rss": 69072
+          },
+          {
+            "pid": 63543,
+            "cpu": 14.07,
+            "rss": 905408
+          }
+        ],
+        "free": 68906176512
+      },
+      "pingLimitation": "Ping completed before drain work started; no concurrent stall measurement from this run",
+      "publicationAttempted": false,
+      "originalArchiveOrProductionMutated": false,
+      "logs": [
+        "state.log",
+        "state.log.err",
+        "boot-evidence.json"
+      ],
+      "diff": "drain-instrumentation.diff"
+    },
+    "settings": {
+      "work_mem": "8MB",
+      "hash_mem_multiplier": 2,
+      "shared_buffers": "16MB",
+      "maintenance_work_mem": "8MB",
+      "temp_buffers": "1MB"
+    },
+    "candidate": "Four portable projection functions use local1MB work_mem/hash_mem_multiplier1; serving retains8MB/hash2. Exact SQL050 prefilters unchanged rows before upsert locks.",
+    "productionChanged": false,
+    "evidence": "/tmp/2079-runtime-publication/",
+    "prefilterCandidate": {
+      "sqlSha256": "60224b5ab4aa75c0efcf6156e6bae8c2d36a043166f13375c89e959334e68751",
+      "allNineDrainsCompleted": true,
+      "firstPassMilliseconds": 104111.151,
+      "priorMilliseconds": 170451.683958,
+      "lastSampleCpuSeconds": 99.33000000000001,
+      "firstPassMetrics": {
+        "sqliteBytes": 4744634368,
+        "peakBytes": 4999045120,
+        "sqlCalls": 2007440,
+        "peakHeap": 77070336,
+        "heap": 77070336,
+        "errors": [],
+        "events": [],
+        "changes": 0
+      },
+      "standingHashBefore": {
+        "rows": 58440,
+        "hash": "8b8fd1920e143f35aaf99903799d7d13"
+      },
+      "standingHashAfterRestart": {
+        "rows": 58440,
+        "hash": "8b8fd1920e143f35aaf99903799d7d13"
+      },
+      "restartMilliseconds": 8443.9835,
+      "publication": "pending",
+      "serving": "Ping issued15s into pass failed with local proxy connection loss. No successful serving during active drain.",
+      "fullHarnessPassed": false,
+      "sqlAndRestartPassed": true,
+      "publicationAttempted": false
+    }
+  },
+  "monthlyPolicyEvidence": "../monthly-history.json",
+  "monthlyBootstrapPublication": {
+    "publication": "Interrupted by300CPU guard, no committed receipt",
+    "guard": {
+      "label": "atomic-publication",
+      "wallMs": 344831.3592089999,
+      "cpuSeconds": 301.34000000000003,
+      "process": [
+        {
+          "pid": 44376,
+          "cpu": 0.64,
+          "rss": 40032
+        },
+        {
+          "pid": 44378,
+          "cpu": 639.33,
+          "rss": 3902176
+        }
+      ],
+      "free": 60657225728
+    },
+    "recoveryPassed": true,
+    "sourceCounts": {
+      "counts": {
+        "team_rating": 8195365,
+        "player_rating": 77238,
+        "rating_eval": 0
+      },
+      "receipts": []
+    },
+    "stageRows": [
+      {
+        "sink": "player_rating",
+        "chunks": 322,
+        "rows": 41155
+      },
+      {
+        "sink": "rating_eval",
+        "chunks": 31,
+        "rows": 3931
+      },
+      {
+        "sink": "team_rating",
+        "chunks": 11126,
+        "rows": 1424044
+      }
+    ],
+    "rollbackSamples": {
+      "player_rating": {
+        "rows": 128,
+        "existing": 128,
+        "matching": 0
+      },
+      "rating_eval": {
+        "rows": 128,
+        "existing": 0,
+        "matching": 0
+      },
+      "team_rating": {
+        "rows": 128,
+        "existing": 111,
+        "matching": 0
+      }
+    },
+    "recoveryStatusMilliseconds": 22474.5955,
+    "sourceSqliteBytes": 5671378944,
+    "limits": "Actual canonical publisher and runtime notifications; measured initial monthly bootstrap exceeds CPU guard. Fullincoming-row output hash verification cannot run because publication didnotcommit. No production data touched.",
+    "files": [
+      "publication-evidence.json",
+      "publication-state.log",
+      "publication-state.log.err",
+      "recovery-evidence.json",
+      "stage-evidence.json"
+    ],
+    "scope": "Local workerd, actual shape and drain triggers; aggregate process CPU guard, not a hosted measurement. Initial publication refused by capacity guard; rollback and retained stages verified."
+  },
+  "offlinePreparation": {
+    "ratings": {
+      "started": "2026-10-25T18:55:27.550Z",
+      "scope": "Ordinary native offline SQL preparation of owned APFS clone, all triggers/constraints; no coordinator coverage or receipts written",
+      "imports": {
+        "team_rating": {
+          "rows": 1424044,
+          "sha256": "c95d35f00b0f1619b6919d8c81a009dca597149326f885f974675f69cea1a16c",
+          "ms": 20468.481833
+        },
+        "player_rating": {
+          "rows": 41155,
+          "sha256": "8275ec19b062e3881551e9195c908bbcd2df00d9446217a8f24eec3d883a25c7",
+          "ms": 343.17412500000137
+        },
+        "rating_eval": {
+          "rows": 3931,
+          "sha256": "6cab179b693191b11fbbeefd6b029a75e13709b0e332c09c5e83973f65b245f6",
+          "ms": 22.79583299999649
+        }
+      },
+      "publishMs": 129437.33595899999,
+      "standing": {
+        "rows": 58440,
+        "sha256": "b0b917689bdd693f3ba472d023a529c8aa5d2c6675e12e639be6595119452dba"
+      },
+      "counts": {
+        "team_rating": 8328930,
+        "player_rating": 41155,
+        "rating_eval": 3931
+      },
+      "passed": true
+    },
+    "otherOutputs": {
+      "started": "2026-10-25T19:00:33.625Z",
+      "scope": "Ordinary native offline SQL preparation of owned APFS clone, all triggers/constraints; no coordinator coverage or receipts written",
+      "imports": {
+        "game_card": {
+          "rows": 318970,
+          "sha256": "f4afea3a3f1e014fdd975229446b534af3329732c40b1ca785c83b77005c5e8e",
+          "ms": 6276.345165999999
+        },
+        "team_game": {
+          "rows": 637940,
+          "sha256": "2e17451f2f767c0ca7539b8b8efcacda59664034d4b4d94ddf89aeba146922ea",
+          "ms": 10884.490875000003
+        },
+        "player_stat": {
+          "rows": 302234,
+          "sha256": "d8f861c23297b0ba6af4c0387639c944b2ba8dd43860d63eec2590eb7ba014aa",
+          "ms": 5019.305625000001
+        },
+        "team_chance": {
+          "rows": 58440,
+          "sha256": "8bdcd8683f1764c37d9b069fda87c36c2f9a8ed41e024dbfbd88d70d8ceedfe7",
+          "ms": 482.33787499999744
+        },
+        "zone_chance": {
+          "rows": 81522,
+          "sha256": "4335b387ad26259b1fbd14d99eb34a907d4e194e9d0ce79d1b61415265511bb8",
+          "ms": 775.5437910000037
+        },
+        "position_chance": {
+          "rows": 988850,
+          "sha256": "87184db68f7e7d1bdbda6b7d811936d16cd72379b6f96d526dd5008fa123da9a",
+          "ms": 8318.998250000004
+        },
+        "game_importance": {
+          "rows": 5419,
+          "sha256": "2d513ad5806248322905a73668f17f81a50104c7568d1a6d271b91015808923d",
+          "ms": 40.06745800000499
+        }
+      },
+      "sourceProof": {
+        "championship": {
+          "columns": [
+            "id",
+            "name",
+            "category_id",
+            "region",
+            "region_name",
+            "begins",
+            "ends",
+            "point_win",
+            "point_draw",
+            "point_loss",
+            "show_country",
+            "season",
+            "full_name",
+            "featured",
+            "search_name",
+            "search_key",
+            "slug",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 1514,
+          "sha256": "b83b18411387b49e729c823ac75e32ac5e1aee7ad1895f63cb849f8bf24c24fc"
+        },
+        "phase": {
+          "columns": [
+            "id",
+            "championship_id",
+            "name",
+            "position",
+            "sort",
+            "bonus_points",
+            "bonus_points_threshold",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 4368,
+          "sha256": "1925af8faab18fd81edbf6f3e5b5373975a4c09afac51dcbfb806239581be52e"
+        },
+        "game": {
+          "columns": [
+            "id",
+            "phase_id",
+            "round",
+            "day",
+            "kickoff",
+            "home_id",
+            "away_id",
+            "home_field",
+            "played",
+            "home_score",
+            "away_score",
+            "home_aet",
+            "away_aet",
+            "home_pen",
+            "away_pen",
+            "stadium_id",
+            "referee_id",
+            "attendance",
+            "day_display",
+            "kickoff_local",
+            "slug",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 318970,
+          "sha256": "a755b5b0bbb3e5e95390d1f7fe6e5520ec867b664b6ef4984d30ec2ca2e82391"
+        },
+        "team": {
+          "columns": [
+            "id",
+            "name",
+            "full_name",
+            "city",
+            "country",
+            "foundation",
+            "stadium_id",
+            "team_type",
+            "foundation_display",
+            "search_name",
+            "search_key",
+            "latitude",
+            "longitude",
+            "slug",
+            "created_by",
+            "updated_by",
+            "logo_key",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 3426,
+          "sha256": "794c684cf0a885bd0b5527d2cd10235224b4538616298de1799324fd535ab5ef"
+        },
+        "player": {
+          "columns": [
+            "id",
+            "name",
+            "full_name",
+            "birth",
+            "country",
+            "height",
+            "position",
+            "slug",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 90867,
+          "sha256": "285aa867f94f98b3c8dc2ebc709e931708df28748d2c8765b833e4695d591e07"
+        },
+        "player_game": {
+          "columns": [
+            "id",
+            "game_id",
+            "player_id",
+            "side",
+            "on_minute",
+            "off_minute",
+            "yellow",
+            "red",
+            "bench",
+            "day",
+            "day_display",
+            "off_rating",
+            "def_rating",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 3290664,
+          "sha256": "589c0ff1b8389349a1d4f1ccea06a5fecf16e501c33d940f8ce218d9937bdd07"
+        },
+        "goal": {
+          "columns": [
+            "id",
+            "game_id",
+            "player_id",
+            "side",
+            "minute",
+            "penalty",
+            "own_goal",
+            "aet",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 225720,
+          "sha256": "84ad2324c59098897113f6fd2613b94441fada20bca49e871ee4441ac4783885"
+        },
+        "stadium": {
+          "columns": [
+            "id",
+            "name",
+            "full_name",
+            "city",
+            "country",
+            "search_name",
+            "search_key",
+            "slug",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 1108,
+          "sha256": "07e57f1abd97e110c3297c49e0bc5d514d6a4ab1f7a884a2b07a604830a39d0b"
+        },
+        "referee": {
+          "columns": [
+            "id",
+            "name",
+            "location",
+            "search_name",
+            "search_key",
+            "slug",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 398,
+          "sha256": "3f3469935c7254fe6cee0313efd0307c8c16cf6288055ad53b722e768e7b894d"
+        }
+      },
+      "publishMs": 101119.65875,
+      "standing": {
+        "rows": 58440,
+        "sha256": "b0b917689bdd693f3ba472d023a529c8aa5d2c6675e12e639be6595119452dba"
+      },
+      "counts": {
+        "game_card": 318970,
+        "team_game": 637940,
+        "player_stat": 302234,
+        "team_chance": 58440,
+        "zone_chance": 81522,
+        "position_chance": 988850,
+        "game_importance": 5419
+      },
+      "passed": true
+    },
+    "cleanup": {
+      "removed": {
+        "/tmp/2079-monthly-publication/state": 6902481416,
+        "/tmp/2079-runtime-publication/state": 5711549152
+      },
+      "retained_evidence": "/tmp/2079-monthly-publication/bootstrap-result.json",
+      "reason": "Stopped failed-capacity rehearsal states superseded by authorized fresh offline bootstrap; rollback verified and all outputs retained separately"
+    },
+    "scope": "Authorized replacement installation. Offline publication and real coordinator restart passed; hosted deployment in progress.",
+    "coordinatorCoverage": {
+      "passed": true,
+      "restart": {
+        "batches": [
+          {
+            "name": "golaberto-chances",
+            "version": "702aac01969bab777b229896f514a108a29408cc32d436d3498892acb38f8c9f",
+            "state": {
+              "due": 0,
+              "name": "golaberto-chances",
+              "wake": 0,
+              "phase": "idle",
+              "claimed": 0,
+              "attempts": 25,
+              "coalesce": 1000,
+              "required": [],
+              "completed": 1,
+              "requested": 1
+            }
+          },
+          {
+            "name": "golaberto-game-cards",
+            "version": "d9baaf41fd0e6dd593332a4ea40a4c2bfb44adf3633f96615782885985b2fdac",
+            "state": {
+              "due": 0,
+              "name": "golaberto-game-cards",
+              "wake": 0,
+              "phase": "idle",
+              "claimed": 0,
+              "attempts": 25,
+              "coalesce": 1000,
+              "required": [],
+              "completed": 1,
+              "requested": 1
+            }
+          },
+          {
+            "name": "golaberto-player-stats",
+            "version": "495ca96f512d99b47bb2b4674cd50d3daea5e83513260ac32fe4e08b48cd96a5",
+            "state": {
+              "due": 0,
+              "name": "golaberto-player-stats",
+              "wake": 0,
+              "phase": "idle",
+              "claimed": 0,
+              "attempts": 25,
+              "coalesce": 1000,
+              "required": [],
+              "completed": 1,
+              "requested": 1
+            }
+          },
+          {
+            "name": "golaberto-ratings",
+            "version": "4a565ae0a7da1ac9d51668941377dd457f837e7ed99e024911c3290296cb6222",
+            "state": {
+              "due": 0,
+              "name": "golaberto-ratings",
+              "wake": 0,
+              "phase": "idle",
+              "claimed": 0,
+              "attempts": 25,
+              "coalesce": 1000,
+              "required": [],
+              "completed": 1,
+              "requested": 1
+            }
+          }
+        ],
+        "errors": [],
+        "drains": [
+          "team-enrichment",
+          "team-profiles",
+          "team-directory",
+          "matches-games",
+          "recent-championships",
+          "standings",
+          "rounds"
+        ],
+        "pending": null
+      },
+      "definitions": [
+        {
+          "name": "golaberto-ratings",
+          "version": "4a565ae0a7da1ac9d51668941377dd457f837e7ed99e024911c3290296cb6222"
+        },
+        {
+          "name": "golaberto-chances",
+          "version": "702aac01969bab777b229896f514a108a29408cc32d436d3498892acb38f8c9f"
+        },
+        {
+          "name": "golaberto-game-cards",
+          "version": "d9baaf41fd0e6dd593332a4ea40a4c2bfb44adf3633f96615782885985b2fdac"
+        },
+        {
+          "name": "golaberto-player-stats",
+          "version": "495ca96f512d99b47bb2b4674cd50d3daea5e83513260ac32fe4e08b48cd96a5"
+        }
+      ],
+      "evidenceDirectory": "/tmp/2079-fresh-bootstrap",
+      "processExit": 0
+    }
+  },
+  "standingsReleasePreparation": {
+    "sourceCommit": "4be759ad9",
+    "sourceVerification": {
+      "started": "2026-10-25T21:18:13.518Z",
+      "sources": {
+        "championship": {
+          "columns": [
+            "id",
+            "name",
+            "category_id",
+            "region",
+            "region_name",
+            "begins",
+            "ends",
+            "point_win",
+            "point_draw",
+            "point_loss",
+            "show_country",
+            "season",
+            "full_name",
+            "featured",
+            "search_name",
+            "search_key",
+            "slug",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 1514,
+          "sha256": "b83b18411387b49e729c823ac75e32ac5e1aee7ad1895f63cb849f8bf24c24fc"
+        },
+        "phase": {
+          "columns": [
+            "id",
+            "championship_id",
+            "name",
+            "position",
+            "sort",
+            "bonus_points",
+            "bonus_points_threshold",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 4368,
+          "sha256": "1925af8faab18fd81edbf6f3e5b5373975a4c09afac51dcbfb806239581be52e"
+        },
+        "stage_group": {
+          "columns": [
+            "id",
+            "phase_id",
+            "name",
+            "position",
+            "slug",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 15566,
+          "sha256": "12bbda6fa5c7800d9736121a54184a7711d069e43a819ec5360e8eb04328b9ae"
+        },
+        "team_group": {
+          "columns": [
+            "id",
+            "group_id",
+            "team_id",
+            "add_sub",
+            "bias",
+            "comment",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 58440,
+          "sha256": "a6d9f1f57d2ca14e894ad5bbbb91b8d8807a940832ef235f6b844d507db61571"
+        },
+        "team": {
+          "columns": [
+            "id",
+            "name",
+            "full_name",
+            "city",
+            "country",
+            "foundation",
+            "stadium_id",
+            "team_type",
+            "foundation_display",
+            "search_name",
+            "search_key",
+            "latitude",
+            "longitude",
+            "slug",
+            "created_by",
+            "updated_by",
+            "logo_key",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 3426,
+          "sha256": "794c684cf0a885bd0b5527d2cd10235224b4538616298de1799324fd535ab5ef"
+        },
+        "game": {
+          "columns": [
+            "id",
+            "phase_id",
+            "round",
+            "day",
+            "kickoff",
+            "home_id",
+            "away_id",
+            "home_field",
+            "played",
+            "home_score",
+            "away_score",
+            "home_aet",
+            "away_aet",
+            "home_pen",
+            "away_pen",
+            "stadium_id",
+            "referee_id",
+            "attendance",
+            "day_display",
+            "kickoff_local",
+            "slug",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 318970,
+          "sha256": "a755b5b0bbb3e5e95390d1f7fe6e5520ec867b664b6ef4984d30ec2ca2e82391"
+        },
+        "zone": {
+          "columns": [
+            "id",
+            "group_id",
+            "name",
+            "color",
+            "first",
+            "last",
+            "positions",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 16379,
+          "sha256": "77559f51fed4fca7ad9b8a8d7b092cf4c3f439be278275aa41ccc52a1ab7c3c3"
+        },
+        "player": {
+          "columns": [
+            "id",
+            "name",
+            "full_name",
+            "birth",
+            "country",
+            "height",
+            "position",
+            "slug",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 90867,
+          "sha256": "285aa867f94f98b3c8dc2ebc709e931708df28748d2c8765b833e4695d591e07"
+        },
+        "player_game": {
+          "columns": [
+            "id",
+            "game_id",
+            "player_id",
+            "side",
+            "on_minute",
+            "off_minute",
+            "yellow",
+            "red",
+            "bench",
+            "day",
+            "day_display",
+            "off_rating",
+            "def_rating",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 3290664,
+          "sha256": "589c0ff1b8389349a1d4f1ccea06a5fecf16e501c33d940f8ce218d9937bdd07"
+        },
+        "goal": {
+          "columns": [
+            "id",
+            "game_id",
+            "player_id",
+            "side",
+            "minute",
+            "penalty",
+            "own_goal",
+            "aet",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 225720,
+          "sha256": "84ad2324c59098897113f6fd2613b94441fada20bca49e871ee4441ac4783885"
+        },
+        "standing": {
+          "columns": [
+            "id",
+            "group_id",
+            "team_id",
+            "team_name",
+            "position",
+            "points",
+            "played",
+            "wins",
+            "draws",
+            "losses",
+            "goals_for",
+            "goals_against",
+            "goal_diff",
+            "form1",
+            "form2",
+            "form3",
+            "form4",
+            "form5",
+            "zone",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 58440,
+          "sha256": "73b5f4e4a3c5005ecf94df10504cf9b195487820a579d9aaa592263626637c73"
+        },
+        "team_rating": {
+          "columns": [
+            "id",
+            "team_id",
+            "measure_date",
+            "offense",
+            "defense",
+            "rating",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 8328930,
+          "sha256": "ca4c282735b997c4cadbc260e967007584329f291af70bb1bfe8a3a7c8b7cc82"
+        },
+        "stadium": {
+          "columns": [
+            "id",
+            "name",
+            "full_name",
+            "city",
+            "country",
+            "search_name",
+            "search_key",
+            "slug",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 1108,
+          "sha256": "07e57f1abd97e110c3297c49e0bc5d514d6a4ab1f7a884a2b07a604830a39d0b"
+        },
+        "referee": {
+          "columns": [
+            "id",
+            "name",
+            "location",
+            "search_name",
+            "search_key",
+            "slug",
+            "created_by",
+            "updated_by",
+            "txid",
+            "scope_id"
+          ],
+          "rows": 398,
+          "sha256": "3f3469935c7254fe6cee0313efd0307c8c16cf6288055ad53b722e768e7b894d"
+        }
+      },
+      "definitions": [
+        {
+          "name": "golaberto-standings",
+          "version": "3a5977b931ca606ffdff4779e3340ba49d9a19c5951c583902d5f80f5cdfdc20",
+          "reads": [
+            "championship",
+            "phase",
+            "stage_group",
+            "team_group",
+            "team",
+            "game",
+            "zone"
+          ],
+          "to": [
+            "standing"
+          ],
+          "sinkWrites": {
+            "standing": "replace"
+          }
+        },
+        {
+          "name": "golaberto-ratings",
+          "version": "3c4d500aa9e715d0f5ac712ea5f30b5817b1dd03d672bb939b287484ccb80483",
+          "reads": [
+            "championship",
+            "phase",
+            "game",
+            "team",
+            "player",
+            "player_game",
+            "goal"
+          ],
+          "to": [
+            "team_rating",
+            "player_rating",
+            "rating_eval"
+          ],
+          "sinkWrites": {
+            "team_rating": "upsert",
+            "player_rating": "replace",
+            "rating_eval": "replace"
+          }
+        },
+        {
+          "name": "golaberto-chances",
+          "version": "e38c8b2f67e6cc7385efa9156ac4f468189516b03a93ce45d5549a32bafd5d2b",
+          "reads": [
+            "championship",
+            "phase",
+            "stage_group",
+            "team_group",
+            "standing",
+            "team",
+            "zone",
+            "game",
+            "team_rating"
+          ],
+          "to": [
+            "team_chance",
+            "zone_chance",
+            "position_chance",
+            "game_importance"
+          ],
+          "onComplete": "capture_team_odds_history",
+          "sinkWrites": {
+            "team_chance": "replace",
+            "zone_chance": "replace",
+            "position_chance": "replace",
+            "game_importance": "replace"
+          }
+        },
+        {
+          "name": "golaberto-game-cards",
+          "version": "7d70b0463ab516c2741179f77ee3bf9062a9ac7c06c6eedbc5abb291d1f4e24e",
+          "reads": [
+            "game",
+            "phase",
+            "championship",
+            "team",
+            "stadium",
+            "referee"
+          ],
+          "to": [
+            "game_card",
+            "team_game"
+          ],
+          "sinkWrites": {
+            "game_card": "replace",
+            "team_game": "replace"
+          }
+        },
+        {
+          "name": "golaberto-player-stats",
+          "version": "8cd01570d3c9265eff399a8e95cf9a65335496f6143506d69e6be3066bde84b3",
+          "reads": [
+            "player_game",
+            "goal",
+            "game",
+            "phase",
+            "championship",
+            "team",
+            "player"
+          ],
+          "to": [
+            "player_stat"
+          ],
+          "sinkWrites": {
+            "player_stat": "replace"
+          }
+        }
+      ],
+      "passed": true,
+      "closed": "2026-10-25T21:20:06.210Z"
+    },
+    "outputQualification": {
+      "passed": true,
+      "scope": "Semantic qualification of retained numerical outputs for current final definitions, contingent on the separately passed final source fingerprints. Not a claim that all outputs were freshly recomputed under each new identity.",
+      "commit": "4be759ad944dab778bc55ef8eb9831cdfb27b1dc",
+      "finalVersions": {
+        "golaberto-standings": "3a5977b931ca606ffdff4779e3340ba49d9a19c5951c583902d5f80f5cdfdc20",
+        "golaberto-ratings": "3c4d500aa9e715d0f5ac712ea5f30b5817b1dd03d672bb939b287484ccb80483",
+        "golaberto-chances": "e38c8b2f67e6cc7385efa9156ac4f468189516b03a93ce45d5549a32bafd5d2b",
+        "golaberto-game-cards": "7d70b0463ab516c2741179f77ee3bf9062a9ac7c06c6eedbc5abb291d1f4e24e",
+        "golaberto-player-stats": "8cd01570d3c9265eff399a8e95cf9a65335496f6143506d69e6be3066bde84b3"
+      },
+      "fourExistingComputations": {
+        "golaberto-ratings": {
+          "currentSourceSha256": "7ac698baa7b685553f4dd89c398e1f0ae4934dafdc8234e75ad28f5f3eb6fb37",
+          "priorSourceSha256": "9e447ec583e15bb7d3be4f1e71cba1ea643b8876e126a936983e7383f384f5da",
+          "onlySourceDifference": "unused ordering.standings entry; wrappers select their literal unchanged computation name",
+          "finalVersion": "3c4d500aa9e715d0f5ac712ea5f30b5817b1dd03d672bb939b287484ccb80483",
+          "priorPackageVersion": "66907c2dacaf8910ccc963fcfb3e4ac8064f09a88d293daafef375af873c09f7",
+          "sameReadsQueriesQueryStagesSpecExceptVersion": true
+        },
+        "golaberto-chances": {
+          "currentSourceSha256": "8695c506ec292be3e310e545c56cda15a3842f47ee4a8a1e9f6e61ce51ef42b4",
+          "priorSourceSha256": "34ff7f1b00cb0380071bff36261b2f8b6b8eb58bfc48337a200010c098f55ed6",
+          "onlySourceDifference": "unused ordering.standings entry; wrappers select their literal unchanged computation name",
+          "finalVersion": "e38c8b2f67e6cc7385efa9156ac4f468189516b03a93ce45d5549a32bafd5d2b",
+          "priorPackageVersion": "50c59c9c768f3bdc6d9b93f0e7ce02ab6d91ce40862ead9be53f4fd3f9617c0a",
+          "sameReadsQueriesQueryStagesSpecExceptVersion": true
+        },
+        "golaberto-game-cards": {
+          "currentSourceSha256": "fbd6b586f85220a98806ac8b73ec8a624a8e21a4c64ff50aaa1e124bce53116c",
+          "priorSourceSha256": "78f8c3af81ab8a24ea298dc32745fd7fe65b7a738759710afbbf127e184cc67d",
+          "onlySourceDifference": "unused ordering.standings entry; wrappers select their literal unchanged computation name",
+          "finalVersion": "7d70b0463ab516c2741179f77ee3bf9062a9ac7c06c6eedbc5abb291d1f4e24e",
+          "priorPackageVersion": "6f77c0aca512e8dd70ec02999621e93d0ced804d4718e84894744a436a16222f",
+          "sameReadsQueriesQueryStagesSpecExceptVersion": true,
+          "nativeMetadataChange": {
+            "onlyIncrementalOutputPartitionQueriesChanged": true,
+            "currentGlobalPartitions": {
+              "game_card": {
+                "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_game_card r"
+              },
+              "team_game": {
+                "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_team_game r"
+              }
+            },
+            "snapshotSqlInputProjectionsOutputSchemaUnchanged": true
+          }
+        },
+        "golaberto-player-stats": {
+          "currentSourceSha256": "8966af19339a1aa2375ac9dc8ec6dac00fe45f3e3976cb4cea69dd4f7ceb839e",
+          "priorSourceSha256": "f997d45aa5983c58ff2c31a8da2cb127f8f4644622944f1ecf0ef908f90e8581",
+          "onlySourceDifference": "unused ordering.standings entry; wrappers select their literal unchanged computation name",
+          "finalVersion": "8cd01570d3c9265eff399a8e95cf9a65335496f6143506d69e6be3066bde84b3",
+          "priorPackageVersion": "614d6da47a92c62d9c12d547931af7933048fafe38eeee169af0e850caed9f41",
+          "sameReadsQueriesQueryStagesSpecExceptVersion": true,
+          "nativeMetadataChange": {
+            "onlyIncrementalOutputPartitionQueriesChanged": true,
+            "currentGlobalPartitions": {
+              "player_stat": {
+                "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_player_stat r"
+              }
+            },
+            "snapshotSqlInputProjectionsOutputSchemaUnchanged": true
+          }
+        }
+      },
+      "ratingsMonthlyProof": {
+        "passed": true,
+        "readsEqual": true,
+        "logicalQueriesEqual": true,
+        "numericalSuffixByteEqual": true,
+        "physicalStageByteEqual": false,
+        "physicalStageNote": "Grouped physical lowering changed materialization, not logical query meaning; current final four query recipes exactly equal the prior verified native-projection package."
+      },
+      "unchangedPureArtifacts": {
+        "oddsWasm": "53bbb38ad80d18fbefe4c94ac96f2e9bdc83736b4c3bbd28eaf79fa1c7cce9c5",
+        "ratingsSql": "70d29945136690392869bdb345c5f907ecea51eeaac9c354e493bb2e8dd389c6",
+        "chancesPure": "e9f23babae1251db9c3cadfdf8f8d8874f1758e4aa1e5aa5a151358e004a5fda"
+      },
+      "standings": {
+        "allOwnedFieldsEqual": true,
+        "rows": 58440,
+        "fields": [
+          "id",
+          "group_id",
+          "team_id",
+          "team_name",
+          "position",
+          "points",
+          "played",
+          "wins",
+          "draws",
+          "losses",
+          "goals_for",
+          "goals_against",
+          "goal_diff",
+          "form1",
+          "form2",
+          "form3",
+          "form4",
+          "form5",
+          "zone"
+        ],
+        "excludedDatabaseMetadata": [
+          "txid",
+          "scope_id"
+        ],
+        "finalVersion": "3a5977b931ca606ffdff4779e3340ba49d9a19c5951c583902d5f80f5cdfdc20",
+        "chancesConsumes": [
+          "group_id",
+          "team_id",
+          "position",
+          "points",
+          "played"
+        ],
+        "ratingsDoesNotReadStanding": true
+      },
+      "outputs": {
+        "team_rating": {
+          "file": "/tmp/2079-monthly-history/baseline-team_rating.jsonl",
+          "rows": 1424044,
+          "sha256": "c95d35f00b0f1619b6919d8c81a009dca597149326f885f974675f69cea1a16c"
+        },
+        "player_rating": {
+          "file": "/tmp/2079-monthly-history/baseline-player_rating.jsonl",
+          "rows": 41155,
+          "sha256": "8275ec19b062e3881551e9195c908bbcd2df00d9446217a8f24eec3d883a25c7"
+        },
+        "rating_eval": {
+          "file": "/tmp/2079-monthly-history/baseline-rating_eval.jsonl",
+          "rows": 3931,
+          "sha256": "6cab179b693191b11fbbeefd6b029a75e13709b0e332c09c5e83973f65b245f6"
+        },
+        "team_chance": {
+          "file": "/tmp/2079-monthly-chances/baseline-team_chance.jsonl",
+          "rows": 58440,
+          "sha256": "8bdcd8683f1764c37d9b069fda87c36c2f9a8ed41e024dbfbd88d70d8ceedfe7"
+        },
+        "zone_chance": {
+          "file": "/tmp/2079-monthly-chances/baseline-zone_chance.jsonl",
+          "rows": 81522,
+          "sha256": "4335b387ad26259b1fbd14d99eb34a907d4e194e9d0ce79d1b61415265511bb8"
+        },
+        "position_chance": {
+          "file": "/tmp/2079-monthly-chances/baseline-position_chance.jsonl",
+          "rows": 988850,
+          "sha256": "87184db68f7e7d1bdbda6b7d811936d16cd72379b6f96d526dd5008fa123da9a"
+        },
+        "game_importance": {
+          "file": "/tmp/2079-monthly-chances/baseline-game_importance.jsonl",
+          "rows": 5419,
+          "sha256": "2d513ad5806248322905a73668f17f81a50104c7568d1a6d271b91015808923d"
+        },
+        "game_card": {
+          "file": "/tmp/2079-projection-archive/game_card.jsonl",
+          "rows": 318970,
+          "sha256": "f4afea3a3f1e014fdd975229446b534af3329732c40b1ca785c83b77005c5e8e"
+        },
+        "team_game": {
+          "file": "/tmp/2079-projection-archive/team_game.jsonl",
+          "rows": 637940,
+          "sha256": "2e17451f2f767c0ca7539b8b8efcacda59664034d4b4d94ddf89aeba146922ea"
+        },
+        "player_stat": {
+          "file": "/tmp/2079-projection-archive/player_stat.jsonl",
+          "rows": 302234,
+          "sha256": "d8f861c23297b0ba6af4c0387639c944b2ba8dd43860d63eec2590eb7ba014aa"
+        },
+        "standing": {
+          "file": "/tmp/2079-standings-archive/standing.jsonl",
+          "rows": 58440,
+          "sha256": "cbde4a297b590caf8685ffb8d43238e03bb9537b075134087835d23fdd1b58c5"
+        }
+      },
+      "sourceProof": {
+        "file": "/tmp/2079-final-bootstrap/source-proof.json",
+        "sha256": "4ac2af0d6f7cee7e57782eddf58d5efadd70ac4d6fb27736b209432e1b5cf5c9",
+        "passed": true
+      },
+      "priorBootstrapManifest": {
+        "file": "/tmp/2079-fresh-bootstrap/bootstrap-manifest.json",
+        "sha256": "bad3e8782b3e79f0d1bed9f25e31768c7822d5ba8592bf0ec29a089be757234d"
+      },
+      "limitations": [
+        "Versions are different and remain different; do not relabel or copy old receipts. Publish through canonical coordinator under each actual new version.",
+        "Query/recipe equality is checked independently of version identity. Native partition metadata fixes were unused by snapshot computation; neither source SQL nor pure output transformation changed.",
+        "The ratings monthly reference predates physical aggregate partitioning; its logical queries and numerical suffix are byte-identical, while current final physical recipes equal the subsequently verified package.",
+        "Source fingerprints must stay fixed until canonical preparation/publication; this file does not authorize source mutations."
+      ],
+      "qualificationLimit": "Superseded for team_chance labels: source hashes and output hashes did not establish producer lineage. The later label audit reran all simulations and proves exactly562 label-only corrections."
+    },
+    "coverage": {
+      "started": "2026-10-25T21:21:39.359Z",
+      "definitions": [
+        {
+          "name": "golaberto-standings",
+          "version": "3a5977b931ca606ffdff4779e3340ba49d9a19c5951c583902d5f80f5cdfdc20",
+          "reads": [
+            "championship",
+            "phase",
+            "stage_group",
+            "team_group",
+            "team",
+            "game",
+            "zone"
+          ],
+          "to": [
+            "standing"
+          ],
+          "sinkWrites": {
+            "standing": "replace"
+          }
+        },
+        {
+          "name": "golaberto-ratings",
+          "version": "3c4d500aa9e715d0f5ac712ea5f30b5817b1dd03d672bb939b287484ccb80483",
+          "reads": [
+            "championship",
+            "phase",
+            "game",
+            "team",
+            "player",
+            "player_game",
+            "goal"
+          ],
+          "to": [
+            "team_rating",
+            "player_rating",
+            "rating_eval"
+          ],
+          "sinkWrites": {
+            "team_rating": "upsert",
+            "player_rating": "replace",
+            "rating_eval": "replace"
+          }
+        },
+        {
+          "name": "golaberto-chances",
+          "version": "e38c8b2f67e6cc7385efa9156ac4f468189516b03a93ce45d5549a32bafd5d2b",
+          "reads": [
+            "championship",
+            "phase",
+            "stage_group",
+            "team_group",
+            "standing",
+            "team",
+            "zone",
+            "game",
+            "team_rating"
+          ],
+          "to": [
+            "team_chance",
+            "zone_chance",
+            "position_chance",
+            "game_importance"
+          ],
+          "onComplete": "capture_team_odds_history",
+          "sinkWrites": {
+            "team_chance": "replace",
+            "zone_chance": "replace",
+            "position_chance": "replace",
+            "game_importance": "replace"
+          }
+        },
+        {
+          "name": "golaberto-game-cards",
+          "version": "7d70b0463ab516c2741179f77ee3bf9062a9ac7c06c6eedbc5abb291d1f4e24e",
+          "reads": [
+            "game",
+            "phase",
+            "championship",
+            "team",
+            "stadium",
+            "referee"
+          ],
+          "to": [
+            "game_card",
+            "team_game"
+          ],
+          "sinkWrites": {
+            "game_card": "replace",
+            "team_game": "replace"
+          }
+        },
+        {
+          "name": "golaberto-player-stats",
+          "version": "8cd01570d3c9265eff399a8e95cf9a65335496f6143506d69e6be3066bde84b3",
+          "reads": [
+            "player_game",
+            "goal",
+            "game",
+            "phase",
+            "championship",
+            "team",
+            "player"
+          ],
+          "to": [
+            "player_stat"
+          ],
+          "sinkWrites": {
+            "player_stat": "replace"
+          }
+        }
+      ],
+      "events": [
+        {
+          "at": "2026-10-25T21:21:44.921Z",
+          "phase": "stage-start",
+          "name": "golaberto-standings",
+          "sink": "standing"
+        },
+        {
+          "at": "2026-10-25T21:21:46.942Z",
+          "phase": "publish",
+          "identity": {
+            "id": "[\"golaberto-standings\",\"3a5977b931ca606ffdff4779e3340ba49d9a19c5951c583902d5f80f5cdfdc20\",1]",
+            "name": "golaberto-standings",
+            "version": "3a5977b931ca606ffdff4779e3340ba49d9a19c5951c583902d5f80f5cdfdc20",
+            "revision": 1
+          }
+        },
+        {
+          "at": "2026-10-25T21:21:50.572Z",
+          "phase": "published",
+          "identity": {
+            "id": "[\"golaberto-standings\",\"3a5977b931ca606ffdff4779e3340ba49d9a19c5951c583902d5f80f5cdfdc20\",1]",
+            "name": "golaberto-standings",
+            "version": "3a5977b931ca606ffdff4779e3340ba49d9a19c5951c583902d5f80f5cdfdc20",
+            "revision": 1
+          }
+        },
+        {
+          "at": "2026-10-25T21:22:15.315Z",
+          "phase": "stage-start",
+          "name": "golaberto-ratings",
+          "sink": "team_rating"
+        },
+        {
+          "at": "2026-10-25T21:22:59.442Z",
+          "phase": "stage-start",
+          "name": "golaberto-ratings",
+          "sink": "player_rating"
+        },
+        {
+          "at": "2026-10-25T21:23:00.498Z",
+          "phase": "stage-start",
+          "name": "golaberto-ratings",
+          "sink": "rating_eval"
+        },
+        {
+          "at": "2026-10-25T21:23:00.597Z",
+          "phase": "publish",
+          "identity": {
+            "id": "[\"golaberto-ratings\",\"3c4d500aa9e715d0f5ac712ea5f30b5817b1dd03d672bb939b287484ccb80483\",2]",
+            "name": "golaberto-ratings",
+            "version": "3c4d500aa9e715d0f5ac712ea5f30b5817b1dd03d672bb939b287484ccb80483",
+            "revision": 2
+          }
+        },
+        {
+          "at": "2026-10-25T21:23:34.653Z",
+          "phase": "published",
+          "identity": {
+            "id": "[\"golaberto-ratings\",\"3c4d500aa9e715d0f5ac712ea5f30b5817b1dd03d672bb939b287484ccb80483\",2]",
+            "name": "golaberto-ratings",
+            "version": "3c4d500aa9e715d0f5ac712ea5f30b5817b1dd03d672bb939b287484ccb80483",
+            "revision": 2
+          }
+        },
+        {
+          "at": "2026-10-25T21:23:37.046Z",
+          "phase": "stage-start",
+          "name": "golaberto-game-cards",
+          "sink": "game_card"
+        },
+        {
+          "at": "2026-10-25T21:23:48.969Z",
+          "phase": "stage-start",
+          "name": "golaberto-game-cards",
+          "sink": "team_game"
+        },
+        {
+          "at": "2026-10-25T21:24:11.432Z",
+          "phase": "publish",
+          "identity": {
+            "id": "[\"golaberto-game-cards\",\"7d70b0463ab516c2741179f77ee3bf9062a9ac7c06c6eedbc5abb291d1f4e24e\",2]",
+            "name": "golaberto-game-cards",
+            "version": "7d70b0463ab516c2741179f77ee3bf9062a9ac7c06c6eedbc5abb291d1f4e24e",
+            "revision": 2
+          }
+        },
+        {
+          "at": "2026-10-25T21:24:25.530Z",
+          "phase": "published",
+          "identity": {
+            "id": "[\"golaberto-game-cards\",\"7d70b0463ab516c2741179f77ee3bf9062a9ac7c06c6eedbc5abb291d1f4e24e\",2]",
+            "name": "golaberto-game-cards",
+            "version": "7d70b0463ab516c2741179f77ee3bf9062a9ac7c06c6eedbc5abb291d1f4e24e",
+            "revision": 2
+          }
+        },
+        {
+          "at": "2026-10-25T21:25:48.331Z",
+          "phase": "stage-start",
+          "name": "golaberto-chances",
+          "sink": "team_chance"
+        },
+        {
+          "at": "2026-10-25T21:25:49.748Z",
+          "phase": "stage-start",
+          "name": "golaberto-chances",
+          "sink": "zone_chance"
+        },
+        {
+          "at": "2026-10-25T21:25:51.838Z",
+          "phase": "stage-start",
+          "name": "golaberto-chances",
+          "sink": "position_chance"
+        },
+        {
+          "at": "2026-10-25T21:26:15.399Z",
+          "phase": "stage-start",
+          "name": "golaberto-chances",
+          "sink": "game_importance"
+        },
+        {
+          "at": "2026-10-25T21:26:15.535Z",
+          "phase": "publish",
+          "identity": {
+            "id": "[\"golaberto-chances\",\"e38c8b2f67e6cc7385efa9156ac4f468189516b03a93ce45d5549a32bafd5d2b\",2]",
+            "name": "golaberto-chances",
+            "version": "e38c8b2f67e6cc7385efa9156ac4f468189516b03a93ce45d5549a32bafd5d2b",
+            "revision": 2
+          }
+        },
+        {
+          "at": "2026-10-25T21:28:22.729Z",
+          "phase": "published",
+          "identity": {
+            "id": "[\"golaberto-chances\",\"e38c8b2f67e6cc7385efa9156ac4f468189516b03a93ce45d5549a32bafd5d2b\",2]",
+            "name": "golaberto-chances",
+            "version": "e38c8b2f67e6cc7385efa9156ac4f468189516b03a93ce45d5549a32bafd5d2b",
+            "revision": 2
+          }
+        },
+        {
+          "at": "2026-10-25T21:28:47.628Z",
+          "phase": "stage-start",
+          "name": "golaberto-player-stats",
+          "sink": "player_stat"
+        },
+        {
+          "at": "2026-10-25T21:28:58.279Z",
+          "phase": "publish",
+          "identity": {
+            "id": "[\"golaberto-player-stats\",\"8cd01570d3c9265eff399a8e95cf9a65335496f6143506d69e6be3066bde84b3\",2]",
+            "name": "golaberto-player-stats",
+            "version": "8cd01570d3c9265eff399a8e95cf9a65335496f6143506d69e6be3066bde84b3",
+            "revision": 2
+          }
+        },
+        {
+          "at": "2026-10-25T21:29:27.390Z",
+          "phase": "published",
+          "identity": {
+            "id": "[\"golaberto-player-stats\",\"8cd01570d3c9265eff399a8e95cf9a65335496f6143506d69e6be3066bde84b3\",2]",
+            "name": "golaberto-player-stats",
+            "version": "8cd01570d3c9265eff399a8e95cf9a65335496f6143506d69e6be3066bde84b3",
+            "revision": 2
+          }
+        }
+      ],
+      "coverage": {
+        "receipts": [
+          {
+            "name": "golaberto-standings",
+            "version": "3a5977b931ca606ffdff4779e3340ba49d9a19c5951c583902d5f80f5cdfdc20",
+            "id": "[\"golaberto-standings\",\"3a5977b931ca606ffdff4779e3340ba49d9a19c5951c583902d5f80f5cdfdc20\",1]"
+          },
+          {
+            "name": "golaberto-ratings",
+            "version": "3c4d500aa9e715d0f5ac712ea5f30b5817b1dd03d672bb939b287484ccb80483",
+            "id": "[\"golaberto-ratings\",\"3c4d500aa9e715d0f5ac712ea5f30b5817b1dd03d672bb939b287484ccb80483\",2]"
+          },
+          {
+            "name": "golaberto-game-cards",
+            "version": "7d70b0463ab516c2741179f77ee3bf9062a9ac7c06c6eedbc5abb291d1f4e24e",
+            "id": "[\"golaberto-game-cards\",\"7d70b0463ab516c2741179f77ee3bf9062a9ac7c06c6eedbc5abb291d1f4e24e\",2]"
+          },
+          {
+            "name": "golaberto-chances",
+            "version": "e38c8b2f67e6cc7385efa9156ac4f468189516b03a93ce45d5549a32bafd5d2b",
+            "id": "[\"golaberto-chances\",\"e38c8b2f67e6cc7385efa9156ac4f468189516b03a93ce45d5549a32bafd5d2b\",2]"
+          },
+          {
+            "name": "golaberto-player-stats",
+            "version": "8cd01570d3c9265eff399a8e95cf9a65335496f6143506d69e6be3066bde84b3",
+            "id": "[\"golaberto-player-stats\",\"8cd01570d3c9265eff399a8e95cf9a65335496f6143506d69e6be3066bde84b3\",2]"
+          }
+        ],
+        "wakeAt": null,
+        "complete": true
+      },
+      "restart": {
+        "batches": [
+          {
+            "name": "golaberto-chances",
+            "version": "e38c8b2f67e6cc7385efa9156ac4f468189516b03a93ce45d5549a32bafd5d2b",
+            "state": {
+              "due": 0,
+              "name": "golaberto-chances",
+              "wake": 0,
+              "phase": "idle",
+              "claimed": 0,
+              "attempts": 25,
+              "coalesce": 1000,
+              "required": [],
+              "completed": 2,
+              "requested": 2
+            }
+          },
+          {
+            "name": "golaberto-game-cards",
+            "version": "7d70b0463ab516c2741179f77ee3bf9062a9ac7c06c6eedbc5abb291d1f4e24e",
+            "state": {
+              "due": 0,
+              "name": "golaberto-game-cards",
+              "wake": 0,
+              "phase": "idle",
+              "claimed": 0,
+              "attempts": 25,
+              "coalesce": 1000,
+              "required": [],
+              "completed": 2,
+              "requested": 2
+            }
+          },
+          {
+            "name": "golaberto-player-stats",
+            "version": "8cd01570d3c9265eff399a8e95cf9a65335496f6143506d69e6be3066bde84b3",
+            "state": {
+              "due": 0,
+              "name": "golaberto-player-stats",
+              "wake": 0,
+              "phase": "idle",
+              "claimed": 0,
+              "attempts": 25,
+              "coalesce": 1000,
+              "required": [],
+              "completed": 2,
+              "requested": 2
+            }
+          },
+          {
+            "name": "golaberto-ratings",
+            "version": "3c4d500aa9e715d0f5ac712ea5f30b5817b1dd03d672bb939b287484ccb80483",
+            "state": {
+              "due": 0,
+              "name": "golaberto-ratings",
+              "wake": 0,
+              "phase": "idle",
+              "claimed": 0,
+              "attempts": 25,
+              "coalesce": 1000,
+              "required": [],
+              "completed": 2,
+              "requested": 2
+            }
+          },
+          {
+            "name": "golaberto-standings",
+            "version": "3a5977b931ca606ffdff4779e3340ba49d9a19c5951c583902d5f80f5cdfdc20",
+            "state": {
+              "due": 0,
+              "name": "golaberto-standings",
+              "wake": 0,
+              "phase": "idle",
+              "claimed": 0,
+              "attempts": 25,
+              "coalesce": 1000,
+              "required": [],
+              "completed": 1,
+              "requested": 1
+            }
+          }
+        ],
+        "receipts": [
+          {
+            "id": "[\"golaberto-chances\",\"e38c8b2f67e6cc7385efa9156ac4f468189516b03a93ce45d5549a32bafd5d2b\",2]",
+            "name": "golaberto-chances",
+            "version": "e38c8b2f67e6cc7385efa9156ac4f468189516b03a93ce45d5549a32bafd5d2b",
+            "revision": 2,
+            "committed_at": 1792963702698
+          },
+          {
+            "id": "[\"golaberto-game-cards\",\"7d70b0463ab516c2741179f77ee3bf9062a9ac7c06c6eedbc5abb291d1f4e24e\",2]",
+            "name": "golaberto-game-cards",
+            "version": "7d70b0463ab516c2741179f77ee3bf9062a9ac7c06c6eedbc5abb291d1f4e24e",
+            "revision": 2,
+            "committed_at": 1792963465488
+          },
+          {
+            "id": "[\"golaberto-player-stats\",\"8cd01570d3c9265eff399a8e95cf9a65335496f6143506d69e6be3066bde84b3\",2]",
+            "name": "golaberto-player-stats",
+            "version": "8cd01570d3c9265eff399a8e95cf9a65335496f6143506d69e6be3066bde84b3",
+            "revision": 2,
+            "committed_at": 1792963767371
+          },
+          {
+            "id": "[\"golaberto-ratings\",\"3c4d500aa9e715d0f5ac712ea5f30b5817b1dd03d672bb939b287484ccb80483\",2]",
+            "name": "golaberto-ratings",
+            "version": "3c4d500aa9e715d0f5ac712ea5f30b5817b1dd03d672bb939b287484ccb80483",
+            "revision": 2,
+            "committed_at": 1792963414636
+          },
+          {
+            "id": "[\"golaberto-standings\",\"3a5977b931ca606ffdff4779e3340ba49d9a19c5951c583902d5f80f5cdfdc20\",1]",
+            "name": "golaberto-standings",
+            "version": "3a5977b931ca606ffdff4779e3340ba49d9a19c5951c583902d5f80f5cdfdc20",
+            "revision": 1,
+            "committed_at": 1792963310559
+          }
+        ],
+        "errors": [],
+        "drains": [
+          "team-enrichment",
+          "team-profiles",
+          "team-directory",
+          "matches-games",
+          "recent-championships",
+          "rounds"
+        ],
+        "pending": null
+      },
+      "passed": true,
+      "closed": "2026-10-25T21:29:30.417Z"
+    },
+    "finalization": {
+      "started": "2026-10-25T21:30:19.667Z",
+      "cycles": [],
+      "sql": [
+        "ALTER SYSTEM SET min_wal_size='32MB'",
+        "ALTER SYSTEM SET max_wal_size='64MB'"
+      ],
+      "scope": "PostgreSQL-managed checkpoints and WAL switches only; no application row writes",
+      "walBefore": 67108864,
+      "batches": [
+        {
+          "name": "golaberto-chances",
+          "version": "e38c8b2f67e6cc7385efa9156ac4f468189516b03a93ce45d5549a32bafd5d2b",
+          "state": {
+            "due": 0,
+            "name": "golaberto-chances",
+            "wake": 0,
+            "phase": "idle",
+            "claimed": 0,
+            "attempts": 25,
+            "coalesce": 1000,
+            "required": [],
+            "completed": 2,
+            "requested": 2
+          }
+        },
+        {
+          "name": "golaberto-game-cards",
+          "version": "7d70b0463ab516c2741179f77ee3bf9062a9ac7c06c6eedbc5abb291d1f4e24e",
+          "state": {
+            "due": 0,
+            "name": "golaberto-game-cards",
+            "wake": 0,
+            "phase": "idle",
+            "claimed": 0,
+            "attempts": 25,
+            "coalesce": 1000,
+            "required": [],
+            "completed": 2,
+            "requested": 2
+          }
+        },
+        {
+          "name": "golaberto-player-stats",
+          "version": "8cd01570d3c9265eff399a8e95cf9a65335496f6143506d69e6be3066bde84b3",
+          "state": {
+            "due": 0,
+            "name": "golaberto-player-stats",
+            "wake": 0,
+            "phase": "idle",
+            "claimed": 0,
+            "attempts": 25,
+            "coalesce": 1000,
+            "required": [],
+            "completed": 2,
+            "requested": 2
+          }
+        },
+        {
+          "name": "golaberto-ratings",
+          "version": "3c4d500aa9e715d0f5ac712ea5f30b5817b1dd03d672bb939b287484ccb80483",
+          "state": {
+            "due": 0,
+            "name": "golaberto-ratings",
+            "wake": 0,
+            "phase": "idle",
+            "claimed": 0,
+            "attempts": 25,
+            "coalesce": 1000,
+            "required": [],
+            "completed": 2,
+            "requested": 2
+          }
+        },
+        {
+          "name": "golaberto-standings",
+          "version": "3a5977b931ca606ffdff4779e3340ba49d9a19c5951c583902d5f80f5cdfdc20",
+          "state": {
+            "due": 0,
+            "name": "golaberto-standings",
+            "wake": 0,
+            "phase": "idle",
+            "claimed": 0,
+            "attempts": 25,
+            "coalesce": 1000,
+            "required": [],
+            "completed": 1,
+            "requested": 1
+          }
+        }
+      ],
+      "receipts": [
+        {
+          "id": "[\"golaberto-chances\",\"e38c8b2f67e6cc7385efa9156ac4f468189516b03a93ce45d5549a32bafd5d2b\",2]",
+          "name": "golaberto-chances",
+          "version": "e38c8b2f67e6cc7385efa9156ac4f468189516b03a93ce45d5549a32bafd5d2b",
+          "revision": 2,
+          "committed_at": 1792963702698
+        },
+        {
+          "id": "[\"golaberto-game-cards\",\"7d70b0463ab516c2741179f77ee3bf9062a9ac7c06c6eedbc5abb291d1f4e24e\",2]",
+          "name": "golaberto-game-cards",
+          "version": "7d70b0463ab516c2741179f77ee3bf9062a9ac7c06c6eedbc5abb291d1f4e24e",
+          "revision": 2,
+          "committed_at": 1792963465488
+        },
+        {
+          "id": "[\"golaberto-player-stats\",\"8cd01570d3c9265eff399a8e95cf9a65335496f6143506d69e6be3066bde84b3\",2]",
+          "name": "golaberto-player-stats",
+          "version": "8cd01570d3c9265eff399a8e95cf9a65335496f6143506d69e6be3066bde84b3",
+          "revision": 2,
+          "committed_at": 1792963767371
+        },
+        {
+          "id": "[\"golaberto-ratings\",\"3c4d500aa9e715d0f5ac712ea5f30b5817b1dd03d672bb939b287484ccb80483\",2]",
+          "name": "golaberto-ratings",
+          "version": "3c4d500aa9e715d0f5ac712ea5f30b5817b1dd03d672bb939b287484ccb80483",
+          "revision": 2,
+          "committed_at": 1792963414636
+        },
+        {
+          "id": "[\"golaberto-standings\",\"3a5977b931ca606ffdff4779e3340ba49d9a19c5951c583902d5f80f5cdfdc20\",1]",
+          "name": "golaberto-standings",
+          "version": "3a5977b931ca606ffdff4779e3340ba49d9a19c5951c583902d5f80f5cdfdc20",
+          "revision": 1,
+          "committed_at": 1792963310559
+        }
+      ],
+      "auth": {
+        "users": 1193,
+        "editors": 0
+      },
+      "stages": {
+        "captures": 0,
+        "outputs": 0,
+        "chunks": 0
+      },
+      "passed": true,
+      "closed": "2026-10-25T21:30:20.169Z",
+      "walAfter": 50331648,
+      "fileCount": 1559,
+      "logicalBytes": 8586698836,
+      "logicalFilesSha256": "e4e5c760c274df4723395b9f11100044452161bff0415153f405ab4f2a423e5c"
+    },
+    "deployment": {
+      "version": "2eee75fe-1994-4fca-bf7d-b39d1dfb71cf",
+      "status": "published",
+      "hostedMemoryVerified": false,
+      "publisherExit": 0,
+      "files": 1559,
+      "MiB": 8188.9,
+      "chunksVerified": 3280,
+      "loadSeconds": 649.9,
+      "verifySeconds": 91.5,
+      "observation": "Initial pages passed, but continued monitoring caught one render-RPC memory reset at 2026-10-25T21:49:43.947Z; separate-renderer follow-up required."
+    },
+    "limits": [
+      "Offline publication does not establish hosted bulk-transaction capacity.",
+      "Full standings recount has 49,608 durable steps; hosted runtime latency is unmeasured."
+    ],
+    "browser": [
+      {
+        "name": "home",
+        "path": "/",
+        "status": 200,
+        "title": "Principal \u2014 golaberto",
+        "errors": [],
+        "screenshot": "standings-release/home.png",
+        "tableRows": 0
+      },
+      {
+        "name": "championship",
+        "path": "/campeonato/brazil-campeonato-brasileiro-2026",
+        "status": 200,
+        "title": "Brasil - Campeonato Brasileiro 2026 \u2014 golaberto",
+        "errors": [],
+        "screenshot": "standings-release/championship.png",
+        "tableRows": 21
+      },
+      {
+        "name": "team",
+        "path": "/equipe/flamengo-rj",
+        "status": 200,
+        "title": "Flamengo-RJ \u2014 golaberto",
+        "errors": [],
+        "screenshot": "standings-release/team.png",
+        "tableRows": 41
+      }
+    ],
+    "latency": [
+      {
+        "name": "championship",
+        "mode": "uncached",
+        "exit": 0,
+        "timing": "200 0.478486 0.603593",
+        "error": "",
+        "cache": [
+          "x-edge-cache: miss"
+        ],
+        "bytes": 173969
+      },
+      {
+        "name": "championship",
+        "mode": "cached",
+        "exit": 0,
+        "timing": "200 0.083290 0.095433",
+        "error": "",
+        "cache": [
+          "x-edge-cache: hit"
+        ],
+        "bytes": 173969
+      },
+      {
+        "name": "home",
+        "mode": "uncached",
+        "exit": 0,
+        "timing": "200 1.272186 1.379085",
+        "error": "",
+        "cache": [
+          "x-edge-cache: miss"
+        ],
+        "bytes": 158498
+      },
+      {
+        "name": "home",
+        "mode": "cached",
+        "exit": 0,
+        "timing": "200 0.072082 0.088424",
+        "error": "",
+        "cache": [
+          "x-edge-cache: hit"
+        ],
+        "bytes": 158498
+      },
+      {
+        "name": "team",
+        "mode": "uncached",
+        "exit": 0,
+        "timing": "200 1.846888 2.141034",
+        "error": "",
+        "cache": [
+          "x-edge-cache: miss"
+        ],
+        "bytes": 485829
+      },
+      {
+        "name": "team",
+        "mode": "cached",
+        "exit": 0,
+        "timing": "200 0.080497 0.110410",
+        "error": "",
+        "cache": [
+          "x-edge-cache: hit"
+        ],
+        "bytes": 485829
+      }
+    ],
+    "labelAudit": {
+      "invalidatedQualification": "/tmp/2079-final-bootstrap/output-semantics.json",
+      "reason": "Prior qualification verified output files and final source fingerprints separately, without verifying diagnostic computation inputs against authoritative source values.",
+      "memberNameMismatches": 562,
+      "distinctTeams": [
+        "a0700000-0000-4000-8000-000000000004"
+      ],
+      "memberOrderChanges": 2,
+      "liveRequests": 332,
+      "requestsByteIdentical": true,
+      "requestSha256": "b9d5b7bf10f1301eb145fb312cf0f2fc3d13b1b470d874fd07dc6fd9055ac4a9",
+      "wasmSha256": "53bbb38ad80d18fbefe4c94ac96f2e9bdc83736b4c3bbd28eaf79fa1c7cce9c5",
+      "sinks": {
+        "team_chance": {
+          "rows": 58440,
+          "sha256": "b1afd1c75c21e7aec3ecb372e4577dbf1351a36fe56041f0626251fbabd28d66",
+          "originalSha256": "8bdcd8683f1764c37d9b069fda87c36c2f9a8ed41e024dbfbd88d70d8ceedfe7",
+          "byteIdentical": false
+        },
+        "zone_chance": {
+          "rows": 81522,
+          "sha256": "4335b387ad26259b1fbd14d99eb34a907d4e194e9d0ce79d1b61415265511bb8",
+          "originalSha256": "4335b387ad26259b1fbd14d99eb34a907d4e194e9d0ce79d1b61415265511bb8",
+          "byteIdentical": true
+        },
+        "position_chance": {
+          "rows": 988850,
+          "sha256": "87184db68f7e7d1bdbda6b7d811936d16cd72379b6f96d526dd5008fa123da9a",
+          "originalSha256": "87184db68f7e7d1bdbda6b7d811936d16cd72379b6f96d526dd5008fa123da9a",
+          "byteIdentical": true
+        },
+        "game_importance": {
+          "rows": 5419,
+          "sha256": "2d513ad5806248322905a73668f17f81a50104c7568d1a6d271b91015808923d",
+          "originalSha256": "2d513ad5806248322905a73668f17f81a50104c7568d1a6d271b91015808923d",
+          "byteIdentical": true
+        }
+      },
+      "passed": true,
+      "changedOutputRows": 562,
+      "changedOutputFields": [
+        "team_name"
+      ],
+      "freshWasmExecution": true,
+      "correctedOutput": "/tmp/2079-monthly-chances/corrected-team_chance.jsonl",
+      "sourceAuditEvidence": [
+        "/tmp/2079-monthly-chances/raw-source-audit.json",
+        "/tmp/2079-monthly-chances/home-field-audit.json",
+        "/tmp/2079-monthly-chances/prepared-rating-parity.json",
+        "/tmp/2079-monthly-chances/prepared-standing-parity.json"
+      ],
+      "limitations": [
+        "This repairs previously contaminated diagnostic output labels; it does not retroactively validate the original disconnected source/output reuse qualification."
+      ]
+    },
+    "finalRelease": {
+      "commit": "5c9c13b1b",
+      "version": "55619f1a-d42d-4253-bce3-95d04264098c",
+      "renderer": "golaberto-renderer-ef83e1778993",
+      "status": "deployed; post-rollout reads verified",
+      "publisherExit": 1,
+      "publisherFailure": "First entry-page check lacked import map; one startup request reported runtime hang. Identical deployed ICE validation rerun exited0.",
+      "gates": {
+        "generate": 0,
+        "lint": 0,
+        "focusedPublisherBootstrapTests": {
+          "exit": 0,
+          "passed": 17
+        },
+        "SSRTestsIncludingTwoWorkers": {
+          "exit": 0,
+          "passed": 9
+        },
+        "browser": 0,
+        "odds": 0,
+        "concurrentReads": 0
+      },
+      "latency": [
+        {
+          "name": "championship",
+          "mode": "uncached",
+          "exit": 0,
+          "timing": "200 1.179085 1.778718",
+          "error": "",
+          "cache": [
+            "x-edge-cache: miss"
+          ],
+          "bytes": 173969
+        },
+        {
+          "name": "championship",
+          "mode": "cached",
+          "exit": 0,
+          "timing": "200 0.089537 0.110449",
+          "error": "",
+          "cache": [
+            "x-edge-cache: hit"
+          ],
+          "bytes": 173969
+        },
+        {
+          "name": "home",
+          "mode": "uncached",
+          "exit": 0,
+          "timing": "200 1.227979 1.661101",
+          "error": "",
+          "cache": [
+            "x-edge-cache: miss"
+          ],
+          "bytes": 158722
+        },
+        {
+          "name": "home",
+          "mode": "cached",
+          "exit": 0,
+          "timing": "200 0.060238 0.071403",
+          "error": "",
+          "cache": [
+            "x-edge-cache: hit"
+          ],
+          "bytes": 158722
+        },
+        {
+          "name": "team",
+          "mode": "uncached",
+          "exit": 0,
+          "timing": "200 1.784451 2.116608",
+          "error": "",
+          "cache": [
+            "x-edge-cache: miss"
+          ],
+          "bytes": 487277
+        },
+        {
+          "name": "team",
+          "mode": "cached",
+          "exit": 0,
+          "timing": "200 0.112830 0.136166",
+          "error": "",
+          "cache": [
+            "x-edge-cache: hit"
+          ],
+          "bytes": 487277
+        }
+      ],
+      "concurrentReads": {
+        "passed": true,
+        "concurrency": 2,
+        "requests": [
+          {
+            "path": "/",
+            "bytes": 158722,
+            "seconds": 0.776
+          },
+          {
+            "path": "/campeonato/brazil-campeonato-brasileiro-2026",
+            "bytes": 173969,
+            "seconds": 1.243
+          },
+          {
+            "path": "/equipe/flamengo-rj",
+            "bytes": 487277,
+            "seconds": 1.939
+          },
+          {
+            "path": "/chances/brazil-campeonato-brasileiro-2026-turno-e-returno-grupo-unico",
+            "bytes": 507477,
+            "seconds": 2.217
+          },
+          {
+            "path": "/",
+            "bytes": 158722,
+            "seconds": 1.173
+          },
+          {
+            "path": "/campeonato/brazil-campeonato-brasileiro-2026",
+            "bytes": 173969,
+            "seconds": 0.879
+          },
+          {
+            "path": "/equipe/flamengo-rj",
+            "bytes": 487277,
+            "seconds": 2.217
+          },
+          {
+            "path": "/chances/brazil-campeonato-brasileiro-2026-turno-e-returno-grupo-unico",
+            "bytes": 507477,
+            "seconds": 3.22
+          },
+          {
+            "path": "/",
+            "bytes": 158722,
+            "seconds": 1.766
+          },
+          {
+            "path": "/campeonato/brazil-campeonato-brasileiro-2026",
+            "bytes": 173969,
+            "seconds": 0.882
+          },
+          {
+            "path": "/equipe/flamengo-rj",
+            "bytes": 487277,
+            "seconds": 2.355
+          },
+          {
+            "path": "/chances/brazil-campeonato-brasileiro-2026-turno-e-returno-grupo-unico",
+            "bytes": 507477,
+            "seconds": 2.405
+          }
+        ]
+      },
+      "rendererObservation": {
+        "events": 52,
+        "exceptions": []
+      },
+      "runtimeObservation": {
+        "events": 240,
+        "memoryResets": 0,
+        "disposedReaderErrors": 0,
+        "startupHangRequests": 1,
+        "subsequentBrowserAndConcurrentChecksPassed": true
+      },
+      "repair": "052_chance_team_names;562 label-only corrections; current odds screenshot has authoritative name; all332 simulations rerun with unchanged numeric outputs.",
+      "remaining": [
+        "Hosted match-edit-to-recomputation-to-live-browser flow not exercised on this archive.",
+        "Large monthly atomic publication capacity remains unproved.",
+        "Single rollout startup hang not reproduced by subsequent tests.",
+        "Full native Docker integration not completed after disk-limited attempts."
+      ]
+    }
+  }
+}

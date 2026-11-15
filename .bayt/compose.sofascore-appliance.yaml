@@ -1,0 +1,38 @@
+# generated from bayt.cue — do not edit
+services:
+  golaberto-sofascore-appliance:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.sofascore-appliance
+      target: sofascore-appliance
+      tags:
+      - bayt-golaberto-sofascore-appliance:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-golaberto-sofascore-appliance:latest
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    image: bayt-golaberto-sofascore-appliance:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    scale: 0
+  golaberto-sofascore-appliance_bayt:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.sofascore-appliance
+      target: sofascore-appliance_bayt
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    image: bayt-golaberto-sofascore-appliance_bayt:latest
+    scale: 0
+  golaberto-sofascore-appliance_srcs:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.sofascore-appliance
+      target: sofascore-appliance_srcs
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    image: bayt-golaberto-sofascore-appliance_srcs:latest
+    scale: 0

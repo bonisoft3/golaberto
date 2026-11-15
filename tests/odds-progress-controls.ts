@@ -1,6 +1,11 @@
 import {assertEquals} from 'jsr:@std/assert@1';
 import { evaluateRole } from "./platform.ts";
-const handler = async (name:string) => evaluateRole(await Deno.readTextFile(new URL(`../shell/handlers/odds-progress-${name}.js`,import.meta.url)), 'handler');
+
+// The assertions below state a leaf's world and its event side by side; the
+// leaf itself takes them as XState's one argument.
+// deno-lint-ignore no-explicit-any
+const positional = (leaf: any) => (state: any, event?: any, ...rest: any[]) => leaf({ context: state, event }, ...rest);
+const handler = async (name:string) => evaluateRole(await Deno.readTextFile(new URL(`../shell/handlers/odds-progress-${name}.js`,import.meta.url)), 'handler').then(positional);
 Deno.test('chart inspection maps responsive plot coordinates onto recorded snapshots',async()=>{
   const point=await handler('point');
   const state={items:[{snapshot_last:9,snapshot_index:9}]};

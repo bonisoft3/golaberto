@@ -13,7 +13,7 @@ import (
 	prontoloop "github.com/bonisoft3/pronto/loops:sayt"
 )
 
-// Compiled escape hatches (ir.html: rclone-s3)
+// Compiled escape hatches (ir.html: feldera_sql, rclone-s3, sofascore, sofascore-receive, team-match-preview)
 // live in program.cue's cluster unification; this redeclaration
 // is the out-of-band human override seam (add a cluster target,
 // modify one, null to drop one; extend the terminal).
@@ -25,6 +25,3 @@ _baytData: _ @embed(file="bayt.json")
 
 project: _golaberto
 _golaberto: bayt.#project & _baytData
-
-depManifestsIn: {[string]: _}
-_render: (bayt.#render & {project: _golaberto, depManifests: depManifestsIn})

@@ -12,10 +12,11 @@ package golaberto
 		"""
 }
 
-#MatchContextForm: F={
+#MatchContextForm: {
+	let F = self
 	teamID: string
 	team:   string
-	out:    """
+	out: """
 		<section class="match-context-form">
 		 <h2><span data-text="{msg.match_context_form}"></span> · <span data-text="{\(F.team)}"></span></h2>
 		 <ol data-project='{"reader_day":{"date":["kickoff","day"]}}' data-live="match_recent_result" data-filter="target_game_id=eq.{id}&team_id=eq.\(F.teamID)&limit=5" data-order="day.asc,kickoff.asc.nullsfirst,id.asc" data-empty="{msg.match_context_form_empty}">
@@ -42,7 +43,7 @@ _matchContextTopMarkup: """
 	"""
 
 _matchContextHistoryMarkup: """
-	<section class="match-context-history">
+	<section id="game-history-{id}" class="match-context-history">
 	 <h2 data-text="{msg.match_context_previous}"></h2>
 	 <ol class="games" data-project='{"reader_day":{"date":["kickoff","day"]}}' data-live="match_head_to_head" data-filter="target_game_id=eq.{id}&limit=5" data-order="day.desc,kickoff.desc.nullslast,id.desc" data-empty="{msg.match_context_previous_empty}">
 	  <template data-item><li>\((#MatchContextGameRow).out)</li></template>
@@ -50,9 +51,10 @@ _matchContextHistoryMarkup: """
 	</section>
 	"""
 
-#MatchContextLineup: L={
+#MatchContextLineup: {
+	let L = self
 	side: string
-	out:  """
+	out: """
 		<table class="grid lineup" data-side="\(L.side)">
 		 <caption data-text="{\(L.side)_name}"></caption>
 		 <thead><tr><th scope="col" data-text="{msg.col_player}"></th><th scope="col" class="num"><abbr title="{msg.col_position_long}" data-text="{msg.col_pos}"></abbr></th><th scope="col" class="num" data-text="{msg.col_on}"></th><th scope="col" class="num" data-text="{msg.col_off}"></th><th scope="col" class="num"><abbr title="{msg.col_contribution_long}" data-text="{msg.col_contribution}"></abbr></th><th scope="col"><span class="visually-hidden" data-text="{msg.col_cards}"></span></th></tr></thead>

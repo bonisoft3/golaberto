@@ -1,0 +1,12 @@
+Check services/compute/native-sources_test.ts
+running 8 tests from ./services/compute/native-sources_test.ts
+source ownership survives installation before engine registration and rejects another owner ... ok (7s)
+ownership is recorded even when adopting an already installed source schema ... ok (7s)
+native sources bootstrap populated rows and maintain only changed projections in the source transaction ... ok (7s)
+source truncate commits CDC row retractions atomically and rollback preserves the mirror ... ok (7s)
+native source installation fences concurrent source writes until baseline and triggers commit ... ok (8s)
+native mirror tables and trigger functions remain private while source writes work ... ok (6s)
+native SQL wires CDC and bag-difference feedback without widening timestamp precision ... ok (2ms)
+native source point updates do not scan unrelated source history ... ok (7s)
+
+ok | 8 passed | 0 failed (54s)

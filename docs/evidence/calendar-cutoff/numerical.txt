@@ -1,0 +1,45 @@
+Check computations/tests/ratings_test.ts
+Check computations/tests/chances_test.ts
+Check computations/tests/ratings_output_test.ts
+Check duckstream/queries_test.ts
+running 7 tests from ./computations/tests/ratings_test.ts
+team ratings are the persisted historic series ...Check ../../libraries/mecha/services/compute/job.ts
+Check ../../libraries/mecha/services/compute/cage.ts
+ ok (712ms)
+player ratings cover who played and only them ... ok (285µs)
+an evaluation per professional phase ... ok (40µs)
+ratings are a function of the lake, not the seed ... ok (209ms)
+no professional game, no rows ... ok (182ms)
+the chances price games with the ratings ... ok (116ms)
+windows count calendar years ... ok (100ms)
+running 18 tests from ./computations/tests/chances_test.ts
+powers follow Rails' Game#home_power ... ok (5ms)
+powers floor the scale and clamp ... ok (518µs)
+the request is Rails' Group#odds ... ok (112ms)
+sparse zones aggregate only their exact positions ... ok (2ms)
+zones beyond current membership stay impossible without stopping other groups ... ok (301ms)
+powers read the latest rating before the game, in f32 ... ok (115ms)
+the sinks hold the estimate ... ok (242ms)
+rank, points and played are the standing's ... ok (255µs)
+rank follows the standings' ladder, not points ... ok (242ms)
+a group the standing does not rank has no chances ... ok (439ms)
+a finished group is its final table ... ok (588µs)
+the last result turns the chances into the final table ... ok (205ms)
+a played game leaves the importance ... ok (229ms)
+game importance covers the games left ... ok (202µs)
+a cell that shows 0 says whether it can still be reached ... ok (255µs)
+a zero's reach is upstream's: an estimate under the cent or a witness is reachable, all proofs impossible, else undecided ... ok (807µs)
+an answer without a cell's reachability fails the run ... ok (203µs)
+a seed is an answer ... ok (235ms)
+running 2 tests from ./computations/tests/ratings_output_test.ts
+current player components retain unsquashed per90 values and player identity ... ok (821µs)
+zero observed contribution remains zero while unplayed players stay absent ... ok (127µs)
+running 6 tests from ./duckstream/queries_test.ts
+Feldera-derived queries preserve archive calendar, strict ASOF and f32 boundaries ... ok (226ms)
+Feldera-derived ratings preserve an empty professional archive ... ok (110ms)
+Golaberto programs and native descriptors are generated from admitted Feldera SQL ... ok (9ms)
+ambiguous rating team/day fails before either engine can choose a power ... ok (97ms)
+calendar 4-year boundaries follow the extremal game before leap-day clamping ... ok (109ms)
+calendar 7-year boundaries follow the extremal game before leap-day clamping ... ok (115ms)
+
+ok | 33 passed | 0 failed (4s)

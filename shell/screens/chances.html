@@ -30,7 +30,7 @@
                   <div class="grid-table zone-odds" role="table">
                     <div class="row head" role="row">
                       <span class="pos" role="columnheader">#</span><span class="name" role="columnheader" data-text="{msg.col_team}"></span><span class="pts" role="columnheader" data-text="{msg.col_points}"></span>
-                      <span class="cells" data-live="zone" data-filter="group_id=eq.{group_id}" data-order="first.asc,last.asc" data-empty=""><template data-item><span class="zone" role="columnheader" data-zone="{color}" style="--zone-source: {color}"><i aria-hidden="true"></i><span data-text="{name}"></span><small data-text="{first}–{last}"></small></span></template></span>
+                      <span class="cells" data-live="zone" data-filter="group_id=eq.{group_id}" data-order="first.asc,last.asc" data-empty=""><template data-item><span class="zone" role="columnheader" data-zone="{color}" style="--zone-source: {color}"><i aria-hidden="true"></i><span data-text="{name}"></span><small data-text="{first}|{last}" data-text-format="zone-positions"></small></span></template></span>
                     </div>
                     <div class="rows" data-live="team_chance" data-select="*,team(slug,logo_key),group:group_id(slug)" data-filter="group_id=eq.{group_id}" data-order="rank.asc" data-empty="">
                       <template data-item>

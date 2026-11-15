@@ -1,16 +1,16 @@
 package golaberto
 
-_competitionScreenRoutes: {
-	"gerenciar-competicoes": {path: "/gerenciar-competicoes", title: "Manage championships"}
-	"nova-competicao": {path: "/nova-competicao", title: "New championship"}
-	"editar-competicao": {path: "/editar-competicao/:slug", title: "Edit championship"}
+_competitionScreenTitles: {
+	"gerenciar-competicoes": "Manage championships"
+	"nova-competicao": "New championship"
+	"editar-competicao": "Edit championship"
 }
 
 code: surface: screens: {
-	for screenRoute, spec in _competitionScreenRoutes {
+	for screenRoute, spec in _competitionScreenTitles {
 		(screenRoute): {
-			title:  spec.title
-			route:  spec.path
+			title:  spec
+
 			strip:  false
 			keep:   0
 			markup: _competitionMarkups[screenRoute]
@@ -44,3 +44,5 @@ code: meta: tests: {
 		then: "output.refused && output.dependents_preserved"
 	}
 }
+
+code: surface: screens: "editar-competicao": files: renderers: ["shell/renderers/zone-positions.js"]

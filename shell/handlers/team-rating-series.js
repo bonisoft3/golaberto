@@ -1,6 +1,6 @@
-(state) => {
-  const view = state.rows.view?.[0];
-  const series = state.items[0];
+({ context }) => {
+  const view = context.rows.view?.[0];
+  const series = context.items[0];
   const series_json = series?.series_json ?? "{}";
   // A page row exists only once stored; the first paint stores it with the
   // fallback the paged read declares, or the series would wait for a click.

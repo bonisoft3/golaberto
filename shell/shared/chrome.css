@@ -13,6 +13,12 @@ body {
    terminal draws it before the screen's mount, so the masthead above it is
    placed out of the screen into the space the body keeps for it. */
 body > nav {
+  --shell-nav-radius: 0;
+  --shell-nav-hover-bg: transparent;
+  --shell-nav-active-bg: transparent;
+  --shell-nav-active-shadow: none;
+  --shell-nav-me-pad: 0;
+  --shell-nav-me-rule: 0;
   max-width: var(--measure-page); margin-inline: auto; box-sizing: border-box;
   background: var(--strip); color: var(--strip-ink);
   border-bottom: 0; gap: 0; justify-content: center;
@@ -59,10 +65,6 @@ body > nav :is(.shell-signin, .shell-register) { min-height: var(--min-touch); f
 .table-wrap { overflow-x: auto; }
 
 main#app { max-width: var(--measure-page); margin-inline: auto; background: var(--surface); }
-
-/* Screen navigation instant swap: eliminate opacity dip and flash */
-.shell-screen { transition: none !important; }
-.shell-screen[data-entering] { opacity: 1 !important; }
 
 .screen { color: var(--primary); min-height: 70vh; }
 /* Prose links; a component that styles its own links wins without a fight. */
@@ -122,6 +124,33 @@ abbr[title] { text-decoration: none; }
 .side { background: var(--side); color: var(--strip-ink); padding: var(--sp-lg); font-weight: 700; font-size: var(--type-caption); }
 .side a { display: inline-block; min-height: var(--min-touch); color: var(--strip-ink); }
 .side p { margin: 0 0 var(--sp-md); }
+
+.page-with-local-nav { grid-template-areas: "content local"; }
+.page-with-local-nav > .content { grid-area: content; }
+.page-with-local-nav > .local-side { grid-area: local; }
+.local-nav-stack { position: sticky; top: calc(var(--control-h-lg) + 2 * var(--sp-lg)); display: flex; flex-direction: column; gap: var(--sp-lg); max-height: calc(100dvh - var(--control-h-lg) - 3 * var(--sp-lg)); overflow-y: auto; }
+.page-with-local-nav > .content :is(section, h2)[id] { scroll-margin-block-start: calc(var(--control-h-lg) + 2 * var(--sp-lg)); }
+.local-navigation h2 { margin: 0 0 var(--sp-sm); font-size: var(--type-caption); line-height: var(--type-leading-body); }
+.local-links { display: flex; flex-direction: column; }
+.local-links a { display: flex; align-items: center; min-height: var(--min-touch); box-sizing: border-box; padding: var(--sp-sm) var(--sp-md); border-inline-start: var(--border-size-2) solid transparent; text-decoration: none; overflow-wrap: anywhere; }
+.local-links a:hover { background: var(--surface-muted); color: var(--primary); text-decoration: underline; text-underline-offset: 3px; }
+.local-links a[aria-current="page"] { background: var(--band); color: var(--band-ink); border-inline-start-color: currentColor; }
+.local-links a:focus-visible { outline: var(--border-size-2) solid currentColor; outline-offset: calc(-1 * var(--border-size-2)); }
+.local-back { padding-block-start: var(--sp-md); border-block-start: var(--border-size-1) solid var(--border); }
+.side .local-about { font-weight: 400; }
+
+@media (max-width: 720px) {
+  .page-with-local-nav { grid-template-areas: "local" "content"; }
+  .page-with-local-nav > .local-side { padding: var(--sp-md); }
+  .local-nav-stack { position: static; max-height: none; overflow: visible; gap: var(--sp-sm); }
+  .local-links { flex-direction: row; flex-wrap: wrap; gap: var(--sp-sm); }
+  .local-links a { border-inline-start: 0; border-block-end: var(--border-size-2) solid transparent; }
+  .local-links a[aria-current="page"] { border-block-end-color: currentColor; }
+  .local-stages { display: flex; align-items: center; gap: var(--sp-md); }
+  .local-stages h2 { margin: 0; }
+  .side .local-back { margin: 0; }
+  .local-side .local-about { display: none; }
+}
 
 h2 { font-size: var(--type-subtitle); margin: 0; }
 h3 { font-size: var(--type-body); margin: 0; }

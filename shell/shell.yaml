@@ -69,8 +69,6 @@ access:
     scope: private
   player_stat:
     scope: public
-  phase_round:
-    scope: public
   team_comment:
     scope: public
   team_campaign_point:
@@ -132,6 +130,10 @@ auth:
   mode: passkey
 floors:
   touch: 24
+hostDom:
+  team-match-preview:
+    src: shell/hatches/team-match-preview.js
+    note: 'Native popover placement, hover hit testing, pinning and focus control escape standings scroll clipping; match data stays in declared live reads.'
 i18n:
   default: pt-BR
   locales:
@@ -231,7 +233,6 @@ read:
   team_game: lazy
   comment: lazy
   player_stat: lazy
-  phase_round: lazy
   team_comment: lazy
   team_campaign_point: lazy
   team_rating_chart: lazy
@@ -312,29 +313,37 @@ seed:
 server: true
 routes:
   - keep: 0
-    path: /arquivo
+    path: /jogos/arquivo
+    paths:
+      pt-BR: /jogos/arquivo
+      es-AR: /partidos/archivo
+      en-US: /matches/archive
+      it-IT: /partite/archivio
+      de-DE: /spiele/archiv
+      fr-FR: /matchs/archives
     screen: arquivo
     nav:
       label: Game archive
       strip: false
     files:
-      html: shell/screens/arquivo.html
-      css: shell/screens/arquivo.css
+      adapters: []
       handlers:
         - shell/handlers/archive-round.js
         - shell/handlers/archive-week.js
         - shell/handlers/page-value.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/games.css
-        - shell/shared/team.css
       renderers:
         - shell/renderers/match-final-score.js
         - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+      html: shell/screens/arquivo.html
+      css: shell/screens/arquivo.css
+    slug: route_games
     ssr: ssr
     states:
       - loading
@@ -342,29 +351,37 @@ routes:
       - gone
       - populated-dark
   - keep: 0
-    path: '/campeonato/:slug/arquivo'
+    path: '/campeonato/:slug/jogos'
+    paths:
+      pt-BR: '/campeonato/:slug/jogos'
+      es-AR: '/campeonato/:slug/partidos'
+      en-US: '/championship/:slug/matches'
+      it-IT: '/campionato/:slug/partite'
+      de-DE: '/wettbewerb/:slug/spiele'
+      fr-FR: '/championnat/:slug/matchs'
     screen: arquivo-campeonato
     nav:
       label: Championship archive
       strip: false
     files:
-      html: shell/screens/arquivo-campeonato.html
-      css: shell/screens/arquivo-campeonato.css
+      adapters: []
       handlers:
         - shell/handlers/archive-round.js
         - shell/handlers/archive-week.js
         - shell/handlers/page-value.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/games.css
-        - shell/shared/team.css
       renderers:
         - shell/renderers/match-final-score.js
         - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+      html: shell/screens/arquivo-campeonato.html
+      css: shell/screens/arquivo-campeonato.css
+    slug: route_championship
     ssr: ssr
     states:
       - loading
@@ -373,26 +390,34 @@ routes:
       - populated-dark
   - keep: 0
     path: '/campeonato/:slug/publico'
+    paths:
+      pt-BR: '/campeonato/:slug/publico'
+      es-AR: '/campeonato/:slug/asistencia'
+      en-US: '/championship/:slug/attendance'
+      it-IT: '/campionato/:slug/presenze'
+      de-DE: '/wettbewerb/:slug/zuschauer'
+      fr-FR: '/championnat/:slug/affluence'
     screen: publico
     nav:
       label: Attendance
       strip: false
     files:
-      html: shell/screens/publico.html
-      css: shell/screens/publico.css
+      adapters: []
       handlers:
         - shell/handlers/page-value.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/games.css
-        - shell/shared/team.css
       renderers:
         - shell/renderers/match-final-score.js
         - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+      html: shell/screens/publico.html
+      css: shell/screens/publico.css
+    slug: route_championship
     ssr: ssr
     states:
       - loading
@@ -400,26 +425,26 @@ routes:
       - gone
       - populated-dark
   - keep: 0
-    path: '/campeonato-jogadores/:slug'
+    path: '/campeonato/:slug/jogadores'
+    paths:
+      pt-BR: '/campeonato/:slug/jogadores'
+      es-AR: '/campeonato/:slug/jugadores'
+      en-US: '/championship/:slug/players'
+      it-IT: '/campionato/:slug/giocatori'
+      de-DE: '/wettbewerb/:slug/spieler'
+      fr-FR: '/championnat/:slug/joueurs'
     screen: campeonato-jogadores
     nav:
       label: Championship players
       strip: false
     files:
-      html: shell/screens/campeonato-jogadores.html
-      css: shell/screens/campeonato-jogadores.css
+      adapters: []
       handlers:
         - shell/handlers/page-value.js
         - shell/handlers/parity-minutes.js
         - shell/handlers/player-csv-fold.js
         - shell/handlers/player-csv-seed.js
         - shell/handlers/search-key.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/catalog.css
-        - shell/shared/games.css
-        - shell/shared/team.css
       renderers:
         - shell/renderers/match-final-score.js
         - shell/renderers/match-shootout.js
@@ -430,14 +455,14 @@ routes:
         - shell/renderers/player-rate-per90.js
         - shell/renderers/player-position.js
         - shell/renderers/player-event-label.js
-    slug: route_championship_players
-    paths:
-      pt-BR: '/campeonato-jogadores/:slug'
-      es-AR: '/campeonato-jugadores/:slug'
-      en-US: '/championship-players/:slug'
-      it-IT: '/campionato-giocatori/:slug'
-      de-DE: '/meisterschaft-spieler/:slug'
-      fr-FR: '/championnat-joueurs/:slug'
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/catalog.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+      html: shell/screens/campeonato-jogadores.html
+      css: shell/screens/campeonato-jogadores.css
+    slug: route_championship
     ssr: ssr
     states:
       - loading
@@ -445,22 +470,22 @@ routes:
       - gone
       - populated-dark
   - keep: 0
-    path: '/jogador-campeonato/:slug/:team/:championship'
+    path: '/campeonato/:championship/equipe/:team/jogador/:slug'
+    paths:
+      pt-BR: '/campeonato/:championship/equipe/:team/jogador/:slug'
+      es-AR: '/campeonato/:championship/equipo/:team/jugador/:slug'
+      en-US: '/championship/:championship/team/:team/player/:slug'
+      it-IT: '/campionato/:championship/squadra/:team/giocatore/:slug'
+      de-DE: '/wettbewerb/:championship/mannschaft/:team/spieler/:slug'
+      fr-FR: '/championnat/:championship/equipe/:team/joueur/:slug'
     screen: jogador-campeonato
     nav:
       label: Player season
       strip: false
     files:
-      html: shell/screens/jogador-campeonato.html
-      css: shell/screens/jogador-campeonato.css
+      adapters: []
       handlers:
         - shell/handlers/page-value.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/catalog.css
-        - shell/shared/games.css
-        - shell/shared/team.css
       renderers:
         - shell/renderers/match-final-score.js
         - shell/renderers/match-shootout.js
@@ -471,14 +496,14 @@ routes:
         - shell/renderers/player-rate-per90.js
         - shell/renderers/player-position.js
         - shell/renderers/player-event-label.js
-    slug: route_scoped_player
-    paths:
-      pt-BR: '/jogador-campeonato/:slug/:team/:championship'
-      es-AR: '/jugador-campeonato/:slug/:team/:championship'
-      en-US: '/player-championship/:slug/:team/:championship'
-      it-IT: '/giocatore-campionato/:slug/:team/:championship'
-      de-DE: '/spieler-meisterschaft/:slug/:team/:championship'
-      fr-FR: '/joueur-championnat/:slug/:team/:championship'
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/catalog.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+      html: shell/screens/jogador-campeonato.html
+      css: shell/screens/jogador-campeonato.css
+    slug: route_championship
     ssr: ssr
     states:
       - loading
@@ -491,13 +516,8 @@ routes:
       key: nav_home
       label: Principal
     files:
-      html: shell/screens/principal.html
-      css: shell/screens/principal.css
-      handlers: []
       adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/games.css
+      handlers: []
       renderers:
         - shell/renderers/match-final-score.js
         - shell/renderers/match-shootout.js
@@ -505,6 +525,11 @@ routes:
         - shell/renderers/country-flag.js
         - shell/renderers/weekday.js
         - shell/renderers/geography-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+      html: shell/screens/principal.html
+      css: shell/screens/principal.css
     ssr: ssr
     states:
       - loading
@@ -513,27 +538,6 @@ routes:
       - populated-dark
   - keep: 0
     path: /campeonatos
-    screen: campeonatos
-    nav:
-      key: nav_championships
-      label: Campeonatos
-    files:
-      html: shell/screens/campeonatos.html
-      css: shell/screens/campeonatos.css
-      handlers:
-        - shell/handlers/page-value.js
-        - shell/handlers/search-key.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/catalog.css
-      renderers:
-        - shell/renderers/match-final-score.js
-        - shell/renderers/match-shootout.js
-        - shell/renderers/team-badge.js
-        - shell/renderers/country-flag.js
-        - shell/renderers/geography-label.js
-    slug: route_championships
     paths:
       pt-BR: /campeonatos
       es-AR: /campeonatos
@@ -541,6 +545,27 @@ routes:
       it-IT: /campionati
       de-DE: /wettbewerbe
       fr-FR: /championnats
+    screen: campeonatos
+    nav:
+      key: nav_championships
+      label: Campeonatos
+    files:
+      adapters: []
+      handlers:
+        - shell/handlers/page-value.js
+        - shell/handlers/search-key.js
+      renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
+        - shell/renderers/geography-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/catalog.css
+      html: shell/screens/campeonatos.html
+      css: shell/screens/campeonatos.css
+    slug: route_championships
     ssr: ssr
     states:
       - loading
@@ -549,27 +574,6 @@ routes:
       - no-match
       - populated-dark
   - path: /jogos
-    screen: jogos
-    nav:
-      key: nav_games
-      label: Jogos
-    files:
-      html: shell/screens/jogos.html
-      css: shell/screens/jogos.css
-      handlers:
-        - shell/handlers/page-value.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/games.css
-      renderers:
-        - shell/renderers/match-final-score.js
-        - shell/renderers/match-shootout.js
-        - shell/renderers/team-badge.js
-        - shell/renderers/country-flag.js
-        - shell/renderers/weekday.js
-        - shell/renderers/geography-label.js
-    slug: route_games
     paths:
       pt-BR: /jogos
       es-AR: /partidos
@@ -577,6 +581,27 @@ routes:
       it-IT: /partite
       de-DE: /spiele
       fr-FR: /matchs
+    screen: jogos
+    nav:
+      key: nav_games
+      label: Jogos
+    files:
+      adapters: []
+      handlers:
+        - shell/handlers/page-value.js
+      renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
+        - shell/renderers/weekday.js
+        - shell/renderers/geography-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+      html: shell/screens/jogos.html
+      css: shell/screens/jogos.css
+    slug: route_games
     ssr: ssr
     states:
       - loading
@@ -585,28 +610,25 @@ routes:
       - populated-dark
   - keep: 3
     path: '/jogo/:slug'
+    paths:
+      pt-BR: '/jogo/:slug'
+      es-AR: '/partido/:slug'
+      en-US: '/match/:slug'
+      it-IT: '/partita/:slug'
+      de-DE: '/spiel/:slug'
+      fr-FR: '/match/:slug'
     screen: jogo
     nav:
       label: Jogo
       strip: false
     files:
-      html: shell/screens/jogo.html
-      css: shell/screens/jogo.css
+      adapters: []
       handlers:
         - shell/handlers/match-probability-event-control.js
         - shell/handlers/match-probability-event-edit.js
         - shell/handlers/match-probability-event-fold.js
         - shell/handlers/match-probability-seed.js
         - shell/handlers/page-value.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/games.css
-        - shell/shared/team.css
-        - shell/shared/match-context.css
-        - shell/shared/match-probability.css
-        - shell/shared/editing.css
-        - shell/shared/community.css
       renderers:
         - shell/renderers/match-final-score.js
         - shell/renderers/match-shootout.js
@@ -615,14 +637,17 @@ routes:
         - shell/renderers/geography-label.js
         - shell/renderers/match-context-map.js
         - shell/renderers/match-probability.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+        - shell/shared/match-context.css
+        - shell/shared/match-probability.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+      html: shell/screens/jogo.html
+      css: shell/screens/jogo.css
     slug: route_game
-    paths:
-      pt-BR: '/jogo/:slug'
-      es-AR: '/partido/:slug'
-      en-US: '/match/:slug'
-      it-IT: '/partita/:slug'
-      de-DE: '/spiel/:slug'
-      fr-FR: '/match/:slug'
     ssr: ssr
     states:
       - loading
@@ -637,34 +662,35 @@ routes:
       - form-submit
       - success
   - keep: 3
-    path: '/chances/:slug'
+    path: '/grupo/:slug/chances'
+    paths:
+      pt-BR: '/grupo/:slug/chances'
+      es-AR: '/grupo/:slug/chances'
+      en-US: '/group/:slug/chances'
+      it-IT: '/gruppo/:slug/probabilita'
+      de-DE: '/gruppe/:slug/chancen'
+      fr-FR: '/groupe/:slug/chances'
     screen: chances
     nav:
       label: Chances
       strip: false
     files:
-      html: shell/screens/chances.html
-      css: shell/screens/chances.css
-      handlers: []
       adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/games.css
+      handlers: []
       renderers:
+        - shell/renderers/zone-positions.js
         - shell/renderers/match-final-score.js
         - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
         - shell/renderers/position-odds.js
-    slug: route_chances
-    paths:
-      pt-BR: '/chances/:slug'
-      es-AR: '/chances/:slug'
-      en-US: '/chances/:slug'
-      it-IT: '/probabilita/:slug'
-      de-DE: '/chancen/:slug'
-      fr-FR: '/chances/:slug'
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+      html: shell/screens/chances.html
+      css: shell/screens/chances.css
+    slug: route_group
     ssr: ssr
     states:
       - loading
@@ -673,38 +699,38 @@ routes:
       - populated-dark
   - access: private
     keep: 0
-    path: '/editar/:slug'
+    path: '/jogo/:slug/placar/editar'
+    paths:
+      pt-BR: '/jogo/:slug/placar/editar'
+      es-AR: '/partido/:slug/marcador/editar'
+      en-US: '/match/:slug/score/edit'
+      it-IT: '/partita/:slug/punteggio/modifica'
+      de-DE: '/spiel/:slug/spielstand/bearbeiten'
+      fr-FR: '/match/:slug/score/modifier'
     screen: editar
     nav:
       label: Editar jogo
       strip: false
     files:
-      html: shell/screens/editar.html
-      css: shell/screens/editar.css
+      adapters: []
       handlers:
         - shell/handlers/blank-null.js
         - shell/handlers/both-scored.js
         - shell/handlers/count-or-null.js
         - shell/handlers/row-id.js
         - shell/handlers/search-key.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/games.css
       renderers:
         - shell/renderers/match-final-score.js
         - shell/renderers/match-shootout.js
         - shell/renderers/team-badge.js
         - shell/renderers/country-flag.js
         - shell/renderers/geography-label.js
-    slug: route_edit
-    paths:
-      pt-BR: '/editar/:slug'
-      es-AR: '/editar/:slug'
-      en-US: '/edit/:slug'
-      it-IT: '/modifica/:slug'
-      de-DE: '/bearbeiten/:slug'
-      fr-FR: '/modifier/:slug'
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+      html: shell/screens/editar.html
+      css: shell/screens/editar.css
+    slug: route_game
     ssr: spa
     states:
       - loading
@@ -715,29 +741,6 @@ routes:
       - populated-dark
   - keep: 0
     path: /equipes
-    screen: equipes
-    nav:
-      key: nav_teams
-      label: Equipes
-    files:
-      html: shell/screens/equipes.html
-      css: shell/screens/equipes.css
-      handlers:
-        - shell/handlers/country-option.js
-        - shell/handlers/geography-selection.js
-        - shell/handlers/page-value.js
-        - shell/handlers/search-key.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/catalog.css
-      renderers:
-        - shell/renderers/match-final-score.js
-        - shell/renderers/match-shootout.js
-        - shell/renderers/team-badge.js
-        - shell/renderers/country-flag.js
-        - shell/renderers/geography-label.js
-    slug: route_teams
     paths:
       pt-BR: /equipes
       es-AR: /equipos
@@ -745,6 +748,29 @@ routes:
       it-IT: /squadre
       de-DE: /mannschaften
       fr-FR: /equipes
+    screen: equipes
+    nav:
+      key: nav_teams
+      label: Equipes
+    files:
+      adapters: []
+      handlers:
+        - shell/handlers/country-option.js
+        - shell/handlers/geography-selection.js
+        - shell/handlers/page-value.js
+        - shell/handlers/search-key.js
+      renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
+        - shell/renderers/geography-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/catalog.css
+      html: shell/screens/equipes.html
+      css: shell/screens/equipes.css
+    slug: route_teams
     ssr: ssr
     states:
       - loading
@@ -754,22 +780,22 @@ routes:
       - populated-dark
   - keep: 0
     path: /jogadores
+    paths:
+      pt-BR: /jogadores
+      es-AR: /jugadores
+      en-US: /players
+      it-IT: /giocatori
+      de-DE: /spieler
+      fr-FR: /joueurs
     screen: jogadores
     nav:
       key: players_title
       label: Players
     files:
-      html: shell/screens/jogadores.html
-      css: shell/screens/jogadores.css
+      adapters: []
       handlers:
         - shell/handlers/page-value.js
         - shell/handlers/search-key.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/catalog.css
-        - shell/shared/games.css
-        - shell/shared/team.css
       renderers:
         - shell/renderers/match-final-score.js
         - shell/renderers/match-shootout.js
@@ -780,14 +806,14 @@ routes:
         - shell/renderers/player-rate-per90.js
         - shell/renderers/player-position.js
         - shell/renderers/player-event-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/catalog.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+      html: shell/screens/jogadores.html
+      css: shell/screens/jogadores.css
     slug: route_players
-    paths:
-      pt-BR: /jogadores
-      es-AR: /jugadores
-      en-US: /players
-      it-IT: /giocatori
-      de-DE: /spieler
-      fr-FR: /joueurs
     ssr: ssr
     states:
       - loading
@@ -796,27 +822,6 @@ routes:
       - populated-dark
   - keep: 0
     path: /estadios
-    screen: estadios
-    nav:
-      key: nav_stadiums
-      label: Estádios
-    files:
-      html: shell/screens/estadios.html
-      css: shell/screens/estadios.css
-      handlers:
-        - shell/handlers/page-value.js
-        - shell/handlers/search-key.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/catalog.css
-      renderers:
-        - shell/renderers/match-final-score.js
-        - shell/renderers/match-shootout.js
-        - shell/renderers/team-badge.js
-        - shell/renderers/country-flag.js
-        - shell/renderers/geography-label.js
-    slug: route_stadiums
     paths:
       pt-BR: /estadios
       es-AR: /estadios
@@ -824,6 +829,27 @@ routes:
       it-IT: /stadi
       de-DE: /stadien
       fr-FR: /stades
+    screen: estadios
+    nav:
+      key: nav_stadiums
+      label: Estádios
+    files:
+      adapters: []
+      handlers:
+        - shell/handlers/page-value.js
+        - shell/handlers/search-key.js
+      renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
+        - shell/renderers/geography-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/catalog.css
+      html: shell/screens/estadios.html
+      css: shell/screens/estadios.css
+    slug: route_stadiums
     ssr: ssr
     states:
       - loading
@@ -833,26 +859,6 @@ routes:
       - populated-dark
   - keep: 3
     path: '/estadio/:slug'
-    screen: estadio
-    nav:
-      label: Estádio
-      strip: false
-    files:
-      html: shell/screens/estadio.html
-      css: shell/screens/estadio.css
-      handlers:
-        - shell/handlers/page-value.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/games.css
-      renderers:
-        - shell/renderers/match-final-score.js
-        - shell/renderers/match-shootout.js
-        - shell/renderers/team-badge.js
-        - shell/renderers/country-flag.js
-        - shell/renderers/geography-label.js
-    slug: route_stadium
     paths:
       pt-BR: '/estadio/:slug'
       es-AR: '/estadio/:slug'
@@ -860,6 +866,26 @@ routes:
       it-IT: '/stadio/:slug'
       de-DE: '/stadion/:slug'
       fr-FR: '/stade/:slug'
+    screen: estadio
+    nav:
+      label: Estádio
+      strip: false
+    files:
+      adapters: []
+      handlers:
+        - shell/handlers/page-value.js
+      renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
+        - shell/renderers/geography-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+      html: shell/screens/estadio.html
+      css: shell/screens/estadio.css
+    slug: route_stadium
     ssr: ssr
     states:
       - loading
@@ -868,27 +894,6 @@ routes:
       - populated-dark
   - keep: 0
     path: /arbitros
-    screen: arbitros
-    nav:
-      key: nav_referees
-      label: Árbitros
-    files:
-      html: shell/screens/arbitros.html
-      css: shell/screens/arbitros.css
-      handlers:
-        - shell/handlers/page-value.js
-        - shell/handlers/search-key.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/catalog.css
-      renderers:
-        - shell/renderers/match-final-score.js
-        - shell/renderers/match-shootout.js
-        - shell/renderers/team-badge.js
-        - shell/renderers/country-flag.js
-        - shell/renderers/geography-label.js
-    slug: route_referees
     paths:
       pt-BR: /arbitros
       es-AR: /arbitros
@@ -896,6 +901,27 @@ routes:
       it-IT: /arbitri
       de-DE: /unparteiische
       fr-FR: /arbitres
+    screen: arbitros
+    nav:
+      key: nav_referees
+      label: Árbitros
+    files:
+      adapters: []
+      handlers:
+        - shell/handlers/page-value.js
+        - shell/handlers/search-key.js
+      renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
+        - shell/renderers/geography-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/catalog.css
+      html: shell/screens/arbitros.html
+      css: shell/screens/arbitros.css
+    slug: route_referees
     ssr: ssr
     states:
       - loading
@@ -905,26 +931,6 @@ routes:
       - populated-dark
   - keep: 3
     path: '/arbitro/:slug'
-    screen: arbitro
-    nav:
-      label: Árbitro
-      strip: false
-    files:
-      html: shell/screens/arbitro.html
-      css: shell/screens/arbitro.css
-      handlers:
-        - shell/handlers/page-value.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/games.css
-      renderers:
-        - shell/renderers/match-final-score.js
-        - shell/renderers/match-shootout.js
-        - shell/renderers/team-badge.js
-        - shell/renderers/country-flag.js
-        - shell/renderers/geography-label.js
-    slug: route_referee
     paths:
       pt-BR: '/arbitro/:slug'
       es-AR: '/arbitro/:slug'
@@ -932,6 +938,26 @@ routes:
       it-IT: '/arbitro/:slug'
       de-DE: '/schiedsrichter/:slug'
       fr-FR: '/arbitre/:slug'
+    screen: arbitro
+    nav:
+      label: Árbitro
+      strip: false
+    files:
+      adapters: []
+      handlers:
+        - shell/handlers/page-value.js
+      renderers:
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
+        - shell/renderers/geography-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+      html: shell/screens/arbitro.html
+      css: shell/screens/arbitro.css
+    slug: route_referee
     ssr: ssr
     states:
       - loading
@@ -940,24 +966,23 @@ routes:
       - populated-dark
   - keep: 3
     path: '/equipe/:slug'
+    paths:
+      pt-BR: '/equipe/:slug'
+      es-AR: '/equipo/:slug'
+      en-US: '/team/:slug'
+      it-IT: '/squadra/:slug'
+      de-DE: '/mannschaft/:slug'
+      fr-FR: '/equipe/:slug'
     screen: equipe
     nav:
       label: Equipe
       strip: false
     files:
-      html: shell/screens/equipe.html
-      css: shell/screens/equipe.css
+      adapters: []
       handlers:
         - shell/handlers/page-value.js
         - shell/handlers/search-key.js
         - shell/handlers/team-rating-series.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/games.css
-        - shell/shared/team.css
-        - shell/shared/editing.css
-        - shell/shared/community.css
       renderers:
         - shell/renderers/match-final-score.js
         - shell/renderers/match-shootout.js
@@ -967,14 +992,15 @@ routes:
         - shell/renderers/team-chart.js
         - shell/renderers/team-location.js
         - shell/renderers/media-image.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+      html: shell/screens/equipe.html
+      css: shell/screens/equipe.css
     slug: route_team
-    paths:
-      pt-BR: '/equipe/:slug'
-      es-AR: '/equipo/:slug'
-      en-US: '/team/:slug'
-      it-IT: '/squadra/:slug'
-      de-DE: '/mannschaft/:slug'
-      fr-FR: '/equipe/:slug'
     ssr: ssr
     states:
       - loading
@@ -986,14 +1012,20 @@ routes:
       - form-submit
       - success
   - keep: 3
-    path: '/equipe-campeonato/:slug/:championship'
+    path: '/campeonato/:championship/equipe/:slug'
+    paths:
+      pt-BR: '/campeonato/:championship/equipe/:slug'
+      es-AR: '/campeonato/:championship/equipo/:slug'
+      en-US: '/championship/:championship/team/:slug'
+      it-IT: '/campionato/:championship/squadra/:slug'
+      de-DE: '/wettbewerb/:championship/mannschaft/:slug'
+      fr-FR: '/championnat/:championship/equipe/:slug'
     screen: equipe-campeonato
     nav:
       label: Equipe no campeonato
       strip: false
     files:
-      html: shell/screens/equipe-campeonato.html
-      css: shell/screens/equipe-campeonato.css
+      adapters: []
       handlers:
         - shell/handlers/chart-compare.js
         - shell/handlers/chart-position-bound.js
@@ -1007,11 +1039,6 @@ routes:
         - shell/handlers/search-key.js
         - shell/handlers/team-chart-fold.js
         - shell/handlers/team-chart-seed.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/games.css
-        - shell/shared/team.css
       renderers:
         - shell/renderers/match-final-score.js
         - shell/renderers/match-shootout.js
@@ -1022,14 +1049,13 @@ routes:
         - shell/renderers/team-location.js
         - shell/renderers/odds-progress.js
         - shell/renderers/position-odds.js
-    slug: route_team_championship
-    paths:
-      pt-BR: '/equipe-campeonato/:slug/:championship'
-      es-AR: '/equipo-campeonato/:slug/:championship'
-      en-US: '/team-championship/:slug/:championship'
-      it-IT: '/squadra-campionato/:slug/:championship'
-      de-DE: '/mannschaft-meisterschaft/:slug/:championship'
-      fr-FR: '/equipe-championnat/:slug/:championship'
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+      html: shell/screens/equipe-campeonato.html
+      css: shell/screens/equipe-campeonato.css
+    slug: route_championship
     ssr: ssr
     states:
       - loading
@@ -1038,24 +1064,25 @@ routes:
       - populated-dark
   - keep: 3
     path: '/jogador/:slug'
+    paths:
+      pt-BR: '/jogador/:slug'
+      es-AR: '/jugador/:slug'
+      en-US: '/player/:slug'
+      it-IT: '/giocatore/:slug'
+      de-DE: '/spieler/:slug'
+      fr-FR: '/joueur/:slug'
     screen: jogador
     nav:
       label: Jogador
       strip: false
     files:
-      html: shell/screens/jogador.html
-      css: shell/screens/jogador.css
+      adapters: []
       handlers:
         - shell/handlers/page-value.js
         - shell/handlers/parity-minutes.js
         - shell/handlers/player-csv-fold.js
         - shell/handlers/player-csv-seed.js
         - shell/handlers/search-key.js
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/games.css
-        - shell/shared/team.css
       renderers:
         - shell/renderers/match-final-score.js
         - shell/renderers/match-shootout.js
@@ -1067,42 +1094,23 @@ routes:
         - shell/renderers/player-position.js
         - shell/renderers/player-height.js
         - shell/renderers/player-event-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+      html: shell/screens/jogador.html
+      css: shell/screens/jogador.css
     slug: route_player
-    paths:
-      pt-BR: '/jogador/:slug'
-      es-AR: '/jugador/:slug'
-      en-US: '/player/:slug'
-      it-IT: '/giocatore/:slug'
-      de-DE: '/spieler/:slug'
-      fr-FR: '/joueur/:slug'
     ssr: ssr
     states:
       - loading
       - populated
       - gone
       - populated-dark
-  - keep: 3
+  - hatches:
+      - team-match-preview
+    keep: 3
     path: '/campeonato/:slug'
-    screen: campeonato
-    nav:
-      label: Campeonato
-      strip: false
-    files:
-      html: shell/screens/campeonato.html
-      css: shell/screens/campeonato.css
-      handlers: []
-      adapters: []
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/games.css
-        - shell/shared/team.css
-      renderers:
-        - shell/renderers/match-final-score.js
-        - shell/renderers/match-shootout.js
-        - shell/renderers/team-badge.js
-        - shell/renderers/country-flag.js
-        - shell/renderers/geography-label.js
-    slug: route_championship
     paths:
       pt-BR: '/campeonato/:slug'
       es-AR: '/campeonato/:slug'
@@ -1110,6 +1118,27 @@ routes:
       it-IT: '/campionato/:slug'
       de-DE: '/wettbewerb/:slug'
       fr-FR: '/championnat/:slug'
+    screen: campeonato
+    nav:
+      label: Campeonato
+      strip: false
+    files:
+      adapters: []
+      handlers: []
+      renderers:
+        - shell/renderers/zone-positions.js
+        - shell/renderers/match-final-score.js
+        - shell/renderers/match-shootout.js
+        - shell/renderers/team-badge.js
+        - shell/renderers/country-flag.js
+        - shell/renderers/geography-label.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/team.css
+      html: shell/screens/campeonato.html
+      css: shell/screens/campeonato.css
+    slug: route_championship
     ssr: ssr
     states:
       - loading
@@ -1119,56 +1148,36 @@ routes:
       - populated-dark
   - access: private
     keep: 0
-    path: '/editar-arbitro/:slug'
-    screen: editar-arbitro
-    nav:
-      label: editar-arbitro
-      strip: false
-    files:
-      html: shell/screens/editar-arbitro.html
-      css: shell/screens/editar-arbitro.css
-      handlers: []
-      adapters:
-        - shell/handlers/editing-text.js
-      renderers:
-        - shell/renderers/media-image.js
-      shared:
-        - shell/shared/chrome.css
-        - shell/shared/games.css
-        - shell/shared/editing.css
-        - shell/shared/community.css
-    ssr: spa
-    states:
-      - loading
-      - populated
-      - gone
-      - validation-error
-      - network-error
-      - form-submit
-      - success
-      - populated-dark
-  - access: private
-    keep: 0
-    path: '/editar-competicao/:slug'
+    path: '/campeonato/:slug/editar'
+    paths:
+      pt-BR: '/campeonato/:slug/editar'
+      es-AR: '/campeonato/:slug/editar'
+      en-US: '/championship/:slug/edit'
+      it-IT: '/campionato/:slug/modifica'
+      de-DE: '/wettbewerb/:slug/bearbeiten'
+      fr-FR: '/championnat/:slug/modifier'
     screen: editar-competicao
     nav:
       label: Edit championship
       strip: false
     files:
-      html: shell/screens/editar-competicao.html
-      css: shell/screens/editar-competicao.css
-      handlers:
-        - shell/handlers/blank-null.js
-        - shell/handlers/editing-choice-event.js
-        - shell/handlers/search-key.js
       adapters:
         - shell/handlers/editing-integer.js
         - shell/handlers/editing-text.js
         - shell/handlers/editing-uuid.js
+      handlers:
+        - shell/handlers/blank-null.js
+        - shell/handlers/editing-choice-event.js
+        - shell/handlers/search-key.js
+      renderers:
+        - shell/renderers/zone-positions.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/editing.css
         - shell/shared/competition.css
+      html: shell/screens/editar-competicao.html
+      css: shell/screens/editar-competicao.css
+    slug: route_championship
     ssr: spa
     states:
       - loading
@@ -1181,21 +1190,64 @@ routes:
       - populated-dark
   - access: private
     keep: 0
-    path: '/editar-equipe/:slug'
+    path: '/arbitro/:slug/editar'
+    paths:
+      pt-BR: '/arbitro/:slug/editar'
+      es-AR: '/arbitro/:slug/editar'
+      en-US: '/referee/:slug/edit'
+      it-IT: '/arbitro/:slug/modifica'
+      de-DE: '/schiedsrichter/:slug/bearbeiten'
+      fr-FR: '/arbitre/:slug/modifier'
+    screen: editar-arbitro
+    nav:
+      label: editar-arbitro
+      strip: false
+    files:
+      adapters:
+        - shell/handlers/editing-text.js
+      handlers: []
+      renderers:
+        - shell/renderers/media-image.js
+      shared:
+        - shell/shared/chrome.css
+        - shell/shared/games.css
+        - shell/shared/editing.css
+        - shell/shared/community.css
+      html: shell/screens/editar-arbitro.html
+      css: shell/screens/editar-arbitro.css
+    slug: route_referee
+    ssr: spa
+    states:
+      - loading
+      - populated
+      - gone
+      - validation-error
+      - network-error
+      - form-submit
+      - success
+      - populated-dark
+  - access: private
+    keep: 0
+    path: '/equipe/:slug/editar'
+    paths:
+      pt-BR: '/equipe/:slug/editar'
+      es-AR: '/equipo/:slug/editar'
+      en-US: '/team/:slug/edit'
+      it-IT: '/squadra/:slug/modifica'
+      de-DE: '/mannschaft/:slug/bearbeiten'
+      fr-FR: '/equipe/:slug/modifier'
     screen: editar-equipe
     nav:
       label: editar-equipe
       strip: false
     files:
-      html: shell/screens/editar-equipe.html
-      css: shell/screens/editar-equipe.css
+      adapters:
+        - shell/handlers/editing-text.js
+        - shell/handlers/editing-uuid.js
       handlers:
         - shell/handlers/blank-null.js
         - shell/handlers/editing-choice-event.js
         - shell/handlers/search-key.js
-      adapters:
-        - shell/handlers/editing-text.js
-        - shell/handlers/editing-uuid.js
       renderers:
         - shell/renderers/media-image.js
       shared:
@@ -1203,6 +1255,9 @@ routes:
         - shell/shared/games.css
         - shell/shared/editing.css
         - shell/shared/community.css
+      html: shell/screens/editar-equipe.html
+      css: shell/screens/editar-equipe.css
+    slug: route_team
     ssr: spa
     states:
       - loading
@@ -1215,17 +1270,22 @@ routes:
       - populated-dark
   - access: private
     keep: 0
-    path: '/editar-estadio/:slug'
+    path: '/estadio/:slug/editar'
+    paths:
+      pt-BR: '/estadio/:slug/editar'
+      es-AR: '/estadio/:slug/editar'
+      en-US: '/stadium/:slug/edit'
+      it-IT: '/stadio/:slug/modifica'
+      de-DE: '/stadion/:slug/bearbeiten'
+      fr-FR: '/stade/:slug/modifier'
     screen: editar-estadio
     nav:
       label: editar-estadio
       strip: false
     files:
-      html: shell/screens/editar-estadio.html
-      css: shell/screens/editar-estadio.css
-      handlers: []
       adapters:
         - shell/handlers/editing-text.js
+      handlers: []
       renderers:
         - shell/renderers/media-image.js
       shared:
@@ -1233,6 +1293,9 @@ routes:
         - shell/shared/games.css
         - shell/shared/editing.css
         - shell/shared/community.css
+      html: shell/screens/editar-estadio.html
+      css: shell/screens/editar-estadio.css
+    slug: route_stadium
     ssr: spa
     states:
       - loading
@@ -1245,22 +1308,27 @@ routes:
       - populated-dark
   - access: private
     keep: 0
-    path: '/editar-jogador/:slug'
+    path: '/jogador/:slug/editar'
+    paths:
+      pt-BR: '/jogador/:slug/editar'
+      es-AR: '/jugador/:slug/editar'
+      en-US: '/player/:slug/edit'
+      it-IT: '/giocatore/:slug/modifica'
+      de-DE: '/spieler/:slug/bearbeiten'
+      fr-FR: '/joueur/:slug/modifier'
     screen: editar-jogador
     nav:
       label: editar-jogador
       strip: false
     files:
-      html: shell/screens/editar-jogador.html
-      css: shell/screens/editar-jogador.css
-      handlers:
-        - shell/handlers/blank-null.js
-        - shell/handlers/editing-choice-event.js
-        - shell/handlers/search-key.js
       adapters:
         - shell/handlers/editing-integer.js
         - shell/handlers/editing-text.js
         - shell/handlers/editing-uuid.js
+      handlers:
+        - shell/handlers/blank-null.js
+        - shell/handlers/editing-choice-event.js
+        - shell/handlers/search-key.js
       renderers:
         - shell/renderers/media-image.js
       shared:
@@ -1268,6 +1336,9 @@ routes:
         - shell/shared/games.css
         - shell/shared/editing.css
         - shell/shared/community.css
+      html: shell/screens/editar-jogador.html
+      css: shell/screens/editar-jogador.css
+    slug: route_player
     ssr: spa
     states:
       - loading
@@ -1280,25 +1351,30 @@ routes:
       - populated-dark
   - access: private
     keep: 0
-    path: '/editar-jogo/:slug'
+    path: '/jogo/:slug/editar'
+    paths:
+      pt-BR: '/jogo/:slug/editar'
+      es-AR: '/partido/:slug/editar'
+      en-US: '/match/:slug/edit'
+      it-IT: '/partita/:slug/modifica'
+      de-DE: '/spiel/:slug/bearbeiten'
+      fr-FR: '/match/:slug/modifier'
     screen: editar-jogo
     nav:
       label: editar-jogo
       strip: false
     files:
-      html: shell/screens/editar-jogo.html
-      css: shell/screens/editar-jogo.css
+      adapters:
+        - shell/handlers/editing-integer.js
+        - shell/handlers/editing-text.js
+        - shell/handlers/editing-timestamp.js
+        - shell/handlers/editing-uuid.js
       handlers:
         - shell/handlers/blank-null.js
         - shell/handlers/count-or-null.js
         - shell/handlers/editing-choice-event.js
         - shell/handlers/editing-played.js
         - shell/handlers/search-key.js
-      adapters:
-        - shell/handlers/editing-integer.js
-        - shell/handlers/editing-text.js
-        - shell/handlers/editing-timestamp.js
-        - shell/handlers/editing-uuid.js
       renderers:
         - shell/renderers/media-image.js
       shared:
@@ -1306,6 +1382,9 @@ routes:
         - shell/shared/games.css
         - shell/shared/editing.css
         - shell/shared/community.css
+      html: shell/screens/editar-jogo.html
+      css: shell/screens/editar-jogo.css
+    slug: route_game
     ssr: spa
     states:
       - loading
@@ -1318,23 +1397,28 @@ routes:
       - populated-dark
   - access: private
     keep: 0
-    path: '/escalacao-jogo/:slug'
+    path: '/jogo/:slug/escalacao/editar'
+    paths:
+      pt-BR: '/jogo/:slug/escalacao/editar'
+      es-AR: '/partido/:slug/alineacion/editar'
+      en-US: '/match/:slug/lineup/edit'
+      it-IT: '/partita/:slug/formazione/modifica'
+      de-DE: '/spiel/:slug/aufstellung/bearbeiten'
+      fr-FR: '/match/:slug/composition/modifier'
     screen: escalacao-jogo
     nav:
       label: escalacao-jogo
       strip: false
     files:
-      html: shell/screens/escalacao-jogo.html
-      css: shell/screens/escalacao-jogo.css
+      adapters:
+        - shell/handlers/editing-integer.js
+        - shell/handlers/editing-text.js
+        - shell/handlers/editing-uuid.js
       handlers:
         - shell/handlers/blank-null.js
         - shell/handlers/editing-choice-event.js
         - shell/handlers/page-value.js
         - shell/handlers/search-key.js
-      adapters:
-        - shell/handlers/editing-integer.js
-        - shell/handlers/editing-text.js
-        - shell/handlers/editing-uuid.js
       renderers:
         - shell/renderers/media-image.js
       shared:
@@ -1342,6 +1426,9 @@ routes:
         - shell/shared/games.css
         - shell/shared/editing.css
         - shell/shared/community.css
+      html: shell/screens/escalacao-jogo.html
+      css: shell/screens/escalacao-jogo.css
+    slug: route_game
     ssr: spa
     states:
       - loading
@@ -1355,17 +1442,22 @@ routes:
   - access: private
     keep: 0
     path: /gerenciar
+    paths:
+      pt-BR: /gerenciar
+      es-AR: /administrar
+      en-US: /manage
+      it-IT: /gestisci
+      de-DE: /verwalten
+      fr-FR: /gerer
     screen: gerenciar
     nav:
       label: gerenciar
       strip: false
     files:
-      html: shell/screens/gerenciar.html
-      css: shell/screens/gerenciar.css
+      adapters: []
       handlers:
         - shell/handlers/page-value.js
         - shell/handlers/search-key.js
-      adapters: []
       renderers:
         - shell/renderers/media-image.js
       shared:
@@ -1373,6 +1465,9 @@ routes:
         - shell/shared/games.css
         - shell/shared/editing.css
         - shell/shared/community.css
+      html: shell/screens/gerenciar.html
+      css: shell/screens/gerenciar.css
+    slug: route_manage
     ssr: spa
     states:
       - loading
@@ -1385,22 +1480,30 @@ routes:
       - populated-dark
   - access: private
     keep: 0
-    path: /gerenciar-competicoes
+    path: /gerenciar/campeonatos
+    paths:
+      pt-BR: /gerenciar/campeonatos
+      es-AR: /administrar/campeonatos
+      en-US: /manage/championships
+      it-IT: /gestisci/campionati
+      de-DE: /verwalten/wettbewerbe
+      fr-FR: /gerer/championnats
     screen: gerenciar-competicoes
     nav:
       label: Manage championships
       strip: false
     files:
-      html: shell/screens/gerenciar-competicoes.html
-      css: shell/screens/gerenciar-competicoes.css
+      adapters: []
       handlers:
         - shell/handlers/page-value.js
         - shell/handlers/search-key.js
-      adapters: []
       shared:
         - shell/shared/chrome.css
         - shell/shared/editing.css
         - shell/shared/competition.css
+      html: shell/screens/gerenciar-competicoes.html
+      css: shell/screens/gerenciar-competicoes.css
+    slug: route_manage
     ssr: spa
     states:
       - loading
@@ -1413,23 +1516,28 @@ routes:
       - populated-dark
   - access: private
     keep: 0
-    path: '/gols-jogo/:slug'
+    path: '/jogo/:slug/gols/editar'
+    paths:
+      pt-BR: '/jogo/:slug/gols/editar'
+      es-AR: '/partido/:slug/goles/editar'
+      en-US: '/match/:slug/goals/edit'
+      it-IT: '/partita/:slug/gol/modifica'
+      de-DE: '/spiel/:slug/tore/bearbeiten'
+      fr-FR: '/match/:slug/buts/modifier'
     screen: gols-jogo
     nav:
       label: gols-jogo
       strip: false
     files:
-      html: shell/screens/gols-jogo.html
-      css: shell/screens/gols-jogo.css
+      adapters:
+        - shell/handlers/editing-integer.js
+        - shell/handlers/editing-text.js
+        - shell/handlers/editing-uuid.js
       handlers:
         - shell/handlers/blank-null.js
         - shell/handlers/editing-choice-event.js
         - shell/handlers/page-value.js
         - shell/handlers/search-key.js
-      adapters:
-        - shell/handlers/editing-integer.js
-        - shell/handlers/editing-text.js
-        - shell/handlers/editing-uuid.js
       renderers:
         - shell/renderers/media-image.js
       shared:
@@ -1437,6 +1545,9 @@ routes:
         - shell/shared/games.css
         - shell/shared/editing.css
         - shell/shared/community.css
+      html: shell/screens/gols-jogo.html
+      css: shell/screens/gols-jogo.css
+    slug: route_game
     ssr: spa
     states:
       - loading
@@ -1448,17 +1559,22 @@ routes:
       - success
       - populated-dark
   - keep: 0
-    path: '/historico-jogo/:slug'
+    path: '/jogo/:slug/historico'
+    paths:
+      pt-BR: '/jogo/:slug/historico'
+      es-AR: '/partido/:slug/historial'
+      en-US: '/match/:slug/history'
+      it-IT: '/partita/:slug/cronologia'
+      de-DE: '/spiel/:slug/verlauf'
+      fr-FR: '/match/:slug/historique'
     screen: historico-jogo
     nav:
       label: historico-jogo
       strip: false
     files:
-      html: shell/screens/historico-jogo.html
-      css: shell/screens/historico-jogo.css
+      adapters: []
       handlers:
         - shell/handlers/page-value.js
-      adapters: []
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
@@ -1467,6 +1583,9 @@ routes:
       renderers:
         - shell/renderers/community-history.js
         - shell/renderers/media-image.js
+      html: shell/screens/historico-jogo.html
+      css: shell/screens/historico-jogo.css
+    slug: route_game
     ssr: ssr
     states:
       - loading
@@ -1479,21 +1598,26 @@ routes:
       - populated-dark
   - access: private
     keep: 0
-    path: '/inscricoes-jogador/:slug'
+    path: '/jogador/:slug/inscricoes/editar'
+    paths:
+      pt-BR: '/jogador/:slug/inscricoes/editar'
+      es-AR: '/jugador/:slug/inscripciones/editar'
+      en-US: '/player/:slug/registrations/edit'
+      it-IT: '/giocatore/:slug/iscrizioni/modifica'
+      de-DE: '/spieler/:slug/registrierungen/bearbeiten'
+      fr-FR: '/joueur/:slug/inscriptions/modifier'
     screen: inscricoes-jogador
     nav:
       label: inscricoes-jogador
       strip: false
     files:
-      html: shell/screens/inscricoes-jogador.html
-      css: shell/screens/inscricoes-jogador.css
+      adapters:
+        - shell/handlers/editing-uuid.js
       handlers:
         - shell/handlers/blank-null.js
         - shell/handlers/editing-choice-event.js
         - shell/handlers/page-value.js
         - shell/handlers/search-key.js
-      adapters:
-        - shell/handlers/editing-uuid.js
       renderers:
         - shell/renderers/media-image.js
       shared:
@@ -1501,6 +1625,9 @@ routes:
         - shell/shared/games.css
         - shell/shared/editing.css
         - shell/shared/community.css
+      html: shell/screens/inscricoes-jogador.html
+      css: shell/screens/inscricoes-jogador.css
+    slug: route_player
     ssr: spa
     states:
       - loading
@@ -1513,26 +1640,34 @@ routes:
       - populated-dark
   - access: private
     keep: 0
-    path: /nova-competicao
+    path: /campeonatos/novo
+    paths:
+      pt-BR: /campeonatos/novo
+      es-AR: /campeonatos/nuevo
+      en-US: /championships/new
+      it-IT: /campionati/nuovo
+      de-DE: /wettbewerbe/neu
+      fr-FR: /championnats/nouveau
     screen: nova-competicao
     nav:
       label: New championship
       strip: false
     files:
-      html: shell/screens/nova-competicao.html
-      css: shell/screens/nova-competicao.css
-      handlers:
-        - shell/handlers/blank-null.js
-        - shell/handlers/editing-choice-event.js
-        - shell/handlers/search-key.js
       adapters:
         - shell/handlers/editing-integer.js
         - shell/handlers/editing-text.js
         - shell/handlers/editing-uuid.js
+      handlers:
+        - shell/handlers/blank-null.js
+        - shell/handlers/editing-choice-event.js
+        - shell/handlers/search-key.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/editing.css
         - shell/shared/competition.css
+      html: shell/screens/nova-competicao.html
+      css: shell/screens/nova-competicao.css
+    slug: route_championships
     ssr: spa
     states:
       - loading
@@ -1545,17 +1680,22 @@ routes:
       - populated-dark
   - access: private
     keep: 0
-    path: /novo-arbitro
+    path: /arbitros/novo
+    paths:
+      pt-BR: /arbitros/novo
+      es-AR: /arbitros/nuevo
+      en-US: /referees/new
+      it-IT: /arbitri/nuovo
+      de-DE: /unparteiische/neu
+      fr-FR: /arbitres/nouveau
     screen: novo-arbitro
     nav:
       label: novo-arbitro
       strip: false
     files:
-      html: shell/screens/novo-arbitro.html
-      css: shell/screens/novo-arbitro.css
-      handlers: []
       adapters:
         - shell/handlers/editing-text.js
+      handlers: []
       renderers:
         - shell/renderers/media-image.js
       shared:
@@ -1563,6 +1703,9 @@ routes:
         - shell/shared/games.css
         - shell/shared/editing.css
         - shell/shared/community.css
+      html: shell/screens/novo-arbitro.html
+      css: shell/screens/novo-arbitro.css
+    slug: route_referees
     ssr: spa
     states:
       - loading
@@ -1575,21 +1718,26 @@ routes:
       - populated-dark
   - access: private
     keep: 0
-    path: /novo-equipe
+    path: /equipes/novo
+    paths:
+      pt-BR: /equipes/novo
+      es-AR: /equipos/nuevo
+      en-US: /teams/new
+      it-IT: /squadre/nuovo
+      de-DE: /mannschaften/neu
+      fr-FR: /equipes/nouveau
     screen: novo-equipe
     nav:
       label: novo-equipe
       strip: false
     files:
-      html: shell/screens/novo-equipe.html
-      css: shell/screens/novo-equipe.css
+      adapters:
+        - shell/handlers/editing-text.js
+        - shell/handlers/editing-uuid.js
       handlers:
         - shell/handlers/blank-null.js
         - shell/handlers/editing-choice-event.js
         - shell/handlers/search-key.js
-      adapters:
-        - shell/handlers/editing-text.js
-        - shell/handlers/editing-uuid.js
       renderers:
         - shell/renderers/media-image.js
       shared:
@@ -1597,6 +1745,9 @@ routes:
         - shell/shared/games.css
         - shell/shared/editing.css
         - shell/shared/community.css
+      html: shell/screens/novo-equipe.html
+      css: shell/screens/novo-equipe.css
+    slug: route_teams
     ssr: spa
     states:
       - loading
@@ -1609,17 +1760,22 @@ routes:
       - populated-dark
   - access: private
     keep: 0
-    path: /novo-estadio
+    path: /estadios/novo
+    paths:
+      pt-BR: /estadios/novo
+      es-AR: /estadios/nuevo
+      en-US: /stadiums/new
+      it-IT: /stadi/nuovo
+      de-DE: /stadien/neu
+      fr-FR: /stades/nouveau
     screen: novo-estadio
     nav:
       label: novo-estadio
       strip: false
     files:
-      html: shell/screens/novo-estadio.html
-      css: shell/screens/novo-estadio.css
-      handlers: []
       adapters:
         - shell/handlers/editing-text.js
+      handlers: []
       renderers:
         - shell/renderers/media-image.js
       shared:
@@ -1627,6 +1783,9 @@ routes:
         - shell/shared/games.css
         - shell/shared/editing.css
         - shell/shared/community.css
+      html: shell/screens/novo-estadio.html
+      css: shell/screens/novo-estadio.css
+    slug: route_stadiums
     ssr: spa
     states:
       - loading
@@ -1639,18 +1798,23 @@ routes:
       - populated-dark
   - access: private
     keep: 0
-    path: /novo-jogador
+    path: /jogadores/novo
+    paths:
+      pt-BR: /jogadores/novo
+      es-AR: /jugadores/nuevo
+      en-US: /players/new
+      it-IT: /giocatori/nuovo
+      de-DE: /spieler/neu
+      fr-FR: /joueurs/nouveau
     screen: novo-jogador
     nav:
       label: novo-jogador
       strip: false
     files:
-      html: shell/screens/novo-jogador.html
-      css: shell/screens/novo-jogador.css
-      handlers: []
       adapters:
         - shell/handlers/editing-integer.js
         - shell/handlers/editing-text.js
+      handlers: []
       renderers:
         - shell/renderers/media-image.js
       shared:
@@ -1658,6 +1822,9 @@ routes:
         - shell/shared/games.css
         - shell/shared/editing.css
         - shell/shared/community.css
+      html: shell/screens/novo-jogador.html
+      css: shell/screens/novo-jogador.css
+    slug: route_players
     ssr: spa
     states:
       - loading
@@ -1670,25 +1837,30 @@ routes:
       - populated-dark
   - access: private
     keep: 0
-    path: /novo-jogo
+    path: /jogos/novo
+    paths:
+      pt-BR: /jogos/novo
+      es-AR: /partidos/nuevo
+      en-US: /matches/new
+      it-IT: /partite/nuovo
+      de-DE: /spiele/neu
+      fr-FR: /matchs/nouveau
     screen: novo-jogo
     nav:
       label: novo-jogo
       strip: false
     files:
-      html: shell/screens/novo-jogo.html
-      css: shell/screens/novo-jogo.css
+      adapters:
+        - shell/handlers/editing-integer.js
+        - shell/handlers/editing-text.js
+        - shell/handlers/editing-timestamp.js
+        - shell/handlers/editing-uuid.js
       handlers:
         - shell/handlers/blank-null.js
         - shell/handlers/count-or-null.js
         - shell/handlers/editing-choice-event.js
         - shell/handlers/editing-played.js
         - shell/handlers/search-key.js
-      adapters:
-        - shell/handlers/editing-integer.js
-        - shell/handlers/editing-text.js
-        - shell/handlers/editing-timestamp.js
-        - shell/handlers/editing-uuid.js
       renderers:
         - shell/renderers/media-image.js
       shared:
@@ -1696,6 +1868,9 @@ routes:
         - shell/shared/games.css
         - shell/shared/editing.css
         - shell/shared/community.css
+      html: shell/screens/novo-jogo.html
+      css: shell/screens/novo-jogo.css
+    slug: route_games
     ssr: spa
     states:
       - loading
@@ -1708,17 +1883,22 @@ routes:
       - populated-dark
   - keep: 0
     path: '/usuario/:id'
+    paths:
+      pt-BR: '/usuario/:id'
+      es-AR: '/usuario/:id'
+      en-US: '/user/:id'
+      it-IT: '/utente/:id'
+      de-DE: '/benutzer/:id'
+      fr-FR: '/utilisateur/:id'
     screen: usuario
     nav:
       label: usuario
       strip: false
     files:
-      html: shell/screens/usuario.html
-      css: shell/screens/usuario.css
-      handlers:
-        - shell/handlers/page-value.js
       adapters:
         - shell/handlers/editing-text.js
+      handlers:
+        - shell/handlers/page-value.js
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
@@ -1727,6 +1907,9 @@ routes:
       renderers:
         - shell/renderers/community-history.js
         - shell/renderers/media-image.js
+      html: shell/screens/usuario.html
+      css: shell/screens/usuario.css
+    slug: route_user
     ssr: ssr
     states:
       - loading
@@ -1739,17 +1922,22 @@ routes:
       - populated-dark
   - keep: 0
     path: /usuarios
+    paths:
+      pt-BR: /usuarios
+      es-AR: /comunidad
+      en-US: /community
+      it-IT: /comunita
+      de-DE: /gemeinschaft
+      fr-FR: /communaute
     screen: usuarios
     nav:
       key: community_title
       label: usuarios
     files:
-      html: shell/screens/usuarios.html
-      css: shell/screens/usuarios.css
+      adapters: []
       handlers:
         - shell/handlers/page-value.js
         - shell/handlers/search-key.js
-      adapters: []
       shared:
         - shell/shared/chrome.css
         - shell/shared/games.css
@@ -1758,6 +1946,9 @@ routes:
       renderers:
         - shell/renderers/community-history.js
         - shell/renderers/media-image.js
+      html: shell/screens/usuarios.html
+      css: shell/screens/usuarios.css
+    slug: route_community
     ssr: ssr
     states:
       - loading
@@ -1795,7 +1986,6 @@ tables:
   - phase
   - phase_clone
   - phase_directory
-  - phase_round
   - player
   - player_appearance
   - player_directory
@@ -2846,6 +3036,18 @@ schema:
         ref: app_user
         type: uuid
         required: false
+      - enum:
+          - scheduled
+          - in_progress
+          - finished
+          - postponed
+          - cancelled
+          - abandoned
+          - awarded
+          - unknown
+        name: sync_status
+        type: string
+        required: false
   goal:
     durability: live
     fields:
@@ -2896,6 +3098,19 @@ schema:
       - name: updated_by
         ref: app_user
         type: uuid
+        required: false
+      - name: period
+        type: string
+        required: false
+      - bounds:
+          intMin: 0
+        name: added_time
+        type: int32
+        required: false
+      - bounds:
+          intMin: 0
+        name: source_order
+        type: int32
         required: false
   player_game:
     durability: server
@@ -3583,6 +3798,11 @@ schema:
       - name: category_key
         type: string
         required: true
+      - default: true
+        defaulted: true
+        name: fixture_available
+        type: bool
+        required: true
   comment:
     durability: live
     fields:
@@ -3831,27 +4051,6 @@ schema:
         name: search_key
         type: string
         required: true
-  phase_round:
-    durability: live
-    fields:
-      - name: id
-        pk: true
-        type: string
-        required: true
-      - name: phase_id
-        ref: phase
-        type: uuid
-        required: true
-      - bounds:
-          intMin: 1
-        name: current
-        type: int32
-        required: true
-      - bounds:
-          intMin: 1
-        name: next
-        type: int32
-        required: false
   games_view:
     durability: tab
     fields:
@@ -4837,6 +5036,7 @@ schema:
         required: true
       - bounds:
           intMin: 0
+          intMax: 2147483646
         default: 0
         defaulted: true
         name: event_sequence
@@ -5551,6 +5751,9 @@ schema:
       - name: away_logo_key
         type: string
         required: false
+      - name: fixture_available
+        type: bool
+        required: true
   player_appearance:
     durability: server
     fields:
@@ -6146,6 +6349,9 @@ migrations:
   - services/database/migrations/006_policies.sql
   - services/database/migrations/007_txid.sql
   - services/database/migrations/008_publication.sql
+  - services/database/migrations/009_functions.sql
+  - services/database/migrations/003_rls.sql
+  - services/database/migrations/063_mecha_actors.sql
   - services/database/migrations/010_game_days.sql
   - services/database/migrations/011_comment_writes.sql
   - services/database/migrations/012_editor_writes.sql
@@ -6187,18 +6393,14 @@ migrations:
   - services/database/migrations/049_match_rating_history_bound.sql
   - services/database/migrations/050_home_feed_relationships.sql
   - services/database/migrations/051_home_feed_relationship_names.sql
+  - services/database/migrations/052_sofascore_sync.sql
+  - services/database/migrations/053_sofascore_apply.sql
+  - services/database/migrations/054_fixture_availability.sql
+  - services/database/migrations/055_sofa_seats.sql
+  - services/database/migrations/062_player_directory_read.sql
   - services/database/migrations/900_seed.sql
   - services/database/migrations/801_schedule_seed.sql
 pipelines:
-  - name: standings
-    to: standing
-    raw: true
-  - name: game-cards
-    to: game_card
-    raw: true
-  - name: player-stats
-    to: player_stat
-    raw: true
   - name: rounds
     to: phase_round
     raw: true

@@ -1,0 +1,32 @@
+[
+  {
+    "command": "./saytw doctor",
+    "exit": 0,
+    "evidence": "Target and toolchain verified"
+  },
+  {
+    "command": "./saytw generate",
+    "exit": 0,
+    "evidence": "Authored SQL generated into fresh-init and additive migration 053"
+  },
+  {
+    "command": "./saytw lint",
+    "exit": 0,
+    "evidence": "All owning lint checks passed"
+  },
+  {
+    "command": "Focused database regressions",
+    "exit": 0,
+    "evidence": "7 passed, including authoritative scheduling, protected scores, scoped review acknowledgement and no-op replay"
+  },
+  {
+    "command": "./saytw --script integrate.nu --bake --no-up --with-buildx --target ci-replay,ci-constraints --jobs 1",
+    "exit": 0,
+    "evidence": "2 targets passed uncached; retained migration replay and isolated constraints. All 7 SofaScore regressions explicitly passed; aggregate constraints count clipped by BuildKit log limit."
+  },
+  {
+    "command": "Local migration deployment and cached schedule replay",
+    "exit": 0,
+    "evidence": "Migration 053 installed; 18 corrected fixtures, 0 new requests, 0 source reviews, updater resumed"
+  }
+]

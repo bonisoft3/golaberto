@@ -5,6 +5,7 @@ WORKDIR /app
 COPY services/media/*.ts services/media/deno.json services/media/deno.lock /app/
 COPY --parents services/media/*.ts services/media/deno.json services/media/deno.lock ./
 COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.rclone-s3.json ./.bayt/
+EXPOSE 3900
 CMD ["run", "--frozen", "--cached-only", "--allow-env", "--allow-read", "--allow-ffi", "--allow-net=database:5432,0.0.0.0:3900", "main.ts"]
 RUN deno cache --frozen main.ts
 

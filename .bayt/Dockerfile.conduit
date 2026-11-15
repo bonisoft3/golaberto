@@ -6,6 +6,7 @@ COPY --chmod=755 --from=tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4d
 COPY docker/golaberto-cdc.yaml /conduit/cdc-to-bus.yaml.tmpl
 COPY --parents docker/golaberto-cdc.yaml ./
 COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.conduit.json ./.bayt/
+EXPOSE 8080
 CMD ["sh", "-c", "mkdir -p /conduit/pipelines && envsubst < /conduit/cdc-to-bus.yaml.tmpl > /conduit/pipelines/cdc-to-bus.yaml && exec /app/conduit run"]
 HEALTHCHECK --interval=5s --timeout=5s --retries=20 --start-period=120s CMD ["httpcheck","http://127.0.0.1:8080/healthz"]
 
@@ -26,6 +27,8 @@ COPY --parents .bayt/compose.conduit.yaml .bayt/Dockerfile.conduit .bayt/bayt.co
 COPY --from=golaberto-database_bayt /monorepo /monorepo
 COPY --from=golaberto-mesh-events_bayt /monorepo /monorepo
 COPY --from=golaberto-migrate_bayt /monorepo /monorepo
+COPY --from=golaberto-airlock-upgrade_bayt /monorepo /monorepo
+COPY --from=golaberto-timer-check_bayt /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
 RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi

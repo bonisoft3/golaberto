@@ -1,14 +1,30 @@
 # generated from bayt.cue — do not edit
 version: "0.5"
 ordered_shutdown: true
-environment:
-- MISE_LOCKED=0
 processes:
+  "launch:build":
+    entrypoint:
+    - task
+    - -t
+    - .bayt/Taskfile.yml
+    - bayt:launch
+  "compute:build":
+    entrypoint:
+    - task
+    - -t
+    - .bayt/Taskfile.yml
+    - bayt:compute
   "bayt:httpcheck":
     entrypoint:
     - bayt
     - microcheck
     - httpcheck
+    - --help
+  "bayt:portcheck":
+    entrypoint:
+    - bayt
+    - microcheck
+    - portcheck
     - --help
   replay:
     depends_on:
@@ -18,17 +34,16 @@ processes:
     - mise
     - x
     - --
-    - sh
+    - nu
     - -c
-    - >-
-      deno run --config "$$(mise where github:bonisoft3/pronto)/deno.json"
-      --allow-read --allow-write --allow-run --allow-env "$$(mise where
-      github:bonisoft3/pronto)/check-replay.ts" .
+    - "let pronto = (if (($$env.PRONTO_DIR? | default '') != '') { $$env.PRONTO_DIR } else { (^mise where github:bonisoft3/pronto | str trim) }); if (($$env.BAYT_LOCAL_WORK_DIR? | default '') != '') { let work = $$env.BAYT_LOCAL_WORK_DIR; let pgroll = ($$work | path join 'pgroll'); if ('.bayt/bayt.migrate.json' | path exists) and (not ($$pgroll | path exists)) { mkdir $$pgroll; let m = (open .bayt/bayt.migrate.json | get dockerfile); ($$m | get -o copy | default []) | each {|c| cp ($$c.srcs.0) ($$pgroll | path join ($$c.dst | path basename)) } | ignore; ($$m | get -o epilogue | default []) | each {|e| let lines = ($$e | lines); if ($$lines.0 | str starts-with \"COPY <<'PGROLL' /tmp/\") { let name = ($$lines.0 | parse \"COPY <<'PGROLL' /tmp/{name}.parts\" | get 0.name); ($$lines | skip 1 | take while {|l| $$l != \"PGROLL\" } | str join \"\" | decode base64) | save --raw -f ($$pgroll | path join $$name) } else if ($$lines.0 | str starts-with \"COPY <<'PGROLL' /pgroll/\") { let name = ($$lines.0 | parse \"COPY <<'PGROLL' /pgroll/{name}\" | get 0.name); $$lines.1 | save --raw -f ($$pgroll | path join $$name) } else if ($$lines.0 | str starts-with \"COPY <<'RECONCILE' /pgroll/\") { let name = ($$lines.0 | parse \"COPY <<'RECONCILE' /pgroll/{name}\" | get 0.name); ($$lines | skip 1 | drop 1 | str join \"\\\\n\") | save --raw -f ($$pgroll | path join $$name) } } | ignore }; let os = (match $$nu.os-info.name { 'macos' => 'macos', 'windows' => 'windows', _ => 'linux' }); let sh = (if ('services/migrate/migrate.nu' | path exists) { 'services/migrate/migrate.nu' } else if ('services/migrate/migrate.sh' | path exists) and ($$os != 'windows') { 'services/migrate/migrate.sh' } else { ((^mise where github:bonisoft3/mecha | str trim) | path join 'services/migrate/migrate.nu') }); with-env { PRONTO_REPLAY_INITDB: ($$work | path join 'initdb.d'), PRONTO_REPLAY_PGROLL_DIR: $$pgroll, PRONTO_MIGRATE_SH: $$sh } { ^deno run --config ($$pronto | path join 'deno.json') --allow-read --allow-write --allow-run --allow-env ($$pronto | path join 'check-replay.ts') . } } else { ^deno run --config ($$pronto | path join 'deno.json') --allow-read --allow-write --allow-run --allow-env ($$pronto | path join 'check-replay.ts') . }"
     availability:
       exit_on_skipped: true
     environment:
     - AUTHENTICATOR_PASSWORD=${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}
     - ELECTRIC_PASSWORD=${ELECTRIC_PASSWORD:-dev-electric-password}
+    - PGHOST=127.0.0.1
+    - PGPORT=${DATABASE_PG_PORT:-12041}
     - POSTGRES_DB=${POSTGRES_DB:-golaberto}
     - >-
       POSTGRES_INITDB_ARGS=--no-sync --encoding=UTF8 --auth=trust
@@ -36,27 +51,102 @@ processes:
     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
     - POSTGRES_USER=${POSTGRES_USER:-postgres}
     - REQUIRED_TABLES=schedule
+  launch:
+    depends_on:
+      render:
+        condition: process_healthy
+      rclone-s3:
+        condition: process_healthy
+      caddy:
+        condition: process_healthy
+      database:
+        condition: process_healthy
+      crud:
+        condition: process_healthy
+      electric:
+        condition: process_healthy
+      redis:
+        condition: process_healthy
+      mesh-events:
+        condition: process_healthy
+      conduit:
+        condition: process_healthy
+      transform:
+        condition: process_started
+      compute:
+        condition: process_healthy
+      auth:
+        condition: process_started
+      clock:
+        condition: process_started
+      airlock:
+        condition: process_healthy
+      "launch:build":
+        condition: process_completed_successfully
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - loop { sleep 1hr }
+    availability:
+      exit_on_skipped: true
+    readiness_probe:
+      exec:
+        command: mise x -- nu -c exit
+      period_seconds: 1
+      timeout_seconds: 5
+      failure_threshold: 10
+  visual:
+    depends_on:
+      launch:
+        condition: process_healthy
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - >-
+      if ('tests/visual-fixture.ts' | path exists) { ^deno run --no-lock --allow-env
+      --allow-net --unsafely-ignore-certificate-errors=caddy,localhost,127.0.0.1
+      tests/visual-fixture.ts }; let omni = (if (($$env.OMNISHELL_DIR? | default '') != '') {
+      $$env.OMNISHELL_DIR } else { (^mise where github:bonisoft3/omnishell | str trim)
+      }); ^deno run --node-modules-dir=auto --allow-read --allow-write --allow-net
+      --allow-env --allow-run --allow-sys --allow-ffi
+      --unsafely-ignore-certificate-errors=caddy,localhost,127.0.0.1 ($$omni | path join 'check-visual.ts') .
+    availability:
+      exit_on_skipped: true
+    environment:
+    - APP_URL=https://localhost:${CADDY_TLS_HOST_PORT:-17702}
+    - SETTLE_TIMEOUT_MS=50000
   database:
     entrypoint:
-    - docker-entrypoint.sh
-    - postgres
+    - mise
+    - x
+    - --
+    - nu
     - -c
-    - wal_level=logical
-    - -c
-    - fsync=off
-    - -c
-    - synchronous_commit=off
-    - -c
-    - full_page_writes=off
-    - -c
-    - shared_buffers=32MB
-    - -c
-    - max_connections=200
+    - |-
+      if ('/docker-entrypoint-initdb.d' | path exists) { exec docker-entrypoint.sh postgres -c session_preload_libraries=pg_ivm -c wal_level=logical -c max_replication_slots=128 -c max_wal_senders=128 -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c shared_buffers=32MB -c max_connections=200 }
+      let mecha = (if (($$env.PRONTO_INITDB_SRC_DIR? | default '') != '') { $$env.PRONTO_INITDB_SRC_DIR } else if ('services/database/rls/rls.sql' | path exists) { $$env.PWD } else { (^mise where github:bonisoft3/mecha | str trim) })
+      let initdb = (($$env.BAYT_LOCAL_WORK_DIR? | default $$nu.temp-dir) | path join 'initdb.d')
+      rm -rf $$initdb; mkdir $$initdb
+      cp -f ($$mecha | path join 'services/database/rls/rls.sql') ($$initdb | path join '003_rls.sql')
+      cp -f ($$mecha | path join 'services/database/role_passwords.sh') ($$initdb | path join '899_role_passwords.sh')
+      cp -f ($$mecha | path join 'services/ticker/schedule.sql') ($$initdb | path join '800_schedule.sql')
+      cp -f ($$mecha | path join 'services/durex/graphile.sql') ($$initdb | path join '060_graphile_worker.sql')
+      [(open --raw ($$mecha | path join 'services/ticker/schedule.sql')) (open --raw ($$mecha | path join 'services/airlock/airlock.sql'))] | str join '' | save --raw -f ($$initdb | path join '061_airlock.sql')
+      cp -f ($$mecha | path join 'services/airlock/job_key.sql') ($$initdb | path join '064_airlock_job_key.sql')
+      open .bayt/bayt.database.json | get dockerfile.copy.0.srcs | each {|s| cp -f $$s ($$initdb | path join ($$s | path basename)) } | ignore
+      exec nu ($$mecha | path join 'services/database/entrypoint.nu') $$initdb postgres -c session_preload_libraries=pg_ivm -c wal_level=logical -c max_replication_slots=128 -c max_wal_senders=128 -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c shared_buffers=32MB -c max_connections=200
     availability:
       exit_on_skipped: true
     environment:
     - AUTHENTICATOR_PASSWORD=${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}
     - ELECTRIC_PASSWORD=${ELECTRIC_PASSWORD:-dev-electric-password}
+    - PGPORT=${DATABASE_PG_PORT:-12041}
     - POSTGRES_DB=${POSTGRES_DB:-golaberto}
     - >-
       POSTGRES_INITDB_ARGS=--no-sync --encoding=UTF8 --auth=trust
@@ -66,33 +156,484 @@ processes:
     readiness_probe:
       exec:
         command: >-
-          pg_isready -h localhost -p 5432 -d ${POSTGRES_DB:-golaberto} -U
-          ${POSTGRES_USER:-postgres}
+          mise x -- pg_isready -h localhost -p ${DATABASE_PG_PORT:-12041} -d
+          ${POSTGRES_DB:-golaberto} -U ${POSTGRES_USER:-postgres}
       period_seconds: 1
       timeout_seconds: 5
       failure_threshold: 330
-  auth:
+    shutdown:
+      signal: 2
+      timeout_seconds: 5
+  migrate:
+    depends_on:
+      database:
+        condition: process_healthy
+      airlock-upgrade:
+        condition: process_completed_successfully
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - >-
+      let os = (match $$nu.os-info.name { 'macos' => 'macos', 'windows' => 'windows',
+      _ => 'linux' }); let dir = (if (($$env.PRONTO_REPLAY_PGROLL_DIR? | default '')
+      != '') { $$env.PRONTO_REPLAY_PGROLL_DIR } else if ('/pgroll' | path exists) {
+      '/pgroll' } else { let d = (($$env.BAYT_LOCAL_WORK_DIR? | default $$nu.temp-dir) |
+      path join 'pgroll'); rm -rf $$d; mkdir $$d; let m = (open .bayt/bayt.migrate.json |
+      get dockerfile); ($$m | get -o copy | default []) | each {|c| cp ($$c.srcs.0)
+      ($$d | path join ($$c.dst | path basename)) } | ignore; ($$m | get -o epilogue |
+      default []) | each {|e| let lines = ($$e | lines); if ($$lines.0 | str starts-with
+      "COPY <<'PGROLL' /tmp/") { let name = ($$lines.0 | parse "COPY <<'PGROLL'
+      /tmp/{name}.parts" | get 0.name); ($$lines | skip 1 | take while {|l| $$l != "PGROLL" }
+      | str join "" | decode base64) | save --raw -f ($$d | path join $$name) } else if
+      ($$lines.0 | str starts-with "COPY <<'PGROLL' /pgroll/") { let name = ($$lines.0
+      | parse "COPY <<'PGROLL' /pgroll/{name}" | get 0.name); $$lines.1 | save --raw
+      -f ($$d | path join $$name) } else if ($$lines.0 | str starts-with "COPY
+      <<'RECONCILE' /pgroll/") { let name = ($$lines.0 | parse "COPY <<'RECONCILE'
+      /pgroll/{name}" | get 0.name); ($$lines | skip 1 | drop 1 | str join "\\n") | save --raw -f
+      ($$d | path join $$name) } } | ignore; $$d }); let script = (if
+      (($$env.PRONTO_MIGRATE_SH? | default '') != '') { $$env.PRONTO_MIGRATE_SH } else if
+      ('services/migrate/migrate.nu' | path exists) { 'services/migrate/migrate.nu' } else if
+      ('/migrate.sh' | path exists) and ($$os != 'windows') { '/migrate.sh' } else { ((^mise
+      where github:bonisoft3/mecha | str trim) | path join 'services/migrate/migrate.nu')
+      }); if ($$script | str ends-with '.nu') { ^nu $$script $$dir 00_initdb } else {
+      ^bash $$script $$dir 00_initdb }
+    availability:
+      exit_on_skipped: true
+    environment:
+    - >-
+      DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:${DATABASE_PG_PORT:-12041}/${POSTGRES_DB:-golaberto}?sslmode=disable
+    - REQUIRED_TABLES=schedule
+  airlock-upgrade:
     depends_on:
       database:
         condition: process_healthy
     entrypoint:
-    - deno
-    - run
-    - --allow-net
-    - --allow-env
-    - --config
-    - /app/deno.json
-    - /app/main.ts
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - >-
+      open .bayt/bayt.airlock-upgrade.json | get dockerfile.epilogue.0 | lines | skip
+      1 | drop 1 | str join (char nl) | ^psql -X --set=ON_ERROR_STOP=1
+      --single-transaction
+    availability:
+      exit_on_skipped: true
+    environment:
+    - PGDATABASE=${POSTGRES_DB:-golaberto}
+    - PGHOST=127.0.0.1
+    - PGPASSWORD=${POSTGRES_PASSWORD:-postgres}
+    - PGPORT=${DATABASE_PG_PORT:-12041}
+    - PGUSER=${POSTGRES_USER:-postgres}
+  timer-check:
+    depends_on:
+      database:
+        condition: process_healthy
+      migrate:
+        condition: process_completed_successfully
+      airlock-upgrade:
+        condition: process_completed_successfully
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - >-
+      open .bayt/bayt.timer-check.json | get dockerfile.epilogue.0 | lines | skip 1 |
+      drop 1 | str join (char nl) | ^psql -X --set=ON_ERROR_STOP=1 --single-transaction
+    availability:
+      exit_on_skipped: true
+    environment:
+    - PGDATABASE=${POSTGRES_DB:-golaberto}
+    - PGHOST=127.0.0.1
+    - PGPASSWORD=${POSTGRES_PASSWORD:-postgres}
+    - PGPORT=${DATABASE_PG_PORT:-12041}
+    - PGUSER=${POSTGRES_USER:-postgres}
+  auth:
+    depends_on:
+      database:
+        condition: process_healthy
+      migrate:
+        condition: process_completed_successfully
+      airlock-upgrade:
+        condition: process_completed_successfully
+      timer-check:
+        condition: process_completed_successfully
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - >-
+      let app = (if (($$env.AUTH_APP_DIR? | default '') != '') { $$env.AUTH_APP_DIR }
+      else if ('/app/main.ts' | path exists) { '/app' } else if
+      ('services/auth/main.ts' | path exists) { 'services/auth' } else { ((^mise where github:bonisoft3/mecha
+      | str trim) | path join 'services/auth') }); exec deno run --allow-net
+      --allow-env --config ($$app | path join 'deno.json') ($$app | path join 'main.ts')
     availability:
       exit_on_skipped: true
     environment:
     - AUTH_STATEMENT_TIMEOUT_MS=5000
     - >-
-      DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:5432/${POSTGRES_DB:-golaberto}
+      DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:${DATABASE_PG_PORT:-12041}/${POSTGRES_DB:-golaberto}
     - OIDC_PROVIDERS=
     - PGRST_JWT_SECRET=${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
+    - PORT=${AUTH_HTTP_PORT:-24592}
     - WEBAUTHN_ORIGIN=${WEBAUTHN_ORIGIN:-https://localhost:*}
     - WEBAUTHN_RP_ID=${WEBAUTHN_RP_ID:-localhost}
+  mesh-events:
+    depends_on:
+      caddy:
+        condition: process_started
+      redis:
+        condition: process_started
+      "bayt:portcheck":
+        condition: process_completed_successfully
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - >-
+      let base = ($$env.BAYT_LOCAL_WORK_DIR? | default $$nu.temp-dir); let dir =
+      ($$base | path join $$'mesh-events-($$nu.pid)-(random int 1000..9999)'); mkdir $$dir;
+      let mdir = (if (($$env.MECHA_MESH_DIR? | default '') != '') {
+      $$env.MECHA_MESH_DIR } else if ('services/mesh/dapr/components/resiliency.yaml' | path exists) {
+      'services/mesh' } else { ((^mise where github:bonisoft3/mecha | str trim) | path
+      join 'services/mesh') }); cp -f ($$mdir | path join
+      'dapr/components/resiliency.yaml') ($$dir | path join 'resiliency.yaml'); cp -f ($$mdir | path join
+      'dapr/components/redis-streams.yaml') ($$dir | path join 'redis-streams.yaml'); exec daprd
+      --app-id mechaed --dapr-listen-addresses 127.0.0.1
+      --dapr-internal-grpc-listen-address 127.0.0.1 --resources-path $$dir --app-channel-address 127.0.0.1 --app-port
+      $$env.CADDY_PORT --dapr-http-port $$env.DAPR_HTTP_PORT --dapr-grpc-port 0
+      --dapr-internal-grpc-port $$env.DAPR_INTERNAL_GRPC_PORT --metrics-port 0 --profile-port 0
+      --log-level info --enable-api-logging
+    availability:
+      exit_on_skipped: true
+      restart: on_failure
+      backoff_seconds: 1
+      max_restarts: 15
+    environment:
+    - CADDY_PORT=${CADDY_HTTP_PORT:-25189}
+    - DAPR_HTTP_PORT=${MESH_EVENTS_HTTP_PORT:-15475}
+    - DAPR_INTERNAL_GRPC_PORT=${MESH_EVENTS_GRPC_PORT:-14440}
+    - REDIS_HOST=127.0.0.1:${REDIS_REDIS_PORT:-24649}
+    readiness_probe:
+      exec:
+        command: bayt microcheck portcheck --port ${MESH_EVENTS_HTTP_PORT:-15475}
+      period_seconds: 5
+      timeout_seconds: 5
+      failure_threshold: 36
+  conduit:
+    depends_on:
+      database:
+        condition: process_healthy
+      mesh-events:
+        condition: process_started
+      migrate:
+        condition: process_completed_successfully
+      airlock-upgrade:
+        condition: process_completed_successfully
+      timer-check:
+        condition: process_completed_successfully
+      "bayt:httpcheck":
+        condition: process_completed_successfully
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - >-
+      let base = ($$env.BAYT_LOCAL_WORK_DIR? | default $$nu.temp-dir); let dir =
+      ($$base | path join $$'conduit-($$nu.pid)-(random int 1000..9999)'); mkdir ($$dir |
+      path join 'pipelines') ($$dir | path join 'connectors'); let conn = (which
+      conduit-connector-http | first | get path); cp -f $$conn ($$dir | path join 'connectors'
+      ($$conn | path basename)); open --raw 'docker/golaberto-cdc.yaml' | str replace
+      -a '$${DATABASE_URL}' $$env.DATABASE_URL | str replace -a '$${MESH_EVENTS_URL}'
+      $$env.MESH_EVENTS_URL | save -f ($$dir | path join 'pipelines/cdc-to-bus.yaml');
+      exec conduit run --db.type inmemory --pipelines.path ($$dir | path join
+      'pipelines') --connectors.path ($$dir | path join 'connectors') --api.http.address
+      $$"127.0.0.1:($$env.CONDUIT_API_HTTP_ADDRESS_PORT)" --api.grpc.address '127.0.0.1:0'
+    availability:
+      exit_on_skipped: true
+      restart: on_failure
+      backoff_seconds: 1
+      max_restarts: 15
+    environment:
+    - CONDUIT_API_HTTP_ADDRESS_PORT=${CONDUIT_HTTP_PORT:-23338}
+    - >-
+      DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:${DATABASE_PG_PORT:-12041}/${POSTGRES_DB:-golaberto}
+    - MESH_EVENTS_URL=http://127.0.0.1:${MESH_EVENTS_HTTP_PORT:-15475}
+    readiness_probe:
+      exec:
+        command: bayt microcheck httpcheck http://127.0.0.1:${CONDUIT_HTTP_PORT:-23338}/healthz
+      period_seconds: 5
+      timeout_seconds: 5
+      failure_threshold: 44
+  compute:
+    depends_on:
+      crud:
+        condition: process_healthy
+      conduit:
+        condition: process_healthy
+      database:
+        condition: process_healthy
+      migrate:
+        condition: process_completed_successfully
+      airlock-upgrade:
+        condition: process_completed_successfully
+      timer-check:
+        condition: process_completed_successfully
+      "compute:build":
+        condition: process_completed_successfully
+      "bayt:portcheck":
+        condition: process_completed_successfully
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - "let base = ($$env.BAYT_LOCAL_WORK_DIR? | default $$nu.temp-dir); let lake = ($$base | path join $$'lake-($$nu.pid)-(random int 1000..9999)'); mkdir $$lake; let ext_dir = (if (($$env.BAYT_LOCAL_DUCKDB_EXTENSIONS? | default '') != '') { $$env.BAYT_LOCAL_DUCKDB_EXTENSIONS } else { ((^mise where http:duckdb | str trim) | path join 'extensions') }); let app = (if (($$env.COMPUTE_APP_DIR? | default '') != '') { $$env.COMPUTE_APP_DIR } else if ('services/compute/main.ts' | path exists) { 'services/compute' } else { ((^mise where github:bonisoft3/mecha | str trim) | path join 'services/compute') }); let marker = ($$ext_dir | path join '.installed-v1.5.6'); if (not ($$marker | path exists)) { mkdir $$ext_dir; with-env { DUCKDB_EXTENSIONS_DIR: $$ext_dir } { ^deno run --allow-ffi --allow-read --allow-write --allow-net --allow-env --allow-sys=homedir --config ($$app | path join 'deno.json') ($$app | path join 'install.ts') }; '' | save -f $$marker }; ^deno cache --config ($$app | path join 'deno.json') ($$app | path join 'main.ts') ($$app | path join 'cage.ts') ($$app | path join 'job.ts'); with-env { DUCKDB_EXTENSIONS_DIR: $$ext_dir, LAKE_DIR: $$lake } { exec deno run --unstable-worker-options --allow-run=/opt/feldera/runtime/supervisor --allow-ffi --allow-read --allow-write --allow-net --allow-env --allow-sys --config ($$app | path join 'deno.json') ($$app | path join 'main.ts') }"
+    availability:
+      exit_on_skipped: true
+      restart: on_failure
+      backoff_seconds: 1
+      max_restarts: 15
+    environment:
+    - CDC_SLOT=golaberto_conduit_slot
+    - >-
+      COMPUTATIONS=[{"declaredReads":["championship","phase","stage_group","team_group","team","game","zone"],"feldera":"duckstream/standings.feldera.json","name":"golaberto-standings","file":"computations/standings.js","sinkTypes":{"standing":[{"name":"id","type":"string","required":true},{"name":"group_id","type":"uuid","required":true},{"name":"team_id","type":"uuid","required":true},{"name":"team_name","type":"string","required":true},{"name":"position","type":"int32","required":true},{"name":"points","type":"int32","required":true},{"name":"played","type":"int32","required":true},{"name":"wins","type":"int32","required":true},{"name":"draws","type":"int32","required":true},{"name":"losses","type":"int32","required":true},{"name":"goals_for","type":"int32","required":true},{"name":"goals_against","type":"int32","required":true},{"name":"goal_diff","type":"int32","required":true},{"name":"form1","type":"string","required":true},{"name":"form2","type":"string","required":true},{"name":"form3","type":"string","required":true},{"name":"form4","type":"string","required":true},{"name":"form5","type":"string","required":true},{"name":"zone","type":"string","required":true}]},"sinkWrites":{"standing":"replace"},"steps":"duckstream/bounded-standings.ts","to":["standing"],"types":{"types":{"string":{"pg":"text","column":"plain","subset":true,"base":["text","varchar","bpchar","tsvector"],"json":"string","refuse":"\\\\x00","order":"text","beyond":["scalar-values"]},"bool":{"pg":"boolean","column":"plain","subset":true,"base":["bool","boolean"],"json":"boolean","order":"boolean","beyond":[]},"int32":{"pg":"integer","column":"plain","subset":true,"base":["int2","int4","integer","smallint"],"json":"number","min":-2147483648,"max":2147483647,"order":"number","beyond":[]},"int64":{"pg":"bigint","column":"domain","subset":false,"sql":"portable_int64","base":["int8","bigint"],"json":"string","pattern":"^(0|-?[1-9][0-9]*)$","order":"integer","beyond":["int64-range"]},"double":{"pg":"double precision","column":"checked","subset":true,"base":["float4","float8","double precision","real"],"json":"number","order":"number","beyond":[]},"bytes":{"pg":"bytea","column":"domain","subset":false,"sql":"portable_bytes","base":["bytea"],"json":"string","pattern":"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$","order":"none","beyond":[]},"uuid":{"pg":"uuid","column":"plain","subset":true,"base":["uuid"],"json":"string","pattern":"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$","order":"text","beyond":[]},"timestamp":{"pg":"timestamptz","column":"domain","subset":false,"sql":"portable_timestamp","base":["timestamptz","timestamp with time zone"],"json":"string","pattern":"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$","order":"text","beyond":["calendar"]},"duration":{"pg":"interval","column":"domain","subset":false,"sql":"portable_duration","base":["interval"],"json":"string","pattern":"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$","order":"duration","beyond":["duration-range"]},"decimal":{"pg":"numeric","column":"domain","subset":false,"base":["numeric","decimal"],"json":"string","pattern":"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$","order":"decimal","beyond":["decimal-profile"]},"date":{"pg":"date","column":"checked","subset":true,"base":["date"],"json":"string","pattern":"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$","order":"text","beyond":["calendar"]},"time":{"pg":"time(6)","column":"domain","subset":false,"sql":"portable_time","base":["time","time without time zone"],"json":"string","pattern":"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$","order":"text","beyond":[]},"timezone":{"pg":"text","column":"checked","subset":true,"base":["text"],"json":"string","pattern":"^[A-Za-z0-9+_/-]+$","order":"none","beyond":["tzdb"]},"json":{"pg":"json","column":"checked","subset":false,"base":["json","jsonb"],"json":"value","order":"none","beyond":["scalar-values","finite-numbers"]},"geojson":{"pg":"json","column":"checked","subset":false,"base":["json","jsonb","geometry","geography"],"json":"value","order":"none","beyond":["scalar-values","finite-numbers","ring-closure"]}},"aliases":{"text":"string","int":"int32","bigint":"int64","timestamptz":"timestamp","tsvector":"string"}},"wasm":[],"endowments":["TextEncoder"]},{"declaredReads":["championship","phase","game","team","player","player_game","goal"],"feldera":"duckstream/ratings.feldera.json","name":"golaberto-ratings","file":"computations/ratings.js","queryTypes":{"teams":[{"name":"id","type":"uuid","required":true}],"players":[{"name":"id","type":"uuid","required":true}]},"sinkTypes":{"team_rating":[{"name":"id","type":"uuid","required":true},{"name":"team_id","type":"uuid","required":true},{"name":"measure_date","type":"date","required":true},{"name":"offense","type":"double","required":true},{"name":"defense","type":"double","required":true},{"name":"rating","type":"double","required":true}],"player_rating":[{"name":"id","type":"uuid","required":true},{"name":"rating","type":"double","required":true},{"name":"off_rating","type":"double","required":false},{"name":"def_rating","type":"double","required":false}],"rating_eval":[{"name":"id","type":"uuid","required":true},{"name":"rps","type":"double","required":true}]},"sinkWrites":{"team_rating":"replace","player_rating":"replace","rating_eval":"replace"},"steps":"duckstream/bounded-ratings.ts","to":["team_rating","player_rating","rating_eval"],"types":{"types":{"string":{"pg":"text","column":"plain","subset":true,"base":["text","varchar","bpchar","tsvector"],"json":"string","refuse":"\\\\x00","order":"text","beyond":["scalar-values"]},"bool":{"pg":"boolean","column":"plain","subset":true,"base":["bool","boolean"],"json":"boolean","order":"boolean","beyond":[]},"int32":{"pg":"integer","column":"plain","subset":true,"base":["int2","int4","integer","smallint"],"json":"number","min":-2147483648,"max":2147483647,"order":"number","beyond":[]},"int64":{"pg":"bigint","column":"domain","subset":false,"sql":"portable_int64","base":["int8","bigint"],"json":"string","pattern":"^(0|-?[1-9][0-9]*)$","order":"integer","beyond":["int64-range"]},"double":{"pg":"double precision","column":"checked","subset":true,"base":["float4","float8","double precision","real"],"json":"number","order":"number","beyond":[]},"bytes":{"pg":"bytea","column":"domain","subset":false,"sql":"portable_bytes","base":["bytea"],"json":"string","pattern":"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$","order":"none","beyond":[]},"uuid":{"pg":"uuid","column":"plain","subset":true,"base":["uuid"],"json":"string","pattern":"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$","order":"text","beyond":[]},"timestamp":{"pg":"timestamptz","column":"domain","subset":false,"sql":"portable_timestamp","base":["timestamptz","timestamp with time zone"],"json":"string","pattern":"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$","order":"text","beyond":["calendar"]},"duration":{"pg":"interval","column":"domain","subset":false,"sql":"portable_duration","base":["interval"],"json":"string","pattern":"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$","order":"duration","beyond":["duration-range"]},"decimal":{"pg":"numeric","column":"domain","subset":false,"base":["numeric","decimal"],"json":"string","pattern":"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$","order":"decimal","beyond":["decimal-profile"]},"date":{"pg":"date","column":"checked","subset":true,"base":["date"],"json":"string","pattern":"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$","order":"text","beyond":["calendar"]},"time":{"pg":"time(6)","column":"domain","subset":false,"sql":"portable_time","base":["time","time without time zone"],"json":"string","pattern":"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$","order":"text","beyond":[]},"timezone":{"pg":"text","column":"checked","subset":true,"base":["text"],"json":"string","pattern":"^[A-Za-z0-9+_/-]+$","order":"none","beyond":["tzdb"]},"json":{"pg":"json","column":"checked","subset":false,"base":["json","jsonb"],"json":"value","order":"none","beyond":["scalar-values","finite-numbers"]},"geojson":{"pg":"json","column":"checked","subset":false,"base":["json","jsonb","geometry","geography"],"json":"value","order":"none","beyond":["scalar-values","finite-numbers","ring-closure"]}},"aliases":{"text":"string","int":"int32","bigint":"int64","timestamptz":"timestamp","tsvector":"string"}},"wasm":["computations/golaberto-odds.wasm"],"endowments":["TextEncoder"]},{"declaredReads":["championship","phase","stage_group","team_group","zone","team","game","team_rating","standing"],"feldera":"duckstream/chances.feldera.json","name":"golaberto-chances","file":"computations/chances.js","onComplete":"capture_team_odds_history","sinkTypes":{"team_chance":[{"name":"id","type":"uuid","required":true},{"name":"group_id","type":"uuid","required":true},{"name":"team_id","type":"uuid","required":true},{"name":"team_name","type":"string","required":true},{"name":"rank","type":"int32","required":true},{"name":"points","type":"int32","required":true},{"name":"played","type":"int32","required":true}],"zone_chance":[{"name":"id","type":"uuid","required":true},{"name":"group_id","type":"uuid","required":true},{"name":"team_id","type":"uuid","required":true},{"name":"zone_id","type":"uuid","required":true},{"name":"first","type":"int32","required":true},{"name":"percent","type":"double","required":true},{"name":"color","type":"string","required":true},{"name":"band","type":"int32","required":true},{"name":"last","type":"int32","required":true},{"name":"reach","type":"string","required":true}],"position_chance":[{"name":"id","type":"uuid","required":true},{"name":"group_id","type":"uuid","required":true},{"name":"team_id","type":"uuid","required":true},{"name":"position","type":"int32","required":true},{"name":"percent","type":"double","required":true},{"name":"band","type":"int32","required":true},{"name":"current","type":"bool","required":true},{"name":"reach","type":"string","required":true}],"game_importance":[{"name":"id","type":"uuid","required":true},{"name":"home","type":"double","required":false},{"name":"away","type":"double","required":false}]},"sinkWrites":{"team_chance":"replace","zone_chance":"replace","position_chance":"replace","game_importance":"replace"},"steps":"duckstream/bounded-chances.ts","to":["team_chance","zone_chance","position_chance","game_importance"],"types":{"types":{"string":{"pg":"text","column":"plain","subset":true,"base":["text","varchar","bpchar","tsvector"],"json":"string","refuse":"\\\\x00","order":"text","beyond":["scalar-values"]},"bool":{"pg":"boolean","column":"plain","subset":true,"base":["bool","boolean"],"json":"boolean","order":"boolean","beyond":[]},"int32":{"pg":"integer","column":"plain","subset":true,"base":["int2","int4","integer","smallint"],"json":"number","min":-2147483648,"max":2147483647,"order":"number","beyond":[]},"int64":{"pg":"bigint","column":"domain","subset":false,"sql":"portable_int64","base":["int8","bigint"],"json":"string","pattern":"^(0|-?[1-9][0-9]*)$","order":"integer","beyond":["int64-range"]},"double":{"pg":"double precision","column":"checked","subset":true,"base":["float4","float8","double precision","real"],"json":"number","order":"number","beyond":[]},"bytes":{"pg":"bytea","column":"domain","subset":false,"sql":"portable_bytes","base":["bytea"],"json":"string","pattern":"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$","order":"none","beyond":[]},"uuid":{"pg":"uuid","column":"plain","subset":true,"base":["uuid"],"json":"string","pattern":"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$","order":"text","beyond":[]},"timestamp":{"pg":"timestamptz","column":"domain","subset":false,"sql":"portable_timestamp","base":["timestamptz","timestamp with time zone"],"json":"string","pattern":"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$","order":"text","beyond":["calendar"]},"duration":{"pg":"interval","column":"domain","subset":false,"sql":"portable_duration","base":["interval"],"json":"string","pattern":"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$","order":"duration","beyond":["duration-range"]},"decimal":{"pg":"numeric","column":"domain","subset":false,"base":["numeric","decimal"],"json":"string","pattern":"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$","order":"decimal","beyond":["decimal-profile"]},"date":{"pg":"date","column":"checked","subset":true,"base":["date"],"json":"string","pattern":"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$","order":"text","beyond":["calendar"]},"time":{"pg":"time(6)","column":"domain","subset":false,"sql":"portable_time","base":["time","time without time zone"],"json":"string","pattern":"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$","order":"text","beyond":[]},"timezone":{"pg":"text","column":"checked","subset":true,"base":["text"],"json":"string","pattern":"^[A-Za-z0-9+_/-]+$","order":"none","beyond":["tzdb"]},"json":{"pg":"json","column":"checked","subset":false,"base":["json","jsonb"],"json":"value","order":"none","beyond":["scalar-values","finite-numbers"]},"geojson":{"pg":"json","column":"checked","subset":false,"base":["json","jsonb","geometry","geography"],"json":"value","order":"none","beyond":["scalar-values","finite-numbers","ring-closure"]}},"aliases":{"text":"string","int":"int32","bigint":"int64","timestamptz":"timestamp","tsvector":"string"}},"wasm":["computations/golaberto-odds.wasm"],"endowments":["TextEncoder"]},{"declaredReads":["game","team","phase","championship","stadium","referee"],"feldera":"duckstream/cards.feldera.json","name":"golaberto-game-cards","file":"computations/cards.js","sinkTypes":{"game_card":[{"name":"id","type":"uuid","required":true},{"name":"phase_id","type":"uuid","required":true},{"name":"championship_id","type":"uuid","required":true},{"name":"round","type":"int32","required":false},{"name":"day","type":"date","required":true},{"name":"kickoff","type":"timestamp","required":false},{"name":"played","type":"bool","required":true},{"name":"home_id","type":"uuid","required":true},{"name":"away_id","type":"uuid","required":true},{"name":"home_name","type":"string","required":true},{"name":"away_name","type":"string","required":true},{"name":"home_score","type":"int32","required":false},{"name":"away_score","type":"int32","required":false},{"name":"home_aet","type":"int32","required":false},{"name":"away_aet","type":"int32","required":false},{"name":"home_pen","type":"int32","required":false},{"name":"away_pen","type":"int32","required":false},{"name":"championship_name","type":"string","required":true},{"name":"phase_name","type":"string","required":true},{"name":"stadium_name","type":"string","required":false},{"name":"referee_name","type":"string","required":false},{"name":"attendance","type":"int32","required":false},{"name":"stadium_id","type":"uuid","required":false},{"name":"referee_id","type":"uuid","required":false}],"team_game":[{"name":"id","type":"string","required":true},{"name":"team_id","type":"uuid","required":true},{"name":"game_id","type":"uuid","required":true},{"name":"side","type":"string","required":true},{"name":"opponent_id","type":"uuid","required":true},{"name":"opponent_name","type":"string","required":true},{"name":"championship_id","type":"uuid","required":true},{"name":"championship_name","type":"string","required":true},{"name":"day","type":"date","required":true},{"name":"kickoff","type":"timestamp","required":false},{"name":"played","type":"bool","required":true},{"name":"goals_for","type":"int32","required":false},{"name":"goals_against","type":"int32","required":false},{"name":"result","type":"string","required":true},{"name":"category_id","type":"uuid","required":false},{"name":"phase_key","type":"string","required":true},{"name":"category_key","type":"string","required":true},{"name":"fixture_available","type":"bool","required":true}]},"sinkWrites":{"game_card":"replace","team_game":"replace"},"steps":"duckstream/bounded-cards.ts","to":["game_card","team_game"],"types":{"types":{"string":{"pg":"text","column":"plain","subset":true,"base":["text","varchar","bpchar","tsvector"],"json":"string","refuse":"\\\\x00","order":"text","beyond":["scalar-values"]},"bool":{"pg":"boolean","column":"plain","subset":true,"base":["bool","boolean"],"json":"boolean","order":"boolean","beyond":[]},"int32":{"pg":"integer","column":"plain","subset":true,"base":["int2","int4","integer","smallint"],"json":"number","min":-2147483648,"max":2147483647,"order":"number","beyond":[]},"int64":{"pg":"bigint","column":"domain","subset":false,"sql":"portable_int64","base":["int8","bigint"],"json":"string","pattern":"^(0|-?[1-9][0-9]*)$","order":"integer","beyond":["int64-range"]},"double":{"pg":"double precision","column":"checked","subset":true,"base":["float4","float8","double precision","real"],"json":"number","order":"number","beyond":[]},"bytes":{"pg":"bytea","column":"domain","subset":false,"sql":"portable_bytes","base":["bytea"],"json":"string","pattern":"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$","order":"none","beyond":[]},"uuid":{"pg":"uuid","column":"plain","subset":true,"base":["uuid"],"json":"string","pattern":"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$","order":"text","beyond":[]},"timestamp":{"pg":"timestamptz","column":"domain","subset":false,"sql":"portable_timestamp","base":["timestamptz","timestamp with time zone"],"json":"string","pattern":"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$","order":"text","beyond":["calendar"]},"duration":{"pg":"interval","column":"domain","subset":false,"sql":"portable_duration","base":["interval"],"json":"string","pattern":"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$","order":"duration","beyond":["duration-range"]},"decimal":{"pg":"numeric","column":"domain","subset":false,"base":["numeric","decimal"],"json":"string","pattern":"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$","order":"decimal","beyond":["decimal-profile"]},"date":{"pg":"date","column":"checked","subset":true,"base":["date"],"json":"string","pattern":"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$","order":"text","beyond":["calendar"]},"time":{"pg":"time(6)","column":"domain","subset":false,"sql":"portable_time","base":["time","time without time zone"],"json":"string","pattern":"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$","order":"text","beyond":[]},"timezone":{"pg":"text","column":"checked","subset":true,"base":["text"],"json":"string","pattern":"^[A-Za-z0-9+_/-]+$","order":"none","beyond":["tzdb"]},"json":{"pg":"json","column":"checked","subset":false,"base":["json","jsonb"],"json":"value","order":"none","beyond":["scalar-values","finite-numbers"]},"geojson":{"pg":"json","column":"checked","subset":false,"base":["json","jsonb","geometry","geography"],"json":"value","order":"none","beyond":["scalar-values","finite-numbers","ring-closure"]}},"aliases":{"text":"string","int":"int32","bigint":"int64","timestamptz":"timestamp","tsvector":"string"}},"wasm":[],"endowments":["TextEncoder"]},{"declaredReads":["player_game","goal","player","game","phase","championship","team"],"feldera":"duckstream/player_stats.feldera.json","name":"golaberto-player-stats","file":"computations/player_stats.js","sinkTypes":{"player_stat":[{"name":"id","type":"string","required":true},{"name":"championship_id","type":"uuid","required":true},{"name":"team_id","type":"uuid","required":true},{"name":"player_id","type":"uuid","required":true},{"name":"player_name","type":"string","required":true},{"name":"position","type":"string","required":true},{"name":"played","type":"int32","required":true},{"name":"started","type":"int32","required":true},{"name":"came_on","type":"int32","required":true},{"name":"bench","type":"int32","required":true},{"name":"minutes","type":"int32","required":true},{"name":"goals","type":"int32","required":true},{"name":"penalties","type":"int32","required":true},{"name":"own_goals","type":"int32","required":true},{"name":"yellow","type":"int32","required":true},{"name":"red","type":"int32","required":true},{"name":"championship_name","type":"string","required":true},{"name":"team_name","type":"string","required":true}]},"sinkWrites":{"player_stat":"replace"},"steps":"duckstream/bounded-player-stats.ts","to":["player_stat"],"types":{"types":{"string":{"pg":"text","column":"plain","subset":true,"base":["text","varchar","bpchar","tsvector"],"json":"string","refuse":"\\\\x00","order":"text","beyond":["scalar-values"]},"bool":{"pg":"boolean","column":"plain","subset":true,"base":["bool","boolean"],"json":"boolean","order":"boolean","beyond":[]},"int32":{"pg":"integer","column":"plain","subset":true,"base":["int2","int4","integer","smallint"],"json":"number","min":-2147483648,"max":2147483647,"order":"number","beyond":[]},"int64":{"pg":"bigint","column":"domain","subset":false,"sql":"portable_int64","base":["int8","bigint"],"json":"string","pattern":"^(0|-?[1-9][0-9]*)$","order":"integer","beyond":["int64-range"]},"double":{"pg":"double precision","column":"checked","subset":true,"base":["float4","float8","double precision","real"],"json":"number","order":"number","beyond":[]},"bytes":{"pg":"bytea","column":"domain","subset":false,"sql":"portable_bytes","base":["bytea"],"json":"string","pattern":"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$","order":"none","beyond":[]},"uuid":{"pg":"uuid","column":"plain","subset":true,"base":["uuid"],"json":"string","pattern":"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$","order":"text","beyond":[]},"timestamp":{"pg":"timestamptz","column":"domain","subset":false,"sql":"portable_timestamp","base":["timestamptz","timestamp with time zone"],"json":"string","pattern":"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$","order":"text","beyond":["calendar"]},"duration":{"pg":"interval","column":"domain","subset":false,"sql":"portable_duration","base":["interval"],"json":"string","pattern":"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$","order":"duration","beyond":["duration-range"]},"decimal":{"pg":"numeric","column":"domain","subset":false,"base":["numeric","decimal"],"json":"string","pattern":"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$","order":"decimal","beyond":["decimal-profile"]},"date":{"pg":"date","column":"checked","subset":true,"base":["date"],"json":"string","pattern":"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$","order":"text","beyond":["calendar"]},"time":{"pg":"time(6)","column":"domain","subset":false,"sql":"portable_time","base":["time","time without time zone"],"json":"string","pattern":"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$","order":"text","beyond":[]},"timezone":{"pg":"text","column":"checked","subset":true,"base":["text"],"json":"string","pattern":"^[A-Za-z0-9+_/-]+$","order":"none","beyond":["tzdb"]},"json":{"pg":"json","column":"checked","subset":false,"base":["json","jsonb"],"json":"value","order":"none","beyond":["scalar-values","finite-numbers"]},"geojson":{"pg":"json","column":"checked","subset":false,"base":["json","jsonb","geometry","geography"],"json":"value","order":"none","beyond":["scalar-values","finite-numbers","ring-closure"]}},"aliases":{"text":"string","int":"int32","bigint":"int64","timestamptz":"timestamp","tsvector":"string"}},"wasm":[],"endowments":["TextEncoder"]}]
+    - COMPUTE_STATE_DIR=${COMPUTE_STATE_DIR:-.pronto/live/duckstream}
+    - CRUD_URL=http://127.0.0.1:${CRUD_HTTP_PORT:-12015}
+    - >-
+      DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:${DATABASE_PG_PORT:-12041}/${POSTGRES_DB:-golaberto}
+    - DUCKSTREAM_ENGINE=${DUCKSTREAM_ENGINE:-duckdb-snapshot}
+    - PORT=${COMPUTE_TCP_PORT:-26287}
+    - >-
+      SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
+    readiness_probe:
+      exec:
+        command: bayt microcheck portcheck --port ${COMPUTE_TCP_PORT:-26287}
+      period_seconds: 5
+      timeout_seconds: 5
+      failure_threshold: 210
+  ticker:
+    depends_on:
+      crud:
+        condition: process_healthy
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - >-
+      let app = (if (($$env.TICKER_APP_DIR? | default '') != '') {
+      $$env.TICKER_APP_DIR } else if ('services/ticker/main.ts' | path exists) { 'services/ticker' } else
+      { ((^mise where github:bonisoft3/mecha | str trim) | path join
+      'services/ticker') }); exec deno run --allow-net --allow-env --config ($$app | path join
+      'deno.json') ($$app | path join 'main.ts')
+    availability:
+      exit_on_skipped: true
+      restart: on_failure
+      backoff_seconds: 1
+      max_restarts: 15
+    environment:
+    - CALL_TIMEOUT_MS=35000
+    - CRUD_URL=http://127.0.0.1:${CRUD_HTTP_PORT:-12015}
+    - PORT=${TICKER_HTTP_PORT:-31354}
+    - >-
+      SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
+    - >-
+      WAKE_URLS=http://127.0.0.1:${MESH_EVENTS_HTTP_PORT:-15475}/v1.0/healthz/outbound,http://127.0.0.1:${AIRLOCK_TCP_PORT:-14330}/healthz
+  clock:
+    depends_on:
+      ticker:
+        condition: process_started
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - >-
+      let yml = (if (($$env.CLOCK_YAML? | default '') != '') { $$env.CLOCK_YAML }
+      else if ('services/clock/clock.yaml' | path exists) { 'services/clock/clock.yaml' }
+      else { ((^mise where github:bonisoft3/mecha | str trim) | path join
+      'services/clock/clock.yaml') }); exec redpanda-connect run --set 'http.enabled=false' $$yml
+    availability:
+      exit_on_skipped: true
+      restart: on_failure
+      backoff_seconds: 1
+      max_restarts: 15
+    environment:
+    - POKE_CALLER=compose
+    - POKE_INTERVAL=${POKE_INTERVAL:-60s}
+    - POKE_URL=http://127.0.0.1:${TICKER_HTTP_PORT:-31354}
+    - >-
+      SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
+  airlock:
+    depends_on:
+      airlock-mesh:
+        condition: process_healthy
+      database:
+        condition: process_healthy
+      migrate:
+        condition: process_completed_successfully
+      airlock-upgrade:
+        condition: process_completed_successfully
+      timer-check:
+        condition: process_completed_successfully
+      "bayt:portcheck":
+        condition: process_completed_successfully
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - "let base = ($$env.BAYT_LOCAL_WORK_DIR? | default $$nu.temp-dir); let dir = ($$base | path join $$'airlock-($$nu.pid)-(random int 1000..9999)'); mkdir ($$dir | path join 'effects'); cp -f 'services/airlock/effects.json' ($$dir | path join 'effects.json'); cp -f 'effects/acquire.js' ($$dir | path join 'effects/acquire.js'); let app = (if (($$env.AIRLOCK_APP_DIR? | default '') != '') { $$env.AIRLOCK_APP_DIR } else if ('services/airlock/main.ts' | path exists) { 'services/airlock' } else { ((^mise where github:bonisoft3/mecha | str trim) | path join 'services/airlock') }); with-env { AIRLOCK_DIR: $$dir } { exec deno run --frozen --unstable-worker-options --allow-net --allow-read --allow-env --allow-sys --config ($$app | path join 'deno.json') ($$app | path join 'main.ts') }"
+    availability:
+      exit_on_skipped: true
+      restart: on_failure
+      backoff_seconds: 1
+      max_restarts: 15
+    environment:
+    - AIRLOCK_TARGET=local
+    - >-
+      DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:${DATABASE_PG_PORT:-12041}/${POSTGRES_DB:-golaberto}
+    - MESH_URL=http://127.0.0.1:${AIRLOCK_MESH_HTTP_PORT:-11227}
+    - ORIGIN=${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-17702}}
+    - PORT=${AIRLOCK_TCP_PORT:-14330}
+    readiness_probe:
+      exec:
+        command: bayt microcheck portcheck --port ${AIRLOCK_TCP_PORT:-14330}
+      period_seconds: 5
+      timeout_seconds: 5
+      failure_threshold: 36
+  airlock-mesh:
+    depends_on:
+      sofascore:
+        condition: process_started
+      "bayt:portcheck":
+        condition: process_completed_successfully
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - >-
+      let base = ($$env.BAYT_LOCAL_WORK_DIR? | default $$nu.temp-dir); let dir =
+      ($$base | path join $$'airlock-mesh-($$nu.pid)-(random int 1000..9999)'); mkdir
+      ($$dir | path join 'airlock'); let app = (if (($$env.AIRLOCK_APP_DIR? | default '') !=
+      '') { $$env.AIRLOCK_APP_DIR } else if ('services/airlock/dapr.yaml' | path
+      exists) { 'services/airlock' } else { ((^mise where github:bonisoft3/mecha | str trim)
+      | path join 'services/airlock') }); cp -f ($$app | path join 'dapr.yaml') ($$dir
+      | path join 'config.yaml');
+      'YXBpVmVyc2lvbjogZGFwci5pby92MWFscGhhMQpraW5kOiBDb21wb25lbnQKbWV0YWRhdGE6CiAgbmFtZTogd2FsbApzcGVjOgogIHR5cGU6IG1pZGRsZXdhcmUuaHR0cC5yb3V0ZXJjaGVja2VyCiAgdmVyc2lvbjogdjEKICBtZXRhZGF0YToKICAgIC0ge25hbWU6IHJ1bGUsIHZhbHVlOiAiXi92MVsuXTAvKGhlYWx0aHooL291dGJvdW5kKT98aW52b2tlLyhhY3F1aXJlKS9tZXRob2QvLiopJCJ9' | decode base64 | decode utf-8 | save -f ($$dir | path join 'airlock/wall.yaml'); 'YXBpVmVyc2lvbjogZGFwci5pby92MWFscGhhMQpraW5kOiBSZXNpbGllbmN5Cm1ldGFkYXRhOgogIG5hbWU6IGFpcmxvY2sKc3BlYzoKICBwb2xpY2llczoKICAgIGNpcmN1aXRCcmVha2VyczoKICAgICAgc2luazoKICAgICAgICBtYXhSZXF1ZXN0czogMQogICAgICAgIGludGVydmFsOiA2MHMKICAgICAgICB0aW1lb3V0OiAzMHMKICAgICAgICB0cmlwOiBjb25zZWN1dGl2ZUZhaWx1cmVzID49IDEwCiAgdGFyZ2V0czoKICAgIGFwcHM6CiAgICAgIGFjcXVpcmU6IHtjaXJjdWl0QnJlYWtlcjogc2lua30=' | decode base64 | decode utf-8 | save -f ($$dir | path join 'airlock/resiliency.yaml'); open --raw 'services/airlock/dapr/acquire.yaml' | str replace --all 'http://sofascore:8080' $$env.BRIDGE_SOFASCORE_URL | save -f ($$dir | path join 'airlock/acquire.yaml'); exec daprd --app-id airlock --dapr-listen-addresses 127.0.0.1 --dapr-internal-grpc-listen-address 127.0.0.1 --resources-path ($$dir | path join 'airlock') --config ($$dir | path join 'config.yaml') --dapr-http-port $$env.DAPR_HTTP_PORT --dapr-grpc-port $$env.DAPR_GRPC_PORT --dapr-internal-grpc-port $$env.DAPR_INTERNAL_GRPC_PORT --metrics-port 0 --profile-port 0 --max-body-size 64Mi --log-level info
+    availability:
+      exit_on_skipped: true
+      restart: on_failure
+      backoff_seconds: 1
+      max_restarts: 15
+    environment:
+    - AIRLOCK_BRIDGES=sofascore
+    - AIRLOCK_ORIGINS=
+    - BRIDGE_SOFASCORE_URL=http://127.0.0.1:${SOFASCORE_HTTP_PORT:-10993}
+    - DAPR_GRPC_PORT=${AIRLOCK_MESH_API_PORT:-15104}
+    - DAPR_HTTP_PORT=${AIRLOCK_MESH_HTTP_PORT:-11227}
+    - DAPR_INTERNAL_GRPC_PORT=${AIRLOCK_MESH_GRPC_PORT:-21891}
+    readiness_probe:
+      exec:
+        command: bayt microcheck portcheck --port ${AIRLOCK_MESH_HTTP_PORT:-11227}
+      period_seconds: 5
+      timeout_seconds: 5
+      failure_threshold: 36
+  check-acceptance:
+    depends_on:
+      launch:
+        condition: process_healthy
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - >-
+      let omnishell = (^mise where github:bonisoft3/omnishell | str trim); deno test
+      --config ($$omnishell | path join test deno.json) --lock ($$omnishell | path join
+      test deno.lock) --frozen --allow-all
+      --unsafely-ignore-certificate-errors=caddy,localhost,127.0.0.1 tests/acceptance.ts
+    availability:
+      exit_on_skipped: true
+    environment:
+    - APP_URL=https://localhost:${CADDY_TLS_HOST_PORT:-17702}
+    - >-
+      DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:${DATABASE_PG_PORT:-12041}/${POSTGRES_DB:-golaberto}
+    - DOOR=http://127.0.0.1:${CADDY_HTTP_PORT:-25189}
+    - ORIGIN=${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-17702}}
+    - PGRST_JWT_SECRET=${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
+    - SETTLE_TIMEOUT_MS=50000
+  check-constraints:
+    depends_on:
+      launch:
+        condition: process_healthy
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - >-
+      deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-env
+      --allow-net --allow-read --allow-sys tests/constraints.ts tests/sofascore.ts
+      tests/campaign-read.ts tests/read-parity.ts tests/heavy-reads.ts
+      tests/community-parity.ts tests/community-access-tests.ts tests/competition-admin.ts
+      tests/editing-parity.ts tests/match-context.ts tests/match-probability.ts tests/odds-progress.ts;
+      deno test --config services/media/deno.json --frozen --allow-read --allow-write
+      --allow-env --allow-net --allow-ffi tests/media-normalize.ts
+      tests/native-media.ts; deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-env
+      --allow-net --allow-read --allow-sys tests/readable-addresses.ts tests/drains.ts
+      tests/sofascore-airlock.ts
+    availability:
+      exit_on_skipped: true
+    environment:
+    - APP_URL=https://localhost:${CADDY_TLS_HOST_PORT:-17702}
+    - >-
+      DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:${DATABASE_PG_PORT:-12041}/${POSTGRES_DB:-golaberto}
+    - DOOR=http://127.0.0.1:${CADDY_HTTP_PORT:-25189}
+    - ORIGIN=${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-17702}}
+    - PGRST_JWT_SECRET=${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
+  check-statistics-live:
+    depends_on:
+      launch:
+        condition: process_healthy
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - "let omnishell = (^mise where github:bonisoft3/omnishell | str trim); deno test --config ($$omnishell | path join test deno.json) --lock ($$omnishell | path join test deno.lock) --frozen --allow-all --unsafely-ignore-certificate-errors=caddy,localhost,127.0.0.1 --filter=live: tests/acceptance.ts"
+    availability:
+      exit_on_skipped: true
+    environment:
+    - APP_URL=https://localhost:${CADDY_TLS_HOST_PORT:-17702}
+    - >-
+      DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:${DATABASE_PG_PORT:-12041}/${POSTGRES_DB:-golaberto}
+    - DOOR=http://127.0.0.1:${CADDY_HTTP_PORT:-25189}
+    - ORIGIN=${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-17702}}
+    - PGRST_JWT_SECRET=${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
+    - SETTLE_TIMEOUT_MS=50000
   caddy:
     depends_on:
       crud:
@@ -100,43 +641,253 @@ processes:
       "bayt:httpcheck":
         condition: process_completed_successfully
     entrypoint:
-    - sh
+    - mise
+    - x
+    - --
+    - nu
     - -c
-    - "case \"$${ORIGIN#http://}\" in \"$$ORIGIN\") h=$${ORIGIN#https://};; *) h=$${ORIGIN#http://};; esac; case \"$$h\" in \"$$ORIGIN\"|\"\"|*[!A-Za-z0-9.:-]*) echo \"ORIGIN '$$ORIGIN' is no origin: set it to the scheme and host readers reach the door at, as https://app.example\" >&2; exit 1;; esac; : > /etc/caddy/env; case \"$$h\" in *:*) _p=$${h##*:};; *) _p=8443;; esac; export CADDY_TLS_HOST_PORT=\"$${CADDY_TLS_HOST_PORT:-$$_p}\"; printf 'CADDY_TLS_HOST_PORT=%s\\n' \"$$CADDY_TLS_HOST_PORT\" >> /etc/caddy/env; if [ -f /certs/localhost.pem ]; then export CADDY_TLS='/certs/localhost.pem /certs/localhost-key.pem'; printf 'CADDY_TLS=%s\\n' \"$$CADDY_TLS\" >> /etc/caddy/env; fi; PRONTO_RELEASE_SCRIPTS=$$(cat /etc/caddy/release-scripts 2>/dev/null || true); export PRONTO_RELEASE_SCRIPTS; printf 'PRONTO_RELEASE_SCRIPTS=%s\\n' \"$$PRONTO_RELEASE_SCRIPTS\" >> /etc/caddy/env; set -e -o pipefail; roots=$$(caddy adapt --envfile /etc/caddy/env --config /etc/caddy/Caddyfile --adapter caddyfile | tr , '\\n' | grep -o '\"root\":\"[^\"]*\"' | cut -d'\"' -f4 | sort -u); if [ -n \"$$roots\" ]; then find $$roots -type f ! -name '*.etag' -exec sh -c 'set -e; q=$$1; shift; for f do h=$$(sha256sum < \"$$f\"); printf \"$$q%s$$q\" \"$${h%% *}\" > \"$$f.etag\"; done' sh '\"' {} +; fi; exec caddy run --envfile /etc/caddy/env --config /etc/caddy/Caddyfile --adapter caddyfile"
+    - "let origin = ($$env.ORIGIN? | default \"\"); let h = ($$origin | str replace -r '^https?://' ''); if ($$h == $$origin) or ($$h | is-empty) or ($$h !~ '^[A-Za-z0-9.:-]+$$') { print -e $$\"ORIGIN '($$origin)' is no origin: set it to the scheme and host readers reach the door at, as https://app.example\"; exit 1 }; let p = (if ($$h | str contains \":\") { $$h | split row \":\" | last } else { \"8443\" }); let tls_port = (if (($$env.CADDY_TLS_HOST_PORT? | default \"\") != \"\") { $$env.CADDY_TLS_HOST_PORT } else { $$p }); let work = ($$env.BAYT_LOCAL_WORK_DIR? | default $$nu.temp-dir); let cdir = ($$work | path join $$\"caddy-($$nu.pid)-(random int 1000..9999)\"); mkdir ($$cdir | path join \"data\") ($$cdir | path join \"config\"); let env_file = ($$cdir | path join \"env\"); let certs = (($$env.CADDY_CERT_DIR? | default \".certs\") | path expand | str replace -a (char -u 5c) '/'); let served_dir = ($$env.BAYT_LOCAL_SERVED_DIR? | default \"\"); let is_local = (($$served_dir != \"\") and (($$served_dir | path join \"srv\") | path exists)); let cfg_src = (if $$is_local { 'docker/Caddyfile' } else { ($$env.CADDY_CONFIG_FILE? | default (if ('docker/Caddyfile' | path exists) { 'docker/Caddyfile' } else { \"/etc/caddy/Caddyfile\" })) }); mut env_lines = [$$\"CADDY_TLS_HOST_PORT=($$tls_port)\"]; mut extra_env = { XDG_DATA_HOME: ($$env.CADDY_DATA_HOME? | default ($$cdir | path join \"data\")), XDG_CONFIG_HOME: ($$cdir | path join \"config\"), CADDY_TLS_HOST_PORT: $$tls_port }; if $$is_local { let served_fwd = ($$served_dir | path expand | str replace -a (char -u 5c) '/'); let srv_root = $$\"($$served_fwd)/srv\"; let omni_root = $$\"($$served_fwd)/omnishell\"; $$env_lines = ($$env_lines | append [$$\"CADDY_DOOR_PORT=($$tls_port)\" $$\"PRONTO_SRV_ROOT=($$srv_root)\" $$\"PRONTO_OMNISHELL_ROOT=($$omni_root)\"]); $$extra_env = ($$extra_env | merge { CADDY_DOOR_PORT: $$tls_port, PRONTO_SRV_ROOT: $$srv_root, PRONTO_OMNISHELL_ROOT: $$omni_root }) }; if (($$certs | path join \"localhost.pem\") | path exists) { let tv = $$\"($$certs)/localhost.pem ($$certs)/localhost-key.pem\"; $$env_lines = ($$env_lines | append $$\"CADDY_TLS=($$tv)\"); $$extra_env = ($$extra_env | merge { CADDY_TLS: $$tv }) }; let sfile = ($$env.CADDY_SCRIPTS_FILE? | default (if (($$env.BAYT_LOCAL_SERVED_DIR? | default \"\") != \"\") { ($$env.BAYT_LOCAL_SERVED_DIR | path join \"caddy/release-scripts\") } else { \"/etc/caddy/release-scripts\" })); let rel = (if ($$sfile | path exists) { open --raw $$sfile | str trim } else { \"\" }); $$env_lines = ($$env_lines | append $$\"PRONTO_RELEASE_SCRIPTS=($$rel)\"); $$extra_env = ($$extra_env | merge { PRONTO_RELEASE_SCRIPTS: $$rel }); ($$env_lines | str join (char nl)) + (char nl) | save -f $$env_file; with-env $$extra_env { let adapted = (^caddy adapt --envfile $$env_file --config $$cfg_src --adapter caddyfile); let roots = ($$adapted | split row \",\" | parse -r '\"root\":\"(?<r>[^\"]+)\"' | get -o r | default [] | uniq); for r in $$roots { if ($$r | path exists) { glob ($$r | path join \"**/*\" | str replace -a (char -u 5c) '/') | where ($$it | path type) == \"file\" and (not ($$it | str ends-with \".etag\")) | each {|f| let etag = $$\"($$f).etag\"; if (not ($$etag | path exists)) { let d = (open --raw $$f | hash sha256); ((char dquote) + $$d + (char dquote)) | save --raw -f $$etag } } | ignore } }; exec caddy run --envfile $$env_file --config $$cfg_src --adapter caddyfile }"
     availability:
       exit_on_skipped: true
     environment:
     - ELECTRIC_SECRET=${ELECTRIC_SECRET:-dev-electric-secret}
-    - ORIGIN=${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT}}
+    - ORIGIN=${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-17702}}
+    - PORT=${CADDY_HTTP_PORT:-25189}
+    - PRONTO_UPSTREAM_AUTH=127.0.0.1:${AUTH_HTTP_PORT:-24592}
+    - PRONTO_UPSTREAM_CRUD=127.0.0.1:${CRUD_HTTP_PORT:-12015}
+    - PRONTO_UPSTREAM_ELECTRIC=127.0.0.1:${ELECTRIC_HTTP_PORT:-24559}
+    - PRONTO_UPSTREAM_RCLONE_S3=127.0.0.1:${RCLONE_S3_HTTP_PORT:-28073}
+    - PRONTO_UPSTREAM_RENDER=127.0.0.1:${RENDER_HTTP_PORT:-13973}
+    - PRONTO_UPSTREAM_TICKER=127.0.0.1:${TICKER_HTTP_PORT:-31354}
     readiness_probe:
       exec:
-        command: bayt microcheck httpcheck http://127.0.0.1:8080/health
+        command: bayt microcheck httpcheck http://127.0.0.1:${CADDY_HTTP_PORT:-25189}/health
       period_seconds: 5
       timeout_seconds: 5
       failure_threshold: 32
+  sofascore:
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - >-
+      let at = $$"127.0.0.1:($$env.SOFASCORE_PORT? | default '8080')"; exec deno run
+      $$"--allow-net=($$at)" --allow-read=simulators/sofascore
+      simulators/sofascore/simulator.ts $$at
+    availability:
+      exit_on_skipped: true
+    environment:
+    - SOFASCORE_PORT=${SOFASCORE_HTTP_PORT:-10993}
+  render:
+    depends_on:
+      caddy:
+        condition: process_healthy
+      crud:
+        condition: process_healthy
+      electric:
+        condition: process_healthy
+      auth:
+        condition: process_started
+      "bayt:httpcheck":
+        condition: process_completed_successfully
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - "let omni = (if (($$env.OMNISHELL_DIR? | default '') != '') { $$env.OMNISHELL_DIR } else { (^mise where github:bonisoft3/omnishell | str trim) }); let served = ($$env.BAYT_LOCAL_SERVED_DIR? | default ''); let cfg = ($$env.BAYT_LOCAL_RENDER_ENTRY? | default (if $$served != '' { ($$served | path join 'srv/shell/index.html') } else { 'shell/index.html' })); let entry = (if ($$cfg | path exists) { $$cfg } else { 'shell/index.html' }); with-env { ENTRY: $$entry } { ^deno run --frozen --config ($$omni | path join 'server/deno.json') --allow-net --allow-env --allow-read ($$omni | path join 'server/render.ts') }"
+    availability:
+      exit_on_skipped: true
+      restart: on_failure
+      backoff_seconds: 1
+      max_restarts: 15
+    environment:
+    - DOOR=http://127.0.0.1:${CADDY_HTTP_PORT:-25189}
+    - DOOR_TIMEOUT_MS=41000
+    - ORIGIN=${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-17702}}
+    - PORT=${RENDER_HTTP_PORT:-13973}
+    readiness_probe:
+      exec:
+        command: bayt microcheck httpcheck http://127.0.0.1:${RENDER_HTTP_PORT:-13973}/health
+      period_seconds: 1
+      timeout_seconds: 5
+      failure_threshold: 150
+  rclone-s3:
+    depends_on:
+      database:
+        condition: process_healthy
+      migrate:
+        condition: process_completed_successfully
+      "bayt:httpcheck":
+        condition: process_completed_successfully
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - >-
+      ^deno run --frozen --allow-env --allow-read --allow-write --allow-ffi
+      --allow-net --config services/media/deno.json services/media/main.ts
+    availability:
+      exit_on_skipped: true
+    environment:
+    - >-
+      DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:${DATABASE_PG_PORT:-12041}/${POSTGRES_DB:-golaberto}
+    - PGRST_JWT_SECRET=${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
+    - PORT=${RCLONE_S3_HTTP_PORT:-28073}
+    readiness_probe:
+      exec:
+        command: bayt microcheck httpcheck http://127.0.0.1:${RCLONE_S3_HTTP_PORT:-28073}/health
+      period_seconds: 1
+      timeout_seconds: 5
+      failure_threshold: 60
   crud:
     depends_on:
       database:
         condition: process_healthy
+      migrate:
+        condition: process_completed_successfully
+      airlock-upgrade:
+        condition: process_completed_successfully
+      timer-check:
+        condition: process_completed_successfully
       "bayt:httpcheck":
         condition: process_completed_successfully
     entrypoint:
-    - postgrest
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - "with-env { PGRST_SERVER_HOST: '127.0.0.1' } { exec postgrest }"
     availability:
       exit_on_skipped: true
     environment:
-    - PGRST_ADMIN_SERVER_PORT=3001
+    - PGRST_ADMIN_SERVER_PORT=${CRUD_ADMIN_PORT:-27857}
     - PGRST_DB_ANON_ROLE=anon
     - PGRST_DB_PRE_REQUEST=public.app_pre_request
     - PGRST_DB_SCHEMA=public
     - >-
-      PGRST_DB_URI=postgres://authenticator:${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}@127.0.0.1:5432/${POSTGRES_DB:-golaberto}
+      PGRST_DB_URI=postgres://authenticator:${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}@127.0.0.1:${DATABASE_PG_PORT:-12041}/${POSTGRES_DB:-golaberto}
     - PGRST_JWT_SECRET=${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
     - PGRST_SERVER_HOST=*
-    - PGRST_SERVER_PORT=3000
+    - PGRST_SERVER_PORT=${CRUD_HTTP_PORT:-12015}
     readiness_probe:
       exec:
-        command: bayt microcheck httpcheck http://127.0.0.1:3001/ready
+        command: bayt microcheck httpcheck http://127.0.0.1:${CRUD_ADMIN_PORT:-27857}/ready
       period_seconds: 5
       timeout_seconds: 5
       failure_threshold: 36
+  electric:
+    depends_on:
+      database:
+        condition: process_healthy
+      migrate:
+        condition: process_completed_successfully
+      airlock-upgrade:
+        condition: process_completed_successfully
+      timer-check:
+        condition: process_completed_successfully
+      "bayt:httpcheck":
+        condition: process_completed_successfully
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - >-
+      let mecha = (if ('services/electric/main.ts' | path exists) { $$env.PWD } else
+      { (^mise where github:bonisoft3/mecha | str trim) }); let auth_dir = (if
+      (($$env.AUTH_APP_DIR? | default '') != '') { $$env.AUTH_APP_DIR } else { ($$mecha | path
+      join 'services/auth') }); let elec_dir = (if (($$env.ELECTRIC_APP_DIR? | default
+      '') != '') { $$env.ELECTRIC_APP_DIR } else { ($$mecha | path join
+      'services/electric') }); exec deno run --allow-net --allow-env --allow-read --config ($$auth_dir
+      | path join 'deno.json') ($$elec_dir | path join 'main.ts')
+    availability:
+      exit_on_skipped: true
+      restart: on_failure
+      backoff_seconds: 1
+      max_restarts: 15
+    environment:
+    - >-
+      ADMIN_DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:${DATABASE_PG_PORT:-12041}/${POSTGRES_DB:-golaberto}
+    - >-
+      DATABASE_URL=postgresql://electric:${ELECTRIC_PASSWORD:-dev-electric-password}@127.0.0.1:${DATABASE_PG_PORT:-12041}/${POSTGRES_DB:-golaberto}?sslmode=disable
+    - ELECTRIC_MANUAL_TABLE_PUBLISHING=true
+    - ELECTRIC_SECRET=${ELECTRIC_SECRET:-dev-electric-secret}
+    - PGRST_JWT_SECRET=${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
+    - PORT=${ELECTRIC_HTTP_PORT:-24559}
+    readiness_probe:
+      exec:
+        command: >-
+          bayt microcheck httpcheck
+          http://127.0.0.1:${ELECTRIC_HTTP_PORT:-24559}/v1/health
+      period_seconds: 1
+      timeout_seconds: 5
+      failure_threshold: 60
+  redis:
+    depends_on:
+      "bayt:portcheck":
+        condition: process_completed_successfully
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - >-
+      exec redis-server --port ($$env.REDIS_PORT? | default '6379') --save ''
+      --appendonly no
+    availability:
+      exit_on_skipped: true
+    environment:
+    - REDIS_PORT=${REDIS_REDIS_PORT:-24649}
+    readiness_probe:
+      exec:
+        command: bayt microcheck portcheck --port ${REDIS_REDIS_PORT:-24649}
+      period_seconds: 5
+      timeout_seconds: 3
+      failure_threshold: 36
+  transform:
+    depends_on:
+      redis:
+        condition: process_healthy
+      crud:
+        condition: process_healthy
+      compute:
+        condition: process_healthy
+    entrypoint:
+    - mise
+    - x
+    - --
+    - nu
+    - -c
+    - >-
+      let mecha = (if ('services/transform/cdc-trace.yaml' | path exists) { $$env.PWD
+      } else { (^mise where github:bonisoft3/mecha | str trim) }); let tdir = (if
+      (($$env.MECHA_TRANSFORM_DIR? | default '') != '') { $$env.MECHA_TRANSFORM_DIR } else
+      { ($$mecha | path join 'services/transform') }); let cdir = (if
+      (($$env.COMPUTE_APP_DIR? | default '') != '') { $$env.COMPUTE_APP_DIR } else { ($$mecha | path
+      join 'services/compute') }); exec redpanda-connect streams --set
+      'http.enabled=false' --no-api -r ($$tdir | path join 'cdc-trace.yaml')
+      'docker/golaberto-rounds.yaml' 'docker/golaberto-team-enrichment.yaml' 'docker/golaberto-team-profiles.yaml'
+      'docker/golaberto-team-directory.yaml' 'docker/golaberto-matches-games.yaml'
+      'docker/golaberto-recent-championships.yaml'
+      'docker/golaberto-sofascore-admission.yaml' ($$cdir | path join 'events.yaml')
+    availability:
+      exit_on_skipped: true
+      restart: on_failure
+      backoff_seconds: 1
+      max_restarts: 15
+    environment:
+    - COMPUTE_GROUP=golaberto-compute
+    - COMPUTE_URL=http://127.0.0.1:${COMPUTE_TCP_PORT:-26287}
+    - CRUD_URL=http://127.0.0.1:${CRUD_HTTP_PORT:-12015}
+    - REDIS_URL=redis://127.0.0.1:${REDIS_REDIS_PORT:-24649}
+    - >-
+      SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}

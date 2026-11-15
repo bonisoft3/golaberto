@@ -1,0 +1,376 @@
+{
+  "sql": "CREATE TABLE source_championship(id VARCHAR,point_win INTEGER,point_draw INTEGER,point_loss INTEGER);\nCREATE TABLE source_phase(id VARCHAR,championship_id VARCHAR,sort VARCHAR,bonus_points INTEGER,bonus_points_threshold INTEGER);\nCREATE TABLE source_stage_group(id VARCHAR,phase_id VARCHAR);\nCREATE TABLE source_team_group(group_id VARCHAR,team_id VARCHAR,add_sub INTEGER,bias INTEGER);\nCREATE TABLE source_team(id VARCHAR,name VARCHAR);\nCREATE TABLE source_game(id VARCHAR,phase_id VARCHAR,day VARCHAR,kickoff VARCHAR,played BOOLEAN,\n home_id VARCHAR,away_id VARCHAR,home_score INTEGER,away_score INTEGER,\n home_aet INTEGER,away_aet INTEGER,home_pen INTEGER,away_pen INTEGER);\nCREATE TABLE source_zone(id VARCHAR,group_id VARCHAR,color VARCHAR,first INTEGER,last INTEGER,positions VARCHAR);\nCREATE LOCAL VIEW members AS\n SELECT m.group_id,m.team_id,m.add_sub,m.bias,t.name AS team_name,p.id AS phase_id,\n p.sort,p.bonus_points,p.bonus_points_threshold,c.point_win,c.point_draw,c.point_loss\n FROM source_team_group m JOIN source_team t ON t.id=m.team_id\n JOIN source_stage_group g ON g.id=m.group_id JOIN source_phase p ON p.id=g.phase_id\n JOIN source_championship c ON c.id=p.championship_id;\nCREATE LOCAL VIEW scores AS\n SELECT m.group_id,m.team_id,g.id,g.day,g.kickoff,\n CASE WHEN g.home_id=m.team_id THEN g.away_id ELSE g.home_id END AS opponent,\n CASE WHEN g.home_id=m.team_id THEN g.home_score ELSE g.away_score END AS gf,\n CASE WHEN g.home_id=m.team_id THEN g.away_score ELSE g.home_score END AS ga,\n CASE WHEN g.home_id=m.team_id THEN 0 ELSE g.away_score END AS away_goals,\n COALESCE(CASE WHEN g.home_id=m.team_id THEN g.home_aet ELSE g.away_aet END,0) AS aet,\n COALESCE(CASE WHEN g.home_id=m.team_id THEN g.home_pen ELSE g.away_pen END,0) AS pen,\n m.point_win,m.point_draw,m.point_loss,m.bonus_points,m.bonus_points_threshold\n FROM members m JOIN source_game g ON g.phase_id=m.phase_id AND g.played\n AND (g.home_id=m.team_id OR g.away_id=m.team_id);\nCREATE LOCAL VIEW sides AS\n SELECT group_id,team_id,id,day,kickoff,opponent,gf,ga,away_goals,aet,pen,\n CAST(CASE WHEN gf>ga THEN 'w' WHEN gf<ga THEN 'l' ELSE 'd' END AS VARCHAR) AS result,\n CASE WHEN gf>ga THEN point_win+CASE WHEN bonus_points>0 AND gf-ga>=bonus_points_threshold THEN bonus_points ELSE 0 END\n WHEN gf<ga THEN point_loss ELSE point_draw END AS points\n FROM scores;\nCREATE LOCAL VIEW totals AS\n SELECT group_id,team_id,CAST(SUM(points) AS INTEGER) AS points,CAST(COUNT(*) AS INTEGER) AS played,\n CAST(SUM(CASE WHEN result='w' THEN 1 ELSE 0 END) AS INTEGER) AS wins,\n CAST(SUM(CASE WHEN result='d' THEN 1 ELSE 0 END) AS INTEGER) AS draws,\n CAST(SUM(CASE WHEN result='l' THEN 1 ELSE 0 END) AS INTEGER) AS losses,\n CAST(SUM(gf) AS INTEGER) AS gf,CAST(SUM(ga) AS INTEGER) AS ga,\n CAST(SUM(away_goals) AS INTEGER) AS away_goals,CAST(SUM(aet) AS INTEGER) AS aet,CAST(SUM(pen) AS INTEGER) AS pen\n FROM sides GROUP BY group_id,team_id;\nCREATE LOCAL VIEW campaigns AS\n SELECT m.group_id,m.team_id,m.team_name,m.add_sub,m.bias,m.sort,\n COALESCE(s.points,0)+m.add_sub AS points,COALESCE(s.played,0) AS played,\n COALESCE(s.wins,0) AS wins,COALESCE(s.draws,0) AS draws,COALESCE(s.losses,0) AS losses,\n COALESCE(s.gf,0) AS goals_for,COALESCE(s.ga,0) AS goals_against,\n COALESCE(s.gf,0)-COALESCE(s.ga,0) AS goal_diff,COALESCE(s.away_goals,0) AS goals_away,\n COALESCE(s.aet,0) AS goals_aet,COALESCE(s.pen,0) AS goals_pen\n FROM members m LEFT JOIN totals s ON s.group_id=m.group_id AND s.team_id=m.team_id;\nCREATE LOCAL VIEW head_points AS\n SELECT c.group_id,c.team_id,CAST(SUM(s.points) AS INTEGER) AS points\n FROM campaigns c JOIN sides s ON s.group_id=c.group_id AND s.team_id=c.team_id\n JOIN campaigns o ON o.group_id=c.group_id AND o.team_id=s.opponent AND o.points=c.points\n GROUP BY c.group_id,c.team_id;\nCREATE MATERIALIZED VIEW result_members AS\n SELECT c.*,COALESCE(h.points,0)+c.add_sub AS head_points FROM campaigns c\n LEFT JOIN head_points h ON h.group_id=c.group_id AND h.team_id=c.team_id;\nCREATE MATERIALIZED VIEW result_form AS SELECT group_id,team_id,id,day,kickoff,result FROM sides;\nCREATE MATERIALIZED VIEW result_zones AS SELECT * FROM source_zone;\nCREATE MATERIALIZED VIEW result_groups AS SELECT DISTINCT group_id AS id FROM members;\n",
+  "incremental": {
+    "inputs": {
+      "source_championship": {
+        "table": "championship",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"point_win\" AS INTEGER) AS \"point_win\", CAST(\"point_draw\" AS INTEGER) AS \"point_draw\", CAST(\"point_loss\" AS INTEGER) AS \"point_loss\""
+      },
+      "source_phase": {
+        "table": "phase",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"championship_id\" AS VARCHAR) AS \"championship_id\", CAST(\"sort\" AS VARCHAR) AS \"sort\", CAST(\"bonus_points\" AS INTEGER) AS \"bonus_points\", CAST(\"bonus_points_threshold\" AS INTEGER) AS \"bonus_points_threshold\""
+      },
+      "source_stage_group": {
+        "table": "stage_group",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"phase_id\" AS VARCHAR) AS \"phase_id\""
+      },
+      "source_team_group": {
+        "table": "team_group",
+        "projection": "CAST(\"group_id\" AS VARCHAR) AS \"group_id\", CAST(\"team_id\" AS VARCHAR) AS \"team_id\", CAST(\"add_sub\" AS INTEGER) AS \"add_sub\", CAST(\"bias\" AS INTEGER) AS \"bias\""
+      },
+      "source_team": {
+        "table": "team",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"name\" AS VARCHAR) AS \"name\""
+      },
+      "source_game": {
+        "table": "game",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"phase_id\" AS VARCHAR) AS \"phase_id\", CAST(\"day\" AS VARCHAR) AS \"day\", to_char(kickoff AT TIME ZONE 'UTC', 'YYYY-MM-DD\"T\"HH24:MI:SS.US\"Z\"') AS \"kickoff\", CAST(\"played\" AS BOOLEAN) AS \"played\", CAST(\"home_id\" AS VARCHAR) AS \"home_id\", CAST(\"away_id\" AS VARCHAR) AS \"away_id\", CAST(\"home_score\" AS INTEGER) AS \"home_score\", CAST(\"away_score\" AS INTEGER) AS \"away_score\", CAST(\"home_aet\" AS INTEGER) AS \"home_aet\", CAST(\"away_aet\" AS INTEGER) AS \"away_aet\", CAST(\"home_pen\" AS INTEGER) AS \"home_pen\", CAST(\"away_pen\" AS INTEGER) AS \"away_pen\""
+      },
+      "source_zone": {
+        "table": "zone",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"group_id\" AS VARCHAR) AS \"group_id\", CAST(\"color\" AS VARCHAR) AS \"color\", CAST(\"first\" AS INTEGER) AS \"first\", CAST(\"last\" AS INTEGER) AS \"last\", CAST(\"positions\" AS VARCHAR) AS \"positions\""
+      }
+    },
+    "outputs": {
+      "groups": {
+        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_groups r"
+      },
+      "members": {
+        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_members r"
+      },
+      "form": {
+        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_form r"
+      },
+      "zones": {
+        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_zones r"
+      }
+    }
+  },
+  "inputs": {
+    "source_championship": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"point_win\" AS INTEGER) AS \"point_win\", CAST(\"point_draw\" AS INTEGER) AS \"point_draw\", CAST(\"point_loss\" AS INTEGER) AS \"point_loss\" FROM \"championship\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "point_win",
+          "type": "INTEGER"
+        },
+        {
+          "name": "point_draw",
+          "type": "INTEGER"
+        },
+        {
+          "name": "point_loss",
+          "type": "INTEGER"
+        }
+      ]
+    },
+    "source_phase": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"championship_id\" AS VARCHAR) AS \"championship_id\", CAST(\"sort\" AS VARCHAR) AS \"sort\", CAST(\"bonus_points\" AS INTEGER) AS \"bonus_points\", CAST(\"bonus_points_threshold\" AS INTEGER) AS \"bonus_points_threshold\" FROM \"phase\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "championship_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "sort",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "bonus_points",
+          "type": "INTEGER"
+        },
+        {
+          "name": "bonus_points_threshold",
+          "type": "INTEGER"
+        }
+      ]
+    },
+    "source_stage_group": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"phase_id\" AS VARCHAR) AS \"phase_id\" FROM \"stage_group\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "phase_id",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "source_team_group": {
+      "query": "SELECT CAST(\"group_id\" AS VARCHAR) AS \"group_id\", CAST(\"team_id\" AS VARCHAR) AS \"team_id\", CAST(\"add_sub\" AS INTEGER) AS \"add_sub\", CAST(\"bias\" AS INTEGER) AS \"bias\" FROM \"team_group\"",
+      "fields": [
+        {
+          "name": "group_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "add_sub",
+          "type": "INTEGER"
+        },
+        {
+          "name": "bias",
+          "type": "INTEGER"
+        }
+      ]
+    },
+    "source_team": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"name\" AS VARCHAR) AS \"name\" FROM \"team\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "source_game": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"phase_id\" AS VARCHAR) AS \"phase_id\", CAST(\"day\" AS VARCHAR) AS \"day\", strftime(kickoff::TIMESTAMPTZ AT TIME ZONE 'UTC', '%Y-%m-%dT%H:%M:%S.%fZ') AS \"kickoff\", CAST(\"played\" AS BOOLEAN) AS \"played\", CAST(\"home_id\" AS VARCHAR) AS \"home_id\", CAST(\"away_id\" AS VARCHAR) AS \"away_id\", CAST(\"home_score\" AS INTEGER) AS \"home_score\", CAST(\"away_score\" AS INTEGER) AS \"away_score\", CAST(\"home_aet\" AS INTEGER) AS \"home_aet\", CAST(\"away_aet\" AS INTEGER) AS \"away_aet\", CAST(\"home_pen\" AS INTEGER) AS \"home_pen\", CAST(\"away_pen\" AS INTEGER) AS \"away_pen\" FROM \"game\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "phase_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "day",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "kickoff",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "played",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "home_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "away_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "home_score",
+          "type": "INTEGER"
+        },
+        {
+          "name": "away_score",
+          "type": "INTEGER"
+        },
+        {
+          "name": "home_aet",
+          "type": "INTEGER"
+        },
+        {
+          "name": "away_aet",
+          "type": "INTEGER"
+        },
+        {
+          "name": "home_pen",
+          "type": "INTEGER"
+        },
+        {
+          "name": "away_pen",
+          "type": "INTEGER"
+        }
+      ]
+    },
+    "source_zone": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"group_id\" AS VARCHAR) AS \"group_id\", CAST(\"color\" AS VARCHAR) AS \"color\", CAST(\"first\" AS INTEGER) AS \"first\", CAST(\"last\" AS INTEGER) AS \"last\", CAST(\"positions\" AS VARCHAR) AS \"positions\" FROM \"zone\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "group_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "color",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "first",
+          "type": "INTEGER"
+        },
+        {
+          "name": "last",
+          "type": "INTEGER"
+        },
+        {
+          "name": "positions",
+          "type": "VARCHAR"
+        }
+      ]
+    }
+  },
+  "outputs": {
+    "groups": {
+      "view": "result_groups",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "members": {
+      "view": "result_members",
+      "fields": [
+        {
+          "name": "group_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "add_sub",
+          "type": "INTEGER"
+        },
+        {
+          "name": "bias",
+          "type": "INTEGER"
+        },
+        {
+          "name": "sort",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "points",
+          "type": "INTEGER"
+        },
+        {
+          "name": "played",
+          "type": "INTEGER"
+        },
+        {
+          "name": "wins",
+          "type": "INTEGER"
+        },
+        {
+          "name": "draws",
+          "type": "INTEGER"
+        },
+        {
+          "name": "losses",
+          "type": "INTEGER"
+        },
+        {
+          "name": "goals_for",
+          "type": "INTEGER"
+        },
+        {
+          "name": "goals_against",
+          "type": "INTEGER"
+        },
+        {
+          "name": "goal_diff",
+          "type": "INTEGER"
+        },
+        {
+          "name": "goals_away",
+          "type": "INTEGER"
+        },
+        {
+          "name": "goals_aet",
+          "type": "INTEGER"
+        },
+        {
+          "name": "goals_pen",
+          "type": "INTEGER"
+        },
+        {
+          "name": "head_points",
+          "type": "INTEGER"
+        }
+      ]
+    },
+    "form": {
+      "view": "result_form",
+      "fields": [
+        {
+          "name": "group_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "day",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "kickoff",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "result",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "zones": {
+      "view": "result_zones",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "group_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "color",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "first",
+          "type": "INTEGER"
+        },
+        {
+          "name": "last",
+          "type": "INTEGER"
+        },
+        {
+          "name": "positions",
+          "type": "VARCHAR"
+        }
+      ]
+    }
+  }
+}

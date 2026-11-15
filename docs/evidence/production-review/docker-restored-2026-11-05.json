@@ -1,0 +1,58 @@
+{
+  "scope": "PR2079 Docker-restored validation after fe41ea9a2b; local stacks only, no production deployment",
+  "passed": {
+    "pglite_rebuild": "exit 0; pg_ivm included",
+    "golaberto_sayt": [
+      "generate",
+      "lint",
+      "test"
+    ],
+    "plausible_sayt": [
+      "generate",
+      "lint",
+      "test"
+    ],
+    "compute": {
+      "passed": 166,
+      "failed": 0,
+      "ignored": 2,
+      "deno": "2.9.7"
+    },
+    "native_feldera_cdc": 5,
+    "portable_type_roundtrip": 15,
+    "workerd_compute_and_migration": 13,
+    "reset_acknowledgement": 1,
+    "plausible_tests": 94,
+    "plausible_native_comparison_stages": 6,
+    "plausible_appearance_cases": 24,
+    "plausible_live": {
+      "events": 1200,
+      "sessions": 400,
+      "documents_per_tab": 1,
+      "browser_errors": 0,
+      "guest_filter_isolation": true,
+      "derived_output_writes_denied": true
+    },
+    "browser_incremental_views": 37,
+    "pronto_isolated_compiler_bake": "exit 0",
+    "duckstream_compiler_contracts": 17
+  },
+  "repairs": [
+    "Durable SERIALIZABLE isolation distinct from public READ COMMITTED machines",
+    "Retained work scheduling after initialization commits",
+    "Exact broken compiler fingerprint repaired atomically; other fingerprints refused",
+    "Durex dispatcher extraction recognizes CREATE OR REPLACE",
+    "Workerd tests retain shared aliases",
+    "Reset response consumed before Durable Object restart",
+    "Workspace lockfile includes compute-snapshot",
+    "Cross-package sink-column contract test runs at repository tier instead of isolated compiler image"
+  ],
+  "review": "Independent reviews of transaction repair and edge response lifetime: no remaining actionable findings",
+  "remaining": [
+    "Fresh CI pending",
+    "Native Windows not validated",
+    "Large monthly atomic edge publication capacity remains unproved",
+    "No new hosted Golaberto match-edit/browser acceptance"
+  ],
+  "browser_evidence": "../../../../plausible/docs/evidence/pr2079-realtime/result.json"
+}

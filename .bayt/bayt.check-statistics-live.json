@@ -1,0 +1,414 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "compose": {
+    "up": true,
+    "manual": true,
+    "build": {
+      "additional_contexts": {
+        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.24.0@sha256:17daf9f9ed4dd8269b0de24eb7d66289c253b7e26fe47b81e93faccbcd77270c}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+      },
+      "secrets": [],
+      "args": {}
+    },
+    "command": [
+      "mise",
+      "x",
+      "--",
+      "nu",
+      "-c",
+      "let omnishell = (^mise where github:bonisoft3/omnishell | str trim); deno test --config ($$omnishell | path join test deno.json) --lock ($$omnishell | path join test deno.lock) --frozen --allow-all --unsafely-ignore-certificate-errors=caddy --filter=live: tests/acceptance.ts"
+    ],
+    "environment": {
+      "APP_URL": "https://caddy:8443",
+      "DATABASE_URL": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
+      "DOOR": "http://caddy:8080",
+      "ORIGIN": "${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT}}",
+      "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}",
+      "SETTLE_TIMEOUT_MS": "50000"
+    },
+    "ports": [],
+    "volumes": [],
+    "depends_on": {
+      "golaberto-launch": {
+        "condition": "service_healthy"
+      }
+    }
+  },
+  "dockerfile": {
+    "preamble": [],
+    "preambleCopyContexts": [],
+    "from": {
+      "ref": ":browser",
+      "name": "golaberto-browser"
+    },
+    "add": [],
+    "mounts": [],
+    "secrets": {},
+    "extra_hosts": [],
+    "epilogue": [],
+    "copy": [
+      {
+        "from": {
+          "name": "plugins_omnishell-runtime-image"
+        },
+        "srcs": [
+          "/"
+        ],
+        "dst": "/omnishell",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      }
+    ],
+    "healthcheck": null,
+    "expose": [],
+    "entrypoint": null,
+    "incremental": false,
+    "cmd": null
+  },
+  "entrypoint": {
+    "do": "let omnishell = (^mise where github:bonisoft3/omnishell | str trim); deno test --config ($omnishell | path join test deno.json) --lock ($omnishell | path join test deno.lock) --frozen --allow-all --unsafely-ignore-certificate-errors=caddy,localhost,127.0.0.1 --filter=live: tests/acceptance.ts",
+    "shell": "nu",
+    "env": {
+      "APP_URL": {
+        "peer": "caddy",
+        "port": "door",
+        "part": "addr",
+        "host": "localhost",
+        "prefix": "https://",
+        "suffix": ""
+      },
+      "DATABASE_URL": [
+        "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@",
+        {
+          "peer": "database",
+          "port": "pg",
+          "part": "addr",
+          "prefix": "",
+          "suffix": ""
+        },
+        "/${POSTGRES_DB:-golaberto}"
+      ],
+      "DOOR": {
+        "peer": "caddy",
+        "port": "http",
+        "part": "addr",
+        "prefix": "http://",
+        "suffix": ""
+      },
+      "ORIGIN": [
+        "${ORIGIN:-https://",
+        {
+          "peer": "caddy",
+          "port": "door",
+          "part": "addr",
+          "host": "localhost",
+          "prefix": "",
+          "suffix": ""
+        },
+        "}"
+      ],
+      "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}",
+      "SETTLE_TIMEOUT_MS": "50000"
+    },
+    "after": {
+      "launch": "healthy"
+    },
+    "host": true
+  },
+  "name": "check-statistics-live",
+  "process-compose": {
+    "activate": "mise x --"
+  },
+  "project": "golaberto",
+  "dir": ".",
+  "activate": "mise x --",
+  "srcs": {
+    "globs": [
+      "tests/**",
+      "bayt.json"
+    ],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {},
+  "synthetics": {
+    "bayt": {
+      "name": "check-statistics-live_bayt",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.check-statistics-live.yaml",
+          ".bayt/Dockerfile.check-statistics-live",
+          ".bayt/bayt.check-statistics-live.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/compose.check-statistics-live.closure.yaml",
+          ".bayt/process-compose.yaml",
+          ".bayt/compose.*.yaml",
+          ".bayt/Dockerfile.*",
+          ".bayt/bayt.*.json",
+          ".bayt/Taskfile.*.yaml",
+          "monorepo/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml",
+          "compose.networks.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.check-statistics-live.yaml",
+        "./.bayt/compose.browser.yaml",
+        "./.bayt/compose.launch.yaml",
+        "./.bayt/compose.airlock.yaml",
+        "./.bayt/compose.airlock-mesh.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml",
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.build.yaml",
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.conduit.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.generate.yaml",
+        "./.bayt/compose.mesh-events.yaml",
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.rclone-s3.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.render.yaml",
+        "./.bayt/compose.served.yaml",
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.sofascore.yaml",
+        "./.bayt/compose.ticker.yaml",
+        "./.bayt/compose.timer-check.yaml",
+        "./.bayt/compose.transform.yaml"
+      ]
+    },
+    "outs": {
+      "name": "check-statistics-live_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.check-statistics-live.yaml",
+        "./.bayt/compose.browser.yaml",
+        "./.bayt/compose.launch.yaml",
+        "./.bayt/compose.airlock.yaml",
+        "./.bayt/compose.airlock-mesh.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml",
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.build.yaml",
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.conduit.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.generate.yaml",
+        "./.bayt/compose.mesh-events.yaml",
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.rclone-s3.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.render.yaml",
+        "./.bayt/compose.served.yaml",
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.sofascore.yaml",
+        "./.bayt/compose.ticker.yaml",
+        "./.bayt/compose.timer-check.yaml",
+        "./.bayt/compose.transform.yaml"
+      ]
+    },
+    "srcs": {
+      "name": "check-statistics-live_srcs",
+      "project": "golaberto",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          "tests/**",
+          "bayt.json",
+          "[m]ise.toml",
+          "[.]mise.toml",
+          "[m]ise.lock",
+          "[.]tool-versions",
+          "[m]ise.local.toml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [
+        "browser_srcs"
+      ],
+      "transitiveCrossDeps": [
+        {
+          "project": "golaberto",
+          "name": "browser_srcs",
+          "dir": ".",
+          "outs": {
+            "globs": [
+              "[m]ise.toml",
+              "[.]mise.toml",
+              "[m]ise.lock",
+              "[.]tool-versions",
+              "[m]ise.local.toml"
+            ],
+            "exclude": []
+          }
+        }
+      ],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.check-statistics-live.yaml",
+        "./.bayt/compose.browser.yaml",
+        "./.bayt/compose.launch.yaml",
+        "./.bayt/compose.airlock.yaml",
+        "./.bayt/compose.airlock-mesh.yaml",
+        "./.bayt/compose.airlock-upgrade.yaml",
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.build.yaml",
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.clock.yaml",
+        "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.conduit.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.generate.yaml",
+        "./.bayt/compose.mesh-events.yaml",
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.rclone-s3.yaml",
+        "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.render.yaml",
+        "./.bayt/compose.served.yaml",
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.sofascore.yaml",
+        "./.bayt/compose.ticker.yaml",
+        "./.bayt/compose.timer-check.yaml",
+        "./.bayt/compose.transform.yaml"
+      ]
+    }
+  },
+  "visibility": "internal",
+  "emitsSrcs": true,
+  "deps": [
+    "browser",
+    "launch_outs"
+  ],
+  "sameProjectDeps": [
+    "browser",
+    "launch_outs"
+  ],
+  "transitiveDeps": [
+    "browser",
+    "launch_outs"
+  ],
+  "transitiveCrossDeps": [],
+  "upClosure": [
+    "./.bayt/compose.check-statistics-live.yaml",
+    "./.bayt/compose.browser.yaml",
+    "./.bayt/compose.launch.yaml",
+    "./.bayt/compose.airlock.yaml",
+    "./.bayt/compose.airlock-mesh.yaml",
+    "./.bayt/compose.airlock-upgrade.yaml",
+    "./.bayt/compose.auth.yaml",
+    "./.bayt/compose.build.yaml",
+    "./.bayt/compose.caddy.yaml",
+    "./.bayt/compose.clock.yaml",
+    "./.bayt/compose.compute.yaml",
+    "./.bayt/compose.conduit.yaml",
+    "./.bayt/compose.crud.yaml",
+    "./.bayt/compose.database.yaml",
+    "./.bayt/compose.electric.yaml",
+    "./.bayt/compose.generate.yaml",
+    "./.bayt/compose.mesh-events.yaml",
+    "./.bayt/compose.migrate.yaml",
+    "./.bayt/compose.rclone-s3.yaml",
+    "./.bayt/compose.redis.yaml",
+    "./.bayt/compose.render.yaml",
+    "./.bayt/compose.served.yaml",
+    "./.bayt/compose.setup.yaml",
+    "./.bayt/compose.sofascore.yaml",
+    "./.bayt/compose.ticker.yaml",
+    "./.bayt/compose.timer-check.yaml",
+    "./.bayt/compose.transform.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "browser",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "launch_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

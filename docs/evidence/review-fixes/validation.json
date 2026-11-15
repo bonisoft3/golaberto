@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-24T09:11:57.276583+00:00",
+  "base": "8cf4dd033",
+  "branch": "feat/duckstream-cortex-pr",
+  "app": "golaberto",
+  "gates": [
+    {
+      "command": "just sayt -d apps/golaberto generate",
+      "exit": 0
+    },
+    {
+      "command": "just sayt -d apps/golaberto lint",
+      "exit": 0
+    },
+    {
+      "command": "just sayt -d apps/golaberto test",
+      "exit": 0
+    },
+    {
+      "command": "just sayt -d apps/golaberto integrate",
+      "exit": 0,
+      "targets": [
+        "replay",
+        "visual",
+        "acceptance",
+        "constraints",
+        "statistics-live"
+      ]
+    },
+    {
+      "check": "Final Cloudflare publish over retained data",
+      "exit": 0,
+      "reset": false
+    },
+    {
+      "check": "Final deployed browser",
+      "exit": 0,
+      "report": "portable-result.json"
+    }
+  ],
+  "sharedValidation": "../../../../plausible/docs/evidence/review-fixes/validation.json",
+  "review": "Claude Opus 5.5/high, two follow-up rounds; confirmed findings fixed with focused regressions and final lead review, no third external review round.",
+  "observedCorrections": [
+    "The first native visual run timed out opening /novo-jogador. The isolated final run passed visual and all remaining native targets.",
+    "A CUE dependency cycle exposed by real Gol generation was fixed and covered by a compiler regression; generation and lint passed."
+  ],
+  "limits": [
+    "Cloudflare snapshot work; capture and publication serialize at the database, query/WASM execution runs separately.",
+    "Native CDC is per table; no database-wide transaction cut.",
+    "Paid Cloudflare tested, Free and full archive capacity unverified.",
+    "Kubernetes/GKE manifests and upgrade commands tested, no cluster deployment; native Windows remains unverified."
+  ]
+}

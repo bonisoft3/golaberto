@@ -1,0 +1,258 @@
+{
+  "captured_at": "2026-10-28T01:58:26.403138+00:00",
+  "resources_corrected": 5,
+  "actual_verification_requests": 6,
+  "responses_staged_without_refetch": 5,
+  "repairs": [
+    {
+      "before": {
+        "id": "4897b439-555a-4edd-939a-82b6f50a186a",
+        "body": null,
+        "etag": null,
+        "meta": {
+          "page": 0,
+          "round": {
+            "name": "Semifinals",
+            "slug": "semifinals",
+            "round": 28
+          }
+        },
+        "path": "unique-tournament/373/season/89353/events/round/28/semifinals",
+        "family": "round",
+        "failures": 1,
+        "priority": 0,
+        "season_id": 89353,
+        "source_id": "ec127c8c-d9fc-54b3-8213-daab6fe57388",
+        "generation": 2,
+        "last_error": "HTTP 404",
+        "cache_until": null,
+        "next_due_at": "2026-10-28T01:49:06.629099+00:00",
+        "resource_key": "unique-tournament/373/season/89353/events/round/28/semifinals",
+        "last_modified": null,
+        "semantic_hash": null,
+        "last_change_at": null,
+        "last_success_at": null,
+        "unique_tournament_id": 373
+      },
+      "path": "unique-tournament/373/season/89353/events/round/28/slug/semifinals",
+      "active_before": [
+        {
+          "id": "dda459b5-7a37-42cb-b299-cedf0bb14848",
+          "body": null,
+          "error": null,
+          "state": "queued",
+          "token": "6f4bb448-0cae-4e7b-a803-39fbde0597ac",
+          "status": null,
+          "headers": {},
+          "requests": 0,
+          "created_at": "2026-10-28T01:49:16.396731+00:00",
+          "elapsed_ms": null,
+          "generation": 2,
+          "lease_until": null,
+          "resource_id": "4897b439-555a-4edd-939a-82b6f50a186a",
+          "completed_at": null
+        }
+      ]
+    },
+    {
+      "before": {
+        "id": "54139ef4-3857-4ae6-a08d-594831810d27",
+        "body": null,
+        "etag": null,
+        "meta": {
+          "page": 0,
+          "round": {
+            "name": "Semifinals",
+            "slug": "semifinals",
+            "round": 28
+          }
+        },
+        "path": "unique-tournament/384/season/87760/events/round/28/semifinals",
+        "family": "round",
+        "failures": 2,
+        "priority": 0,
+        "season_id": 87760,
+        "source_id": "8d44c61c-6628-5756-93c8-38b4d37eaead",
+        "generation": 3,
+        "last_error": "HTTP 404",
+        "cache_until": null,
+        "next_due_at": "2026-10-28T01:50:04.843124+00:00",
+        "resource_key": "unique-tournament/384/season/87760/events/round/28/semifinals",
+        "last_modified": null,
+        "semantic_hash": null,
+        "last_change_at": null,
+        "last_success_at": null,
+        "unique_tournament_id": 384
+      },
+      "path": "unique-tournament/384/season/87760/events/round/28/slug/semifinals",
+      "active_before": [
+        {
+          "id": "9b751f3c-29a5-40af-a18e-acbaf2cb7039",
+          "body": null,
+          "error": null,
+          "state": "queued",
+          "token": "a8ed1dcf-470e-41e8-a8b5-51c96c127613",
+          "status": null,
+          "headers": {},
+          "requests": 0,
+          "created_at": "2026-10-28T01:50:15.47749+00:00",
+          "elapsed_ms": null,
+          "generation": 3,
+          "lease_until": null,
+          "resource_id": "54139ef4-3857-4ae6-a08d-594831810d27",
+          "completed_at": null
+        }
+      ]
+    },
+    {
+      "before": {
+        "id": "72ed0931-49f7-4dbb-9c06-27a2f679f72d",
+        "body": null,
+        "etag": null,
+        "meta": {
+          "page": 0,
+          "round": {
+            "name": "Semifinals",
+            "slug": "semifinals",
+            "round": 28
+          }
+        },
+        "path": "unique-tournament/480/season/87770/events/round/28/semifinals",
+        "family": "round",
+        "failures": 2,
+        "priority": 0,
+        "season_id": 87770,
+        "source_id": "3425bdb5-84b5-5e74-a631-605ddf1ecac4",
+        "generation": 3,
+        "last_error": "HTTP 404",
+        "cache_until": null,
+        "next_due_at": "2026-10-28T01:50:07.402903+00:00",
+        "resource_key": "unique-tournament/480/season/87770/events/round/28/semifinals",
+        "last_modified": null,
+        "semantic_hash": null,
+        "last_change_at": null,
+        "last_success_at": null,
+        "unique_tournament_id": 480
+      },
+      "path": "unique-tournament/480/season/87770/events/round/28/slug/semifinals",
+      "active_before": [
+        {
+          "id": "219b598c-0c2c-4a39-af19-33ae5cb21ee9",
+          "body": null,
+          "error": null,
+          "state": "queued",
+          "token": "c135035a-1ef8-4a76-a8b3-ebf7652cde5b",
+          "status": null,
+          "headers": {},
+          "requests": 0,
+          "created_at": "2026-10-28T01:50:15.477662+00:00",
+          "elapsed_ms": null,
+          "generation": 3,
+          "lease_until": null,
+          "resource_id": "72ed0931-49f7-4dbb-9c06-27a2f679f72d",
+          "completed_at": null
+        }
+      ]
+    },
+    {
+      "before": {
+        "id": "bb184261-2e0a-4098-b631-b007ed57db9e",
+        "body": null,
+        "etag": null,
+        "meta": {
+          "page": 0,
+          "round": {
+            "name": "Final",
+            "slug": "final",
+            "round": 29
+          }
+        },
+        "path": "unique-tournament/384/season/87760/events/round/29/final",
+        "family": "round",
+        "failures": 2,
+        "priority": 0,
+        "season_id": 87760,
+        "source_id": "8d44c61c-6628-5756-93c8-38b4d37eaead",
+        "generation": 3,
+        "last_error": "HTTP 404",
+        "cache_until": null,
+        "next_due_at": "2026-10-28T01:50:04.181178+00:00",
+        "resource_key": "unique-tournament/384/season/87760/events/round/29/final",
+        "last_modified": null,
+        "semantic_hash": null,
+        "last_change_at": null,
+        "last_success_at": null,
+        "unique_tournament_id": 384
+      },
+      "path": "unique-tournament/384/season/87760/events/round/29/slug/final",
+      "active_before": [
+        {
+          "id": "9135bc49-dd81-4978-8176-a46143feae3e",
+          "body": null,
+          "error": null,
+          "state": "queued",
+          "token": "62e569be-99cc-44f8-9a4d-1fff00943dcb",
+          "status": null,
+          "headers": {},
+          "requests": 0,
+          "created_at": "2026-10-28T01:50:15.474829+00:00",
+          "elapsed_ms": null,
+          "generation": 3,
+          "lease_until": null,
+          "resource_id": "bb184261-2e0a-4098-b631-b007ed57db9e",
+          "completed_at": null
+        }
+      ]
+    },
+    {
+      "before": {
+        "id": "cd010710-87cd-40f0-af89-908841612e34",
+        "body": null,
+        "etag": null,
+        "meta": {
+          "page": 0,
+          "round": {
+            "name": "Final",
+            "slug": "final",
+            "round": 29
+          }
+        },
+        "path": "unique-tournament/480/season/87770/events/round/29/final",
+        "family": "round",
+        "failures": 2,
+        "priority": 0,
+        "season_id": 87770,
+        "source_id": "3425bdb5-84b5-5e74-a631-605ddf1ecac4",
+        "generation": 3,
+        "last_error": "HTTP 404",
+        "cache_until": null,
+        "next_due_at": "2026-10-28T01:50:07.972717+00:00",
+        "resource_key": "unique-tournament/480/season/87770/events/round/29/final",
+        "last_modified": null,
+        "semantic_hash": null,
+        "last_change_at": null,
+        "last_success_at": null,
+        "unique_tournament_id": 480
+      },
+      "path": "unique-tournament/480/season/87770/events/round/29/slug/final",
+      "active_before": [
+        {
+          "id": "e427644e-3fe9-40c9-ab41-f77ea356ddf4",
+          "body": null,
+          "error": null,
+          "state": "queued",
+          "token": "76185030-cdc7-42b7-b72d-9b384dfe68e5",
+          "status": null,
+          "headers": {},
+          "requests": 0,
+          "created_at": "2026-10-28T01:50:15.477778+00:00",
+          "elapsed_ms": null,
+          "generation": 3,
+          "lease_until": null,
+          "resource_id": "cd010710-87cd-40f0-af89-908841612e34",
+          "completed_at": null
+        }
+      ]
+    }
+  ]
+}

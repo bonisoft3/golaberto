@@ -1,0 +1,56 @@
+{
+  "runtime_tests": {
+    "native_cdc": 2,
+    "partition_runtime": 9,
+    "coordinator": 15,
+    "delta_and_publication": 21,
+    "source_projections": 8,
+    "consistent_native_capture": 1
+  },
+  "application_oracles": {
+    "golaberto_queries": 7,
+    "golaberto_postgres_projection_equivalence": 1,
+    "plausible_queries_and_partition_finish": 18
+  },
+  "passed": [
+    "Golaberto doctor/generate/build/lint",
+    "Plausible doctor/generate/lint",
+    "Mecha doctor/generate",
+    "Golaberto integration replay",
+    "Golaberto integration visual",
+    "Golaberto live browser with score restoration",
+    "Golaberto unchanged restart with row-version fingerprints",
+    "final Deno check and lint",
+    "Golaberto full acceptance and constraints targets",
+    "Golaberto standalone live-statistics target after convergence-readiness correction",
+    "Plausible build and complete integration: appearance/live replay, replay, visual",
+    "Native single-query capture across heterogeneous outputs during 12,288 row updates",
+    "Plausible live replay: 1,200 events, two unchanged documents, oracle and authorization checks",
+    "Both local application stacks restored"
+  ],
+  "blocked": [],
+  "review": "Astra/high backend review: no actionable findings in single-query capture or eventual-result acceptance. Lead simplification pass retained the bounded query helper and shared normalization.",
+  "resolved_findings": [
+    "Pausing Feldera does not drain buffered steps; all pending relations and validations now share one query snapshot.",
+    "Fresh-start odds tests must await downstream ratings convergence, including the standalone live edit/undo test.",
+    "Unowned manual sink rows are outside the ownership-repair contract; runtime regression now matches that contract."
+  ],
+  "live_browser": {
+    "golaberto_elapsed_ms": 19154,
+    "golaberto_same_document": true,
+    "plausible_events": 1200,
+    "plausible_documents_per_tab": 1,
+    "page_errors": 0
+  },
+  "unchanged_restart": {
+    "elapsed_ms": 58054,
+    "affected_partitions": 0,
+    "delta_rows": 0,
+    "checked_sink_row_versions_unchanged": true
+  },
+  "gate_history": [
+    "The combined Golaberto command passed replay, visual, acceptance and constraints; its standalone live-statistics target failed the old undo baseline assertion.",
+    "After correcting that baseline readiness, the standalone ci-statistics-live rerun exited 0.",
+    "Plausible complete Sayt integrate exited 0."
+  ]
+}

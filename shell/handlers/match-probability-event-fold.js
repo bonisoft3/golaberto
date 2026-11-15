@@ -1,12 +1,12 @@
-(state) => {
-  const view = state.rows.view?.[0];
+({ context }) => {
+  const view = context.rows.view?.[0];
   if (!view) return { updates: [] };
-  if (state.items.length > 20) {
+  if (context.items.length > 20) {
     throw new RangeError(
       "A match probability scenario cannot exceed 20 events",
     );
   }
-  const events = state.items.map((row) => {
+  const events = context.items.map((row) => {
     if (
       typeof row.id !== "string" || !Number.isInteger(row.sequence) ||
       row.sequence < 1 || (row.kind !== "goal" && row.kind !== "red_card") ||

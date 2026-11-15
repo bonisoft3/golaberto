@@ -3,17 +3,31 @@ FROM libraries_mecha-compute-image AS compute
 ARG BAYT_DIR
 WORKDIR /monorepo/${BAYT_DIR}
 COPY --chmod=755 --from=tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa /bin/portcheck /usr/local/bin/portcheck
+COPY computations/standings.js /app/computations/golaberto-standings.js
 COPY computations/ratings.js /app/computations/golaberto-ratings.js
 COPY computations/chances.js /app/computations/golaberto-chances.js
+COPY computations/cards.js /app/computations/golaberto-game-cards.js
+COPY computations/player_stats.js /app/computations/golaberto-player-stats.js
 COPY computations/golaberto-odds.wasm /app/computations/golaberto-odds.wasm
-COPY --parents computations/ratings.js computations/chances.js computations/golaberto-odds.wasm ./
-COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.compute.json ./.bayt/
+COPY duckstream/standings.feldera.json /app/computations/golaberto-standings.feldera.json
+COPY duckstream/ratings.feldera.json /app/computations/golaberto-ratings.feldera.json
+COPY duckstream/chances.feldera.json /app/computations/golaberto-chances.feldera.json
+COPY duckstream/cards.feldera.json /app/computations/golaberto-game-cards.feldera.json
+COPY duckstream/player_stats.feldera.json /app/computations/golaberto-player-stats.feldera.json
+COPY duckstream/bounded-standings.ts.bundle.js /app/computations/golaberto-standings.steps.bundle.js
+COPY duckstream/bounded-ratings.ts.bundle.js /app/computations/golaberto-ratings.steps.bundle.js
+COPY duckstream/bounded-chances.ts.bundle.js /app/computations/golaberto-chances.steps.bundle.js
+COPY duckstream/bounded-cards.ts.bundle.js /app/computations/golaberto-game-cards.steps.bundle.js
+COPY duckstream/bounded-player-stats.ts.bundle.js /app/computations/golaberto-player-stats.steps.bundle.js
+COPY --parents computations/standings.js computations/ratings.js computations/chances.js computations/cards.js computations/player_stats.js computations/golaberto-odds.wasm duckstream/standings.feldera.json duckstream/ratings.feldera.json duckstream/chances.feldera.json duckstream/cards.feldera.json duckstream/player_stats.feldera.json duckstream/bounded-standings.ts.bundle.js duckstream/bounded-ratings.ts.bundle.js duckstream/bounded-chances.ts.bundle.js duckstream/bounded-cards.ts.bundle.js duckstream/bounded-player-stats.ts.bundle.js ./
+COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/Taskfile.compute.yaml .bayt/bayt.compute.json ./.bayt/
+EXPOSE 9997
 HEALTHCHECK --interval=5s --timeout=5s --retries=30 --start-period=15m CMD ["portcheck","--port","9997"]
 
 FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS compute_ctxs
 ARG BAYT_DIR
 WORKDIR /monorepo/${BAYT_DIR}
-COPY --parents computations/ratings.js computations/chances.js computations/golaberto-odds.wasm ./
+COPY --parents computations/standings.js computations/ratings.js computations/chances.js computations/cards.js computations/player_stats.js computations/golaberto-odds.wasm duckstream/standings.feldera.json duckstream/ratings.feldera.json duckstream/chances.feldera.json duckstream/cards.feldera.json duckstream/player_stats.feldera.json duckstream/bounded-standings.ts.bundle.js duckstream/bounded-ratings.ts.bundle.js duckstream/bounded-chances.ts.bundle.js duckstream/bounded-cards.ts.bundle.js duckstream/bounded-player-stats.ts.bundle.js ./
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
 RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
@@ -23,11 +37,13 @@ COPY --from=compute_ctxs /monorepo /monorepo
 FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS compute_bayt_ctxs
 ARG BAYT_DIR
 WORKDIR /monorepo/${BAYT_DIR}
-COPY --parents .bayt/compose.compute.yaml .bayt/Dockerfile.compute .bayt/bayt.compute.json .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/process-compose.yaml ./
+COPY --parents .bayt/compose.compute.yaml .bayt/Dockerfile.compute .bayt/bayt.compute.json .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/Taskfile.compute.yaml .bayt/process-compose.yaml ./
 COPY --from=golaberto-crud_bayt /monorepo /monorepo
 COPY --from=golaberto-conduit_bayt /monorepo /monorepo
 COPY --from=golaberto-database_bayt /monorepo /monorepo
 COPY --from=golaberto-migrate_bayt /monorepo /monorepo
+COPY --from=golaberto-airlock-upgrade_bayt /monorepo /monorepo
+COPY --from=golaberto-timer-check_bayt /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
 RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi

@@ -1,7 +1,5 @@
 package golaberto
 
-import "strings"
-
 code: state: entities: {
 	EditingChoice: {
 		id: "0xbec870d131152065"
@@ -33,7 +31,7 @@ code: surface: screens: {
 	for screenRoute, screenMarkup in _editingMarkups {
 		(screenRoute): {
 			title:  screenRoute
-			route:  "/\(screenRoute)\([if strings.HasPrefix(screenRoute, "editar-") || screenRoute == "gols-jogo" || screenRoute == "escalacao-jogo" || screenRoute == "inscricoes-jogador" {"/:slug"}, ""][0])"
+
 			strip:  false
 			keep:   0
 			markup: screenMarkup

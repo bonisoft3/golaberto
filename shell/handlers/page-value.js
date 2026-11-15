@@ -1,5 +1,5 @@
-(state, _event, params) => {
-  const row = state.items[0];
+({ context }, params) => {
+  const row = context.items[0];
   const page = Math.max(1, row.page + params.step / 40);
   const origin = row.page_origin ?? 0;
   const originPage = Math.ceil(origin / 40) + 1;

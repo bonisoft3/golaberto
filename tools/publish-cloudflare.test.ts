@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict'
 import * as path from 'node:path'
-import { prepareRelease, requireExistingSecret, runtimeRoot, writeEdgeSsr } from './publish-cloudflare.ts'
+import { writeEdgeSsr } from '@bonisoft3/pronto/bundle/edge-ssr.ts'
+import { prepareRelease, publishOptions, runtimeRoot } from './publish-cloudflare.ts'
 
-Deno.test('Golaberto publishing preserves its migration history and both deployment policies', async () => {
+Deno.test('Golaberto publishing preserves shared rendering and hosted JWT policy', async () => {
   const root = await Deno.makeTempDir()
   const out = path.join(root, 'cloudflare')
   try {
@@ -16,37 +17,51 @@ Deno.test('Golaberto publishing preserves its migration history and both deploym
     }))
     await writeEdgeSsr(out, await runtimeRoot('omnishell'), await runtimeRoot('mecha'), 'golaberto', 'https://golaberto.bonisoft3.com', [], 'existing', 'disabled')
     const entry = path.join(out, 'src/index.ts')
-    const configPath = path.join(out, 'wrangler.jsonc')
-    const fresh = await Deno.readTextFile(configPath)
-    const changed = JSON.parse(fresh)
-    changed.migrations.push({ tag: 'v2-unexpected', new_sqlite_classes: ['Another'] })
-    await Deno.writeTextFile(configPath, JSON.stringify(changed))
     const original = await Deno.readTextFile(entry)
-    await assert.rejects(() => prepareRelease(out), /Cloudflare migration history changed/)
-    assert.equal(await Deno.readTextFile(entry), original)
-    await Deno.writeTextFile(configPath, fresh)
-    await assert.rejects(() => requireExistingSecret(out, {}), /existing production JWT secret/)
-    await requireExistingSecret(out, { CI: 'true' })
-    await requireExistingSecret(out, { JWT_SECRET: 'existing-secret' })
-    const secret = path.join(root, '.jwt-secret')
-    await Deno.writeTextFile(secret, '   ')
-    await assert.rejects(() => requireExistingSecret(out, {}), /existing production JWT secret/)
-    await Deno.writeTextFile(secret, 'existing-secret')
-    await requireExistingSecret(out, {})
     await prepareRelease(out)
-    const config = JSON.parse(await Deno.readTextFile(path.join(out, 'wrangler.jsonc')))
-    assert.deepEqual(config.migrations, [
-      { tag: 'v1', new_sqlite_classes: ['Cluster'] },
-      { tag: 'v2-compute-coordinator', new_sqlite_classes: ['ComputeCoordinator'] },
-      { tag: 'v3-drop-compute-coordinator', deleted_classes: ['ComputeCoordinator'] },
-    ])
+    const prepared = JSON.parse(await Deno.readTextFile(path.join(out, 'wrangler.jsonc')))
+    assert.equal(prepared.limits.cpu_ms, 300_000)
+    assert.match(await Deno.readTextFile(path.join(out, 'src/database.ts')), /storageFormat: \{ version: 1, blockSize: 8192, codec: 'deflate' \}/)
+    assert.deepEqual(prepared.routes, [{ pattern: 'golaberto.bonisoft3.com', custom_domain: true }])
     const source = await Deno.readTextFile(entry)
-    assert.match(source, /export \{ Cluster \} from '\.\/combined-database\.ts'/)
-    assert.match(source, /purpose'\) === 'prefetch'\) return new Response\(null, \{ status: 204/)
-    assert.equal(await Deno.readTextFile(secret), 'existing-secret')
-    await assert.rejects(() => prepareRelease(out), /Cloudflare migration history changed/)
+    assert.match(source, /export \{ Cluster \} from '\.\/database\.ts'/)
+    assert.ok(prepared.durable_objects.bindings.find((binding: { name: string; script_name?: string }) => binding.name === 'RENDERER')?.script_name)
+    await assert.rejects(() => Deno.stat(path.join(out, 'src/combined-database.ts')), Deno.errors.NotFound)
+    assert.equal(source, original)
+    await assert.rejects(() => Deno.stat(path.join(root, '.jwt-secret')), Deno.errors.NotFound)
+    await assert.rejects(() => prepareRelease(out), /Cloudflare database entry changed/)
     assert.equal(await Deno.readTextFile(entry), source)
   } finally {
     await Deno.remove(root, { recursive: true })
+  }
+})
+
+Deno.test('Golaberto JWT retention is an explicit independent publishing option', () => {
+  assert.deepEqual(publishOptions(['release']), { directory: 'release', prepareOnly: false, keepJwtSecret: false, reset: false })
+  assert.deepEqual(publishOptions(['release', '--keep-jwt-secret']), { directory: 'release', prepareOnly: false, keepJwtSecret: true, reset: false })
+  assert.deepEqual(publishOptions(['release', '--prepare-only', '--keep-jwt-secret']), { directory: 'release', prepareOnly: true, keepJwtSecret: true, reset: false })
+  assert.deepEqual(publishOptions(['release', '--keep-jwt-secret', '--prepare-only']), { directory: 'release', prepareOnly: true, keepJwtSecret: true, reset: false })
+  for (const flags of [['--temporary'], ['--keep-jwt-secret', '--keep-jwt-secret']]) {
+    assert.throws(() => publishOptions(['release', ...flags]), /publish-cloudflare.ts/)
+  }
+})
+
+Deno.test('Golaberto reset explicitly replaces the database and refuses JWT retention', () => {
+  assert.deepEqual(publishOptions(['release', '--reset']), { directory: 'release', prepareOnly: false, keepJwtSecret: false, reset: true })
+  assert.throws(() => publishOptions(['release', '--reset', '--keep-jwt-secret']), /cannot be combined/)
+})
+
+Deno.test('generated Cloudflare releases prepare archive storage before shared publication', async () => {
+  const recipe = await Deno.readTextFile(new URL('../.say.yaml', import.meta.url))
+  const release = recipe.split('\n  release:\n')[1]?.split(/\n  [\w-]+:\n/)[0]
+  assert.ok(release, 'generated recipe must declare releases')
+  const prepare = release.indexOf('tools/publish-cloudflare.ts dist/cloudflare --prepare-only')
+  const publish = release.indexOf('bundle publish-edge.ts) dist/cloudflare')
+  assert.ok(prepare >= 0, 'automatic releases must apply archive storage and CPU policy')
+  assert.ok(publish > prepare, 'the shared publisher must receive the prepared artifact')
+  assert.match(release.slice(prepare, publish + 400), /SAY_RELEASE_ARGS_RESET/)
+  for (const target of ['gcp', 'k8s']) {
+    assert.ok(release.includes(`      ${target}:\n        platform: ${target}\n        cmds:`), `${target} release rule must survive the Cloudflare override`)
+    assert.ok(release.includes(`($pronto | path join ${target} release.nu)`), `${target} release must retain its shared publisher`)
   }
 })

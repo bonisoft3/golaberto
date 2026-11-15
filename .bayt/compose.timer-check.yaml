@@ -7,7 +7,7 @@ services:
         golaberto-migrate: service:golaberto-migrate
         golaberto-airlock-upgrade: service:golaberto-airlock-upgrade
         libraries_mecha-database-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.23.2@sha256:5aee8c679499d38cef17453a2701beb2e5cfea144873fd72a59b126208abb6ee}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.23.3@sha256:65844a96f2e4e699504198d7d7470d86e14588731cff600447c7ed5570877d39}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}
       context: ..
       dockerfile: .bayt/Dockerfile.timer-check
       target: timer-check

@@ -5,7 +5,7 @@ services:
       additional_contexts:
         golaberto-crud: service:golaberto-crud
         libraries_mecha-ticker-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-ticker:0.23.3@sha256:a53329d93da4b2d734d2ff686c98c62ba3c47ffd6fea144defda61f144dd59d2}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-ticker:0.24.0@sha256:c377d3062f0159eed1a414a2a81f4377cbee95bed9889a4300d48fdca6607e4e}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image}
       context: ..
       dockerfile: .bayt/Dockerfile.ticker
       target: ticker

@@ -387,7 +387,7 @@
     {"path":"shell/shared/team.css","token":"--hex-dim"}
   ],
   "artifact": [
-    {"path":"program.cue","sha256":"77ed40ec113fb1a7f56cd0489db241ff2a30de7cce6a674c0df7a7360840763b","derived":false},
+    {"path":"program.cue","sha256":"9abb7546f4dde343f99135b3c21124f580a95297dff50895207cd95ff412a3cb","derived":false},
     {"path":"DESIGN.md","sha256":"a22520345b96d451041013f16acc5a06c4647a6c5cfe7cb6c410f3bfef7de417","derived":false},
     {"path":"ir.html","sha256":"143d0aa9a9a3dc5219e82c16fc9236647183175b617ac8a0d3cf3d145958e397","derived":false},
     {"path":"acceptance.md","sha256":"0c15c848d833f862f25868012beccf12a1a63be56dbd48e4557251c18c7861c4","derived":false},

@@ -145,12 +145,11 @@ code: state: mecha: rows: SofaRequestMachine: {
 }
 // The local stack answers SofaScore from a simulated league and the
 // end-to-end test's scripted cases; the docker appliance runs the transport
-// itself, and Cloudflare runs it on Cloudflare Containers, owned by the
-// airlock's dispatcher (pronto's container-bridges.md#Targets).
+// itself.
 code: state: bridges: sofascore: {
 	container: "sofascore"
 	port:      8080
-	targets: ["docker", "cloudflare"]
+	targets: ["docker"]
 	appliance: {
 		srcs: ["/usr/local/bin/sofascore_fetch"]
 		command: ["/usr/local/bin/sofascore_fetch", "--listen", "127.0.0.1:8081"]
@@ -216,5 +215,5 @@ cluster: surface: targets: sofascore: {
 	compose: restart: "unless-stopped"
 }
 // Every target runs the ticker over the reducers' deadlines and the
-// admission drain (clock.ts on the edge, services/ticker in containers).
-code: meta: clocks: ["cloudflare", "docker", "k8s", "gcp"]
+// admission drain.
+code: meta: clocks: ["docker", "k8s", "gcp"]

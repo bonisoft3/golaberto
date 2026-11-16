@@ -6,8 +6,7 @@
       "container": "sofascore",
       "port": 8080,
       "targets": [
-        "docker",
-        "cloudflare"
+        "docker"
       ],
       "build": "sofascore-appliance"
     }

@@ -51,17 +51,13 @@ Deno.test('Golaberto reset explicitly replaces the database and refuses JWT rete
   assert.throws(() => publishOptions(['release', '--reset', '--keep-jwt-secret']), /cannot be combined/)
 })
 
-Deno.test('generated Cloudflare releases prepare archive storage before shared publication', async () => {
+Deno.test('generated releases omit automatic Cloudflare publication and retain container targets', async () => {
   const recipe = await Deno.readTextFile(new URL('../.say.yaml', import.meta.url))
   const release = recipe.split('\n  release:\n')[1]?.split(/\n  [\w-]+:\n/)[0]
   assert.ok(release, 'generated recipe must declare releases')
-  const prepare = release.indexOf('tools/publish-cloudflare.ts dist/cloudflare --prepare-only')
-  const publish = release.indexOf('bundle publish-edge.ts) dist/cloudflare')
-  assert.ok(prepare >= 0, 'automatic releases must apply archive storage and CPU policy')
-  assert.ok(publish > prepare, 'the shared publisher must receive the prepared artifact')
-  assert.match(release.slice(prepare, publish + 400), /SAY_RELEASE_ARGS_RESET/)
+  assert.equal(release.includes('      cloudflare:\n'), false, 'Cloudflare release target must be absent while production runs on the GCP VM')
   for (const target of ['gcp', 'k8s']) {
-    assert.ok(release.includes(`      ${target}:\n        platform: ${target}\n        cmds:`), `${target} release rule must survive the Cloudflare override`)
+    assert.ok(release.includes(`      ${target}:\n        platform: ${target}\n        cmds:`), `${target} release rule must be emitted`)
     assert.ok(release.includes(`($pronto | path join ${target} release.nu)`), `${target} release must retain its shared publisher`)
   }
 })

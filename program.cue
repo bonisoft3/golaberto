@@ -1745,7 +1745,6 @@ code: pronto.#App & {
 	meta: {
 		name:        "golaberto"
 		domain:      "golaberto.bonisoft3.com"
-		ssrOrigin:   "https://\(domain)"
 		description: "O banco de dados aberto do futebol — campeonatos, tabelas, jogos, gols e elencos, mantido pelos seus leitores."
 		favicon:     "/shell/favicon.ico"
 		// A shared championship or match is the app's whole reach: the card
@@ -1769,7 +1768,7 @@ code: pronto.#App & {
 			catalogues: _catalogues
 		}
 		ir: sha256: "25a5a02d5aa396d41d48c7b5489df04383e636934baf919d82853876a5723a32"
-		targets: ["cloudflare", "docker", "k8s", "gcp"]
+		targets: ["docker", "k8s", "gcp"]
 		decisions: {
 			"decision-team-page-split":           {}
 			"decision-favicon":                   {}
@@ -2406,34 +2405,7 @@ cluster: (pronto.#DefaultCluster & {
 }).out & {state: duckstreamEngine: "duckdb-snapshot"}
 _appBoot:     string @embed(file="boot.js", type=text)
 terminal:     (pronto.#DefaultTerminal & {"code": code, boot: _appBoot}).out
-_defaultLoop: (pronto.#DefaultLoop & {"code": code, "cluster": cluster, "terminal": terminal}).out
-loop: {
-	for field, value in _defaultLoop if field != "surface" {(field): value}
-	surface: {
-		for field, value in _defaultLoop.surface if field != "verbs" && field != "sayYaml" {(field): value}
-		sayYaml: {
-			for field, value in _defaultLoop.surface.sayYaml if field != "say" {(field): value}
-			say: {
-				for verb, value in _defaultLoop.surface.sayYaml.say if verb != "release" {(verb): value}
-				release: {
-					for field, value in _defaultLoop.surface.sayYaml.say.release if field != "rulemap" {(field): value}
-					rulemap: {
-						for name, rule in _defaultLoop.surface.sayYaml.say.release.rulemap if name != "cloudflare" {(name): rule}
-					}
-				}
-			}
-		}
-		verbs: {
-			for name, verb in _defaultLoop.surface.verbs if name != "cloudflare" {(name): verb}
-			cloudflare: {
-				for field, value in _defaultLoop.surface.verbs.cloudflare if field != "cmds" {(field): value}
-				cmds: list.Concat([_defaultLoop.surface.verbs.cloudflare.cmds, [
-					"use tools.nu [run-mise]; let pronto = (run-mise where github:bonisoft3/pronto | str trim); run-mise exec -- deno run -A --config ($pronto | path join bundle deno.json) tools/publish-cloudflare.ts dist/cloudflare --prepare-only",
-				]])
-			}
-		}
-	}
-}
+loop: (pronto.#DefaultLoop & {"code": code, "cluster": cluster, "terminal": terminal}).out
 
 build: (pronto.#DefaultBuild & {"code": code, "loop": loop, "cluster": cluster, "terminal": terminal}).out
 

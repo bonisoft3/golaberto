@@ -4,8 +4,7 @@
       "bridge": {
         "name": "sofascore",
         "targets": [
-          "docker",
-          "cloudflare"
+          "docker"
         ],
         "simulated": true
       },

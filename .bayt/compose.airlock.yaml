@@ -9,7 +9,7 @@ services:
         golaberto-airlock-upgrade: service:golaberto-airlock-upgrade
         golaberto-timer-check: service:golaberto-timer-check
         libraries_mecha-airlock-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-airlock:0.25.0@sha256:82dd88d15578025b4c5534309f2b3336a96ba1c0a58de7bb8f27dc90c0d3d310}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-airlock:0.25.1@sha256:c84af38310b9210a13eac8576bf5336104d078f60912cda47a98536af5c2afba}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image}
       context: ..
       dockerfile: .bayt/Dockerfile.airlock
       target: airlock

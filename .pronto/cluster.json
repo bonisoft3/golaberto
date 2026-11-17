@@ -20,7 +20,7 @@
     "target": "database",
     "initdb": "/docker-entrypoint-initdb.d"
   },
-  "database": "bonitao/mecha-database:0.25.0@sha256:d8eb2aa35230b1835ef1da15e45b342d0e49312db85667e69f26e4b0d5d285fb",
+  "database": "bonitao/mecha-database:0.25.1@sha256:0b136a4d23661852800194879ee4dc0dc1580269c2f186dd531db97f03ab931f",
   "server": true,
   "steps": {
     "graphile": "060_graphile_worker.sql",

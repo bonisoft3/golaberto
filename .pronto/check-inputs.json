@@ -14447,11 +14447,11 @@
   },
   "effects": {
     "acquire": {
-      "name": "acquire",
-      "ir": "acquire",
       "key": [
         "id"
       ],
+      "name": "acquire",
+      "ir": "acquire",
       "input": {
         "id": "NEW.id",
         "path": "NEW.path"

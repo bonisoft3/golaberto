@@ -1,0 +1,40 @@
+# generated from bayt.cue — do not edit
+FROM risingwavelabs/risingwave:v3.1.1@sha256:b869358fa704250d25045d3575145ca59cfb67a558a08fa4f8fd375874c24d63 AS risingwave
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY --chmod=755 --from=tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa /bin/portcheck /usr/local/bin/portcheck
+COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.risingwave.json ./.bayt/
+CMD ["single_node"]
+COPY <<'RWCONFIG' /etc/risingwave/risingwave.toml
+[meta]
+min_sst_retention_time_sec = 300
+full_gc_interval_sec = 60
+vacuum_interval_sec = 15
+gc_history_retention_time_sec = 0
+clean_all_foreground_jobs_on_recovery = true
+
+[meta.developer]
+actor_cnt_per_worker_parallelism_soft_limit = 1000
+actor_cnt_per_worker_parallelism_hard_limit = 4000
+
+[streaming]
+in_flight_barrier_nums = 256
+
+[streaming.developer]
+enable_snapshot_backfill = false
+
+[storage]
+shared_buffer_min_batch_flush_size_mb = 32
+RWCONFIG
+ENV RW_SINGLE_NODE_CONFIG_PATH=/etc/risingwave/risingwave.toml
+HEALTHCHECK --interval=1s --timeout=5s --retries=30 --start-period=120s CMD ["portcheck","--port","4566"]
+
+FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS risingwave_bayt_ctxs
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY --parents .bayt/compose.risingwave.yaml .bayt/Dockerfile.risingwave .bayt/bayt.risingwave.json .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/process-compose.yaml ./
+ARG SOURCE_DATE_EPOCH
+ARG BAYT_CLAMP=1
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
+FROM scratch AS risingwave_bayt
+COPY --from=risingwave_bayt_ctxs /monorepo /monorepo

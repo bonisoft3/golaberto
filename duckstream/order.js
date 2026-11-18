@@ -1,4 +1,4 @@
-// Relational outputs are unordered, including native Feldera snapshots. Keep
+// Relational outputs are unordered, including native RisingWave snapshots. Keep
 // the numerical program's original stable archive order for seeded jobs.
 const ordering = {
   standings: {groups: ["id"], members: ["group_id", "team_id"], form: [], zones: ["group_id", "id"]},

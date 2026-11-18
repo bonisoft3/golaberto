@@ -2,7 +2,7 @@ BEGIN;
 SET LOCAL lock_timeout='5s';
 SET LOCAL statement_timeout='1min';
 CREATE TEMP TABLE history(id integer PRIMARY KEY,team_id integer,day date,offense real);
--- Feldera carriers use UTC timestamps without an offset.
+-- Streaming carriers use UTC timestamps without an offset.
 -- squawk-ignore prefer-timestamp-tz
 CREATE TEMP TABLE requests(id integer PRIMARY KEY,team_id integer,moment timestamp);
 CREATE TEMP TABLE retained(LIKE history INCLUDING ALL);

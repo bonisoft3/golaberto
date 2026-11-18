@@ -16,11 +16,11 @@ Deno.test("community profile ownership and history also execute in the standalon
 			await Deno.readTextFile(new URL("shell/shell.json", app)),
 		) as { migrations: string[] };
 		for (
-			// The schema alone: a seed writes rows, the schedule seed into mecha's
-			// table, which this database never places.
-			const migration of shell.migrations.filter((file) =>
-				!file.endsWith("_seed.sql")
-			)
+			// The schema alone, in initdb filename order: a seed writes rows, the
+			// schedule seed into mecha's table, which this database never places.
+			const migration of [...shell.migrations]
+				.filter((file) => !file.endsWith("_seed.sql") && !file.endsWith("/003_rls.sql"))
+				.sort((a, b) => (a.split("/").pop()! < b.split("/").pop()! ? -1 : 1))
 		) {
 			await db.exec(
 				browserTier(await Deno.readTextFile(new URL(migration, app))),

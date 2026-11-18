@@ -6,7 +6,6 @@
     "environment": {
       "CRUD_URL": "http://crud:3000",
       "REDIS_URL": "redis://redis:6379",
-      "COMPUTE_GROUP": "golaberto-compute",
       "SERVICE_JWT": "${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZWNoYTpzdGFjayIsInJvbGUiOiJzZXJ2aWNlIiwic3ViIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiZXhwIjoxOTg4MTUwNDAwfQ.K4ZX9EDs-BwPIh3r_ZOKmO9XfrQrEx18rwlw3siXcxs}"
     },
     "ports": [],
@@ -171,15 +170,13 @@
       "/pipelines/golaberto-team-directory.yaml",
       "/pipelines/golaberto-matches-games.yaml",
       "/pipelines/golaberto-recent-championships.yaml",
-      "/pipelines/golaberto-sofascore-admission.yaml",
-      "/compute-events.yaml"
+      "/pipelines/golaberto-sofascore-admission.yaml"
     ]
   },
   "entrypoint": {
     "do": "let mecha = (if ('services/transform/cdc-trace.yaml' | path exists) { $env.PWD } else { (^mise where github:bonisoft3/mecha | str trim) }); let tdir = (if (($env.MECHA_TRANSFORM_DIR? | default '') != '') { $env.MECHA_TRANSFORM_DIR } else { ($mecha | path join 'services/transform') }); let cdir = (if (($env.COMPUTE_APP_DIR? | default '') != '') { $env.COMPUTE_APP_DIR } else { ($mecha | path join 'services/compute') }); exec redpanda-connect streams --set 'http.enabled=false' --no-api -r ($tdir | path join 'cdc-trace.yaml') 'docker/golaberto-rounds.yaml' 'docker/golaberto-team-enrichment.yaml' 'docker/golaberto-team-profiles.yaml' 'docker/golaberto-team-directory.yaml' 'docker/golaberto-matches-games.yaml' 'docker/golaberto-recent-championships.yaml' 'docker/golaberto-sofascore-admission.yaml' ($cdir | path join 'events.yaml')",
     "shell": "nu",
     "env": {
-      "COMPUTE_GROUP": "golaberto-compute",
       "CRUD_URL": {
         "peer": "crud",
         "port": "http",
@@ -288,6 +285,7 @@
         "./.bayt/compose.database.yaml",
         "./.bayt/compose.mesh-events.yaml",
         "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.risingwave.yaml",
         "./.bayt/compose.served.yaml",
         "./.bayt/compose.timer-check.yaml"
       ]
@@ -327,6 +325,7 @@
         "./.bayt/compose.database.yaml",
         "./.bayt/compose.mesh-events.yaml",
         "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.risingwave.yaml",
         "./.bayt/compose.served.yaml",
         "./.bayt/compose.timer-check.yaml"
       ]
@@ -374,6 +373,7 @@
         "./.bayt/compose.database.yaml",
         "./.bayt/compose.mesh-events.yaml",
         "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.risingwave.yaml",
         "./.bayt/compose.served.yaml",
         "./.bayt/compose.timer-check.yaml"
       ]
@@ -408,6 +408,7 @@
     "./.bayt/compose.database.yaml",
     "./.bayt/compose.mesh-events.yaml",
     "./.bayt/compose.migrate.yaml",
+    "./.bayt/compose.risingwave.yaml",
     "./.bayt/compose.served.yaml",
     "./.bayt/compose.timer-check.yaml"
   ],

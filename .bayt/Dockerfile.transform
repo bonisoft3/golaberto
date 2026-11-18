@@ -11,7 +11,7 @@ COPY docker/golaberto-recent-championships.yaml /pipelines/golaberto-recent-cham
 COPY docker/golaberto-sofascore-admission.yaml /pipelines/golaberto-sofascore-admission.yaml
 COPY --parents docker/golaberto-rounds.yaml docker/golaberto-team-enrichment.yaml docker/golaberto-team-profiles.yaml docker/golaberto-team-directory.yaml docker/golaberto-matches-games.yaml docker/golaberto-recent-championships.yaml docker/golaberto-sofascore-admission.yaml ./
 COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.transform.json ./.bayt/
-CMD ["streams", "--no-api", "-r", "/cdc-trace.yaml", "/pipelines/golaberto-rounds.yaml", "/pipelines/golaberto-team-enrichment.yaml", "/pipelines/golaberto-team-profiles.yaml", "/pipelines/golaberto-team-directory.yaml", "/pipelines/golaberto-matches-games.yaml", "/pipelines/golaberto-recent-championships.yaml", "/pipelines/golaberto-sofascore-admission.yaml", "/compute-events.yaml"]
+CMD ["streams", "--no-api", "-r", "/cdc-trace.yaml", "/pipelines/golaberto-rounds.yaml", "/pipelines/golaberto-team-enrichment.yaml", "/pipelines/golaberto-team-profiles.yaml", "/pipelines/golaberto-team-directory.yaml", "/pipelines/golaberto-matches-games.yaml", "/pipelines/golaberto-recent-championships.yaml", "/pipelines/golaberto-sofascore-admission.yaml"]
 COPY <<'CDCTRACE' /cdc-trace.yaml
 # The change feed's transaction trace, joined onto every row: shared by every
 # stream reading cdc-events through the transform's `-r`, since streams mode

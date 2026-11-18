@@ -1,9 +1,9 @@
 # Statistics
 
 Ratings and chances are declared as Duckstream sources and sinks in
-`program.cue`. Native servers use Feldera; Cloudflare and Pages use DuckDB snapshots. Both
+`program.cue`. Native servers use RisingWave; Cloudflare and Pages use DuckDB snapshots. Both
 execute queries authored in `duckstream/ratings.sql` and
-`duckstream/chances.sql`. The pinned stock Feldera compiler exports Calcite
+`duckstream/chances.sql`. The pinned stock Calcite compiler exports Calcite
 plans; the bounded translator produces the committed DuckDB queries.
 
 ## SQL-only projections
@@ -13,7 +13,7 @@ Game cards, team game lines and player counters use `duckstream/cards.sql` and
 capture as ratings, with no numerical WASM step. DuckDB performs their joins
 and aggregation outside the serving PostgreSQL process; bounded steps page the
 completed relations into staged publication. Native deployments use the same
-Feldera relations. Their retired Conduit pipelines and portable recount drains
+RisingWave relations. Their retired Conduit pipelines and portable recount drains
 are not registered, so each projection has one computation owner.
 
 GameCard and TeamGame publish in one transaction. PlayerStat publishes only its
@@ -31,13 +31,13 @@ check does not establish hosted process or publication capacity.
 
 ## Computation boundary
 
-Feldera maintains joins and aggregates. Source carriers preserve row-local
+RisingWave maintains joins and aggregates. Source carriers preserve row-local
 UTC conversion, phase-specific calendar-year boundaries, epoch rounding and f32 rounding.
 The historical ratings input starts seven calendar years before the UTC month
 containing the latest played match: October 2026 starts at October 1, 2019;
 November advances that start to November 1, 2019. Current-month matches enter
 immediately, so the input spans seven years plus the elapsed current month.
-This application policy is expressed in Feldera SQL with `FLOOR(MAX(utc) TO MONTH)`.
+This application policy is expressed in Duckstream SQL with `FLOOR(MAX(utc) TO MONTH)`.
 Team ratings replace the computation's current output, including retracting dates
 that disappear when a result is undone or the window moves. Keeping omitted rows
 with upsert leaves obsolete ratings eligible for the chances query's ASOF join.
@@ -76,9 +76,9 @@ cache is not the durable publication receipt and does not decide freshness.
 
 ## Delivery and latency
 
-Native ingestion uses Feldera PostgreSQL CDC over row-local current-state
+Native ingestion uses RisingWave PostgreSQL CDC over row-local current-state
 carriers. Source transactions maintain these carriers through indexed triggers;
-they are not work queues. Feldera maintains the difference from the last durable
+they are not work queues. RisingWave maintains the difference from the last durable
 capture. Cortex coalesces pending changes for one second and retains affected
 partition inputs before acknowledgment. Odds finish per phase; ratings remain
 a global numerical fit. Other phase partitions are not loaded or republished.
@@ -86,19 +86,13 @@ a global numerical fit. Other phase partitions are not loaded or republished.
 The seeded live-browser trial observed a 73.06% to 59.55% title-probability update
 in 20.5 seconds without reload, and restored the original value after undo.
 Ratings changes can legitimately affect additional phases. This is local
-correctness evidence, not a latency or capacity guarantee. Cold compilation and
-OSS reconstruction precede normal work; a measured restart took 139 seconds
-under test load, with zero partitions recalculated and no checked result-row
-rewrites. Current data and captured baselines are rebuilt after OSS restarts.
+correctness evidence, not a latency or capacity guarantee.
 
-Native CDC progresses independently per table. A stable Feldera capture is not
-an atomic multi-table PostgreSQL snapshot; this mode must not be used where
-that stronger source-read contract is required. The SQL closes calculation inputs
+The SQL closes calculation inputs
 over their required identities: archived games join both teams, goals join their
 player, and ranked odds groups require every member’s team to be present. Missing
 dependencies withhold those rows until CDC catches up, instead of capturing a
-permanently invalid numerical request. Intermediate statistics can still reflect
-partial source progress. This does not provide a transaction-consistent source cut.
+permanently invalid numerical request.
 Publication and its receipt
 are one PostgreSQL transaction. Indexed sink guards repair owned rows removed
 by cascades, while immutable captures and serial execution prevent stale retries
@@ -108,7 +102,7 @@ Conduit and Redis remain for the round pipeline. Ratings, chances, standings,
 game cards and player counters are owned by Duckstream. Pages and explicit
 snapshot deployments retain their existing snapshot path.
 
-Standings uses Feldera SQL for joins and aggregates, followed by bounded per-group
+Standings uses Duckstream SQL for joins and aggregates, followed by bounded per-group
 ranking, recent form and zone selection. The archive oracle matches all 58,440
 rows across 19 fields. Cloudflare persists bounded batches of groups separately, so native execution
 time does not predict hosted latency. See [[evidence/standings.json|standings validation]].
@@ -156,7 +150,7 @@ prove that memory pressure is fixed.
 
 ## Scaling limits
 
-In native Feldera mode, steady-state relational work uses maintained deltas; capture and publication
+In native RisingWave mode, steady-state relational work uses maintained deltas; capture and publication
 are bounded by changed outputs and affected computation partitions. A global
 rating dependency can still affect many phases, and the WASM fitter remains
 batch-oriented. Initial carrier installation, source reconstruction and captured

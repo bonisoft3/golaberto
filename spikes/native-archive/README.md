@@ -34,7 +34,7 @@ fresh schedule, Graphile ledger and actor tables remained intact. It held 318,97
 championships, 8,195,365 team ratings and 3,290,664 player-game rows. The last
 played kickoff was 2026-10-05 18:45 UTC; the latest scheduled kickoff was
 2027-05-30 19:00 UTC. PGDATA used 9.3 GiB. This checks database bootstrap, not
-Feldera startup, application behavior, or equivalence to the later PGlite copy.
+compute startup, application behavior, or equivalence to the later PGlite copy.
 
 The source SHA-256 is
 `39ce0d8aea4da54fe0e61ae56d255cfb9872e0f730ef82a36c567517956f726a`.

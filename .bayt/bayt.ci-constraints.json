@@ -53,8 +53,7 @@
       "ARG MONOREPO_COMPOSE_MODE",
       "ENV MONOREPO_COMPOSE_MODE=$MONOREPO_COMPOSE_MODE",
       "ARG BAYT_RUNTIME",
-      "ENV BAYT_RUNTIME=$BAYT_RUNTIME",
-      "ENV FELDERA_COMPILATION_PROFILE=unoptimized"
+      "ENV BAYT_RUNTIME=$BAYT_RUNTIME"
     ],
     "preambleCopyContexts": [
       {
@@ -510,6 +509,7 @@
         "./.bayt/compose.launch.yaml",
         "./.bayt/compose.mesh-events.yaml",
         "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.risingwave.yaml",
         "./.bayt/compose.setup.yaml",
         "./.bayt/compose.ticker.yaml",
         "./.bayt/compose.timer-check.yaml"
@@ -566,6 +566,7 @@
         "./.bayt/compose.launch.yaml",
         "./.bayt/compose.mesh-events.yaml",
         "./.bayt/compose.redis.yaml",
+        "./.bayt/compose.risingwave.yaml",
         "./.bayt/compose.setup.yaml",
         "./.bayt/compose.ticker.yaml",
         "./.bayt/compose.timer-check.yaml"
@@ -662,6 +663,7 @@
     "./.bayt/compose.launch.yaml",
     "./.bayt/compose.mesh-events.yaml",
     "./.bayt/compose.redis.yaml",
+    "./.bayt/compose.risingwave.yaml",
     "./.bayt/compose.setup.yaml",
     "./.bayt/compose.ticker.yaml",
     "./.bayt/compose.timer-check.yaml"
@@ -1468,12 +1470,12 @@
           "services/database/migrations/001_roles.sql",
           "services/database/migrations/002_grants.sql",
           "services/database/migrations/004_types.sql",
-          "services/database/migrations/005_create_tables.sql",
           "services/database/migrations/006_policies.sql",
           "services/database/migrations/007_txid.sql",
           "services/database/migrations/008_publication.sql",
           "services/database/migrations/009_functions.sql",
           "services/database/migrations/003_rls.sql",
+          "services/database/migrations/005_create_tables.sql",
           "services/database/migrations/063_mecha_actors.sql",
           "services/database/migrations/010_game_days.sql",
           "services/database/migrations/011_comment_writes.sql",
@@ -1539,6 +1541,7 @@
           "services/database/pgroll/052_blob_claims.json",
           "services/database/pgroll/046_team_projection_turn.json",
           "services/database/pgroll/048_team_projection_clock.json",
+          "services/database/pgroll/20261118_team_rating_chart_anchor.json",
           "services/database/pgroll/047_team_projection_writers.json",
           "services/database/pgroll/013_home_games.json",
           "services/database/pgroll/20261108_sofa_request.json",
@@ -1642,11 +1645,11 @@
           "computations/cards.js",
           "computations/player_stats.js",
           "computations/golaberto-odds.wasm",
-          "duckstream/standings.feldera.json",
-          "duckstream/ratings.feldera.json",
-          "duckstream/chances.feldera.json",
-          "duckstream/cards.feldera.json",
-          "duckstream/player_stats.feldera.json",
+          "duckstream/standings.risingwave.json",
+          "duckstream/ratings.risingwave.json",
+          "duckstream/chances.risingwave.json",
+          "duckstream/cards.risingwave.json",
+          "duckstream/player_stats.risingwave.json",
           "duckstream/bounded-standings.ts.bundle.js",
           "duckstream/bounded-ratings.ts.bundle.js",
           "duckstream/bounded-chances.ts.bundle.js",

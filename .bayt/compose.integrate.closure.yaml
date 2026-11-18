@@ -36,6 +36,8 @@ include:
   required: false
 - path: .././.bayt/compose.compute.yaml
   required: false
+- path: .././.bayt/compose.risingwave.yaml
+  required: false
 - path: .././.bayt/compose.sofascore-appliance.yaml
   required: false
 - path: .././.bayt/compose.redis.yaml

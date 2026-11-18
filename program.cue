@@ -1252,7 +1252,7 @@ code: pronto.#App & {
 		ir:         "standings"
 		backend:    "compute"
 		src:        "computations/standings.js"
-		feldera:    "duckstream/standings.feldera.json"
+		risingwave: "duckstream/standings.risingwave.json"
 		steps:      "duckstream/bounded-standings.ts"
 		endowments: ["TextEncoder"]
 		sources: football: {entities: ["Championship", "Phase", "Group", "TeamGroup", "Team", "Game", "Zone"], read: "snapshot"}
@@ -1280,6 +1280,8 @@ code: pronto.#App & {
 	}
 	state: rawMigrations: [
 		{name: "003_rls.sql", src: "services/database/sql/003_rls.txt"},
+		// As deployed before atomic RLS DDL (#2444); live directories check its digest.
+		{name: "005_create_tables.sql", src: "migrations/baseline/005_create_tables.sql"},
 		// The actors step a live database ran; the engines since are carried after it.
 		{name: "063_mecha_actors.sql", src: "migrations/baseline/063_mecha_actors.sql"},
 		{name: "010_game_days.sql", src: "services/database/sql/010_game_days.sql"},
@@ -1369,7 +1371,7 @@ code: pronto.#App & {
 	// The numeric stage (ir decision-chances).
 	// The chances read each game's power from team_rating, so they rerun
 	// whenever the ratings change.
-	capabilities: hatches: feldera_sql: {
+	capabilities: hatches: risingwave_sql: {
 		kind: "sql"
 		files: ["duckstream/ratings.sql", "duckstream/chances.sql", "duckstream/cards.sql", "duckstream/player_stats.sql", "duckstream/standings.sql",
 			for name in ["groups", "members", "form", "zones"] {"duckstream/standings/result_\(name).sql"},
@@ -1378,7 +1380,7 @@ code: pronto.#App & {
 			for name in ["games", "phases", "cutoff", "teams", "players", "appearances", "goals"] {"duckstream/ratings/result_\(name).sql"},
 			for name in ["groups", "members", "games", "zones"] {"duckstream/chances/result_\(name).sql"},
 		]
-		note: "Pinned stock Feldera compilation and DuckDB equivalence tests validate these SQL dialects instead of PostgreSQL-only Squawk"
+		note: "Pinned stock Calcite compilation and DuckDB equivalence tests validate these SQL dialects instead of PostgreSQL-only Squawk"
 	}
 
 	state: duckstreams: ratings: {
@@ -1386,7 +1388,7 @@ code: pronto.#App & {
 		ir:         "ratings"
 		backend:    "compute"
 		src:        "computations/ratings.js"
-		feldera:    "duckstream/ratings.feldera.json"
+		risingwave: "duckstream/ratings.risingwave.json"
 		steps:      "duckstream/bounded-ratings.ts"
 		endowments: ["TextEncoder"]
 		sources: football: {entities: ["Championship", "Phase", "Game", "Team", "Player", "PlayerGame", "Goal"], read: "snapshot"}
@@ -1406,7 +1408,7 @@ code: pronto.#App & {
 		ir:         "chances"
 		backend:    "compute"
 		src:        "computations/chances.js"
-		feldera:    "duckstream/chances.feldera.json"
+		risingwave: "duckstream/chances.risingwave.json"
 		steps:      "duckstream/bounded-chances.ts"
 		endowments: ["TextEncoder"]
 		sources: football: {entities: ["Championship", "Phase", "Group", "TeamGroup", "Zone", "Team", "Game", "TeamRating", "Standing"], read: "snapshot"}
@@ -1424,7 +1426,7 @@ code: pronto.#App & {
 		ir:         "game-cards"
 		backend:    "compute"
 		src:        "computations/cards.js"
-		feldera:    "duckstream/cards.feldera.json"
+		risingwave: "duckstream/cards.risingwave.json"
 		steps:      "duckstream/bounded-cards.ts"
 		endowments: ["TextEncoder"]
 		sources: football: {entities: ["Game", "Team", "Phase", "Championship", "Stadium", "Referee"], read: "snapshot"}
@@ -1438,7 +1440,7 @@ code: pronto.#App & {
 		ir:         "player-stats"
 		backend:    "compute"
 		src:        "computations/player_stats.js"
-		feldera:    "duckstream/player_stats.feldera.json"
+		risingwave: "duckstream/player_stats.risingwave.json"
 		steps:      "duckstream/bounded-player-stats.ts"
 		endowments: ["TextEncoder"]
 		sources: football: {entities: ["PlayerGame", "Goal", "Player", "Game", "Phase", "Championship", "Team"], read: "snapshot"}
@@ -2402,7 +2404,7 @@ cluster: (pronto.#DefaultCluster & {
 			watch:  true
 		}],
 	])
-}).out & {state: duckstreamEngine: "duckdb-snapshot"}
+}).out
 _appBoot:     string @embed(file="boot.js", type=text)
 terminal:     (pronto.#DefaultTerminal & {"code": code, boot: _appBoot}).out
 loop: (pronto.#DefaultLoop & {"code": code, "cluster": cluster, "terminal": terminal}).out
@@ -2471,7 +2473,7 @@ loop: surface: checks: "cloudflare-policy":      {verb: "test", cmds: ["\((pront
 loop: surface: verbs: "duckstream": {
 	verb: "generate"
 	cmds: ["\((pronto.#Platform & {tree: "pronto"}).rule); deno run --config ($pronto | path join deno.json) --lock ($pronto | path join deno.lock) --frozen -A duckstream/build.ts --compile"]
-	note: "compile computation Feldera SQL and translate the verified plans for DuckDB snapshots"
+	note: "compile computation Duckstream SQL and translate the verified plans for DuckDB snapshots"
 }
 loop: surface: checks: "duckstream": {
 	verb: "test"

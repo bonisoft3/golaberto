@@ -33,16 +33,16 @@
     },
     "outputs": {
       "groups": {
-        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_groups r"
+        "partitionQuery": "SELECT r.id AS __partition,r.* FROM result_groups r"
       },
       "members": {
-        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_members r"
+        "partitionQuery": "SELECT r.group_id AS __partition,r.* FROM result_members r"
       },
       "form": {
-        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_form r"
+        "partitionQuery": "SELECT r.group_id AS __partition,r.* FROM result_form r"
       },
       "zones": {
-        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_zones r"
+        "partitionQuery": "SELECT r.group_id AS __partition,r.* FROM result_zones r"
       }
     }
   },

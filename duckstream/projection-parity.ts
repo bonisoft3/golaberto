@@ -25,8 +25,8 @@ export async function projectionParity(
     await Deno.readTextFile(
       new URL(
         call === "refresh_game_cards"
-          ? "cards.feldera.json"
-          : "player_stats.feldera.json",
+          ? "cards.risingwave.json"
+          : "player_stats.risingwave.json",
         import.meta.url,
       ),
     ),
@@ -67,10 +67,20 @@ export async function projectionParity(
       const partitioned = (await conn.runAndReadAll(
         descriptor.incremental.outputs[sink].partitionQuery,
       )).getRowObjectsJson();
+      const partitionField = sink === "game_card"
+        ? "phase_id"
+        : sink === "team_game"
+        ? "phase_key"
+        : "championship_id";
       assertEquals(
         sorted(partitioned),
-        sorted(inputs[sink].map((row) => ({ __partition: "", ...row }))),
-        `${sink} native global partition`,
+        sorted(
+          inputs[sink].map((row) => ({
+            __partition: String(row[partitionField]),
+            ...row,
+          })),
+        ),
+        `${sink} native partition`,
       );
       await conn.run("SET memory_limit='32MB'");
       const physical = (program.queryStages as Record<

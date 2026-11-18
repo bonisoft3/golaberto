@@ -9,9 +9,13 @@ const id = (n: number) => `00000000-0000-4000-8000-${String(n).padStart(12, "0")
 Deno.test("standalone migrations retain player views, fullname triggers, joins and filtered aggregate semantics", async () => {
   const shell = JSON.parse(await Deno.readTextFile(new URL("shell/shell.json", app))) as { migrations: string[] };
   const scripts = [await Deno.readTextFile(new URL(import.meta.resolve("mecha/services/database/rls/rls.sql")))];
-  // The schema alone: a seed writes rows, the schedule seed into mecha's
-  // table, which this database never places.
-  for (const migration of shell.migrations.filter((file) => !file.endsWith("_seed.sql"))) {
+  // The schema alone, in initdb filename order: a seed writes rows, the
+  // schedule seed into mecha's table, which this database never places.
+  for (
+    const migration of [...shell.migrations]
+      .filter((file) => !file.endsWith("_seed.sql") && !file.endsWith("/003_rls.sql"))
+      .sort((a, b) => (a.split("/").pop()! < b.split("/").pop()! ? -1 : 1))
+  ) {
     scripts.push(await Deno.readTextFile(new URL(migration.endsWith("035_read_parity.sql")
       ? "services/database/sql/035_read_parity.sql" : migration, app)));
   }

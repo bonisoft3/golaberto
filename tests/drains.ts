@@ -80,6 +80,21 @@ Deno.test("both team drains wait for the same transaction lock before writing", 
   }
 });
 
+// Windows that ended at today emptied a dormant team's short periods and
+// rewrote all 3,426 teams' series every UTC midnight with no new rating;
+// each rewrite landed in the live shape's log, about 71 MiB a night.
+Deno.test("a rating chart's periods end at the team's latest rating", async () => {
+  // The archive's ratings come from the ratings computation, after start.
+  const dormant = `SELECT team_id, max(measure_date) FROM team_rating
+    GROUP BY team_id HAVING max(measure_date) < current_date - 40 ORDER BY team_id LIMIT 1`;
+  await eventually(`SELECT EXISTS (${dormant})`, 300);
+  const [team, latest] = (await query(dormant)).split("|");
+  await query(`SELECT enqueue_team_rating_chart('${team}')`);
+  await eventually("SELECT NOT EXISTS (SELECT 1 FROM team_rating_chart_dirty)", 120);
+  assertEquals(await query(`SELECT series_json::jsonb->'series'->0->'points'->-1->>'label'
+    FROM team_rating_chart WHERE id = '${team}:1m'`), latest);
+});
+
 Deno.test("rebuilding every roster drains both team queues", async () => {
   const settled = () => eventually(`SELECT NOT EXISTS (SELECT 1 FROM team_profile_dirty)
     AND NOT EXISTS (SELECT 1 FROM team_roster_total_dirty)`, 120);

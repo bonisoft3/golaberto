@@ -5,7 +5,7 @@
     "manual": true,
     "build": {
       "additional_contexts": {
-        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.25.1@sha256:a807d1ac0bc336c8a6ecfaf2700cb5cad55404468716a4a5791ede8c3d1c1329}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.25.2@sha256:a807d1ac0bc336c8a6ecfaf2700cb5cad55404468716a4a5791ede8c3d1c1329}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
       },
       "secrets": [],
       "args": {}
@@ -202,6 +202,7 @@
         "./.bayt/compose.rclone-s3.yaml",
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.render.yaml",
+        "./.bayt/compose.risingwave.yaml",
         "./.bayt/compose.served.yaml",
         "./.bayt/compose.sofascore.yaml",
         "./.bayt/compose.ticker.yaml",
@@ -255,6 +256,7 @@
         "./.bayt/compose.rclone-s3.yaml",
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.render.yaml",
+        "./.bayt/compose.risingwave.yaml",
         "./.bayt/compose.served.yaml",
         "./.bayt/compose.sofascore.yaml",
         "./.bayt/compose.ticker.yaml",
@@ -339,6 +341,7 @@
         "./.bayt/compose.rclone-s3.yaml",
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.render.yaml",
+        "./.bayt/compose.risingwave.yaml",
         "./.bayt/compose.served.yaml",
         "./.bayt/compose.sofascore.yaml",
         "./.bayt/compose.ticker.yaml",
@@ -384,6 +387,7 @@
     "./.bayt/compose.rclone-s3.yaml",
     "./.bayt/compose.redis.yaml",
     "./.bayt/compose.render.yaml",
+    "./.bayt/compose.risingwave.yaml",
     "./.bayt/compose.served.yaml",
     "./.bayt/compose.sofascore.yaml",
     "./.bayt/compose.ticker.yaml",

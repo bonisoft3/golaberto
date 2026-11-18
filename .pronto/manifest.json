@@ -160,6 +160,7 @@
     "services/database/pgroll/20261113_sofa_request_job_keys.json",
     "services/database/pgroll/20261113_sofa_request_once.json",
     "services/database/pgroll/20261114_rule_argument_engines.json",
+    "services/database/pgroll/20261118_team_rating_chart_anchor.json",
     "shell/boot.js",
     "shell/design.css",
     "shell/index.html",

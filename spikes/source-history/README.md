@@ -1,7 +1,7 @@
 # Historical rating source experiment
 
 Status: exploratory; no source filtering is enabled. Golaberto now selects the
-DuckDB snapshot runtime, so Feldera source compaction is deferred.
+DuckDB snapshot runtime, so streaming source compaction is deferred.
 
 Run each script against an archive copy with `psql -X -v ON_ERROR_STOP=1 -f FILE`.
 The scripts use repeatable-read or isolated temporary tables and roll back.

@@ -8,9 +8,8 @@ import "strings"
 // reads change (plugins/pronto/docs/pipelines-and-schedules.md#drains).
 
 code: state: drains: {
-	// Rating chart windows end at the UTC day, which re-queues every team.
 	"team-enrichment": {
-		on: ["player_metric_dirty", "team_roster_total_dirty", "team_rating_chart_dirty", "team_odds_chart_dirty", "day_tick"]
+		on: ["player_metric_dirty", "team_roster_total_dirty", "team_rating_chart_dirty", "team_odds_chart_dirty"]
 		call: "refresh_team_enrichment"
 		body: {roster_batch: 50, rating_batch: 10, odds_batch: 5}
 	}
@@ -29,7 +28,8 @@ code: state: drains: {
 	}
 }
 
-// The two midnights the drains above roll over at. Nothing answers a tick:
+// The drains above roll over at Brasília's midnight; SofaScore admission
+// (program_sofascore.cue) wakes at either. Nothing answers a tick:
 // the drain it wakes is idempotent, and a missed one is repaired by the next.
 code: state: entities: {
 	DayTick: {
@@ -63,6 +63,12 @@ code: state: migrations: "046_team_projection_turn": {operations: [{sql: {
 _teamProjectionClockSql: string @embed(file="services/database/sql/048_team_projection_clock.sql", type=text)
 code: state: migrations: "048_team_projection_clock": {operations: [{sql: {
 	up:         strings.Replace(strings.Replace(_teamProjectionClockSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
+	onComplete: true
+}}]}
+
+_teamRatingChartAnchorSql: string @embed(file="services/database/sql/064_team_rating_chart_anchor.sql", type=text)
+code: state: migrations: "20261118_team_rating_chart_anchor": {operations: [{sql: {
+	up:         strings.Replace(strings.Replace(_teamRatingChartAnchorSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 	onComplete: true
 }}]}
 

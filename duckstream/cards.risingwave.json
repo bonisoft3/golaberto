@@ -29,10 +29,10 @@
     },
     "outputs": {
       "game_card": {
-        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_game_card r"
+        "partitionQuery": "SELECT r.phase_id AS __partition,r.* FROM result_game_card r"
       },
       "team_game": {
-        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_team_game r"
+        "partitionQuery": "SELECT r.phase_key AS __partition,r.* FROM result_team_game r"
       }
     }
   },

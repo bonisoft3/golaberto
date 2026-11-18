@@ -94,7 +94,7 @@ class ArchiveWorkflowTest(unittest.TestCase):
         profile = yaml.load((Path(__file__).parent/'archive'/'compose.preserve.yaml').read_text(),Loader=ComposeLoader)
         jobs = json.loads(profile['services']['golaberto-compute']['environment']['COMPUTATIONS'])
         self.assertEqual([job['name'] for job in jobs],['golaberto-chances'])
-        self.assertEqual(jobs[0]['feldera'],'/app/computations/golaberto-chances.feldera.json')
+        self.assertEqual(jobs[0]['risingwave'],'/app/computations/golaberto-chances.risingwave.json')
         self.assertNotIn('onComplete',jobs[0])
         self.assertNotIn('team_rating',jobs[0]['to'])
         self.assertEqual(profile['volumes']['archive-postgres'],{})

@@ -1,8 +1,8 @@
 import { assertEquals } from "jsr:@std/assert@1.0.8";
 import {
-  Feldera,
-  type FelderaProgram,
-} from "@bonisoft3/mecha/services/compute/feldera.ts";
+  RisingWave,
+  type RisingWaveProgram,
+} from "@bonisoft3/mecha/services/compute/risingwave.ts";
 import * as ratings from "../computations/ratings.js";
 import * as chances from "../computations/chances.js";
 import { uid, World } from "../computations/tests/world.ts";
@@ -10,7 +10,8 @@ import { inputs } from "../computations/tests/compute.ts";
 import { ordered } from "./order.js";
 import { calendarWorld } from "./calendar-fixture.ts";
 
-const endpoint = Deno.env.get("FELDERA_TEST_URL");
+const endpoint = Deno.env.get("RISINGWAVE_TEST_URL") ??
+  Deno.env.get("RISINGWAVE_URL");
 for (
   const [name, program] of [["ratings", ratings], ["chances", chances]] as const
 ) {
@@ -22,30 +23,12 @@ for (
     sanitizeResources: false,
     async fn() {
       const pipeline = `golaberto-${name}-integration`;
-      const descriptor: FelderaProgram = JSON.parse(
+      const descriptor: RisingWaveProgram = JSON.parse(
         await Deno.readTextFile(
-          new URL(`${name}.feldera.json`, import.meta.url),
+          new URL(`${name}.risingwave.json`, import.meta.url),
         ),
       );
-      const native = new Feldera(endpoint!, pipeline, descriptor);
-      const api = async (suffix: string, method = "GET") => {
-        const response = await fetch(
-          `${endpoint}/v0/pipelines/${pipeline}${suffix}`,
-          { method },
-        );
-        if (!response.ok) {
-          throw new Error(`${method} ${suffix}: ${await response.text()}`);
-        }
-        return await response.json();
-      };
-      const wait = async (field: string, wanted: string) => {
-        const deadline = Date.now() + 30000;
-        while (Date.now() < deadline) {
-          if ((await api(""))[field] === wanted) return;
-          await new Promise((resolve) => setTimeout(resolve, 100));
-        }
-        throw new Error(`cleanup did not reach ${wanted}`);
-      };
+      const native = new RisingWave(endpoint!, pipeline, descriptor);
       try {
         let world = new World();
         world.rows.team_rating = world.teams.flatMap((team, i) =>
@@ -87,10 +70,12 @@ for (
           );
           if (name === "chances") {
             assertEquals(chances.plan(actual, 17), chances.plan(expected, 17));
-          } else {assertEquals(
+          } else {
+            assertEquals(
               ratings.plan(actual, 17, []),
               ratings.plan(expected, 17, []),
-            );}
+            );
+          }
           console.log(`${name}: stage ${stage} matched`);
         }
         world = new World();
@@ -112,17 +97,7 @@ for (
           }
         }
       } finally {
-        await api("/stop?force=true", "POST");
-        await wait("deployment_status", "Stopped");
-        await api("/clear", "POST");
-        await wait("storage_status", "Cleared");
-        const response = await fetch(`${endpoint}/v0/pipelines/${pipeline}`, {
-          method: "DELETE",
-        });
-        if (!response.ok) {
-          throw new Error(`cleanup: ${await response.text()}`);
-        }
-        await response.text();
+        await native.close();
       }
     },
   });

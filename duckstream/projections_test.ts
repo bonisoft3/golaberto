@@ -50,7 +50,7 @@ pgTest(
       for (const name of ["ratings", "chances"]) {
         const descriptor: IncrementalProgram = JSON.parse(
           await Deno.readTextFile(
-            new URL(`${name}.feldera.json`, import.meta.url),
+            new URL(`${name}.risingwave.json`, import.meta.url),
           ),
         );
         for (const [source, input] of Object.entries(descriptor.inputs)) {
@@ -124,7 +124,7 @@ pgTest(
         }
       }
       const descriptor: IncrementalProgram = JSON.parse(
-        await Deno.readTextFile(new URL("cards.feldera.json", import.meta.url)),
+        await Deno.readTextFile(new URL("cards.risingwave.json", import.meta.url)),
       );
       const native = descriptor.incremental.inputs.source_game;
       const actual = (await client.query(

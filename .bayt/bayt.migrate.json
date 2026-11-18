@@ -5,7 +5,7 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.25.2@sha256:2229cfefd31a8ee37eb2f88414fcb37eb8b990288cd65e873c70c6fa3af5fd55}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+        "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.26.0@sha256:bc17c811912900b9ed4ba691167be6dc56f961b437dd765bebd4e53148aa92ec}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
       },
       "secrets": [],
       "args": {}
@@ -103,6 +103,16 @@
           "services/database/pgroll/048_team_projection_clock.json"
         ],
         "dst": "/pgroll/048_team_projection_clock.json",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": null,
+        "srcs": [
+          "services/database/pgroll/20261118_team_rating_chart_anchor.json"
+        ],
+        "dst": "/pgroll/20261118_team_rating_chart_anchor.json",
         "link": true,
         "parents": false,
         "exclude": []
@@ -746,6 +756,7 @@
       "services/database/pgroll/052_blob_claims.json",
       "services/database/pgroll/046_team_projection_turn.json",
       "services/database/pgroll/048_team_projection_clock.json",
+      "services/database/pgroll/20261118_team_rating_chart_anchor.json",
       "services/database/pgroll/047_team_projection_writers.json",
       "services/database/pgroll/013_home_games.json",
       "services/database/pgroll/20261108_sofa_request.json",
@@ -901,6 +912,7 @@
           "services/database/pgroll/052_blob_claims.json",
           "services/database/pgroll/046_team_projection_turn.json",
           "services/database/pgroll/048_team_projection_clock.json",
+          "services/database/pgroll/20261118_team_rating_chart_anchor.json",
           "services/database/pgroll/047_team_projection_writers.json",
           "services/database/pgroll/013_home_games.json",
           "services/database/pgroll/20261108_sofa_request.json",

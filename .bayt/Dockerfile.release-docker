@@ -19,6 +19,9 @@ ENV COMPUTE_APP_DIR=/compute-app
 ENV COMPUTE_STATE_DIR=/var/lib/duckstream
 ENV BAYT_LOCAL_DUCKDB_EXTENSIONS=/compute-app/extensions
 ENV DENO_DIR=/deno-dir
+ENV DUCKSTREAM_ENGINE=risingwave
+ENV RISINGWAVE_URL=http://risingwave:4566
+RUN printf '%s\n' '#!/bin/sh' 'set -eu' 'dir="${COMPUTE_STATE_DIR:-/var/lib/duckstream}/risingwave"' 'mkdir -p "$dir/state_store"' 'printf "%s\n" "[meta]" "min_sst_retention_time_sec = 300" "full_gc_interval_sec = 60" "vacuum_interval_sec = 15" "gc_history_retention_time_sec = 0" "clean_all_foreground_jobs_on_recovery = true" "" "[meta.developer]" "actor_cnt_per_worker_parallelism_soft_limit = 1000" "actor_cnt_per_worker_parallelism_hard_limit = 4000" "" "[streaming]" "in_flight_barrier_nums = 256" "" "[streaming.developer]" "enable_snapshot_backfill = false" "" "[storage]" "shared_buffer_min_batch_flush_size_mb = 32" > "$dir/risingwave.toml"' 'compute_mem="${RISINGWAVE_MEMORY_BYTES:-1342177280}"' 'parallelism="${RISINGWAVE_PARALLELISM:-2}"' 'exec /risingwave/bin/risingwave standalone --config-path "$dir/risingwave.toml" \' '  --meta-opts="--listen-addr 127.0.0.1:5690 --advertise-addr 127.0.0.1:5690 --backend sqlite --sql-endpoint $dir/metadata.db --state-store hummock+fs://$dir/state_store --data-directory hummock_001" \' '  --compute-opts="--listen-addr 127.0.0.1:5688 --meta-address http://127.0.0.1:5690 --total-memory-bytes $compute_mem --role both --parallelism $parallelism" \' '  --frontend-opts="--listen-addr 0.0.0.0:4566 --meta-addr http://127.0.0.1:5690 --frontend-total-memory-bytes 268435456" \' '  --compactor-opts="--listen-addr 127.0.0.1:6660 --meta-address http://127.0.0.1:5690 --compactor-total-memory-bytes 1073741824 --compactor-meta-cache-memory-bytes 67108864"' > /usr/local/bin/appliance-risingwave.sh && chmod 755 /usr/local/bin/appliance-risingwave.sh
 ENV MECHA_MESH_DIR=/mesh-events
 ENV MECHA_TRANSFORM_DIR=/transform
 COPY <<'APPLIANCE' /.bayt/process-compose.appliance.yaml
@@ -73,6 +76,27 @@ processes:
     command: '''docker-entrypoint.sh'' ''postgres'' ''-c'' ''session_preload_libraries=pg_ivm'' ''-c'' ''wal_level=logical'' ''-c'' ''max_replication_slots=128'' ''-c'' ''max_wal_senders=128'' ''-c'' ''fsync=off'' ''-c'' ''synchronous_commit=off'' ''-c'' ''full_page_writes=off'' ''-c'' ''shared_buffers=32MB'' ''-c'' ''max_connections=200'' ''-c'' ''fsync=on'' ''-c'' ''synchronous_commit=on'' ''-c'' ''full_page_writes=on'' ''-c'' ''shared_buffers=512MB'''
   electric:
     command: '''env'' ''DATABASE_URL=postgresql://electric:${ELECTRIC_PASSWORD:-dev-electric-password}@127.0.0.1:5432/${POSTGRES_DB:-golaberto}?sslmode=disable'' ''ELECTRIC_SECRET=${ELECTRIC_SECRET:-dev-electric-secret}'' ''ELECTRIC_MANUAL_TABLE_PUBLISHING=true'' ''ELECTRIC_PORT=3002'' ''ELECTRIC_STORAGE_DIR=${PGDATA:-/var/lib/pgsql/data}/electric'' ''LD_LIBRARY_PATH=/electric-libs'' ''ELIXIR_ERL_OPTIONS=+fnu'' ''/electric-app/bin/entrypoint'' ''start'''
+  risingwave:
+    command: '''/usr/local/bin/appliance-risingwave.sh'''
+    environment:
+      - CONNECTOR_LIBS_PATH=/risingwave/bin/connector-node/libs
+      - ADBC_DRIVER_PATH=/risingwave/lib/adbc
+      - LD_LIBRARY_PATH=/risingwave/lib:/risingwave/lib/adbc:/risingwave/jre/lib/server
+      - JAVA_HOME=/risingwave/jre
+      - JAVA_TOOL_OPTIONS=-Xmx256m
+      - PATH=/risingwave/jre/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      - ENABLE_TELEMETRY=false
+    depends_on:
+      database:
+        condition: process_healthy
+    readiness_probe:
+      exec:
+        command: portcheck --port 4566
+      period_seconds: 1
+      timeout_seconds: 5
+      failure_threshold: 120
+    availability:
+      restart: on_failure
   ticker:
     command: '''ticker-deno'' ''run'' ''--frozen'' ''--allow-net'' ''--allow-env'' ''main.ts'''
     working_dir: /ticker-app
@@ -173,21 +197,30 @@ COPY --link --from=golaberto-compute /deno-dir /deno-dir
 COPY --link --from=golaberto-compute /durex /durex
 COPY --link --from=golaberto-compute /airlock /airlock
 COPY --link --from=golaberto-compute /packages /packages
+COPY --link --from=golaberto-risingwave /risingwave/bin/risingwave /risingwave/bin/risingwave
+COPY --link --from=golaberto-risingwave /risingwave/bin/connector-node /risingwave/bin/connector-node
+COPY --link --from=golaberto-risingwave /risingwave/lib /risingwave/lib
+COPY --from=golaberto-risingwave /lib/*-linux-gnu/libpython3.12.so.1* /lib/*-linux-gnu/libexpat.so.1* /risingwave/lib/
+COPY --from=golaberto-risingwave /usr/lib/jvm/java-21-openjdk-*/bin /risingwave/jre/bin
+COPY --from=golaberto-risingwave /usr/lib/jvm/java-21-openjdk-*/conf /risingwave/jre/conf
+COPY --from=golaberto-risingwave /usr/lib/jvm/java-21-openjdk-*/lib /risingwave/jre/lib
+COPY --link --from=golaberto-risingwave /etc/java-21-openjdk /etc/java-21-openjdk
+COPY --link --from=golaberto-risingwave /etc/ssl/certs/java /etc/ssl/certs/java
 COPY computations/standings.js computations/standings.js
-COPY duckstream/standings.feldera.json duckstream/standings.feldera.json
+COPY duckstream/standings.risingwave.json duckstream/standings.risingwave.json
 COPY duckstream/bounded-standings.ts.bundle.js duckstream/bounded-standings.ts.bundle.js
 COPY computations/ratings.js computations/ratings.js
 COPY computations/golaberto-odds.wasm computations/golaberto-odds.wasm
-COPY duckstream/ratings.feldera.json duckstream/ratings.feldera.json
+COPY duckstream/ratings.risingwave.json duckstream/ratings.risingwave.json
 COPY duckstream/bounded-ratings.ts.bundle.js duckstream/bounded-ratings.ts.bundle.js
 COPY computations/chances.js computations/chances.js
-COPY duckstream/chances.feldera.json duckstream/chances.feldera.json
+COPY duckstream/chances.risingwave.json duckstream/chances.risingwave.json
 COPY duckstream/bounded-chances.ts.bundle.js duckstream/bounded-chances.ts.bundle.js
 COPY computations/cards.js computations/cards.js
-COPY duckstream/cards.feldera.json duckstream/cards.feldera.json
+COPY duckstream/cards.risingwave.json duckstream/cards.risingwave.json
 COPY duckstream/bounded-cards.ts.bundle.js duckstream/bounded-cards.ts.bundle.js
 COPY computations/player_stats.js computations/player_stats.js
-COPY duckstream/player_stats.feldera.json duckstream/player_stats.feldera.json
+COPY duckstream/player_stats.risingwave.json duckstream/player_stats.risingwave.json
 COPY duckstream/bounded-player-stats.ts.bundle.js duckstream/bounded-player-stats.ts.bundle.js
 COPY --from=golaberto-ticker /usr/bin/deno /usr/local/bin/ticker-deno
 COPY --from=golaberto-ticker /deno-dir /ticker-deno-dir
@@ -196,28 +229,29 @@ COPY --link --from=golaberto-sofascore-appliance /usr/local/bin/sofascore_fetch 
 COPY --from=golaberto-database --link /monorepo/${BAYT_DIR} /monorepo/${BAYT_DIR}
 COPY --from=golaberto-crud --link /monorepo/${BAYT_DIR} /monorepo/${BAYT_DIR}
 COPY --from=golaberto-caddy --link /monorepo/${BAYT_DIR} /monorepo/${BAYT_DIR}
-COPY --parents .bayt/process-compose.yaml docker/*.yaml computations/standings.js duckstream/standings.feldera.json duckstream/bounded-standings.ts.bundle.js computations/ratings.js computations/golaberto-odds.wasm duckstream/ratings.feldera.json duckstream/bounded-ratings.ts.bundle.js computations/chances.js duckstream/chances.feldera.json duckstream/bounded-chances.ts.bundle.js computations/cards.js duckstream/cards.feldera.json duckstream/bounded-cards.ts.bundle.js computations/player_stats.js duckstream/player_stats.feldera.json duckstream/bounded-player-stats.ts.bundle.js ./
+COPY --parents .bayt/process-compose.yaml docker/*.yaml computations/standings.js duckstream/standings.risingwave.json duckstream/bounded-standings.ts.bundle.js computations/ratings.js computations/golaberto-odds.wasm duckstream/ratings.risingwave.json duckstream/bounded-ratings.ts.bundle.js computations/chances.js duckstream/chances.risingwave.json duckstream/bounded-chances.ts.bundle.js computations/cards.js duckstream/cards.risingwave.json duckstream/bounded-cards.ts.bundle.js computations/player_stats.js duckstream/player_stats.risingwave.json duckstream/bounded-player-stats.ts.bundle.js ./
 COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.release-docker.json ./.bayt/
 ENTRYPOINT ["/usr/local/bin/appliance-entrypoint.sh"]
-CMD ["/usr/local/bin/process-compose", "up", "-f", "/.bayt/process-compose.yaml", "-f", "/.bayt/process-compose.appliance.yaml", "-t=false", "--no-server", "caddy", "electric", "auth", "airlock", "conduit", "transform", "compute", "ticker", "clock"]
+CMD ["/usr/local/bin/process-compose", "up", "-f", "/.bayt/process-compose.yaml", "-f", "/.bayt/process-compose.appliance.yaml", "-t=false", "--no-server", "caddy", "electric", "auth", "airlock", "conduit", "transform", "risingwave", "compute", "ticker", "clock"]
 RUN printf '%s\n' '#!/bin/sh' 'set -e' 'if [ "$1" = "postgres" ]; then shift; fi' 'export PGDATA="${PGDATA:-/var/lib/pgsql/data}"' 'export POSTGRES_DB="${POSTGRES_DB:-golaberto}"' 'export PATH="/usr/lib/postgresql/18/bin:$PATH"' 'q=$(printf "\047")' 'if [ ! -s "$PGDATA/PG_VERSION" ]; then' '  mkdir -p "$PGDATA" /run/postgresql' '  chown -R postgres:postgres "$PGDATA" /run/postgresql' '  setpriv --reuid=postgres --regid=postgres --clear-groups initdb -D "$PGDATA" --no-sync --encoding=UTF8 --auth=trust --locale-provider=icu --icu-locale=und --locale=C' '  setpriv --reuid=postgres --regid=postgres --clear-groups pg_ctl -D "$PGDATA" -w -o "-c listen_addresses='\'''\'' $*" start' '  if [ "$POSTGRES_DB" != "postgres" ]; then setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d postgres -c "CREATE DATABASE \"$POSTGRES_DB\""; fi' '  setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d "$POSTGRES_DB" -c "CREATE TABLE IF NOT EXISTS _pronto_migrations (name text primary key, applied_at timestamptz default now())"' '  for f in /docker-entrypoint-initdb.d/*.sql; do' '    if [ -f "$f" ]; then' '      echo "Applying $f..."' '      setpriv --reuid=postgres --regid=postgres --clear-groups psql -v ON_ERROR_STOP=1 -U postgres -d "$POSTGRES_DB" -f "$f"' '      base=$(basename "$f")' '      setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d "$POSTGRES_DB" -c "INSERT INTO _pronto_migrations (name) VALUES ($q$base$q) ON CONFLICT DO NOTHING"' '    fi' '  done' '  setpriv --reuid=postgres --regid=postgres --clear-groups pg_ctl -D "$PGDATA" -m fast -w stop' 'else' '  setpriv --reuid=postgres --regid=postgres --clear-groups pg_ctl -D "$PGDATA" -w -o "-c listen_addresses='\'''\'' $*" start' '  setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d "$POSTGRES_DB" -c "CREATE TABLE IF NOT EXISTS _pronto_migrations (name text primary key, applied_at timestamptz default now())"' '  for f in /docker-entrypoint-initdb.d/*.sql; do' '    if [ -f "$f" ]; then' '      base=$(basename "$f")' '      case "$base" in *seed*) continue;; esac' '      applied=$(setpriv --reuid=postgres --regid=postgres --clear-groups psql -t -A -U postgres -d "$POSTGRES_DB" -c "SELECT count(*) FROM _pronto_migrations WHERE name = $q$base$q")' '      if [ "$applied" = "0" ]; then' '        echo "Applying pending migration $f..."' '        setpriv --reuid=postgres --regid=postgres --clear-groups psql -v ON_ERROR_STOP=1 -U postgres -d "$POSTGRES_DB" -f "$f"' '        setpriv --reuid=postgres --regid=postgres --clear-groups psql -U postgres -d "$POSTGRES_DB" -c "INSERT INTO _pronto_migrations (name) VALUES ($q$base$q)"' '      fi' '    fi' '  done' '  setpriv --reuid=postgres --regid=postgres --clear-groups pg_ctl -D "$PGDATA" -m fast -w stop' 'fi' 'exec setpriv --reuid=postgres --regid=postgres --clear-groups postgres -D "$PGDATA" -c listen_addresses=127.0.0.1 "$@"' > /usr/local/bin/docker-entrypoint.sh && chmod 755 /usr/local/bin/docker-entrypoint.sh
 RUN printf '%s\n' '#!/bin/sh' 'if [ "$1" = "microcheck" ]; then' '  shift' '  exec "$@"' 'fi' 'exec "$@"' > /usr/local/bin/bayt && chmod 755 /usr/local/bin/bayt
 RUN cp "$(/root/.local/share/lazybox/bin/nu -c '$nu.current-exe')" /usr/local/bin/nu && chmod 755 /usr/local/bin/nu && /usr/local/bin/nu --version
 RUN printf '%s\n' '#!/bin/sh' 'while [ $# -gt 0 ]; do if [ "$1" = "--" ]; then shift; break; fi; shift; done' 'exec "$@"' > /usr/local/bin/mise && chmod 755 /usr/local/bin/mise
 RUN printf '#!/bin/sh\nexit 0\n' > /usr/local/bin/task && chmod 755 /usr/local/bin/task
-RUN printf '%s\n' '#!/bin/sh' 'set -e' 'for n in crud database auth airlock-mesh airlock ticker sofascore; do' '  grep -Eq "^[^#]*[[:space:]]$n([[:space:]]|$)" /etc/hosts || echo "127.0.0.1 $n" >> /etc/hosts || { echo "appliance: cannot name $n in /etc/hosts" >&2; exit 1; }' 'done' 'export PORT="${PORT:-8080}"' 'if [ "$PORT" = 8081 ]; then echo "appliance: PORT 8081 is where the bridge process sofascore listens; set another" >&2; exit 1; fi' 'export CADDY_HTTP_PORT="${PORT}"' 'export CADDY_TLS_HOST_PORT="${PORT}"' 'if [ -n "$ORIGIN" ]; then' '  if [ -z "$WEBAUTHN_RP_ID" ]; then' '    h="${ORIGIN#*://}"' '    h="${h%%/*}"' '    h="${h%%:*}"' '    if [ -n "$h" ] && [ "$h" != "localhost" ]; then export WEBAUTHN_RP_ID="$h"; fi' '  fi' '  if [ -z "$WEBAUTHN_ORIGIN" ] && [ -n "$WEBAUTHN_RP_ID" ] && [ "$WEBAUTHN_RP_ID" != "localhost" ]; then export WEBAUTHN_ORIGIN="$ORIGIN"; fi' 'fi' 'exec "$@"' > /usr/local/bin/appliance-entrypoint.sh && chmod 755 /usr/local/bin/appliance-entrypoint.sh
+RUN printf '%s\n' '#!/bin/sh' 'set -e' 'for n in crud database auth airlock-mesh airlock ticker risingwave sofascore; do' '  grep -Eq "^[^#]*[[:space:]]$n([[:space:]]|$)" /etc/hosts || echo "127.0.0.1 $n" >> /etc/hosts || { echo "appliance: cannot name $n in /etc/hosts" >&2; exit 1; }' 'done' 'export PORT="${PORT:-8080}"' 'if [ "$PORT" = 8081 ]; then echo "appliance: PORT 8081 is where the bridge process sofascore listens; set another" >&2; exit 1; fi' 'export CADDY_HTTP_PORT="${PORT}"' 'export CADDY_TLS_HOST_PORT="${PORT}"' 'if [ -n "$ORIGIN" ]; then' '  if [ -z "$WEBAUTHN_RP_ID" ]; then' '    h="${ORIGIN#*://}"' '    h="${h%%/*}"' '    h="${h%%:*}"' '    if [ -n "$h" ] && [ "$h" != "localhost" ]; then export WEBAUTHN_RP_ID="$h"; fi' '  fi' '  if [ -z "$WEBAUTHN_ORIGIN" ] && [ -n "$WEBAUTHN_RP_ID" ] && [ "$WEBAUTHN_RP_ID" != "localhost" ]; then export WEBAUTHN_ORIGIN="$ORIGIN"; fi' 'fi' 'exec "$@"' > /usr/local/bin/appliance-entrypoint.sh && chmod 755 /usr/local/bin/appliance-entrypoint.sh
 RUN sed -Ei 's|http://127\.0\.0\.1:\$\{CADDY_HTTP_PORT:-[0-9]+\}/health|http://127.0.0.1:${PORT:-8080}/health|g' /.bayt/process-compose.yaml
 RUN grep -v AIRLOCK_SEAL_DEV /.bayt/process-compose.yaml > /tmp/process-compose.yaml && mv /tmp/process-compose.yaml /.bayt/process-compose.yaml
 RUN awk 'skip { d += gsub(/\{/, "{") - gsub(/\}/, "}"); if (d <= 0) skip = 0; next } /handle @rendered \{/ { skip = 1; d = 1; next } { print }' /etc/caddy/Caddyfile > /tmp/Caddyfile && mv /tmp/Caddyfile /etc/caddy/Caddyfile
 RUN nu -c 'let f = "/dapr/airlock/acquire.yaml"; let b = (open $f); if $b.spec.baseUrl != "http://sofascore:8080" { error make {msg: "appliance: unexpected bridge endpoint in acquire"} }; $b | upsert spec.baseUrl "http://sofascore:8081" | to yaml | save -f $f'
 RUN --network=none deno check --cached-only --frozen --config /compute-app/deno.json /compute-app/main.ts /compute-app/cage.ts /compute-app/step-worker.ts && touch /compute-app/extensions/.installed-v1.5.6
+RUN nu -c 'let f = "/.bayt/process-compose.yaml"; open $f | upsert processes.compute.depends_on.risingwave {condition: "process_healthy"} | if ("transform" in $in.processes) { update processes.transform.entrypoint {|p| $p.processes.transform.entrypoint | each {|a| $a | str replace " ($$cdir | path join '\''events.yaml'\'')" "" } } } else { $in } | to yaml | save -f $f'
 RUN ports="8081"; for p in $ports; do if grep -Eq ":-$p\}" /.bayt/process-compose.yaml; then echo "appliance: bridge port $p is one an appliance process takes; name another" >&2; exit 1; fi; done; dup="$(printf '%s\n' $ports | sort | uniq -d)"; if [ -n "$dup" ]; then echo "appliance: bridges share port $dup" >&2; exit 1; fi
 RUN ELECTRIC_SECRET=validation-only caddy validate --adapter caddyfile --config /etc/caddy/Caddyfile
 
 FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS release-docker_ctxs
 ARG BAYT_DIR
 WORKDIR /monorepo/${BAYT_DIR}
-COPY --parents .bayt/process-compose.yaml docker/*.yaml computations/standings.js duckstream/standings.feldera.json duckstream/bounded-standings.ts.bundle.js computations/ratings.js computations/golaberto-odds.wasm duckstream/ratings.feldera.json duckstream/bounded-ratings.ts.bundle.js computations/chances.js duckstream/chances.feldera.json duckstream/bounded-chances.ts.bundle.js computations/cards.js duckstream/cards.feldera.json duckstream/bounded-cards.ts.bundle.js computations/player_stats.js duckstream/player_stats.feldera.json duckstream/bounded-player-stats.ts.bundle.js ./
+COPY --parents .bayt/process-compose.yaml docker/*.yaml computations/standings.js duckstream/standings.risingwave.json duckstream/bounded-standings.ts.bundle.js computations/ratings.js computations/golaberto-odds.wasm duckstream/ratings.risingwave.json duckstream/bounded-ratings.ts.bundle.js computations/chances.js duckstream/chances.risingwave.json duckstream/bounded-chances.ts.bundle.js computations/cards.js duckstream/cards.risingwave.json duckstream/bounded-cards.ts.bundle.js computations/player_stats.js duckstream/player_stats.risingwave.json duckstream/bounded-player-stats.ts.bundle.js ./
 COPY --from=golaberto-database_srcs /monorepo /monorepo
 COPY --from=golaberto-caddy_srcs /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
@@ -246,6 +280,7 @@ COPY --from=golaberto-transform_bayt /monorepo /monorepo
 COPY --from=golaberto-ticker_bayt /monorepo /monorepo
 COPY --from=golaberto-timer-check_bayt /monorepo /monorepo
 COPY --from=golaberto-compute_bayt /monorepo /monorepo
+COPY --from=golaberto-risingwave_bayt /monorepo /monorepo
 COPY --from=golaberto-sofascore-appliance_bayt /monorepo /monorepo
 COPY --from=golaberto-served_bayt /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH

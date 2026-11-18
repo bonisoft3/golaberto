@@ -26,7 +26,7 @@
     "target": "database",
     "initdb": "/docker-entrypoint-initdb.d"
   },
-  "database": "bonitao/mecha-database:0.25.2@sha256:2229cfefd31a8ee37eb2f88414fcb37eb8b990288cd65e873c70c6fa3af5fd55",
+  "database": "bonitao/mecha-database:0.26.0@sha256:bc17c811912900b9ed4ba691167be6dc56f961b437dd765bebd4e53148aa92ec",
   "server": true,
   "steps": {
     "graphile": "060_graphile_worker.sql",
@@ -53,9 +53,9 @@
       "endowments": [
         "TextEncoder"
       ],
-      "feldera": "duckstream/standings.feldera.json",
       "file": "computations/standings.js",
       "name": "golaberto-standings",
+      "risingwave": "duckstream/standings.risingwave.json",
       "sinkTypes": {
         "standing": [
           {
@@ -409,7 +409,6 @@
       "endowments": [
         "TextEncoder"
       ],
-      "feldera": "duckstream/ratings.feldera.json",
       "file": "computations/ratings.js",
       "name": "golaberto-ratings",
       "queryTypes": {
@@ -428,6 +427,7 @@
           }
         ]
       },
+      "risingwave": "duckstream/ratings.risingwave.json",
       "sinkTypes": {
         "team_rating": [
           {
@@ -758,10 +758,10 @@
       "endowments": [
         "TextEncoder"
       ],
-      "feldera": "duckstream/chances.feldera.json",
       "file": "computations/chances.js",
       "name": "golaberto-chances",
       "onComplete": "capture_team_odds_history",
+      "risingwave": "duckstream/chances.risingwave.json",
       "sinkTypes": {
         "team_chance": [
           {
@@ -1173,9 +1173,9 @@
       "endowments": [
         "TextEncoder"
       ],
-      "feldera": "duckstream/cards.feldera.json",
       "file": "computations/cards.js",
       "name": "golaberto-game-cards",
+      "risingwave": "duckstream/cards.risingwave.json",
       "sinkTypes": {
         "game_card": [
           {
@@ -1648,9 +1648,9 @@
       "endowments": [
         "TextEncoder"
       ],
-      "feldera": "duckstream/player_stats.feldera.json",
       "file": "computations/player_stats.js",
       "name": "golaberto-player-stats",
+      "risingwave": "duckstream/player_stats.risingwave.json",
       "sinkTypes": {
         "player_stat": [
           {
@@ -1994,8 +1994,7 @@
         "player_metric_dirty",
         "team_roster_total_dirty",
         "team_rating_chart_dirty",
-        "team_odds_chart_dirty",
-        "day_tick"
+        "team_odds_chart_dirty"
       ],
       "call": "refresh_team_enrichment",
       "body": {

@@ -34,7 +34,7 @@ const visible = (rows: Record<string, unknown[]>) =>
 
 Deno.test({
   name:
-    "Feldera-derived queries preserve archive calendar, strict ASOF and f32 boundaries",
+    "Duckstream-derived queries preserve archive calendar, strict ASOF and f32 boundaries",
   sanitizeOps: false,
   sanitizeResources: false,
   fn: async () => {
@@ -94,7 +94,7 @@ Deno.test({
   },
 });
 Deno.test({
-  name: "Feldera-derived ratings preserve an empty professional archive",
+  name: "Duckstream-derived ratings preserve an empty professional archive",
   sanitizeOps: false,
   sanitizeResources: false,
   fn: async () => {
@@ -107,7 +107,7 @@ Deno.test({
     );
   },
 });
-Deno.test("Golaberto programs and native descriptors are generated from admitted Feldera SQL", async () => {
+Deno.test("Golaberto programs and native descriptors are generated from admitted Duckstream SQL", async () => {
   for (const name of ["ratings", "chances"] as const) {
     const actual = await build(name);
     assertEquals(
@@ -117,8 +117,8 @@ Deno.test("Golaberto programs and native descriptors are generated from admitted
       actual.source,
     );
     assertEquals(
-      await Deno.readTextFile(new URL(`${name}.feldera.json`, import.meta.url)),
-      actual.feldera,
+      await Deno.readTextFile(new URL(`${name}.risingwave.json`, import.meta.url)),
+      actual.risingwave,
     );
   }
 });
@@ -141,7 +141,7 @@ Deno.test({
       })),
     });
     const descriptor = JSON.parse(
-      await Deno.readTextFile(new URL("chances.feldera.json", import.meta.url)),
+      await Deno.readTextFile(new URL("chances.risingwave.json", import.meta.url)),
     );
     await assertRejects(
       () => lake.query(chances.queries.games),
@@ -192,7 +192,7 @@ Deno.test({
     const world = new World();
     const lake = await world.lake();
     const descriptor = JSON.parse(
-      await Deno.readTextFile(new URL("chances.feldera.json", import.meta.url)),
+      await Deno.readTextFile(new URL("chances.risingwave.json", import.meta.url)),
     );
     await lake.query(
       "CREATE VIEW source_stage_group AS SELECT id,phase_id FROM stage_group",

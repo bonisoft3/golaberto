@@ -5,7 +5,7 @@
     "manual": true,
     "build": {
       "additional_contexts": {
-        "libraries_mecha-extensions-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-extensions:0.25.2@sha256:d3fe4b3869ded07a410579c2928f951bb42c3bdc14ada1122b5cf0a7d7c11c9f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-extensions-image}"
+        "libraries_mecha-extensions-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-extensions:0.26.0@sha256:d3fe4b3869ded07a410579c2928f951bb42c3bdc14ada1122b5cf0a7d7c11c9f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-extensions-image}"
       },
       "secrets": [],
       "args": {}
@@ -30,9 +30,12 @@
       "ENV COMPUTE_STATE_DIR=/var/lib/duckstream",
       "ENV BAYT_LOCAL_DUCKDB_EXTENSIONS=/compute-app/extensions",
       "ENV DENO_DIR=/deno-dir",
+      "ENV DUCKSTREAM_ENGINE=risingwave",
+      "ENV RISINGWAVE_URL=http://risingwave:4566",
+      "RUN printf '%s\\n' '#!/bin/sh' 'set -eu' 'dir=\"${COMPUTE_STATE_DIR:-/var/lib/duckstream}/risingwave\"' 'mkdir -p \"$dir/state_store\"' 'printf \"%s\\n\" \"[meta]\" \"min_sst_retention_time_sec = 300\" \"full_gc_interval_sec = 60\" \"vacuum_interval_sec = 15\" \"gc_history_retention_time_sec = 0\" \"clean_all_foreground_jobs_on_recovery = true\" \"\" \"[meta.developer]\" \"actor_cnt_per_worker_parallelism_soft_limit = 1000\" \"actor_cnt_per_worker_parallelism_hard_limit = 4000\" \"\" \"[streaming]\" \"in_flight_barrier_nums = 256\" \"\" \"[streaming.developer]\" \"enable_snapshot_backfill = false\" \"\" \"[storage]\" \"shared_buffer_min_batch_flush_size_mb = 32\" > \"$dir/risingwave.toml\"' 'compute_mem=\"${RISINGWAVE_MEMORY_BYTES:-1342177280}\"' 'parallelism=\"${RISINGWAVE_PARALLELISM:-2}\"' 'exec /risingwave/bin/risingwave standalone --config-path \"$dir/risingwave.toml\" \\' '  --meta-opts=\"--listen-addr 127.0.0.1:5690 --advertise-addr 127.0.0.1:5690 --backend sqlite --sql-endpoint $dir/metadata.db --state-store hummock+fs://$dir/state_store --data-directory hummock_001\" \\' '  --compute-opts=\"--listen-addr 127.0.0.1:5688 --meta-address http://127.0.0.1:5690 --total-memory-bytes $compute_mem --role both --parallelism $parallelism\" \\' '  --frontend-opts=\"--listen-addr 0.0.0.0:4566 --meta-addr http://127.0.0.1:5690 --frontend-total-memory-bytes 268435456\" \\' '  --compactor-opts=\"--listen-addr 127.0.0.1:6660 --meta-address http://127.0.0.1:5690 --compactor-total-memory-bytes 1073741824 --compactor-meta-cache-memory-bytes 67108864\"' > /usr/local/bin/appliance-risingwave.sh && chmod 755 /usr/local/bin/appliance-risingwave.sh",
       "ENV MECHA_MESH_DIR=/mesh-events",
       "ENV MECHA_TRANSFORM_DIR=/transform",
-      "COPY <<'APPLIANCE' /.bayt/process-compose.appliance.yaml\nversion: \"0.5\"\nprocesses:\n  airlock-upgrade:\n    command: '''psql'' ''postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}'' ''-X'' ''--set=ON_ERROR_STOP=1'' ''--single-transaction'' ''--file=/airlock-upgrade.sql'''\n    depends_on:\n      database:\n        condition: process_healthy\n  airlock-mesh:\n    command: '''/daprd'' ''--app-id'' ''airlock'' ''--dapr-listen-addresses'' ''127.0.0.1'' ''--dapr-internal-grpc-listen-address'' ''127.0.0.1'' ''--resources-path'' ''/dapr/airlock'' ''--config'' ''/dapr/config.yaml'' ''--dapr-http-port'' ''3500'' ''--dapr-grpc-port'' ''50001'' ''--dapr-internal-grpc-port'' ''50002'' ''--metrics-port'' ''0'' ''--profile-port'' ''0'' ''--log-level'' ''info'''\n    depends_on:\n      sofascore:\n        condition: process_healthy\n    environment:\n      - BRIDGE_SOFASCORE_URL=http://sofascore:8081\n    readiness_probe:\n      exec:\n        command: portcheck --port 3500\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n  airlock:\n    command: '''airlock-deno'' ''run'' ''--frozen'' ''--unstable-worker-options'' ''--allow-net=database:5432,airlock-mesh:3500,0.0.0.0:9997'' ''--allow-read'' ''--allow-env'' ''--allow-sys'' ''main.ts'''\n    working_dir: /app/airlock\n    environment:\n      - DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}\n      - MESH_URL=http://airlock-mesh:3500\n      - AIRLOCK_DIR=/airlock\n      - DENO_DIR=/airlock-deno-dir\n      - PORT=9997\n      - AIRLOCK_RELEASE=docker\n      - AIRLOCK_SEAL_DEV=\n      - AIRLOCK_TARGET=docker\n    depends_on:\n      airlock-upgrade:\n        condition: process_completed_successfully\n      airlock-mesh:\n        condition: process_healthy\n    readiness_probe:\n      exec:\n        command: portcheck --port 9997\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n  database:\n    command: '''docker-entrypoint.sh'' ''postgres'' ''-c'' ''session_preload_libraries=pg_ivm'' ''-c'' ''wal_level=logical'' ''-c'' ''max_replication_slots=128'' ''-c'' ''max_wal_senders=128'' ''-c'' ''fsync=off'' ''-c'' ''synchronous_commit=off'' ''-c'' ''full_page_writes=off'' ''-c'' ''shared_buffers=32MB'' ''-c'' ''max_connections=200'' ''-c'' ''fsync=on'' ''-c'' ''synchronous_commit=on'' ''-c'' ''full_page_writes=on'' ''-c'' ''shared_buffers=512MB'''\n  electric:\n    command: '''env'' ''DATABASE_URL=postgresql://electric:${ELECTRIC_PASSWORD:-dev-electric-password}@127.0.0.1:5432/${POSTGRES_DB:-golaberto}?sslmode=disable'' ''ELECTRIC_SECRET=${ELECTRIC_SECRET:-dev-electric-secret}'' ''ELECTRIC_MANUAL_TABLE_PUBLISHING=true'' ''ELECTRIC_PORT=3002'' ''ELECTRIC_STORAGE_DIR=${PGDATA:-/var/lib/pgsql/data}/electric'' ''LD_LIBRARY_PATH=/electric-libs'' ''ELIXIR_ERL_OPTIONS=+fnu'' ''/electric-app/bin/entrypoint'' ''start'''\n  ticker:\n    command: '''ticker-deno'' ''run'' ''--frozen'' ''--allow-net'' ''--allow-env'' ''main.ts'''\n    working_dir: /ticker-app\n    environment:\n      - CRUD_URL=http://crud:3000\n      - CALL_TIMEOUT_MS=35000\n      - SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZWNoYTpzdGFjayIsInJvbGUiOiJzZXJ2aWNlIiwic3ViIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiZXhwIjoxOTg4MTUwNDAwfQ.K4ZX9EDs-BwPIh3r_ZOKmO9XfrQrEx18rwlw3siXcxs}\n      - DENO_DIR=/ticker-deno-dir\n      - PORT=9998\n      - WAKE_URLS=http://airlock:9997/healthz\n    depends_on:\n      crud:\n        condition: process_healthy\n    readiness_probe:\n      exec:\n        command: portcheck --port 9998\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n  clock:\n    command: '''/usr/local/bin/appliance-clock.sh'''\n    environment:\n      - SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZWNoYTpzdGFjayIsInJvbGUiOiJzZXJ2aWNlIiwic3ViIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiZXhwIjoxOTg4MTUwNDAwfQ.K4ZX9EDs-BwPIh3r_ZOKmO9XfrQrEx18rwlw3siXcxs}\n    depends_on:\n      ticker:\n        condition: process_healthy\n    availability:\n      restart: on_failure\n  timer-check:\n    command: '''psql'' ''-X'' ''--set=ON_ERROR_STOP=1'' ''--single-transaction'' ''--file=/timer-check.sql'''\n  sofascore:\n    command: '''/usr/local/bin/sofascore_fetch'' ''--listen'' ''127.0.0.1:8081'''\n    readiness_probe:\n      exec:\n        command: portcheck --port 8081\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\nAPPLIANCE",
+      "COPY <<'APPLIANCE' /.bayt/process-compose.appliance.yaml\nversion: \"0.5\"\nprocesses:\n  airlock-upgrade:\n    command: '''psql'' ''postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}'' ''-X'' ''--set=ON_ERROR_STOP=1'' ''--single-transaction'' ''--file=/airlock-upgrade.sql'''\n    depends_on:\n      database:\n        condition: process_healthy\n  airlock-mesh:\n    command: '''/daprd'' ''--app-id'' ''airlock'' ''--dapr-listen-addresses'' ''127.0.0.1'' ''--dapr-internal-grpc-listen-address'' ''127.0.0.1'' ''--resources-path'' ''/dapr/airlock'' ''--config'' ''/dapr/config.yaml'' ''--dapr-http-port'' ''3500'' ''--dapr-grpc-port'' ''50001'' ''--dapr-internal-grpc-port'' ''50002'' ''--metrics-port'' ''0'' ''--profile-port'' ''0'' ''--log-level'' ''info'''\n    depends_on:\n      sofascore:\n        condition: process_healthy\n    environment:\n      - BRIDGE_SOFASCORE_URL=http://sofascore:8081\n    readiness_probe:\n      exec:\n        command: portcheck --port 3500\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n  airlock:\n    command: '''airlock-deno'' ''run'' ''--frozen'' ''--unstable-worker-options'' ''--allow-net=database:5432,airlock-mesh:3500,0.0.0.0:9997'' ''--allow-read'' ''--allow-env'' ''--allow-sys'' ''main.ts'''\n    working_dir: /app/airlock\n    environment:\n      - DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}\n      - MESH_URL=http://airlock-mesh:3500\n      - AIRLOCK_DIR=/airlock\n      - DENO_DIR=/airlock-deno-dir\n      - PORT=9997\n      - AIRLOCK_RELEASE=docker\n      - AIRLOCK_SEAL_DEV=\n      - AIRLOCK_TARGET=docker\n    depends_on:\n      airlock-upgrade:\n        condition: process_completed_successfully\n      airlock-mesh:\n        condition: process_healthy\n    readiness_probe:\n      exec:\n        command: portcheck --port 9997\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n  database:\n    command: '''docker-entrypoint.sh'' ''postgres'' ''-c'' ''session_preload_libraries=pg_ivm'' ''-c'' ''wal_level=logical'' ''-c'' ''max_replication_slots=128'' ''-c'' ''max_wal_senders=128'' ''-c'' ''fsync=off'' ''-c'' ''synchronous_commit=off'' ''-c'' ''full_page_writes=off'' ''-c'' ''shared_buffers=32MB'' ''-c'' ''max_connections=200'' ''-c'' ''fsync=on'' ''-c'' ''synchronous_commit=on'' ''-c'' ''full_page_writes=on'' ''-c'' ''shared_buffers=512MB'''\n  electric:\n    command: '''env'' ''DATABASE_URL=postgresql://electric:${ELECTRIC_PASSWORD:-dev-electric-password}@127.0.0.1:5432/${POSTGRES_DB:-golaberto}?sslmode=disable'' ''ELECTRIC_SECRET=${ELECTRIC_SECRET:-dev-electric-secret}'' ''ELECTRIC_MANUAL_TABLE_PUBLISHING=true'' ''ELECTRIC_PORT=3002'' ''ELECTRIC_STORAGE_DIR=${PGDATA:-/var/lib/pgsql/data}/electric'' ''LD_LIBRARY_PATH=/electric-libs'' ''ELIXIR_ERL_OPTIONS=+fnu'' ''/electric-app/bin/entrypoint'' ''start'''\n  risingwave:\n    command: '''/usr/local/bin/appliance-risingwave.sh'''\n    environment:\n      - CONNECTOR_LIBS_PATH=/risingwave/bin/connector-node/libs\n      - ADBC_DRIVER_PATH=/risingwave/lib/adbc\n      - LD_LIBRARY_PATH=/risingwave/lib:/risingwave/lib/adbc:/risingwave/jre/lib/server\n      - JAVA_HOME=/risingwave/jre\n      - JAVA_TOOL_OPTIONS=-Xmx256m\n      - PATH=/risingwave/jre/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\n      - ENABLE_TELEMETRY=false\n    depends_on:\n      database:\n        condition: process_healthy\n    readiness_probe:\n      exec:\n        command: portcheck --port 4566\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n  ticker:\n    command: '''ticker-deno'' ''run'' ''--frozen'' ''--allow-net'' ''--allow-env'' ''main.ts'''\n    working_dir: /ticker-app\n    environment:\n      - CRUD_URL=http://crud:3000\n      - CALL_TIMEOUT_MS=35000\n      - SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZWNoYTpzdGFjayIsInJvbGUiOiJzZXJ2aWNlIiwic3ViIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiZXhwIjoxOTg4MTUwNDAwfQ.K4ZX9EDs-BwPIh3r_ZOKmO9XfrQrEx18rwlw3siXcxs}\n      - DENO_DIR=/ticker-deno-dir\n      - PORT=9998\n      - WAKE_URLS=http://airlock:9997/healthz\n    depends_on:\n      crud:\n        condition: process_healthy\n    readiness_probe:\n      exec:\n        command: portcheck --port 9998\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n  clock:\n    command: '''/usr/local/bin/appliance-clock.sh'''\n    environment:\n      - SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZWNoYTpzdGFjayIsInJvbGUiOiJzZXJ2aWNlIiwic3ViIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiZXhwIjoxOTg4MTUwNDAwfQ.K4ZX9EDs-BwPIh3r_ZOKmO9XfrQrEx18rwlw3siXcxs}\n    depends_on:\n      ticker:\n        condition: process_healthy\n    availability:\n      restart: on_failure\n  timer-check:\n    command: '''psql'' ''-X'' ''--set=ON_ERROR_STOP=1'' ''--single-transaction'' ''--file=/timer-check.sql'''\n  sofascore:\n    command: '''/usr/local/bin/sofascore_fetch'' ''--listen'' ''127.0.0.1:8081'''\n    readiness_probe:\n      exec:\n        command: portcheck --port 8081\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\nAPPLIANCE",
       "RUN printf '%s\\n' '#!/bin/sh' 'set -e' 'while sleep \"${POKE_INTERVAL_SECONDS:-60}\"; do' '  curl -fsS -X POST -H \"Authorization: Bearer ${SERVICE_JWT}\" \"http://ticker:9998/poke?caller=appliance\" >/dev/null || { echo \"clock: the ticker refused its poke\" >&2; exit 1; }' 'done' > /usr/local/bin/appliance-clock.sh && chmod 755 /usr/local/bin/appliance-clock.sh",
       "ENV PATH=/usr/lib/postgresql/18/bin:/usr/local/bin:$PATH",
       "ENV PGDATA=/var/lib/pgsql/data",
@@ -581,6 +584,124 @@
         "exclude": []
       },
       {
+        "from": {
+          "ref": ":risingwave",
+          "name": "golaberto-risingwave"
+        },
+        "srcs": [
+          "/risingwave/bin/risingwave"
+        ],
+        "dst": "/risingwave/bin/risingwave",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "ref": ":risingwave",
+          "name": "golaberto-risingwave"
+        },
+        "srcs": [
+          "/risingwave/bin/connector-node"
+        ],
+        "dst": "/risingwave/bin/connector-node",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "ref": ":risingwave",
+          "name": "golaberto-risingwave"
+        },
+        "srcs": [
+          "/risingwave/lib"
+        ],
+        "dst": "/risingwave/lib",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "ref": ":risingwave",
+          "name": "golaberto-risingwave"
+        },
+        "srcs": [
+          "/lib/*-linux-gnu/libpython3.12.so.1*",
+          "/lib/*-linux-gnu/libexpat.so.1*"
+        ],
+        "dst": "/risingwave/lib/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "ref": ":risingwave",
+          "name": "golaberto-risingwave"
+        },
+        "srcs": [
+          "/usr/lib/jvm/java-21-openjdk-*/bin"
+        ],
+        "dst": "/risingwave/jre/bin",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "ref": ":risingwave",
+          "name": "golaberto-risingwave"
+        },
+        "srcs": [
+          "/usr/lib/jvm/java-21-openjdk-*/conf"
+        ],
+        "dst": "/risingwave/jre/conf",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "ref": ":risingwave",
+          "name": "golaberto-risingwave"
+        },
+        "srcs": [
+          "/usr/lib/jvm/java-21-openjdk-*/lib"
+        ],
+        "dst": "/risingwave/jre/lib",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "ref": ":risingwave",
+          "name": "golaberto-risingwave"
+        },
+        "srcs": [
+          "/etc/java-21-openjdk"
+        ],
+        "dst": "/etc/java-21-openjdk",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "ref": ":risingwave",
+          "name": "golaberto-risingwave"
+        },
+        "srcs": [
+          "/etc/ssl/certs/java"
+        ],
+        "dst": "/etc/ssl/certs/java",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
         "from": null,
         "srcs": [
           "computations/standings.js"
@@ -593,9 +714,9 @@
       {
         "from": null,
         "srcs": [
-          "duckstream/standings.feldera.json"
+          "duckstream/standings.risingwave.json"
         ],
-        "dst": "duckstream/standings.feldera.json",
+        "dst": "duckstream/standings.risingwave.json",
         "link": true,
         "parents": false,
         "exclude": []
@@ -633,9 +754,9 @@
       {
         "from": null,
         "srcs": [
-          "duckstream/ratings.feldera.json"
+          "duckstream/ratings.risingwave.json"
         ],
-        "dst": "duckstream/ratings.feldera.json",
+        "dst": "duckstream/ratings.risingwave.json",
         "link": true,
         "parents": false,
         "exclude": []
@@ -663,9 +784,9 @@
       {
         "from": null,
         "srcs": [
-          "duckstream/chances.feldera.json"
+          "duckstream/chances.risingwave.json"
         ],
-        "dst": "duckstream/chances.feldera.json",
+        "dst": "duckstream/chances.risingwave.json",
         "link": true,
         "parents": false,
         "exclude": []
@@ -693,9 +814,9 @@
       {
         "from": null,
         "srcs": [
-          "duckstream/cards.feldera.json"
+          "duckstream/cards.risingwave.json"
         ],
-        "dst": "duckstream/cards.feldera.json",
+        "dst": "duckstream/cards.risingwave.json",
         "link": true,
         "parents": false,
         "exclude": []
@@ -723,9 +844,9 @@
       {
         "from": null,
         "srcs": [
-          "duckstream/player_stats.feldera.json"
+          "duckstream/player_stats.risingwave.json"
         ],
-        "dst": "duckstream/player_stats.feldera.json",
+        "dst": "duckstream/player_stats.risingwave.json",
         "link": true,
         "parents": false,
         "exclude": []
@@ -799,12 +920,13 @@
       "RUN cp \"$(/root/.local/share/lazybox/bin/nu -c '$nu.current-exe')\" /usr/local/bin/nu && chmod 755 /usr/local/bin/nu && /usr/local/bin/nu --version",
       "RUN printf '%s\\n' '#!/bin/sh' 'while [ $# -gt 0 ]; do if [ \"$1\" = \"--\" ]; then shift; break; fi; shift; done' 'exec \"$@\"' > /usr/local/bin/mise && chmod 755 /usr/local/bin/mise",
       "RUN printf '#!/bin/sh\\nexit 0\\n' > /usr/local/bin/task && chmod 755 /usr/local/bin/task",
-      "RUN printf '%s\\n' '#!/bin/sh' 'set -e' 'for n in crud database auth airlock-mesh airlock ticker sofascore; do' '  grep -Eq \"^[^#]*[[:space:]]$n([[:space:]]|$)\" /etc/hosts || echo \"127.0.0.1 $n\" >> /etc/hosts || { echo \"appliance: cannot name $n in /etc/hosts\" >&2; exit 1; }' 'done' 'export PORT=\"${PORT:-8080}\"' 'if [ \"$PORT\" = 8081 ]; then echo \"appliance: PORT 8081 is where the bridge process sofascore listens; set another\" >&2; exit 1; fi' 'export CADDY_HTTP_PORT=\"${PORT}\"' 'export CADDY_TLS_HOST_PORT=\"${PORT}\"' 'if [ -n \"$ORIGIN\" ]; then' '  if [ -z \"$WEBAUTHN_RP_ID\" ]; then' '    h=\"${ORIGIN#*://}\"' '    h=\"${h%%/*}\"' '    h=\"${h%%:*}\"' '    if [ -n \"$h\" ] && [ \"$h\" != \"localhost\" ]; then export WEBAUTHN_RP_ID=\"$h\"; fi' '  fi' '  if [ -z \"$WEBAUTHN_ORIGIN\" ] && [ -n \"$WEBAUTHN_RP_ID\" ] && [ \"$WEBAUTHN_RP_ID\" != \"localhost\" ]; then export WEBAUTHN_ORIGIN=\"$ORIGIN\"; fi' 'fi' 'exec \"$@\"' > /usr/local/bin/appliance-entrypoint.sh && chmod 755 /usr/local/bin/appliance-entrypoint.sh",
+      "RUN printf '%s\\n' '#!/bin/sh' 'set -e' 'for n in crud database auth airlock-mesh airlock ticker risingwave sofascore; do' '  grep -Eq \"^[^#]*[[:space:]]$n([[:space:]]|$)\" /etc/hosts || echo \"127.0.0.1 $n\" >> /etc/hosts || { echo \"appliance: cannot name $n in /etc/hosts\" >&2; exit 1; }' 'done' 'export PORT=\"${PORT:-8080}\"' 'if [ \"$PORT\" = 8081 ]; then echo \"appliance: PORT 8081 is where the bridge process sofascore listens; set another\" >&2; exit 1; fi' 'export CADDY_HTTP_PORT=\"${PORT}\"' 'export CADDY_TLS_HOST_PORT=\"${PORT}\"' 'if [ -n \"$ORIGIN\" ]; then' '  if [ -z \"$WEBAUTHN_RP_ID\" ]; then' '    h=\"${ORIGIN#*://}\"' '    h=\"${h%%/*}\"' '    h=\"${h%%:*}\"' '    if [ -n \"$h\" ] && [ \"$h\" != \"localhost\" ]; then export WEBAUTHN_RP_ID=\"$h\"; fi' '  fi' '  if [ -z \"$WEBAUTHN_ORIGIN\" ] && [ -n \"$WEBAUTHN_RP_ID\" ] && [ \"$WEBAUTHN_RP_ID\" != \"localhost\" ]; then export WEBAUTHN_ORIGIN=\"$ORIGIN\"; fi' 'fi' 'exec \"$@\"' > /usr/local/bin/appliance-entrypoint.sh && chmod 755 /usr/local/bin/appliance-entrypoint.sh",
       "RUN sed -Ei 's|http://127\\.0\\.0\\.1:\\$\\{CADDY_HTTP_PORT:-[0-9]+\\}/health|http://127.0.0.1:${PORT:-8080}/health|g' /.bayt/process-compose.yaml",
       "RUN grep -v AIRLOCK_SEAL_DEV /.bayt/process-compose.yaml > /tmp/process-compose.yaml && mv /tmp/process-compose.yaml /.bayt/process-compose.yaml",
       "RUN awk 'skip { d += gsub(/\\{/, \"{\") - gsub(/\\}/, \"}\"); if (d <= 0) skip = 0; next } /handle @rendered \\{/ { skip = 1; d = 1; next } { print }' /etc/caddy/Caddyfile > /tmp/Caddyfile && mv /tmp/Caddyfile /etc/caddy/Caddyfile",
       "RUN nu -c 'let f = \"/dapr/airlock/acquire.yaml\"; let b = (open $f); if $b.spec.baseUrl != \"http://sofascore:8080\" { error make {msg: \"appliance: unexpected bridge endpoint in acquire\"} }; $b | upsert spec.baseUrl \"http://sofascore:8081\" | to yaml | save -f $f'",
       "RUN --network=none deno check --cached-only --frozen --config /compute-app/deno.json /compute-app/main.ts /compute-app/cage.ts /compute-app/step-worker.ts && touch /compute-app/extensions/.installed-v1.5.6",
+      "RUN nu -c 'let f = \"/.bayt/process-compose.yaml\"; open $f | upsert processes.compute.depends_on.risingwave {condition: \"process_healthy\"} | if (\"transform\" in $in.processes) { update processes.transform.entrypoint {|p| $p.processes.transform.entrypoint | each {|a| $a | str replace \" ($$cdir | path join '\\''events.yaml'\\'')\" \"\" } } } else { $in } | to yaml | save -f $f'",
       "RUN ports=\"8081\"; for p in $ports; do if grep -Eq \":-$p\\}\" /.bayt/process-compose.yaml; then echo \"appliance: bridge port $p is one an appliance process takes; name another\" >&2; exit 1; fi; done; dup=\"$(printf '%s\\n' $ports | sort | uniq -d)\"; if [ -n \"$dup\" ]; then echo \"appliance: bridges share port $dup\" >&2; exit 1; fi",
       "RUN ELECTRIC_SECRET=validation-only caddy validate --adapter caddyfile --config /etc/caddy/Caddyfile"
     ],
@@ -832,6 +954,7 @@
       "airlock",
       "conduit",
       "transform",
+      "risingwave",
       "compute",
       "ticker",
       "clock"
@@ -846,20 +969,20 @@
       ".bayt/process-compose.yaml",
       "docker/*.yaml",
       "computations/standings.js",
-      "duckstream/standings.feldera.json",
+      "duckstream/standings.risingwave.json",
       "duckstream/bounded-standings.ts.bundle.js",
       "computations/ratings.js",
       "computations/golaberto-odds.wasm",
-      "duckstream/ratings.feldera.json",
+      "duckstream/ratings.risingwave.json",
       "duckstream/bounded-ratings.ts.bundle.js",
       "computations/chances.js",
-      "duckstream/chances.feldera.json",
+      "duckstream/chances.risingwave.json",
       "duckstream/bounded-chances.ts.bundle.js",
       "computations/cards.js",
-      "duckstream/cards.feldera.json",
+      "duckstream/cards.risingwave.json",
       "duckstream/bounded-cards.ts.bundle.js",
       "computations/player_stats.js",
-      "duckstream/player_stats.feldera.json",
+      "duckstream/player_stats.risingwave.json",
       "duckstream/bounded-player-stats.ts.bundle.js"
     ],
     "exclude": []
@@ -922,6 +1045,7 @@
         "./.bayt/compose.ticker.yaml",
         "./.bayt/compose.timer-check.yaml",
         "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.risingwave.yaml",
         "./.bayt/compose.sofascore-appliance.yaml",
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.served.yaml",
@@ -970,6 +1094,7 @@
         "./.bayt/compose.ticker.yaml",
         "./.bayt/compose.timer-check.yaml",
         "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.risingwave.yaml",
         "./.bayt/compose.sofascore-appliance.yaml",
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.served.yaml",
@@ -990,31 +1115,31 @@
           ".bayt/process-compose.yaml",
           "docker/*.yaml",
           "computations/standings.js",
-          "duckstream/standings.feldera.json",
+          "duckstream/standings.risingwave.json",
           "duckstream/bounded-standings.ts.bundle.js",
           "computations/ratings.js",
           "computations/golaberto-odds.wasm",
-          "duckstream/ratings.feldera.json",
+          "duckstream/ratings.risingwave.json",
           "duckstream/bounded-ratings.ts.bundle.js",
           "computations/chances.js",
-          "duckstream/chances.feldera.json",
+          "duckstream/chances.risingwave.json",
           "duckstream/bounded-chances.ts.bundle.js",
           "computations/cards.js",
-          "duckstream/cards.feldera.json",
+          "duckstream/cards.risingwave.json",
           "duckstream/bounded-cards.ts.bundle.js",
           "computations/player_stats.js",
-          "duckstream/player_stats.feldera.json",
+          "duckstream/player_stats.risingwave.json",
           "duckstream/bounded-player-stats.ts.bundle.js",
           "services/database/migrations/000_extensions.sql",
           "services/database/migrations/001_roles.sql",
           "services/database/migrations/002_grants.sql",
           "services/database/migrations/004_types.sql",
-          "services/database/migrations/005_create_tables.sql",
           "services/database/migrations/006_policies.sql",
           "services/database/migrations/007_txid.sql",
           "services/database/migrations/008_publication.sql",
           "services/database/migrations/009_functions.sql",
           "services/database/migrations/003_rls.sql",
+          "services/database/migrations/005_create_tables.sql",
           "services/database/migrations/063_mecha_actors.sql",
           "services/database/migrations/010_game_days.sql",
           "services/database/migrations/011_comment_writes.sql",
@@ -1087,12 +1212,12 @@
               "services/database/migrations/001_roles.sql",
               "services/database/migrations/002_grants.sql",
               "services/database/migrations/004_types.sql",
-              "services/database/migrations/005_create_tables.sql",
               "services/database/migrations/006_policies.sql",
               "services/database/migrations/007_txid.sql",
               "services/database/migrations/008_publication.sql",
               "services/database/migrations/009_functions.sql",
               "services/database/migrations/003_rls.sql",
+              "services/database/migrations/005_create_tables.sql",
               "services/database/migrations/063_mecha_actors.sql",
               "services/database/migrations/010_game_days.sql",
               "services/database/migrations/011_comment_writes.sql",
@@ -1182,6 +1307,7 @@
         "./.bayt/compose.ticker.yaml",
         "./.bayt/compose.timer-check.yaml",
         "./.bayt/compose.compute.yaml",
+        "./.bayt/compose.risingwave.yaml",
         "./.bayt/compose.sofascore-appliance.yaml",
         "./.bayt/compose.redis.yaml",
         "./.bayt/compose.served.yaml",
@@ -1208,6 +1334,7 @@
     "ticker_outs",
     "timer-check_outs",
     "compute_outs",
+    "risingwave_outs",
     "sofascore-appliance_outs"
   ],
   "sameProjectDeps": [
@@ -1227,6 +1354,7 @@
     "ticker_outs",
     "timer-check_outs",
     "compute_outs",
+    "risingwave_outs",
     "sofascore-appliance_outs"
   ],
   "transitiveDeps": [
@@ -1246,6 +1374,7 @@
     "ticker_outs",
     "timer-check_outs",
     "compute_outs",
+    "risingwave_outs",
     "sofascore-appliance_outs",
     "database_outs",
     "crud_outs",
@@ -1270,6 +1399,7 @@
     "./.bayt/compose.ticker.yaml",
     "./.bayt/compose.timer-check.yaml",
     "./.bayt/compose.compute.yaml",
+    "./.bayt/compose.risingwave.yaml",
     "./.bayt/compose.sofascore-appliance.yaml",
     "./.bayt/compose.redis.yaml",
     "./.bayt/compose.served.yaml",
@@ -1413,6 +1543,15 @@
     },
     {
       "name": "compute_outs",
+      "project": "golaberto",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "risingwave_outs",
       "project": "golaberto",
       "dir": ".",
       "outs": {

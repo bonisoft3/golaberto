@@ -82,6 +82,8 @@ include:
   required: false
 - path: ./compose.transform.yaml
   required: false
+- path: ./compose.risingwave.yaml
+  required: false
 - path: ../monorepo/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml
   required: false
 - path: ../compose.networks.yaml

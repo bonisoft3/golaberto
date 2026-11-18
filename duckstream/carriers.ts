@@ -55,15 +55,14 @@ const withdrawn =
 const stamp = (value: string) => `strftime(${value}, '%Y-%m-%dT%H:%M:%S.%fZ')`;
 
 // Row-local carriers retain the archive's UTC, calendar-year and f32 contracts.
-// Relational joins and aggregates belong to the compiled Feldera program.
+// Relational joins and aggregates belong to the compiled Duckstream program.
 function expression(
   name: Computation,
   table: string,
   field: string,
   type: string,
 ) {
-  // Four exact 32-bit limbs avoid the pinned engine's non-Copy string/UUID
-  // ASOF codegen bug. Unlike a hash, this preserves all 128 identity bits.
+  // Four exact 32-bit limbs preserve all 128 identity bits for ASOF equality keys.
   const key = /^(home|away|team)_key_([0-3])$/.exec(field);
   if (key) {
     const column = key[1] === "team" ? "team_id" : key[1] + "_id";
@@ -101,8 +100,8 @@ function expression(
     } else if (field === "moment") return utc;
   }
   if (table === "team_rating") {
-    // Feldera admits >= ASOF. At microsecond precision this is exactly the
-    // original strict comparison to the rating day's UTC midnight.
+    // >= ASOF at microsecond precision is the original strict comparison to the
+    // rating day's UTC midnight.
     if (field === "moment") {
       return "measure_date::DATE::TIMESTAMP + INTERVAL 1 MICROSECOND";
     }
@@ -242,7 +241,7 @@ export function descriptor(name: Computation, sql: string, schema: Schema) {
       if (
         !["VARCHAR", "BOOLEAN", "INTEGER", "BIGINT", "DOUBLE", "TIMESTAMP"]
           .includes(type)
-      ) throw new Error("unsupported Feldera JSON type " + type);
+      ) throw new Error("unsupported RisingWave JSON type " + type);
       return { name: f.name, type };
     });
   return {
@@ -261,11 +260,17 @@ export function descriptor(name: Computation, sql: string, schema: Schema) {
         projection: postgresProjection(name, r),
       }])),
       outputs: Object.fromEntries(outputs[name].map((output) => [output, {
-        partitionQuery: name !== "chances"
-          ? `SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_${output} r`
-          : `SELECT g.phase_id AS __partition,r.* FROM result_${output} r JOIN source_stage_group g ON g.id=r.${
+        partitionQuery: name === "chances"
+          ? `SELECT g.phase_id AS __partition,r.* FROM result_${output} r JOIN source_stage_group g ON g.id=r.${
             output === "groups" ? "id" : "group_id"
-          }`,
+          }`
+          : name === "standings"
+          ? `SELECT r.${output === "groups" ? "id" : "group_id"} AS __partition,r.* FROM result_${output} r`
+          : name === "cards"
+          ? `SELECT r.${output === "game_card" ? "phase_id" : "phase_key"} AS __partition,r.* FROM result_${output} r`
+          : name === "player_stats"
+          ? `SELECT r.championship_id AS __partition,r.* FROM result_${output} r`
+          : `SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_${output} r`,
       }])),
     },
     inputs: Object.fromEntries(schema.inputs.map((r) => [r.name, {

@@ -33,7 +33,7 @@
     },
     "outputs": {
       "player_stat": {
-        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_player_stat r"
+        "partitionQuery": "SELECT r.championship_id AS __partition,r.* FROM result_player_stat r"
       }
     }
   },

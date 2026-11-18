@@ -1,0 +1,42 @@
+# generated from bayt.cue — do not edit
+services:
+  golaberto-risingwave:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.risingwave
+      target: risingwave
+      tags:
+      - bayt-golaberto-risingwave:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-golaberto-risingwave:latest
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    healthcheck:
+      test:
+      - CMD
+      - portcheck
+      - --port
+      - "4566"
+      interval: 1s
+      timeout: 5s
+      retries: 30
+      start_period: 120s
+      start_interval: 200ms
+    image: bayt-golaberto-risingwave:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    networks:
+      default:
+        aliases:
+        - risingwave
+    restart: on-failure
+  golaberto-risingwave_bayt:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.risingwave
+      target: risingwave_bayt
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/golaberto}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    image: bayt-golaberto-risingwave_bayt:latest
+    scale: 0

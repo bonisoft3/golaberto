@@ -986,6 +986,7 @@
         ":ticker:outs",
         ":timer-check:outs",
         ":compute:outs",
+        ":risingwave:outs",
         ":sofascore-appliance:outs"
       ],
       "env": {},
@@ -998,20 +999,20 @@
           ".bayt/process-compose.yaml",
           "docker/*.yaml",
           "computations/standings.js",
-          "duckstream/standings.feldera.json",
+          "duckstream/standings.risingwave.json",
           "duckstream/bounded-standings.ts.bundle.js",
           "computations/ratings.js",
           "computations/golaberto-odds.wasm",
-          "duckstream/ratings.feldera.json",
+          "duckstream/ratings.risingwave.json",
           "duckstream/bounded-ratings.ts.bundle.js",
           "computations/chances.js",
-          "duckstream/chances.feldera.json",
+          "duckstream/chances.risingwave.json",
           "duckstream/bounded-chances.ts.bundle.js",
           "computations/cards.js",
-          "duckstream/cards.feldera.json",
+          "duckstream/cards.risingwave.json",
           "duckstream/bounded-cards.ts.bundle.js",
           "computations/player_stats.js",
-          "duckstream/player_stats.feldera.json",
+          "duckstream/player_stats.risingwave.json",
           "duckstream/bounded-player-stats.ts.bundle.js"
         ],
         "defaultGlobs": null,
@@ -1027,7 +1028,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-extensions-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-extensions:0.25.2@sha256:d3fe4b3869ded07a410579c2928f951bb42c3bdc14ada1122b5cf0a7d7c11c9f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-extensions-image}"
+            "libraries_mecha-extensions-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-extensions:0.26.0@sha256:d3fe4b3869ded07a410579c2928f951bb42c3bdc14ada1122b5cf0a7d7c11c9f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-extensions-image}"
           },
           "secrets": [],
           "args": {}
@@ -1571,6 +1572,124 @@
             "exclude": []
           },
           {
+            "from": {
+              "ref": ":risingwave",
+              "name": "golaberto-risingwave"
+            },
+            "srcs": [
+              "/risingwave/bin/risingwave"
+            ],
+            "dst": "/risingwave/bin/risingwave",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          {
+            "from": {
+              "ref": ":risingwave",
+              "name": "golaberto-risingwave"
+            },
+            "srcs": [
+              "/risingwave/bin/connector-node"
+            ],
+            "dst": "/risingwave/bin/connector-node",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          {
+            "from": {
+              "ref": ":risingwave",
+              "name": "golaberto-risingwave"
+            },
+            "srcs": [
+              "/risingwave/lib"
+            ],
+            "dst": "/risingwave/lib",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          {
+            "from": {
+              "ref": ":risingwave",
+              "name": "golaberto-risingwave"
+            },
+            "srcs": [
+              "/lib/*-linux-gnu/libpython3.12.so.1*",
+              "/lib/*-linux-gnu/libexpat.so.1*"
+            ],
+            "dst": "/risingwave/lib/",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          {
+            "from": {
+              "ref": ":risingwave",
+              "name": "golaberto-risingwave"
+            },
+            "srcs": [
+              "/usr/lib/jvm/java-21-openjdk-*/bin"
+            ],
+            "dst": "/risingwave/jre/bin",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          {
+            "from": {
+              "ref": ":risingwave",
+              "name": "golaberto-risingwave"
+            },
+            "srcs": [
+              "/usr/lib/jvm/java-21-openjdk-*/conf"
+            ],
+            "dst": "/risingwave/jre/conf",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          {
+            "from": {
+              "ref": ":risingwave",
+              "name": "golaberto-risingwave"
+            },
+            "srcs": [
+              "/usr/lib/jvm/java-21-openjdk-*/lib"
+            ],
+            "dst": "/risingwave/jre/lib",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          {
+            "from": {
+              "ref": ":risingwave",
+              "name": "golaberto-risingwave"
+            },
+            "srcs": [
+              "/etc/java-21-openjdk"
+            ],
+            "dst": "/etc/java-21-openjdk",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          {
+            "from": {
+              "ref": ":risingwave",
+              "name": "golaberto-risingwave"
+            },
+            "srcs": [
+              "/etc/ssl/certs/java"
+            ],
+            "dst": "/etc/ssl/certs/java",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          {
             "from": null,
             "srcs": [
               "computations/standings.js"
@@ -1583,9 +1702,9 @@
           {
             "from": null,
             "srcs": [
-              "duckstream/standings.feldera.json"
+              "duckstream/standings.risingwave.json"
             ],
-            "dst": "duckstream/standings.feldera.json",
+            "dst": "duckstream/standings.risingwave.json",
             "link": true,
             "parents": false,
             "exclude": []
@@ -1623,9 +1742,9 @@
           {
             "from": null,
             "srcs": [
-              "duckstream/ratings.feldera.json"
+              "duckstream/ratings.risingwave.json"
             ],
-            "dst": "duckstream/ratings.feldera.json",
+            "dst": "duckstream/ratings.risingwave.json",
             "link": true,
             "parents": false,
             "exclude": []
@@ -1653,9 +1772,9 @@
           {
             "from": null,
             "srcs": [
-              "duckstream/chances.feldera.json"
+              "duckstream/chances.risingwave.json"
             ],
-            "dst": "duckstream/chances.feldera.json",
+            "dst": "duckstream/chances.risingwave.json",
             "link": true,
             "parents": false,
             "exclude": []
@@ -1683,9 +1802,9 @@
           {
             "from": null,
             "srcs": [
-              "duckstream/cards.feldera.json"
+              "duckstream/cards.risingwave.json"
             ],
-            "dst": "duckstream/cards.feldera.json",
+            "dst": "duckstream/cards.risingwave.json",
             "link": true,
             "parents": false,
             "exclude": []
@@ -1713,9 +1832,9 @@
           {
             "from": null,
             "srcs": [
-              "duckstream/player_stats.feldera.json"
+              "duckstream/player_stats.risingwave.json"
             ],
-            "dst": "duckstream/player_stats.feldera.json",
+            "dst": "duckstream/player_stats.risingwave.json",
             "link": true,
             "parents": false,
             "exclude": []
@@ -1862,12 +1981,13 @@
           "RUN cp \"$(/root/.local/share/lazybox/bin/nu -c '$nu.current-exe')\" /usr/local/bin/nu && chmod 755 /usr/local/bin/nu && /usr/local/bin/nu --version",
           "RUN printf '%s\\n' '#!/bin/sh' 'while [ $# -gt 0 ]; do if [ \"$1\" = \"--\" ]; then shift; break; fi; shift; done' 'exec \"$@\"' > /usr/local/bin/mise && chmod 755 /usr/local/bin/mise",
           "RUN printf '#!/bin/sh\\nexit 0\\n' > /usr/local/bin/task && chmod 755 /usr/local/bin/task",
-          "RUN printf '%s\\n' '#!/bin/sh' 'set -e' 'for n in crud database auth airlock-mesh airlock ticker sofascore; do' '  grep -Eq \"^[^#]*[[:space:]]$n([[:space:]]|$)\" /etc/hosts || echo \"127.0.0.1 $n\" >> /etc/hosts || { echo \"appliance: cannot name $n in /etc/hosts\" >&2; exit 1; }' 'done' 'export PORT=\"${PORT:-8080}\"' 'if [ \"$PORT\" = 8081 ]; then echo \"appliance: PORT 8081 is where the bridge process sofascore listens; set another\" >&2; exit 1; fi' 'export CADDY_HTTP_PORT=\"${PORT}\"' 'export CADDY_TLS_HOST_PORT=\"${PORT}\"' 'if [ -n \"$ORIGIN\" ]; then' '  if [ -z \"$WEBAUTHN_RP_ID\" ]; then' '    h=\"${ORIGIN#*://}\"' '    h=\"${h%%/*}\"' '    h=\"${h%%:*}\"' '    if [ -n \"$h\" ] && [ \"$h\" != \"localhost\" ]; then export WEBAUTHN_RP_ID=\"$h\"; fi' '  fi' '  if [ -z \"$WEBAUTHN_ORIGIN\" ] && [ -n \"$WEBAUTHN_RP_ID\" ] && [ \"$WEBAUTHN_RP_ID\" != \"localhost\" ]; then export WEBAUTHN_ORIGIN=\"$ORIGIN\"; fi' 'fi' 'exec \"$@\"' > /usr/local/bin/appliance-entrypoint.sh && chmod 755 /usr/local/bin/appliance-entrypoint.sh",
+          "RUN printf '%s\\n' '#!/bin/sh' 'set -e' 'for n in crud database auth airlock-mesh airlock ticker risingwave sofascore; do' '  grep -Eq \"^[^#]*[[:space:]]$n([[:space:]]|$)\" /etc/hosts || echo \"127.0.0.1 $n\" >> /etc/hosts || { echo \"appliance: cannot name $n in /etc/hosts\" >&2; exit 1; }' 'done' 'export PORT=\"${PORT:-8080}\"' 'if [ \"$PORT\" = 8081 ]; then echo \"appliance: PORT 8081 is where the bridge process sofascore listens; set another\" >&2; exit 1; fi' 'export CADDY_HTTP_PORT=\"${PORT}\"' 'export CADDY_TLS_HOST_PORT=\"${PORT}\"' 'if [ -n \"$ORIGIN\" ]; then' '  if [ -z \"$WEBAUTHN_RP_ID\" ]; then' '    h=\"${ORIGIN#*://}\"' '    h=\"${h%%/*}\"' '    h=\"${h%%:*}\"' '    if [ -n \"$h\" ] && [ \"$h\" != \"localhost\" ]; then export WEBAUTHN_RP_ID=\"$h\"; fi' '  fi' '  if [ -z \"$WEBAUTHN_ORIGIN\" ] && [ -n \"$WEBAUTHN_RP_ID\" ] && [ \"$WEBAUTHN_RP_ID\" != \"localhost\" ]; then export WEBAUTHN_ORIGIN=\"$ORIGIN\"; fi' 'fi' 'exec \"$@\"' > /usr/local/bin/appliance-entrypoint.sh && chmod 755 /usr/local/bin/appliance-entrypoint.sh",
           "RUN sed -Ei 's|http://127\\.0\\.0\\.1:\\$\\{CADDY_HTTP_PORT:-[0-9]+\\}/health|http://127.0.0.1:${PORT:-8080}/health|g' /.bayt/process-compose.yaml",
           "RUN grep -v AIRLOCK_SEAL_DEV /.bayt/process-compose.yaml > /tmp/process-compose.yaml && mv /tmp/process-compose.yaml /.bayt/process-compose.yaml",
           "RUN awk 'skip { d += gsub(/\\{/, \"{\") - gsub(/\\}/, \"}\"); if (d <= 0) skip = 0; next } /handle @rendered \\{/ { skip = 1; d = 1; next } { print }' /etc/caddy/Caddyfile > /tmp/Caddyfile && mv /tmp/Caddyfile /etc/caddy/Caddyfile",
           "RUN nu -c 'let f = \"/dapr/airlock/acquire.yaml\"; let b = (open $f); if $b.spec.baseUrl != \"http://sofascore:8080\" { error make {msg: \"appliance: unexpected bridge endpoint in acquire\"} }; $b | upsert spec.baseUrl \"http://sofascore:8081\" | to yaml | save -f $f'",
           "RUN --network=none deno check --cached-only --frozen --config /compute-app/deno.json /compute-app/main.ts /compute-app/cage.ts /compute-app/step-worker.ts && touch /compute-app/extensions/.installed-v1.5.6",
+          "RUN nu -c 'let f = \"/.bayt/process-compose.yaml\"; open $f | upsert processes.compute.depends_on.risingwave {condition: \"process_healthy\"} | if (\"transform\" in $in.processes) { update processes.transform.entrypoint {|p| $p.processes.transform.entrypoint | each {|a| $a | str replace \" ($$cdir | path join '\\''events.yaml'\\'')\" \"\" } } } else { $in } | to yaml | save -f $f'",
           "RUN ports=\"8081\"; for p in $ports; do if grep -Eq \":-$p\\}\" /.bayt/process-compose.yaml; then echo \"appliance: bridge port $p is one an appliance process takes; name another\" >&2; exit 1; fi; done; dup=\"$(printf '%s\\n' $ports | sort | uniq -d)\"; if [ -n \"$dup\" ]; then echo \"appliance: bridges share port $dup\" >&2; exit 1; fi",
           "RUN ELECTRIC_SECRET=validation-only caddy validate --adapter caddyfile --config /etc/caddy/Caddyfile"
         ],
@@ -1878,9 +1998,12 @@
           "ENV COMPUTE_STATE_DIR=/var/lib/duckstream",
           "ENV BAYT_LOCAL_DUCKDB_EXTENSIONS=/compute-app/extensions",
           "ENV DENO_DIR=/deno-dir",
+          "ENV DUCKSTREAM_ENGINE=risingwave",
+          "ENV RISINGWAVE_URL=http://risingwave:4566",
+          "RUN printf '%s\\n' '#!/bin/sh' 'set -eu' 'dir=\"${COMPUTE_STATE_DIR:-/var/lib/duckstream}/risingwave\"' 'mkdir -p \"$dir/state_store\"' 'printf \"%s\\n\" \"[meta]\" \"min_sst_retention_time_sec = 300\" \"full_gc_interval_sec = 60\" \"vacuum_interval_sec = 15\" \"gc_history_retention_time_sec = 0\" \"clean_all_foreground_jobs_on_recovery = true\" \"\" \"[meta.developer]\" \"actor_cnt_per_worker_parallelism_soft_limit = 1000\" \"actor_cnt_per_worker_parallelism_hard_limit = 4000\" \"\" \"[streaming]\" \"in_flight_barrier_nums = 256\" \"\" \"[streaming.developer]\" \"enable_snapshot_backfill = false\" \"\" \"[storage]\" \"shared_buffer_min_batch_flush_size_mb = 32\" > \"$dir/risingwave.toml\"' 'compute_mem=\"${RISINGWAVE_MEMORY_BYTES:-1342177280}\"' 'parallelism=\"${RISINGWAVE_PARALLELISM:-2}\"' 'exec /risingwave/bin/risingwave standalone --config-path \"$dir/risingwave.toml\" \\' '  --meta-opts=\"--listen-addr 127.0.0.1:5690 --advertise-addr 127.0.0.1:5690 --backend sqlite --sql-endpoint $dir/metadata.db --state-store hummock+fs://$dir/state_store --data-directory hummock_001\" \\' '  --compute-opts=\"--listen-addr 127.0.0.1:5688 --meta-address http://127.0.0.1:5690 --total-memory-bytes $compute_mem --role both --parallelism $parallelism\" \\' '  --frontend-opts=\"--listen-addr 0.0.0.0:4566 --meta-addr http://127.0.0.1:5690 --frontend-total-memory-bytes 268435456\" \\' '  --compactor-opts=\"--listen-addr 127.0.0.1:6660 --meta-address http://127.0.0.1:5690 --compactor-total-memory-bytes 1073741824 --compactor-meta-cache-memory-bytes 67108864\"' > /usr/local/bin/appliance-risingwave.sh && chmod 755 /usr/local/bin/appliance-risingwave.sh",
           "ENV MECHA_MESH_DIR=/mesh-events",
           "ENV MECHA_TRANSFORM_DIR=/transform",
-          "COPY <<'APPLIANCE' /.bayt/process-compose.appliance.yaml\nversion: \"0.5\"\nprocesses:\n  airlock-upgrade:\n    command: '''psql'' ''postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}'' ''-X'' ''--set=ON_ERROR_STOP=1'' ''--single-transaction'' ''--file=/airlock-upgrade.sql'''\n    depends_on:\n      database:\n        condition: process_healthy\n  airlock-mesh:\n    command: '''/daprd'' ''--app-id'' ''airlock'' ''--dapr-listen-addresses'' ''127.0.0.1'' ''--dapr-internal-grpc-listen-address'' ''127.0.0.1'' ''--resources-path'' ''/dapr/airlock'' ''--config'' ''/dapr/config.yaml'' ''--dapr-http-port'' ''3500'' ''--dapr-grpc-port'' ''50001'' ''--dapr-internal-grpc-port'' ''50002'' ''--metrics-port'' ''0'' ''--profile-port'' ''0'' ''--log-level'' ''info'''\n    depends_on:\n      sofascore:\n        condition: process_healthy\n    environment:\n      - BRIDGE_SOFASCORE_URL=http://sofascore:8081\n    readiness_probe:\n      exec:\n        command: portcheck --port 3500\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n  airlock:\n    command: '''airlock-deno'' ''run'' ''--frozen'' ''--unstable-worker-options'' ''--allow-net=database:5432,airlock-mesh:3500,0.0.0.0:9997'' ''--allow-read'' ''--allow-env'' ''--allow-sys'' ''main.ts'''\n    working_dir: /app/airlock\n    environment:\n      - DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}\n      - MESH_URL=http://airlock-mesh:3500\n      - AIRLOCK_DIR=/airlock\n      - DENO_DIR=/airlock-deno-dir\n      - PORT=9997\n      - AIRLOCK_RELEASE=docker\n      - AIRLOCK_SEAL_DEV=\n      - AIRLOCK_TARGET=docker\n    depends_on:\n      airlock-upgrade:\n        condition: process_completed_successfully\n      airlock-mesh:\n        condition: process_healthy\n    readiness_probe:\n      exec:\n        command: portcheck --port 9997\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n  database:\n    command: '''docker-entrypoint.sh'' ''postgres'' ''-c'' ''session_preload_libraries=pg_ivm'' ''-c'' ''wal_level=logical'' ''-c'' ''max_replication_slots=128'' ''-c'' ''max_wal_senders=128'' ''-c'' ''fsync=off'' ''-c'' ''synchronous_commit=off'' ''-c'' ''full_page_writes=off'' ''-c'' ''shared_buffers=32MB'' ''-c'' ''max_connections=200'' ''-c'' ''fsync=on'' ''-c'' ''synchronous_commit=on'' ''-c'' ''full_page_writes=on'' ''-c'' ''shared_buffers=512MB'''\n  electric:\n    command: '''env'' ''DATABASE_URL=postgresql://electric:${ELECTRIC_PASSWORD:-dev-electric-password}@127.0.0.1:5432/${POSTGRES_DB:-golaberto}?sslmode=disable'' ''ELECTRIC_SECRET=${ELECTRIC_SECRET:-dev-electric-secret}'' ''ELECTRIC_MANUAL_TABLE_PUBLISHING=true'' ''ELECTRIC_PORT=3002'' ''ELECTRIC_STORAGE_DIR=${PGDATA:-/var/lib/pgsql/data}/electric'' ''LD_LIBRARY_PATH=/electric-libs'' ''ELIXIR_ERL_OPTIONS=+fnu'' ''/electric-app/bin/entrypoint'' ''start'''\n  ticker:\n    command: '''ticker-deno'' ''run'' ''--frozen'' ''--allow-net'' ''--allow-env'' ''main.ts'''\n    working_dir: /ticker-app\n    environment:\n      - CRUD_URL=http://crud:3000\n      - CALL_TIMEOUT_MS=35000\n      - SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZWNoYTpzdGFjayIsInJvbGUiOiJzZXJ2aWNlIiwic3ViIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiZXhwIjoxOTg4MTUwNDAwfQ.K4ZX9EDs-BwPIh3r_ZOKmO9XfrQrEx18rwlw3siXcxs}\n      - DENO_DIR=/ticker-deno-dir\n      - PORT=9998\n      - WAKE_URLS=http://airlock:9997/healthz\n    depends_on:\n      crud:\n        condition: process_healthy\n    readiness_probe:\n      exec:\n        command: portcheck --port 9998\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n  clock:\n    command: '''/usr/local/bin/appliance-clock.sh'''\n    environment:\n      - SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZWNoYTpzdGFjayIsInJvbGUiOiJzZXJ2aWNlIiwic3ViIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiZXhwIjoxOTg4MTUwNDAwfQ.K4ZX9EDs-BwPIh3r_ZOKmO9XfrQrEx18rwlw3siXcxs}\n    depends_on:\n      ticker:\n        condition: process_healthy\n    availability:\n      restart: on_failure\n  timer-check:\n    command: '''psql'' ''-X'' ''--set=ON_ERROR_STOP=1'' ''--single-transaction'' ''--file=/timer-check.sql'''\n  sofascore:\n    command: '''/usr/local/bin/sofascore_fetch'' ''--listen'' ''127.0.0.1:8081'''\n    readiness_probe:\n      exec:\n        command: portcheck --port 8081\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\nAPPLIANCE",
+          "COPY <<'APPLIANCE' /.bayt/process-compose.appliance.yaml\nversion: \"0.5\"\nprocesses:\n  airlock-upgrade:\n    command: '''psql'' ''postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}'' ''-X'' ''--set=ON_ERROR_STOP=1'' ''--single-transaction'' ''--file=/airlock-upgrade.sql'''\n    depends_on:\n      database:\n        condition: process_healthy\n  airlock-mesh:\n    command: '''/daprd'' ''--app-id'' ''airlock'' ''--dapr-listen-addresses'' ''127.0.0.1'' ''--dapr-internal-grpc-listen-address'' ''127.0.0.1'' ''--resources-path'' ''/dapr/airlock'' ''--config'' ''/dapr/config.yaml'' ''--dapr-http-port'' ''3500'' ''--dapr-grpc-port'' ''50001'' ''--dapr-internal-grpc-port'' ''50002'' ''--metrics-port'' ''0'' ''--profile-port'' ''0'' ''--log-level'' ''info'''\n    depends_on:\n      sofascore:\n        condition: process_healthy\n    environment:\n      - BRIDGE_SOFASCORE_URL=http://sofascore:8081\n    readiness_probe:\n      exec:\n        command: portcheck --port 3500\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n  airlock:\n    command: '''airlock-deno'' ''run'' ''--frozen'' ''--unstable-worker-options'' ''--allow-net=database:5432,airlock-mesh:3500,0.0.0.0:9997'' ''--allow-read'' ''--allow-env'' ''--allow-sys'' ''main.ts'''\n    working_dir: /app/airlock\n    environment:\n      - DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}\n      - MESH_URL=http://airlock-mesh:3500\n      - AIRLOCK_DIR=/airlock\n      - DENO_DIR=/airlock-deno-dir\n      - PORT=9997\n      - AIRLOCK_RELEASE=docker\n      - AIRLOCK_SEAL_DEV=\n      - AIRLOCK_TARGET=docker\n    depends_on:\n      airlock-upgrade:\n        condition: process_completed_successfully\n      airlock-mesh:\n        condition: process_healthy\n    readiness_probe:\n      exec:\n        command: portcheck --port 9997\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n  database:\n    command: '''docker-entrypoint.sh'' ''postgres'' ''-c'' ''session_preload_libraries=pg_ivm'' ''-c'' ''wal_level=logical'' ''-c'' ''max_replication_slots=128'' ''-c'' ''max_wal_senders=128'' ''-c'' ''fsync=off'' ''-c'' ''synchronous_commit=off'' ''-c'' ''full_page_writes=off'' ''-c'' ''shared_buffers=32MB'' ''-c'' ''max_connections=200'' ''-c'' ''fsync=on'' ''-c'' ''synchronous_commit=on'' ''-c'' ''full_page_writes=on'' ''-c'' ''shared_buffers=512MB'''\n  electric:\n    command: '''env'' ''DATABASE_URL=postgresql://electric:${ELECTRIC_PASSWORD:-dev-electric-password}@127.0.0.1:5432/${POSTGRES_DB:-golaberto}?sslmode=disable'' ''ELECTRIC_SECRET=${ELECTRIC_SECRET:-dev-electric-secret}'' ''ELECTRIC_MANUAL_TABLE_PUBLISHING=true'' ''ELECTRIC_PORT=3002'' ''ELECTRIC_STORAGE_DIR=${PGDATA:-/var/lib/pgsql/data}/electric'' ''LD_LIBRARY_PATH=/electric-libs'' ''ELIXIR_ERL_OPTIONS=+fnu'' ''/electric-app/bin/entrypoint'' ''start'''\n  risingwave:\n    command: '''/usr/local/bin/appliance-risingwave.sh'''\n    environment:\n      - CONNECTOR_LIBS_PATH=/risingwave/bin/connector-node/libs\n      - ADBC_DRIVER_PATH=/risingwave/lib/adbc\n      - LD_LIBRARY_PATH=/risingwave/lib:/risingwave/lib/adbc:/risingwave/jre/lib/server\n      - JAVA_HOME=/risingwave/jre\n      - JAVA_TOOL_OPTIONS=-Xmx256m\n      - PATH=/risingwave/jre/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\n      - ENABLE_TELEMETRY=false\n    depends_on:\n      database:\n        condition: process_healthy\n    readiness_probe:\n      exec:\n        command: portcheck --port 4566\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n  ticker:\n    command: '''ticker-deno'' ''run'' ''--frozen'' ''--allow-net'' ''--allow-env'' ''main.ts'''\n    working_dir: /ticker-app\n    environment:\n      - CRUD_URL=http://crud:3000\n      - CALL_TIMEOUT_MS=35000\n      - SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZWNoYTpzdGFjayIsInJvbGUiOiJzZXJ2aWNlIiwic3ViIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiZXhwIjoxOTg4MTUwNDAwfQ.K4ZX9EDs-BwPIh3r_ZOKmO9XfrQrEx18rwlw3siXcxs}\n      - DENO_DIR=/ticker-deno-dir\n      - PORT=9998\n      - WAKE_URLS=http://airlock:9997/healthz\n    depends_on:\n      crud:\n        condition: process_healthy\n    readiness_probe:\n      exec:\n        command: portcheck --port 9998\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n  clock:\n    command: '''/usr/local/bin/appliance-clock.sh'''\n    environment:\n      - SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZWNoYTpzdGFjayIsInJvbGUiOiJzZXJ2aWNlIiwic3ViIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiZXhwIjoxOTg4MTUwNDAwfQ.K4ZX9EDs-BwPIh3r_ZOKmO9XfrQrEx18rwlw3siXcxs}\n    depends_on:\n      ticker:\n        condition: process_healthy\n    availability:\n      restart: on_failure\n  timer-check:\n    command: '''psql'' ''-X'' ''--set=ON_ERROR_STOP=1'' ''--single-transaction'' ''--file=/timer-check.sql'''\n  sofascore:\n    command: '''/usr/local/bin/sofascore_fetch'' ''--listen'' ''127.0.0.1:8081'''\n    readiness_probe:\n      exec:\n        command: portcheck --port 8081\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\nAPPLIANCE",
           "RUN printf '%s\\n' '#!/bin/sh' 'set -e' 'while sleep \"${POKE_INTERVAL_SECONDS:-60}\"; do' '  curl -fsS -X POST -H \"Authorization: Bearer ${SERVICE_JWT}\" \"http://ticker:9998/poke?caller=appliance\" >/dev/null || { echo \"clock: the ticker refused its poke\" >&2; exit 1; }' 'done' > /usr/local/bin/appliance-clock.sh && chmod 755 /usr/local/bin/appliance-clock.sh",
           "ENV PATH=/usr/lib/postgresql/18/bin:/usr/local/bin:$PATH",
           "ENV PGDATA=/var/lib/pgsql/data",
@@ -1921,6 +2044,7 @@
           "airlock",
           "conduit",
           "transform",
+          "risingwave",
           "compute",
           "ticker",
           "clock"
@@ -3295,7 +3419,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.25.1@sha256:a807d1ac0bc336c8a6ecfaf2700cb5cad55404468716a4a5791ede8c3d1c1329}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.25.2@sha256:a807d1ac0bc336c8a6ecfaf2700cb5cad55404468716a4a5791ede8c3d1c1329}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -3778,8 +3902,7 @@
           "ARG MONOREPO_COMPOSE_MODE",
           "ENV MONOREPO_COMPOSE_MODE=$MONOREPO_COMPOSE_MODE",
           "ARG BAYT_RUNTIME",
-          "ENV BAYT_RUNTIME=$BAYT_RUNTIME",
-          "ENV FELDERA_COMPILATION_PROFILE=unoptimized"
+          "ENV BAYT_RUNTIME=$BAYT_RUNTIME"
         ],
         "defaultPreamble": {
           "bayt-runtime": {
@@ -4633,8 +4756,7 @@
           "ARG MONOREPO_COMPOSE_MODE",
           "ENV MONOREPO_COMPOSE_MODE=$MONOREPO_COMPOSE_MODE",
           "ARG BAYT_RUNTIME",
-          "ENV BAYT_RUNTIME=$BAYT_RUNTIME",
-          "ENV FELDERA_COMPILATION_PROFILE=unoptimized"
+          "ENV BAYT_RUNTIME=$BAYT_RUNTIME"
         ],
         "defaultPreamble": {
           "bayt-runtime": {
@@ -5296,12 +5418,12 @@
           "services/database/migrations/001_roles.sql",
           "services/database/migrations/002_grants.sql",
           "services/database/migrations/004_types.sql",
-          "services/database/migrations/005_create_tables.sql",
           "services/database/migrations/006_policies.sql",
           "services/database/migrations/007_txid.sql",
           "services/database/migrations/008_publication.sql",
           "services/database/migrations/009_functions.sql",
           "services/database/migrations/003_rls.sql",
+          "services/database/migrations/005_create_tables.sql",
           "services/database/migrations/063_mecha_actors.sql",
           "services/database/migrations/010_game_days.sql",
           "services/database/migrations/011_comment_writes.sql",
@@ -5389,12 +5511,12 @@
               "services/database/migrations/001_roles.sql",
               "services/database/migrations/002_grants.sql",
               "services/database/migrations/004_types.sql",
-              "services/database/migrations/005_create_tables.sql",
               "services/database/migrations/006_policies.sql",
               "services/database/migrations/007_txid.sql",
               "services/database/migrations/008_publication.sql",
               "services/database/migrations/009_functions.sql",
               "services/database/migrations/003_rls.sql",
+              "services/database/migrations/005_create_tables.sql",
               "services/database/migrations/063_mecha_actors.sql",
               "services/database/migrations/010_game_days.sql",
               "services/database/migrations/011_comment_writes.sql",
@@ -5540,7 +5662,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.25.2@sha256:2229cfefd31a8ee37eb2f88414fcb37eb8b990288cd65e873c70c6fa3af5fd55}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.26.0@sha256:bc17c811912900b9ed4ba691167be6dc56f961b437dd765bebd4e53148aa92ec}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
           },
           "secrets": [],
           "args": {}
@@ -5613,11 +5735,6 @@
             },
             {
               "action": "rebuild",
-              "path": "../services/database/migrations/005_create_tables.sql",
-              "target": "/docker-entrypoint-initdb.d"
-            },
-            {
-              "action": "rebuild",
               "path": "../services/database/migrations/006_policies.sql",
               "target": "/docker-entrypoint-initdb.d"
             },
@@ -5639,6 +5756,11 @@
             {
               "action": "rebuild",
               "path": "../services/database/migrations/003_rls.sql",
+              "target": "/docker-entrypoint-initdb.d"
+            },
+            {
+              "action": "rebuild",
+              "path": "../services/database/migrations/005_create_tables.sql",
               "target": "/docker-entrypoint-initdb.d"
             },
             {
@@ -5959,6 +6081,7 @@
           "services/database/pgroll/052_blob_claims.json",
           "services/database/pgroll/046_team_projection_turn.json",
           "services/database/pgroll/048_team_projection_clock.json",
+          "services/database/pgroll/20261118_team_rating_chart_anchor.json",
           "services/database/pgroll/047_team_projection_writers.json",
           "services/database/pgroll/013_home_games.json",
           "services/database/pgroll/20261108_sofa_request.json",
@@ -6111,6 +6234,16 @@
               "services/database/pgroll/048_team_projection_clock.json"
             ],
             "dst": "/pgroll/048_team_projection_clock.json",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          {
+            "from": null,
+            "srcs": [
+              "services/database/pgroll/20261118_team_rating_chart_anchor.json"
+            ],
+            "dst": "/pgroll/20261118_team_rating_chart_anchor.json",
             "link": true,
             "parents": false,
             "exclude": []
@@ -6722,7 +6855,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.25.2@sha256:2229cfefd31a8ee37eb2f88414fcb37eb8b990288cd65e873c70c6fa3af5fd55}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.26.0@sha256:bc17c811912900b9ed4ba691167be6dc56f961b437dd765bebd4e53148aa92ec}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
           },
           "secrets": [],
           "args": {}
@@ -6849,7 +6982,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.25.2@sha256:2229cfefd31a8ee37eb2f88414fcb37eb8b990288cd65e873c70c6fa3af5fd55}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.26.0@sha256:bc17c811912900b9ed4ba691167be6dc56f961b437dd765bebd4e53148aa92ec}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
           },
           "secrets": [],
           "args": {}
@@ -6983,7 +7116,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.25.2@sha256:2229cfefd31a8ee37eb2f88414fcb37eb8b990288cd65e873c70c6fa3af5fd55}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.26.0@sha256:bc17c811912900b9ed4ba691167be6dc56f961b437dd765bebd4e53148aa92ec}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
           },
           "secrets": [],
           "args": {}
@@ -7120,7 +7253,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-auth-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.25.2@sha256:b70e33e7986b60365045bb9b172d31f867fb1e782be8a691e4ab9aab53a93e6f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}"
+            "libraries_mecha-auth-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.26.0@sha256:2e628fe945498c2be941d26e19087084e9ee8e7660c425859d30520a2c77c80f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}"
           },
           "secrets": [],
           "args": {}
@@ -7293,7 +7426,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-mesh-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.25.2@sha256:8d39aa3543560232c52330152ba70a4d2c973b76d0ac97899d677704bc0e09a4}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}"
+            "libraries_mecha-mesh-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.26.0@sha256:8d39aa3543560232c52330152ba70a4d2c973b76d0ac97899d677704bc0e09a4}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}"
           },
           "secrets": [],
           "args": {}
@@ -7500,7 +7633,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-conduit-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-conduit:0.25.2@sha256:cdc0cf709760da2de6f11d4bf6d3c7fab4486df472fc4c0bc20f1db64c09b067}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image}"
+            "libraries_mecha-conduit-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-conduit:0.26.0@sha256:e4be48bc45f4797c6e4d53f30e5e4864a0c2817a0714a821e4719c0b580304b7}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image}"
           },
           "secrets": [],
           "args": {}
@@ -7648,11 +7781,11 @@
           "computations/cards.js",
           "computations/player_stats.js",
           "computations/golaberto-odds.wasm",
-          "duckstream/standings.feldera.json",
-          "duckstream/ratings.feldera.json",
-          "duckstream/chances.feldera.json",
-          "duckstream/cards.feldera.json",
-          "duckstream/player_stats.feldera.json",
+          "duckstream/standings.risingwave.json",
+          "duckstream/ratings.risingwave.json",
+          "duckstream/chances.risingwave.json",
+          "duckstream/cards.risingwave.json",
+          "duckstream/player_stats.risingwave.json",
           "duckstream/bounded-standings.ts.bundle.js",
           "duckstream/bounded-ratings.ts.bundle.js",
           "duckstream/bounded-chances.ts.bundle.js",
@@ -7691,6 +7824,7 @@
       },
       "env": {},
       "deps": [
+        ":risingwave:outs",
         ":crud:outs",
         ":conduit:outs",
         ":database:outs",
@@ -7773,9 +7907,9 @@
           {
             "from": null,
             "srcs": [
-              "duckstream/standings.feldera.json"
+              "duckstream/standings.risingwave.json"
             ],
-            "dst": "/app/computations/golaberto-standings.feldera.json",
+            "dst": "/app/computations/golaberto-standings.risingwave.json",
             "link": true,
             "parents": false,
             "exclude": []
@@ -7783,9 +7917,9 @@
           {
             "from": null,
             "srcs": [
-              "duckstream/ratings.feldera.json"
+              "duckstream/ratings.risingwave.json"
             ],
-            "dst": "/app/computations/golaberto-ratings.feldera.json",
+            "dst": "/app/computations/golaberto-ratings.risingwave.json",
             "link": true,
             "parents": false,
             "exclude": []
@@ -7793,9 +7927,9 @@
           {
             "from": null,
             "srcs": [
-              "duckstream/chances.feldera.json"
+              "duckstream/chances.risingwave.json"
             ],
-            "dst": "/app/computations/golaberto-chances.feldera.json",
+            "dst": "/app/computations/golaberto-chances.risingwave.json",
             "link": true,
             "parents": false,
             "exclude": []
@@ -7803,9 +7937,9 @@
           {
             "from": null,
             "srcs": [
-              "duckstream/cards.feldera.json"
+              "duckstream/cards.risingwave.json"
             ],
-            "dst": "/app/computations/golaberto-game-cards.feldera.json",
+            "dst": "/app/computations/golaberto-game-cards.risingwave.json",
             "link": true,
             "parents": false,
             "exclude": []
@@ -7813,9 +7947,9 @@
           {
             "from": null,
             "srcs": [
-              "duckstream/player_stats.feldera.json"
+              "duckstream/player_stats.risingwave.json"
             ],
-            "dst": "/app/computations/golaberto-player-stats.feldera.json",
+            "dst": "/app/computations/golaberto-player-stats.risingwave.json",
             "link": true,
             "parents": false,
             "exclude": []
@@ -7897,7 +8031,7 @@
           "interval": "5s",
           "timeout": "5s",
           "retries": 30,
-          "start_period": "15m"
+          "start_period": "150m"
         },
         "expose": [],
         "entrypoint": null,
@@ -7909,7 +8043,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-compute-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.25.2@sha256:1ca210a17e1f2747551db0b5f73aa7d03a9f42cd75fb23dafeaa03f3fa06cd71}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}"
+            "libraries_mecha-compute-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.26.0@sha256:1a3177dd05f3260eb15d49d9e6e75a47b9295c8b6f0f146dcf1dc349584ff112}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}"
           },
           "secrets": [],
           "args": {}
@@ -7917,18 +8051,20 @@
         "environment": {
           "COMPUTE_STATE_DIR": "/state",
           "LAKE_DIR": "/lake",
-          "DUCKSTREAM_ENGINE": "${DUCKSTREAM_ENGINE:-duckdb-snapshot}",
-          "COMPUTATIONS": "[{\"declaredReads\":[\"championship\",\"phase\",\"stage_group\",\"team_group\",\"team\",\"game\",\"zone\"],\"feldera\":\"/app/computations/golaberto-standings.feldera.json\",\"name\":\"golaberto-standings\",\"file\":\"/app/computations/golaberto-standings.js\",\"sinkTypes\":{\"standing\":[{\"name\":\"id\",\"type\":\"string\",\"required\":true},{\"name\":\"group_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_name\",\"type\":\"string\",\"required\":true},{\"name\":\"position\",\"type\":\"int32\",\"required\":true},{\"name\":\"points\",\"type\":\"int32\",\"required\":true},{\"name\":\"played\",\"type\":\"int32\",\"required\":true},{\"name\":\"wins\",\"type\":\"int32\",\"required\":true},{\"name\":\"draws\",\"type\":\"int32\",\"required\":true},{\"name\":\"losses\",\"type\":\"int32\",\"required\":true},{\"name\":\"goals_for\",\"type\":\"int32\",\"required\":true},{\"name\":\"goals_against\",\"type\":\"int32\",\"required\":true},{\"name\":\"goal_diff\",\"type\":\"int32\",\"required\":true},{\"name\":\"form1\",\"type\":\"string\",\"required\":true},{\"name\":\"form2\",\"type\":\"string\",\"required\":true},{\"name\":\"form3\",\"type\":\"string\",\"required\":true},{\"name\":\"form4\",\"type\":\"string\",\"required\":true},{\"name\":\"form5\",\"type\":\"string\",\"required\":true},{\"name\":\"zone\",\"type\":\"string\",\"required\":true}]},\"sinkWrites\":{\"standing\":\"replace\"},\"steps\":\"/app/computations/golaberto-standings.steps\",\"to\":[\"standing\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[],\"endowments\":[\"TextEncoder\"]},{\"declaredReads\":[\"championship\",\"phase\",\"game\",\"team\",\"player\",\"player_game\",\"goal\"],\"feldera\":\"/app/computations/golaberto-ratings.feldera.json\",\"name\":\"golaberto-ratings\",\"file\":\"/app/computations/golaberto-ratings.js\",\"queryTypes\":{\"teams\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true}],\"players\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true}]},\"sinkTypes\":{\"team_rating\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"measure_date\",\"type\":\"date\",\"required\":true},{\"name\":\"offense\",\"type\":\"double\",\"required\":true},{\"name\":\"defense\",\"type\":\"double\",\"required\":true},{\"name\":\"rating\",\"type\":\"double\",\"required\":true}],\"player_rating\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"rating\",\"type\":\"double\",\"required\":true},{\"name\":\"off_rating\",\"type\":\"double\",\"required\":false},{\"name\":\"def_rating\",\"type\":\"double\",\"required\":false}],\"rating_eval\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"rps\",\"type\":\"double\",\"required\":true}]},\"sinkWrites\":{\"team_rating\":\"replace\",\"player_rating\":\"replace\",\"rating_eval\":\"replace\"},\"steps\":\"/app/computations/golaberto-ratings.steps\",\"to\":[\"team_rating\",\"player_rating\",\"rating_eval\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[\"/app/computations/golaberto-odds.wasm\"],\"endowments\":[\"TextEncoder\"]},{\"declaredReads\":[\"championship\",\"phase\",\"stage_group\",\"team_group\",\"zone\",\"team\",\"game\",\"team_rating\",\"standing\"],\"feldera\":\"/app/computations/golaberto-chances.feldera.json\",\"name\":\"golaberto-chances\",\"file\":\"/app/computations/golaberto-chances.js\",\"onComplete\":\"capture_team_odds_history\",\"sinkTypes\":{\"team_chance\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"group_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_name\",\"type\":\"string\",\"required\":true},{\"name\":\"rank\",\"type\":\"int32\",\"required\":true},{\"name\":\"points\",\"type\":\"int32\",\"required\":true},{\"name\":\"played\",\"type\":\"int32\",\"required\":true}],\"zone_chance\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"group_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"zone_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"first\",\"type\":\"int32\",\"required\":true},{\"name\":\"percent\",\"type\":\"double\",\"required\":true},{\"name\":\"color\",\"type\":\"string\",\"required\":true},{\"name\":\"band\",\"type\":\"int32\",\"required\":true},{\"name\":\"last\",\"type\":\"int32\",\"required\":true},{\"name\":\"reach\",\"type\":\"string\",\"required\":true}],\"position_chance\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"group_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"position\",\"type\":\"int32\",\"required\":true},{\"name\":\"percent\",\"type\":\"double\",\"required\":true},{\"name\":\"band\",\"type\":\"int32\",\"required\":true},{\"name\":\"current\",\"type\":\"bool\",\"required\":true},{\"name\":\"reach\",\"type\":\"string\",\"required\":true}],\"game_importance\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"home\",\"type\":\"double\",\"required\":false},{\"name\":\"away\",\"type\":\"double\",\"required\":false}]},\"sinkWrites\":{\"team_chance\":\"replace\",\"zone_chance\":\"replace\",\"position_chance\":\"replace\",\"game_importance\":\"replace\"},\"steps\":\"/app/computations/golaberto-chances.steps\",\"to\":[\"team_chance\",\"zone_chance\",\"position_chance\",\"game_importance\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[\"/app/computations/golaberto-odds.wasm\"],\"endowments\":[\"TextEncoder\"]},{\"declaredReads\":[\"game\",\"team\",\"phase\",\"championship\",\"stadium\",\"referee\"],\"feldera\":\"/app/computations/golaberto-game-cards.feldera.json\",\"name\":\"golaberto-game-cards\",\"file\":\"/app/computations/golaberto-game-cards.js\",\"sinkTypes\":{\"game_card\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"phase_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"championship_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"round\",\"type\":\"int32\",\"required\":false},{\"name\":\"day\",\"type\":\"date\",\"required\":true},{\"name\":\"kickoff\",\"type\":\"timestamp\",\"required\":false},{\"name\":\"played\",\"type\":\"bool\",\"required\":true},{\"name\":\"home_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"away_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"home_name\",\"type\":\"string\",\"required\":true},{\"name\":\"away_name\",\"type\":\"string\",\"required\":true},{\"name\":\"home_score\",\"type\":\"int32\",\"required\":false},{\"name\":\"away_score\",\"type\":\"int32\",\"required\":false},{\"name\":\"home_aet\",\"type\":\"int32\",\"required\":false},{\"name\":\"away_aet\",\"type\":\"int32\",\"required\":false},{\"name\":\"home_pen\",\"type\":\"int32\",\"required\":false},{\"name\":\"away_pen\",\"type\":\"int32\",\"required\":false},{\"name\":\"championship_name\",\"type\":\"string\",\"required\":true},{\"name\":\"phase_name\",\"type\":\"string\",\"required\":true},{\"name\":\"stadium_name\",\"type\":\"string\",\"required\":false},{\"name\":\"referee_name\",\"type\":\"string\",\"required\":false},{\"name\":\"attendance\",\"type\":\"int32\",\"required\":false},{\"name\":\"stadium_id\",\"type\":\"uuid\",\"required\":false},{\"name\":\"referee_id\",\"type\":\"uuid\",\"required\":false}],\"team_game\":[{\"name\":\"id\",\"type\":\"string\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"game_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"side\",\"type\":\"string\",\"required\":true},{\"name\":\"opponent_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"opponent_name\",\"type\":\"string\",\"required\":true},{\"name\":\"championship_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"championship_name\",\"type\":\"string\",\"required\":true},{\"name\":\"day\",\"type\":\"date\",\"required\":true},{\"name\":\"kickoff\",\"type\":\"timestamp\",\"required\":false},{\"name\":\"played\",\"type\":\"bool\",\"required\":true},{\"name\":\"goals_for\",\"type\":\"int32\",\"required\":false},{\"name\":\"goals_against\",\"type\":\"int32\",\"required\":false},{\"name\":\"result\",\"type\":\"string\",\"required\":true},{\"name\":\"category_id\",\"type\":\"uuid\",\"required\":false},{\"name\":\"phase_key\",\"type\":\"string\",\"required\":true},{\"name\":\"category_key\",\"type\":\"string\",\"required\":true},{\"name\":\"fixture_available\",\"type\":\"bool\",\"required\":true}]},\"sinkWrites\":{\"game_card\":\"replace\",\"team_game\":\"replace\"},\"steps\":\"/app/computations/golaberto-game-cards.steps\",\"to\":[\"game_card\",\"team_game\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[],\"endowments\":[\"TextEncoder\"]},{\"declaredReads\":[\"player_game\",\"goal\",\"player\",\"game\",\"phase\",\"championship\",\"team\"],\"feldera\":\"/app/computations/golaberto-player-stats.feldera.json\",\"name\":\"golaberto-player-stats\",\"file\":\"/app/computations/golaberto-player-stats.js\",\"sinkTypes\":{\"player_stat\":[{\"name\":\"id\",\"type\":\"string\",\"required\":true},{\"name\":\"championship_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"player_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"player_name\",\"type\":\"string\",\"required\":true},{\"name\":\"position\",\"type\":\"string\",\"required\":true},{\"name\":\"played\",\"type\":\"int32\",\"required\":true},{\"name\":\"started\",\"type\":\"int32\",\"required\":true},{\"name\":\"came_on\",\"type\":\"int32\",\"required\":true},{\"name\":\"bench\",\"type\":\"int32\",\"required\":true},{\"name\":\"minutes\",\"type\":\"int32\",\"required\":true},{\"name\":\"goals\",\"type\":\"int32\",\"required\":true},{\"name\":\"penalties\",\"type\":\"int32\",\"required\":true},{\"name\":\"own_goals\",\"type\":\"int32\",\"required\":true},{\"name\":\"yellow\",\"type\":\"int32\",\"required\":true},{\"name\":\"red\",\"type\":\"int32\",\"required\":true},{\"name\":\"championship_name\",\"type\":\"string\",\"required\":true},{\"name\":\"team_name\",\"type\":\"string\",\"required\":true}]},\"sinkWrites\":{\"player_stat\":\"replace\"},\"steps\":\"/app/computations/golaberto-player-stats.steps\",\"to\":[\"player_stat\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[],\"endowments\":[\"TextEncoder\"]}]",
+          "DUCKSTREAM_ENGINE": "${DUCKSTREAM_ENGINE:-risingwave}",
+          "COMPUTATIONS": "[{\"declaredReads\":[\"championship\",\"phase\",\"stage_group\",\"team_group\",\"team\",\"game\",\"zone\"],\"name\":\"golaberto-standings\",\"file\":\"/app/computations/golaberto-standings.js\",\"risingwave\":\"/app/computations/golaberto-standings.risingwave.json\",\"sinkTypes\":{\"standing\":[{\"name\":\"id\",\"type\":\"string\",\"required\":true},{\"name\":\"group_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_name\",\"type\":\"string\",\"required\":true},{\"name\":\"position\",\"type\":\"int32\",\"required\":true},{\"name\":\"points\",\"type\":\"int32\",\"required\":true},{\"name\":\"played\",\"type\":\"int32\",\"required\":true},{\"name\":\"wins\",\"type\":\"int32\",\"required\":true},{\"name\":\"draws\",\"type\":\"int32\",\"required\":true},{\"name\":\"losses\",\"type\":\"int32\",\"required\":true},{\"name\":\"goals_for\",\"type\":\"int32\",\"required\":true},{\"name\":\"goals_against\",\"type\":\"int32\",\"required\":true},{\"name\":\"goal_diff\",\"type\":\"int32\",\"required\":true},{\"name\":\"form1\",\"type\":\"string\",\"required\":true},{\"name\":\"form2\",\"type\":\"string\",\"required\":true},{\"name\":\"form3\",\"type\":\"string\",\"required\":true},{\"name\":\"form4\",\"type\":\"string\",\"required\":true},{\"name\":\"form5\",\"type\":\"string\",\"required\":true},{\"name\":\"zone\",\"type\":\"string\",\"required\":true}]},\"sinkWrites\":{\"standing\":\"replace\"},\"steps\":\"/app/computations/golaberto-standings.steps\",\"to\":[\"standing\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[],\"endowments\":[\"TextEncoder\"]},{\"declaredReads\":[\"championship\",\"phase\",\"game\",\"team\",\"player\",\"player_game\",\"goal\"],\"name\":\"golaberto-ratings\",\"file\":\"/app/computations/golaberto-ratings.js\",\"queryTypes\":{\"teams\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true}],\"players\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true}]},\"risingwave\":\"/app/computations/golaberto-ratings.risingwave.json\",\"sinkTypes\":{\"team_rating\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"measure_date\",\"type\":\"date\",\"required\":true},{\"name\":\"offense\",\"type\":\"double\",\"required\":true},{\"name\":\"defense\",\"type\":\"double\",\"required\":true},{\"name\":\"rating\",\"type\":\"double\",\"required\":true}],\"player_rating\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"rating\",\"type\":\"double\",\"required\":true},{\"name\":\"off_rating\",\"type\":\"double\",\"required\":false},{\"name\":\"def_rating\",\"type\":\"double\",\"required\":false}],\"rating_eval\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"rps\",\"type\":\"double\",\"required\":true}]},\"sinkWrites\":{\"team_rating\":\"replace\",\"player_rating\":\"replace\",\"rating_eval\":\"replace\"},\"steps\":\"/app/computations/golaberto-ratings.steps\",\"to\":[\"team_rating\",\"player_rating\",\"rating_eval\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[\"/app/computations/golaberto-odds.wasm\"],\"endowments\":[\"TextEncoder\"]},{\"declaredReads\":[\"championship\",\"phase\",\"stage_group\",\"team_group\",\"zone\",\"team\",\"game\",\"team_rating\",\"standing\"],\"name\":\"golaberto-chances\",\"file\":\"/app/computations/golaberto-chances.js\",\"onComplete\":\"capture_team_odds_history\",\"risingwave\":\"/app/computations/golaberto-chances.risingwave.json\",\"sinkTypes\":{\"team_chance\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"group_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_name\",\"type\":\"string\",\"required\":true},{\"name\":\"rank\",\"type\":\"int32\",\"required\":true},{\"name\":\"points\",\"type\":\"int32\",\"required\":true},{\"name\":\"played\",\"type\":\"int32\",\"required\":true}],\"zone_chance\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"group_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"zone_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"first\",\"type\":\"int32\",\"required\":true},{\"name\":\"percent\",\"type\":\"double\",\"required\":true},{\"name\":\"color\",\"type\":\"string\",\"required\":true},{\"name\":\"band\",\"type\":\"int32\",\"required\":true},{\"name\":\"last\",\"type\":\"int32\",\"required\":true},{\"name\":\"reach\",\"type\":\"string\",\"required\":true}],\"position_chance\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"group_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"position\",\"type\":\"int32\",\"required\":true},{\"name\":\"percent\",\"type\":\"double\",\"required\":true},{\"name\":\"band\",\"type\":\"int32\",\"required\":true},{\"name\":\"current\",\"type\":\"bool\",\"required\":true},{\"name\":\"reach\",\"type\":\"string\",\"required\":true}],\"game_importance\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"home\",\"type\":\"double\",\"required\":false},{\"name\":\"away\",\"type\":\"double\",\"required\":false}]},\"sinkWrites\":{\"team_chance\":\"replace\",\"zone_chance\":\"replace\",\"position_chance\":\"replace\",\"game_importance\":\"replace\"},\"steps\":\"/app/computations/golaberto-chances.steps\",\"to\":[\"team_chance\",\"zone_chance\",\"position_chance\",\"game_importance\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[\"/app/computations/golaberto-odds.wasm\"],\"endowments\":[\"TextEncoder\"]},{\"declaredReads\":[\"game\",\"team\",\"phase\",\"championship\",\"stadium\",\"referee\"],\"name\":\"golaberto-game-cards\",\"file\":\"/app/computations/golaberto-game-cards.js\",\"risingwave\":\"/app/computations/golaberto-game-cards.risingwave.json\",\"sinkTypes\":{\"game_card\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"phase_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"championship_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"round\",\"type\":\"int32\",\"required\":false},{\"name\":\"day\",\"type\":\"date\",\"required\":true},{\"name\":\"kickoff\",\"type\":\"timestamp\",\"required\":false},{\"name\":\"played\",\"type\":\"bool\",\"required\":true},{\"name\":\"home_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"away_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"home_name\",\"type\":\"string\",\"required\":true},{\"name\":\"away_name\",\"type\":\"string\",\"required\":true},{\"name\":\"home_score\",\"type\":\"int32\",\"required\":false},{\"name\":\"away_score\",\"type\":\"int32\",\"required\":false},{\"name\":\"home_aet\",\"type\":\"int32\",\"required\":false},{\"name\":\"away_aet\",\"type\":\"int32\",\"required\":false},{\"name\":\"home_pen\",\"type\":\"int32\",\"required\":false},{\"name\":\"away_pen\",\"type\":\"int32\",\"required\":false},{\"name\":\"championship_name\",\"type\":\"string\",\"required\":true},{\"name\":\"phase_name\",\"type\":\"string\",\"required\":true},{\"name\":\"stadium_name\",\"type\":\"string\",\"required\":false},{\"name\":\"referee_name\",\"type\":\"string\",\"required\":false},{\"name\":\"attendance\",\"type\":\"int32\",\"required\":false},{\"name\":\"stadium_id\",\"type\":\"uuid\",\"required\":false},{\"name\":\"referee_id\",\"type\":\"uuid\",\"required\":false}],\"team_game\":[{\"name\":\"id\",\"type\":\"string\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"game_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"side\",\"type\":\"string\",\"required\":true},{\"name\":\"opponent_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"opponent_name\",\"type\":\"string\",\"required\":true},{\"name\":\"championship_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"championship_name\",\"type\":\"string\",\"required\":true},{\"name\":\"day\",\"type\":\"date\",\"required\":true},{\"name\":\"kickoff\",\"type\":\"timestamp\",\"required\":false},{\"name\":\"played\",\"type\":\"bool\",\"required\":true},{\"name\":\"goals_for\",\"type\":\"int32\",\"required\":false},{\"name\":\"goals_against\",\"type\":\"int32\",\"required\":false},{\"name\":\"result\",\"type\":\"string\",\"required\":true},{\"name\":\"category_id\",\"type\":\"uuid\",\"required\":false},{\"name\":\"phase_key\",\"type\":\"string\",\"required\":true},{\"name\":\"category_key\",\"type\":\"string\",\"required\":true},{\"name\":\"fixture_available\",\"type\":\"bool\",\"required\":true}]},\"sinkWrites\":{\"game_card\":\"replace\",\"team_game\":\"replace\"},\"steps\":\"/app/computations/golaberto-game-cards.steps\",\"to\":[\"game_card\",\"team_game\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[],\"endowments\":[\"TextEncoder\"]},{\"declaredReads\":[\"player_game\",\"goal\",\"player\",\"game\",\"phase\",\"championship\",\"team\"],\"name\":\"golaberto-player-stats\",\"file\":\"/app/computations/golaberto-player-stats.js\",\"risingwave\":\"/app/computations/golaberto-player-stats.risingwave.json\",\"sinkTypes\":{\"player_stat\":[{\"name\":\"id\",\"type\":\"string\",\"required\":true},{\"name\":\"championship_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"player_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"player_name\",\"type\":\"string\",\"required\":true},{\"name\":\"position\",\"type\":\"string\",\"required\":true},{\"name\":\"played\",\"type\":\"int32\",\"required\":true},{\"name\":\"started\",\"type\":\"int32\",\"required\":true},{\"name\":\"came_on\",\"type\":\"int32\",\"required\":true},{\"name\":\"bench\",\"type\":\"int32\",\"required\":true},{\"name\":\"minutes\",\"type\":\"int32\",\"required\":true},{\"name\":\"goals\",\"type\":\"int32\",\"required\":true},{\"name\":\"penalties\",\"type\":\"int32\",\"required\":true},{\"name\":\"own_goals\",\"type\":\"int32\",\"required\":true},{\"name\":\"yellow\",\"type\":\"int32\",\"required\":true},{\"name\":\"red\",\"type\":\"int32\",\"required\":true},{\"name\":\"championship_name\",\"type\":\"string\",\"required\":true},{\"name\":\"team_name\",\"type\":\"string\",\"required\":true}]},\"sinkWrites\":{\"player_stat\":\"replace\"},\"steps\":\"/app/computations/golaberto-player-stats.steps\",\"to\":[\"player_stat\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[],\"endowments\":[\"TextEncoder\"]}]",
+          "RISINGWAVE_URL": "http://risingwave:4566",
           "CRUD_URL": "http://crud:3000",
           "DATABASE_URL": "postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}",
           "CDC_SLOT": "golaberto_conduit_slot",
           "SERVICE_JWT": "${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZWNoYTpzdGFjayIsInJvbGUiOiJzZXJ2aWNlIiwic3ViIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiZXhwIjoxOTg4MTUwNDAwfQ.K4ZX9EDs-BwPIh3r_ZOKmO9XfrQrEx18rwlw3siXcxs}"
         },
         "ports": [],
-        "volumes": [
-          "../.pronto/live/duckstream:/state"
-        ],
+        "volumes": [],
         "depends_on": {
+          "golaberto-risingwave": {
+            "condition": "service_healthy"
+          },
           "golaberto-crud": {
             "condition": "service_healthy"
           },
@@ -7966,7 +8102,7 @@
           "interval": "5s",
           "timeout": "5s",
           "retries": 30,
-          "start_period": "15m",
+          "start_period": "150m",
           "start_interval": "1s"
         },
         "develop": {
@@ -7998,28 +8134,28 @@
             },
             {
               "action": "sync+restart",
-              "path": "../duckstream/standings.feldera.json",
-              "target": "/app/computations/golaberto-standings.feldera.json"
+              "path": "../duckstream/standings.risingwave.json",
+              "target": "/app/computations/golaberto-standings.risingwave.json"
             },
             {
               "action": "sync+restart",
-              "path": "../duckstream/ratings.feldera.json",
-              "target": "/app/computations/golaberto-ratings.feldera.json"
+              "path": "../duckstream/ratings.risingwave.json",
+              "target": "/app/computations/golaberto-ratings.risingwave.json"
             },
             {
               "action": "sync+restart",
-              "path": "../duckstream/chances.feldera.json",
-              "target": "/app/computations/golaberto-chances.feldera.json"
+              "path": "../duckstream/chances.risingwave.json",
+              "target": "/app/computations/golaberto-chances.risingwave.json"
             },
             {
               "action": "sync+restart",
-              "path": "../duckstream/cards.feldera.json",
-              "target": "/app/computations/golaberto-game-cards.feldera.json"
+              "path": "../duckstream/cards.risingwave.json",
+              "target": "/app/computations/golaberto-game-cards.risingwave.json"
             },
             {
               "action": "sync+restart",
-              "path": "../duckstream/player_stats.feldera.json",
-              "target": "/app/computations/golaberto-player-stats.feldera.json"
+              "path": "../duckstream/player_stats.risingwave.json",
+              "target": "/app/computations/golaberto-player-stats.risingwave.json"
             },
             {
               "action": "sync+restart",
@@ -8049,11 +8185,11 @@
         "start_interval": "1s",
         "timeout": "5s",
         "retries": 30,
-        "start_period": "15m"
+        "start_period": "150m"
       },
       "entrypoint": {
         "name": "entrypoint",
-        "do": "let base = ($env.BAYT_LOCAL_WORK_DIR? | default $nu.temp-dir); let lake = ($base | path join $'lake-($nu.pid)-(random int 1000..9999)'); mkdir $lake; let ext_dir = (if (($env.BAYT_LOCAL_DUCKDB_EXTENSIONS? | default '') != '') { $env.BAYT_LOCAL_DUCKDB_EXTENSIONS } else { ((^mise where http:duckdb | str trim) | path join 'extensions') }); let app = (if (($env.COMPUTE_APP_DIR? | default '') != '') { $env.COMPUTE_APP_DIR } else if ('services/compute/main.ts' | path exists) { 'services/compute' } else { ((^mise where github:bonisoft3/mecha | str trim) | path join 'services/compute') }); let marker = ($ext_dir | path join '.installed-v1.5.6'); if (not ($marker | path exists)) { mkdir $ext_dir; with-env { DUCKDB_EXTENSIONS_DIR: $ext_dir } { ^deno run --allow-ffi --allow-read --allow-write --allow-net --allow-env --allow-sys=homedir --config ($app | path join 'deno.json') ($app | path join 'install.ts') }; '' | save -f $marker }; ^deno cache --config ($app | path join 'deno.json') ($app | path join 'main.ts') ($app | path join 'cage.ts') ($app | path join 'job.ts'); with-env { DUCKDB_EXTENSIONS_DIR: $ext_dir, LAKE_DIR: $lake } { exec deno run --unstable-worker-options --allow-run=/opt/feldera/runtime/supervisor --allow-ffi --allow-read --allow-write --allow-net --allow-env --allow-sys --config ($app | path join 'deno.json') ($app | path join 'main.ts') }",
+        "do": "let base = ($env.BAYT_LOCAL_WORK_DIR? | default $nu.temp-dir); let lake = ($base | path join $'lake-($nu.pid)-(random int 1000..9999)'); mkdir $lake; let state = (if (($env.COMPUTE_STATE_DIR? | default '') != '') { $env.COMPUTE_STATE_DIR } else { ($base | path join $'duckstream-($nu.pid)-(random int 1000..9999)') }); mkdir $state; let ext_dir = (if (($env.BAYT_LOCAL_DUCKDB_EXTENSIONS? | default '') != '') { $env.BAYT_LOCAL_DUCKDB_EXTENSIONS } else { ((^mise where http:duckdb | str trim) | path join 'extensions') }); let app = (if (($env.COMPUTE_APP_DIR? | default '') != '') { $env.COMPUTE_APP_DIR } else if ('services/compute/main.ts' | path exists) { 'services/compute' } else { ((^mise where github:bonisoft3/mecha | str trim) | path join 'services/compute') }); let marker = ($ext_dir | path join '.installed-v1.5.6'); if (not ($marker | path exists)) { mkdir $ext_dir; with-env { DUCKDB_EXTENSIONS_DIR: $ext_dir } { ^deno run --allow-ffi --allow-read --allow-write --allow-net --allow-env --allow-sys=homedir --config ($app | path join 'deno.json') ($app | path join 'install.ts') }; '' | save -f $marker }; ^deno cache --config ($app | path join 'deno.json') ($app | path join 'main.ts') ($app | path join 'cage.ts') ($app | path join 'job.ts'); with-env { DUCKDB_EXTENSIONS_DIR: $ext_dir, LAKE_DIR: $lake, COMPUTE_STATE_DIR: $state } { exec deno run --unstable-worker-options --allow-ffi --allow-read --allow-write --allow-net --allow-env --allow-sys --config ($app | path join 'deno.json') ($app | path join 'main.ts') }",
         "priority": 0,
         "shell": "nu",
         "stop": false,
@@ -8083,9 +8219,8 @@
             "/${POSTGRES_DB:-golaberto}"
           ],
           "CDC_SLOT": "golaberto_conduit_slot",
-          "COMPUTE_STATE_DIR": "${COMPUTE_STATE_DIR:-.pronto/live/duckstream}",
           "DUCKSTREAM_ENGINE": "${DUCKSTREAM_ENGINE:-duckdb-snapshot}",
-          "COMPUTATIONS": "[{\"declaredReads\":[\"championship\",\"phase\",\"stage_group\",\"team_group\",\"team\",\"game\",\"zone\"],\"feldera\":\"duckstream/standings.feldera.json\",\"name\":\"golaberto-standings\",\"file\":\"computations/standings.js\",\"sinkTypes\":{\"standing\":[{\"name\":\"id\",\"type\":\"string\",\"required\":true},{\"name\":\"group_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_name\",\"type\":\"string\",\"required\":true},{\"name\":\"position\",\"type\":\"int32\",\"required\":true},{\"name\":\"points\",\"type\":\"int32\",\"required\":true},{\"name\":\"played\",\"type\":\"int32\",\"required\":true},{\"name\":\"wins\",\"type\":\"int32\",\"required\":true},{\"name\":\"draws\",\"type\":\"int32\",\"required\":true},{\"name\":\"losses\",\"type\":\"int32\",\"required\":true},{\"name\":\"goals_for\",\"type\":\"int32\",\"required\":true},{\"name\":\"goals_against\",\"type\":\"int32\",\"required\":true},{\"name\":\"goal_diff\",\"type\":\"int32\",\"required\":true},{\"name\":\"form1\",\"type\":\"string\",\"required\":true},{\"name\":\"form2\",\"type\":\"string\",\"required\":true},{\"name\":\"form3\",\"type\":\"string\",\"required\":true},{\"name\":\"form4\",\"type\":\"string\",\"required\":true},{\"name\":\"form5\",\"type\":\"string\",\"required\":true},{\"name\":\"zone\",\"type\":\"string\",\"required\":true}]},\"sinkWrites\":{\"standing\":\"replace\"},\"steps\":\"duckstream/bounded-standings.ts\",\"to\":[\"standing\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[],\"endowments\":[\"TextEncoder\"]},{\"declaredReads\":[\"championship\",\"phase\",\"game\",\"team\",\"player\",\"player_game\",\"goal\"],\"feldera\":\"duckstream/ratings.feldera.json\",\"name\":\"golaberto-ratings\",\"file\":\"computations/ratings.js\",\"queryTypes\":{\"teams\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true}],\"players\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true}]},\"sinkTypes\":{\"team_rating\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"measure_date\",\"type\":\"date\",\"required\":true},{\"name\":\"offense\",\"type\":\"double\",\"required\":true},{\"name\":\"defense\",\"type\":\"double\",\"required\":true},{\"name\":\"rating\",\"type\":\"double\",\"required\":true}],\"player_rating\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"rating\",\"type\":\"double\",\"required\":true},{\"name\":\"off_rating\",\"type\":\"double\",\"required\":false},{\"name\":\"def_rating\",\"type\":\"double\",\"required\":false}],\"rating_eval\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"rps\",\"type\":\"double\",\"required\":true}]},\"sinkWrites\":{\"team_rating\":\"replace\",\"player_rating\":\"replace\",\"rating_eval\":\"replace\"},\"steps\":\"duckstream/bounded-ratings.ts\",\"to\":[\"team_rating\",\"player_rating\",\"rating_eval\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[\"computations/golaberto-odds.wasm\"],\"endowments\":[\"TextEncoder\"]},{\"declaredReads\":[\"championship\",\"phase\",\"stage_group\",\"team_group\",\"zone\",\"team\",\"game\",\"team_rating\",\"standing\"],\"feldera\":\"duckstream/chances.feldera.json\",\"name\":\"golaberto-chances\",\"file\":\"computations/chances.js\",\"onComplete\":\"capture_team_odds_history\",\"sinkTypes\":{\"team_chance\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"group_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_name\",\"type\":\"string\",\"required\":true},{\"name\":\"rank\",\"type\":\"int32\",\"required\":true},{\"name\":\"points\",\"type\":\"int32\",\"required\":true},{\"name\":\"played\",\"type\":\"int32\",\"required\":true}],\"zone_chance\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"group_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"zone_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"first\",\"type\":\"int32\",\"required\":true},{\"name\":\"percent\",\"type\":\"double\",\"required\":true},{\"name\":\"color\",\"type\":\"string\",\"required\":true},{\"name\":\"band\",\"type\":\"int32\",\"required\":true},{\"name\":\"last\",\"type\":\"int32\",\"required\":true},{\"name\":\"reach\",\"type\":\"string\",\"required\":true}],\"position_chance\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"group_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"position\",\"type\":\"int32\",\"required\":true},{\"name\":\"percent\",\"type\":\"double\",\"required\":true},{\"name\":\"band\",\"type\":\"int32\",\"required\":true},{\"name\":\"current\",\"type\":\"bool\",\"required\":true},{\"name\":\"reach\",\"type\":\"string\",\"required\":true}],\"game_importance\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"home\",\"type\":\"double\",\"required\":false},{\"name\":\"away\",\"type\":\"double\",\"required\":false}]},\"sinkWrites\":{\"team_chance\":\"replace\",\"zone_chance\":\"replace\",\"position_chance\":\"replace\",\"game_importance\":\"replace\"},\"steps\":\"duckstream/bounded-chances.ts\",\"to\":[\"team_chance\",\"zone_chance\",\"position_chance\",\"game_importance\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[\"computations/golaberto-odds.wasm\"],\"endowments\":[\"TextEncoder\"]},{\"declaredReads\":[\"game\",\"team\",\"phase\",\"championship\",\"stadium\",\"referee\"],\"feldera\":\"duckstream/cards.feldera.json\",\"name\":\"golaberto-game-cards\",\"file\":\"computations/cards.js\",\"sinkTypes\":{\"game_card\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"phase_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"championship_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"round\",\"type\":\"int32\",\"required\":false},{\"name\":\"day\",\"type\":\"date\",\"required\":true},{\"name\":\"kickoff\",\"type\":\"timestamp\",\"required\":false},{\"name\":\"played\",\"type\":\"bool\",\"required\":true},{\"name\":\"home_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"away_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"home_name\",\"type\":\"string\",\"required\":true},{\"name\":\"away_name\",\"type\":\"string\",\"required\":true},{\"name\":\"home_score\",\"type\":\"int32\",\"required\":false},{\"name\":\"away_score\",\"type\":\"int32\",\"required\":false},{\"name\":\"home_aet\",\"type\":\"int32\",\"required\":false},{\"name\":\"away_aet\",\"type\":\"int32\",\"required\":false},{\"name\":\"home_pen\",\"type\":\"int32\",\"required\":false},{\"name\":\"away_pen\",\"type\":\"int32\",\"required\":false},{\"name\":\"championship_name\",\"type\":\"string\",\"required\":true},{\"name\":\"phase_name\",\"type\":\"string\",\"required\":true},{\"name\":\"stadium_name\",\"type\":\"string\",\"required\":false},{\"name\":\"referee_name\",\"type\":\"string\",\"required\":false},{\"name\":\"attendance\",\"type\":\"int32\",\"required\":false},{\"name\":\"stadium_id\",\"type\":\"uuid\",\"required\":false},{\"name\":\"referee_id\",\"type\":\"uuid\",\"required\":false}],\"team_game\":[{\"name\":\"id\",\"type\":\"string\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"game_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"side\",\"type\":\"string\",\"required\":true},{\"name\":\"opponent_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"opponent_name\",\"type\":\"string\",\"required\":true},{\"name\":\"championship_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"championship_name\",\"type\":\"string\",\"required\":true},{\"name\":\"day\",\"type\":\"date\",\"required\":true},{\"name\":\"kickoff\",\"type\":\"timestamp\",\"required\":false},{\"name\":\"played\",\"type\":\"bool\",\"required\":true},{\"name\":\"goals_for\",\"type\":\"int32\",\"required\":false},{\"name\":\"goals_against\",\"type\":\"int32\",\"required\":false},{\"name\":\"result\",\"type\":\"string\",\"required\":true},{\"name\":\"category_id\",\"type\":\"uuid\",\"required\":false},{\"name\":\"phase_key\",\"type\":\"string\",\"required\":true},{\"name\":\"category_key\",\"type\":\"string\",\"required\":true},{\"name\":\"fixture_available\",\"type\":\"bool\",\"required\":true}]},\"sinkWrites\":{\"game_card\":\"replace\",\"team_game\":\"replace\"},\"steps\":\"duckstream/bounded-cards.ts\",\"to\":[\"game_card\",\"team_game\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[],\"endowments\":[\"TextEncoder\"]},{\"declaredReads\":[\"player_game\",\"goal\",\"player\",\"game\",\"phase\",\"championship\",\"team\"],\"feldera\":\"duckstream/player_stats.feldera.json\",\"name\":\"golaberto-player-stats\",\"file\":\"computations/player_stats.js\",\"sinkTypes\":{\"player_stat\":[{\"name\":\"id\",\"type\":\"string\",\"required\":true},{\"name\":\"championship_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"player_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"player_name\",\"type\":\"string\",\"required\":true},{\"name\":\"position\",\"type\":\"string\",\"required\":true},{\"name\":\"played\",\"type\":\"int32\",\"required\":true},{\"name\":\"started\",\"type\":\"int32\",\"required\":true},{\"name\":\"came_on\",\"type\":\"int32\",\"required\":true},{\"name\":\"bench\",\"type\":\"int32\",\"required\":true},{\"name\":\"minutes\",\"type\":\"int32\",\"required\":true},{\"name\":\"goals\",\"type\":\"int32\",\"required\":true},{\"name\":\"penalties\",\"type\":\"int32\",\"required\":true},{\"name\":\"own_goals\",\"type\":\"int32\",\"required\":true},{\"name\":\"yellow\",\"type\":\"int32\",\"required\":true},{\"name\":\"red\",\"type\":\"int32\",\"required\":true},{\"name\":\"championship_name\",\"type\":\"string\",\"required\":true},{\"name\":\"team_name\",\"type\":\"string\",\"required\":true}]},\"sinkWrites\":{\"player_stat\":\"replace\"},\"steps\":\"duckstream/bounded-player-stats.ts\",\"to\":[\"player_stat\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[],\"endowments\":[\"TextEncoder\"]}]",
+          "COMPUTATIONS": "[{\"declaredReads\":[\"championship\",\"phase\",\"stage_group\",\"team_group\",\"team\",\"game\",\"zone\"],\"name\":\"golaberto-standings\",\"file\":\"computations/standings.js\",\"risingwave\":\"duckstream/standings.risingwave.json\",\"sinkTypes\":{\"standing\":[{\"name\":\"id\",\"type\":\"string\",\"required\":true},{\"name\":\"group_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_name\",\"type\":\"string\",\"required\":true},{\"name\":\"position\",\"type\":\"int32\",\"required\":true},{\"name\":\"points\",\"type\":\"int32\",\"required\":true},{\"name\":\"played\",\"type\":\"int32\",\"required\":true},{\"name\":\"wins\",\"type\":\"int32\",\"required\":true},{\"name\":\"draws\",\"type\":\"int32\",\"required\":true},{\"name\":\"losses\",\"type\":\"int32\",\"required\":true},{\"name\":\"goals_for\",\"type\":\"int32\",\"required\":true},{\"name\":\"goals_against\",\"type\":\"int32\",\"required\":true},{\"name\":\"goal_diff\",\"type\":\"int32\",\"required\":true},{\"name\":\"form1\",\"type\":\"string\",\"required\":true},{\"name\":\"form2\",\"type\":\"string\",\"required\":true},{\"name\":\"form3\",\"type\":\"string\",\"required\":true},{\"name\":\"form4\",\"type\":\"string\",\"required\":true},{\"name\":\"form5\",\"type\":\"string\",\"required\":true},{\"name\":\"zone\",\"type\":\"string\",\"required\":true}]},\"sinkWrites\":{\"standing\":\"replace\"},\"steps\":\"duckstream/bounded-standings.ts\",\"to\":[\"standing\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[],\"endowments\":[\"TextEncoder\"]},{\"declaredReads\":[\"championship\",\"phase\",\"game\",\"team\",\"player\",\"player_game\",\"goal\"],\"name\":\"golaberto-ratings\",\"file\":\"computations/ratings.js\",\"queryTypes\":{\"teams\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true}],\"players\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true}]},\"risingwave\":\"duckstream/ratings.risingwave.json\",\"sinkTypes\":{\"team_rating\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"measure_date\",\"type\":\"date\",\"required\":true},{\"name\":\"offense\",\"type\":\"double\",\"required\":true},{\"name\":\"defense\",\"type\":\"double\",\"required\":true},{\"name\":\"rating\",\"type\":\"double\",\"required\":true}],\"player_rating\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"rating\",\"type\":\"double\",\"required\":true},{\"name\":\"off_rating\",\"type\":\"double\",\"required\":false},{\"name\":\"def_rating\",\"type\":\"double\",\"required\":false}],\"rating_eval\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"rps\",\"type\":\"double\",\"required\":true}]},\"sinkWrites\":{\"team_rating\":\"replace\",\"player_rating\":\"replace\",\"rating_eval\":\"replace\"},\"steps\":\"duckstream/bounded-ratings.ts\",\"to\":[\"team_rating\",\"player_rating\",\"rating_eval\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[\"computations/golaberto-odds.wasm\"],\"endowments\":[\"TextEncoder\"]},{\"declaredReads\":[\"championship\",\"phase\",\"stage_group\",\"team_group\",\"zone\",\"team\",\"game\",\"team_rating\",\"standing\"],\"name\":\"golaberto-chances\",\"file\":\"computations/chances.js\",\"onComplete\":\"capture_team_odds_history\",\"risingwave\":\"duckstream/chances.risingwave.json\",\"sinkTypes\":{\"team_chance\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"group_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_name\",\"type\":\"string\",\"required\":true},{\"name\":\"rank\",\"type\":\"int32\",\"required\":true},{\"name\":\"points\",\"type\":\"int32\",\"required\":true},{\"name\":\"played\",\"type\":\"int32\",\"required\":true}],\"zone_chance\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"group_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"zone_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"first\",\"type\":\"int32\",\"required\":true},{\"name\":\"percent\",\"type\":\"double\",\"required\":true},{\"name\":\"color\",\"type\":\"string\",\"required\":true},{\"name\":\"band\",\"type\":\"int32\",\"required\":true},{\"name\":\"last\",\"type\":\"int32\",\"required\":true},{\"name\":\"reach\",\"type\":\"string\",\"required\":true}],\"position_chance\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"group_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"position\",\"type\":\"int32\",\"required\":true},{\"name\":\"percent\",\"type\":\"double\",\"required\":true},{\"name\":\"band\",\"type\":\"int32\",\"required\":true},{\"name\":\"current\",\"type\":\"bool\",\"required\":true},{\"name\":\"reach\",\"type\":\"string\",\"required\":true}],\"game_importance\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"home\",\"type\":\"double\",\"required\":false},{\"name\":\"away\",\"type\":\"double\",\"required\":false}]},\"sinkWrites\":{\"team_chance\":\"replace\",\"zone_chance\":\"replace\",\"position_chance\":\"replace\",\"game_importance\":\"replace\"},\"steps\":\"duckstream/bounded-chances.ts\",\"to\":[\"team_chance\",\"zone_chance\",\"position_chance\",\"game_importance\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[\"computations/golaberto-odds.wasm\"],\"endowments\":[\"TextEncoder\"]},{\"declaredReads\":[\"game\",\"team\",\"phase\",\"championship\",\"stadium\",\"referee\"],\"name\":\"golaberto-game-cards\",\"file\":\"computations/cards.js\",\"risingwave\":\"duckstream/cards.risingwave.json\",\"sinkTypes\":{\"game_card\":[{\"name\":\"id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"phase_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"championship_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"round\",\"type\":\"int32\",\"required\":false},{\"name\":\"day\",\"type\":\"date\",\"required\":true},{\"name\":\"kickoff\",\"type\":\"timestamp\",\"required\":false},{\"name\":\"played\",\"type\":\"bool\",\"required\":true},{\"name\":\"home_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"away_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"home_name\",\"type\":\"string\",\"required\":true},{\"name\":\"away_name\",\"type\":\"string\",\"required\":true},{\"name\":\"home_score\",\"type\":\"int32\",\"required\":false},{\"name\":\"away_score\",\"type\":\"int32\",\"required\":false},{\"name\":\"home_aet\",\"type\":\"int32\",\"required\":false},{\"name\":\"away_aet\",\"type\":\"int32\",\"required\":false},{\"name\":\"home_pen\",\"type\":\"int32\",\"required\":false},{\"name\":\"away_pen\",\"type\":\"int32\",\"required\":false},{\"name\":\"championship_name\",\"type\":\"string\",\"required\":true},{\"name\":\"phase_name\",\"type\":\"string\",\"required\":true},{\"name\":\"stadium_name\",\"type\":\"string\",\"required\":false},{\"name\":\"referee_name\",\"type\":\"string\",\"required\":false},{\"name\":\"attendance\",\"type\":\"int32\",\"required\":false},{\"name\":\"stadium_id\",\"type\":\"uuid\",\"required\":false},{\"name\":\"referee_id\",\"type\":\"uuid\",\"required\":false}],\"team_game\":[{\"name\":\"id\",\"type\":\"string\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"game_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"side\",\"type\":\"string\",\"required\":true},{\"name\":\"opponent_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"opponent_name\",\"type\":\"string\",\"required\":true},{\"name\":\"championship_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"championship_name\",\"type\":\"string\",\"required\":true},{\"name\":\"day\",\"type\":\"date\",\"required\":true},{\"name\":\"kickoff\",\"type\":\"timestamp\",\"required\":false},{\"name\":\"played\",\"type\":\"bool\",\"required\":true},{\"name\":\"goals_for\",\"type\":\"int32\",\"required\":false},{\"name\":\"goals_against\",\"type\":\"int32\",\"required\":false},{\"name\":\"result\",\"type\":\"string\",\"required\":true},{\"name\":\"category_id\",\"type\":\"uuid\",\"required\":false},{\"name\":\"phase_key\",\"type\":\"string\",\"required\":true},{\"name\":\"category_key\",\"type\":\"string\",\"required\":true},{\"name\":\"fixture_available\",\"type\":\"bool\",\"required\":true}]},\"sinkWrites\":{\"game_card\":\"replace\",\"team_game\":\"replace\"},\"steps\":\"duckstream/bounded-cards.ts\",\"to\":[\"game_card\",\"team_game\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[],\"endowments\":[\"TextEncoder\"]},{\"declaredReads\":[\"player_game\",\"goal\",\"player\",\"game\",\"phase\",\"championship\",\"team\"],\"name\":\"golaberto-player-stats\",\"file\":\"computations/player_stats.js\",\"risingwave\":\"duckstream/player_stats.risingwave.json\",\"sinkTypes\":{\"player_stat\":[{\"name\":\"id\",\"type\":\"string\",\"required\":true},{\"name\":\"championship_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"team_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"player_id\",\"type\":\"uuid\",\"required\":true},{\"name\":\"player_name\",\"type\":\"string\",\"required\":true},{\"name\":\"position\",\"type\":\"string\",\"required\":true},{\"name\":\"played\",\"type\":\"int32\",\"required\":true},{\"name\":\"started\",\"type\":\"int32\",\"required\":true},{\"name\":\"came_on\",\"type\":\"int32\",\"required\":true},{\"name\":\"bench\",\"type\":\"int32\",\"required\":true},{\"name\":\"minutes\",\"type\":\"int32\",\"required\":true},{\"name\":\"goals\",\"type\":\"int32\",\"required\":true},{\"name\":\"penalties\",\"type\":\"int32\",\"required\":true},{\"name\":\"own_goals\",\"type\":\"int32\",\"required\":true},{\"name\":\"yellow\",\"type\":\"int32\",\"required\":true},{\"name\":\"red\",\"type\":\"int32\",\"required\":true},{\"name\":\"championship_name\",\"type\":\"string\",\"required\":true},{\"name\":\"team_name\",\"type\":\"string\",\"required\":true}]},\"sinkWrites\":{\"player_stat\":\"replace\"},\"steps\":\"duckstream/bounded-player-stats.ts\",\"to\":[\"player_stat\"],\"types\":{\"types\":{\"string\":{\"pg\":\"text\",\"column\":\"plain\",\"subset\":true,\"base\":[\"text\",\"varchar\",\"bpchar\",\"tsvector\"],\"json\":\"string\",\"refuse\":\"\\\\x00\",\"order\":\"text\",\"beyond\":[\"scalar-values\"]},\"bool\":{\"pg\":\"boolean\",\"column\":\"plain\",\"subset\":true,\"base\":[\"bool\",\"boolean\"],\"json\":\"boolean\",\"order\":\"boolean\",\"beyond\":[]},\"int32\":{\"pg\":\"integer\",\"column\":\"plain\",\"subset\":true,\"base\":[\"int2\",\"int4\",\"integer\",\"smallint\"],\"json\":\"number\",\"min\":-2147483648,\"max\":2147483647,\"order\":\"number\",\"beyond\":[]},\"int64\":{\"pg\":\"bigint\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_int64\",\"base\":[\"int8\",\"bigint\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*)$\",\"order\":\"integer\",\"beyond\":[\"int64-range\"]},\"double\":{\"pg\":\"double precision\",\"column\":\"checked\",\"subset\":true,\"base\":[\"float4\",\"float8\",\"double precision\",\"real\"],\"json\":\"number\",\"order\":\"number\",\"beyond\":[]},\"bytes\":{\"pg\":\"bytea\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_bytes\",\"base\":[\"bytea\"],\"json\":\"string\",\"pattern\":\"^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$\",\"order\":\"none\",\"beyond\":[]},\"uuid\":{\"pg\":\"uuid\",\"column\":\"plain\",\"subset\":true,\"base\":[\"uuid\"],\"json\":\"string\",\"pattern\":\"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$\",\"order\":\"text\",\"beyond\":[]},\"timestamp\":{\"pg\":\"timestamptz\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_timestamp\",\"base\":[\"timestamptz\",\"timestamp with time zone\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}Z$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"duration\":{\"pg\":\"interval\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_duration\",\"base\":[\"interval\"],\"json\":\"string\",\"pattern\":\"^PT(0|[1-9][0-9]*)(\\\\.[0-9]{0,5}[1-9])?S$\",\"order\":\"duration\",\"beyond\":[\"duration-range\"]},\"decimal\":{\"pg\":\"numeric\",\"column\":\"domain\",\"subset\":false,\"base\":[\"numeric\",\"decimal\"],\"json\":\"string\",\"pattern\":\"^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\\\.[0-9]*[1-9])$\",\"order\":\"decimal\",\"beyond\":[\"decimal-profile\"]},\"date\":{\"pg\":\"date\",\"column\":\"checked\",\"subset\":true,\"base\":[\"date\"],\"json\":\"string\",\"pattern\":\"^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$\",\"order\":\"text\",\"beyond\":[\"calendar\"]},\"time\":{\"pg\":\"time(6)\",\"column\":\"domain\",\"subset\":false,\"sql\":\"portable_time\",\"base\":[\"time\",\"time without time zone\"],\"json\":\"string\",\"pattern\":\"^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\\\.[0-9]{6}$\",\"order\":\"text\",\"beyond\":[]},\"timezone\":{\"pg\":\"text\",\"column\":\"checked\",\"subset\":true,\"base\":[\"text\"],\"json\":\"string\",\"pattern\":\"^[A-Za-z0-9+_/-]+$\",\"order\":\"none\",\"beyond\":[\"tzdb\"]},\"json\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\"]},\"geojson\":{\"pg\":\"json\",\"column\":\"checked\",\"subset\":false,\"base\":[\"json\",\"jsonb\",\"geometry\",\"geography\"],\"json\":\"value\",\"order\":\"none\",\"beyond\":[\"scalar-values\",\"finite-numbers\",\"ring-closure\"]}},\"aliases\":{\"text\":\"string\",\"int\":\"int32\",\"bigint\":\"int64\",\"timestamptz\":\"timestamp\",\"tsvector\":\"string\"}},\"wasm\":[],\"endowments\":[\"TextEncoder\"]}]",
           "SERVICE_JWT": "${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZWNoYTpzdGFjayIsInJvbGUiOiJzZXJ2aWNlIiwic3ViIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiZXhwIjoxOTg4MTUwNDAwfQ.K4ZX9EDs-BwPIh3r_ZOKmO9XfrQrEx18rwlw3siXcxs}"
         },
         "after": {
@@ -8176,7 +8311,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-ticker-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-ticker:0.25.2@sha256:3f465f637a588b910ee00dc5df1e5843cd93574a834d96f57230aa5311fce8ef}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image}"
+            "libraries_mecha-ticker-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-ticker:0.26.0@sha256:03aef8f516ce4ac10d1300b890f2504bab4b222a7080ee6095f7a1581649b7db}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image}"
           },
           "secrets": [],
           "args": {}
@@ -8324,7 +8459,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-clock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-clock:0.25.2@sha256:9d8cdaca612d880a4de4ab3176f80a1e7acdb38b10295f9aa5990217dcb3317f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-clock-image}"
+            "libraries_mecha-clock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-clock:0.26.0@sha256:9d8cdaca612d880a4de4ab3176f80a1e7acdb38b10295f9aa5990217dcb3317f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-clock-image}"
           },
           "secrets": [],
           "args": {}
@@ -8509,7 +8644,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-airlock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-airlock:0.25.2@sha256:281a2c2eb21a186cfda0b9c0200b279bdd4423b0b08e67414c2886884b3bab0e}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image}"
+            "libraries_mecha-airlock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-airlock:0.26.0@sha256:89fb37e3ab1e0278452c584b2d4e2b6fbd7f8985adb86d5a363873ddbd02145e}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image}"
           },
           "secrets": [],
           "args": {}
@@ -8773,8 +8908,8 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-mesh-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.25.2@sha256:8d39aa3543560232c52330152ba70a4d2c973b76d0ac97899d677704bc0e09a4}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}",
-            "libraries_mecha-airlock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-airlock:0.25.2@sha256:281a2c2eb21a186cfda0b9c0200b279bdd4423b0b08e67414c2886884b3bab0e}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image}"
+            "libraries_mecha-mesh-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.26.0@sha256:8d39aa3543560232c52330152ba70a4d2c973b76d0ac97899d677704bc0e09a4}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}",
+            "libraries_mecha-airlock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-airlock:0.26.0@sha256:89fb37e3ab1e0278452c584b2d4e2b6fbd7f8985adb86d5a363873ddbd02145e}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image}"
           },
           "secrets": [],
           "args": {}
@@ -9031,7 +9166,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.25.1@sha256:a807d1ac0bc336c8a6ecfaf2700cb5cad55404468716a4a5791ede8c3d1c1329}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.25.2@sha256:a807d1ac0bc336c8a6ecfaf2700cb5cad55404468716a4a5791ede8c3d1c1329}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -9424,8 +9559,7 @@
           "ARG MONOREPO_COMPOSE_MODE",
           "ENV MONOREPO_COMPOSE_MODE=$MONOREPO_COMPOSE_MODE",
           "ARG BAYT_RUNTIME",
-          "ENV BAYT_RUNTIME=$BAYT_RUNTIME",
-          "ENV FELDERA_COMPILATION_PROFILE=unoptimized"
+          "ENV BAYT_RUNTIME=$BAYT_RUNTIME"
         ],
         "defaultPreamble": {
           "bayt-runtime": {
@@ -10070,7 +10204,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.25.1@sha256:a807d1ac0bc336c8a6ecfaf2700cb5cad55404468716a4a5791ede8c3d1c1329}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.25.2@sha256:a807d1ac0bc336c8a6ecfaf2700cb5cad55404468716a4a5791ede8c3d1c1329}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -10466,8 +10600,7 @@
           "ARG MONOREPO_COMPOSE_MODE",
           "ENV MONOREPO_COMPOSE_MODE=$MONOREPO_COMPOSE_MODE",
           "ARG BAYT_RUNTIME",
-          "ENV BAYT_RUNTIME=$BAYT_RUNTIME",
-          "ENV FELDERA_COMPILATION_PROFILE=unoptimized"
+          "ENV BAYT_RUNTIME=$BAYT_RUNTIME"
         ],
         "defaultPreamble": {
           "bayt-runtime": {
@@ -11112,7 +11245,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.25.1@sha256:a807d1ac0bc336c8a6ecfaf2700cb5cad55404468716a4a5791ede8c3d1c1329}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.25.2@sha256:a807d1ac0bc336c8a6ecfaf2700cb5cad55404468716a4a5791ede8c3d1c1329}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -11505,8 +11638,7 @@
           "ARG MONOREPO_COMPOSE_MODE",
           "ENV MONOREPO_COMPOSE_MODE=$MONOREPO_COMPOSE_MODE",
           "ARG BAYT_RUNTIME",
-          "ENV BAYT_RUNTIME=$BAYT_RUNTIME",
-          "ENV FELDERA_COMPILATION_PROFILE=unoptimized"
+          "ENV BAYT_RUNTIME=$BAYT_RUNTIME"
         ],
         "defaultPreamble": {
           "bayt-runtime": {
@@ -14346,7 +14478,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.25.1@sha256:a807d1ac0bc336c8a6ecfaf2700cb5cad55404468716a4a5791ede8c3d1c1329}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.25.2@sha256:a807d1ac0bc336c8a6ecfaf2700cb5cad55404468716a4a5791ede8c3d1c1329}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -14694,7 +14826,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.25.1@sha256:a807d1ac0bc336c8a6ecfaf2700cb5cad55404468716a4a5791ede8c3d1c1329}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.25.2@sha256:a807d1ac0bc336c8a6ecfaf2700cb5cad55404468716a4a5791ede8c3d1c1329}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -15062,7 +15194,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.25.1@sha256:a807d1ac0bc336c8a6ecfaf2700cb5cad55404468716a4a5791ede8c3d1c1329}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.25.2@sha256:a807d1ac0bc336c8a6ecfaf2700cb5cad55404468716a4a5791ede8c3d1c1329}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -16035,8 +16167,7 @@
           "/pipelines/golaberto-team-directory.yaml",
           "/pipelines/golaberto-matches-games.yaml",
           "/pipelines/golaberto-recent-championships.yaml",
-          "/pipelines/golaberto-sofascore-admission.yaml",
-          "/compute-events.yaml"
+          "/pipelines/golaberto-sofascore-admission.yaml"
         ]
       },
       "compose": {
@@ -16045,7 +16176,6 @@
         "environment": {
           "CRUD_URL": "http://crud:3000",
           "REDIS_URL": "redis://redis:6379",
-          "COMPUTE_GROUP": "golaberto-compute",
           "SERVICE_JWT": "${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZWNoYTpzdGFjayIsInJvbGUiOiJzZXJ2aWNlIiwic3ViIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiZXhwIjoxOTg4MTUwNDAwfQ.K4ZX9EDs-BwPIh3r_ZOKmO9XfrQrEx18rwlw3siXcxs}"
         },
         "ports": [],
@@ -16140,7 +16270,6 @@
           "defaultExclude": null
         },
         "env": {
-          "COMPUTE_GROUP": "golaberto-compute",
           "CRUD_URL": {
             "peer": "crud",
             "port": "http",
@@ -16163,6 +16292,131 @@
           "compute": "healthy"
         },
         "host": true
+      },
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      }
+    },
+    "risingwave": {
+      "name": "risingwave",
+      "project": "golaberto",
+      "dir": ".",
+      "srcs": {
+        "globs": [],
+        "defaultGlobs": null,
+        "exclude": [],
+        "defaultExclude": null
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "state": {
+        "globs": []
+      },
+      "visibility": "internal",
+      "activate": "",
+      "cmd": {
+        "builtin": null
+      },
+      "env": {},
+      "deps": [],
+      "dockerfile": {
+        "from": {
+          "name": "risingwavelabs/risingwave:v3.1.1@sha256:b869358fa704250d25045d3575145ca59cfb67a558a08fa4f8fd375874c24d63"
+        },
+        "preamble": [],
+        "defaultPreamble": null,
+        "add": [],
+        "mounts": [],
+        "secrets": {},
+        "extra_hosts": [],
+        "epilogue": [
+          "COPY <<'RWCONFIG' /etc/risingwave/risingwave.toml\n[meta]\nmin_sst_retention_time_sec = 300\nfull_gc_interval_sec = 60\nvacuum_interval_sec = 15\ngc_history_retention_time_sec = 0\nclean_all_foreground_jobs_on_recovery = true\n\n[meta.developer]\nactor_cnt_per_worker_parallelism_soft_limit = 1000\nactor_cnt_per_worker_parallelism_hard_limit = 4000\n\n[streaming]\nin_flight_barrier_nums = 256\n\n[streaming.developer]\nenable_snapshot_backfill = false\n\n[storage]\nshared_buffer_min_batch_flush_size_mb = 32\nRWCONFIG",
+          "ENV RW_SINGLE_NODE_CONFIG_PATH=/etc/risingwave/risingwave.toml"
+        ],
+        "copy": [],
+        "defaultCopy": {
+          "portcheck": {
+            "from": {
+              "name": "tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa"
+            },
+            "name": "portcheck",
+            "srcs": [
+              "/bin/portcheck"
+            ],
+            "dst": "/usr/local/bin/portcheck",
+            "chmod": "755",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          }
+        },
+        "healthcheck": {
+          "test": [
+            "CMD",
+            "portcheck",
+            "--port",
+            "4566"
+          ],
+          "interval": "1s",
+          "timeout": "5s",
+          "retries": 30,
+          "start_period": "120s"
+        },
+        "expose": [],
+        "entrypoint": null,
+        "incremental": false,
+        "cmd": [
+          "single_node"
+        ]
+      },
+      "compose": {
+        "up": false,
+        "manual": false,
+        "environment": {},
+        "ports": [],
+        "volumes": [],
+        "depends_on": {},
+        "networks": {
+          "default": {
+            "aliases": [
+              "risingwave"
+            ]
+          }
+        },
+        "restart": "on-failure",
+        "healthcheck": {
+          "test": [
+            "CMD",
+            "portcheck",
+            "--port",
+            "4566"
+          ],
+          "interval": "1s",
+          "timeout": "5s",
+          "retries": 30,
+          "start_period": "120s",
+          "start_interval": "200ms"
+        }
+      },
+      "process-compose": {
+        "availability": {
+          "restart": "on_failure",
+          "backoff_seconds": 1,
+          "max_restarts": 15
+        }
+      },
+      "healthcheck": {
+        "template": "tcp",
+        "port": 4566,
+        "start_interval": "200ms",
+        "interval": "1s",
+        "timeout": "5s",
+        "retries": 30,
+        "start_period": "120s"
       },
       "cmds": [],
       "cache": {

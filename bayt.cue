@@ -13,7 +13,7 @@ import (
 	prontoloop "github.com/bonisoft3/pronto/loops:sayt"
 )
 
-// Compiled escape hatches (ir.html: feldera_sql, rclone-s3, sofascore, sofascore-receive, team-match-preview)
+// Compiled escape hatches (ir.html: rclone-s3, risingwave_sql, sofascore, sofascore-receive, team-match-preview)
 // live in program.cue's cluster unification; this redeclaration
 // is the out-of-band human override seam (add a cluster target,
 // modify one, null to drop one; extend the terminal).

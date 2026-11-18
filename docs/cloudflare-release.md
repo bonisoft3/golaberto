@@ -21,9 +21,9 @@ coordinator. Cortex retains captures and retries in the database object and
 publishes each result with its receipt. A separate computation coordinator object
 owns execution and retry alarms; request serving and clock alarms do not await
 those computations.
-Standings, game cards, team-game projections and player counters use Feldera SQL through
-Duckstream. On Cloudflare their relational work runs in the separate DuckDB
-object; on native Kubernetes/GKE it runs in Feldera. Player-counter publication
+Standings, game cards, team-game projections and player counters use Duckstream SQL.
+On Cloudflare their relational work runs in the separate DuckDB
+object; on native Kubernetes/GKE it runs in RisingWave. Player-counter publication
 updates only its declared columns, preserving independently computed rating
 metrics. SQL drains still maintain rounds and display enrichment.
 Cloudflare uses snapshot recounts. Guests can browse; passkey accounts with an
@@ -344,7 +344,7 @@ historical played games must still return rows.
   both bounded query memory and a capture design that preserves request
   responsiveness. See [[evidence/production-review/source-capture.json|capture evidence]].
 - **Snapshot execution recomputes retained inputs.** It supplies no incremental
-  Feldera state at the edge.
+  RisingWave state at the edge.
 - **Archive logos** still use their original URLs; this release does not migrate them into blob storage.
 
 ## Verify a live statistics update

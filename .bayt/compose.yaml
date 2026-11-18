@@ -287,3 +287,10 @@ services:
     profiles:
     - transform
     scale: 1
+  risingwave:
+    extends:
+      file: ./compose.risingwave.yaml
+      service: golaberto-risingwave
+    profiles:
+    - risingwave
+    scale: 1

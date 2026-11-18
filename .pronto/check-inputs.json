@@ -13939,7 +13939,12 @@
     }
   },
   "hatches": {
-    "feldera_sql": {
+    "rclone-s3": {
+      "ir": "hatch-native-media",
+      "kind": "container",
+      "note": "Authenticated app media gateway adapts the existing /blobs upstream. Private normalized bytes live in PostgreSQL; raw rclone and imgproxy are not started."
+    },
+    "risingwave_sql": {
       "files": [
         "duckstream/ratings.sql",
         "duckstream/chances.sql",
@@ -13965,14 +13970,9 @@
         "duckstream/chances/result_games.sql",
         "duckstream/chances/result_zones.sql"
       ],
-      "ir": "feldera_sql",
+      "ir": "risingwave_sql",
       "kind": "sql",
-      "note": "Pinned stock Feldera compilation and DuckDB equivalence tests validate these SQL dialects instead of PostgreSQL-only Squawk"
-    },
-    "rclone-s3": {
-      "ir": "hatch-native-media",
-      "kind": "container",
-      "note": "Authenticated app media gateway adapts the existing /blobs upstream. Private normalized bytes live in PostgreSQL; raw rclone and imgproxy are not started."
+      "note": "Pinned stock Calcite compilation and DuckDB equivalence tests validate these SQL dialects instead of PostgreSQL-only Squawk"
     },
     "sofascore": {
       "ir": "hatch-sofascore-transport",
@@ -14001,6 +14001,10 @@
     {
       "name": "003_rls.sql",
       "src": "services/database/sql/003_rls.txt"
+    },
+    {
+      "name": "005_create_tables.sql",
+      "src": "migrations/baseline/005_create_tables.sql"
     },
     {
       "name": "063_mecha_actors.sql",
@@ -14201,7 +14205,7 @@
       "ir": "chances",
       "backend": "compute",
       "src": "computations/chances.js",
-      "feldera": "duckstream/chances.feldera.json",
+      "risingwave": "duckstream/chances.risingwave.json",
       "steps": "duckstream/bounded-chances.ts",
       "endowments": [
         "TextEncoder"
@@ -14258,7 +14262,7 @@
       "ir": "game-cards",
       "backend": "compute",
       "src": "computations/cards.js",
-      "feldera": "duckstream/cards.feldera.json",
+      "risingwave": "duckstream/cards.risingwave.json",
       "steps": "duckstream/bounded-cards.ts",
       "endowments": [
         "TextEncoder"
@@ -14297,7 +14301,7 @@
       "ir": "player-stats",
       "backend": "compute",
       "src": "computations/player_stats.js",
-      "feldera": "duckstream/player_stats.feldera.json",
+      "risingwave": "duckstream/player_stats.risingwave.json",
       "steps": "duckstream/bounded-player-stats.ts",
       "endowments": [
         "TextEncoder"
@@ -14351,7 +14355,7 @@
       "ir": "ratings",
       "backend": "compute",
       "src": "computations/ratings.js",
-      "feldera": "duckstream/ratings.feldera.json",
+      "risingwave": "duckstream/ratings.risingwave.json",
       "steps": "duckstream/bounded-ratings.ts",
       "endowments": [
         "TextEncoder"
@@ -14415,7 +14419,7 @@
       "ir": "standings",
       "backend": "compute",
       "src": "computations/standings.js",
-      "feldera": "duckstream/standings.feldera.json",
+      "risingwave": "duckstream/standings.risingwave.json",
       "steps": "duckstream/bounded-standings.ts",
       "endowments": [
         "TextEncoder"

@@ -21,7 +21,7 @@ pipeline:
     - mapping: |-
         let row = this.catch({})
         let table = $row.data.or("").parse_json().catch({}).__table.or("")
-        root = if $row.exists("wake") || ["player_metric_dirty","team_roster_total_dirty","team_rating_chart_dirty","team_odds_chart_dirty","day_tick"].contains($table) { {"body": {"roster_batch":50,"rating_batch":10,"odds_batch":5}, "trace": @traceparent.or("")} } else { deleted() }
+        root = if $row.exists("wake") || ["player_metric_dirty","team_roster_total_dirty","team_rating_chart_dirty","team_odds_chart_dirty"].contains($table) { {"body": {"roster_batch":50,"rating_batch":10,"odds_batch":5}, "trace": @traceparent.or("")} } else { deleted() }
 output:
   http_client:
     url: '${CRUD_URL}/rpc/refresh_team_enrichment'

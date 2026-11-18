@@ -11,6 +11,12 @@
       "build": "sofascore-appliance"
     }
   ],
+  "endpoints": {
+    "k8s": {
+      "acquire": "http://sofascore:8080"
+    }
+  },
+  "prunesTokenRoles": true,
   "schema": {
     "pgroll": {
       "target": "migrate",
@@ -20,7 +26,7 @@
     "target": "database",
     "initdb": "/docker-entrypoint-initdb.d"
   },
-  "database": "bonitao/mecha-database:0.25.1@sha256:0b136a4d23661852800194879ee4dc0dc1580269c2f186dd531db97f03ab931f",
+  "database": "bonitao/mecha-database:0.25.2@sha256:2229cfefd31a8ee37eb2f88414fcb37eb8b990288cd65e873c70c6fa3af5fd55",
   "server": true,
   "steps": {
     "graphile": "060_graphile_worker.sql",

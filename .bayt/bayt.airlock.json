@@ -5,7 +5,7 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "libraries_mecha-airlock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-airlock:0.25.1@sha256:c84af38310b9210a13eac8576bf5336104d078f60912cda47a98536af5c2afba}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image}"
+        "libraries_mecha-airlock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-airlock:0.25.2@sha256:281a2c2eb21a186cfda0b9c0200b279bdd4423b0b08e67414c2886884b3bab0e}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image}"
       },
       "secrets": [],
       "args": {}

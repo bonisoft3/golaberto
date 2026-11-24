@@ -1,0 +1,10 @@
+{
+  "operations": [
+    {
+      "sql": {
+        "up": "-- Chances publication writes team_chance through game_importance before its\n-- onComplete hook inserts team_odds_history, while structural invalidation\n-- takes the projection turn before clearing standing and chance sinks. Take\n-- the same turn before statement-level source tracking locks compute.source.\nSET lock_timeout = '5s';\nSET statement_timeout = '60s';\n\nDO $$ DECLARE sink_table text; BEGIN\n  FOREACH sink_table IN ARRAY ARRAY[\n    'standing', 'team_chance', 'zone_chance', 'position_chance', 'game_importance', 'player_rating'\n  ] LOOP\n    EXECUTE format('DROP TRIGGER IF EXISTS team_projection_write_turn ON %I', sink_table);\n    EXECUTE format('CREATE TRIGGER team_projection_write_turn BEFORE INSERT OR UPDATE OR DELETE ON %I\n      FOR EACH STATEMENT EXECUTE FUNCTION take_team_projection_write_turn()', sink_table);\n  END LOOP;\nEND $$;\n",
+        "onComplete": true
+      }
+    }
+  ]
+}

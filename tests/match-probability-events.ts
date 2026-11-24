@@ -82,10 +82,11 @@ Deno.test("exhaustion is visible and the mounted chart never creates a duplicate
   const created: unknown[] = [];
   const subscribers = new Map<string, Set<() => void>>();
   const store = batched({
-    query: async (table: string, _order: unknown, options: {filter?: string} = {}) => {
+    answer: (table: string, _order: unknown, options: {filter?: string} = {}) => {
       const predicates = parseFilter(options.filter ?? "");
       return table === "match_probability_scenario" && (!predicates || predicates.every((match: (row: unknown) => boolean) => match(row))) ? [row] : [];
     },
+    query: (table: string, order: unknown, options?: {filter?: string}) => Promise.resolve(store.answer(table, order, options)),
     subscribe: (table: string, wake: () => void) => {
       const group = subscribers.get(table) ?? new Set();
       group.add(wake);

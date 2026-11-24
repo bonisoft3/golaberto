@@ -1,5 +1,6 @@
 import { assertEquals, assertRejects } from "jsr:@std/assert@1.0.8";
-import * as ratings from "../computations/ratings.js";
+import * as teamRatings from "../computations/team_ratings.js";
+import * as playerRatings from "../computations/player_ratings.js";
 import * as chances from "../computations/chances.js";
 import * as oldRatings from "./ratings.legacy.js";
 import * as oldChances from "./chances.legacy.js";
@@ -62,37 +63,52 @@ Deno.test({
         }))
       ),
     });
-    for (
-      const [program, legacy] of [[ratings, monthlyRatings], [
-        chances,
-        oldChances,
-      ]]
-    ) {
-      assertEquals(
-        visible(await inputs(program.queries, lake)),
-        await inputs(legacy.queries, lake),
-      );
-    }
-    const captured = await inputs(chances.queries, lake);
-    const shuffled = Object.fromEntries(
-      Object.entries(captured).map(([key, rows]) => [key, [...rows].reverse()]),
-    );
-    assertEquals(chances.plan(shuffled, 17), chances.plan(captured, 17));
-    const ratingInputs = await inputs(ratings.queries, lake);
+    const legacyRatings = await inputs(monthlyRatings.queries, lake);
+    const actualTeam = await inputs(teamRatings.queries, lake);
+    const actualPlayer = visible(await inputs(playerRatings.queries, lake));
     assertEquals(
-      ratings.plan(
-        Object.fromEntries(
-          Object.entries(ratingInputs).map((
-            [key, rows],
-          ) => [key, [...rows].reverse()]),
-        ),
-        17,
-        [],
-      ),
-      ratings.plan(ratingInputs, 17, []),
+      actualTeam.games,
+      legacyRatings.games.filter((g) => g.seven_years).map(({
+        phase_id: _p,
+        seven_years: _s,
+        recent: _r,
+        ...rest
+      }) => rest),
     );
+    assertEquals(actualTeam.teams, legacyRatings.teams);
+    assertEquals(
+      actualPlayer.games,
+      legacyRatings.games.filter((g) => g.recent).map(({
+        phase_id: _p,
+        home_score: _hs,
+        away_score: _as,
+        away_aet: _aa,
+        seven_years: _s,
+        recent: _r,
+        ...rest
+      }) => rest),
+    );
+    assertEquals(actualPlayer.cutoff, legacyRatings.cutoff);
+    assertEquals(actualPlayer.teams, legacyRatings.teams);
+    assertEquals(actualPlayer.players, legacyRatings.players);
+    assertEquals(actualPlayer.appearances, legacyRatings.appearances);
+    assertEquals(actualPlayer.goals, legacyRatings.goals);
+    assertEquals(
+      visible(await inputs(chances.queries, lake)),
+      await inputs(oldChances.queries, lake),
+    );
+    for (
+      const program of [teamRatings, playerRatings, chances] as const
+    ) {
+      const captured = await inputs(program.queries, lake);
+      const shuffled = Object.fromEntries(
+        Object.entries(captured).map(([key, rows]) => [key, [...rows].reverse()]),
+      );
+      assertEquals(program.plan(shuffled, 17, []), program.plan(captured, 17, []));
+    }
   },
 });
+
 Deno.test({
   name: "Duckstream-derived ratings preserve an empty professional archive",
   sanitizeOps: false,
@@ -101,14 +117,25 @@ Deno.test({
     const world = new World();
     for (const game of world.rows.game) game.played = "false";
     const lake = await world.lake();
-    assertEquals(
-      visible(await inputs(ratings.queries, lake)),
-      await inputs(monthlyRatings.queries, lake),
-    );
+    assertEquals((await inputs(teamRatings.queries, lake)).games, []);
+    const players = visible(await inputs(playerRatings.queries, lake));
+    assertEquals(players.games, []);
+    assertEquals(players.appearances, []);
+    assertEquals(players.goals, []);
   },
 });
+
 Deno.test("Golaberto programs and native descriptors are generated from admitted Duckstream SQL", async () => {
-  for (const name of ["ratings", "chances"] as const) {
+  for (
+    const name of [
+      "team_ratings",
+      "player_ratings",
+      "chances",
+      "cards",
+      "standings",
+      "player_stats",
+    ] as const
+  ) {
     const actual = await build(name);
     assertEquals(
       await Deno.readTextFile(
@@ -156,32 +183,25 @@ Deno.test({
   },
 });
 
-for (const years of [4, 7] as const) {
-  Deno.test({
-    name:
-      `calendar ${years}-year boundary preserves its declared monthly or phase policy`,
-    sanitizeOps: false,
-    sanitizeResources: false,
-    fn: async () => {
-      const world = calendarWorld(years);
-      const lake = await world.lake();
-      const actual = await inputs(ratings.queries, lake);
-      assertEquals(visible(actual), await inputs(monthlyRatings.queries, lake));
-      if (years === 7) {
-        assertEquals(
-          actual.games.find((row) => row.id === world.rows.game[0].id)
-            ?.seven_years,
-          true,
-        );
-      } else {
-        assertEquals(
-          actual.phases[0].since,
-          Date.parse("2100-02-28T21:00:00Z") / 1000,
-        );
-      }
-    },
-  });
-}
+Deno.test({
+  name: "calendar 7-year boundary preserves its declared monthly policy",
+  sanitizeOps: false,
+  sanitizeResources: false,
+  fn: async () => {
+    const world = calendarWorld(7);
+    const lake = await world.lake();
+    const legacy = await inputs(monthlyRatings.queries, lake);
+    const actual = await inputs(teamRatings.queries, lake);
+    assertEquals(
+      actual.games.some((row) => row.id === world.rows.game[0].id),
+      true,
+    );
+    assertEquals(
+      actual.games.map((g) => g.id),
+      legacy.games.filter((g) => g.seven_years).map((g) => g.id),
+    );
+  },
+});
 
 Deno.test({
   name:
@@ -238,25 +258,37 @@ Deno.test({
     const world = new World();
     const teams = world.rows.team;
     const players = world.rows.player;
+    const ratings = world.teams.map((team_id, i) => ({
+      id: uid(12, i),
+      team_id,
+      measure_date: "2026-04-01",
+      offense: "1.25",
+      defense: "0.95",
+      rating: "50",
+    }));
+    world.rows.team_rating = ratings;
     const baseline = await world.lake();
-    const expectedRatings = await inputs(ratings.queries, baseline);
+    const expectedTeam = await inputs(teamRatings.queries, baseline);
+    const expectedPlayer = await inputs(playerRatings.queries, baseline);
     const expectedChances = await inputs(chances.queries, baseline);
-    // Child rows may arrive before inserts, or remain after parent deletes.
     for (const available of [teams.slice(1), []]) {
       world.rows.team = available;
       world.rows.player = [];
       const lake = await world.lake();
-      const captured = await inputs(ratings.queries, lake);
       const known = new Set(available.map((t) => t.id));
-      assertEquals(
-        captured.games.every((g) =>
-          known.has(String(g.home_id)) && known.has(String(g.away_id))
-        ),
-        true,
-      );
-      assertEquals(captured.goals, []);
-      assertEquals(captured.appearances, []);
-      ratings.plan(captured, 17, [[]]);
+      for (const prog of [teamRatings, playerRatings] as const) {
+        const captured = await inputs(prog.queries, lake);
+        assertEquals(
+          captured.games.every((g) =>
+            known.has(String(g.home_id)) && known.has(String(g.away_id))
+          ),
+          true,
+        );
+        prog.plan(captured, 17, []);
+      }
+      const capturedPlayers = await inputs(playerRatings.queries, lake);
+      assertEquals(capturedPlayers.goals, []);
+      assertEquals(capturedPlayers.appearances, []);
       const odds = await inputs(chances.queries, lake);
       assertEquals(odds.groups, []);
       assertEquals(chances.plan(odds, 17), []);
@@ -264,10 +296,18 @@ Deno.test({
     }
     world.rows.team = teams;
     world.rows.player = players;
+    world.rows.team_rating = [];
+    const unratedPlayers = await inputs(playerRatings.queries, await world.lake());
+    assertEquals(unratedPlayers.games, []);
+    assertEquals(unratedPlayers.appearances, []);
+    assertEquals(playerRatings.plan(unratedPlayers, 17, []), []);
+    world.rows.team_rating = ratings;
     const restored = await world.lake();
-    assertEquals(await inputs(ratings.queries, restored), expectedRatings);
+    assertEquals(await inputs(teamRatings.queries, restored), expectedTeam);
+    assertEquals(await inputs(playerRatings.queries, restored), expectedPlayer);
     assertEquals(await inputs(chances.queries, restored), expectedChances);
-    ratings.plan(expectedRatings, 17, [[]]);
+    teamRatings.plan(expectedTeam, 17, []);
+    playerRatings.plan(expectedPlayer, 17, []);
     chances.plan(expectedChances, 17);
   },
 });
@@ -299,15 +339,12 @@ Deno.test({
         day: [before, at, latest][i].slice(0, 10),
       }));
       const lake = await world.lake();
-      const first = await inputs(ratings.queries, lake);
-      const history = new Map(
-        first.games.map((row) => [row.id, row.seven_years]),
-      );
-      assertEquals(history.get(world.rows.game[0].id), false, latest);
-      assertEquals(history.get(world.rows.game[1].id), true, latest);
-      assertEquals(history.get(world.rows.game[2].id), true, latest);
-      assertEquals(visible(first), await inputs(monthlyRatings.queries, lake));
-      assertEquals(await inputs(ratings.queries, lake), first);
+      const first = await inputs(teamRatings.queries, lake);
+      const ids = new Set(first.games.map((row) => row.id));
+      assertEquals(ids.has(world.rows.game[0].id), false, latest);
+      assertEquals(ids.has(world.rows.game[1].id), true, latest);
+      assertEquals(ids.has(world.rows.game[2].id), true, latest);
+      assertEquals(await inputs(teamRatings.queries, lake), first);
     }
   },
 });
@@ -318,9 +355,6 @@ Deno.test({
   sanitizeOps: false,
   sanitizeResources: false,
   fn: async () => {
-    // A SofaScore update marks cancelled, abandoned and awarded fixtures
-    // without a score; projecting them as pending would invent results and
-    // hold a finished group open.
     const world = new World();
     const phase = world.phases["2026"];
     const pending = world.rows.game.filter((g) =>

@@ -11,7 +11,7 @@ const NOW = Date.parse("2026-10-27T12:00:00Z");
 
 type Spec = Machine & { name: string };
 type State = Record<string, unknown> & { phase: string; due: number };
-type Answer = { kind: string; state?: State; reason?: string };
+type Answer = { kind: string; state?: State; reason?: string; actions?: { type: string; params: { delay?: number } }[] };
 const reducers = (await emitted<{ reducers: Record<string, Spec> }>(".pronto/check-inputs.json")).reducers;
 const compiled = await emitted<Record<string, { source: string }>>(".pronto/mecha-reducers.json");
 const machine = (name: string) => {
@@ -120,12 +120,12 @@ Deno.test("a cache's max-age holds a resource back, and a season past its end is
 });
 
 Deno.test("an admitted request owns its resource until it answers, fails, or is given up as stuck", async () => {
-  const due = await resource.accepted(await fresh("round"), "ripe", {});
+  const due = await resource.accepted(await fresh("round"), "xstate.after.ripe.idle", {});
   assertEquals(due.phase, "due");
   const acquiring = await resource.accepted(due, "admitted", { request: crypto.randomUUID() });
-  assertEquals([acquiring.phase, acquiring.due - NOW], ["acquiring", 30 * MINUTE]);
-  assertEquals((await resource.step(acquiring, "ripe", {}, NOW + MINUTE)).kind, "rejected");
-  assertEquals((await resource.accepted(acquiring, "ripe", {}, NOW + 30 * MINUTE)).phase, "due");
+  // Its timer waits the time left until it is due, from the step that admitted it.
+  assertEquals([acquiring.phase, acquiring.due - NOW, acquiring.wait], ["acquiring", 30 * MINUTE, 30 * MINUTE]);
+  assertEquals((await resource.accepted(acquiring, "xstate.after.ripe.acquiring", {}, NOW + 30 * MINUTE)).phase, "due");
   assert((await resource.accepted(acquiring, "fetched", answer())).phase !== "acquiring");
   assert((await resource.accepted(acquiring, "failed", { status: 502, retry_at: 0 })).phase !== "acquiring");
   assertEquals((await resource.step(await fresh("round"), "admitted", { request: "x" })).kind, "rejected");
@@ -134,8 +134,11 @@ Deno.test("an admitted request owns its resource until it answers, fails, or is 
 Deno.test("a seen fixture pulls an untroubled resource's next ask forward, never back", async () => {
   const later = await resource.spawn({ family: "event", due: 0, owed: [fixture("scheduled", "2026-11-16T12:00:00Z")] });
   assertEquals(later.due - NOW, 7 * DAY);
-  const pulled = await resource.accepted(later, "hasten", { owed: [fixture("scheduled", "2026-10-27T14:00:00Z")] });
-  assertEquals(pulled.due - NOW, 2 * HOUR);
+  const hastened = await resource.step(later, "hasten", { owed: [fixture("scheduled", "2026-10-27T14:00:00Z")] });
+  const pulled = hastened.state!;
+  assertEquals([pulled.due - NOW, pulled.wait], [2 * HOUR, 2 * HOUR]);
+  // The idle resource is entered again, and its timer starts over at the time left.
+  assertEquals(hastened.actions?.map((a) => [a.type, a.params.delay]), [["xstate.cancel", undefined], ["xstate.raise", 2 * HOUR]]);
   assertEquals((await resource.accepted(pulled, "hasten", { owed: [fixture("scheduled", "2026-11-16T12:00:00Z")] })).due - NOW, 2 * HOUR);
   const troubled = await resource.accepted(later, "failed", { status: 500, retry_at: 0 });
   assertEquals((await resource.accepted(troubled, "hasten", { owed: [fixture("in_progress", "2026-10-27T11:00:00Z")] })).due, troubled.due);
@@ -145,9 +148,10 @@ Deno.test("the provider pauses on 401 and 403 until resumed, and blocks on 429 u
   const open = await provider.spawn({});
   assertEquals((await provider.accepted(open, "refused", { status: 503, until: 0 })).phase, "open");
   const blocked = await provider.accepted(open, "refused", { status: 429, until: NOW + 10 * MINUTE });
-  assertEquals([blocked.phase, blocked.until], ["blocked", NOW + 10 * MINUTE]);
-  assertEquals((await provider.step(blocked, "lapsed", {}, NOW + MINUTE)).kind, "rejected");
-  assertEquals((await provider.accepted(blocked, "lapsed", {}, NOW + 10 * MINUTE)).phase, "open");
+  assertEquals([blocked.phase, blocked.until, blocked.wait], ["blocked", NOW + 10 * MINUTE, 10 * MINUTE]);
+  // A lesser refusal meanwhile enters the block again, its timer waiting only the time left.
+  assertEquals((await provider.accepted(blocked, "refused", { status: 503, until: 0 }, NOW + MINUTE)).wait, 9 * MINUTE);
+  assertEquals((await provider.accepted(blocked, "xstate.after.block.blocked", {}, NOW + 10 * MINUTE)).phase, "open");
   const paused = await provider.accepted(blocked, "refused", { status: 403, until: 0 });
   assertEquals([paused.phase, paused.reason], ["paused", "HTTP 403"]);
   assertEquals((await provider.accepted(paused, "refused", { status: 429, until: NOW + DAY })).phase, "paused");
@@ -168,7 +172,7 @@ Deno.test("the schedule's reducers hold their invariants under a random walk", a
     [provider, paused, []],
   ] as const) {
     for (const seed of [1, 2, 3]) {
-      const walked = await walk(m.spec, m.source, start, [], seed, 400);
+      const walked = await walk(m.spec, m.source, start, [], seed, 2000);
       assertEquals(walked.crashes, []);
       for (const phase of phases) assert(walked.visited.includes(phase), `${m.spec.name} never reached ${phase}: ${walked.visited}`);
     }

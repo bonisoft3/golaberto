@@ -452,7 +452,6 @@ Fields:
 ### Entity: RatingEval
 Fields:
   - `id` (uuid)
-  - `rps` (double)
 
 ### Entity: GameCard
 Fields:

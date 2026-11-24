@@ -127,7 +127,7 @@ async function mountPlayerCsv(html: string) {
     }
   };
   const store = batched({
-    query: (
+    answer: (
       table: string,
       _order: unknown,
       options: { filter?: string } = {},
@@ -143,13 +143,13 @@ async function mountPlayerCsv(html: string) {
           predicate(value)
         )
       );
-      return Promise.resolve(
-        selected.slice(
-          offset,
-          limit === undefined ? undefined : offset + limit,
-        ),
+      return selected.slice(
+        offset,
+        limit === undefined ? undefined : offset + limit,
       );
     },
+    query: (table: string, order: unknown, options?: { filter?: string }) =>
+      Promise.resolve(store.answer(table, order, options)),
     subscribe: (table: string, callback: () => void) => {
       const listeners = subscriptions.get(table) ?? new Set();
       listeners.add(callback);

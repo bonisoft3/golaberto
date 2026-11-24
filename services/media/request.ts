@@ -56,8 +56,11 @@ export async function requireActor(
       algorithms: ["HS256"],
       requiredClaims: ["sub", "exp"],
     });
+    // A person's session, as the database's public.signed_in() asks it: not
+    // a guest's, which the auth service issues at acr "0" and which before
+    // acr said `"guest": true`.
     if (
-      payload.guest !== false || payload.role !== "app_user" ||
+      payload.acr === "0" || payload.guest === true || payload.role !== "app_user" ||
       typeof payload.sub !== "string" ||
       !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(
         payload.sub,

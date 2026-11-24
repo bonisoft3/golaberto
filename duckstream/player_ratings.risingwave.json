@@ -1,0 +1,401 @@
+{
+  "sql": "CREATE TABLE source_championship(id VARCHAR, category_id VARCHAR);\nCREATE TABLE source_phase(id VARCHAR, championship_id VARCHAR);\nCREATE TABLE source_game(\n id VARCHAR, phase_id VARCHAR, home_id VARCHAR, away_id VARCHAR,\n home_field INTEGER, home_aet INTEGER, played BOOLEAN, utc TIMESTAMP(6),\n moment BIGINT, \"date\" VARCHAR, cutoff VARCHAR\n);\nCREATE TABLE source_team(id VARCHAR);\nCREATE TABLE source_team_rating(team_id VARCHAR, measure_date VARCHAR, offense DOUBLE, defense DOUBLE);\nCREATE TABLE source_player(id VARCHAR, position VARCHAR);\nCREATE TABLE source_player_game(id VARCHAR, game_id VARCHAR, player_id VARCHAR, side VARCHAR,\n on_minute INTEGER, off_minute INTEGER, red BOOLEAN);\nCREATE TABLE source_goal(id VARCHAR, game_id VARCHAR, player_id VARCHAR, side VARCHAR,\n minute INTEGER, penalty BOOLEAN, own_goal BOOLEAN);\nCREATE LOCAL VIEW archive AS\n SELECT x.* FROM source_game x\n JOIN source_team h ON h.id=x.home_id\n JOIN source_team a ON a.id=x.away_id\n JOIN source_phase p ON p.id=x.phase_id\n JOIN source_championship c ON c.id=p.championship_id\n WHERE c.category_id IS NULL AND x.played;\nCREATE LOCAL VIEW statistics_window AS SELECT MAX(utc) AS latest FROM archive;\nCREATE LOCAL VIEW boundary AS\n SELECT MAX(w.latest) AS latest, MIN(x.cutoff) AS cutoff\n FROM statistics_window w LEFT JOIN archive x ON x.utc=w.latest;\nCREATE LOCAL VIEW rated_teams AS\n SELECT DISTINCT r.team_id FROM source_team_rating r CROSS JOIN boundary b WHERE r.measure_date > b.cutoff;\nCREATE LOCAL VIEW recent AS\n SELECT x.* FROM archive x\n JOIN rated_teams rh ON rh.team_id=x.home_id\n JOIN rated_teams ra ON ra.team_id=x.away_id\n CROSS JOIN boundary b WHERE x.utc > b.latest + INTERVAL '-1456' DAY;\nCREATE LOCAL VIEW recent_teams AS\n SELECT home_id AS team_id FROM recent\n UNION\n SELECT away_id AS team_id FROM recent;\nCREATE MATERIALIZED VIEW result_games AS\n SELECT id,home_id,away_id,home_field,home_aet,moment,\"date\" FROM recent;\nCREATE MATERIALIZED VIEW result_cutoff AS SELECT cutoff AS since FROM boundary;\nCREATE MATERIALIZED VIEW result_teams AS SELECT id FROM source_team;\nCREATE MATERIALIZED VIEW result_players AS SELECT id FROM source_player;\nCREATE MATERIALIZED VIEW result_team_ratings AS\n SELECT r.team_id,r.measure_date,r.offense,r.defense\n FROM source_team_rating r\n JOIN recent_teams t ON t.team_id=r.team_id\n CROSS JOIN boundary b\n WHERE r.measure_date > b.cutoff;\nCREATE MATERIALIZED VIEW result_appearances AS\n SELECT pg.id,pg.game_id,pg.player_id,CASE WHEN pg.side='home' THEN x.home_id ELSE x.away_id END AS team_id,\n pg.on_minute AS \"on\",pg.off_minute AS \"off\",pg.red,COALESCE(p.position,'') AS position\n FROM source_player_game pg JOIN source_player p ON p.id=pg.player_id JOIN recent x ON x.id=pg.game_id\n WHERE pg.off_minute>0;\nCREATE MATERIALIZED VIEW result_goals AS\n SELECT q.id AS __order,q.game_id,q.player_id,\n CASE WHEN (q.side='home')<>q.own_goal THEN x.home_id ELSE x.away_id END AS team_id,\n q.minute AS \"time\",q.penalty,q.own_goal\n FROM source_goal q JOIN source_player p ON p.id=q.player_id\n JOIN recent x ON x.id=q.game_id WHERE q.minute IS NOT NULL;\n",
+  "incremental": {
+    "inputs": {
+      "source_championship": {
+        "table": "championship",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"category_id\" AS VARCHAR) AS \"category_id\""
+      },
+      "source_phase": {
+        "table": "phase",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"championship_id\" AS VARCHAR) AS \"championship_id\""
+      },
+      "source_game": {
+        "table": "game",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"phase_id\" AS VARCHAR) AS \"phase_id\", CAST(\"home_id\" AS VARCHAR) AS \"home_id\", CAST(\"away_id\" AS VARCHAR) AS \"away_id\", CASE home_field WHEN 'left' THEN 0 WHEN 'neutral' THEN 1 WHEN 'right' THEN 2 ELSE ('invalid home_field: ' || home_field)::integer END AS \"home_field\", CAST(\"home_aet\" AS INTEGER) AS \"home_aet\", CAST(\"played\" AS BOOLEAN) AS \"played\", coalesce(kickoff::TIMESTAMPTZ AT TIME ZONE 'UTC', day::DATE::TIMESTAMP) AS \"utc\", (EXTRACT(EPOCH FROM coalesce(kickoff::TIMESTAMPTZ AT TIME ZONE 'UTC', day::DATE::TIMESTAMP))::double precision)::bigint AS \"moment\", to_char(coalesce(kickoff::TIMESTAMPTZ AT TIME ZONE 'UTC', day::DATE::TIMESTAMP), 'YYYY-MM-DD HH24:MI:SS') AS \"date\", (coalesce(kickoff::TIMESTAMPTZ AT TIME ZONE 'UTC', day::DATE::TIMESTAMP) - INTERVAL '1463 days')::date::varchar AS \"cutoff\""
+      },
+      "source_team": {
+        "table": "team",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\""
+      },
+      "source_team_rating": {
+        "table": "team_rating",
+        "projection": "CAST(\"team_id\" AS VARCHAR) AS \"team_id\", to_char(measure_date::date, 'YYYY-MM-DD') AS \"measure_date\", CAST(\"offense\" AS double precision) AS \"offense\", CAST(\"defense\" AS double precision) AS \"defense\""
+      },
+      "source_player": {
+        "table": "player",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"position\" AS VARCHAR) AS \"position\""
+      },
+      "source_player_game": {
+        "table": "player_game",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"game_id\" AS VARCHAR) AS \"game_id\", CAST(\"player_id\" AS VARCHAR) AS \"player_id\", CAST(\"side\" AS VARCHAR) AS \"side\", CAST(\"on_minute\" AS INTEGER) AS \"on_minute\", CAST(\"off_minute\" AS INTEGER) AS \"off_minute\", CAST(\"red\" AS BOOLEAN) AS \"red\""
+      },
+      "source_goal": {
+        "table": "goal",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"game_id\" AS VARCHAR) AS \"game_id\", CAST(\"player_id\" AS VARCHAR) AS \"player_id\", CAST(\"side\" AS VARCHAR) AS \"side\", CAST(\"minute\" AS INTEGER) AS \"minute\", CAST(\"penalty\" AS BOOLEAN) AS \"penalty\", CAST(\"own_goal\" AS BOOLEAN) AS \"own_goal\""
+      }
+    },
+    "outputs": {
+      "games": {
+        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_games r"
+      },
+      "cutoff": {
+        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_cutoff r"
+      },
+      "teams": {
+        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_teams r"
+      },
+      "players": {
+        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_players r"
+      },
+      "team_ratings": {
+        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_team_ratings r"
+      },
+      "appearances": {
+        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_appearances r"
+      },
+      "goals": {
+        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_goals r"
+      }
+    }
+  },
+  "inputs": {
+    "source_championship": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"category_id\" AS VARCHAR) AS \"category_id\" FROM \"championship\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "category_id",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "source_phase": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"championship_id\" AS VARCHAR) AS \"championship_id\" FROM \"phase\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "championship_id",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "source_game": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"phase_id\" AS VARCHAR) AS \"phase_id\", CAST(\"home_id\" AS VARCHAR) AS \"home_id\", CAST(\"away_id\" AS VARCHAR) AS \"away_id\", CASE home_field WHEN 'left' THEN 0 WHEN 'neutral' THEN 1 WHEN 'right' THEN 2 ELSE error('home_field ' || home_field) END AS \"home_field\", CAST(\"home_aet\" AS INTEGER) AS \"home_aet\", CAST(\"played\" AS BOOLEAN) AS \"played\", strftime(coalesce(kickoff::TIMESTAMPTZ AT TIME ZONE 'UTC', day::DATE::TIMESTAMP), '%Y-%m-%dT%H:%M:%S.%fZ') AS \"utc\", epoch(coalesce(kickoff::TIMESTAMPTZ AT TIME ZONE 'UTC', day::DATE::TIMESTAMP))::BIGINT AS \"moment\", strftime(coalesce(kickoff::TIMESTAMPTZ AT TIME ZONE 'UTC', day::DATE::TIMESTAMP), '%Y-%m-%d %H:%M:%S') AS \"date\", (coalesce(kickoff::TIMESTAMPTZ AT TIME ZONE 'UTC', day::DATE::TIMESTAMP) - INTERVAL 1463 DAY)::DATE::VARCHAR AS \"cutoff\" FROM \"game\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "phase_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "home_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "away_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "home_field",
+          "type": "INTEGER"
+        },
+        {
+          "name": "home_aet",
+          "type": "INTEGER"
+        },
+        {
+          "name": "played",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "utc",
+          "type": "TIMESTAMP"
+        },
+        {
+          "name": "moment",
+          "type": "BIGINT"
+        },
+        {
+          "name": "date",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "cutoff",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "source_team": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\" FROM \"team\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "source_team_rating": {
+      "query": "SELECT CAST(\"team_id\" AS VARCHAR) AS \"team_id\", strftime(measure_date::DATE, '%Y-%m-%d') AS \"measure_date\", CAST(\"offense\" AS DOUBLE) AS \"offense\", CAST(\"defense\" AS DOUBLE) AS \"defense\" FROM \"team_rating\"",
+      "fields": [
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "measure_date",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "offense",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "defense",
+          "type": "DOUBLE"
+        }
+      ]
+    },
+    "source_player": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"position\" AS VARCHAR) AS \"position\" FROM \"player\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "position",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "source_player_game": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"game_id\" AS VARCHAR) AS \"game_id\", CAST(\"player_id\" AS VARCHAR) AS \"player_id\", CAST(\"side\" AS VARCHAR) AS \"side\", CAST(\"on_minute\" AS INTEGER) AS \"on_minute\", CAST(\"off_minute\" AS INTEGER) AS \"off_minute\", CAST(\"red\" AS BOOLEAN) AS \"red\" FROM \"player_game\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "game_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "side",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "on_minute",
+          "type": "INTEGER"
+        },
+        {
+          "name": "off_minute",
+          "type": "INTEGER"
+        },
+        {
+          "name": "red",
+          "type": "BOOLEAN"
+        }
+      ]
+    },
+    "source_goal": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"game_id\" AS VARCHAR) AS \"game_id\", CAST(\"player_id\" AS VARCHAR) AS \"player_id\", CAST(\"side\" AS VARCHAR) AS \"side\", CAST(\"minute\" AS INTEGER) AS \"minute\", CAST(\"penalty\" AS BOOLEAN) AS \"penalty\", CAST(\"own_goal\" AS BOOLEAN) AS \"own_goal\" FROM \"goal\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "game_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "side",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "minute",
+          "type": "INTEGER"
+        },
+        {
+          "name": "penalty",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "own_goal",
+          "type": "BOOLEAN"
+        }
+      ]
+    }
+  },
+  "outputs": {
+    "games": {
+      "view": "result_games",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "home_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "away_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "home_field",
+          "type": "INTEGER"
+        },
+        {
+          "name": "home_aet",
+          "type": "INTEGER"
+        },
+        {
+          "name": "moment",
+          "type": "BIGINT"
+        },
+        {
+          "name": "date",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "cutoff": {
+      "view": "result_cutoff",
+      "fields": [
+        {
+          "name": "since",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "teams": {
+      "view": "result_teams",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "players": {
+      "view": "result_players",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "team_ratings": {
+      "view": "result_team_ratings",
+      "fields": [
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "measure_date",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "offense",
+          "type": "DOUBLE"
+        },
+        {
+          "name": "defense",
+          "type": "DOUBLE"
+        }
+      ]
+    },
+    "appearances": {
+      "view": "result_appearances",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "game_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "on",
+          "type": "INTEGER"
+        },
+        {
+          "name": "off",
+          "type": "INTEGER"
+        },
+        {
+          "name": "red",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "position",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "goals": {
+      "view": "result_goals",
+      "fields": [
+        {
+          "name": "__order",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "game_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "player_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "team_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "time",
+          "type": "INTEGER"
+        },
+        {
+          "name": "penalty",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "own_goal",
+          "type": "BOOLEAN"
+        }
+      ]
+    }
+  }
+}

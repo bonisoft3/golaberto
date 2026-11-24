@@ -4,11 +4,16 @@ const ordering = {
   standings: {groups: ["id"], members: ["group_id", "team_id"], form: [], zones: ["group_id", "id"]},
   cards: {game_card: ["id"], team_game: ["id"]},
   player_stats: {player_stat: ["id"]},
-  ratings: {
+  team_ratings: {
     games: ["moment", "id"],
-    phases: ["id"],
+    teams: ["id"],
+  },
+  player_ratings: {
+    games: ["moment", "id"],
+    cutoff: [],
     teams: ["id"],
     players: ["id"],
+    team_ratings: ["team_id", "measure_date"],
     appearances: ["id"],
     goals: ["__order"],
   },

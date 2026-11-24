@@ -7,19 +7,31 @@ ENTRYPOINT ["psql"]
 CMD ["-X", "--set=ON_ERROR_STOP=1", "--single-transaction", "--file=/timer-check.sql"]
 COPY <<'TIMERS' /timer-check.sql
 DO $$ BEGIN
-  IF EXISTS (SELECT FROM hybrid_sofa_resource.instance i
-    WHERE i.state->>'phase' IN ('acquiring', 'idle', 'backoff') AND (i.state->>'due')::bigint > 0
+  IF to_regprocedure('hybrid_sofa_resource.arm(uuid, bigint, jsonb, bigint)') IS NULL AND EXISTS (SELECT FROM hybrid_sofa_resource.instance i WHERE i.state->>'phase' = 'idle'
       AND NOT EXISTS (SELECT FROM public.schedule s WHERE s.emits_entity = 'machine_timer_tick'
-        AND s.emits_values @> jsonb_build_object('machine', 'sofa_resource', 'row', jsonb_build_object('id', i.id::text)))) THEN
-    RAISE EXCEPTION 'machine sofa_resource has instances waiting on a deadline the ticker was never given';
+        AND s.emits_values @> jsonb_build_object('machine', 'sofa_resource', 'row', jsonb_build_object('id', i.id::text), 'state', 'idle', 'delay', 'ripe'))) THEN
+    RAISE EXCEPTION 'machine sofa_resource has instances in idle whose ripe timer the ticker was never given';
   END IF;
 END $$;
 DO $$ BEGIN
-  IF EXISTS (SELECT FROM hybrid_sofa_provider.instance i
-    WHERE i.state->>'phase' IN ('blocked') AND (i.state->>'until')::bigint > 0
+  IF to_regprocedure('hybrid_sofa_resource.arm(uuid, bigint, jsonb, bigint)') IS NULL AND EXISTS (SELECT FROM hybrid_sofa_resource.instance i WHERE i.state->>'phase' = 'acquiring'
       AND NOT EXISTS (SELECT FROM public.schedule s WHERE s.emits_entity = 'machine_timer_tick'
-        AND s.emits_values @> jsonb_build_object('machine', 'sofa_provider', 'row', jsonb_build_object('id', i.id::text)))) THEN
-    RAISE EXCEPTION 'machine sofa_provider has instances waiting on a deadline the ticker was never given';
+        AND s.emits_values @> jsonb_build_object('machine', 'sofa_resource', 'row', jsonb_build_object('id', i.id::text), 'state', 'acquiring', 'delay', 'ripe'))) THEN
+    RAISE EXCEPTION 'machine sofa_resource has instances in acquiring whose ripe timer the ticker was never given';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('hybrid_sofa_resource.arm(uuid, bigint, jsonb, bigint)') IS NULL AND EXISTS (SELECT FROM hybrid_sofa_resource.instance i WHERE i.state->>'phase' = 'backoff'
+      AND NOT EXISTS (SELECT FROM public.schedule s WHERE s.emits_entity = 'machine_timer_tick'
+        AND s.emits_values @> jsonb_build_object('machine', 'sofa_resource', 'row', jsonb_build_object('id', i.id::text), 'state', 'backoff', 'delay', 'ripe'))) THEN
+    RAISE EXCEPTION 'machine sofa_resource has instances in backoff whose ripe timer the ticker was never given';
+  END IF;
+END $$;
+DO $$ BEGIN
+  IF to_regprocedure('hybrid_sofa_provider.arm(uuid, bigint, jsonb, bigint)') IS NULL AND EXISTS (SELECT FROM hybrid_sofa_provider.instance i WHERE i.state->>'phase' = 'blocked'
+      AND NOT EXISTS (SELECT FROM public.schedule s WHERE s.emits_entity = 'machine_timer_tick'
+        AND s.emits_values @> jsonb_build_object('machine', 'sofa_provider', 'row', jsonb_build_object('id', i.id::text), 'state', 'blocked', 'delay', 'block'))) THEN
+    RAISE EXCEPTION 'machine sofa_provider has instances in blocked whose block timer the ticker was never given';
   END IF;
 END $$;
 TIMERS
@@ -33,6 +45,6 @@ COPY --from=golaberto-migrate_bayt /monorepo /monorepo
 COPY --from=golaberto-airlock-upgrade_bayt /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
-RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then { w=$(pwd); mkdir -p /.bayt-clamp && find "$w" -exec getfattr -dh {} + > /.bayt-clamp/x && if [ ! -s /.bayt-clamp/x ]; then cd / && cp -a "$w" /.bayt-clamp/w && rm -rf "$w" && mv /.bayt-clamp/w "$w"; fi && rm -rf /.bayt-clamp; } && find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
 FROM scratch AS timer-check_bayt
 COPY --from=timer-check_bayt_ctxs /monorepo /monorepo

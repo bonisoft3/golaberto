@@ -63,8 +63,8 @@ Deno.test("guests, other authors and editors cannot claim profiles by matching a
 	);
 	await refused(
 		`${f.setup}${
-			identity(f.reader, null)
-		}INSERT INTO user_biography(display_name) VALUES ('Missing guest claim');`,
+			identity(f.reader, "legacy")
+		}INSERT INTO user_biography(display_name) VALUES ('Legacy guest token');`,
 	);
 	await refused(
 		`${f.setup}${
@@ -116,7 +116,7 @@ Deno.test("comment deletion requires its signed-in author and refuses guest or e
 			const [actor, guest] of [[f.actor, true], [f.other, false], [
 				f.reader,
 				false,
-			], [f.actor, null]] as const
+			], [f.actor, "legacy"]] as const
 		) {
 			await refused(
 				`${f.setup}${
@@ -172,7 +172,7 @@ Deno.test("game corrections retain immutable actor snapshots, field diffs and sc
           <>'{"home_id":{"before":"Community home","after":"Community away"}}'::jsonb
         THEN RAISE EXCEPTION 'history must record names and archive dates, not identifiers'; END IF;
     END $$;
-    SET LOCAL request.jwt.claims='{"sub":"${f.actor}","guest":false}';
+    SET LOCAL request.jwt.claims='{"sub":"${f.actor}","acr":"phr","auth_time":1}';
     SET LOCAL ROLE service;
     UPDATE game SET attendance=1300 WHERE id='${f.game}';
     RESET ROLE;

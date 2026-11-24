@@ -45,7 +45,7 @@ async function mount(rows: Record<string, Record<string, unknown>[]>) {
   };
   const calls: unknown[] = [];
   const store = batched({
-    query: async (
+    answer: (
       table: string,
       _order: unknown,
       options: { filter?: string } = {},
@@ -58,6 +58,8 @@ async function mount(rows: Record<string, Record<string, unknown>[]>) {
       );
       return found.slice(0, parseLimit(filter));
     },
+    query: (table: string, order: unknown, options?: { filter?: string }) =>
+      Promise.resolve(store.answer(table, order, options)),
     subscribe: () => () => {},
     create: async (table: string, row: unknown) => {
       calls.push({ table, row });

@@ -11,7 +11,7 @@ a Worker in front of a separate renderer and a database Durable Object running m
 [edge cluster](../../../libraries/mecha/packages/mecha-edge/README.md) over
 PGlite, its data directory in the object's SQLite. The archive is too big to
 rebuild from the migrations, so its data directory comes from the archive
-trial's database ([archive import](archive-import.md)), derived tables
+imported database ([[archive-import]]), derived tables
 included. The generated release packages admitted Duckstream
 computations in three private immutable companion Workers: a Reader Durable Object
 materializes an immutable PostgreSQL image, a Query Durable Object runs DuckDB,

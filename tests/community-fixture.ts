@@ -1,8 +1,10 @@
-export const identity = (id: string, guest: boolean | null = false) =>
+// "legacy": a guest's token from before acr, which said so in `guest` alone.
+// "unstated": a person whose provider reported neither acr nor auth_time.
+export const identity = (id: string, guest: boolean | "legacy" | "unstated" = false) =>
 	`RESET ROLE;
   SET LOCAL app.scopes='public:,user:${id}';
   SET LOCAL request.jwt.claims='{"sub":"${id}"${
-		guest === null ? "" : `,"guest":${guest}`
+		guest === "legacy" ? `,"guest":true` : guest === "unstated" ? "" : `,"acr":"${guest ? "0" : "phr"}","auth_time":1`
 	}}';
   SET LOCAL ROLE app_user;`;
 

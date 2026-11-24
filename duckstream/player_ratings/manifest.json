@@ -1,0 +1,29 @@
+{
+  "format": 2,
+  "compiler": {
+    "engine": "duckdb",
+    "version": "1.5.6"
+  },
+  "views": [
+    "result_games",
+    "result_cutoff",
+    "result_teams",
+    "result_players",
+    "result_team_ratings",
+    "result_appearances",
+    "result_goals"
+  ],
+  "hashes": {
+    "translator": "c893fb322115e9a380639f4bc3f5c69821512e6a03fdc38a9e04ed89155622ce",
+    "driver": "3754b87c34c901bfdff520065fda56337ad2c2a8543b529b2719914fd4f0c692",
+    "source": "330d06f32c89816d9fee66f6a76d98d9bcc91f9822b6cbfd82120ec0d7606d90",
+    "schema": "8d685a553968f343a1dc2b57acb880eb22f6a8aba922edc5a6d090a2c06a3134",
+    "result_games.sql": "7f0caa743d83c4b3959f25065981979b24bf47986ca8a85c2185352cbbd347ee",
+    "result_cutoff.sql": "2bc15e4955820217b82f3573e39ec5ce0665c344854779e1a047ea8d002573cb",
+    "result_teams.sql": "ecfc73a89ec7894cb371c962858b51460cf4578b3b578edcf99cf12444c0115a",
+    "result_players.sql": "3b1ae7fe9df4dab3d29856ab58fdf6eb38c7cfcf4ca5ed51648878b6809b4f0d",
+    "result_team_ratings.sql": "d4aa8a364865af2140de40e8fd45837448991ef6119ad620b4e792d00c987829",
+    "result_appearances.sql": "3c879c8e395de5388bf2a5beae9a57ce38137ce050e83a938979f2b32a4337f9",
+    "result_goals.sql": "c59bbda205859c162c953e4f8ba1691f0c255766bfdd92edb5dd9d822497271d"
+  }
+}

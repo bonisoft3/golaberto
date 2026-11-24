@@ -82,7 +82,8 @@ say:
             github:bonisoft3/mecha | str trim) | path join services compute deno.json) --frozen
             --unstable-worker-options --allow-read --allow-env ((run-mise where github:bonisoft3/mecha |
             str trim) | path join services compute admit.ts)
-            "computations/standings.js=TextEncoder" "computations/ratings.js=TextEncoder" "computations/chances.js=TextEncoder"
+            "computations/standings.js=TextEncoder" "computations/team_ratings.js=TextEncoder"
+            "computations/player_ratings.js=TextEncoder" "computations/chances.js=TextEncoder"
             "computations/cards.js=TextEncoder" "computations/player_stats.js=TextEncoder"
       admitEffects:
         cmds:
@@ -167,7 +168,7 @@ say:
         cmds:
         - do: >-
             let mecha = (^mise where github:bonisoft3/mecha | str trim); let sources =
-            ('WyJkdWNrc3RyZWFtL2JvdW5kZWQtc3RhbmRpbmdzLnRzIiwiZHVja3N0cmVhbS9ib3VuZGVkLXJhdGluZ3MudHMiLCJkdWNrc3RyZWFtL2JvdW5kZWQtY2hhbmNlcy50cyIsImR1Y2tzdHJlYW0vYm91bmRlZC1jYXJkcy50cyIsImR1Y2tzdHJlYW0vYm91bmRlZC1wbGF5ZXItc3RhdHMudHMiXQ==' | decode base64 | decode utf-8 | from json); ^mise exec -- deno run -A --frozen --config ($mecha | path join 'services/compute/deno.json') ($mecha | path join 'services/compute/step-build.ts') ...$sources
+            ('WyJkdWNrc3RyZWFtL2JvdW5kZWQtc3RhbmRpbmdzLnRzIiwiZHVja3N0cmVhbS9ib3VuZGVkLXRlYW0tcmF0aW5ncy50cyIsImR1Y2tzdHJlYW0vYm91bmRlZC1wbGF5ZXItcmF0aW5ncy50cyIsImR1Y2tzdHJlYW0vYm91bmRlZC1jaGFuY2VzLnRzIiwiZHVja3N0cmVhbS9ib3VuZGVkLWNhcmRzLnRzIiwiZHVja3N0cmVhbS9ib3VuZGVkLXBsYXllci1zdGF0cy50cyJd' | decode base64 | decode utf-8 | from json); ^mise exec -- deno run -A --frozen --config ($mecha | path join 'services/compute/deno.json') ($mecha | path join 'services/compute/step-build.ts') ...$sources
       omnishell:
         priority: 0
         cmds:
@@ -216,10 +217,7 @@ say:
         - do: python3 -m unittest discover -s tools -p seed_sql_test.py
       phase-rounds:
         cmds:
-        - do: >-
-            use tools.nu [run-mise]; mise exec -- redpanda-connect test -r ((run-mise where
-            github:bonisoft3/mecha | str trim) | path join
-            services/transform/cdc-trace.yaml) pipelines/rounds.yaml
+        - do: "use tools.nu [run-mise]; with-env {REDIS_URL: 'redis://localhost:6379'} { mise exec -- redpanda-connect test -r ((run-mise where github:bonisoft3/mecha | str trim) | path join services/transform/cdc-trace.yaml) pipelines/rounds.yaml }"
       image-renderers:
         cmds:
         - do: >-

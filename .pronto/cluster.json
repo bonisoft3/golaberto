@@ -17,6 +17,90 @@
     }
   },
   "prunesTokenRoles": true,
+  "rowMachines": {
+    "SofaRequestMachine": {
+      "name": "SofaRequestMachine",
+      "ir": "SofaRequestMachine",
+      "entity": "SofaRequest",
+      "guards": {},
+      "level": "external",
+      "hatches": [
+        "sofascore-receive"
+      ],
+      "field": "status",
+      "initial": "acquiring",
+      "states": {
+        "acquiring": {
+          "invoke": {
+            "src": "acquire",
+            "onDone": {
+              "target": "applied",
+              "actions": [
+                {
+                  "hatch": {
+                    "name": "sofascore-receive",
+                    "call": "sofa.receive",
+                    "args": [
+                      {
+                        "raw": "NEW.id"
+                      },
+                      {
+                        "raw": "NEW.source_id"
+                      },
+                      {
+                        "raw": "NEW.family"
+                      },
+                      {
+                        "raw": "NEW.resource_key"
+                      },
+                      {
+                        "raw": "NEW.seq"
+                      },
+                      {
+                        "raw": "outcome"
+                      }
+                    ]
+                  }
+                }
+              ]
+            },
+            "onError": {
+              "target": "failed",
+              "actions": [
+                {
+                  "assign": {
+                    "failure": {
+                      "raw": "coalesce(outcome->'data'->>'error', outcome->'data'->>'reason', outcome->>'kind')"
+                    }
+                  }
+                },
+                {
+                  "hatch": {
+                    "name": "sofascore-receive",
+                    "call": "sofa.fail",
+                    "args": [
+                      {
+                        "raw": "NEW.resource_id"
+                      },
+                      {
+                        "raw": "outcome"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "applied": {
+          "type": "final"
+        },
+        "failed": {
+          "type": "final"
+        }
+      }
+    }
+  },
   "schema": {
     "pgroll": {
       "target": "migrate",
@@ -26,7 +110,7 @@
     "target": "database",
     "initdb": "/docker-entrypoint-initdb.d"
   },
-  "database": "bonitao/mecha-database:0.26.0@sha256:bc17c811912900b9ed4ba691167be6dc56f961b437dd765bebd4e53148aa92ec",
+  "database": "bonitao/mecha-database:0.34.0@sha256:1e65261fd9507f7c935a939c43916fb3a61f335cf50002478b31a8d643a103df",
   "server": true,
   "steps": {
     "graphile": "060_graphile_worker.sql",
@@ -401,16 +485,13 @@
         "championship",
         "phase",
         "game",
-        "team",
-        "player",
-        "player_game",
-        "goal"
+        "team"
       ],
       "endowments": [
         "TextEncoder"
       ],
-      "file": "computations/ratings.js",
-      "name": "golaberto-ratings",
+      "file": "computations/team_ratings.js",
+      "name": "golaberto-team-ratings",
       "queryTypes": {
         "teams": [
           {
@@ -418,16 +499,9 @@
             "type": "uuid",
             "required": true
           }
-        ],
-        "players": [
-          {
-            "name": "id",
-            "type": "uuid",
-            "required": true
-          }
         ]
       },
-      "risingwave": "duckstream/ratings.risingwave.json",
+      "risingwave": "duckstream/team_ratings.risingwave.json",
       "sinkTypes": {
         "team_rating": [
           {
@@ -460,7 +534,285 @@
             "type": "double",
             "required": true
           }
+        ]
+      },
+      "sinkWrites": {
+        "team_rating": "replace"
+      },
+      "steps": "duckstream/bounded-team-ratings.ts",
+      "to": [
+        "team_rating"
+      ],
+      "types": {
+        "types": {
+          "string": {
+            "pg": "text",
+            "column": "plain",
+            "subset": true,
+            "base": [
+              "text",
+              "varchar",
+              "bpchar",
+              "tsvector"
+            ],
+            "json": "string",
+            "refuse": "\\x00",
+            "order": "text",
+            "beyond": [
+              "scalar-values"
+            ]
+          },
+          "bool": {
+            "pg": "boolean",
+            "column": "plain",
+            "subset": true,
+            "base": [
+              "bool",
+              "boolean"
+            ],
+            "json": "boolean",
+            "order": "boolean",
+            "beyond": []
+          },
+          "int32": {
+            "pg": "integer",
+            "column": "plain",
+            "subset": true,
+            "base": [
+              "int2",
+              "int4",
+              "integer",
+              "smallint"
+            ],
+            "json": "number",
+            "min": -2147483648,
+            "max": 2147483647,
+            "order": "number",
+            "beyond": []
+          },
+          "int64": {
+            "pg": "bigint",
+            "column": "domain",
+            "subset": false,
+            "sql": "portable_int64",
+            "base": [
+              "int8",
+              "bigint"
+            ],
+            "json": "string",
+            "pattern": "^(0|-?[1-9][0-9]*)$",
+            "order": "integer",
+            "beyond": [
+              "int64-range"
+            ]
+          },
+          "double": {
+            "pg": "double precision",
+            "column": "checked",
+            "subset": true,
+            "base": [
+              "float4",
+              "float8",
+              "double precision",
+              "real"
+            ],
+            "json": "number",
+            "order": "number",
+            "beyond": []
+          },
+          "bytes": {
+            "pg": "bytea",
+            "column": "domain",
+            "subset": false,
+            "sql": "portable_bytes",
+            "base": [
+              "bytea"
+            ],
+            "json": "string",
+            "pattern": "^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$",
+            "order": "none",
+            "beyond": []
+          },
+          "uuid": {
+            "pg": "uuid",
+            "column": "plain",
+            "subset": true,
+            "base": [
+              "uuid"
+            ],
+            "json": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "order": "text",
+            "beyond": []
+          },
+          "timestamp": {
+            "pg": "timestamptz",
+            "column": "domain",
+            "subset": false,
+            "sql": "portable_timestamp",
+            "base": [
+              "timestamptz",
+              "timestamp with time zone"
+            ],
+            "json": "string",
+            "pattern": "^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\.[0-9]{6}Z$",
+            "order": "text",
+            "beyond": [
+              "calendar"
+            ]
+          },
+          "duration": {
+            "pg": "interval",
+            "column": "domain",
+            "subset": false,
+            "sql": "portable_duration",
+            "base": [
+              "interval"
+            ],
+            "json": "string",
+            "pattern": "^PT(0|[1-9][0-9]*)(\\.[0-9]{0,5}[1-9])?S$",
+            "order": "duration",
+            "beyond": [
+              "duration-range"
+            ]
+          },
+          "decimal": {
+            "pg": "numeric",
+            "column": "domain",
+            "subset": false,
+            "base": [
+              "numeric",
+              "decimal"
+            ],
+            "json": "string",
+            "pattern": "^(0|-?[1-9][0-9]*|-?(0|[1-9][0-9]*)\\.[0-9]*[1-9])$",
+            "order": "decimal",
+            "beyond": [
+              "decimal-profile"
+            ]
+          },
+          "date": {
+            "pg": "date",
+            "column": "checked",
+            "subset": true,
+            "base": [
+              "date"
+            ],
+            "json": "string",
+            "pattern": "^(000[1-9]|00[1-9][0-9]|0[1-9][0-9]{2}|[1-9][0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$",
+            "order": "text",
+            "beyond": [
+              "calendar"
+            ]
+          },
+          "time": {
+            "pg": "time(6)",
+            "column": "domain",
+            "subset": false,
+            "sql": "portable_time",
+            "base": [
+              "time",
+              "time without time zone"
+            ],
+            "json": "string",
+            "pattern": "^([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]\\.[0-9]{6}$",
+            "order": "text",
+            "beyond": []
+          },
+          "timezone": {
+            "pg": "text",
+            "column": "checked",
+            "subset": true,
+            "base": [
+              "text"
+            ],
+            "json": "string",
+            "pattern": "^[A-Za-z0-9+_/-]+$",
+            "order": "none",
+            "beyond": [
+              "tzdb"
+            ]
+          },
+          "json": {
+            "pg": "json",
+            "column": "checked",
+            "subset": false,
+            "base": [
+              "json",
+              "jsonb"
+            ],
+            "json": "value",
+            "order": "none",
+            "beyond": [
+              "scalar-values",
+              "finite-numbers"
+            ]
+          },
+          "geojson": {
+            "pg": "json",
+            "column": "checked",
+            "subset": false,
+            "base": [
+              "json",
+              "jsonb",
+              "geometry",
+              "geography"
+            ],
+            "json": "value",
+            "order": "none",
+            "beyond": [
+              "scalar-values",
+              "finite-numbers",
+              "ring-closure"
+            ]
+          }
+        },
+        "aliases": {
+          "text": "string",
+          "int": "int32",
+          "bigint": "int64",
+          "timestamptz": "timestamp",
+          "tsvector": "string"
+        }
+      },
+      "wasm": [
+        "computations/golaberto-odds.wasm"
+      ]
+    },
+    {
+      "declaredReads": [
+        "championship",
+        "phase",
+        "game",
+        "team",
+        "team_rating",
+        "player",
+        "player_game",
+        "goal"
+      ],
+      "endowments": [
+        "TextEncoder"
+      ],
+      "file": "computations/player_ratings.js",
+      "name": "golaberto-player-ratings",
+      "queryTypes": {
+        "teams": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "required": true
+          }
         ],
+        "players": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "required": true
+          }
+        ]
+      },
+      "risingwave": "duckstream/player_ratings.risingwave.json",
+      "sinkTypes": {
         "player_rating": [
           {
             "name": "id",
@@ -482,30 +834,14 @@
             "type": "double",
             "required": false
           }
-        ],
-        "rating_eval": [
-          {
-            "name": "id",
-            "type": "uuid",
-            "required": true
-          },
-          {
-            "name": "rps",
-            "type": "double",
-            "required": true
-          }
         ]
       },
       "sinkWrites": {
-        "team_rating": "replace",
-        "player_rating": "replace",
-        "rating_eval": "replace"
+        "player_rating": "replace"
       },
-      "steps": "duckstream/bounded-ratings.ts",
+      "steps": "duckstream/bounded-player-ratings.ts",
       "to": [
-        "team_rating",
-        "player_rating",
-        "rating_eval"
+        "player_rating"
       ],
       "types": {
         "types": {

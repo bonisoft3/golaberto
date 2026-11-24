@@ -127,7 +127,7 @@ Deno.test("stalled upload bodies do not hold the image processor", async () => {
     stage: async (_actor, key) => void staged.push(key),
     read: async () => null,
   }, secret);
-  const token = await new SignJWT({ role: "app_user", guest: false }).setProtectedHeader({ alg: "HS256" })
+  const token = await new SignJWT({ role: "app_user", acr: "phr" }).setProtectedHeader({ alg: "HS256" })
     .setSubject(crypto.randomUUID()).setExpirationTime("1h").sign(new TextEncoder().encode(secret));
   const put = (body: BodyInit) =>
     gateway(new Request(`http://media/blobs/mecha-objects/${crypto.randomUUID()}.png`, {

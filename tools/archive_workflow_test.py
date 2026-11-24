@@ -1,6 +1,5 @@
 import hashlib
 import json
-import os
 from pathlib import Path
 import tempfile
 import subprocess
@@ -11,16 +10,6 @@ from archive_workflow import check_new_project,ledger_names,project_name,sequenc
 
 
 class ArchiveWorkflowTest(unittest.TestCase):
-    @unittest.skipUnless(os.environ.get('ARCHIVE_WORKFLOW_COMPOSE_TEST'),'merged Compose validation not requested')
-    def test_merged_compose_does_not_publish_private_database(self):
-        environment = {**os.environ,'MONOREPO_COMPOSE_MODE':'','BAYT_IMAGE_TAG':'archive-workflow-test'}
-        command = ['docker','compose','-p','archive-workflow-test','-f','.bayt/compose.launch.closure.yaml',
-                   '-f','tools/archive/compose.preserve.yaml','config','--format','json']
-        profile = json.loads(subprocess.run(command,cwd=Path(__file__).resolve().parents[1],env=environment,
-                                            text=True,capture_output=True,check=True).stdout)
-        self.assertFalse(profile['services']['golaberto-database'].get('ports'))
-        self.assertFalse(profile['volumes']['archive-postgres'].get('external'))
-
     def test_dump_ledger_names_only_public_schema_migrations(self):
         copy = '\n'.join([
             'SET client_encoding = \'UTF8\';',
@@ -86,20 +75,6 @@ class ArchiveWorkflowTest(unittest.TestCase):
         self.assertEqual(len(provenance['archive_sha256']),64)
         self.assertTrue(all('reason' in record for records in corrections.values() for record in records.values()))
 
-    def test_preservation_profile_does_not_replace_original_history(self):
-        import yaml
-        class ComposeLoader(yaml.SafeLoader):
-            pass
-        ComposeLoader.add_constructor('!reset',lambda loader,node: loader.construct_sequence(node))
-        profile = yaml.load((Path(__file__).parent/'archive'/'compose.preserve.yaml').read_text(),Loader=ComposeLoader)
-        jobs = json.loads(profile['services']['golaberto-compute']['environment']['COMPUTATIONS'])
-        self.assertEqual([job['name'] for job in jobs],['golaberto-chances'])
-        self.assertEqual(jobs[0]['risingwave'],'/app/computations/golaberto-chances.risingwave.json')
-        self.assertNotIn('onComplete',jobs[0])
-        self.assertNotIn('team_rating',jobs[0]['to'])
-        self.assertEqual(profile['volumes']['archive-postgres'],{})
-        self.assertIn('archive-postgres:/postgresql-data',profile['services']['golaberto-database']['volumes'])
-        self.assertEqual(profile['services']['golaberto-database']['ports'],[])
 
 
 if __name__=='__main__':

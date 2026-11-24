@@ -4,6 +4,8 @@ import pronto "github.com/bonisoft3/pronto"
 
 // Instants are epoch milliseconds; 0 is none.
 _sofaInstant: {type: "integer", min: 0, max: 9007199254740991}
+// Milliseconds from a step to the instant its state's timer is due.
+_sofaWait: {type: "integer", min: 0, max: 9007199254740991}
 _sofaCount: {type: "integer", min: 0, max: 1000000}
 _sofaFamily: {type: "string", maxLength: 9, values: ["rounds", "round", "event", "lineups", "incidents"]}
 _sofaResourcePhases: ["due", "acquiring", "idle", "backoff", "review", "done", "answered", "refused"]
@@ -27,7 +29,9 @@ _sofaOwed: {type: "array", maxItems: 128, items: {type: "object", fields: {
 
 // One instance per resource: when it is next due, how it backs off, and when
 // its details give up. Admission, the source budget and priority are SQL's,
-// since they are decided over every resource at once.
+// since they are decided over every resource at once. A waiting state's timer
+// is XState's after, due `wait` after the step that entered it, which every
+// action setting `due` sets to the time left until it.
 _sofaResourceMachine: pronto.#Machine & {
 	config: {
 		id:      "sofa_resource"
@@ -35,16 +39,19 @@ _sofaResourceMachine: pronto.#Machine & {
 		on: {
 			fetched: {target: "answered", actions: "answer"}
 			failed: {target: "refused", actions: "fail"}
-			hasten: {actions: "hasten"}
-			reopened: {target: "idle", actions: "reopen"}
-			paired: {target: "idle", actions: "pair"}
+			// Each moves `due`, so each enters idle again, an idle resource
+			// included, and its timer starts over at the time left.
+			reopened: {target: "idle", reenter: true, actions: "reopen"}
+			paired: {target: "idle", reenter: true, actions: "pair"}
 			stopped: {target: "done", actions: "stop"}
 		}
 		states: {
 			due: on: admitted: {target: "acquiring", actions: "admit"}
-			acquiring: on: ripe: {guard: "isDue", target: "due"}
-			idle: on: ripe: {guard: "isDue", target: "due"}
-			backoff: on: ripe: {guard: "isDue", target: "due"}
+			for s in ["acquiring", "idle", "backoff"] {(s): after: ripe: {target: "due"}}
+			// A fixture seen again pulls an idle resource's next ask forward:
+			// re-entering idle starts its timer from the step, `wait` after it.
+			idle: on: hasten: {target: "idle", reenter: true, actions: "hasten"}
+			for s in ["due", "acquiring", "backoff", "answered", "refused", "review", "done"] {(s): on: hasten: {actions: "hasten"}}
 			// Where an answer or a refusal leaves the resource, read off what it made of it.
 			answered: always: [{guard: "givenUp", target: "review"}, {guard: "finished", target: "done"}, {target: "idle"}]
 			refused: always: [{guard: "givenUp", target: "review"}, {target: "backoff"}]
@@ -54,26 +61,26 @@ _sofaResourceMachine: pronto.#Machine & {
 	}
 	setup: {
 		initialize: "initial"
+		delays: ripe: "wait"
 		guards: {
-			isDue: {reads: ["_time"], reason: "not_due"}
 			givenUp: reads: []
 			finished: reads: []
 		}
 		actions: {
-			admit: {reads: ["_time"], writes: ["due"]}
-			answer: {reads: ["_time", "owed", "unresolved", "terminal", "kept", "fixtures", "complete", "max_age", "ends"], writes: ["due", "failures", "checks", "complete_checks", "complete", "settled", "status"]}
-			fail: {reads: ["_time", "status", "retry_at"], writes: ["due", "failures", "status"]}
-			hasten: {reads: ["_time", "owed"], writes: ["due"]}
-			reopen: {reads: ["_time"], writes: ["due", "checks", "complete_checks", "complete"]}
-			pair: {reads: ["_time"], writes: ["due", "complete", "complete_checks"]}
-			stop: {reads: [], writes: ["due"]}
+			admit: {reads: ["_time"], writes: ["due", "wait"]}
+			answer: {reads: ["_time", "owed", "unresolved", "terminal", "kept", "fixtures", "complete", "max_age", "ends"], writes: ["due", "wait", "failures", "checks", "complete_checks", "complete", "settled", "status"]}
+			fail: {reads: ["_time", "status", "retry_at"], writes: ["due", "wait", "failures", "status"]}
+			hasten: {reads: ["_time", "owed"], writes: ["due", "wait"]}
+			reopen: {reads: ["_time"], writes: ["due", "wait", "checks", "complete_checks", "complete"]}
+			pair: {reads: ["_time"], writes: ["due", "wait", "complete", "complete_checks"]}
+			stop: {reads: [], writes: ["due", "wait"]}
 		}
 		version: 1
 		fuel:    20000
 		types: {
 			// Spawned due at `due`, or, owing fixtures, when the soonest of them is.
 			input: {type: "object", fields: {family: _sofaFamily, due: _sofaInstant, owed: _sofaOwed}}
-			context: {type: "object", fields: _sofaResource}
+			context: {type: "object", fields: {_sofaResource, wait: _sofaWait}}
 			view: {type: "object", fields: {_sofaResource, phase: {type: "string", maxLength: 9, values: _sofaResourcePhases}}}
 			events: {
 				admitted: {tier: "mecha", payload: {type: "object", fields: {request: {type: "string", maxLength: 36}}}}
@@ -101,10 +108,8 @@ _sofaResourceMachine: pronto.#Machine & {
 				reopened: {tier: "mecha", payload: {type: "object", fields: {}}}
 				paired: {tier: "mecha", payload: {type: "object", fields: {}}}
 				stopped: {tier: "mecha", payload: {type: "object", fields: {}}}
-				ripe: {tier: "mecha", payload: {type: "object", fields: {}}}
 			}
 		}
-		ports: wake: {phases: ["acquiring", "idle", "backoff"], deadline: "due", event: "ripe"}
 	}
 }
 
@@ -114,8 +119,9 @@ _sofaProvider: {
 	until:  _sofaInstant
 }
 // The provider's standing: a 401 or 403 pauses it until an operator resumes
-// it, a 429 blocks it until the instant the refusal named. Admission asks it
-// before admitting anything.
+// it, a 429 blocks it until the instant the refusal named, the blocked
+// state's timer due `wait` after the refusal. Admission asks it before
+// admitting anything.
 _sofaProviderMachine: pronto.#Machine & {
 	config: {
 		id:      "sofa_provider"
@@ -127,26 +133,26 @@ _sofaProviderMachine: pronto.#Machine & {
 		states: {
 			open: {}
 			paused: {}
-			blocked: on: lapsed: {guard: "isDue", target: "open", actions: "resume"}
+			blocked: after: block: {target: "open", actions: "resume"}
 			// A pause outranks a block, and a block outlives a lesser refusal.
 			judged: always: [{guard: "isPaused", target: "paused"}, {guard: "isBlocked", target: "blocked"}, {target: "open"}]
 		}
 	}
 	setup: {
 		initialize: "initial"
+		delays: block: "wait"
 		guards: {
-			isDue: {reads: ["_time"], reason: "not_due"}
 			isPaused: reads: []
 			isBlocked: reads: []
 		}
 		actions: {
-			refuse: {reads: ["status", "until"], writes: ["reason", "until"]}
-			resume: {reads: [], writes: ["reason", "until"]}
+			refuse: {reads: ["_time", "status", "until"], writes: ["reason", "until", "wait"]}
+			resume: {reads: [], writes: ["reason", "until", "wait"]}
 		}
 		version: 1
 		types: {
 			input: {type: "object", fields: {}}
-			context: {type: "object", fields: _sofaProvider}
+			context: {type: "object", fields: {_sofaProvider, wait: _sofaWait}}
 			view: {type: "object", fields: {_sofaProvider, phase: {type: "string", maxLength: 7, values: _sofaProviderPhases}}}
 			events: {
 				refused: {tier: "mecha", payload: {type: "object", fields: {
@@ -154,10 +160,8 @@ _sofaProviderMachine: pronto.#Machine & {
 					until:  _sofaInstant
 				}}}
 				resumed: {tier: "mecha", payload: {type: "object", fields: {}}}
-				lapsed: {tier: "mecha", payload: {type: "object", fields: {}}}
 			}
 		}
-		ports: wake: {phases: ["blocked"], deadline: "until", event: "lapsed"}
 	}
 }
 

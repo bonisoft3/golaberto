@@ -1,67 +1,85 @@
 import { assert, assertEquals, assertRejects } from "jsr:@std/assert@1.0.8";
-import * as program from "../computations/ratings.js";
+import * as teamProgram from "../computations/team_ratings.js";
+import * as playerProgram from "../computations/player_ratings.js";
 import { inputs } from "../computations/tests/compute.ts";
 import { World } from "../computations/tests/world.ts";
 import { legacy, runBounded, sorted } from "./bounded-test.ts";
-import { boundedRows, boundedWasm, JOB_BYTES, step } from "./bounded-ratings.ts";
+import { boundedRows, boundedWasm, JOB_BYTES } from "./bounded-ratings.ts";
+import { step as teamStep } from "./bounded-team-ratings.ts";
+import { step as playerStep } from "./bounded-player-ratings.ts";
 import { duckdb, readerOf } from "@mecha/compute/main.ts";
 
-Deno.test({
-  name:
-    "bounded ratings preserve complete archive outputs across durable checkpoints and player partitions",
-  sanitizeOps: false,
-  sanitizeResources: false,
-  fn: async () => {
-    const world = new World();
-    const queried = await inputs(program.queries, await world.lake());
-    for (const rows of Object.values(queried)) rows.reverse();
-    const expected = sorted(await legacy(program, queried));
-    let prepared = 0;
-    const driver: typeof step = async (db, state) => {
-      const stage = (state as { stage?: string } | null)?.stage;
-      const result = await step(db, state);
-      if (
-        state === null || stage === "prepare" || stage === "prepare_players"
-      ) {
-        assertEquals(result.statements?.length, 1);
-        assertEquals(result.writes, {});
-        prepared++;
-      }
-      return result;
-    };
-    const actual = await runBounded(driver, queried, [
-      "team_rating",
-      "player_rating",
-      "rating_eval",
-    ]);
-    assertEquals(actual.out, expected);
-    assertEquals(prepared, 35);
-    assert(
-      actual.jobs > queried.phases.length + 2,
-      "players and historic refits require independent jobs",
-    );
-  },
-});
+for (const [concurrency, maxJobs] of [[1, 1], [1, 64], [2, 64], [8, 64]] as const) {
+  Deno.test({
+    name:
+      `bounded split ratings preserve complete archive outputs across durable checkpoints (concurrency=${concurrency}, maxJobs=${maxJobs})`,
+    sanitizeOps: false,
+    sanitizeResources: false,
+    fn: async () => {
+      const world = new World();
+      const baseLake = await world.lake();
+      const teamInputs = await inputs(teamProgram.queries, baseLake);
+      for (const rows of Object.values(teamInputs)) rows.reverse();
+      const expectedTeam = sorted(await legacy(teamProgram, teamInputs));
+      const actualTeam = await runBounded(
+        teamStep,
+        teamInputs,
+        ["team_rating"],
+        17,
+        concurrency,
+        maxJobs,
+      );
+      assertEquals(actualTeam.out, expectedTeam);
+
+      const ratedLake = await world.lake({
+        team_rating: actualTeam.out.team_rating.map((r) => ({
+          ...r,
+          offense: `${r.offense}`,
+          defense: `${r.defense}`,
+          rating: `${r.rating}`,
+        })),
+      });
+      const playerInputs = await inputs(playerProgram.queries, ratedLake);
+      for (const rows of Object.values(playerInputs)) rows.reverse();
+      const expectedPlayer = sorted(await legacy(playerProgram, playerInputs));
+      const actualPlayer = await runBounded(
+        playerStep,
+        playerInputs,
+        ["player_rating"],
+        17,
+        concurrency,
+        maxJobs,
+      );
+      assertEquals(actualPlayer.out, expectedPlayer);
+      assert(
+        actualTeam.jobs >= 2 && actualPlayer.jobs >= 2,
+        "historic refits and player slices run as bounded WASM jobs",
+      );
+    },
+  });
+}
 
 Deno.test({
-  name: "bounded ratings handle an empty professional archive without WASM",
+  name: "bounded split ratings handle an empty professional archive without WASM",
   sanitizeOps: false,
   sanitizeResources: false,
   fn: async () => {
     const world = new World();
     world.rows.game = [];
-    const queried = await inputs(program.queries, await world.lake());
-    const actual = await runBounded(step, queried, [
-      "team_rating",
-      "player_rating",
-      "rating_eval",
-    ]);
-    assertEquals(actual.out, {
-      team_rating: [],
-      player_rating: [],
-      rating_eval: [],
-    });
-    assertEquals(actual.jobs, 0);
+    const lake = await world.lake();
+    const teamOut = await runBounded(
+      teamStep,
+      await inputs(teamProgram.queries, lake),
+      ["team_rating"],
+    );
+    const playerOut = await runBounded(
+      playerStep,
+      await inputs(playerProgram.queries, lake),
+      ["player_rating"],
+    );
+    assertEquals(teamOut.out, { team_rating: [] });
+    assertEquals(playerOut.out, { player_rating: [] });
+    assertEquals(teamOut.jobs + playerOut.jobs, 0);
   },
 });
 
@@ -149,12 +167,11 @@ Deno.test("ratings read ordered inputs beyond host row and byte limits", async (
 
 Deno.test({
   name:
-    "staged ratings preparation preserves timestamp/UUID order and numeric ID mapping",
+    "staged team ratings preparation preserves timestamp/UUID order and numeric ID mapping",
   sanitizeOps: false,
   sanitizeResources: false,
   fn: async () => {
     const game = {
-      phase_id: "phase-z",
       home_id: "team-z",
       away_id: "team-a",
       home_score: 2,
@@ -163,30 +180,25 @@ Deno.test({
       away_aet: null,
       home_field: 0,
       moment: 20,
-      date: "1970-01-01 00:00:20",
-      recent: true,
-      seven_years: true,
+      date: "2026-04-01 00:00:00",
     };
     const captured = {
       teams: [{ id: "team-z" }, { id: "team-a" }],
-      players: [],
       games: [{ ...game, id: "game-z" }, {
         ...game,
         id: "game-a",
-        phase_id: "phase-a",
       }, { ...game, id: "game-first", moment: 10 }],
     };
     let prepared = false;
-    const driver: typeof step = async (db, state) => {
+    const driver: typeof teamStep = async (db, state) => {
       if ((state as { stage?: string } | null)?.stage === "initialize") {
         assertEquals(
-          await db.query(`SELECT ordinal,uuid,phase_id,home_id,away_id,
-          home_score,away_score,home_aet,away_aet FROM ratings_games ORDER BY ordinal`),
+          await db.query(`SELECT ordinal,uuid,home_id,away_id,
+          home_score,away_score,home_aet,away_aet FROM ratings_historic_games ORDER BY ordinal`),
           [
             {
               ordinal: 0,
               uuid: "game-first",
-              phase_id: 2,
               home_id: 2,
               away_id: 1,
               home_score: 2,
@@ -197,7 +209,6 @@ Deno.test({
             {
               ordinal: 1,
               uuid: "game-a",
-              phase_id: 1,
               home_id: 2,
               away_id: 1,
               home_score: 2,
@@ -208,7 +219,6 @@ Deno.test({
             {
               ordinal: 2,
               uuid: "game-z",
-              phase_id: 2,
               home_id: 2,
               away_id: 1,
               home_score: 2,
@@ -221,7 +231,7 @@ Deno.test({
         prepared = true;
         return { checkpoint: { stage: "done" }, writes: {}, done: true };
       }
-      return await step(db, state);
+      return await teamStep(db, state);
     };
     assertEquals((await runBounded(driver, captured, [])).jobs, 0);
     assert(prepared);

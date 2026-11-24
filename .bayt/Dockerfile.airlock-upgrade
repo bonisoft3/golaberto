@@ -39,6 +39,15 @@ BEGIN
 
   IF TG_OP = ''''INSERT'''' THEN
     IF NEW."status" <> ''''acquiring'''' THEN
+      -- A seed restores its row in the state it names, entering
+      -- nothing (900_seed.sql marks its session as seeding). Any
+      -- session may set the mark, so it counts only where the session
+      -- logged in as the table''''s owner, as the seed''''s runner does; a
+      -- client logs in as authenticator.
+      IF coalesce(current_setting(''''pronto.seed'''', true), '''''''') = ''''on''''
+        AND pg_has_role(session_user, (SELECT c.relowner FROM pg_class c WHERE c.oid = TG_RELID), ''''MEMBER'''') THEN
+        RETURN NEW;
+      END IF;
       RAISE EXCEPTION ''''new % must start in initial state % (got %)'''', ''''sofa_request'''', ''''acquiring'''', NEW."status" USING ERRCODE = ''''check_violation'''';
     END IF;
         INSERT INTO "airlock"."external_effect_ledger" ("key", "effect", "row", "input")
@@ -114,6 +123,6 @@ COPY --parents .bayt/compose.airlock-upgrade.yaml .bayt/Dockerfile.airlock-upgra
 COPY --from=golaberto-database_bayt /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
-RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then { w=$(pwd); mkdir -p /.bayt-clamp && find "$w" -exec getfattr -dh {} + > /.bayt-clamp/x && if [ ! -s /.bayt-clamp/x ]; then cd / && cp -a "$w" /.bayt-clamp/w && rm -rf "$w" && mv /.bayt-clamp/w "$w"; fi && rm -rf /.bayt-clamp; } && find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
 FROM scratch AS airlock-upgrade_bayt
 COPY --from=airlock-upgrade_bayt_ctxs /monorepo /monorepo

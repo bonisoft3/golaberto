@@ -596,19 +596,6 @@ code: state: entities: {
 			}
 		}
 	}
-	RatingEval: {
-		seed: [...{
-			rps?: >=0
-		}]
-		cel: {
-			checks: {
-				rps: "rps >= 0"
-			}
-			bounds: {
-				rps: {intMin: 0}
-			}
-		}
-	}
 	GameCard: {
 		seed: [...{
 			round?: >=1

@@ -183,7 +183,6 @@
   "auth": {
     "required": false,
     "service": "/auth",
-    "promote": true,
     "self": {
       "route": "usuario"
     },

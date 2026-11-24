@@ -14,7 +14,7 @@ RUN --mount=type=cache,target=/apt-store,id=/apt-store,sharing=shared --mount=ty
 COPY --from=postgres:18-trixie@sha256:073e7c8b84e2197f94c8083634640ab37105effe1bc853ca4d5fbece3219b0e8 /usr/local/share/keyrings/postgres.gpg.asc /usr/local/share/keyrings/
 COPY --from=postgres:18-trixie@sha256:073e7c8b84e2197f94c8083634640ab37105effe1bc853ca4d5fbece3219b0e8 /etc/apt/sources.list.d/pgdg.list /etc/apt/sources.list.d/
 RUN mkdir -p /etc/postgresql-common/createcluster.d && echo 'create_main_cluster = false' > /etc/postgresql-common/createcluster.d/appliance.conf
-RUN --mount=type=cache,target=/apt-store,id=/apt-store,sharing=shared --mount=type=cache,target=/var/cache/apt,id=golaberto-release-docker:/var/cache/apt,sharing=locked --mount=type=cache,target=/var/lib/apt/lists,id=golaberto-release-docker:/var/lib/apt/lists,sharing=locked p="$PWD"; s=/apt-store; d=/var/cache/apt/archives; mkdir -p "$s" "$d"; cp -r "$s"/. "$d"/ 2>/dev/null || true; rm -f /etc/apt/apt.conf.d/docker-clean && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache && apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends 'postgresql-18=18.*' 'redis-server=5:8.0.*' || exit; cd "$d" && for f in *.deb; do [ -f "$f" ] || continue; o="$s/$f"; [ -e "$o" ] && continue; t="$(mktemp "$s/.pXXXXXX")" && cp "$f" "$t" && mv -f "$t" "$o"; done; :; (cd "$p" && mkdir -p /run/postgresql && chown -R postgres:postgres /run/postgresql) || exit
+RUN --mount=type=cache,target=/apt-store,id=/apt-store,sharing=shared --mount=type=cache,target=/var/cache/apt,id=golaberto-release-docker:/var/cache/apt,sharing=locked --mount=type=cache,target=/var/lib/apt/lists,id=golaberto-release-docker:/var/lib/apt/lists,sharing=locked p="$PWD"; s=/apt-store; d=/var/cache/apt/archives; mkdir -p "$s" "$d"; cp -r "$s"/. "$d"/ 2>/dev/null || true; rm -f /etc/apt/apt.conf.d/docker-clean && echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache && apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends 'postgresql-18=18.*' || exit; cd "$d" && for f in *.deb; do [ -f "$f" ] || continue; o="$s/$f"; [ -e "$o" ] && continue; t="$(mktemp "$s/.pXXXXXX")" && cp "$f" "$t" && mv -f "$t" "$o"; done; :; (cd "$p" && mkdir -p /run/postgresql && chown -R postgres:postgres /run/postgresql) || exit
 ENV COMPUTE_APP_DIR=/compute-app
 ENV COMPUTE_STATE_DIR=/var/lib/duckstream
 ENV BAYT_LOCAL_DUCKDB_EXTENSIONS=/compute-app/extensions
@@ -47,6 +47,7 @@ processes:
       failure_threshold: 120
     availability:
       restart: on_failure
+      exit_on_end: true
   airlock:
     command: '''airlock-deno'' ''run'' ''--frozen'' ''--unstable-worker-options'' ''--allow-net=database:5432,airlock-mesh:3500,0.0.0.0:9997'' ''--allow-read'' ''--allow-env'' ''--allow-sys'' ''main.ts'''
     working_dir: /app/airlock
@@ -72,9 +73,12 @@ processes:
       failure_threshold: 120
     availability:
       restart: on_failure
+      exit_on_end: true
   database:
     command: '''docker-entrypoint.sh'' ''postgres'' ''-c'' ''session_preload_libraries=pg_ivm'' ''-c'' ''wal_level=logical'' ''-c'' ''max_replication_slots=128'' ''-c'' ''max_wal_senders=128'' ''-c'' ''fsync=off'' ''-c'' ''synchronous_commit=off'' ''-c'' ''full_page_writes=off'' ''-c'' ''shared_buffers=32MB'' ''-c'' ''max_connections=200'' ''-c'' ''fsync=on'' ''-c'' ''synchronous_commit=on'' ''-c'' ''full_page_writes=on'' ''-c'' ''shared_buffers=512MB'''
   electric:
+    availability:
+      exit_on_end: true
     command: '''env'' ''DATABASE_URL=postgresql://electric:${ELECTRIC_PASSWORD:-dev-electric-password}@127.0.0.1:5432/${POSTGRES_DB:-golaberto}?sslmode=disable'' ''ELECTRIC_SECRET=${ELECTRIC_SECRET:-dev-electric-secret}'' ''ELECTRIC_MANUAL_TABLE_PUBLISHING=true'' ''ELECTRIC_PORT=3002'' ''ELECTRIC_STORAGE_DIR=${PGDATA:-/var/lib/pgsql/data}/electric'' ''LD_LIBRARY_PATH=/electric-libs'' ''ELIXIR_ERL_OPTIONS=+fnu'' ''/electric-app/bin/entrypoint'' ''start'''
   risingwave:
     command: '''/usr/local/bin/appliance-risingwave.sh'''
@@ -97,6 +101,7 @@ processes:
       failure_threshold: 120
     availability:
       restart: on_failure
+      exit_on_end: true
   ticker:
     command: '''ticker-deno'' ''run'' ''--frozen'' ''--allow-net'' ''--allow-env'' ''main.ts'''
     working_dir: /ticker-app
@@ -118,6 +123,7 @@ processes:
       failure_threshold: 120
     availability:
       restart: on_failure
+      exit_on_end: true
   clock:
     command: '''/usr/local/bin/appliance-clock.sh'''
     environment:
@@ -127,8 +133,26 @@ processes:
         condition: process_healthy
     availability:
       restart: on_failure
+      exit_on_end: true
   timer-check:
     command: '''psql'' ''-X'' ''--set=ON_ERROR_STOP=1'' ''--single-transaction'' ''--file=/timer-check.sql'''
+  transform:
+    availability:
+      exit_on_end: true
+    environment:
+      - CDC_GROUPS=["golaberto-matches-games","golaberto-recent-championships","golaberto-rounds","golaberto-sofascore-admission","golaberto-team-directory","golaberto-team-enrichment","golaberto-team-profiles"]
+  render:
+    availability:
+      exit_on_end: true
+  mesh-events:
+    availability:
+      exit_on_end: true
+  conduit:
+    availability:
+      exit_on_end: true
+  compute:
+    availability:
+      exit_on_end: true
   sofascore:
     command: '''/usr/local/bin/sofascore_fetch'' ''--listen'' ''127.0.0.1:8081'''
     readiness_probe:
@@ -139,6 +163,7 @@ processes:
       failure_threshold: 120
     availability:
       restart: on_failure
+      exit_on_end: true
 APPLIANCE
 RUN printf '%s\n' '#!/bin/sh' 'set -e' 'while sleep "${POKE_INTERVAL_SECONDS:-60}"; do' '  curl -fsS -X POST -H "Authorization: Bearer ${SERVICE_JWT}" "http://ticker:9998/poke?caller=appliance" >/dev/null || { echo "clock: the ticker refused its poke" >&2; exit 1; }' 'done' > /usr/local/bin/appliance-clock.sh && chmod 755 /usr/local/bin/appliance-clock.sh
 ENV PATH=/usr/lib/postgresql/18/bin:/usr/local/bin:$PATH
@@ -181,9 +206,11 @@ COPY --from=golaberto-airlock /usr/bin/deno /usr/local/bin/airlock-deno
 COPY --from=golaberto-airlock /deno-dir /airlock-deno-dir
 COPY --link --from=golaberto-airlock /app /app
 COPY --link --from=golaberto-airlock /airlock /airlock
+COPY --link --from=golaberto-airlock /packages /packages
 COPY --link --from=golaberto-airlock-mesh /daprd /daprd
 COPY --link --from=golaberto-airlock-mesh /dapr /dapr
 COPY --link --from=golaberto-airlock-upgrade /airlock-upgrade.sql /airlock-upgrade.sql
+COPY --from=redis:8.2.11-bookworm@sha256:b0b01167ff47bc3868e56a967895a26be4230891a1f42a78ab61cdd227accc8d /usr/local/bin/redis-server /usr/local/bin/redis-cli /usr/local/bin/
 COPY --from=golaberto-mesh-events /daprd /usr/local/bin/daprd
 COPY --from=golaberto-mesh-events /dapr/components/ /mesh-events/dapr/components/
 COPY --from=golaberto-conduit /app/conduit /usr/local/bin/conduit
@@ -209,10 +236,13 @@ COPY --link --from=golaberto-risingwave /etc/ssl/certs/java /etc/ssl/certs/java
 COPY computations/standings.js computations/standings.js
 COPY duckstream/standings.risingwave.json duckstream/standings.risingwave.json
 COPY duckstream/bounded-standings.ts.bundle.js duckstream/bounded-standings.ts.bundle.js
-COPY computations/ratings.js computations/ratings.js
+COPY computations/team_ratings.js computations/team_ratings.js
 COPY computations/golaberto-odds.wasm computations/golaberto-odds.wasm
-COPY duckstream/ratings.risingwave.json duckstream/ratings.risingwave.json
-COPY duckstream/bounded-ratings.ts.bundle.js duckstream/bounded-ratings.ts.bundle.js
+COPY duckstream/team_ratings.risingwave.json duckstream/team_ratings.risingwave.json
+COPY duckstream/bounded-team-ratings.ts.bundle.js duckstream/bounded-team-ratings.ts.bundle.js
+COPY computations/player_ratings.js computations/player_ratings.js
+COPY duckstream/player_ratings.risingwave.json duckstream/player_ratings.risingwave.json
+COPY duckstream/bounded-player-ratings.ts.bundle.js duckstream/bounded-player-ratings.ts.bundle.js
 COPY computations/chances.js computations/chances.js
 COPY duckstream/chances.risingwave.json duckstream/chances.risingwave.json
 COPY duckstream/bounded-chances.ts.bundle.js duckstream/bounded-chances.ts.bundle.js
@@ -229,7 +259,7 @@ COPY --link --from=golaberto-sofascore-appliance /usr/local/bin/sofascore_fetch 
 COPY --from=golaberto-database --link /monorepo/${BAYT_DIR} /monorepo/${BAYT_DIR}
 COPY --from=golaberto-crud --link /monorepo/${BAYT_DIR} /monorepo/${BAYT_DIR}
 COPY --from=golaberto-caddy --link /monorepo/${BAYT_DIR} /monorepo/${BAYT_DIR}
-COPY --parents .bayt/process-compose.yaml docker/*.yaml computations/standings.js duckstream/standings.risingwave.json duckstream/bounded-standings.ts.bundle.js computations/ratings.js computations/golaberto-odds.wasm duckstream/ratings.risingwave.json duckstream/bounded-ratings.ts.bundle.js computations/chances.js duckstream/chances.risingwave.json duckstream/bounded-chances.ts.bundle.js computations/cards.js duckstream/cards.risingwave.json duckstream/bounded-cards.ts.bundle.js computations/player_stats.js duckstream/player_stats.risingwave.json duckstream/bounded-player-stats.ts.bundle.js ./
+COPY --parents .bayt/process-compose.yaml docker/*.yaml computations/standings.js duckstream/standings.risingwave.json duckstream/bounded-standings.ts.bundle.js computations/team_ratings.js computations/golaberto-odds.wasm duckstream/team_ratings.risingwave.json duckstream/bounded-team-ratings.ts.bundle.js computations/player_ratings.js duckstream/player_ratings.risingwave.json duckstream/bounded-player-ratings.ts.bundle.js computations/chances.js duckstream/chances.risingwave.json duckstream/bounded-chances.ts.bundle.js computations/cards.js duckstream/cards.risingwave.json duckstream/bounded-cards.ts.bundle.js computations/player_stats.js duckstream/player_stats.risingwave.json duckstream/bounded-player-stats.ts.bundle.js ./
 COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.release-docker.json ./.bayt/
 ENTRYPOINT ["/usr/local/bin/appliance-entrypoint.sh"]
 CMD ["/usr/local/bin/process-compose", "up", "-f", "/.bayt/process-compose.yaml", "-f", "/.bayt/process-compose.appliance.yaml", "-t=false", "--no-server", "caddy", "electric", "auth", "airlock", "conduit", "transform", "risingwave", "compute", "ticker", "clock"]
@@ -251,12 +281,12 @@ RUN ELECTRIC_SECRET=validation-only caddy validate --adapter caddyfile --config 
 FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS release-docker_ctxs
 ARG BAYT_DIR
 WORKDIR /monorepo/${BAYT_DIR}
-COPY --parents .bayt/process-compose.yaml docker/*.yaml computations/standings.js duckstream/standings.risingwave.json duckstream/bounded-standings.ts.bundle.js computations/ratings.js computations/golaberto-odds.wasm duckstream/ratings.risingwave.json duckstream/bounded-ratings.ts.bundle.js computations/chances.js duckstream/chances.risingwave.json duckstream/bounded-chances.ts.bundle.js computations/cards.js duckstream/cards.risingwave.json duckstream/bounded-cards.ts.bundle.js computations/player_stats.js duckstream/player_stats.risingwave.json duckstream/bounded-player-stats.ts.bundle.js ./
+COPY --parents .bayt/process-compose.yaml docker/*.yaml computations/standings.js duckstream/standings.risingwave.json duckstream/bounded-standings.ts.bundle.js computations/team_ratings.js computations/golaberto-odds.wasm duckstream/team_ratings.risingwave.json duckstream/bounded-team-ratings.ts.bundle.js computations/player_ratings.js duckstream/player_ratings.risingwave.json duckstream/bounded-player-ratings.ts.bundle.js computations/chances.js duckstream/chances.risingwave.json duckstream/bounded-chances.ts.bundle.js computations/cards.js duckstream/cards.risingwave.json duckstream/bounded-cards.ts.bundle.js computations/player_stats.js duckstream/player_stats.risingwave.json duckstream/bounded-player-stats.ts.bundle.js ./
 COPY --from=golaberto-database_srcs /monorepo /monorepo
 COPY --from=golaberto-caddy_srcs /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
-RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then { w=$(pwd); mkdir -p /.bayt-clamp && find "$w" -exec getfattr -dh {} + > /.bayt-clamp/x && if [ ! -s /.bayt-clamp/x ]; then cd / && cp -a "$w" /.bayt-clamp/w && rm -rf "$w" && mv /.bayt-clamp/w "$w"; fi && rm -rf /.bayt-clamp; } && find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
 FROM scratch AS release-docker_srcs
 COPY --from=release-docker_ctxs /monorepo /monorepo
 
@@ -285,6 +315,6 @@ COPY --from=golaberto-sofascore-appliance_bayt /monorepo /monorepo
 COPY --from=golaberto-served_bayt /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
-RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then { w=$(pwd); mkdir -p /.bayt-clamp && find "$w" -exec getfattr -dh {} + > /.bayt-clamp/x && if [ ! -s /.bayt-clamp/x ]; then cd / && cp -a "$w" /.bayt-clamp/w && rm -rf "$w" && mv /.bayt-clamp/w "$w"; fi && rm -rf /.bayt-clamp; } && find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
 FROM scratch AS release-docker_bayt
 COPY --from=release-docker_bayt_ctxs /monorepo /monorepo

@@ -24,7 +24,7 @@ function enrolled(tournament: number) {
       DO $$ BEGIN
         PERFORM hybrid_sofa_resource.spawn('${resource}',jsonb_build_object('family','round','due',sofa.ms(now()),'owed','[]'::jsonb),
           jsonb_build_object('service',sofa.service_actor()));
-        PERFORM sofa.tell('${resource}','ripe','{}');
+        PERFORM sofa.tell('${resource}','xstate.after.ripe.idle','{}');
       END $$;`,
   };
 }

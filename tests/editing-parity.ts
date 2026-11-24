@@ -4,7 +4,7 @@ import { query } from "./db.ts";
 const identity = (user: string, guest = false) =>
   `RESET ROLE;
   SET LOCAL app.scopes='public:,user:${user}';
-  SET LOCAL request.jwt.claims='{"sub":"${user}","guest":${guest}}';
+  SET LOCAL request.jwt.claims='{"sub":"${user}","acr":"${guest ? "0" : "phr"}","auth_time":1}';
   SET LOCAL ROLE app_user;`;
 const fixture = () => {
   const [

@@ -4,8 +4,8 @@ import { assertEquals } from "jsr:@std/assert@1.0.11";
 import { DuckDBInstance } from "npm:@duckdb/node-api@1.5.6-r.1";
 import { Cage, compile } from "@bonisoft3/mecha/services/compute/workers.ts";
 import type {} from "@bonisoft3/mecha/services/compute/cage.ts";
-import { fixture as wasmFixture, host } from "@bonisoft3/mecha/packages/mecha-edge/test/duckdb-fixture.ts";
-import { PagedExecution } from "@bonisoft3/mecha/packages/mecha-edge/src/paged-execution.ts";
+import { fixture as wasmFixture, asyncHost } from "@bonisoft3/mecha/packages/mecha-edge/test/duckdb-fixture.ts";
+import { PagedExecution } from "@bonisoft3/mecha/packages/compute-snapshot/src/execution.ts";
 import {
   fixture,
   insert,
@@ -300,21 +300,21 @@ Deno.test("standings preparation and replay pass the real paged execution admiss
       }
     }
     conn.close();
-    let store = new PagedExecution(host(db), ["standing"]);
+    let store = await PagedExecution.open(asyncHost(db), ["standing"]);
     for (let i = 0; i < 200; i++) {
-      const before = store.state();
+      const before = await store.state();
       const result = await step({
-        query: (sql) => Promise.resolve(store.query(sql)),
+        query: (sql) => store.query(sql),
       }, before.checkpoint);
-      const after = store.commit(before.revision, result);
-      assertEquals(store.commit(before.revision, result), after);
-      store = new PagedExecution(host(db), ["standing"]);
-      assertEquals(store.state(), after, "durable restart");
+      const after = await store.commit(before.revision, result);
+      assertEquals(await store.commit(before.revision, result), after);
+      store = await PagedExecution.open(asyncHost(db), ["standing"]);
+      assertEquals(await store.state(), after, "durable restart");
       if (result.done) break;
       if (i === 199) throw new Error("standings did not finish");
     }
     assertEquals(
-      canonical(store.output("standing").rows),
+      canonical((await store.output("standing")).rows),
       canonical(program.finish(inputs).standing),
     );
   } finally {

@@ -77,3 +77,9 @@ code: state: migrations: "047_team_projection_writers": {operations: [{sql: {
 	up:         strings.Replace(strings.Replace(_teamProjectionWritersSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 	onComplete: true
 }}]}
+
+_teamSinkProjectionTurnSql: string @embed(file="services/database/sql/065_team_sink_projection_turn.sql", type=text)
+code: state: migrations: "20261118_team_sink_projection_turn": {operations: [{sql: {
+	up:         strings.Replace(strings.Replace(_teamSinkProjectionTurnSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
+	onComplete: true
+}}]}

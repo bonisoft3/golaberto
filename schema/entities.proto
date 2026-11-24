@@ -801,7 +801,8 @@ message PositionChance {
 
 message RatingEval {
   optional string id = 1 [json_name = "id"];
-  optional double rps = 2 [json_name = "rps"];
+  reserved 2;
+  reserved "rps";
 }
 
 message Referee {

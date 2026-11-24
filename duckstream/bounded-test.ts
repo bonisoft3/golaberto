@@ -1,5 +1,6 @@
 import { assert } from "jsr:@std/assert@1.0.8";
 import { duckdb, readerOf } from "@mecha/compute/main.ts";
+import { normalizeSelect, projectOutput } from "@mecha/compute/wasm-select.ts";
 import { runWasm } from "@mecha/compute/wasi.ts";
 import type { Host, Row, Step } from "./bounded-ratings.ts";
 
@@ -8,15 +9,22 @@ const wasm = await WebAssembly.compile(
     new URL("../computations/golaberto-odds.wasm", import.meta.url),
   ),
 );
-export const wasmJob = (_name: string, input: unknown): Promise<unknown> =>
+export const wasmJob = (
+  _name: string,
+  input: unknown,
+  select?: readonly string[],
+): Promise<unknown> =>
   Promise.resolve(
     JSON.parse(
-      new TextDecoder().decode(
-        runWasm(
-          wasm,
-          new TextEncoder().encode(JSON.stringify(input)),
-          "golaberto-odds",
+      projectOutput(
+        new TextDecoder().decode(
+          runWasm(
+            wasm,
+            new TextEncoder().encode(JSON.stringify(input)),
+            "golaberto-odds",
+          ),
         ),
+        normalizeSelect(select),
       ),
     ),
   );
@@ -31,7 +39,7 @@ export async function legacy(
     const jobs = program.plan(inputs, seed, outputs);
     if (jobs.length === outputs.length) return program.finish(inputs, outputs);
     for (let i = outputs.length; i < jobs.length; i++) {
-      outputs.push(await wasmJob(jobs[i].wasm, jobs[i].input));
+      outputs.push(await wasmJob(jobs[i].wasm, jobs[i].input, jobs[i].select));
     }
   }
 }
@@ -50,33 +58,46 @@ export async function runBounded(
   inputs: Record<string, Row[]>,
   sinks: string[],
   seed = 17,
+  concurrency = 1,
+  maxJobs = concurrency === 1 ? 1 : 64,
 ) {
   const database = await duckdb();
   const con = await database.connect();
   const reader = readerOf(con);
   let jobs = 0;
+  let dbQueue = Promise.resolve();
+  const withDb = <T>(work: () => Promise<T>): Promise<T> => {
+    const run = dbQueue.then(work, work);
+    dbQueue = run.then(() => {}, () => {});
+    return run;
+  };
   const host: Host = {
     seed,
-    query: async (sql) => {
-      const rows = await reader.query(sql);
-      assert(
-        new TextEncoder().encode(JSON.stringify(rows)).length <=
-          8 * 1024 * 1024,
-      );
-      return rows;
-    },
-    wasm: async (name, input) => {
+    concurrency,
+    maxJobs,
+    query: (sql) =>
+      withDb(async () => {
+        const rows = await reader.query(sql);
+        assert(
+          new TextEncoder().encode(JSON.stringify(rows)).length <=
+            8 * 1024 * 1024,
+        );
+        return rows;
+      }),
+    wasm: async (name, input, select) => {
       jobs++;
-      return await wasmJob(name, input);
+      return await wasmJob(name, input, select);
     },
-    wasmFromQuery: async (name, input, query) => {
+    wasmFromQuery: async (name, input, query, select) => {
       const body = structuredClone(input) as Record<string, unknown>;
       let target = body;
       for (const part of query.path.slice(0, -1)) {
         target = target[part] as Record<string, unknown>;
       }
-      const rows = await reader.query(
-        `SELECT * FROM (${query.sql}) ORDER BY "${query.orderBy}"`,
+      const rows = await withDb(() =>
+        reader.query(
+          `SELECT * FROM (${query.sql}) ORDER BY "${query.orderBy}"`,
+        )
       );
       target[query.path.at(-1)!] = rows.map((row) => {
         const value = { ...row };
@@ -84,7 +105,7 @@ export async function runBounded(
         return value;
       });
       jobs++;
-      return await wasmJob(name, body);
+      return await wasmJob(name, body, select);
     },
   };
   try {
@@ -107,7 +128,10 @@ export async function runBounded(
     for (let iteration = 0; iteration < 1000; iteration++) {
       const before = jobs;
       const result = await driver(host, checkpoint);
-      assert(jobs - before <= 1, "a durable step runs at most one WASM job");
+      assert(
+        jobs - before <= maxJobs,
+        `a bounded step runs at most ${maxJobs} WASM job(s)`,
+      );
       await con.run("BEGIN");
       for (const sql of result.statements ?? []) await con.run(sql);
       for (const [sink, rows] of Object.entries(result.writes)) {

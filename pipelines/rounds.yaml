@@ -20,6 +20,7 @@ input:
           # The change feed's transaction markers become each row's
           # @traceparent (mecha's cdc-trace.yaml, loaded by -r).
           - mutation: meta cdc_consumer = "golaberto-rounds"
+          - resource: cdc_stream_trim
           - resource: cdc_trace_join
       - generate:
           count: 1

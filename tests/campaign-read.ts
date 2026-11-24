@@ -160,7 +160,7 @@ Deno.test("home feed computed relationships retain the guest reader's access", a
     INSERT INTO championship(id,name,region_name,begins,ends) VALUES ('${champ}','Feed season','Brasil','2026-01-01','2026-12-31');
     INSERT INTO phase(id,championship_id,name) VALUES ('${phase}','${champ}','Feed phase');
     INSERT INTO game(id,phase_id,round,day,home_id,away_id,played) VALUES ('${game}','${phase}',1,'2026-01-01','${home}','${away}',false);
-    SET LOCAL request.jwt.claims='{"role":"app_user","sub":"guest-fixture","guest":true}';
+    SET LOCAL request.jwt.claims='{"role":"app_user","sub":"guest-fixture","acr":"0","auth_time":1}';
     SET LOCAL ROLE app_user;
     DO $$ BEGIN PERFORM app_pre_request(); END $$;
     SELECT (SELECT id FROM game_archive(f)) = '${game}'::uuid,

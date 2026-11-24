@@ -40,6 +40,8 @@ Deno.test("community profile ownership and history also execute in the standalon
 		);
 		await db.exec(migration);
 		await db.exec(migration);
+		// The ledger's later migration restates the baseline's write checks.
+		await db.exec(browserTier(await Deno.readTextFile(new URL("migrations/20261116_signed_in_by_acr.sql", app))));
 		const f = fixture();
 		await db.exec(`${f.setup}${identity(f.actor).replaceAll("SET LOCAL", "SET")}
       INSERT INTO user_biography(display_name,about_me) VALUES ('Portable profile','Public text');
@@ -66,6 +68,15 @@ Deno.test("community profile ownership and history also execute in the standalon
 			db.exec(`DELETE FROM game_change WHERE game_id='${f.game}';`)
 		);
 		assertEquals((forged as Error & { code: string }).code, "42501");
+		// Regression: signed_in() once asked for auth_time, which a provider
+		// reports only sometimes, and refused such a person every write.
+		await db.exec(`${identity(f.reader, "unstated").replaceAll("SET LOCAL", "SET")}
+      INSERT INTO user_biography(display_name) VALUES ('Provider profile');`);
+		const legacy = await assertRejects(() =>
+			db.exec(`${identity(f.other, "legacy").replaceAll("SET LOCAL", "SET")}
+      INSERT INTO user_biography(display_name) VALUES ('Legacy guest');`)
+		);
+		assertEquals((legacy as Error & { code: string }).code, "42501");
 	} finally {
 		await db.close();
 	}

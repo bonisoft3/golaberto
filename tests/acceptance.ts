@@ -62,7 +62,7 @@ const signedIn = async (handle: string) => {
   const jwt = Deno.env.get("PGRST_JWT_SECRET");
   if (jwt === undefined) throw new Error("PGRST_JWT_SECRET is unset: the check runs beside the stack, which sets it");
   const secret = new TextEncoder().encode(jwt);
-  const token = await new SignJWT({ role: "app_user", handle, guest: false }).setProtectedHeader({ alg: "HS256" }).setSubject(id)
+  const token = await new SignJWT({ role: "app_user", handle, acr: "phr", amr: ["pop"], auth_time: Math.floor(Date.now() / 1000) }).setProtectedHeader({ alg: "HS256" }).setSubject(id)
     .setExpirationTime("1h").sign(secret);
   return { token, user: { id, handle } };
 };
@@ -77,7 +77,7 @@ const context = async (opts: { width?: number; dark?: boolean; session?: unknown
   });
   currentOpened().push(c);
   if (opts.session !== undefined) {
-    await c.addInitScript((s: unknown) => sessionStorage.setItem("pronto-token", JSON.stringify(s)), opts.session);
+    await c.addInitScript((s: unknown) => localStorage.setItem("pronto-token", JSON.stringify(s)), opts.session);
   }
   return c;
 };
@@ -210,12 +210,12 @@ const STREAM_MS = 180_000;
 const statisticsReady = async (budget = STREAM_MS) => {
   const deadline = Date.now() + budget;
   while (Date.now() < deadline) {
-    if (await query(`SELECT count(*)=2 AND bool_and(completed=requested AND completed>0 AND claimed IS NULL)
-      FROM compute.batch WHERE name IN ('golaberto-ratings','golaberto-chances')`) === "t") return;
+    if (await query(`SELECT count(*)=3 AND bool_and(completed=requested AND completed>0 AND claimed IS NULL)
+      FROM compute.batch WHERE name IN ('golaberto-team-ratings','golaberto-player-ratings','golaberto-chances')`) === "t") return;
     await new Promise((resolve) => setTimeout(resolve, 250));
   }
   const batches = await query(`SELECT name, requested, completed, claimed FROM compute.batch
-    WHERE name IN ('golaberto-ratings','golaberto-chances') ORDER BY name`);
+    WHERE name IN ('golaberto-team-ratings','golaberto-player-ratings','golaberto-chances') ORDER BY name`);
   throw new Error(`statistics publication did not complete within ${budget}ms: ${batches}`);
 };
 
@@ -1500,7 +1500,7 @@ test("test-game-importance: a game still to play shows how much its result matte
   assert(sides.every((v) => v >= 0), `importance ${sides} has a negative side`);
 });
 
-test("test-sign-in: explicit passkey creation preserves a guest, and an unknown credential stays refused until a new passkey is explicitly created", async () => {
+test("test-sign-in: the device makes the account where it holds none, keeping the guest, and makes it again once the server forgets its passkey", async () => {
   const door = localhostDoor(base);
   const c = await context();
   const page = await c.newPage();
@@ -1510,19 +1510,30 @@ test("test-sign-in: explicit passkey creation preserves a guest, and an unknown 
   let authenticatorId: string | undefined;
   const session = async () => {
     await page.waitForSelector('.shell-screen:not([hidden]):not([data-served]) .screen[data-state="populated"]');
-    await page.waitForFunction(() => JSON.parse(sessionStorage.getItem("pronto-token") ?? "null")?.user?.id);
-    const value = await page.evaluate(() => JSON.parse(sessionStorage.getItem("pronto-token")!));
+    await page.waitForFunction(() => JSON.parse(localStorage.getItem("pronto-token") ?? "null")?.user?.id);
+    const value = await page.evaluate(() => JSON.parse(localStorage.getItem("pronto-token")!));
     assert(value?.user?.id, "the browser has a session identity");
     identities.add(value.user.id);
     return value;
   };
   const signedIn = async () => {
-    await page.waitForSelector("body > nav .shell-signout", { state: "visible" });
+    await page.waitForSelector("body > nav .shell-person", { state: "visible" });
     return await session();
   };
+  // With no provider, the nav's Sign in opens onto Passkey alone: its field
+  // offers the device's passkeys as autofill, and a name there makes one.
+  const myDevice = async () => {
+    await page.locator("body > nav .shell-signin").click();
+    await page.locator("body > nav .shell-signin-panel .shell-passkey").click();
+  };
+  const named = async (name: string) => {
+    await page.locator("body > nav .shell-passkey-form input").fill(name);
+    await page.locator("body > nav .shell-passkey-go").click();
+  };
   const signOut = async () => {
+    await page.locator("body > nav .shell-person").click();
     await page.locator("body > nav .shell-signout").click();
-    await page.waitForSelector("body > nav .shell-register", { state: "visible" });
+    await page.waitForSelector("body > nav .shell-signin", { state: "visible" });
     const guest = await session();
     assertEquals(guest.user.guest, true);
     return guest;
@@ -1538,38 +1549,42 @@ test("test-sign-in: explicit passkey creation preserves a guest, and an unknown 
       hasUserVerification: true, isUserVerified: true, automaticPresenceSimulation: true,
     } }));
     await page.goto(`${door.origin}${await fixturePath(`/jogo/${WIN}`)}`);
-    await page.waitForSelector("body > nav .shell-register", { state: "visible" });
+    await page.waitForSelector("body > nav .shell-signin", { state: "visible" });
     assertEquals(await said(page, "body > nav .shell-signin"), ["Entrar"]);
     const initialGuest = await session();
     assertEquals(initialGuest.user.guest, true);
-    await page.locator("body > nav .shell-register").click();
+    // Nothing saved: the device's answer is the account made there, the
+    // guest's, under the name given and the guest's suffix.
+    await myDevice();
+    await named("Ana");
     const firstAccount = await signedIn();
     assertEquals(firstAccount.user.id, initialGuest.user.id);
-    assertEquals(firstAccount.user.handle, initialGuest.user.handle);
+    assertEquals(firstAccount.user.handle, `Ana-${initialGuest.user.handle.slice(-4)}`);
     assertEquals(firstAccount.user.guest, undefined);
-    assertEquals(ceremonies, ["/auth/register/start", "/auth/register/verify"]);
+    // The step keeps a challenge in hand ahead of the reader, so how many it
+    // starts is its own; what it verifies is the register alone.
+    assertEquals(ceremonies.filter((c) => c !== "/auth/login/start"), ["/auth/register/start", "/auth/register/verify"]);
     assertEquals(await query(`SELECT count(*) FROM webauthn_credential WHERE user_id = '${firstAccount.user.id}'`), "1");
     const { credentials } = await cdp.send("WebAuthn.getCredentials", { authenticatorId });
     assertEquals(credentials.length, 1);
     assertEquals(credentials[0].rpId, "localhost");
     assertEquals(credentials[0].isResidentCredential, true);
 
+    // The server forgets the passkey: the device still offers it, the server
+    // refuses it as unknown, and holding nothing of this app's, the device
+    // makes the account again — the guest's — rather than signing in as
+    // anyone.
     await query(`DELETE FROM webauthn_credential WHERE user_id = '${firstAccount.user.id}'`);
     const recoveryGuest = await signOut();
     ceremonies.length = 0;
     const refused = page.waitForResponse((response: { url(): string }) => new URL(response.url()).pathname === "/auth/login/verify");
-    await page.locator("body > nav .shell-signin").click();
+    await myDevice();
     assertEquals((await refused).status(), 401);
-    await page.waitForSelector('body > nav .shell-signin[data-key="chrome_passkey_failed"]');
-    assertEquals(ceremonies, ["/auth/login/start", "/auth/login/verify"]);
-    assertEquals((await session()).user, recoveryGuest.user);
-    assertEquals(await query(`SELECT count(*) FROM webauthn_credential WHERE user_id IN ('${firstAccount.user.id}', '${recoveryGuest.user.id}')`), "0");
-
-    await page.locator("body > nav .shell-register").click();
+    await named("Bia");
     const recovered = await signedIn();
     assertEquals(recovered.user.id, recoveryGuest.user.id);
-    assertEquals(recovered.user.handle, recoveryGuest.user.handle);
-    assertEquals(ceremonies.slice(2), ["/auth/register/start", "/auth/register/verify"]);
+    assertEquals(recovered.user.handle, `Bia-${recoveryGuest.user.handle.slice(-4)}`);
+    assertEquals(ceremonies.filter((c) => c !== "/auth/login/start"), ["/auth/login/verify", "/auth/register/start", "/auth/register/verify"]);
     assertEquals(await query(`SELECT count(*) FROM webauthn_credential WHERE user_id = '${recovered.user.id}'`), "1");
     const { credentials: afterRecovery } = await cdp.send("WebAuthn.getCredentials", { authenticatorId });
     if (afterRecovery.some((c: { credentialId: string }) => c.credentialId === credentials[0].credentialId)) {
@@ -1577,7 +1592,7 @@ test("test-sign-in: explicit passkey creation preserves a guest, and an unknown 
     }
     await signOut();
     const accepted = page.waitForResponse((response: { url(): string }) => new URL(response.url()).pathname === "/auth/login/verify");
-    await page.locator("body > nav .shell-signin").click();
+    await myDevice();
     assertEquals((await accepted).status(), 200);
     assertEquals((await signedIn()).user, recovered.user);
   } finally {
@@ -2026,7 +2041,7 @@ test("door: every public route is answered with its document, rows and all, in i
   // page, and of 0.12 on the catalogue.
   for (const [path, h1] of [["/campeonatos", "Campeonatos"], ["/es/campeonatos", "Campeonatos"], ["/en/championships", "Championships"]]) {
     const page = await served(path);
-    assertEquals([page.status, page.cache, h1Of(page.html)], [200, "public, no-cache", h1], path);
+    assertEquals([page.status, page.cache, h1Of(page.html)], [200, "public, no-cache, no-transform", h1], path);
     // Under the search's seed, which is every tab's first: the whole
     // catalogue, its region chosen as none.
     assert((page.html.match(/<tr[^>]* data-id="/g) ?? []).length > 3, `${path} carries no rows`);
@@ -2037,7 +2052,7 @@ test("door: every public route is answered with its document, rows and all, in i
   }
   for (const path of ["/", "/en", "/en/", "/equipes", "/estadios", "/arbitros"]) {
     const page = await served(path);
-    assertEquals([page.status, page.cache], [200, "public, no-cache"], path);
+    assertEquals([page.status, page.cache], [200, "public, no-cache, no-transform"], path);
     assert(page.html.includes('<div data-served="" class="shell-screen">'), `${path} is not a document`);
     assert(/<(li|tr)[^>]* data-id="/.test(page.html), `${path} carries no rows`);
   }
@@ -2063,7 +2078,7 @@ test("door: readable detail addresses render their records and missing addresses
   ]) {
     const path = await fixturePath(fixture);
     const page = await served(path);
-    assertEquals([page.status, page.cache], [200, "public, no-cache"], path);
+    assertEquals([page.status, page.cache], [200, "public, no-cache, no-transform"], path);
     assert(page.html.includes('<div data-served="" class="shell-screen">'), `${path} has no served document`);
     assert(page.html.includes(words), `${path} did not render its record`);
     assert(page.html.includes(`<link href="${origin}${path}" rel="canonical">`), `${path} lost its readable canonical`);
@@ -2100,11 +2115,11 @@ test("door: team statistics and derived charts arrive before JavaScript and surv
   const team = "07000000-0000-4000-8000-000000000001";
   const path = `/en/championship/${BRASILEIRO_2026}/team/${team}`;
   const profile = await served(`/en/team/${team}`);
-  assertEquals([profile.status, profile.cache], [200, "public, no-cache"]);
+  assertEquals([profile.status, profile.cache], [200, "public, no-cache, no-transform"]);
   assert(profile.html.includes('data-served=""'), "the team profile is not server rendered");
   assert(profile.html.includes("Flamengo-RJ"), "the team profile has no team");
   const initial = await served(path);
-  assertEquals([initial.status, initial.cache], [200, "public, no-cache"]);
+  assertEquals([initial.status, initial.cache], [200, "public, no-cache, no-transform"]);
   const page = await (await context()).newPage();
   const statistics = (html: string | null) => {
     const doc = html === null ? document : new DOMParser().parseFromString(html, "text/html");
@@ -2171,7 +2186,7 @@ test("door: every file revalidates on its hash, without its body", async () => {
 
 test("door: a game's page is answered with its rows, for no one in particular", async () => {
   const page = await served(`/jogo/${WIN}`);
-  assertEquals([page.status, page.cache], [200, "public, no-cache"]);
+  assertEquals([page.status, page.cache], [200, "public, no-cache, no-transform"]);
   for (const words of ["Athletico-PR", "Bahia-BA", "Brasil - Campeonato Brasileiro 2026"]) assert(page.html.includes(words), words);
   assert(/data-text="\{home_score\}">2</.test(page.html) && /data-text="\{away_score\}">1</.test(page.html), "no score");
   assert((page.html.match(/<tr[^>]* data-id=/g) ?? []).length >= 22, "no line-ups");
@@ -2292,8 +2307,8 @@ Deno.test("readonly acceptance", async () => {
         serviceWorkers: "block",
       });
       await warm.addInitScript((s: unknown) => {
-        if (sessionStorage.getItem("pronto-token") === null) {
-          sessionStorage.setItem("pronto-token", JSON.stringify(s));
+        if (localStorage.getItem("pronto-token") === null) {
+          localStorage.setItem("pronto-token", JSON.stringify(s));
         }
       }, guest);
       try {

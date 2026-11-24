@@ -771,7 +771,7 @@ pairs:
     of: jogo
     accepts:
       - accept-sign-in
-    says: 'a guest is offered a passkey, which keeps the guest''s identity'
+    says: 'a guest is offered the device, which makes the account there and keeps the guest''s identity'
     given: {}
     when: view
     then: output.strip.contains("Entrar")

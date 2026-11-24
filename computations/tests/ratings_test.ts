@@ -1,9 +1,9 @@
-// The ratings computation over a small lake, and the chances reading what it writes.
+// The split ratings computations over a small lake, and chances reading TeamRating.
 
 import { assert, assertEquals } from "@std/assert";
 import { runWasm } from "@mecha/compute/wasi.ts";
 import * as chances from "../chances.js";
-import * as ratings from "../ratings.js";
+import * as teamRatings from "../team_ratings.js";
 import { compute, inputs, odds, type Out } from "./compute.ts";
 import { type Row, World } from "./world.ts";
 
@@ -12,7 +12,24 @@ const test = (name: string, fn: () => Promise<void>) =>
 
 const world = new World();
 let computed: Out | undefined;
-const once = async () => (computed ??= await compute("ratings", await world.lake()));
+
+async function computeRatings(w: World, prefix = ""): Promise<Out> {
+  const suffix = prefix ? `-${prefix}` : "";
+  const baseLake = await w.lake();
+  const { team_rating } = await compute("team_ratings", baseLake, `team_ratings${suffix}`);
+  const ratedLake = await w.lake({
+    team_rating: team_rating.map((r) => ({
+      ...r,
+      offense: `${r.offense}`,
+      defense: `${r.defense}`,
+      rating: `${r.rating}`,
+    })),
+  });
+  const { player_rating } = await compute("player_ratings", ratedLake, `player_ratings${suffix}`);
+  return { team_rating, player_rating };
+}
+
+const once = async () => (computed ??= await computeRatings(world));
 
 const professional = (w: World) =>
   w.rows.game.filter((g) => [w.phases["2021"], w.phases["2026"]].includes(g.phase_id!) && g.played === "true");
@@ -21,7 +38,6 @@ const seconds = (day: string) => Date.parse(`${day}Z`.replace(" ", "T")) / 1000;
 
 test("team ratings are the persisted historic series", async () => {
   const rows = (await once()).team_rating;
-  // By hand from the rows: the request Rails builds, through the wasm.
   const games = professional(world);
   const at = (g: Row) => seconds(g.kickoff ? g.kickoff.slice(0, 19) : `${g.day} 00:00:00`);
   games.sort((a, b) => at(a) - at(b) || (a.id! < b.id! ? -1 : 1));
@@ -49,7 +65,6 @@ test("team ratings are the persisted historic series", async () => {
   const raw: Raw[] = JSON.parse(new TextDecoder().decode(
     runWasm(odds, new TextEncoder().encode(JSON.stringify({ op: "historic", request })), "golaberto-odds"),
   ));
-  // The upsert keeps a team's last row of a day, to six decimals.
   const last = new Map(raw.map((r) => [`${r.team_id} ${r.measure_date}`, r]));
   const expected = [...last.values()]
     .sort((a, b) => a.team_id - b.team_id || (a.measure_date < b.measure_date ? -1 : 1))
@@ -57,7 +72,6 @@ test("team ratings are the persisted historic series", async () => {
   assertEquals(rows.map((r) => [r.team_id, r.measure_date, r.offense, r.defense, r.rating]), expected);
   assertEquals(new Set(rows.map((r) => r.id)).size, rows.length);
   assert(rows.length > 0 && rows.every((r) => 0 <= r.rating && r.rating <= 100));
-  // Every team that played the last four years is rated as of the last game.
   const lastDay = games.map((g) => g.day!).sort().at(-1);
   assertEquals(new Set(rows.filter((r) => r.measure_date === lastDay).map((r) => r.team_id)), new Set(world.teams));
 });
@@ -75,20 +89,14 @@ test("player ratings cover who played and only them", async () => {
   assert(new Set(rows.map((r) => r.rating)).size > rows.length / 2);
 });
 
-test("an evaluation per professional phase", async () => {
-  const rows = (await once()).rating_eval;
-  assertEquals(new Set(rows.map((r) => r.id)), new Set([world.phases["2021"], world.phases["2026"]]));
-  assert(rows.every((r) => 0 <= r.rps && r.rps <= 1));
-});
-
 test("ratings are a function of the lake, not the seed", async () => {
-  assertEquals(await compute("ratings", await world.lake(), "another"), await once());
+  assertEquals(await computeRatings(world, "another"), await once());
 });
 
 test("no professional game, no rows", async () => {
   const w = new World();
   w.rows.game = w.rows.game.filter((g) => g.phase_id === w.phases["2026-sub20"]);
-  assertEquals(await compute("ratings", await w.lake()), { team_rating: [], player_rating: [], rating_eval: [] });
+  assertEquals(await computeRatings(w), { team_rating: [], player_rating: [] });
 });
 
 test("the chances price games with the ratings", async () => {
@@ -104,7 +112,7 @@ test("the chances price games with the ratings", async () => {
   assert(left.length > 0 && left.every((g) => g.home_power !== null && 0.01 <= g.home_power && g.home_power <= 10));
 });
 
-test("history starts seven years before the month while phase bounds retain their day", async () => {
+test("history starts seven years before the month of the latest played match", async () => {
   const w = new World();
   const template = w.rows.game.find((g) => g.phase_id === w.phases["2026"] && g.played === "true")!;
   const days: Record<string, string> = {
@@ -117,13 +125,10 @@ test("history starts seven years before the month while phase bounds retain thei
   };
   const id = (day: string) => `00000013-0000-4000-8000-0000${day.replaceAll("-", "")}`;
   w.rows.game = Object.entries(days).map(([day, phase]) => ({ ...template, id: id(day), day, kickoff: null, phase_id: phase }));
-  const { games, phases } = await inputs(ratings.queries, await w.lake());
+  const lake = await w.lake();
+  const { games } = await inputs(teamRatings.queries, lake);
   assertEquals(
-    Object.fromEntries(games.map((g) => [g.id, g.seven_years])),
-    Object.fromEntries(Object.keys(days).map((d) => [id(d), d !== "2017-01-31"])),
+    games.map((g) => g.id).sort(),
+    Object.keys(days).filter((d) => d !== "2017-01-31").map(id).sort(),
   );
-  assertEquals(Object.fromEntries(phases.map((p) => [p.id, [p.since, p.until]])), {
-    [w.phases["2021"]]: [seconds("2013-01-31 00:00:00"), seconds("2017-02-28 00:00:00")],
-    [w.phases["2026"]]: [seconds("2016-03-01 00:00:00"), seconds("2024-02-29 00:00:00")],
-  });
 });

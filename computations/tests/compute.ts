@@ -10,7 +10,8 @@ export const odds = await WebAssembly.compile(await Deno.readFile(WASM));
 
 const SINKS = {
   chances: ["team_chance", "zone_chance", "position_chance", "game_importance"],
-  ratings: ["team_rating", "player_rating", "rating_eval"],
+  team_ratings: ["team_rating"],
+  player_ratings: ["player_rating"],
 };
 
 // deno-lint-ignore no-explicit-any

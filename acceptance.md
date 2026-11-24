@@ -41,7 +41,7 @@
 - [ ] A referee's page shows their name, where they are from, and the games they refereed, newest first, each leading to its page. {#accept-referee-page}
 - [ ] A game's page names its stadium and its referee, each leading to their page. {#accept-game-venue}
 - [ ] An address that names no stadium, or no referee, says so in words. {#accept-venue-gone}
-- [ ] A reader signs in with one gesture and a passkey, and keeps the handle they had as a guest. {#accept-sign-in}
+- [ ] A reader signs in with this device, setting it up when it comes back empty, and keeps the handle they had as a guest. {#accept-sign-in}
 - [ ] A signed-in reader comments on a game; the comment appears for every reader of the game with the author's handle, newest first, without a reload. {#accept-comment}
 - [ ] A comment that cannot be posted — empty, too long, or written by a reader who has not signed in — is refused with a sentence saying why, and what was typed is kept. {#accept-comment-refused}
 - [ ] An editor corrects a game from its page — the score, whether it was played, the crowd, the stadium, the referee, and its goals, each added for a player of the line-ups or removed — and the game's page and the scorers' seasons follow without a reload; a reader who is not an editor is not offered the editor. Stadium and referee searches ignore case and diacritics. {#accept-edit-game}

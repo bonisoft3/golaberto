@@ -55,6 +55,9 @@
 # strips that suffix from a revalidation. The sidecars themselves are no
 # content.
 (files) {
+  # Host MIME databases disagree on glTF; static assets have one type on every target.
+  header @gltfBinary Content-Type model/gltf-binary
+  header @gltfJson Content-Type model/gltf+json
   import files-{$PRONTO_FILE_MODE:release}
 }
 
@@ -125,6 +128,18 @@
   header @ladder Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' https://cdn.jsdelivr.net/npm/marked@16.4.2/lib/marked.umd.js 'sha256-6ZoE2MzsuJRzSNxFVn9sEGmwr4upjZH423uYzEEtajk='; script-src-attr 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; form-action 'self'; frame-ancestors 'self'"
   @immutable path_regexp /_immutable-[0-9a-f]{64}-[^/]*$
   header @immutable >Cache-Control "public, max-age=31536000, immutable"
+  # Host-prefixed auth cookies use Path=/; only auth receives those credentials.
+  @withoutAuthCookies not path /auth/*
+  request_header @withoutAuthCookies Cookie "(^|;)[ \t]*(__Host-)?mecha_(session(_held)?|oidc_state(_[A-Za-z0-9_-]+)?)=[^;]*" ""
+  @gltfBinary path_regexp (?i)\.glb$
+  @gltfJson path_regexp (?i)\.gltf$
+  # A proxy's injected scripts would violate the released page's CSP.
+  @released expression `"{$PRONTO_FILE_MODE:release}" == "release"`
+  header @released {
+    match header Content-Type text/html*
+    +Cache-Control no-transform
+    defer
+  }
   # Every request is a span, the child of the traceparent it arrived with (the
   # gateway's), and every upstream is sent the span's own; the access log names
   # its traceID. The exporter reads the standard OTEL_* environment.
@@ -143,6 +158,13 @@
   # driver measured in hundreds of KiB; compression at the door is what keeps
   # a cold cache from paying for that in seconds on a slow link.
   encode zstd gzip
+  # Extend compression without copying Caddy's default MIME list.
+  encode zstd gzip {
+    match {
+      header Content-Type model/gltf-binary*
+      header Content-Type model/gltf+json*
+    }
+  }
   # Chromium probes /favicon.ico unsolicited; serve the file if present, or
   # answer 204 to prevent console errors that break Best Practices audits
   # without paying for an asset.
@@ -187,8 +209,19 @@
   # path; a gcp release to the service's localhost port in the one Cloud Run
   # instance they share; compose and docker leave them unset and dial the
   # service directly.
+  # What a route states of the client's request is the door's to state: a
+  # rewrite's X-Forwarded-Method and X-Forwarded-Uri (emit.cue's
+  # _rewriteDoors), a signal's and a claim's path below. Asked directly, a
+  # function is told none of them, and each route to PostgREST drops the
+  # ones it does not state. A route that states one sets it on the upstream
+  # request (header_up), past the hop-by-hop headers a client's Connection
+  # names for removal.
   handle /crud/* {
     uri strip_prefix /crud
+    request_header -X-Forwarded-Method
+    request_header -X-Forwarded-Uri
+    request_header -X-Signal-Path
+    request_header -X-Blob-Path
     @post method POST
     request_header @post Prefer "return=representation,resolution=ignore-duplicates"
     reverse_proxy {$PRONTO_UPSTREAM_CRUD:crud:3000} {
@@ -205,12 +238,15 @@
       request_body {
         max_size 1MB
       }
-      request_header X-Signal-Path {http.request.uri.path}
       request_header -Authorization
+      request_header -X-Forwarded-Method
+      request_header -X-Forwarded-Uri
+      request_header -X-Blob-Path
       request_header Content-Type application/json
       rewrite * /rpc/signal_in
       reverse_proxy {$PRONTO_UPSTREAM_CRUD:crud:3000} {
         header_up dapr-app-id crud
+        header_up X-Signal-Path {http.request.orig_uri.path}
         import bounded-crud
       }
     }
@@ -283,11 +319,14 @@
     route {
       @other not method POST
       respond @other 405
-      request_header X-Blob-Path {http.request.uri.path}
+      request_header -X-Forwarded-Method
+      request_header -X-Forwarded-Uri
+      request_header -X-Signal-Path
       request_header Content-Type application/json
       rewrite * /rpc/claim_upload
       reverse_proxy {$PRONTO_UPSTREAM_CRUD:crud:3000} {
         header_up dapr-app-id crud
+        header_up X-Blob-Path {http.request.orig_uri.path}
         import bounded-crud
       }
     }
@@ -321,6 +360,8 @@
         forward_auth {$PRONTO_UPSTREAM_CRUD:crud:3000} {
           uri /rpc/upload_allowed?key={http.request.uri.path.2}
           header_up dapr-app-id crud
+          header_up -X-Signal-Path
+          header_up -X-Blob-Path
           import bounded-crud
         }
       }

@@ -176,3 +176,42 @@ Deno.test("user deletion takes the projection turn before locking attribution pa
     await Promise.all([holder.end(), deleter.end()]);
   }
 });
+
+// Chances publication inserts team_chance before capture_team_odds_history
+// takes the projection turn on team_odds_history; taking the turn after
+// compute.source('team_chance') deadlocks with structural edits that hold the
+// turn first and then clear or seed team_chance.
+Deno.test("chance sink writers take the projection turn before locking compute.source", async () => {
+  const connect = () => postgres(Deno.env.get("DATABASE_URL")!, { max: 1, fetch_types: false });
+  const holder = connect();
+  const writer = connect();
+  let held = false;
+  let writing = false;
+  let pending: Promise<unknown> | undefined;
+  try {
+    const [{ group_id: groupId, team_id: teamId }] =
+      await holder`SELECT group_id, team_id FROM team_group ORDER BY id LIMIT 1`;
+    assert(groupId && teamId, "the seed has a group membership");
+    const [{ pid }] = await writer`SELECT pg_backend_pid() AS pid`;
+    await holder`BEGIN`;
+    held = true;
+    await holder`SELECT pg_advisory_xact_lock(715030, 1)`;
+    await writer`BEGIN`;
+    writing = true;
+    pending = writer`INSERT INTO team_chance(id, group_id, team_id, team_name, rank, points, played)
+      VALUES (${crypto.randomUUID()}, ${groupId}, ${teamId}, 'Turn probe', 1, 0, 0)`.execute();
+    const completed = Promise.allSettled([pending]);
+    await eventually(`SELECT EXISTS (SELECT 1 FROM pg_locks WHERE pid = ${pid}
+      AND locktype = 'advisory' AND classid = 715030 AND objid = 1 AND objsubid = 2 AND NOT granted)`, 3);
+    await holder`SELECT 1 FROM compute.source WHERE name = 'team_chance' FOR UPDATE NOWAIT`;
+    await holder`ROLLBACK`;
+    held = false;
+    const [result] = await completed;
+    if (result.status === "rejected") throw result.reason;
+  } finally {
+    if (held) await holder`ROLLBACK`;
+    if (pending) await Promise.allSettled([pending]);
+    if (writing) await writer`ROLLBACK`;
+    await Promise.all([holder.end(), writer.end()]);
+  }
+});

@@ -4,12 +4,12 @@ import postgres from "npm:postgres@3.4.9";
 
 const id = () => crypto.randomUUID();
 // A resource's scheduling instance, made due at the transaction's instant and
-// woken, as the ticker's wake would once that instant passed.
+// woken, as its idle timer's tick would once that instant passed.
 const ripe = (resource: string, family: string) => `
   DO $$ BEGIN
     PERFORM hybrid_sofa_resource.spawn('${resource}',jsonb_build_object('family','${family}','due',sofa.ms(now()),'owed','[]'::jsonb),
       jsonb_build_object('service',sofa.service_actor()));
-    PERFORM sofa.tell('${resource}','ripe','{}');
+    PERFORM sofa.tell('${resource}','xstate.after.ripe.idle','{}');
   END $$;`;
 const state = (resource: string, field: string) => `(sofa.resource_state('${resource}')->>'${field}')`;
 // How far past the transaction's instant a resource is next due, in milliseconds.
@@ -287,7 +287,7 @@ Deno.test("editor game updates remove unavailable fixtures from projections", as
     INSERT INTO matches_game_card(id,phase_id,championship_id,day,played,home_id,away_id,home_name,away_name,championship_name,phase_name)
       VALUES ('${f.game}','${f.phase}','${f.champ}','2026-10-27',true,'${f.home}','${f.away}','Sofa home','Sofa away','Sofa season','Sofa phase');
     SET LOCAL app.scopes='public:,user:${actor}';
-    SET LOCAL request.jwt.claims='{"sub":"${actor}","guest":false}';
+    SET LOCAL request.jwt.claims='{"sub":"${actor}","acr":"phr","auth_time":1}';
     SET LOCAL ROLE app_user;
     UPDATE game SET played=false,home_score=NULL,away_score=NULL WHERE id='${f.game}';
     RESET ROLE;
@@ -574,7 +574,7 @@ Deno.test("Sofa enrollment binds a source once, and the tick seeds fixtures and 
       RAISE EXCEPTION 'identity changed';
     EXCEPTION WHEN raise_exception THEN IF SQLERRM<>'source identity is immutable' THEN RAISE; END IF; END $$;
     UPDATE sofa.source SET event_scope='fixtures' WHERE championship_id='${f.champ}';
-    DO $$ BEGIN PERFORM sofa.tell(r.id,'ripe','{}') FROM sofa.resource r JOIN sofa.source s ON s.id=r.source_id WHERE s.championship_id='${f.champ}'; END $$;
+    DO $$ BEGIN PERFORM sofa.tell(r.id,'xstate.after.ripe.idle','{}') FROM sofa.resource r JOIN sofa.source s ON s.id=r.source_id WHERE s.championship_id='${f.champ}'; END $$;
     SELECT sofa.tick();
     SELECT string_agg(resource_key,',' ORDER BY resource_key) FROM sofa.resource r JOIN sofa.source s ON s.id=r.source_id WHERE s.championship_id='${f.champ}';
     UPDATE sofa_request SET admitted_at=clock_timestamp()-interval '1 hour' WHERE resource_key LIKE '%/rounds';
@@ -634,6 +634,10 @@ Deno.test("Sofa event-driven admission wakes due resources, avoids repeat fixtur
       PERFORM hybrid_sofa_resource.spawn('${second}',jsonb_build_object('family','round','due',sofa.ms(now())-1000,'owed','[]'::jsonb),
         jsonb_build_object('service',sofa.service_actor()));
     END $$;
+    -- Their idle timers are already due: the ticker fires them, then the sweep admits.
+    INSERT INTO public.machine_timer_tick (id, schedule, tick_at, late, machine, "row", state, delay)
+      SELECT gen_random_uuid(), s.name, s.due_at, false, s.emits_values->>'machine', s.emits_values->'row', s.emits_values->>'state', s.emits_values->>'delay'
+      FROM public.schedule s WHERE s.emits_values->>'machine' = 'sofa_resource' AND s.emits_values->'row'->>'id' IN ('${first}', '${second}');
     SELECT sofa.tick();
     SELECT (SELECT count(*) FROM public.schedule WHERE name='sofascore-budget')
       || '|' || (SELECT ${state(second, "phase")});

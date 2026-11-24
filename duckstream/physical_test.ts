@@ -1,21 +1,27 @@
 import { assertEquals, assertThrows } from "jsr:@std/assert@1.0.8";
 import {
   parse,
-  type Plan,
   type Schema,
   translate,
   translatePhysical,
 } from "@bonisoft3/pronto/duckstream/translator.ts";
 import { outputs, physicalCarriers } from "./carriers.ts";
-import { World } from "../computations/tests/world.ts";
+import { uid, World } from "../computations/tests/world.ts";
 import { inputs } from "../computations/tests/compute.ts";
-import * as ratings from "../computations/ratings.js";
+import * as teamRatings from "../computations/team_ratings.js";
+import * as playerRatings from "../computations/player_ratings.js";
 import * as chances from "../computations/chances.js";
 
 const sorted = (rows: Record<string, unknown>[]) =>
   rows.map((row) => JSON.stringify(row)).sort();
 
-for (const name of ["ratings", "chances"] as const) {
+const programs = {
+  team_ratings: teamRatings,
+  player_ratings: playerRatings,
+  chances,
+} as const;
+
+for (const name of ["team_ratings", "player_ratings", "chances"] as const) {
   Deno.test({
     name:
       `${name} physical barriers preserve relational bags and numerical ordering`,
@@ -23,33 +29,42 @@ for (const name of ["ratings", "chances"] as const) {
     sanitizeResources: false,
     async fn() {
       const base = new URL(name + "/", import.meta.url);
-      const plan = parse(
-        await Deno.readTextFile(new URL("plan.json", base)),
-      ) as Plan;
+      const sourceSql = await Deno.readTextFile(
+        new URL(`${name}.sql`, import.meta.url),
+      );
       const schema = parse(
         await Deno.readTextFile(new URL("schema.json", base)),
       ) as Schema;
       const physical = Object.fromEntries(outputs[name].map((output) => [
         "result_" + output,
         translatePhysical(
-          plan,
+          sourceSql,
           schema,
           "result_" + output,
           `__duckstream_${name}_${output}`,
         ),
       ]));
       const queries = physicalCarriers(name, physical, schema);
-      const program = name === "ratings" ? ratings : chances;
+      const program = programs[name];
       const world = new World();
       world.rows.team[0].name = "\uE000";
       world.rows.team[1].name = "😀";
-      const lake = await world.lake();
+      const lake = await world.lake({
+        team_rating: world.teams.map((team_id, i) => ({
+          id: uid(12, i),
+          team_id,
+          measure_date: "2026-04-01",
+          offense: "1.25",
+          defense: "0.95",
+          rating: "50",
+        })),
+      });
       const expected = await inputs(program.queries, lake);
       const actual: typeof expected = {};
       const names = new Set<string>();
       for (const [output, query] of Object.entries(queries)) {
         assertEquals(
-          translate(plan, schema, "result_" + output),
+          translate(sourceSql, schema, "result_" + output),
           await Deno.readTextFile(new URL(`result_${output}.sql`, base)),
         );
         for (const stage of query.stages) {
@@ -69,7 +84,7 @@ for (const name of ["ratings", "chances"] as const) {
         program.plan(expected, 17, []),
       );
       assertThrows(
-        () => translatePhysical(plan, schema, "result_games", "unscoped"),
+        () => translatePhysical(sourceSql, schema, "result_games", "unscoped"),
         Error,
         "physical stage namespace",
       );

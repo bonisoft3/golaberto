@@ -138,7 +138,7 @@ Deno.test("match probability selects historical ratings and bounds timed events"
       END LOOP;
     END $$;
     SET LOCAL app.scopes='public:';
-    SET LOCAL request.jwt.claims='{"sub":"00000000-0000-0000-0000-000000000001","guest":true}';
+    SET LOCAL request.jwt.claims='{"sub":"00000000-0000-0000-0000-000000000001","acr":"0","auth_time":1}';
     SET LOCAL ROLE app_user;
     DO $$ BEGIN
       IF (SELECT count(*) FROM match_probability WHERE id='${dayGame}')<>1

@@ -1,0 +1,181 @@
+{
+  "sql": "CREATE TABLE source_championship(id VARCHAR, category_id VARCHAR);\nCREATE TABLE source_phase(id VARCHAR, championship_id VARCHAR);\nCREATE TABLE source_game(\n id VARCHAR, phase_id VARCHAR, home_id VARCHAR, away_id VARCHAR,\n home_field INTEGER, home_score INTEGER, away_score INTEGER,\n home_aet INTEGER, away_aet INTEGER, played BOOLEAN, utc TIMESTAMP(6),\n moment BIGINT, \"date\" VARCHAR\n);\nCREATE TABLE source_team(id VARCHAR);\nCREATE LOCAL VIEW archive AS\n SELECT x.* FROM source_game x\n JOIN source_team h ON h.id=x.home_id\n JOIN source_team a ON a.id=x.away_id\n JOIN source_phase p ON p.id=x.phase_id\n JOIN source_championship c ON c.id=p.championship_id\n WHERE c.category_id IS NULL AND x.played;\nCREATE LOCAL VIEW statistics_window AS SELECT FLOOR(MAX(utc) TO MONTH) AS anchor FROM archive;\nCREATE LOCAL VIEW boundary AS SELECT anchor + INTERVAL '-7' YEAR AS seven_years FROM statistics_window;\nCREATE MATERIALIZED VIEW result_games AS\n SELECT x.id,x.home_id,x.away_id,x.home_field,x.home_score,x.away_score,x.home_aet,x.away_aet,\n x.moment,x.\"date\"\n FROM archive x CROSS JOIN boundary b WHERE x.utc>=b.seven_years;\nCREATE MATERIALIZED VIEW result_teams AS SELECT id FROM source_team;\n",
+  "incremental": {
+    "inputs": {
+      "source_championship": {
+        "table": "championship",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"category_id\" AS VARCHAR) AS \"category_id\""
+      },
+      "source_phase": {
+        "table": "phase",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"championship_id\" AS VARCHAR) AS \"championship_id\""
+      },
+      "source_game": {
+        "table": "game",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"phase_id\" AS VARCHAR) AS \"phase_id\", CAST(\"home_id\" AS VARCHAR) AS \"home_id\", CAST(\"away_id\" AS VARCHAR) AS \"away_id\", CASE home_field WHEN 'left' THEN 0 WHEN 'neutral' THEN 1 WHEN 'right' THEN 2 ELSE ('invalid home_field: ' || home_field)::integer END AS \"home_field\", CAST(\"home_score\" AS INTEGER) AS \"home_score\", CAST(\"away_score\" AS INTEGER) AS \"away_score\", CAST(\"home_aet\" AS INTEGER) AS \"home_aet\", CAST(\"away_aet\" AS INTEGER) AS \"away_aet\", CAST(\"played\" AS BOOLEAN) AS \"played\", coalesce(kickoff::TIMESTAMPTZ AT TIME ZONE 'UTC', day::DATE::TIMESTAMP) AS \"utc\", (EXTRACT(EPOCH FROM coalesce(kickoff::TIMESTAMPTZ AT TIME ZONE 'UTC', day::DATE::TIMESTAMP))::double precision)::bigint AS \"moment\", to_char(coalesce(kickoff::TIMESTAMPTZ AT TIME ZONE 'UTC', day::DATE::TIMESTAMP), 'YYYY-MM-DD HH24:MI:SS') AS \"date\""
+      },
+      "source_team": {
+        "table": "team",
+        "projection": "CAST(\"id\" AS VARCHAR) AS \"id\""
+      }
+    },
+    "outputs": {
+      "games": {
+        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_games r"
+      },
+      "teams": {
+        "partitionQuery": "SELECT CAST('' AS VARCHAR) AS __partition,r.* FROM result_teams r"
+      }
+    }
+  },
+  "inputs": {
+    "source_championship": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"category_id\" AS VARCHAR) AS \"category_id\" FROM \"championship\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "category_id",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "source_phase": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"championship_id\" AS VARCHAR) AS \"championship_id\" FROM \"phase\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "championship_id",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "source_game": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\", CAST(\"phase_id\" AS VARCHAR) AS \"phase_id\", CAST(\"home_id\" AS VARCHAR) AS \"home_id\", CAST(\"away_id\" AS VARCHAR) AS \"away_id\", CASE home_field WHEN 'left' THEN 0 WHEN 'neutral' THEN 1 WHEN 'right' THEN 2 ELSE error('home_field ' || home_field) END AS \"home_field\", CAST(\"home_score\" AS INTEGER) AS \"home_score\", CAST(\"away_score\" AS INTEGER) AS \"away_score\", CAST(\"home_aet\" AS INTEGER) AS \"home_aet\", CAST(\"away_aet\" AS INTEGER) AS \"away_aet\", CAST(\"played\" AS BOOLEAN) AS \"played\", strftime(coalesce(kickoff::TIMESTAMPTZ AT TIME ZONE 'UTC', day::DATE::TIMESTAMP), '%Y-%m-%dT%H:%M:%S.%fZ') AS \"utc\", epoch(coalesce(kickoff::TIMESTAMPTZ AT TIME ZONE 'UTC', day::DATE::TIMESTAMP))::BIGINT AS \"moment\", strftime(coalesce(kickoff::TIMESTAMPTZ AT TIME ZONE 'UTC', day::DATE::TIMESTAMP), '%Y-%m-%d %H:%M:%S') AS \"date\" FROM \"game\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "phase_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "home_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "away_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "home_field",
+          "type": "INTEGER"
+        },
+        {
+          "name": "home_score",
+          "type": "INTEGER"
+        },
+        {
+          "name": "away_score",
+          "type": "INTEGER"
+        },
+        {
+          "name": "home_aet",
+          "type": "INTEGER"
+        },
+        {
+          "name": "away_aet",
+          "type": "INTEGER"
+        },
+        {
+          "name": "played",
+          "type": "BOOLEAN"
+        },
+        {
+          "name": "utc",
+          "type": "TIMESTAMP"
+        },
+        {
+          "name": "moment",
+          "type": "BIGINT"
+        },
+        {
+          "name": "date",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "source_team": {
+      "query": "SELECT CAST(\"id\" AS VARCHAR) AS \"id\" FROM \"team\"",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        }
+      ]
+    }
+  },
+  "outputs": {
+    "games": {
+      "view": "result_games",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "home_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "away_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "home_field",
+          "type": "INTEGER"
+        },
+        {
+          "name": "home_score",
+          "type": "INTEGER"
+        },
+        {
+          "name": "away_score",
+          "type": "INTEGER"
+        },
+        {
+          "name": "home_aet",
+          "type": "INTEGER"
+        },
+        {
+          "name": "away_aet",
+          "type": "INTEGER"
+        },
+        {
+          "name": "moment",
+          "type": "BIGINT"
+        },
+        {
+          "name": "date",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    "teams": {
+      "view": "result_teams",
+      "fields": [
+        {
+          "name": "id",
+          "type": "VARCHAR"
+        }
+      ]
+    }
+  }
+}

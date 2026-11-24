@@ -14,6 +14,7 @@ input:
           mapping: 'root = {"wake": "start"}'
   processors:
     - mutation: meta cdc_consumer = "golaberto-recent-championships"
+    - resource: cdc_stream_trim
     - resource: cdc_trace_join
 pipeline:
   threads: 1

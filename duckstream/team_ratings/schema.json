@@ -1,0 +1,498 @@
+{
+  "inputs": [
+    {
+      "name": "source_championship",
+      "case_sensitive": false,
+      "fields": [
+        {
+          "name": "id",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        },
+        {
+          "name": "category_id",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        }
+      ],
+      "materialized": false,
+      "foreign_keys": []
+    },
+    {
+      "name": "source_phase",
+      "case_sensitive": false,
+      "fields": [
+        {
+          "name": "id",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        },
+        {
+          "name": "championship_id",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        }
+      ],
+      "materialized": false,
+      "foreign_keys": []
+    },
+    {
+      "name": "source_game",
+      "case_sensitive": false,
+      "fields": [
+        {
+          "name": "id",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        },
+        {
+          "name": "phase_id",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        },
+        {
+          "name": "home_id",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        },
+        {
+          "name": "away_id",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        },
+        {
+          "name": "home_field",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "INTEGER"
+          },
+          "unused": false
+        },
+        {
+          "name": "home_score",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "INTEGER"
+          },
+          "unused": false
+        },
+        {
+          "name": "away_score",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "INTEGER"
+          },
+          "unused": false
+        },
+        {
+          "name": "home_aet",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "INTEGER"
+          },
+          "unused": false
+        },
+        {
+          "name": "away_aet",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "INTEGER"
+          },
+          "unused": false
+        },
+        {
+          "name": "played",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "BOOLEAN"
+          },
+          "unused": false
+        },
+        {
+          "name": "utc",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": 6,
+            "type": "TIMESTAMP"
+          },
+          "unused": false
+        },
+        {
+          "name": "moment",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "BIGINT"
+          },
+          "unused": false
+        },
+        {
+          "name": "date",
+          "case_sensitive": true,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        }
+      ],
+      "materialized": false,
+      "foreign_keys": []
+    },
+    {
+      "name": "source_team",
+      "case_sensitive": false,
+      "fields": [
+        {
+          "name": "id",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        }
+      ],
+      "materialized": false,
+      "foreign_keys": []
+    }
+  ],
+  "outputs": [
+    {
+      "name": "archive",
+      "case_sensitive": false,
+      "fields": [
+        {
+          "name": "id",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        },
+        {
+          "name": "phase_id",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        },
+        {
+          "name": "home_id",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        },
+        {
+          "name": "away_id",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        },
+        {
+          "name": "home_field",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "INTEGER"
+          },
+          "unused": false
+        },
+        {
+          "name": "home_score",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "INTEGER"
+          },
+          "unused": false
+        },
+        {
+          "name": "away_score",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "INTEGER"
+          },
+          "unused": false
+        },
+        {
+          "name": "home_aet",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "INTEGER"
+          },
+          "unused": false
+        },
+        {
+          "name": "away_aet",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "INTEGER"
+          },
+          "unused": false
+        },
+        {
+          "name": "played",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "BOOLEAN"
+          },
+          "unused": false
+        },
+        {
+          "name": "utc",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": 6,
+            "type": "TIMESTAMP"
+          },
+          "unused": false
+        },
+        {
+          "name": "moment",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "BIGINT"
+          },
+          "unused": false
+        },
+        {
+          "name": "date",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        }
+      ],
+      "materialized": false,
+      "foreign_keys": []
+    },
+    {
+      "name": "statistics_window",
+      "case_sensitive": false,
+      "fields": [
+        {
+          "name": "anchor",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": 6,
+            "type": "TIMESTAMP"
+          },
+          "unused": false
+        }
+      ],
+      "materialized": false,
+      "foreign_keys": []
+    },
+    {
+      "name": "boundary",
+      "case_sensitive": false,
+      "fields": [
+        {
+          "name": "seven_years",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": 6,
+            "type": "TIMESTAMP"
+          },
+          "unused": false
+        }
+      ],
+      "materialized": false,
+      "foreign_keys": []
+    },
+    {
+      "name": "result_games",
+      "case_sensitive": false,
+      "fields": [
+        {
+          "name": "id",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        },
+        {
+          "name": "home_id",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        },
+        {
+          "name": "away_id",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        },
+        {
+          "name": "home_field",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "INTEGER"
+          },
+          "unused": false
+        },
+        {
+          "name": "home_score",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "INTEGER"
+          },
+          "unused": false
+        },
+        {
+          "name": "away_score",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "INTEGER"
+          },
+          "unused": false
+        },
+        {
+          "name": "home_aet",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "INTEGER"
+          },
+          "unused": false
+        },
+        {
+          "name": "away_aet",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "INTEGER"
+          },
+          "unused": false
+        },
+        {
+          "name": "moment",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "type": "BIGINT"
+          },
+          "unused": false
+        },
+        {
+          "name": "date",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        }
+      ],
+      "materialized": true,
+      "foreign_keys": []
+    },
+    {
+      "name": "result_teams",
+      "case_sensitive": false,
+      "fields": [
+        {
+          "name": "id",
+          "case_sensitive": false,
+          "columntype": {
+            "nullable": true,
+            "precision": -1,
+            "type": "VARCHAR"
+          },
+          "unused": false
+        }
+      ],
+      "materialized": true,
+      "foreign_keys": []
+    }
+  ]
+}

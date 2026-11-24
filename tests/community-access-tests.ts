@@ -3,7 +3,7 @@ const { query } = await import(
   Deno.env.get("COMMUNITY_DB_HELPER") ?? "./db.ts"
 );
 const identity = (id: string, guest = false) =>
-  `RESET ROLE; SET LOCAL app.scopes='public:,user:${id}'; SET LOCAL request.jwt.claims='{"sub":"${id}","guest":${guest}}'; SET LOCAL ROLE app_user;`;
+  `RESET ROLE; SET LOCAL app.scopes='public:,user:${id}'; SET LOCAL request.jwt.claims='{"sub":"${id}","acr":"${guest ? "0" : "phr"}","auth_time":1}'; SET LOCAL ROLE app_user;`;
 Deno.test("community UI eligibility follows the authenticated owner and biography lifecycle", async () => {
   const [
     owner,

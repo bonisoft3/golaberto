@@ -2,9 +2,10 @@
 
 Ratings and chances are declared as Duckstream sources and sinks in
 `program.cue`. Native servers use RisingWave; Cloudflare and Pages use DuckDB snapshots. Both
-execute queries authored in `duckstream/ratings.sql` and
-`duckstream/chances.sql`. The pinned stock Calcite compiler exports Calcite
-plans; the bounded translator produces the committed DuckDB queries.
+execute queries authored in `duckstream/team_ratings.sql`,
+`duckstream/player_ratings.sql`, and
+`duckstream/chances.sql`. The Duckstream compiler lowers authored SQL directly
+to the committed DuckDB queries and schema manifests.
 
 ## SQL-only projections
 
@@ -41,12 +42,9 @@ This application policy is expressed in Duckstream SQL with `FLOOR(MAX(utc) TO M
 Team ratings replace the computation's current output, including retracting dates
 that disappear when a result is undone or the window moves. Keeping omitted rows
 with upsert leaves obsolete ratings eligible for the chances query's ASOF join.
-Historical ratings outside this computed projection belong to the separate
-archive preservation profile described below.
-The fitter's internal four-year window, latest-match-relative player windows,
-and phase evaluation bounds are unchanged. Phase calendar cutoffs use the
-carrier attached to the extremal game, rather than the extremum of shifted
-timestamps: leap-day clamping can reverse their order.
+Imported ratings outside this computed projection are removed by normal publication.
+The fitter's internal four-year window and latest-match-relative player windows
+are unchanged. Upstream's unlinked `/eval` phase RPS debug endpoint is not materialized.
 Chances use an ASOF join: a rating at midnight becomes eligible one microsecond
 later, preserving the original strictly-before rule even for a midnight match.
 Duplicate ratings for the same team/day fail capture. Native mode maintains
@@ -68,11 +66,13 @@ Durex durable work; each complete output, latest-version guard, completion
 hook and receipt commits in one PostgreSQL transaction. Electric updates the
 open browser after publication. Internal publication does not use Airlock.
 
-The compute service keeps a bounded private cache of successful pure WASM
-answers. Identity includes exact request bytes (including the seed), module
-bytes, command name and execution host. A restart can reuse retained answers;
-a changed request or module cannot. Eviction only causes recomputation. The
-cache is not the durable publication receipt and does not decide freshness.
+The compute service keeps a bounded private Zstd-compressed `bytea` cache of
+successful pure WASM answers, dispatched across a bounded WASI worker pool.
+Identity includes exact request bytes (including the seed), optional output
+field selection, module bytes, command name and WASI execution host. A restart
+can reuse retained answers; a changed request or module cannot. Eviction only
+causes recomputation. The cache is not the durable publication receipt and does
+not decide freshness.
 
 ## Delivery and latency
 
@@ -107,9 +107,8 @@ ranking, recent form and zone selection. The archive oracle matches all 58,440
 rows across 19 fields. Cloudflare persists bounded batches of groups separately, so native execution
 time does not predict hosted latency. See [[evidence/standings.json|standings validation]].
 
-The tested server deployment uses Linux containers. Native Windows is not
-validated; in particular the compiler's default Docker invocation assumes Unix
-UID/GID values. DuckDB portability does not establish portability of the whole
+The tested server deployment uses Linux containers; native Windows is not
+validated. DuckDB portability does not establish portability of the whole
 stack.
 
 ## Cloudflare snapshot cost
@@ -158,11 +157,7 @@ baseline transfer cost a full scan. The current Durex worker is serial; WASM
 parallelism is inside its calculation runner. Archive-scale throughput is not
 measured.
 
-Ordinary seeded deployment maintains all statistics. The
-[[archive-import|archive preservation profile]] deliberately disables ratings
-replacement and odds-history capture so imported historical results remain
-intact. It still maintains chances. Changing the query engine does not remove
-that retention requirement.
+The normal deployment maintains all statistics after [[archive-import|importing legacy records]]. Imported derived results are initial data, not immutable history: ratings publication replaces them and chances publication captures new odds history.
 
 Run `sayt generate` to regenerate the SQL artifacts, `sayt test` for query
 and numerical equivalence, and `sayt integrate` for the running application.

@@ -241,7 +241,7 @@ Deno.test("native object upload and ordinary field attachment enforce ownership,
         VALUES('${game}','${phase}','${team}','${opponent}','2026-06-01',true,0,0,5);
       INSERT INTO game(id,phase_id,home_id,away_id,day) VALUES('${nextGame}','${phase}','${team}','${opponent}','2026-06-02');
       INSERT INTO player_game(game_id,player_id,side,on_minute,off_minute) VALUES('${game}','${player}','home',0,90);
-      SET LOCAL request.jwt.claims='{"sub":"${editor}","role":"app_user","guest":false}';
+      SET LOCAL request.jwt.claims='{"sub":"${editor}","role":"app_user","acr":"phr","auth_time":1}';
       SET LOCAL app.scopes='public:,user:${editor}';
       SET LOCAL ROLE app_user;
       DO $$ BEGIN

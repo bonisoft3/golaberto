@@ -10,7 +10,7 @@ const timeout = Number(Deno.env.get('GOLABERTO_PORTABLE_TIMEOUT_MS') ?? '240000'
 assert(Number.isSafeInteger(timeout) && timeout > 0, 'invalid portable timeout');
 type Row = Record<string, string | number | boolean | null>;
 const expectedCounts: Record<string, number> = {
-  game: 1522, team: 68, team_rating: 64, player_rating: 725, rating_eval: 6,
+  game: 1522, team: 68, team_rating: 64, player_rating: 725,
   team_chance: 82, zone_chance: 300, position_chance: 1604, game_importance: 513,
   standing: 82, game_card: 1522,
 };
@@ -26,7 +26,7 @@ async function waitFor<T>(description: string, read: () => Promise<T>, ready: (v
 }
 async function request(page: Page, path: string, patch?: Row) {
   return await page.evaluate(async ({ path, patch }) => {
-    const stored = sessionStorage.getItem('pronto-token');
+    const stored = localStorage.getItem('pronto-token');
     if (!stored) throw new Error('preview has no guest session');
     const session = JSON.parse(stored);
     if (!session.user.guest) throw new Error('preview test requires a guest session');
@@ -50,7 +50,7 @@ async function read(page: Page, path: string): Promise<{ rows: Row[]; total: num
 async function visit(page: Page, path: string) {
   const response = await page.goto(`${base}${path}`, { waitUntil: 'domcontentloaded', timeout });
   assertEquals(response?.status(), 200, `navigation to ${path} failed`);
-  await waitFor('guest session', () => page.evaluate(() => sessionStorage.getItem('pronto-token') !== null), Boolean);
+  await waitFor('guest session', () => page.evaluate(() => localStorage.getItem('pronto-token') !== null), Boolean);
 }
 async function photograph(page: Page, filename: string, fullPage = true) {
   await waitFor('finished UI transitions', () => page.evaluate(() =>

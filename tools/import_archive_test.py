@@ -132,7 +132,7 @@ for query in sys.stdin:
     def test_historical_rating_identity_matches_actual_rating_computation(self):
         repo = Path(__file__).resolve().parents[1]
         team = legacy_uuid(7,17)
-        script = 'import {finish} from "./computations/ratings.js";console.log(finish('+json.dumps({'games':[{'recent':False}],'teams':[{'id':team}],'players':[],'phases':[]})+',[ [{team_id:1,measure_date:"2025-01-02",off_rating:1,def_rating:1,rating:50}] ]).team_rating[0].id);'
+        script = 'import {finish} from "./computations/team_ratings.js";console.log(finish('+json.dumps({'games':[{'id':'g'}],'teams':[{'id':team}]})+',[ [{team_id:1,measure_date:"2025-01-02",off_rating:1,def_rating:1,rating:50}] ]).team_rating[0].id);'
         runtime = subprocess.run(['node','--input-type=module','-e',script],cwd=repo,text=True,capture_output=True,check=True).stdout.strip()
         db = Database('', '', os.environ['ARCHIVE_IMPORT_TEST_TARGET_CONTAINER'], 'golaberto')
         actual = db.pg("BEGIN;CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\" WITH SCHEMA public VERSION '1.1';SELECT public.uuid_generate_v5('"+RATING_NAMESPACE+"'::uuid,'"+team+":2025-01-02');ROLLBACK;")

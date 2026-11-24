@@ -18,7 +18,7 @@ export async function build(name: Computation, compile = false) {
     views: outputs[name].map((o) => "result_" + o),
   };
   if (compile) {
-    await compileProgram({ ...options, jarPath: Deno.env.get("CALCITE_COMPILER_JAR") });
+    await compileProgram(options);
   }
   const compiled = await checkCompiledProgram(options);
   const queries = carriers(name, compiled.queries, compiled.schema);
@@ -27,7 +27,7 @@ export async function build(name: Computation, compile = false) {
     Object.fromEntries(outputs[name].map((output) => [
       "result_" + output,
       translatePhysical(
-        compiled.plan,
+        compiled.source,
         compiled.schema,
         "result_" + output,
         `__duckstream_${name}_${output}`,

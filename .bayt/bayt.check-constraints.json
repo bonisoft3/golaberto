@@ -5,7 +5,7 @@
     "manual": true,
     "build": {
       "additional_contexts": {
-        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.25.2@sha256:a807d1ac0bc336c8a6ecfaf2700cb5cad55404468716a4a5791ede8c3d1c1329}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.34.0@sha256:cd4cd6fc4b2b8eec05a1f3628c00d9c06eb943b0e6abb1b9bc900250680e5c01}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
       },
       "secrets": [],
       "args": {}
@@ -16,7 +16,7 @@
       "--",
       "nu",
       "-c",
-      "deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-env --allow-net --allow-read --allow-sys tests/constraints.ts tests/sofascore.ts tests/campaign-read.ts tests/read-parity.ts tests/heavy-reads.ts tests/community-parity.ts tests/community-access-tests.ts tests/competition-admin.ts tests/editing-parity.ts tests/match-context.ts tests/match-probability.ts tests/odds-progress.ts; deno test --config services/media/deno.json --frozen --allow-read --allow-write --allow-env --allow-net --allow-ffi tests/media-normalize.ts tests/native-media.ts; deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-env --allow-net --allow-read --allow-sys tests/readable-addresses.ts tests/drains.ts tests/sofascore-airlock.ts"
+      "deno run --config tests/deno.json --lock tests/deno.lock --frozen --allow-env --allow-net --allow-read --allow-sys tests/visual-ready.ts; deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-env --allow-net --allow-read --allow-sys tests/constraints.ts tests/sofascore.ts tests/campaign-read.ts tests/read-parity.ts tests/heavy-reads.ts tests/community-parity.ts tests/community-access-tests.ts tests/competition-admin.ts tests/editing-parity.ts tests/match-context.ts tests/match-probability.ts tests/odds-progress.ts; deno test --config services/media/deno.json --frozen --allow-read --allow-write --allow-env --allow-net --allow-ffi tests/media-normalize.ts tests/native-media.ts; deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-env --allow-net --allow-read --allow-sys tests/readable-addresses.ts tests/drains.ts tests/sofascore-airlock.ts"
     ],
     "environment": {
       "APP_URL": "https://caddy:8443",
@@ -66,7 +66,7 @@
     "cmd": null
   },
   "entrypoint": {
-    "do": "deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-env --allow-net --allow-read --allow-sys tests/constraints.ts tests/sofascore.ts tests/campaign-read.ts tests/read-parity.ts tests/heavy-reads.ts tests/community-parity.ts tests/community-access-tests.ts tests/competition-admin.ts tests/editing-parity.ts tests/match-context.ts tests/match-probability.ts tests/odds-progress.ts; deno test --config services/media/deno.json --frozen --allow-read --allow-write --allow-env --allow-net --allow-ffi tests/media-normalize.ts tests/native-media.ts; deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-env --allow-net --allow-read --allow-sys tests/readable-addresses.ts tests/drains.ts tests/sofascore-airlock.ts",
+    "do": "deno run --config tests/deno.json --lock tests/deno.lock --frozen --allow-env --allow-net --allow-read --allow-sys tests/visual-ready.ts; deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-env --allow-net --allow-read --allow-sys tests/constraints.ts tests/sofascore.ts tests/campaign-read.ts tests/read-parity.ts tests/heavy-reads.ts tests/community-parity.ts tests/community-access-tests.ts tests/competition-admin.ts tests/editing-parity.ts tests/match-context.ts tests/match-probability.ts tests/odds-progress.ts; deno test --config services/media/deno.json --frozen --allow-read --allow-write --allow-env --allow-net --allow-ffi tests/media-normalize.ts tests/native-media.ts; deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-env --allow-net --allow-read --allow-sys tests/readable-addresses.ts tests/drains.ts tests/sofascore-airlock.ts",
     "shell": "nu",
     "env": {
       "APP_URL": {

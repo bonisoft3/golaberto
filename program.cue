@@ -18,6 +18,12 @@ _sofaRequestApplied:    _ @embed(file="migrations/20261108_sofa_request.json")
 _sofaRequestJobKeysSql: string @embed(file="migrations/20261113_sofa_request_job_keys.sql", type=text)
 _sofaRequestOnceSql:    string @embed(file="migrations/20261113_sofa_request_once.sql", type=text)
 _ruleArgumentEngines:   string @embed(file="migrations/20261114_rule_argument_engines.sql", type=text)
+_signedInByAcr:         string @embed(file="migrations/20261116_signed_in_by_acr.sql", type=text)
+_transitionEngines:     string @embed(file="migrations/20261120_transition_engines.sql", type=text)
+// The sofa machines timed by XState's after; 063 and the engine carries keep
+// the bytes a database ran.
+_afterTimers: string @embed(file="migrations/20261121_after_timers.sql", type=text)
+_sofaRequestSeeds: string @embed(file="migrations/20261121_sofa_request_seeds.sql", type=text)
 _matchesStartUpgrade: strings.Replace(strings.Replace(_matchesStartSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
 _readParitySql:     string @embed(file="services/database/sql/035_read_parity.sql", type=text)
@@ -703,8 +709,7 @@ code: pronto.#App & {
 				{ordinal: 4, name: "def_rating", type: "double", required: false},
 			]
 		}
-		// How well the ratings predicted a phase's played games (upstream's
-		// /eval): the ranked probability score, lower is better.
+		// Phase-level RPS tombstone; ordinal 2 is retired.
 		RatingEval: {
 			id:         "0xf8a29784e425c143"
 			table:      "rating_eval"
@@ -712,7 +717,7 @@ code: pronto.#App & {
 			access:     {scope: "public"}
 			fields: [
 				{ordinal: 1, name: "id", type: "uuid", pk: true, ref: "phase"},
-				{ordinal: 2, name: "rps", type: "double", cel: "this >= 0"},
+				{ordinal: 2, name: "rps", type: "double", retired: true},
 			]
 		}
 		// One game as every list shows it, its names written beside its ids by the
@@ -1243,7 +1248,7 @@ code: pronto.#App & {
 		note:   "the archive serves club logos, player photos and country flags from its image CDN"
 	}
 
-	capabilities: auth: {required: false, service: "/auth", promote: true}
+	capabilities: auth: {required: false, service: "/auth"}
 
 	surface: design: (pronto.#DesignMd & {text: _designMd}).design
 
@@ -1275,8 +1280,9 @@ code: pronto.#App & {
 			"UserPendingUpload", "SofaResourceSeat", "SofaProviderSeat",
 		]
 		after: "20261108"
-		// 20261113_sofa_request_job_keys and 20261113_sofa_request_once carry the request since its release.
-		carried: "20261108_sofa_request": "0f99e8425f42d3b1ad2ca2a2ab4ab0ed4d5843648b06c4d1861f798dfb8d34b5"
+		// 20261113_sofa_request_job_keys, 20261113_sofa_request_once and
+		// 20261121_sofa_request_seeds carry the request since its release.
+		carried: "20261108_sofa_request": "51b5b78750ae411f1c9aaeb7f3a484eb9207b11aa8788d529bc9a19f05f15966"
 	}
 	state: rawMigrations: [
 		{name: "003_rls.sql", src: "services/database/sql/003_rls.txt"},
@@ -1341,6 +1347,10 @@ code: pronto.#App & {
 	state: migrations: "20261113_sofa_request_job_keys":   {operations: [{sql: {up: _sofaRequestJobKeysSql, onComplete: true}}]}
 	state: migrations: "20261113_sofa_request_once":       {operations: [{sql: {up: _sofaRequestOnceSql, onComplete: true}}]}
 	state: migrations: "20261114_rule_argument_engines":   {operations: [{sql: {up: _ruleArgumentEngines, onComplete: true}}]}
+	state: migrations: "20261116_signed_in_by_acr":        {operations: [{sql: {up: _signedInByAcr, onComplete: true}}]}
+	state: migrations: "20261120_transition_engines":      {operations: [{sql: {up: _transitionEngines, onComplete: true}}]}
+	state: migrations: "20261121_after_timers":            {operations: [{sql: {up: _afterTimers, onComplete: true}}]}
+	state: migrations: "20261121_sofa_request_seeds":      {operations: [{sql: {up: _sofaRequestSeeds, onComplete: true}}]}
 	state: migrations: "014_home_championships":           {operations: [{sql: {up: _homeChampionshipsUpgrade, onComplete: true}}]}
 	state: migrations: "015_home_performance":             {operations: [{sql: {up: _homePerformanceUpgrade, onComplete: true}}]}
 	state: migrations: "016_matches_performance":          {operations: [{sql: {up: _matchesPerformanceUpgrade, onComplete: true}}]}
@@ -1373,29 +1383,47 @@ code: pronto.#App & {
 	// whenever the ratings change.
 	capabilities: hatches: risingwave_sql: {
 		kind: "sql"
-		files: ["duckstream/ratings.sql", "duckstream/chances.sql", "duckstream/cards.sql", "duckstream/player_stats.sql", "duckstream/standings.sql",
+		files: [
+			"duckstream/team_ratings.sql", "duckstream/player_ratings.sql",
+			"duckstream/chances.sql", "duckstream/cards.sql", "duckstream/player_stats.sql", "duckstream/standings.sql",
 			for name in ["groups", "members", "form", "zones"] {"duckstream/standings/result_\(name).sql"},
 			for name in ["game_card", "team_game"] {"duckstream/cards/result_\(name).sql"},
 			"duckstream/player_stats/result_player_stat.sql",
-			for name in ["games", "phases", "cutoff", "teams", "players", "appearances", "goals"] {"duckstream/ratings/result_\(name).sql"},
+			for name in ["games", "teams"] {"duckstream/team_ratings/result_\(name).sql"},
+			for name in ["games", "cutoff", "teams", "players", "team_ratings", "appearances", "goals"] {"duckstream/player_ratings/result_\(name).sql"},
 			for name in ["groups", "members", "games", "zones"] {"duckstream/chances/result_\(name).sql"},
 		]
-		note: "Pinned stock Calcite compilation and DuckDB equivalence tests validate these SQL dialects instead of PostgreSQL-only Squawk"
+		note: "Pinned DuckDB compilation and RisingWave equivalence tests validate these SQL dialects instead of PostgreSQL-only Squawk"
 	}
 
-	state: duckstreams: ratings: {
-		name:       "ratings"
-		ir:         "ratings"
+	state: duckstreams: "team-ratings": {
+		name:       "team-ratings"
+		ir:         "team-ratings"
 		backend:    "compute"
-		src:        "computations/ratings.js"
-		risingwave: "duckstream/ratings.risingwave.json"
-		steps:      "duckstream/bounded-ratings.ts"
+		src:        "computations/team_ratings.js"
+		risingwave: "duckstream/team_ratings.risingwave.json"
+		steps:      "duckstream/bounded-team-ratings.ts"
 		endowments: ["TextEncoder"]
-		sources: football: {entities: ["Championship", "Phase", "Game", "Team", "Player", "PlayerGame", "Goal"], read: "snapshot"}
+		sources: football: {entities: ["Championship", "Phase", "Game", "Team"], read: "snapshot"}
 		sinks: {
-			teams:       {entity: "TeamRating", write: "replace", version: "latest", transaction: "ratings"}
-			players:     {entity: "PlayerRating", write: "replace", version: "latest", transaction: "ratings"}
-			evaluations: {entity: "RatingEval", write: "replace", version: "latest", transaction: "ratings"}
+			teams: {entity: "TeamRating", write: "replace", version: "latest", transaction: "team-ratings"}
+		}
+		wasm: ["computations/golaberto-odds.wasm"]
+		queryTypes: {
+			teams: [{name: "id", type: "uuid"}]
+		}
+	}
+	state: duckstreams: "player-ratings": {
+		name:       "player-ratings"
+		ir:         "player-ratings"
+		backend:    "compute"
+		src:        "computations/player_ratings.js"
+		risingwave: "duckstream/player_ratings.risingwave.json"
+		steps:      "duckstream/bounded-player-ratings.ts"
+		endowments: ["TextEncoder"]
+		sources: football: {entities: ["Championship", "Phase", "Game", "Team", "TeamRating", "Player", "PlayerGame", "Goal"], read: "snapshot"}
+		sinks: {
+			players: {entity: "PlayerRating", write: "replace", version: "latest", transaction: "player-ratings"}
 		}
 		wasm: ["computations/golaberto-odds.wasm"]
 		queryTypes: {
@@ -2336,7 +2364,7 @@ code: pronto.#App & {
 			}
 			"test-sign-in": {
 				of:    "jogo"
-				says:  "a guest is offered a passkey, which keeps the guest's identity"
+				says:  "a guest is offered the device, which makes the account there and keeps the guest's identity"
 				given: {}
 				when:  "view"
 				then:  "output.strip.contains(\"Entrar\")"
@@ -2424,10 +2452,14 @@ build: checks: "constraints": {
 		"services/media/request.ts",
 		"services/media/native-gateway.ts",
 	]
-	// Rolled-back DDL/migration replays run before suites that commit WAL events
-	// (native-media, readable-addresses, drains), so background CDC writers stay
-	// idle while 035-049 take AccessExclusiveLock on shared tables.
+	// The replays' 5 s lock_timeout cannot outwait a fresh stack's bootstrap:
+	// compute batches and drain batches (048 lets one run 20 s) hold the shared
+	// tables 035-049 take AccessExclusiveLock on, so the suites start once it
+	// settles. Rolled-back DDL/migration replays then run before suites that
+	// commit WAL events (native-media, readable-addresses, drains), so background
+	// CDC writers stay idle while they hold those locks.
 	cmds: [
+		"deno run --config tests/deno.json --lock tests/deno.lock --frozen --allow-env --allow-net --allow-read --allow-sys tests/visual-ready.ts",
 		"deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-env --allow-net --allow-read --allow-sys tests/constraints.ts tests/sofascore.ts tests/campaign-read.ts tests/read-parity.ts tests/heavy-reads.ts tests/community-parity.ts tests/community-access-tests.ts tests/competition-admin.ts tests/editing-parity.ts tests/match-context.ts tests/match-probability.ts tests/odds-progress.ts",
 		"deno test --config services/media/deno.json --frozen --allow-read --allow-write --allow-env --allow-net --allow-ffi tests/media-normalize.ts tests/native-media.ts",
 		"deno test --config tests/deno.json --lock tests/deno.lock --frozen --allow-env --allow-net --allow-read --allow-sys tests/readable-addresses.ts tests/drains.ts tests/sofascore-airlock.ts",
@@ -2455,7 +2487,7 @@ loop: surface: checks: "phase-rounds": {
 	verb: "test"
 	// The pipeline joins its rows to mecha's transaction markers through
 	// cdc-trace.yaml's resources, which the transform loads by -r.
-	cmds: ["use tools.nu [run-mise]; mise exec -- redpanda-connect test -r ((run-mise where github:bonisoft3/mecha | str trim) | path join services/transform/cdc-trace.yaml) pipelines/rounds.yaml"]
+	cmds: ["use tools.nu [run-mise]; with-env {REDIS_URL: 'redis://localhost:6379'} { mise exec -- redpanda-connect test -r ((run-mise where github:bonisoft3/mecha | str trim) | path join services/transform/cdc-trace.yaml) pipelines/rounds.yaml }"]
 	note: "the current and next phase rounds preserve the existing stream contract"
 }
 

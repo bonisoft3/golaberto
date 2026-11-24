@@ -1,0 +1,19 @@
+{
+  "format": 2,
+  "compiler": {
+    "engine": "duckdb",
+    "version": "1.5.6"
+  },
+  "views": [
+    "result_games",
+    "result_teams"
+  ],
+  "hashes": {
+    "translator": "c893fb322115e9a380639f4bc3f5c69821512e6a03fdc38a9e04ed89155622ce",
+    "driver": "3754b87c34c901bfdff520065fda56337ad2c2a8543b529b2719914fd4f0c692",
+    "source": "26ee8fd01ef89d0ad2cc3cbb0d151a9636e209d14579a26ddb262e8d290837ca",
+    "schema": "7b4f1b74db4f91938fc7a7e3b1736c8eb28618472faa64bfe3e9695d365ba59c",
+    "result_games.sql": "ae16877b2b5e7033e830688d6fe3869ce1fb6313560da22a08ac347e7148993b",
+    "result_teams.sql": "ecfc73a89ec7894cb371c962858b51460cf4578b3b578edcf99cf12444c0115a"
+  }
+}

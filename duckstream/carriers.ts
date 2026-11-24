@@ -7,12 +7,13 @@ import {
 } from "@bonisoft3/pronto/duckstream/translator.ts";
 
 export const outputs = {
-  ratings: [
+  team_ratings: ["games", "teams"],
+  player_ratings: [
     "games",
-    "phases",
     "cutoff",
     "teams",
     "players",
+    "team_ratings",
     "appearances",
     "goals",
   ],
@@ -30,11 +31,16 @@ const order: Record<string, Record<string, string>> = {
     zones: "group_id, id",
   },
   player_stats: { player_stat: "id" },
-  ratings: {
+  team_ratings: {
     games: "moment, id",
-    phases: "id",
+    teams: "id",
+  },
+  player_ratings: {
+    games: "moment, id",
+    cutoff: "",
     teams: "id",
     players: "id",
+    team_ratings: "team_id, measure_date",
     appearances: "id",
     goals: "__order",
   },
@@ -46,6 +52,8 @@ const order: Record<string, Record<string, string>> = {
   },
 };
 export type Computation = keyof typeof outputs;
+const isRatings = (name: Computation) =>
+  name === "team_ratings" || name === "player_ratings";
 const utc =
   "coalesce(kickoff::TIMESTAMPTZ AT TIME ZONE 'UTC', day::DATE::TIMESTAMP)";
 // A fixture the provider cancelled, abandoned or awarded without play has no
@@ -86,7 +94,7 @@ function expression(
     return `played OR NOT (${withdrawn})`;
   }
   if (table === "game") {
-    if (name === "ratings") {
+    if (isRatings(name)) {
       const special: Record<string, string> = {
         utc,
         moment: `epoch(${utc})::BIGINT`,
@@ -100,13 +108,18 @@ function expression(
     } else if (field === "moment") return utc;
   }
   if (table === "team_rating") {
-    // >= ASOF at microsecond precision is the original strict comparison to the
-    // rating day's UTC midnight.
-    if (field === "moment") {
-      return "measure_date::DATE::TIMESTAMP + INTERVAL 1 MICROSECOND";
+    if (name === "player_ratings" && field === "measure_date") {
+      return "strftime(measure_date::DATE, '%Y-%m-%d')";
     }
-    if (["offense", "defense"].includes(field)) {
-      return `${quote(field)}::DOUBLE::FLOAT::DOUBLE`;
+    if (name === "chances") {
+      // >= ASOF at microsecond precision is the original strict comparison to the
+      // rating day's UTC midnight.
+      if (field === "moment") {
+        return "measure_date::DATE::TIMESTAMP + INTERVAL 1 MICROSECOND";
+      }
+      if (["offense", "defense"].includes(field)) {
+        return `${quote(field)}::DOUBLE::FLOAT::DOUBLE`;
+      }
     }
   }
   return `CAST(${quote(field)} AS ${type})`;
@@ -210,7 +223,7 @@ function postgresProjection(name: Computation, relation: Relation) {
       name === "cards" && table === "game" && field.name === "fixture_available"
     ) {
       value = `played OR NOT (${withdrawn})`;
-    } else if (table === "game" && name === "ratings") {
+    } else if (table === "game" && isRatings(name)) {
       const special: Record<string, string> = {
         utc,
         moment: epoch(utc),
@@ -223,11 +236,15 @@ function postgresProjection(name: Computation, relation: Relation) {
       value = special[field.name] ?? value;
     } else if (table === "game" && field.name === "moment") value = utc;
     else if (table === "team_rating") {
-      if (field.name === "moment") {
-        value = "measure_date::date::timestamp + INTERVAL '1 microsecond'";
-      }
-      if (["offense", "defense"].includes(field.name)) {
-        value = `${column}::double precision::real::double precision`;
+      if (name === "player_ratings" && field.name === "measure_date") {
+        value = "to_char(measure_date::date, 'YYYY-MM-DD')";
+      } else if (name === "chances") {
+        if (field.name === "moment") {
+          value = "measure_date::date::timestamp + INTERVAL '1 microsecond'";
+        }
+        if (["offense", "defense"].includes(field.name)) {
+          value = `${column}::double precision::real::double precision`;
+        }
       }
     }
     return `${value} AS ${column}`;

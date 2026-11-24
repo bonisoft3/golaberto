@@ -4526,7 +4526,7 @@
       "server": true,
       "writers": [
         {
-          "by": "ratings",
+          "by": "team-ratings",
           "kind": "computation",
           "ops": [
             "upsert"
@@ -4604,7 +4604,7 @@
       "server": true,
       "writers": [
         {
-          "by": "ratings",
+          "by": "player-ratings",
           "kind": "computation",
           "ops": [
             "upsert"
@@ -4641,36 +4641,21 @@
         {
           "name": "rps",
           "ordinal": 2,
-          "retired": false,
+          "retired": true,
           "type": "double",
           "pk": false,
-          "required": true,
-          "cel": "this >= 0"
+          "required": false
         }
       ],
       "seed": [],
       "durability": "live",
       "level": "compensable",
       "server": true,
-      "writers": [
-        {
-          "by": "ratings",
-          "kind": "computation",
-          "ops": [
-            "upsert"
-          ]
-        }
-      ],
+      "writers": [],
       "cel": {
-        "checks": {
-          "rps": "rps >= 0"
-        },
+        "checks": {},
         "enums": {},
-        "bounds": {
-          "rps": {
-            "intMin": 0
-          }
-        }
+        "bounds": {}
       },
       "uniques": [],
       "validations": {}
@@ -12978,17 +12963,6 @@
           }
         }
       },
-      "ports": {
-        "wake": {
-          "phases": [
-            "acquiring",
-            "idle",
-            "backoff"
-          ],
-          "deadline": "due",
-          "event": "ripe"
-        }
-      },
       "state": {
         "type": "object",
         "fields": {
@@ -12997,14 +12971,19 @@
             "maxLength": 9,
             "values": [
               "due",
-              "acquiring",
               "idle",
-              "backoff",
               "answered",
               "refused",
               "review",
-              "done"
+              "done",
+              "acquiring",
+              "backoff"
             ]
+          },
+          "wait": {
+            "type": "integer",
+            "min": 0,
+            "max": 9007199254740991
           },
           "family": {
             "type": "string",
@@ -13117,7 +13096,8 @@
             "_time"
           ],
           "writes": [
-            "due"
+            "due",
+            "wait"
           ]
         },
         "answer": {
@@ -13134,6 +13114,7 @@
           ],
           "writes": [
             "due",
+            "wait",
             "failures",
             "checks",
             "complete_checks",
@@ -13150,6 +13131,7 @@
           ],
           "writes": [
             "due",
+            "wait",
             "failures",
             "status"
           ]
@@ -13160,7 +13142,8 @@
             "owed"
           ],
           "writes": [
-            "due"
+            "due",
+            "wait"
           ]
         },
         "reopen": {
@@ -13169,6 +13152,7 @@
           ],
           "writes": [
             "due",
+            "wait",
             "checks",
             "complete_checks",
             "complete"
@@ -13180,6 +13164,7 @@
           ],
           "writes": [
             "due",
+            "wait",
             "complete",
             "complete_checks"
           ]
@@ -13187,14 +13172,9 @@
         "stop": {
           "reads": [],
           "writes": [
-            "due"
+            "due",
+            "wait"
           ]
-        },
-        "isDue": {
-          "reads": [
-            "_time"
-          ],
-          "reason": "not_due"
         },
         "givenUp": {
           "reads": []
@@ -13341,14 +13321,10 @@
             "type": "object",
             "fields": {}
           }
-        },
-        "ripe": {
-          "tier": "mecha",
-          "payload": {
-            "type": "object",
-            "fields": {}
-          }
         }
+      },
+      "delays": {
+        "ripe": "wait"
       },
       "states": {
         "due": {
@@ -13358,39 +13334,8 @@
               "target": "acquiring",
               "reduce": "admit"
             },
-            "fetched": {
-              "target": "answered",
-              "reduce": "answer"
-            },
-            "failed": {
-              "target": "refused",
-              "reduce": "fail"
-            },
             "hasten": {
               "reduce": "hasten"
-            },
-            "reopened": {
-              "target": "idle",
-              "reduce": "reopen"
-            },
-            "paired": {
-              "target": "idle",
-              "reduce": "pair"
-            },
-            "stopped": {
-              "target": "done",
-              "reduce": "stop"
-            }
-          }
-        },
-        "acquiring": {
-          "final": false,
-          "on": {
-            "ripe": {
-              "target": "due",
-              "guard": [
-                "isDue"
-              ]
             },
             "fetched": {
               "target": "answered",
@@ -13400,15 +13345,14 @@
               "target": "refused",
               "reduce": "fail"
             },
-            "hasten": {
-              "reduce": "hasten"
-            },
             "reopened": {
               "target": "idle",
+              "reenter": true,
               "reduce": "reopen"
             },
             "paired": {
               "target": "idle",
+              "reenter": true,
               "reduce": "pair"
             },
             "stopped": {
@@ -13419,12 +13363,18 @@
         },
         "idle": {
           "final": false,
+          "after": {
+            "ripe": [
+              {
+                "target": "due"
+              }
+            ]
+          },
           "on": {
-            "ripe": {
-              "target": "due",
-              "guard": [
-                "isDue"
-              ]
+            "hasten": {
+              "target": "idle",
+              "reenter": true,
+              "reduce": "hasten"
             },
             "fetched": {
               "target": "answered",
@@ -13434,49 +13384,14 @@
               "target": "refused",
               "reduce": "fail"
             },
-            "hasten": {
-              "reduce": "hasten"
-            },
             "reopened": {
               "target": "idle",
+              "reenter": true,
               "reduce": "reopen"
             },
             "paired": {
               "target": "idle",
-              "reduce": "pair"
-            },
-            "stopped": {
-              "target": "done",
-              "reduce": "stop"
-            }
-          }
-        },
-        "backoff": {
-          "final": false,
-          "on": {
-            "ripe": {
-              "target": "due",
-              "guard": [
-                "isDue"
-              ]
-            },
-            "fetched": {
-              "target": "answered",
-              "reduce": "answer"
-            },
-            "failed": {
-              "target": "refused",
-              "reduce": "fail"
-            },
-            "hasten": {
-              "reduce": "hasten"
-            },
-            "reopened": {
-              "target": "idle",
-              "reduce": "reopen"
-            },
-            "paired": {
-              "target": "idle",
+              "reenter": true,
               "reduce": "pair"
             },
             "stopped": {
@@ -13505,6 +13420,9 @@
             }
           ],
           "on": {
+            "hasten": {
+              "reduce": "hasten"
+            },
             "fetched": {
               "target": "answered",
               "reduce": "answer"
@@ -13513,15 +13431,14 @@
               "target": "refused",
               "reduce": "fail"
             },
-            "hasten": {
-              "reduce": "hasten"
-            },
             "reopened": {
               "target": "idle",
+              "reenter": true,
               "reduce": "reopen"
             },
             "paired": {
               "target": "idle",
+              "reenter": true,
               "reduce": "pair"
             },
             "stopped": {
@@ -13544,6 +13461,9 @@
             }
           ],
           "on": {
+            "hasten": {
+              "reduce": "hasten"
+            },
             "fetched": {
               "target": "answered",
               "reduce": "answer"
@@ -13552,15 +13472,14 @@
               "target": "refused",
               "reduce": "fail"
             },
-            "hasten": {
-              "reduce": "hasten"
-            },
             "reopened": {
               "target": "idle",
+              "reenter": true,
               "reduce": "reopen"
             },
             "paired": {
               "target": "idle",
+              "reenter": true,
               "reduce": "pair"
             },
             "stopped": {
@@ -13572,6 +13491,9 @@
         "review": {
           "final": false,
           "on": {
+            "hasten": {
+              "reduce": "hasten"
+            },
             "fetched": {
               "target": "answered",
               "reduce": "answer"
@@ -13580,15 +13502,14 @@
               "target": "refused",
               "reduce": "fail"
             },
-            "hasten": {
-              "reduce": "hasten"
-            },
             "reopened": {
               "target": "idle",
+              "reenter": true,
               "reduce": "reopen"
             },
             "paired": {
               "target": "idle",
+              "reenter": true,
               "reduce": "pair"
             },
             "stopped": {
@@ -13600,6 +13521,9 @@
         "done": {
           "final": false,
           "on": {
+            "hasten": {
+              "reduce": "hasten"
+            },
             "fetched": {
               "target": "answered",
               "reduce": "answer"
@@ -13608,15 +13532,88 @@
               "target": "refused",
               "reduce": "fail"
             },
-            "hasten": {
-              "reduce": "hasten"
-            },
             "reopened": {
               "target": "idle",
+              "reenter": true,
               "reduce": "reopen"
             },
             "paired": {
               "target": "idle",
+              "reenter": true,
+              "reduce": "pair"
+            },
+            "stopped": {
+              "target": "done",
+              "reduce": "stop"
+            }
+          }
+        },
+        "acquiring": {
+          "final": false,
+          "after": {
+            "ripe": [
+              {
+                "target": "due"
+              }
+            ]
+          },
+          "on": {
+            "hasten": {
+              "reduce": "hasten"
+            },
+            "fetched": {
+              "target": "answered",
+              "reduce": "answer"
+            },
+            "failed": {
+              "target": "refused",
+              "reduce": "fail"
+            },
+            "reopened": {
+              "target": "idle",
+              "reenter": true,
+              "reduce": "reopen"
+            },
+            "paired": {
+              "target": "idle",
+              "reenter": true,
+              "reduce": "pair"
+            },
+            "stopped": {
+              "target": "done",
+              "reduce": "stop"
+            }
+          }
+        },
+        "backoff": {
+          "final": false,
+          "after": {
+            "ripe": [
+              {
+                "target": "due"
+              }
+            ]
+          },
+          "on": {
+            "hasten": {
+              "reduce": "hasten"
+            },
+            "fetched": {
+              "target": "answered",
+              "reduce": "answer"
+            },
+            "failed": {
+              "target": "refused",
+              "reduce": "fail"
+            },
+            "reopened": {
+              "target": "idle",
+              "reenter": true,
+              "reduce": "reopen"
+            },
+            "paired": {
+              "target": "idle",
+              "reenter": true,
               "reduce": "pair"
             },
             "stopped": {
@@ -13629,7 +13626,6 @@
       "hatches": [],
       "mecha": {
         "locks": "",
-        "ports": {},
         "transitions": []
       }
     },
@@ -13646,15 +13642,6 @@
           "fields": {}
         }
       },
-      "ports": {
-        "wake": {
-          "phases": [
-            "blocked"
-          ],
-          "deadline": "until",
-          "event": "lapsed"
-        }
-      },
       "state": {
         "type": "object",
         "fields": {
@@ -13667,6 +13654,11 @@
               "blocked",
               "judged"
             ]
+          },
+          "wait": {
+            "type": "integer",
+            "min": 0,
+            "max": 9007199254740991
           },
           "reason": {
             "type": "string",
@@ -13706,26 +13698,23 @@
       "contracts": {
         "refuse": {
           "reads": [
+            "_time",
             "status",
             "until"
           ],
           "writes": [
             "reason",
-            "until"
+            "until",
+            "wait"
           ]
         },
         "resume": {
           "reads": [],
           "writes": [
             "reason",
-            "until"
+            "until",
+            "wait"
           ]
-        },
-        "isDue": {
-          "reads": [
-            "_time"
-          ],
-          "reason": "not_due"
         },
         "isPaused": {
           "reads": []
@@ -13759,14 +13748,10 @@
             "type": "object",
             "fields": {}
           }
-        },
-        "lapsed": {
-          "tier": "mecha",
-          "payload": {
-            "type": "object",
-            "fields": {}
-          }
         }
+      },
+      "delays": {
+        "block": "wait"
       },
       "states": {
         "open": {
@@ -13797,14 +13782,15 @@
         },
         "blocked": {
           "final": false,
+          "after": {
+            "block": [
+              {
+                "target": "open",
+                "reduce": "resume"
+              }
+            ]
+          },
           "on": {
-            "lapsed": {
-              "target": "open",
-              "guard": [
-                "isDue"
-              ],
-              "reduce": "resume"
-            },
             "refused": {
               "target": "judged",
               "reduce": "refuse"
@@ -13849,7 +13835,6 @@
       "hatches": [],
       "mecha": {
         "locks": "",
-        "ports": {},
         "transitions": []
       }
     }
@@ -13946,7 +13931,8 @@
     },
     "risingwave_sql": {
       "files": [
-        "duckstream/ratings.sql",
+        "duckstream/team_ratings.sql",
+        "duckstream/player_ratings.sql",
         "duckstream/chances.sql",
         "duckstream/cards.sql",
         "duckstream/player_stats.sql",
@@ -13958,13 +13944,15 @@
         "duckstream/cards/result_game_card.sql",
         "duckstream/cards/result_team_game.sql",
         "duckstream/player_stats/result_player_stat.sql",
-        "duckstream/ratings/result_games.sql",
-        "duckstream/ratings/result_phases.sql",
-        "duckstream/ratings/result_cutoff.sql",
-        "duckstream/ratings/result_teams.sql",
-        "duckstream/ratings/result_players.sql",
-        "duckstream/ratings/result_appearances.sql",
-        "duckstream/ratings/result_goals.sql",
+        "duckstream/team_ratings/result_games.sql",
+        "duckstream/team_ratings/result_teams.sql",
+        "duckstream/player_ratings/result_games.sql",
+        "duckstream/player_ratings/result_cutoff.sql",
+        "duckstream/player_ratings/result_teams.sql",
+        "duckstream/player_ratings/result_players.sql",
+        "duckstream/player_ratings/result_team_ratings.sql",
+        "duckstream/player_ratings/result_appearances.sql",
+        "duckstream/player_ratings/result_goals.sql",
         "duckstream/chances/result_groups.sql",
         "duckstream/chances/result_members.sql",
         "duckstream/chances/result_games.sql",
@@ -13972,7 +13960,7 @@
       ],
       "ir": "risingwave_sql",
       "kind": "sql",
-      "note": "Pinned stock Calcite compilation and DuckDB equivalence tests validate these SQL dialects instead of PostgreSQL-only Squawk"
+      "note": "Pinned DuckDB compilation and RisingWave equivalence tests validate these SQL dialects instead of PostgreSQL-only Squawk"
     },
     "sofascore": {
       "ir": "hatch-sofascore-transport",
@@ -14296,6 +14284,59 @@
       },
       "wasm": []
     },
+    "player-ratings": {
+      "name": "player-ratings",
+      "ir": "player-ratings",
+      "backend": "compute",
+      "src": "computations/player_ratings.js",
+      "risingwave": "duckstream/player_ratings.risingwave.json",
+      "steps": "duckstream/bounded-player-ratings.ts",
+      "endowments": [
+        "TextEncoder"
+      ],
+      "sinks": {
+        "players": {
+          "entity": "PlayerRating",
+          "write": "replace",
+          "version": "latest",
+          "transaction": "player-ratings"
+        }
+      },
+      "sources": {
+        "football": {
+          "entities": [
+            "Championship",
+            "Phase",
+            "Game",
+            "Team",
+            "TeamRating",
+            "Player",
+            "PlayerGame",
+            "Goal"
+          ],
+          "read": "snapshot"
+        }
+      },
+      "wasm": [
+        "computations/golaberto-odds.wasm"
+      ],
+      "queryTypes": {
+        "teams": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "required": true
+          }
+        ],
+        "players": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "required": true
+          }
+        ]
+      }
+    },
     "player-stats": {
       "name": "player-stats",
       "ir": "player-stats",
@@ -14350,70 +14391,6 @@
       },
       "wasm": []
     },
-    "ratings": {
-      "name": "ratings",
-      "ir": "ratings",
-      "backend": "compute",
-      "src": "computations/ratings.js",
-      "risingwave": "duckstream/ratings.risingwave.json",
-      "steps": "duckstream/bounded-ratings.ts",
-      "endowments": [
-        "TextEncoder"
-      ],
-      "sinks": {
-        "teams": {
-          "entity": "TeamRating",
-          "write": "replace",
-          "version": "latest",
-          "transaction": "ratings"
-        },
-        "players": {
-          "entity": "PlayerRating",
-          "write": "replace",
-          "version": "latest",
-          "transaction": "ratings"
-        },
-        "evaluations": {
-          "entity": "RatingEval",
-          "write": "replace",
-          "version": "latest",
-          "transaction": "ratings"
-        }
-      },
-      "sources": {
-        "football": {
-          "entities": [
-            "Championship",
-            "Phase",
-            "Game",
-            "Team",
-            "Player",
-            "PlayerGame",
-            "Goal"
-          ],
-          "read": "snapshot"
-        }
-      },
-      "wasm": [
-        "computations/golaberto-odds.wasm"
-      ],
-      "queryTypes": {
-        "teams": [
-          {
-            "name": "id",
-            "type": "uuid",
-            "required": true
-          }
-        ],
-        "players": [
-          {
-            "name": "id",
-            "type": "uuid",
-            "required": true
-          }
-        ]
-      }
-    },
     "standings": {
       "name": "standings",
       "ir": "standings",
@@ -14447,6 +14424,48 @@
         }
       },
       "wasm": []
+    },
+    "team-ratings": {
+      "name": "team-ratings",
+      "ir": "team-ratings",
+      "backend": "compute",
+      "src": "computations/team_ratings.js",
+      "risingwave": "duckstream/team_ratings.risingwave.json",
+      "steps": "duckstream/bounded-team-ratings.ts",
+      "endowments": [
+        "TextEncoder"
+      ],
+      "sinks": {
+        "teams": {
+          "entity": "TeamRating",
+          "write": "replace",
+          "version": "latest",
+          "transaction": "team-ratings"
+        }
+      },
+      "sources": {
+        "football": {
+          "entities": [
+            "Championship",
+            "Phase",
+            "Game",
+            "Team"
+          ],
+          "read": "snapshot"
+        }
+      },
+      "wasm": [
+        "computations/golaberto-odds.wasm"
+      ],
+      "queryTypes": {
+        "teams": [
+          {
+            "name": "id",
+            "type": "uuid",
+            "required": true
+          }
+        ]
+      }
     }
   },
   "effects": {

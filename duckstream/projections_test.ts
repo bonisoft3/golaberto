@@ -47,7 +47,7 @@ pgTest(
           );
         }
       }
-      for (const name of ["ratings", "chances"]) {
+      for (const name of ["team_ratings", "player_ratings", "chances"]) {
         const descriptor: IncrementalProgram = JSON.parse(
           await Deno.readTextFile(
             new URL(`${name}.risingwave.json`, import.meta.url),

@@ -59,34 +59,36 @@ const answered = (state, p, now) => {
   return {...kept, settled, due: season(state, p, due, now)};
 };
 
+// The time left until `due`, which a waiting state's timer waits.
+const waiting = (state, now) => ({...state, wait: Math.max(0, state.due - now)});
+
 const next = ({context: state, event}) => {
   const p = event, now = event._time, step = answered(state, p, now);
   const due = step.due > 0 && p.max_age >= 0 ? Math.max(step.due, now + p.max_age * 1000) : step.due;
   return {...step, due};
 };
 return {
-  initial: ({input}) => ({phase: "idle", family: input.family, due: input.owed.length ? roundDue(input.owed, input._time) : input.due, failures: 0, checks: 0, complete_checks: 0, complete: false, settled: false, status: 0}),
+  initial: ({input}) => waiting({phase: "idle", family: input.family, due: input.owed.length ? roundDue(input.owed, input._time) : input.due, failures: 0, checks: 0, complete_checks: 0, complete: false, settled: false, status: 0}, input._time),
   invariant: state => (["done", "review"].includes(state.phase) ? state.due === 0 : ["acquiring", "idle", "backoff"].includes(state.phase) ? state.due > 0 : true)
     && (state.phase !== "review" || DETAILS.includes(state.family)),
-  project: state => ({...state}),
-  isDue: ({context: state, event}) => state.due > 0 && state.due <= event._time,
+  project: ({wait: _wait, ...state}) => state,
   // A detail with nothing left to ask is given up unless its pair settled
   // complete; one that failed five times is given up either way.
   givenUp: ({context: state}) => state.due === 0 && DETAILS.includes(state.family) && (!state.complete || state.failures > 0),
   finished: ({context: state}) => state.due === 0,
-  admit: ({context: state, event}) => ({...state, due: event._time + STUCK}),
-  answer: ({context: state, event}) => ({...state, ...next({context: state, event}), failures: 0, status: 0}),
+  admit: ({context: state, event}) => waiting({...state, due: event._time + STUCK}, event._time),
+  answer: ({context: state, event}) => waiting({...state, ...next({context: state, event}), failures: 0, status: 0}, event._time),
   fail: ({context: state, event}) => {
     const p = event, now = event._time, failures = state.failures + 1;
     const retry = p.retry_at > 0 ? Math.max(now + RETRY_FLOOR, p.retry_at) : now + BACKOFF[Math.min(state.failures, BACKOFF.length - 1)] * 1000;
-    return {...state, failures, status: p.status, due: DETAILS.includes(state.family) && failures >= 5 ? 0 : retry};
+    return waiting({...state, failures, status: p.status, due: DETAILS.includes(state.family) && failures >= 5 ? 0 : retry}, now);
   },
   // A fixture seen again pulls an untroubled resource's next ask forward.
   hasten: ({context: state, event}) => {
     const due = roundDue(event.owed, event._time);
-    return state.phase === "idle" && state.failures === 0 && state.due > due ? {...state, due} : state;
+    return waiting(state.phase === "idle" && state.failures === 0 && state.due > due ? {...state, due} : state, event._time);
   },
-  reopen: ({context: state, event}) => ({...state, due: event._time, checks: 0, complete_checks: 0, complete: false}),
-  pair: ({context: state, event}) => ({...state, due: event._time + DAY, complete: true, complete_checks: 1}),
-  stop: ({context: state}) => ({...state, due: 0}),
+  reopen: ({context: state, event}) => waiting({...state, due: event._time, checks: 0, complete_checks: 0, complete: false}, event._time),
+  pair: ({context: state, event}) => waiting({...state, due: event._time + DAY, complete: true, complete_checks: 1}, event._time),
+  stop: ({context: state}) => ({...state, due: 0, wait: 0}),
 };

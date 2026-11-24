@@ -102,7 +102,7 @@ async function mountScreen(
     for (const callback of subscriptions.get(table) ?? []) callback();
   };
   const store = batched({
-    query: (
+    answer: (
       table: string,
       _order: unknown,
       options: { filter?: string } = {},
@@ -125,11 +125,13 @@ async function mountScreen(
       }
       const offset = Number(/(?:^|&)offset=(\d+)/.exec(filter)?.[1] ?? 0);
       const limit = parseLimit(filter);
-      return Promise.resolve(selected.slice(
+      return selected.slice(
         offset,
         limit === undefined ? undefined : offset + limit,
-      ));
+      );
     },
+    query: (table: string, order: unknown, options?: { filter?: string }) =>
+      Promise.resolve(store.answer(table, order, options)),
     subscribe: (table: string, callback: () => void) => {
       const listeners = subscriptions.get(table) ?? new Set();
       listeners.add(callback);

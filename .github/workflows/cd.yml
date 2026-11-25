@@ -34,9 +34,16 @@ jobs:
       - name: Configure Docker for Artifact Registry
         run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
 
+      - uses: docker/setup-compose-action@v2
+        with:
+          version: v5.6.1
+
       - uses: docker/setup-buildx-action@v4
         with:
-          driver: docker
+          version: v0.38.1
+          buildkitd-config-inline: |
+            [registry."docker.io"]
+              mirrors = ["mirror.gcr.io"]
 
       - name: Build and push release-docker image
         id: image
@@ -44,9 +51,9 @@ jobs:
           BAYT_DOCKER_REPOSITORY: us-central1-docker.pkg.dev/trash-362115/pronto/golaberto
           BAYT_IMAGE_TAG: ${{ github.ref_name }}
           DOCKER_DEFAULT_PLATFORM: linux/amd64
+          COMPOSE_BAKE: "true"
         run: |
-          docker compose build release-docker
-          docker compose push release-docker
+          docker compose build --push release-docker
           digest="$(docker buildx imagetools inspect "${BAYT_DOCKER_REPOSITORY}:${BAYT_IMAGE_TAG}" | awk '/^Digest:/ {print $2; exit}')"
           test -n "$digest"
           echo "ref=${BAYT_DOCKER_REPOSITORY}@${digest}" >> "$GITHUB_OUTPUT"

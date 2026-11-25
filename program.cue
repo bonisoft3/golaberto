@@ -38,71 +38,71 @@ _designMd:                 _      @embed(file="DESIGN.md", type=text)
 _oddsCaptureSql:           string @embed(file="services/database/sql/034_idempotent_odds_capture.sql", type=text)
 _catalogues:               _      @embed(glob="messages/*.json")
 _homeGamesSql:             string @embed(file="services/database/sql/013_home_games.sql", type=text)
-_homeGamesUpgrade:         strings.Join(strings.Split(strings.Join(strings.Split(_homeGamesSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_homeGamesUpgrade:         strings.Replace(strings.Replace(_homeGamesSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 _homeChampionshipsSql:     string @embed(file="services/database/sql/014_home_championships.sql", type=text)
-_homeChampionshipsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeChampionshipsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_homeChampionshipsUpgrade: strings.Replace(strings.Replace(_homeChampionshipsSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
 _homePerformanceSql:     string @embed(file="services/database/sql/015_home_performance.sql", type=text)
-_homePerformanceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homePerformanceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_homePerformanceUpgrade: strings.Replace(strings.Replace(_homePerformanceSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
 _matchesPerformanceSql:     string @embed(file="services/database/sql/016_matches_performance.sql", type=text)
-_matchesPerformanceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_matchesPerformanceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_matchesPerformanceUpgrade: strings.Replace(strings.Replace(_matchesPerformanceSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
 _gameCountriesSql:     string @embed(file="services/database/sql/017_game_countries.sql", type=text)
-_gameCountriesUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_gameCountriesSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_gameCountriesUpgrade: strings.Replace(strings.Replace(_gameCountriesSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
 _normalizedGameFlagsSql:     string @embed(file="services/database/sql/019_normalized_game_flags.sql", type=text)
-_normalizedGameFlagsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_normalizedGameFlagsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_normalizedGameFlagsUpgrade: strings.Replace(strings.Replace(_normalizedGameFlagsSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
 _homeReferenceSql:     string @embed(file="services/database/sql/020_home_reference_order.sql", type=text)
-_homeReferenceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeReferenceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_homeReferenceUpgrade: strings.Replace(strings.Replace(_homeReferenceSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
 _recentChampionshipsSql:     string @embed(file="services/database/sql/022_recent_championships.sql", type=text)
-_recentChampionshipsUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_recentChampionshipsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_recentChampionshipsUpgrade: strings.Replace(strings.Replace(_recentChampionshipsSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
 _searchCollationSql:     string @embed(file="services/database/sql/023_search_collation.sql", type=text)
-_searchCollationUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_searchCollationSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_searchCollationUpgrade: strings.Replace(strings.Replace(_searchCollationSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
 _teamDirectorySql:      string @embed(file="services/database/sql/024_team_directory.sql", type=text)
-_teamDirectoryUpgrade:  strings.Join(strings.Split(strings.Join(strings.Split(_teamDirectorySql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_teamDirectoryUpgrade:  strings.Replace(strings.Replace(_teamDirectorySql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 _teamEnrichmentSql:     string @embed(file="services/database/sql/029_team_enrichment.sql", type=text)
-_teamEnrichmentUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamEnrichmentSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_teamEnrichmentUpgrade: strings.Replace(strings.Replace(_teamEnrichmentSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
 _teamProfilesSql:     string @embed(file="services/database/sql/028_team_profiles.sql", type=text)
-_teamProfilesUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamProfilesSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_teamProfilesUpgrade: strings.Replace(strings.Replace(_teamProfilesSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
 _campaignReadSql:     string @embed(file="services/database/sql/030_campaign_read.sql", type=text)
-_campaignReadUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_campaignReadSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_campaignReadUpgrade: strings.Replace(strings.Replace(_campaignReadSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
 _archiveCompatibilitySql:     string @embed(file="services/database/sql/032_archive_compatibility.sql", type=text)
-_archiveCompatibilityUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_archiveCompatibilitySql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_archiveCompatibilityUpgrade: strings.Replace(strings.Replace(_archiveCompatibilitySql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
 _readableAddressesSql:     string @embed(file="services/database/sql/031_readable_addresses.sql", type=text)
-_readableAddressesUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_readableAddressesSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_readableAddressesUpgrade: strings.Replace(strings.Replace(_readableAddressesSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
 // SQLite tab queries and PostgreSQL stored keys share the same two mappings.
 #SearchKey: {col: string, out: "replace(replace(replace(\(col), 'ı', 'i'), 'þ', 'th'), 'Þ', 'th')"}
 
 _extendedSearchCollationSql:     string @embed(file="services/database/sql/025_search_letter_equivalences.sql", type=text)
-_extendedSearchCollationUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_extendedSearchCollationSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_extendedSearchCollationUpgrade: strings.Replace(strings.Replace(_extendedSearchCollationSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
 _teamGeographySql:     string @embed(file="services/database/sql/026_team_geography.sql", type=text)
-_teamGeographyUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamGeographySql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_teamGeographyUpgrade: strings.Replace(strings.Replace(_teamGeographySql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
 _teamTypeSql:     string @embed(file="services/database/sql/027_team_directory_type.sql", type=text)
-_teamTypeUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_teamTypeSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_teamTypeUpgrade: strings.Replace(strings.Replace(_teamTypeSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
 _homeHighlightsSql:                string @embed(file="services/database/sql/021_home_highlights.sql", type=text)
-_homeHighlightsUpgrade:            strings.Join(strings.Split(strings.Join(strings.Split(_homeHighlightsSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_homeHighlightsUpgrade:            strings.Replace(strings.Replace(_homeHighlightsSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 _homeGamesAtReadSql:               string @embed(file="services/database/sql/047_home_games_at_read.sql", type=text)
-_homeGamesAtReadUpgrade:           strings.Join(strings.Split(strings.Join(strings.Split(_homeGamesAtReadSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_homeGamesAtReadUpgrade:           strings.Replace(strings.Replace(_homeGamesAtReadSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 _homeFeedRelationshipsSql:         string @embed(file="services/database/sql/050_home_feed_relationships.sql", type=text)
-_homeFeedRelationshipsUpgrade:     strings.Join(strings.Split(strings.Join(strings.Split(_homeFeedRelationshipsSql, "BEGIN;\n"), ""), "\nCOMMIT;\n"), "\n")
+_homeFeedRelationshipsUpgrade:     strings.Replace(strings.Replace(_homeFeedRelationshipsSql, "BEGIN;\n", "", -1), "\nCOMMIT;\n", "\n", -1)
 _homeFeedRelationshipNamesSql:     string @embed(file="services/database/sql/051_home_feed_relationship_names.sql", type=text)
-_homeFeedRelationshipNamesUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_homeFeedRelationshipNamesSql, "BEGIN;\n"), ""), "\nCOMMIT;\n"), "\n")
+_homeFeedRelationshipNamesUpgrade: strings.Replace(strings.Replace(_homeFeedRelationshipNamesSql, "BEGIN;\n", "", -1), "\nCOMMIT;\n", "\n", -1)
 
 _routePerformanceSql:     string @embed(file="services/database/sql/018_route_performance.sql", type=text)
-_routePerformanceUpgrade: strings.Join(strings.Split(strings.Join(strings.Split(_routePerformanceSql, "\nBEGIN;\n"), "\n"), "\nCOMMIT;\n"), "\n")
+_routePerformanceUpgrade: strings.Replace(strings.Replace(_routePerformanceSql, "\nBEGIN;\n", "\n", -1), "\nCOMMIT;\n", "\n", -1)
 
 // "2026" or "2026/2027", in immutable SQL: to_char is only STABLE.
 _season: "extract(year from begins)::int::text || CASE WHEN extract(year from begins) = extract(year from ends) THEN '' ELSE '/' || extract(year from ends)::int::text END"

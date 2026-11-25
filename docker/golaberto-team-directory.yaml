@@ -12,7 +12,13 @@ input:
           count: 1
           interval: ''
           mapping: 'root = {"wake": "start"}'
+      - http_server:
+          path: /replay
+          timeout: 5m
   processors:
+    - mutation: |-
+        meta cdc_via = if @redis_stream.or("") != "" { "stream" } else if @http_server_request_path.or("") != "" { "replay" } else { "wake" }
+        meta cdc_original = content().string()
     - mutation: meta cdc_consumer = "golaberto-team-directory"
     - resource: cdc_stream_trim
     - resource: cdc_trace_join
@@ -24,24 +30,124 @@ pipeline:
         let table = $row.data.or("").parse_json().catch({}).__table.or("")
         root = if $row.exists("wake") || ["team","team_rating","geography_country"].contains($table) { {"body": {}, "trace": @traceparent.or("")} } else { deleted() }
 output:
-  http_client:
-    url: '${CRUD_URL}/rpc/refresh_team_directory'
-    verb: POST
-    timeout: 35s
-    max_in_flight: 1
-    headers:
-      Authorization: 'Bearer ${SERVICE_JWT}'
-      Content-Type: application/json
-    metadata:
-      include_patterns:
-        - ^traceparent$
-    successful_on:
-      - 200
-      - 204
-    batching:
-      period: 1s
-      processors:
-        - archive:
-            format: json_array
-        - resource: cdc_trace_batch
-        - mapping: root = this.index(0).body
+  switch:
+    cases:
+      - check: '@cdc_via == "replay" && @cdc_failed != null'
+        output:
+          reject: '${! @cdc_failed }'
+      - check: '@cdc_via == "replay"'
+        output:
+          http_client:
+            url: '${CRUD_URL}/rpc/refresh_team_directory'
+            verb: POST
+            timeout: 35s
+            max_in_flight: 1
+            headers:
+              Authorization: 'Bearer ${SERVICE_JWT}'
+              Content-Type: application/json
+            metadata:
+              include_patterns:
+                - ^traceparent$
+            successful_on:
+              - 200
+              - 204
+            batching:
+              period: 1s
+              processors:
+                - archive:
+                    format: json_array
+                - resource: cdc_trace_batch
+                - mapping: root = this.index(0).body
+      - check: '@cdc_via == "wake"'
+        output:
+          fallback:
+            - http_client:
+                url: '${CRUD_URL}/rpc/refresh_team_directory'
+                verb: POST
+                timeout: 35s
+                max_in_flight: 1
+                headers:
+                  Authorization: 'Bearer ${SERVICE_JWT}'
+                  Content-Type: application/json
+                metadata:
+                  include_patterns:
+                    - ^traceparent$
+                successful_on:
+                  - 200
+                  - 204
+                batching:
+                  period: 1s
+                  processors:
+                    - archive:
+                        format: json_array
+                    - resource: cdc_trace_batch
+                    - mapping: root = this.index(0).body
+            - drop: {}
+              processors:
+                - crash: 'golaberto-team-directory: startup sweep output failed: ${! @fallback_error }'
+      - check: '@cdc_via == "stream" && @cdc_failed != null && env("CDC_RETRY_GROUPS").or("[]").parse_json().contains("golaberto-team-directory")'
+        output:
+          redis_streams:
+            url: '${REDIS_URL}'
+            stream: golaberto-team-directory-retry
+            body_key: data
+            metadata:
+              exclude_prefixes:
+                - ''
+          processors:
+            - mapping: root = @cdc_original
+      - check: '@cdc_via == "stream" && env("CDC_RETRY_GROUPS").or("[]").parse_json().contains("golaberto-team-directory")'
+        output:
+          fallback:
+            - http_client:
+                url: '${CRUD_URL}/rpc/refresh_team_directory'
+                verb: POST
+                timeout: 35s
+                max_in_flight: 1
+                headers:
+                  Authorization: 'Bearer ${SERVICE_JWT}'
+                  Content-Type: application/json
+                metadata:
+                  include_patterns:
+                    - ^traceparent$
+                successful_on:
+                  - 200
+                  - 204
+                batching:
+                  period: 1s
+                  processors:
+                    - archive:
+                        format: json_array
+                    - resource: cdc_trace_batch
+                    - mapping: root = this.index(0).body
+            - redis_streams:
+                url: '${REDIS_URL}'
+                stream: golaberto-team-directory-retry
+                body_key: data
+                metadata:
+                  exclude_prefixes:
+                    - ''
+              processors:
+                - mapping: root = @cdc_original
+      - output:
+          http_client:
+            url: '${CRUD_URL}/rpc/refresh_team_directory'
+            verb: POST
+            timeout: 35s
+            max_in_flight: 1
+            headers:
+              Authorization: 'Bearer ${SERVICE_JWT}'
+              Content-Type: application/json
+            metadata:
+              include_patterns:
+                - ^traceparent$
+            successful_on:
+              - 200
+              - 204
+            batching:
+              period: 1s
+              processors:
+                - archive:
+                    format: json_array
+                - resource: cdc_trace_batch
+                - mapping: root = this.index(0).body

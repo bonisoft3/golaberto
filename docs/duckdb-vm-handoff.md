@@ -28,7 +28,7 @@ Worktree `/Users/davi/code/trash/.worktrees/duckstream`, branch `release/golaber
 
 ## VM access and operation
 
-GCP project `trash-362115`, VM `golaberto`, zone `us-central1-a`, machine type `e2-medium`. Container `golaberto` runs `/mnt/disks/golaberto/config/run-bounded.sh` with 3 GiB memory/swap and 256 MiB shm, preserving `golaberto-postgres`, `golaberto-caddy` and `golaberto-duckstream` on `/mnt/disks/golaberto` (`golaberto-data`).
+GCP project `trash-362115`, VM `golaberto`, zone `us-central1-a`, machine type `e2-medium`. Container `golaberto` runs `/mnt/disks/golaberto/config/run-bounded.sh` with 3 GiB memory/swap and 256 MiB shm, preserving `golaberto-postgres`, `golaberto-caddy`, `golaberto-duckstream` and `golaberto-redis` on `/mnt/disks/golaberto` (`golaberto-data`).
 
 Inspect coordinator state with:
 

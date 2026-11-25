@@ -201,7 +201,7 @@
           }
         },
         "self": {
-          "version": "v0.49.1"
+          "version": "v0.49.2"
         },
         "doctor": {
           "do": "use tools.nu [run-mise]; run-mise exec -- cue version; run-mise exec -- deno --version; run-mise where github:bonisoft3/pronto"
@@ -1031,7 +1031,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-extensions-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-extensions:0.34.0@sha256:d3fe4b3869ded07a410579c2928f951bb42c3bdc14ada1122b5cf0a7d7c11c9f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-extensions-image}"
+            "libraries_mecha-extensions-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-extensions:0.35.0@sha256:d3fe4b3869ded07a410579c2928f951bb42c3bdc14ada1122b5cf0a7d7c11c9f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-extensions-image}"
           },
           "secrets": [],
           "args": {}
@@ -1423,7 +1423,7 @@
           },
           {
             "from": {
-              "name": "redis:8.2.11-bookworm@sha256:b0b01167ff47bc3868e56a967895a26be4230891a1f42a78ab61cdd227accc8d"
+              "name": "redis:8.4.8-trixie@sha256:90cb779e1f814f1123532293f7a7a18a6a48bdc01aa0a9d54ce9f3d61b71018f"
             },
             "srcs": [
               "/usr/local/bin/redis-server",
@@ -1518,6 +1518,19 @@
               "/cdc-trace.yaml"
             ],
             "dst": "/transform/cdc-trace.yaml",
+            "link": true,
+            "parents": false,
+            "exclude": []
+          },
+          {
+            "from": {
+              "ref": ":transform",
+              "name": "golaberto-transform"
+            },
+            "srcs": [
+              "/durable-retry.yaml"
+            ],
+            "dst": "/transform/durable-retry.yaml",
             "link": true,
             "parents": false,
             "exclude": []
@@ -2046,7 +2059,7 @@
           "RUN awk 'skip { d += gsub(/\\{/, \"{\") - gsub(/\\}/, \"}\"); if (d <= 0) skip = 0; next } /handle @rendered \\{/ { skip = 1; d = 1; next } { print }' /etc/caddy/Caddyfile > /tmp/Caddyfile && mv /tmp/Caddyfile /etc/caddy/Caddyfile",
           "RUN nu -c 'let f = \"/dapr/airlock/acquire.yaml\"; let b = (open $f); if $b.spec.baseUrl != \"http://sofascore:8080\" { error make {msg: \"appliance: unexpected bridge endpoint in acquire\"} }; $b | upsert spec.baseUrl \"http://sofascore:8081\" | to yaml | save -f $f'",
           "RUN --network=none deno check --cached-only --frozen --config /compute-app/deno.json /compute-app/main.ts /compute-app/cage.ts /compute-app/step-worker.ts && touch /compute-app/extensions/.installed-v1.5.6",
-          "RUN nu -c 'let f = \"/.bayt/process-compose.yaml\"; open $f | upsert processes.compute.depends_on.risingwave {condition: \"process_healthy\"} | if (\"transform\" in $in.processes) { update processes.transform.entrypoint {|p| $p.processes.transform.entrypoint | each {|a| $a | str replace \" ($$cdir | path join '\\''events.yaml'\\'')\" \"\" } } } else { $in } | to yaml | save -f $f'",
+          "RUN nu -c 'let f = \"/.bayt/process-compose.yaml\"; open $f | upsert processes.compute.depends_on.risingwave {condition: \"process_healthy\"} | upsert processes.compute.availability.exit_on_end true | if (\"transform\" in $in.processes) { update processes.transform.entrypoint {|p| $p.processes.transform.entrypoint | each {|a| $a | str replace \" ($$cdir | path join '\\''events.yaml'\\'')\" \"\" } } } else { $in } | to yaml | save -f $f'",
           "RUN ports=\"8081\"; for p in $ports; do if grep -Eq \":-$p\\}\" /.bayt/process-compose.yaml; then echo \"appliance: bridge port $p is one an appliance process takes; name another\" >&2; exit 1; fi; done; dup=\"$(printf '%s\\n' $ports | sort | uniq -d)\"; if [ -n \"$dup\" ]; then echo \"appliance: bridges share port $dup\" >&2; exit 1; fi",
           "RUN ELECTRIC_SECRET=validation-only caddy validate --adapter caddyfile --config /etc/caddy/Caddyfile"
         ],
@@ -2062,7 +2075,8 @@
           "RUN printf '%s\\n' '#!/bin/sh' 'set -eu' 'dir=\"${COMPUTE_STATE_DIR:-/var/lib/duckstream}/risingwave\"' 'mkdir -p \"$dir/state_store\"' 'printf \"%s\\n\" \"[meta]\" \"min_sst_retention_time_sec = 300\" \"full_gc_interval_sec = 60\" \"vacuum_interval_sec = 15\" \"gc_history_retention_time_sec = 0\" \"clean_all_foreground_jobs_on_recovery = true\" \"\" \"[meta.developer]\" \"actor_cnt_per_worker_parallelism_soft_limit = 1000\" \"actor_cnt_per_worker_parallelism_hard_limit = 4000\" \"\" \"[streaming]\" \"in_flight_barrier_nums = 256\" \"\" \"[streaming.developer]\" \"enable_snapshot_backfill = false\" \"\" \"[storage]\" \"shared_buffer_min_batch_flush_size_mb = 32\" > \"$dir/risingwave.toml\"' 'compute_mem=\"${RISINGWAVE_MEMORY_BYTES:-1342177280}\"' 'parallelism=\"${RISINGWAVE_PARALLELISM:-2}\"' 'exec /risingwave/bin/risingwave standalone --config-path \"$dir/risingwave.toml\" \\' '  --meta-opts=\"--listen-addr 127.0.0.1:5690 --advertise-addr 127.0.0.1:5690 --backend sqlite --sql-endpoint $dir/metadata.db --state-store hummock+fs://$dir/state_store --data-directory hummock_001\" \\' '  --compute-opts=\"--listen-addr 127.0.0.1:5688 --meta-address http://127.0.0.1:5690 --total-memory-bytes $compute_mem --role both --parallelism $parallelism\" \\' '  --frontend-opts=\"--listen-addr 0.0.0.0:4566 --meta-addr http://127.0.0.1:5690 --frontend-total-memory-bytes 268435456\" \\' '  --compactor-opts=\"--listen-addr 127.0.0.1:6660 --meta-address http://127.0.0.1:5690 --compactor-total-memory-bytes 1073741824 --compactor-meta-cache-memory-bytes 67108864\"' > /usr/local/bin/appliance-risingwave.sh && chmod 755 /usr/local/bin/appliance-risingwave.sh",
           "ENV MECHA_MESH_DIR=/mesh-events",
           "ENV MECHA_TRANSFORM_DIR=/transform",
-          "COPY <<'APPLIANCE' /.bayt/process-compose.appliance.yaml\nversion: \"0.5\"\nprocesses:\n  airlock-upgrade:\n    command: '''psql'' ''postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}'' ''-X'' ''--set=ON_ERROR_STOP=1'' ''--single-transaction'' ''--file=/airlock-upgrade.sql'''\n    depends_on:\n      database:\n        condition: process_healthy\n  airlock-mesh:\n    command: '''/daprd'' ''--app-id'' ''airlock'' ''--dapr-listen-addresses'' ''127.0.0.1'' ''--dapr-internal-grpc-listen-address'' ''127.0.0.1'' ''--resources-path'' ''/dapr/airlock'' ''--config'' ''/dapr/config.yaml'' ''--dapr-http-port'' ''3500'' ''--dapr-grpc-port'' ''50001'' ''--dapr-internal-grpc-port'' ''50002'' ''--metrics-port'' ''0'' ''--profile-port'' ''0'' ''--log-level'' ''info'''\n    depends_on:\n      sofascore:\n        condition: process_healthy\n    environment:\n      - BRIDGE_SOFASCORE_URL=http://sofascore:8081\n    readiness_probe:\n      exec:\n        command: portcheck --port 3500\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n      exit_on_end: true\n  airlock:\n    command: '''airlock-deno'' ''run'' ''--frozen'' ''--unstable-worker-options'' ''--allow-net=database:5432,airlock-mesh:3500,0.0.0.0:9997'' ''--allow-read'' ''--allow-env'' ''--allow-sys'' ''main.ts'''\n    working_dir: /app/airlock\n    environment:\n      - DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}\n      - MESH_URL=http://airlock-mesh:3500\n      - AIRLOCK_DIR=/airlock\n      - DENO_DIR=/airlock-deno-dir\n      - PORT=9997\n      - AIRLOCK_RELEASE=docker\n      - AIRLOCK_SEAL_DEV=\n      - AIRLOCK_TARGET=docker\n    depends_on:\n      airlock-upgrade:\n        condition: process_completed_successfully\n      airlock-mesh:\n        condition: process_healthy\n    readiness_probe:\n      exec:\n        command: portcheck --port 9997\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n      exit_on_end: true\n  database:\n    command: '''docker-entrypoint.sh'' ''postgres'' ''-c'' ''session_preload_libraries=pg_ivm'' ''-c'' ''wal_level=logical'' ''-c'' ''max_replication_slots=128'' ''-c'' ''max_wal_senders=128'' ''-c'' ''fsync=off'' ''-c'' ''synchronous_commit=off'' ''-c'' ''full_page_writes=off'' ''-c'' ''shared_buffers=32MB'' ''-c'' ''max_connections=200'' ''-c'' ''fsync=on'' ''-c'' ''synchronous_commit=on'' ''-c'' ''full_page_writes=on'' ''-c'' ''shared_buffers=512MB'''\n  electric:\n    availability:\n      exit_on_end: true\n    command: '''env'' ''DATABASE_URL=postgresql://electric:${ELECTRIC_PASSWORD:-dev-electric-password}@127.0.0.1:5432/${POSTGRES_DB:-golaberto}?sslmode=disable'' ''ELECTRIC_SECRET=${ELECTRIC_SECRET:-dev-electric-secret}'' ''ELECTRIC_MANUAL_TABLE_PUBLISHING=true'' ''ELECTRIC_PORT=3002'' ''ELECTRIC_STORAGE_DIR=${PGDATA:-/var/lib/pgsql/data}/electric'' ''LD_LIBRARY_PATH=/electric-libs'' ''ELIXIR_ERL_OPTIONS=+fnu'' ''/electric-app/bin/entrypoint'' ''start'''\n  risingwave:\n    command: '''/usr/local/bin/appliance-risingwave.sh'''\n    environment:\n      - CONNECTOR_LIBS_PATH=/risingwave/bin/connector-node/libs\n      - ADBC_DRIVER_PATH=/risingwave/lib/adbc\n      - LD_LIBRARY_PATH=/risingwave/lib:/risingwave/lib/adbc:/risingwave/jre/lib/server\n      - JAVA_HOME=/risingwave/jre\n      - JAVA_TOOL_OPTIONS=-Xmx256m\n      - PATH=/risingwave/jre/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\n      - ENABLE_TELEMETRY=false\n    depends_on:\n      database:\n        condition: process_healthy\n    readiness_probe:\n      exec:\n        command: portcheck --port 4566\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n      exit_on_end: true\n  ticker:\n    command: '''ticker-deno'' ''run'' ''--frozen'' ''--allow-net'' ''--allow-env'' ''main.ts'''\n    working_dir: /ticker-app\n    environment:\n      - CRUD_URL=http://crud:3000\n      - CALL_TIMEOUT_MS=35000\n      - SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZWNoYTpzdGFjayIsInJvbGUiOiJzZXJ2aWNlIiwic3ViIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiZXhwIjoxOTg4MTUwNDAwfQ.K4ZX9EDs-BwPIh3r_ZOKmO9XfrQrEx18rwlw3siXcxs}\n      - DENO_DIR=/ticker-deno-dir\n      - PORT=9998\n      - WAKE_URLS=http://airlock:9997/healthz\n    depends_on:\n      crud:\n        condition: process_healthy\n    readiness_probe:\n      exec:\n        command: portcheck --port 9998\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n      exit_on_end: true\n  clock:\n    command: '''/usr/local/bin/appliance-clock.sh'''\n    environment:\n      - SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZWNoYTpzdGFjayIsInJvbGUiOiJzZXJ2aWNlIiwic3ViIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiZXhwIjoxOTg4MTUwNDAwfQ.K4ZX9EDs-BwPIh3r_ZOKmO9XfrQrEx18rwlw3siXcxs}\n    depends_on:\n      ticker:\n        condition: process_healthy\n    availability:\n      restart: on_failure\n      exit_on_end: true\n  timer-check:\n    command: '''psql'' ''-X'' ''--set=ON_ERROR_STOP=1'' ''--single-transaction'' ''--file=/timer-check.sql'''\n  transform:\n    availability:\n      exit_on_end: true\n    environment:\n      - CDC_GROUPS=[\"golaberto-matches-games\",\"golaberto-recent-championships\",\"golaberto-rounds\",\"golaberto-sofascore-admission\",\"golaberto-team-directory\",\"golaberto-team-enrichment\",\"golaberto-team-profiles\"]\n  render:\n    availability:\n      exit_on_end: true\n  mesh-events:\n    availability:\n      exit_on_end: true\n  conduit:\n    availability:\n      exit_on_end: true\n  compute:\n    availability:\n      exit_on_end: true\n  sofascore:\n    command: '''/usr/local/bin/sofascore_fetch'' ''--listen'' ''127.0.0.1:8081'''\n    readiness_probe:\n      exec:\n        command: portcheck --port 8081\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n      exit_on_end: true\nAPPLIANCE",
+          "COPY <<'APPLIANCE' /.bayt/process-compose.appliance.yaml\nversion: \"0.5\"\nprocesses:\n  airlock-upgrade:\n    command: '''psql'' ''postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}'' ''-X'' ''--set=ON_ERROR_STOP=1'' ''--single-transaction'' ''--file=/airlock-upgrade.sql'''\n    depends_on:\n      database:\n        condition: process_healthy\n  airlock-mesh:\n    command: '''/daprd'' ''--app-id'' ''airlock'' ''--dapr-listen-addresses'' ''127.0.0.1'' ''--dapr-internal-grpc-listen-address'' ''127.0.0.1'' ''--resources-path'' ''/dapr/airlock'' ''--config'' ''/dapr/config.yaml'' ''--dapr-http-port'' ''3500'' ''--dapr-grpc-port'' ''50001'' ''--dapr-internal-grpc-port'' ''50002'' ''--metrics-port'' ''0'' ''--profile-port'' ''0'' ''--log-level'' ''info'''\n    depends_on:\n      sofascore:\n        condition: process_healthy\n    environment:\n      - BRIDGE_SOFASCORE_URL=http://sofascore:8081\n    readiness_probe:\n      exec:\n        command: portcheck --port 3500\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n      exit_on_end: true\n  airlock:\n    command: '''airlock-deno'' ''run'' ''--frozen'' ''--unstable-worker-options'' ''--allow-net=database:5432,airlock-mesh:3500,0.0.0.0:9997'' ''--allow-read'' ''--allow-env'' ''--allow-sys'' ''main.ts'''\n    working_dir: /app/airlock\n    environment:\n      - DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}\n      - MESH_URL=http://airlock-mesh:3500\n      - AIRLOCK_DIR=/airlock\n      - DENO_DIR=/airlock-deno-dir\n      - PORT=9997\n      - AIRLOCK_RELEASE=docker\n      - AIRLOCK_SEAL_DEV=\n      - AIRLOCK_TARGET=docker\n    depends_on:\n      airlock-upgrade:\n        condition: process_completed_successfully\n      airlock-mesh:\n        condition: process_healthy\n    readiness_probe:\n      exec:\n        command: portcheck --port 9997\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n      exit_on_end: true\n  database:\n    command: '''docker-entrypoint.sh'' ''postgres'' ''-c'' ''session_preload_libraries=pg_ivm'' ''-c'' ''wal_level=logical'' ''-c'' ''max_replication_slots=128'' ''-c'' ''max_wal_senders=128'' ''-c'' ''max_slot_wal_keep_size=1GB'' ''-c'' ''fsync=off'' ''-c'' ''synchronous_commit=off'' ''-c'' ''full_page_writes=off'' ''-c'' ''shared_buffers=32MB'' ''-c'' ''max_connections=200'' ''-c'' ''fsync=on'' ''-c'' ''synchronous_commit=on'' ''-c'' ''full_page_writes=on'' ''-c'' ''shared_buffers=512MB'' ''-c'' ''max_slot_wal_keep_size=${PG_MAX_SLOT_WAL_KEEP_SIZE:-1GB}'''\n  electric:\n    availability:\n      exit_on_end: true\n    command: '''sh'' ''-c'' ''set -eu; lost=$$(psql \"postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}\" -XAt -v ON_ERROR_STOP=1 -c \"SELECT 1 FROM pg_replication_slots WHERE slot_name = ''\\''''electric_slot_default''\\'''' AND wal_status = ''\\''''lost''\\'''';\"); if [ \"$$lost\" = \"1\" ]; then echo ''\\''''electric: slot electric_slot_default was lost; dropping it and clearing shape storage to rebuild''\\'''' >&2; psql \"postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}\" -X -v ON_ERROR_STOP=1 -c \"SELECT pg_drop_replication_slot(''\\''''electric_slot_default''\\'''');\"; rm -rf \"${PGDATA:-/var/lib/pgsql/data}/electric\"; fi; exec env \"DATABASE_URL=postgresql://electric:${ELECTRIC_PASSWORD:-dev-electric-password}@127.0.0.1:5432/${POSTGRES_DB:-golaberto}?sslmode=disable\" \"ELECTRIC_SECRET=${ELECTRIC_SECRET:-dev-electric-secret}\" ELECTRIC_MANUAL_TABLE_PUBLISHING=true ELECTRIC_PORT=3002 \"ELECTRIC_STORAGE_DIR=${PGDATA:-/var/lib/pgsql/data}/electric\" LD_LIBRARY_PATH=/electric-libs ELIXIR_ERL_OPTIONS=+fnu /electric-app/bin/entrypoint start'''\n  mesh-events:\n    availability:\n      exit_on_end: true\n    environment:\n      - MESH_SUBSCRIPTIONS_DIR=/mesh-events/subscriptions\n      - MESH_APP_PORT=4195\n  redis:\n    command: '''sh'' ''-c'' ''mkdir -p /var/lib/redis && exec redis-server --port \"$$REDIS_PORT\" --save ''\\''''''\\'''' --appendonly yes --appendfsync always --aof-load-corrupt-tail-max-size 65536 --maxmemory \"$${REDIS_MAXMEMORY:-256mb}\" --maxmemory-policy noeviction --dir /var/lib/redis'''\n  risingwave:\n    command: '''/usr/local/bin/appliance-risingwave.sh'''\n    environment:\n      - CONNECTOR_LIBS_PATH=/risingwave/bin/connector-node/libs\n      - ADBC_DRIVER_PATH=/risingwave/lib/adbc\n      - LD_LIBRARY_PATH=/risingwave/lib:/risingwave/lib/adbc:/risingwave/jre/lib/server\n      - JAVA_HOME=/risingwave/jre\n      - JAVA_TOOL_OPTIONS=-Xmx256m\n      - PATH=/risingwave/jre/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\n      - ENABLE_TELEMETRY=false\n    depends_on:\n      database:\n        condition: process_healthy\n    readiness_probe:\n      exec:\n        command: portcheck --port 4566\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n      exit_on_end: true\n  ticker:\n    command: '''ticker-deno'' ''run'' ''--frozen'' ''--allow-net'' ''--allow-env'' ''main.ts'''\n    working_dir: /ticker-app\n    environment:\n      - CRUD_URL=http://crud:3000\n      - CALL_TIMEOUT_MS=35000\n      - SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZWNoYTpzdGFjayIsInJvbGUiOiJzZXJ2aWNlIiwic3ViIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiZXhwIjoxOTg4MTUwNDAwfQ.K4ZX9EDs-BwPIh3r_ZOKmO9XfrQrEx18rwlw3siXcxs}\n      - DENO_DIR=/ticker-deno-dir\n      - PORT=9998\n      - WAKE_URLS=http://airlock:9997/healthz\n    depends_on:\n      crud:\n        condition: process_healthy\n    readiness_probe:\n      exec:\n        command: portcheck --port 9998\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n      exit_on_end: true\n  clock:\n    command: '''/usr/local/bin/appliance-clock.sh'''\n    environment:\n      - SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJtZWNoYTpzdGFjayIsInJvbGUiOiJzZXJ2aWNlIiwic3ViIjoiMDAwMDAwMDAtMDAwMC0wMDAwLTAwMDAtMDAwMDAwMDAwMDAwIiwiZXhwIjoxOTg4MTUwNDAwfQ.K4ZX9EDs-BwPIh3r_ZOKmO9XfrQrEx18rwlw3siXcxs}\n    depends_on:\n      ticker:\n        condition: process_healthy\n    availability:\n      restart: on_failure\n      exit_on_end: true\n  timer-check:\n    command: '''psql'' ''-X'' ''--set=ON_ERROR_STOP=1'' ''--single-transaction'' ''--file=/timer-check.sql'''\n  transform:\n    availability:\n      exit_on_end: true\n    environment:\n      - CDC_GROUPS=[\"golaberto-matches-games\",\"golaberto-recent-championships\",\"golaberto-rounds\",\"golaberto-sofascore-admission\",\"golaberto-team-directory\",\"golaberto-team-enrichment\",\"golaberto-team-profiles\"]\n      - CDC_REPLAY_PORT=4195\n      - CDC_RETRY_GROUPS=[\"golaberto-team-enrichment\",\"golaberto-team-profiles\",\"golaberto-team-directory\",\"golaberto-matches-games\",\"golaberto-recent-championships\",\"golaberto-sofascore-admission\"]\n  render:\n    availability:\n      exit_on_end: true\n  conduit:\n    availability:\n      exit_on_end: true\n  sofascore:\n    command: '''/usr/local/bin/sofascore_fetch'' ''--listen'' ''127.0.0.1:8081'''\n    readiness_probe:\n      exec:\n        command: portcheck --port 8081\n      period_seconds: 1\n      timeout_seconds: 5\n      failure_threshold: 120\n    availability:\n      restart: on_failure\n      exit_on_end: true\nAPPLIANCE",
+          "COPY <<'SUBSCRIPTIONS' /mesh-events/subscriptions/retry.yaml\napiVersion: dapr.io/v2alpha1\nkind: Subscription\nmetadata:\n  name: golaberto-team-enrichment-retry\nspec:\n  pubsubname: redis-streams\n  topic: golaberto-team-enrichment-retry\n  routes:\n    default: /golaberto-team-enrichment/replay\n  deadLetterTopic: golaberto-team-enrichment-dead\nscopes:\n  - mechaed\n---\napiVersion: dapr.io/v2alpha1\nkind: Subscription\nmetadata:\n  name: golaberto-team-profiles-retry\nspec:\n  pubsubname: redis-streams\n  topic: golaberto-team-profiles-retry\n  routes:\n    default: /golaberto-team-profiles/replay\n  deadLetterTopic: golaberto-team-profiles-dead\nscopes:\n  - mechaed\n---\napiVersion: dapr.io/v2alpha1\nkind: Subscription\nmetadata:\n  name: golaberto-team-directory-retry\nspec:\n  pubsubname: redis-streams\n  topic: golaberto-team-directory-retry\n  routes:\n    default: /golaberto-team-directory/replay\n  deadLetterTopic: golaberto-team-directory-dead\nscopes:\n  - mechaed\n---\napiVersion: dapr.io/v2alpha1\nkind: Subscription\nmetadata:\n  name: golaberto-matches-games-retry\nspec:\n  pubsubname: redis-streams\n  topic: golaberto-matches-games-retry\n  routes:\n    default: /golaberto-matches-games/replay\n  deadLetterTopic: golaberto-matches-games-dead\nscopes:\n  - mechaed\n---\napiVersion: dapr.io/v2alpha1\nkind: Subscription\nmetadata:\n  name: golaberto-recent-championships-retry\nspec:\n  pubsubname: redis-streams\n  topic: golaberto-recent-championships-retry\n  routes:\n    default: /golaberto-recent-championships/replay\n  deadLetterTopic: golaberto-recent-championships-dead\nscopes:\n  - mechaed\n---\napiVersion: dapr.io/v2alpha1\nkind: Subscription\nmetadata:\n  name: golaberto-sofascore-admission-retry\nspec:\n  pubsubname: redis-streams\n  topic: golaberto-sofascore-admission-retry\n  routes:\n    default: /golaberto-sofascore-admission/replay\n  deadLetterTopic: golaberto-sofascore-admission-dead\nscopes:\n  - mechaed\nSUBSCRIPTIONS",
           "RUN printf '%s\\n' '#!/bin/sh' 'set -e' 'while sleep \"${POKE_INTERVAL_SECONDS:-60}\"; do' '  curl -fsS -X POST -H \"Authorization: Bearer ${SERVICE_JWT}\" \"http://ticker:9998/poke?caller=appliance\" >/dev/null || { echo \"clock: the ticker refused its poke\" >&2; exit 1; }' 'done' > /usr/local/bin/appliance-clock.sh && chmod 755 /usr/local/bin/appliance-clock.sh",
           "ENV PATH=/usr/lib/postgresql/18/bin:/usr/local/bin:$PATH",
           "ENV PGDATA=/var/lib/pgsql/data",
@@ -3479,7 +3493,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.34.0@sha256:cd4cd6fc4b2b8eec05a1f3628c00d9c06eb943b0e6abb1b9bc900250680e5c01}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.35.0@sha256:a91ae9b6b96eb354197725f50a727a0f36faa5772c284adc0852d32e189d6440}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -3971,7 +3985,7 @@
             "copy": {
               "from": {
                 "name": "bayt",
-                "image": "bonitao/bayt-runtime:1.5.3@sha256:9560b4a6d6e40fe15a951ef14b5d10dcd613c3efa73ef1847072add962d60760"
+                "image": "bonitao/bayt-runtime:1.5.4@sha256:5bda4d9d7a43bdeca9ccaa0597eaf542f1a14d7f55c84e8cd79cbf19a40cffdd"
               },
               "srcs": [
                 "."
@@ -4825,7 +4839,7 @@
             "copy": {
               "from": {
                 "name": "bayt",
-                "image": "bonitao/bayt-runtime:1.5.3@sha256:9560b4a6d6e40fe15a951ef14b5d10dcd613c3efa73ef1847072add962d60760"
+                "image": "bonitao/bayt-runtime:1.5.4@sha256:5bda4d9d7a43bdeca9ccaa0597eaf542f1a14d7f55c84e8cd79cbf19a40cffdd"
               },
               "srcs": [
                 "."
@@ -5722,7 +5736,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.34.0@sha256:1e65261fd9507f7c935a939c43916fb3a61f335cf50002478b31a8d643a103df}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.35.0@sha256:848b00d3e43564b2c17a535a2afbf8699ee0221a5f4cc8f92a1a265cd57a2a55}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
           },
           "secrets": [],
           "args": {}
@@ -6093,7 +6107,7 @@
       },
       "entrypoint": {
         "name": "entrypoint",
-        "do": "if ('/docker-entrypoint-initdb.d' | path exists) { exec docker-entrypoint.sh postgres -c session_preload_libraries=pg_ivm -c wal_level=logical -c max_replication_slots=128 -c max_wal_senders=128 -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c shared_buffers=32MB -c max_connections=200 }\nlet mecha = (if (($env.PRONTO_INITDB_SRC_DIR? | default '') != '') { $env.PRONTO_INITDB_SRC_DIR } else if ('services/database/rls/rls.sql' | path exists) { $env.PWD } else { (^mise where github:bonisoft3/mecha | str trim) })\nlet initdb = (($env.BAYT_LOCAL_WORK_DIR? | default $nu.temp-dir) | path join 'initdb.d')\nrm -rf $initdb; mkdir $initdb\ncp -f ($mecha | path join 'services/database/rls/rls.sql') ($initdb | path join '003_rls.sql')\ncp -f ($mecha | path join 'services/database/role_passwords.sh') ($initdb | path join '899_role_passwords.sh')\ncp -f ($mecha | path join 'services/ticker/schedule.sql') ($initdb | path join '800_schedule.sql')\ncp -f ($mecha | path join 'services/durex/graphile.sql') ($initdb | path join '060_graphile_worker.sql')\n[(open --raw ($mecha | path join 'services/ticker/schedule.sql')) (open --raw ($mecha | path join 'services/airlock/airlock.sql'))] | str join '' | save --raw -f ($initdb | path join '061_airlock.sql')\ncp -f ($mecha | path join 'services/airlock/job_key.sql') ($initdb | path join '064_airlock_job_key.sql')\nopen .bayt/bayt.database.json | get dockerfile.copy.0.srcs | each {|s| cp -f $s ($initdb | path join ($s | path basename)) } | ignore\nexec nu ($mecha | path join 'services/database/entrypoint.nu') $initdb postgres -c session_preload_libraries=pg_ivm -c wal_level=logical -c max_replication_slots=128 -c max_wal_senders=128 -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c shared_buffers=32MB -c max_connections=200",
+        "do": "if ('/docker-entrypoint-initdb.d' | path exists) { exec docker-entrypoint.sh postgres -c session_preload_libraries=pg_ivm -c wal_level=logical -c max_replication_slots=128 -c max_wal_senders=128 -c max_slot_wal_keep_size=1GB -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c shared_buffers=32MB -c max_connections=200 }\nlet mecha = (if (($env.PRONTO_INITDB_SRC_DIR? | default '') != '') { $env.PRONTO_INITDB_SRC_DIR } else if ('services/database/rls/rls.sql' | path exists) { $env.PWD } else { (^mise where github:bonisoft3/mecha | str trim) })\nlet initdb = (($env.BAYT_LOCAL_WORK_DIR? | default $nu.temp-dir) | path join 'initdb.d')\nrm -rf $initdb; mkdir $initdb\ncp -f ($mecha | path join 'services/database/rls/rls.sql') ($initdb | path join '003_rls.sql')\ncp -f ($mecha | path join 'services/database/role_passwords.sh') ($initdb | path join '899_role_passwords.sh')\ncp -f ($mecha | path join 'services/ticker/schedule.sql') ($initdb | path join '800_schedule.sql')\ncp -f ($mecha | path join 'services/durex/graphile.sql') ($initdb | path join '060_graphile_worker.sql')\n[(open --raw ($mecha | path join 'services/ticker/schedule.sql')) (open --raw ($mecha | path join 'services/airlock/airlock.sql'))] | str join '' | save --raw -f ($initdb | path join '061_airlock.sql')\ncp -f ($mecha | path join 'services/airlock/job_key.sql') ($initdb | path join '064_airlock_job_key.sql')\nopen .bayt/bayt.database.json | get dockerfile.copy.0.srcs | each {|s| cp -f $s ($initdb | path join ($s | path basename)) } | ignore\nexec nu ($mecha | path join 'services/database/entrypoint.nu') $initdb postgres -c session_preload_libraries=pg_ivm -c wal_level=logical -c max_replication_slots=128 -c max_wal_senders=128 -c max_slot_wal_keep_size=1GB -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c shared_buffers=32MB -c max_connections=200",
         "priority": 0,
         "shell": "nu",
         "stop": false,
@@ -6115,7 +6129,7 @@
         "after": {},
         "host": true,
         "dockerfile": {
-          "do": "docker-entrypoint.sh postgres -c session_preload_libraries=pg_ivm -c wal_level=logical -c max_replication_slots=128 -c max_wal_senders=128 -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c shared_buffers=32MB -c max_connections=200",
+          "do": "docker-entrypoint.sh postgres -c session_preload_libraries=pg_ivm -c wal_level=logical -c max_replication_slots=128 -c max_wal_senders=128 -c max_slot_wal_keep_size=1GB -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c shared_buffers=32MB -c max_connections=200",
           "shell": "exec"
         }
       },
@@ -6973,7 +6987,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.34.0@sha256:1e65261fd9507f7c935a939c43916fb3a61f335cf50002478b31a8d643a103df}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.35.0@sha256:848b00d3e43564b2c17a535a2afbf8699ee0221a5f4cc8f92a1a265cd57a2a55}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
           },
           "secrets": [],
           "args": {}
@@ -7100,7 +7114,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.34.0@sha256:1e65261fd9507f7c935a939c43916fb3a61f335cf50002478b31a8d643a103df}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.35.0@sha256:848b00d3e43564b2c17a535a2afbf8699ee0221a5f4cc8f92a1a265cd57a2a55}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
           },
           "secrets": [],
           "args": {}
@@ -7234,7 +7248,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.34.0@sha256:1e65261fd9507f7c935a939c43916fb3a61f335cf50002478b31a8d643a103df}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+            "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.35.0@sha256:848b00d3e43564b2c17a535a2afbf8699ee0221a5f4cc8f92a1a265cd57a2a55}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
           },
           "secrets": [],
           "args": {}
@@ -7371,7 +7385,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-auth-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.34.0@sha256:51403dda03dbaf341eb2eee779d7b293eebca3cab186b0a22420f53e8fca4d18}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}"
+            "libraries_mecha-auth-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.35.0@sha256:ffbef2572dae57f22159216d6dea97840dfdf8bc2127cd4644083307e0fb12e8}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}"
           },
           "secrets": [],
           "args": {}
@@ -7501,7 +7515,7 @@
           "name": "libraries_mecha-mesh-image"
         },
         "preamble": [
-          "COPY <<'REDIS' /dapr/components/redis-streams.yaml\napiVersion: dapr.io/v1alpha1\nkind: Component\nmetadata:\n  name: env\nspec:\n  type: secretstores.local.env\n  version: v1\n  metadata: []\n---\napiVersion: dapr.io/v1alpha1\nkind: Component\nmetadata:\n  name: redis-streams\nspec:\n  type: pubsub.redis\n  version: v1\n  metadata:\n    - name: redisHost\n      secretKeyRef:\n        name: REDIS_HOST\n        key: REDIS_HOST\n    - name: redisPassword\n      value: \"\"\n    - name: consumerID\n      value: \"mecha\"\n    - name: enableTLS\n      value: \"false\"\n    - name: processingTimeout\n      value: \"30s\"\n    - name: redeliverInterval\n      value: \"5s\"\n    - name: maxRetries\n      value: \"5\"\n    - name: concurrency\n      value: \"1\"\nauth:\n  secretStore: env\n\nREDIS"
+          "COPY <<'REDIS' /dapr/components/redis-streams.yaml\napiVersion: dapr.io/v1alpha1\nkind: Component\nmetadata:\n  name: env\nspec:\n  type: secretstores.local.env\n  version: v1\n  metadata: []\n---\napiVersion: dapr.io/v1alpha1\nkind: Component\nmetadata:\n  name: redis-streams\nspec:\n  type: pubsub.redis\n  version: v1\n  metadata:\n    - name: redisHost\n      secretKeyRef:\n        name: REDIS_HOST\n        key: REDIS_HOST\n    - name: redisPassword\n      value: \"\"\n    - name: consumerID\n      value: \"mecha\"\n    - name: enableTLS\n      value: \"false\"\n    # Only durable retry subscribes through Dapr. Its resiliency policy\n    # (resiliency.yaml) owns the attempts and keeps a record pending for up to\n    # twenty minutes, which redelivery after this timeout would duplicate.\n    - name: processingTimeout\n      value: \"1h\"\n    - name: redeliverInterval\n      value: \"1m\"\n    - name: concurrency\n      value: \"1\"\nauth:\n  secretStore: env\n\nREDIS"
         ],
         "defaultPreamble": null,
         "add": [],
@@ -7548,7 +7562,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-mesh-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.34.0@sha256:8d39aa3543560232c52330152ba70a4d2c973b76d0ac97899d677704bc0e09a4}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}"
+            "libraries_mecha-mesh-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.35.0@sha256:cc5a4657406eed9ef03d8c7a670fae5588851bca71767aad76b0aac077275a89}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}"
           },
           "secrets": [],
           "args": {}
@@ -7616,7 +7630,7 @@
       },
       "entrypoint": {
         "name": "entrypoint",
-        "do": "let base = ($env.BAYT_LOCAL_WORK_DIR? | default $nu.temp-dir); let dir = ($base | path join $'mesh-events-($nu.pid)-(random int 1000..9999)'); mkdir $dir; let mdir = (if (($env.MECHA_MESH_DIR? | default '') != '') { $env.MECHA_MESH_DIR } else if ('services/mesh/dapr/components/resiliency.yaml' | path exists) { 'services/mesh' } else { ((^mise where github:bonisoft3/mecha | str trim) | path join 'services/mesh') }); cp -f ($mdir | path join 'dapr/components/resiliency.yaml') ($dir | path join 'resiliency.yaml'); cp -f ($mdir | path join 'dapr/components/redis-streams.yaml') ($dir | path join 'redis-streams.yaml'); exec daprd --app-id mechaed --dapr-listen-addresses 127.0.0.1 --dapr-internal-grpc-listen-address 127.0.0.1 --resources-path $dir --app-channel-address 127.0.0.1 --app-port $env.CADDY_PORT --dapr-http-port $env.DAPR_HTTP_PORT --dapr-grpc-port 0 --dapr-internal-grpc-port $env.DAPR_INTERNAL_GRPC_PORT --metrics-port 0 --profile-port 0 --log-level info --enable-api-logging",
+        "do": "let base = ($env.BAYT_LOCAL_WORK_DIR? | default $nu.temp-dir); let dir = ($base | path join $'mesh-events-($nu.pid)-(random int 1000..9999)'); mkdir $dir; let mdir = (if (($env.MECHA_MESH_DIR? | default '') != '') { $env.MECHA_MESH_DIR } else if ('services/mesh/dapr/components/resiliency.yaml' | path exists) { 'services/mesh' } else { ((^mise where github:bonisoft3/mecha | str trim) | path join 'services/mesh') }); cp -f ($mdir | path join 'dapr/components/resiliency.yaml') ($dir | path join 'resiliency.yaml'); cp -f ($mdir | path join 'dapr/components/redis-streams.yaml') ($dir | path join 'redis-streams.yaml'); if (($env.MESH_SUBSCRIPTIONS_DIR? | default '') != '') { ls ($env.MESH_SUBSCRIPTIONS_DIR | path join '*.yaml' | into glob) | each {|f| cp -f $f.name $dir } | ignore }; exec daprd --app-id mechaed --dapr-listen-addresses 127.0.0.1 --dapr-internal-grpc-listen-address 127.0.0.1 --resources-path $dir --app-channel-address 127.0.0.1 --app-port ($env.MESH_APP_PORT? | default $env.CADDY_PORT) --dapr-http-port $env.DAPR_HTTP_PORT --dapr-grpc-port 0 --dapr-internal-grpc-port $env.DAPR_INTERNAL_GRPC_PORT --metrics-port 0 --profile-port 0 --log-level info --enable-api-logging",
         "priority": 0,
         "shell": "nu",
         "stop": false,
@@ -7747,7 +7761,7 @@
         "cmd": [
           "sh",
           "-c",
-          "mkdir -p /conduit/pipelines && envsubst < /conduit/cdc-to-bus.yaml.tmpl > /conduit/pipelines/cdc-to-bus.yaml && exec /app/conduit run"
+          "set -eu; mkdir -p /conduit/pipelines; envsubst < /conduit/cdc-to-bus.yaml.tmpl > /conduit/pipelines/cdc-to-bus.yaml; slot=$(sed -nE 's/.*logrepl\\.slotName:[[:space:]]*\"?([a-zA-Z0-9_]+)\"?.*/\\1/p' /conduit/pipelines/cdc-to-bus.yaml | head -n 1); pub=$(sed -nE 's/.*logrepl\\.publicationName:[[:space:]]*\"?([a-zA-Z0-9_]+)\"?.*/\\1/p' /conduit/pipelines/cdc-to-bus.yaml | head -n 1); if [ -n \"$slot\" ]; then [ -n \"$pub\" ] || { echo \"conduit: slot $slot has no logrepl.publicationName\" >&2; exit 1; }; state=$(printf '%s\\n' \"SELECT COALESCE((SELECT '1' FROM pg_replication_slots WHERE slot_name = :'slot' AND wal_status = 'lost'), '0') || ',' || COALESCE((SELECT '1' FROM pg_publication WHERE pubname = :'pub' AND obj_description(oid, 'pg_publication') = 'slot_reset_pending'), '0');\" | psql \"$DATABASE_URL\" -XAt -v ON_ERROR_STOP=1 -v slot=\"$slot\" -v pub=\"$pub\"); if [ \"$state\" != \"0,0\" ]; then echo \"conduit: slot $slot recovery needed ($state); recreating slot and signalling readers to rebuild\" >&2; i=0; until curl -fsS \"$MESH_EVENTS_URL/v1.0/healthz/outbound\" >/dev/null; do i=$((i + 1)); [ \"$i\" -lt 30 ] || { echo \"conduit: mesh-events at $MESH_EVENTS_URL not ready\" >&2; exit 1; }; sleep 1; done; printf '%s\\n' \"COMMENT ON PUBLICATION :\\\"pub\\\" IS 'slot_reset_pending';\" \"SELECT pg_drop_replication_slot(slot_name) FROM pg_replication_slots WHERE slot_name = :'slot' AND wal_status = 'lost';\" \"SELECT pg_create_logical_replication_slot(:'slot', 'pgoutput') WHERE NOT EXISTS (SELECT 1 FROM pg_replication_slots WHERE slot_name = :'slot');\" | psql \"$DATABASE_URL\" -X -v ON_ERROR_STOP=1 -v slot=\"$slot\" -v pub=\"$pub\"; curl -fsS -H 'Content-Type: text/plain' --data '{\"__table\":\"slot_reset\"}' \"$MESH_EVENTS_URL/v1.0/publish/redis-streams/cdc-events\"; printf '%s\\n' \"COMMENT ON PUBLICATION :\\\"pub\\\" IS NULL;\" | psql \"$DATABASE_URL\" -X -v ON_ERROR_STOP=1 -v pub=\"$pub\"; fi; fi; exec /app/conduit run"
         ]
       },
       "compose": {
@@ -7755,7 +7769,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-conduit-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-conduit:0.34.0@sha256:31cb58e1a6b6111aeab56a9dd61cc10a31af5c3d3ab207f2c78115dfeebbaa5c}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image}"
+            "libraries_mecha-conduit-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-conduit:0.35.0@sha256:a643922ed823b329436fb7c49e0ff495a2c3d7060ea583fb8e0d6ab841553f75}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-conduit-image}"
           },
           "secrets": [],
           "args": {}
@@ -7840,7 +7854,7 @@
       },
       "entrypoint": {
         "name": "entrypoint",
-        "do": "let base = ($env.BAYT_LOCAL_WORK_DIR? | default $nu.temp-dir); let dir = ($base | path join $'conduit-($nu.pid)-(random int 1000..9999)'); mkdir ($dir | path join 'pipelines') ($dir | path join 'connectors'); let conn = (which conduit-connector-http | first | get path); cp -f $conn ($dir | path join 'connectors' ($conn | path basename)); open --raw 'docker/golaberto-cdc.yaml' | str replace -a '${DATABASE_URL}' $env.DATABASE_URL | str replace -a '${MESH_EVENTS_URL}' $env.MESH_EVENTS_URL | save -f ($dir | path join 'pipelines/cdc-to-bus.yaml'); exec conduit run --db.type inmemory --pipelines.path ($dir | path join 'pipelines') --connectors.path ($dir | path join 'connectors') --api.http.address $\"127.0.0.1:($env.CONDUIT_API_HTTP_ADDRESS_PORT)\" --api.grpc.address '127.0.0.1:0'",
+        "do": "let base = ($env.BAYT_LOCAL_WORK_DIR? | default $nu.temp-dir); let dir = ($base | path join $'conduit-($nu.pid)-(random int 1000..9999)'); mkdir ($dir | path join 'pipelines') ($dir | path join 'connectors'); let conn = (which conduit-connector-http | first | get path); cp -f $conn ($dir | path join 'connectors' ($conn | path basename)); let cfg = ($dir | path join 'pipelines/cdc-to-bus.yaml'); open --raw 'docker/golaberto-cdc.yaml' | str replace -a '${DATABASE_URL}' $env.DATABASE_URL | str replace -a '${MESH_EVENTS_URL}' $env.MESH_EVENTS_URL | save -f $cfg; let raw = (open --raw $cfg); let slot = ($raw | parse -r 'logrepl\\.slotName:\\s*\"?(?<name>[a-zA-Z0-9_]+)\"?' | get -o 0.name | default ''); let pub = ($raw | parse -r 'logrepl\\.publicationName:\\s*\"?(?<name>[a-zA-Z0-9_]+)\"?' | get -o 0.name | default ''); if $slot != '' { if $pub == '' { error make { msg: $'conduit: slot ($slot) has no logrepl.publicationName' } }; let state = (\"SELECT COALESCE((SELECT '1' FROM pg_replication_slots WHERE slot_name = :'slot' AND wal_status = 'lost'), '0') || ',' || COALESCE((SELECT '1' FROM pg_publication WHERE pubname = :'pub' AND obj_description(oid, 'pg_publication') = 'slot_reset_pending'), '0');\" | ^psql $env.DATABASE_URL -XAt -v ON_ERROR_STOP=1 -v $'slot=($slot)' -v $'pub=($pub)' | str trim); if $state != '0,0' { print -e $'conduit: slot ($slot) recovery needed (($state)); recreating slot and signalling readers to rebuild'; mut ready = false; for _ in 1..30 { if (try { http get $'($env.MESH_EVENTS_URL)/v1.0/healthz/outbound'; true } catch { false }) { $ready = true; break }; sleep 1sec }; if not $ready { error make { msg: $'conduit: mesh-events at ($env.MESH_EVENTS_URL) not ready' } }; ([\"COMMENT ON PUBLICATION :\\\"pub\\\" IS 'slot_reset_pending';\" \"SELECT pg_drop_replication_slot(slot_name) FROM pg_replication_slots WHERE slot_name = :'slot' AND wal_status = 'lost';\" \"SELECT pg_create_logical_replication_slot(:'slot', 'pgoutput') WHERE NOT EXISTS (SELECT 1 FROM pg_replication_slots WHERE slot_name = :'slot');\"] | str join (char nl)) | ^psql $env.DATABASE_URL -X -v ON_ERROR_STOP=1 -v $'slot=($slot)' -v $'pub=($pub)'; http post --content-type text/plain $'($env.MESH_EVENTS_URL)/v1.0/publish/redis-streams/cdc-events' '{\"__table\":\"slot_reset\"}'; \"COMMENT ON PUBLICATION :\\\"pub\\\" IS NULL;\" | ^psql $env.DATABASE_URL -X -v ON_ERROR_STOP=1 -v $'pub=($pub)' } }; exec conduit run --db.type inmemory --pipelines.path ($dir | path join 'pipelines') --connectors.path ($dir | path join 'connectors') --api.http.address $\"127.0.0.1:($env.CONDUIT_API_HTTP_ADDRESS_PORT)\" --api.grpc.address '127.0.0.1:0'",
         "priority": 0,
         "shell": "nu",
         "stop": false,
@@ -8198,7 +8212,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-compute-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.34.0@sha256:bc35f0d86362e7ac9ba9e7bf95c8e3010ccef378b34a08662b4a565f758e3e34}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}"
+            "libraries_mecha-compute-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.35.0@sha256:311cdaf8a194a6058bdef225757a9b9fe0ac77d1de186624088221d39b4df3bc}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}"
           },
           "secrets": [],
           "args": {}
@@ -8476,7 +8490,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-ticker-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-ticker:0.34.0@sha256:100a724353cca8e88f6f6e0839195f10e1287f010a8729f82bfd8c85cefcdfb6}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image}"
+            "libraries_mecha-ticker-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-ticker:0.35.0@sha256:69f8dca787537bbf2d08a7b6ab42be6b786bebf744725f0b900c952d4991d71d}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-ticker-image}"
           },
           "secrets": [],
           "args": {}
@@ -8624,7 +8638,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-clock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-clock:0.34.0@sha256:9d8cdaca612d880a4de4ab3176f80a1e7acdb38b10295f9aa5990217dcb3317f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-clock-image}"
+            "libraries_mecha-clock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-clock:0.35.0@sha256:9d8cdaca612d880a4de4ab3176f80a1e7acdb38b10295f9aa5990217dcb3317f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-clock-image}"
           },
           "secrets": [],
           "args": {}
@@ -8809,7 +8823,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-airlock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-airlock:0.34.0@sha256:eba02ec833bdd24995d73019af5735a6353b60e21529762814126f4799e0d095}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image}"
+            "libraries_mecha-airlock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-airlock:0.35.0@sha256:24010107f8dab3b373bb84e890938af62613c6fcd362d684aa27b7fa2dfa766f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image}"
           },
           "secrets": [],
           "args": {}
@@ -9073,8 +9087,8 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "libraries_mecha-mesh-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.34.0@sha256:8d39aa3543560232c52330152ba70a4d2c973b76d0ac97899d677704bc0e09a4}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}",
-            "libraries_mecha-airlock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-airlock:0.34.0@sha256:eba02ec833bdd24995d73019af5735a6353b60e21529762814126f4799e0d095}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image}"
+            "libraries_mecha-mesh-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-mesh:0.35.0@sha256:cc5a4657406eed9ef03d8c7a670fae5588851bca71767aad76b0aac077275a89}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-mesh-image}",
+            "libraries_mecha-airlock-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-airlock:0.35.0@sha256:24010107f8dab3b373bb84e890938af62613c6fcd362d684aa27b7fa2dfa766f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-airlock-image}"
           },
           "secrets": [],
           "args": {}
@@ -9331,7 +9345,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.34.0@sha256:cd4cd6fc4b2b8eec05a1f3628c00d9c06eb943b0e6abb1b9bc900250680e5c01}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.35.0@sha256:a91ae9b6b96eb354197725f50a727a0f36faa5772c284adc0852d32e189d6440}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -9733,7 +9747,7 @@
             "copy": {
               "from": {
                 "name": "bayt",
-                "image": "bonitao/bayt-runtime:1.5.3@sha256:9560b4a6d6e40fe15a951ef14b5d10dcd613c3efa73ef1847072add962d60760"
+                "image": "bonitao/bayt-runtime:1.5.4@sha256:5bda4d9d7a43bdeca9ccaa0597eaf542f1a14d7f55c84e8cd79cbf19a40cffdd"
               },
               "srcs": [
                 "."
@@ -10369,7 +10383,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.34.0@sha256:cd4cd6fc4b2b8eec05a1f3628c00d9c06eb943b0e6abb1b9bc900250680e5c01}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.35.0@sha256:a91ae9b6b96eb354197725f50a727a0f36faa5772c284adc0852d32e189d6440}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -10774,7 +10788,7 @@
             "copy": {
               "from": {
                 "name": "bayt",
-                "image": "bonitao/bayt-runtime:1.5.3@sha256:9560b4a6d6e40fe15a951ef14b5d10dcd613c3efa73ef1847072add962d60760"
+                "image": "bonitao/bayt-runtime:1.5.4@sha256:5bda4d9d7a43bdeca9ccaa0597eaf542f1a14d7f55c84e8cd79cbf19a40cffdd"
               },
               "srcs": [
                 "."
@@ -11410,7 +11424,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.34.0@sha256:cd4cd6fc4b2b8eec05a1f3628c00d9c06eb943b0e6abb1b9bc900250680e5c01}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.35.0@sha256:a91ae9b6b96eb354197725f50a727a0f36faa5772c284adc0852d32e189d6440}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -11812,7 +11826,7 @@
             "copy": {
               "from": {
                 "name": "bayt",
-                "image": "bonitao/bayt-runtime:1.5.3@sha256:9560b4a6d6e40fe15a951ef14b5d10dcd613c3efa73ef1847072add962d60760"
+                "image": "bonitao/bayt-runtime:1.5.4@sha256:5bda4d9d7a43bdeca9ccaa0597eaf542f1a14d7f55c84e8cd79cbf19a40cffdd"
               },
               "srcs": [
                 "."
@@ -14643,7 +14657,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.34.0@sha256:cd4cd6fc4b2b8eec05a1f3628c00d9c06eb943b0e6abb1b9bc900250680e5c01}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.35.0@sha256:a91ae9b6b96eb354197725f50a727a0f36faa5772c284adc0852d32e189d6440}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -14991,7 +15005,7 @@
         "manual": true,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.34.0@sha256:cd4cd6fc4b2b8eec05a1f3628c00d9c06eb943b0e6abb1b9bc900250680e5c01}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.35.0@sha256:a91ae9b6b96eb354197725f50a727a0f36faa5772c284adc0852d32e189d6440}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -15359,7 +15373,7 @@
         "manual": false,
         "build": {
           "additional_contexts": {
-            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.34.0@sha256:cd4cd6fc4b2b8eec05a1f3628c00d9c06eb943b0e6abb1b9bc900250680e5c01}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+            "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.35.0@sha256:a91ae9b6b96eb354197725f50a727a0f36faa5772c284adc0852d32e189d6440}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
           },
           "secrets": [],
           "args": {}
@@ -16100,7 +16114,7 @@
       "deps": [],
       "dockerfile": {
         "from": {
-          "name": "redis:8.2.11-bookworm@sha256:b0b01167ff47bc3868e56a967895a26be4230891a1f42a78ab61cdd227accc8d"
+          "name": "redis:8.4.8-trixie@sha256:90cb779e1f814f1123532293f7a7a18a6a48bdc01aa0a9d54ce9f3d61b71018f"
         },
         "workdir": "/data",
         "preamble": [],
@@ -16112,6 +16126,13 @@
         "epilogue": [],
         "copy": [],
         "defaultCopy": null,
+        "cmd": [
+          "sh",
+          "-c",
+          "exec redis-server --save '' --appendonly no --maxmemory \"${REDIS_MAXMEMORY:-256mb}\" --maxmemory-policy noeviction"
+        ],
+        "entrypoint": null,
+        "expose": [],
         "healthcheck": {
           "test": [
             "CMD-SHELL",
@@ -16122,10 +16143,7 @@
           "retries": 6,
           "start_period": "10s"
         },
-        "expose": [],
-        "entrypoint": null,
-        "incremental": false,
-        "cmd": null
+        "incremental": false
       },
       "compose": {
         "up": false,
@@ -16167,7 +16185,7 @@
       },
       "entrypoint": {
         "name": "entrypoint",
-        "do": "exec redis-server --port ($env.REDIS_PORT? | default '6379') --save '' --appendonly no",
+        "do": "exec redis-server --port ($env.REDIS_PORT? | default '6379') --save '' --appendonly no --maxmemory ($env.REDIS_MAXMEMORY? | default '256mb') --maxmemory-policy noeviction",
         "priority": 0,
         "shell": "nu",
         "stop": false,
@@ -16313,8 +16331,9 @@
           }
         ],
         "epilogue": [
-          "COPY <<'CDCTRACE' /cdc-trace.yaml\n# The change feed's transaction trace, joined onto every row: shared by every\n# stream reading cdc-events through the transform's `-r`, since streams mode\n# refuses resources in a stream's own file.\n#\n# A writing transaction's first change on the bus is its marker\n# (mecha.txn_trace, rls.sql), and conduit does not interleave transactions, so\n# the marker last read is the transaction of every row after it. A row's own\n# txid cannot answer instead: the bus spells a delete as its before-image,\n# indistinguishable from an insert, and that image's txid, where it carries\n# more than its key, is its last writer's.\n#\n# A stream runs this among its INPUT processors, which Connect runs on one\n# goroutine whatever the pipeline's threads, after stamping @cdc_consumer with\n# a name no other stream uses: the cache is one per process, and each stream\n# reads the bus at its own position. The marker is consumed and dropped; a\n# row leaves with @traceparent set to its transaction's trace, or unset when\n# the transaction had none or began before this process read its marker.\ncache_resources:\n  - label: cdc_trace\n    memory:\n      # One entry per stream, replaced by every marker: the TTL bounds nothing\n      # and only has to outlast the longest transaction's rows (the default\n      # is 5m).\n      default_ttl: 24h\n\nprocessor_resources:\n  # Redis Streams delivers single-message batches. Missing declared readers\n  # hold the stream intact while their groups are still being registered.\n  - label: cdc_stream_trim\n    branch:\n      request_map: 'root = if batch_index() == 0 && @redis_stream.or(\"\") != \"\" { \"\" } else { deleted() }'\n      processors:\n        - redis_script:\n            url: ${REDIS_URL}\n            keys_mapping: 'root = [\"cdc-events\"]'\n            args_mapping: 'root = env(\"CDC_GROUPS\").parse_json()'\n            script: |\n              #!lua flags=allow-oom\n              if #ARGV == 0 then return redis.error_reply('CDC_GROUPS must name the stream readers') end\n              local present = {}\n              for _, group in ipairs(redis.call('XINFO', 'GROUPS', KEYS[1])) do\n                for i = 1, #group, 2 do\n                  if group[i] == 'name' then present[group[i + 1]] = true end\n                end\n              end\n              for _, name in ipairs(ARGV) do\n                if not present[name] then return 0 end\n              end\n              return redis.call('XTRIM', KEYS[1], 'MAXLEN', '~', 10000, 'LIMIT', 1000, 'ACKED')\n        - catch:\n            - crash: 'CDC stream trimming failed: ${! error() }'\n\n  - label: cdc_trace_join\n    # A batch runs each processor over every message before the next, so a\n    # marker mid-batch would reach the rows after it only once the batch had\n    # already read the cache; for_each runs the batch a message at a time.\n    for_each:\n      - switch:\n          - check: '@cdc_consumer.or(\"\") == \"\"'\n            processors:\n              - crash: a cdc-events stream ran cdc_trace_join without stamping @cdc_consumer\n          - check: this.catch({}).data.or(\"\").catch(\"\").parse_json().catch({}).__table.or(\"\") == \"txn_trace\"\n            processors:\n              # A marker without its NOT NULL trace keeps the error and stays\n              # on the stream, where the consumer refuses it as it would any\n              # malformed row.\n              - try:\n                  - mapping: |\n                      let trace = this.data.parse_json().traceparent\n                      root = if $trace.type() == \"string\" { $trace } else { throw(\"txn_trace marker has no traceparent\") }\n                  - cache:\n                      resource: cdc_trace\n                      operator: set\n                      key: ${! @cdc_consumer }\n                      value: ${! content() }\n                  - mapping: root = deleted()\n          - processors:\n              - branch:\n                  request_map: root = \"\"\n                  processors:\n                    - cache:\n                        resource: cdc_trace\n                        operator: get\n                        key: ${! @cdc_consumer }\n                    # No marker read yet: the transaction's trace is unknown.\n                    - catch:\n                        - mapping: root = \"\"\n                  result_map: meta traceparent = if content().string() != \"\" { content().string() } else { deleted() }\n\n  # A coalesced call's @traceparent, over a batch archived as a JSON array whose\n  # elements carry their row's @traceparent as `trace` (archive keeps no\n  # metadata): the first transaction's trace, the one that set the call off.\n  - label: cdc_trace_batch\n    mutation: |\n      let traces = this.map_each(m -> m.trace).filter(t -> t != \"\")\n      meta traceparent = if $traces.length() > 0 { $traces.index(0) } else { deleted() }\n\nCDCTRACE",
-          "COPY <<'COMPUTE' /compute-events.yaml\ninput:\n  redis_streams:\n    url: ${REDIS_URL}\n    streams: [cdc-events]\n    body_key: data\n    consumer_group: ${COMPUTE_GROUP}\n    client_id: compute\n    start_from_oldest: true\n    auto_replay_nacks: true\n    # A backlog is read in large steps so one batch below drains much of it.\n    limit: 1000\n  # The transform's -r cdc-trace.yaml consumes the transaction markers and\n  # stamps each row's @traceparent.\n  processors:\n    - mutation: meta cdc_consumer = env(\"COMPUTE_GROUP\")\n    - resource: cdc_stream_trim\n    - resource: cdc_trace_join\npipeline:\n  threads: 1\n  processors:\n    - mapping: |\n        let table = this.data.parse_json().__table\n        root.tables = [if $table.type() == \"string\" && $table != \"\" { $table } else { throw(\"CDC event has no table\") }]\n        root.trace = @traceparent.or(\"\")\noutput:\n  switch:\n    cases:\n      - check: errored()\n        output:\n          reject: ${! error() }\n      # An invalidation says the named tables changed since the last run, and\n      # the receiver durably merges them before acknowledging. Each period\n      # sends the union of changed tables; compute's PostgreSQL ledger keeps\n      # one pending successor while a claimed calculation runs. A stream\n      # acknowledgment means durable acceptance, not finished statistics.\n      #\n      # Compute answers a failed delivery 500, the error in the body, and keeps\n      # serving; the batch is retried here as the one message it became, with\n      # exponential backoff. A delivery still refused after twelve retries\n      # (about eight minutes of backoff) is no transient failure: crash, so the\n      # stack fails loudly. The delivery stays pending and is replayed first\n      # when Connect restarts.\n      - output:\n          broker:\n            pattern: fan_out\n            batching:\n              count: 10000\n              period: 1s\n              processors:\n                - archive:\n                    format: json_array\n                - resource: cdc_trace_batch\n                - mapping: root.tables = this.map_each(m -> m.tables).flatten().unique()\n            outputs:\n              - fallback:\n                  - retry:\n                      backoff:\n                        initial_interval: 1s\n                        max_interval: 1m\n                        max_elapsed_time: 0s\n                      max_retries: 12\n                      output:\n                        http_client:\n                          url: ${COMPUTE_URL:http://compute:9997}/invalidate\n                          verb: POST\n                          timeout: 30m\n                          retries: 0\n                          max_in_flight: 1\n                          headers:\n                            Content-Type: application/json\n                            Authorization: Bearer ${SERVICE_JWT:}\n                          metadata:\n                            include_patterns: [\"^traceparent$\"]\n                  - drop: {}\n                    processors:\n                      - crash: 'compute refused an invalidation through every retry: ${! @fallback_error }'\n\nCOMPUTE"
+          "COPY <<'CDCTRACE' /cdc-trace.yaml\n# The change feed's transaction trace, joined onto every row: shared by every\n# stream reading cdc-events through the transform's `-r`, since streams mode\n# refuses resources in a stream's own file.\n#\n# A writing transaction's first change on the bus is its marker\n# (mecha.txn_trace, rls.sql), and conduit does not interleave transactions, so\n# the marker last read is the transaction of every row after it. A row's own\n# txid cannot answer instead: the bus spells a delete as its before-image,\n# indistinguishable from an insert, and that image's txid, where it carries\n# more than its key, is its last writer's.\n#\n# A stream runs this among its INPUT processors, which Connect runs on one\n# goroutine whatever the pipeline's threads, after stamping @cdc_consumer with\n# a name no other stream uses: the cache is one per process, and each stream\n# reads the bus at its own position. The marker is consumed and dropped; a\n# row leaves with @traceparent set to its transaction's trace, or unset when\n# the transaction had none or began before this process read its marker.\ncache_resources:\n  - label: cdc_trace\n    memory:\n      # One entry per stream, replaced by every marker: the TTL bounds nothing\n      # and only has to outlast the longest transaction's rows (the default\n      # is 5m).\n      default_ttl: 24h\n  - label: cdc_epoch\n    memory:\n      # The epoch each reader's group had when this process first read it,\n      # kept for the process's life.\n      default_ttl: 876000h\n  - label: cdc_sweep\n    memory:\n      # A pipeline's aggregate, read once for the rows its start sweeps.\n      default_ttl: 1h\n\nprocessor_resources:\n  # Redis Streams delivers single-message batches. Missing declared readers\n  # hold the stream intact while their groups are still being registered. A\n  # reader under durable retry (CDC_RETRY_GROUPS) also hands its crash loops to\n  # its retry stream: a record that kills the process leaves no copy in memory,\n  # only a delivery count that grows with every restart. A declared group past\n  # CDC_GROUP_BUDGET (lag + pending entries) is destroyed and its epoch deleted\n  # so trimming proceeds and its reader restarts to sweep on return.\n  #\n  # Every group has an epoch in Redis, set when the guard first sees it. A\n  # Redis that lost its data, a group retired past its budget, or a slot_reset\n  # marker from Conduit clears epochs and stops readers so their restart\n  # rebuilds from the current rows.\n  - label: cdc_stream_trim\n    branch:\n      request_map: |\n        let reset = this.catch({}).data.or(\"\").catch(\"\").parse_json().catch({}).__table.or(\"\") == \"slot_reset\"\n        let wake = @redis_stream.or(\"\") == \"\" && env(\"CDC_GROUPS\").or(\"\") != \"\" && (@cdc_via.or(\"\") == \"wake\" || this.catch({}).wake.or(\"\") == \"start\")\n        root = if @redis_stream.or(\"\") != \"\" && (batch_index() == 0 || $reset) { if $reset { @redis_stream } else { \"\" } } else if $wake && batch_index() == 0 && @cdc_consumer.or(\"\") != \"\" { \"wake\" } else { deleted() }\n      processors:\n        - redis_script:\n            url: ${REDIS_URL}\n            keys_mapping: 'root = [\"cdc-events\"]'\n            args_mapping: 'root = [@cdc_consumer.or(\"\"), env(\"CDC_RETRY_GROUPS\").or(\"[]\"), env(\"CDC_MAX_DELIVERIES\").or(\"5\"), env(\"CDC_GROUP_BUDGET\").or(\"100000\"), content().string()].concat(env(\"CDC_GROUPS\").parse_json())'\n            script: |\n              #!lua flags=allow-oom\n              if #ARGV <= 5 then return redis.error_reply('CDC_GROUPS must name the stream readers') end\n              local consumer, max, budget, reset_id = ARGV[1], tonumber(ARGV[3]), tonumber(ARGV[4]), ARGV[5]\n              if not budget or budget <= 0 then return redis.error_reply('CDC_GROUP_BUDGET must be positive') end\n              if reset_id == 'wake' then\n                if consumer ~= '' and redis.call('EXISTS', 'cdc-retired:' .. consumer) == 1 then\n                  if redis.call('EXISTS', KEYS[1]) == 1 then\n                    redis.call('XGROUP', 'DESTROY', KEYS[1], consumer)\n                  end\n                  redis.call('XGROUP', 'CREATE', KEYS[1], consumer, '$', 'MKSTREAM')\n                  redis.call('DEL', 'cdc-retired:' .. consumer)\n                  redis.call('DEL', 'cdc-epoch:' .. consumer)\n                end\n                return ''\n              end\n              local groups = {}\n              for _, group in ipairs(redis.call('XINFO', 'GROUPS', KEYS[1])) do\n                local fields = {}\n                for i = 1, #group, 2 do fields[group[i]] = group[i + 1] end\n                groups[fields['name']] = fields\n              end\n              if reset_id ~= '' and consumer ~= '' and redis.call('GET', 'cdc-reset:' .. consumer) ~= reset_id then\n                for i = 6, #ARGV do\n                  redis.call('SET', 'cdc-reset:' .. ARGV[i], reset_id)\n                  redis.call('DEL', 'cdc-epoch:' .. ARGV[i])\n                end\n                if groups[consumer] then redis.call('XACK', KEYS[1], consumer, reset_id) end\n                return 'reset'\n              end\n              local retired_self = false\n              for i = 6, #ARGV do\n                local name = ARGV[i]\n                local fields = groups[name]\n                if fields then\n                  local behind = (tonumber(fields['pending']) or 0) + (tonumber(fields['lag']) or 0)\n                  if redis.call('EXISTS', 'cdc-retired:' .. name) == 1 then\n                    if behind > budget then\n                      redis.call('XGROUP', 'DESTROY', KEYS[1], name)\n                      redis.call('XGROUP', 'CREATE', KEYS[1], name, '$', 'MKSTREAM')\n                      redis.call('DEL', 'cdc-epoch:' .. name)\n                      redis.call('DEL', 'cdc-retired:' .. name)\n                      groups[name] = {pending = 0, lag = 0}\n                      if name == consumer then retired_self = true end\n                    else\n                      redis.call('DEL', 'cdc-retired:' .. name)\n                    end\n                  elseif behind > budget then\n                    redis.call('XGROUP', 'DESTROY', KEYS[1], name)\n                    redis.call('DEL', 'cdc-epoch:' .. name)\n                    redis.call('SET', 'cdc-retired:' .. name, '1')\n                    groups[name] = nil\n                  end\n                end\n              end\n              local epoch = ''\n              if consumer ~= '' and not retired_self then\n                local now = redis.call('TIME')\n                redis.call('SET', 'cdc-epoch:' .. consumer, now[1] .. '.' .. now[2], 'NX')\n                epoch = redis.call('GET', 'cdc-epoch:' .. consumer)\n              end\n              for _, group in ipairs(cjson.decode(ARGV[2])) do\n                if group == consumer and groups[group] and not retired_self then\n                  for _, p in ipairs(redis.call('XPENDING', KEYS[1], group, '-', '+', 100)) do\n                    if p[4] > max then\n                      local entry = redis.call('XRANGE', KEYS[1], p[1], p[1])[1]\n                      if entry then redis.call('XADD', group .. '-retry', '*', unpack(entry[2])) end\n                      redis.call('XACK', KEYS[1], group, p[1])\n                    end\n                  end\n                  redis.call('XTRIM', group .. '-retry', 'MAXLEN', '~', 10000, 'LIMIT', 1000, 'ACKED')\n                end\n              end\n              local complete = true\n              for i = 6, #ARGV do\n                if not groups[ARGV[i]] and redis.call('EXISTS', 'cdc-retired:' .. ARGV[i]) == 0 then complete = false end\n              end\n              if complete then redis.call('XTRIM', KEYS[1], 'MAXLEN', '~', 10000, 'LIMIT', 1000, 'ACKED') end\n              if retired_self then return 'retired' end\n              return epoch\n        - catch:\n            - crash: 'CDC stream trimming failed: ${! error() }'\n        - switch:\n            - check: 'this.catch(\"\") == \"reset\"'\n              processors:\n                - crash: 'the bus slot was lost for ${! @cdc_consumer }: restarting to rebuild'\n            - check: 'this.catch(\"\") == \"retired\"'\n              processors:\n                - crash: 'the retired group ${! @cdc_consumer } was advanced to the stream tail: restarting to rebuild'\n            - check: 'this.catch(\"\") != \"\"'\n              processors:\n                - mapping: 'meta cdc_epoch = content().string()'\n                - cached:\n                    cache: cdc_epoch\n                    key: '${! @cdc_consumer.or(\"\") }'\n                    processors:\n                      - mapping: 'root = @cdc_epoch'\n                - switch:\n                    - check: '@cdc_epoch != \"\" && content().string() != @cdc_epoch'\n                      processors:\n                        - crash: 'the bus lost what ${! @cdc_consumer } had not read (its epoch is ${! @cdc_epoch }, not ${! content() }): restarting to rebuild'\n\n  - label: cdc_trace_join\n    # A batch runs each processor over every message before the next, so a\n    # marker mid-batch would reach the rows after it only once the batch had\n    # already read the cache; for_each runs the batch a message at a time.\n    for_each:\n      - switch:\n          - check: '@cdc_consumer.or(\"\") == \"\"'\n            processors:\n              - crash: a cdc-events stream ran cdc_trace_join without stamping @cdc_consumer\n          - check: this.catch({}).data.or(\"\").catch(\"\").parse_json().catch({}).__table.or(\"\") == \"txn_trace\"\n            processors:\n              # A marker without its NOT NULL trace keeps the error and stays\n              # on the stream, where the consumer refuses it as it would any\n              # malformed row.\n              - try:\n                  - mapping: |\n                      let trace = this.data.parse_json().traceparent\n                      root = if $trace.type() == \"string\" { $trace } else { throw(\"txn_trace marker has no traceparent\") }\n                  - cache:\n                      resource: cdc_trace\n                      operator: set\n                      key: ${! @cdc_consumer }\n                      value: ${! content() }\n                  - mapping: root = deleted()\n          - check: this.catch({}).data.or(\"\").catch(\"\").parse_json().catch({}).__table.or(\"\") == \"slot_reset\"\n            processors:\n              - mapping: root = deleted()\n          - processors:\n              - branch:\n                  request_map: root = \"\"\n                  processors:\n                    - cache:\n                        resource: cdc_trace\n                        operator: get\n                        key: ${! @cdc_consumer }\n                    # No marker read yet: the transaction's trace is unknown.\n                    - catch:\n                        - mapping: root = \"\"\n                  result_map: meta traceparent = if content().string() != \"\" { content().string() } else { deleted() }\n\n  # A coalesced call's @traceparent, over a batch archived as a JSON array whose\n  # elements carry their row's @traceparent as `trace` (archive keeps no\n  # metadata): the first transaction's trace, the one that set the call off.\n  - label: cdc_trace_batch\n    mutation: |\n      let traces = this.map_each(m -> m.trace).filter(t -> t != \"\")\n      meta traceparent = if $traces.length() > 0 { $traces.index(0) } else { deleted() }\n\nCDCTRACE",
+          "COPY <<'DURABLERETRY' /durable-retry.yaml\n# Durable retry's start, a stream of its own beside the readers'. Each group\n# under durable retry (CDC_RETRY_GROUPS) moves its dead letters back to its\n# retry stream once, so the release that fixes a poison record also redrives\n# it, and the bus's state is logged where an operator reads the transform:\n# per group, what was redriven, what is pending and how far it lags.\ninput:\n  generate:\n    count: 1\n    interval: \"\"\n    mapping: 'root = {}'\npipeline:\n  processors:\n    - mapping: 'root = if env(\"CDC_RETRY_GROUPS\").or(\"[]\") == \"[]\" { deleted() } else { this }'\n    - redis_script:\n        url: ${REDIS_URL}\n        keys_mapping: 'root = [\"cdc-events\"]'\n        args_mapping: 'root = env(\"CDC_RETRY_GROUPS\").parse_json()'\n        script: |\n          local state = {}\n          if redis.call('EXISTS', KEYS[1]) == 1 then\n            for _, group in ipairs(redis.call('XINFO', 'GROUPS', KEYS[1])) do\n              local fields = {}\n              for i = 1, #group, 2 do fields[group[i]] = group[i + 1] end\n              state[fields['name']] = fields\n            end\n          end\n          local report = {}\n          for _, group in ipairs(ARGV) do\n            local dead = group .. '-dead'\n            local entries = redis.call('XRANGE', dead, '-', '+')\n            for _, entry in ipairs(entries) do\n              redis.call('XADD', group .. '-retry', '*', unpack(entry[2]))\n            end\n            redis.call('DEL', dead)\n            local fields = state[group] or {}\n            report[group] = {redriven = #entries, pending = fields['pending'] or 0, lag = fields['lag'] or cjson.null}\n          end\n          return cjson.encode(report)\n    - catch:\n        - crash: 'durable retry redrive failed: ${! error() }'\n    - log:\n        level: INFO\n        message: 'durable retry at start: ${! content() }'\noutput:\n  drop: {}\n\nDURABLERETRY",
+          "COPY <<'COMPUTE' /compute-events.yaml\ninput:\n  broker:\n    inputs:\n      - redis_streams:\n          url: ${REDIS_URL}\n          streams: [cdc-events]\n          body_key: data\n          consumer_group: ${COMPUTE_GROUP}\n          client_id: compute\n          start_from_oldest: true\n          auto_replay_nacks: true\n          # A backlog is read in large steps so one batch below drains much of it.\n          limit: 1000\n      # A change the bus lost while Redis restarted, the group was retired, or\n      # the slot reset was never heard; the start invalidates every computation.\n      - generate:\n          count: 1\n          interval: \"\"\n          mapping: 'root = {\"wake\": \"start\"}'\n  # The transform's -r cdc-trace.yaml consumes the transaction markers and\n  # stamps each row's @traceparent.\n  processors:\n    - mutation: meta cdc_consumer = env(\"COMPUTE_GROUP\")\n    - resource: cdc_stream_trim\n    - resource: cdc_trace_join\npipeline:\n  threads: 1\n  processors:\n    - mapping: |\n        let table = if this.exists(\"wake\") { null } else { this.data.parse_json().__table }\n        root.tables = if this.exists(\"wake\") {\n          null\n        } else if $table.type() == \"string\" && $table != \"\" {\n          [$table]\n        } else {\n          throw(\"CDC event has no table\")\n        }\n        root.trace = @traceparent.or(\"\")\noutput:\n  switch:\n    cases:\n      - check: errored()\n        output:\n          reject: ${! error() }\n      # An invalidation says the named tables changed since the last run, and\n      # the receiver durably merges them before acknowledging. Each period\n      # sends the union of changed tables; compute's PostgreSQL ledger keeps\n      # one pending successor while a claimed calculation runs. A stream\n      # acknowledgment means durable acceptance, not finished statistics.\n      #\n      # Compute answers a failed delivery 500, the error in the body, and keeps\n      # serving; the batch is retried here as the one message it became, with\n      # exponential backoff. A delivery still refused after twelve retries\n      # (about eight minutes of backoff) is no transient failure: crash, so the\n      # stack fails loudly. The delivery stays pending and is replayed first\n      # when Connect restarts.\n      - output:\n          broker:\n            pattern: fan_out\n            batching:\n              count: 10000\n              period: 1s\n              processors:\n                - archive:\n                    format: json_array\n                - resource: cdc_trace_batch\n                - mapping: |\n                    root.tables = if this.any(m -> m.tables == null) { null } else { this.map_each(m -> m.tables).flatten().unique() }\n            outputs:\n              - fallback:\n                  - retry:\n                      backoff:\n                        initial_interval: 1s\n                        max_interval: 1m\n                        max_elapsed_time: 0s\n                      max_retries: 12\n                      output:\n                        http_client:\n                          url: ${COMPUTE_URL:http://compute:9997}/invalidate\n                          verb: POST\n                          timeout: 30m\n                          retries: 0\n                          max_in_flight: 1\n                          headers:\n                            Content-Type: application/json\n                            Authorization: Bearer ${SERVICE_JWT:}\n                          metadata:\n                            include_patterns: [\"^traceparent$\"]\n                  - drop: {}\n                    processors:\n                      - crash: 'compute refused an invalidation through every retry: ${! @fallback_error }'\n\nCOMPUTE"
         ],
         "defaultCopy": null,
         "healthcheck": null,
@@ -16326,6 +16345,7 @@
           "--no-api",
           "-r",
           "/cdc-trace.yaml",
+          "/durable-retry.yaml",
           "/pipelines/golaberto-rounds.yaml",
           "/pipelines/golaberto-team-enrichment.yaml",
           "/pipelines/golaberto-team-profiles.yaml",
@@ -16426,7 +16446,7 @@
       },
       "entrypoint": {
         "name": "entrypoint",
-        "do": "let mecha = (if ('services/transform/cdc-trace.yaml' | path exists) { $env.PWD } else { (^mise where github:bonisoft3/mecha | str trim) }); let tdir = (if (($env.MECHA_TRANSFORM_DIR? | default '') != '') { $env.MECHA_TRANSFORM_DIR } else { ($mecha | path join 'services/transform') }); let cdir = (if (($env.COMPUTE_APP_DIR? | default '') != '') { $env.COMPUTE_APP_DIR } else { ($mecha | path join 'services/compute') }); exec redpanda-connect streams --set 'http.enabled=false' --no-api -r ($tdir | path join 'cdc-trace.yaml') 'docker/golaberto-rounds.yaml' 'docker/golaberto-team-enrichment.yaml' 'docker/golaberto-team-profiles.yaml' 'docker/golaberto-team-directory.yaml' 'docker/golaberto-matches-games.yaml' 'docker/golaberto-recent-championships.yaml' 'docker/golaberto-sofascore-admission.yaml' ($cdir | path join 'events.yaml')",
+        "do": "let mecha = (if ('services/transform/cdc-trace.yaml' | path exists) { $env.PWD } else { (^mise where github:bonisoft3/mecha | str trim) }); let tdir = (if (($env.MECHA_TRANSFORM_DIR? | default '') != '') { $env.MECHA_TRANSFORM_DIR } else { ($mecha | path join 'services/transform') }); let cdir = (if (($env.COMPUTE_APP_DIR? | default '') != '') { $env.COMPUTE_APP_DIR } else { ($mecha | path join 'services/compute') }); exec redpanda-connect streams --set ('http.enabled=' + ((($env.CDC_REPLAY_PORT? | default '') != '') | into string)) --set ('http.address=127.0.0.1:' + ($env.CDC_REPLAY_PORT? | default '0')) --no-api -r ($tdir | path join 'cdc-trace.yaml') ($tdir | path join 'durable-retry.yaml') 'docker/golaberto-rounds.yaml' 'docker/golaberto-team-enrichment.yaml' 'docker/golaberto-team-profiles.yaml' 'docker/golaberto-team-directory.yaml' 'docker/golaberto-matches-games.yaml' 'docker/golaberto-recent-championships.yaml' 'docker/golaberto-sofascore-admission.yaml' ($cdir | path join 'events.yaml')",
         "priority": 0,
         "shell": "nu",
         "stop": false,

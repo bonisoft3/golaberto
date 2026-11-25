@@ -75,11 +75,19 @@ processes:
       restart: on_failure
       exit_on_end: true
   database:
-    command: '''docker-entrypoint.sh'' ''postgres'' ''-c'' ''session_preload_libraries=pg_ivm'' ''-c'' ''wal_level=logical'' ''-c'' ''max_replication_slots=128'' ''-c'' ''max_wal_senders=128'' ''-c'' ''fsync=off'' ''-c'' ''synchronous_commit=off'' ''-c'' ''full_page_writes=off'' ''-c'' ''shared_buffers=32MB'' ''-c'' ''max_connections=200'' ''-c'' ''fsync=on'' ''-c'' ''synchronous_commit=on'' ''-c'' ''full_page_writes=on'' ''-c'' ''shared_buffers=512MB'''
+    command: '''docker-entrypoint.sh'' ''postgres'' ''-c'' ''session_preload_libraries=pg_ivm'' ''-c'' ''wal_level=logical'' ''-c'' ''max_replication_slots=128'' ''-c'' ''max_wal_senders=128'' ''-c'' ''max_slot_wal_keep_size=1GB'' ''-c'' ''fsync=off'' ''-c'' ''synchronous_commit=off'' ''-c'' ''full_page_writes=off'' ''-c'' ''shared_buffers=32MB'' ''-c'' ''max_connections=200'' ''-c'' ''fsync=on'' ''-c'' ''synchronous_commit=on'' ''-c'' ''full_page_writes=on'' ''-c'' ''shared_buffers=512MB'' ''-c'' ''max_slot_wal_keep_size=${PG_MAX_SLOT_WAL_KEEP_SIZE:-1GB}'''
   electric:
     availability:
       exit_on_end: true
-    command: '''env'' ''DATABASE_URL=postgresql://electric:${ELECTRIC_PASSWORD:-dev-electric-password}@127.0.0.1:5432/${POSTGRES_DB:-golaberto}?sslmode=disable'' ''ELECTRIC_SECRET=${ELECTRIC_SECRET:-dev-electric-secret}'' ''ELECTRIC_MANUAL_TABLE_PUBLISHING=true'' ''ELECTRIC_PORT=3002'' ''ELECTRIC_STORAGE_DIR=${PGDATA:-/var/lib/pgsql/data}/electric'' ''LD_LIBRARY_PATH=/electric-libs'' ''ELIXIR_ERL_OPTIONS=+fnu'' ''/electric-app/bin/entrypoint'' ''start'''
+    command: '''sh'' ''-c'' ''set -eu; lost=$$(psql "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}" -XAt -v ON_ERROR_STOP=1 -c "SELECT 1 FROM pg_replication_slots WHERE slot_name = ''\''''electric_slot_default''\'''' AND wal_status = ''\''''lost''\'''';"); if [ "$$lost" = "1" ]; then echo ''\''''electric: slot electric_slot_default was lost; dropping it and clearing shape storage to rebuild''\'''' >&2; psql "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-golaberto}" -X -v ON_ERROR_STOP=1 -c "SELECT pg_drop_replication_slot(''\''''electric_slot_default''\'''');"; rm -rf "${PGDATA:-/var/lib/pgsql/data}/electric"; fi; exec env "DATABASE_URL=postgresql://electric:${ELECTRIC_PASSWORD:-dev-electric-password}@127.0.0.1:5432/${POSTGRES_DB:-golaberto}?sslmode=disable" "ELECTRIC_SECRET=${ELECTRIC_SECRET:-dev-electric-secret}" ELECTRIC_MANUAL_TABLE_PUBLISHING=true ELECTRIC_PORT=3002 "ELECTRIC_STORAGE_DIR=${PGDATA:-/var/lib/pgsql/data}/electric" LD_LIBRARY_PATH=/electric-libs ELIXIR_ERL_OPTIONS=+fnu /electric-app/bin/entrypoint start'''
+  mesh-events:
+    availability:
+      exit_on_end: true
+    environment:
+      - MESH_SUBSCRIPTIONS_DIR=/mesh-events/subscriptions
+      - MESH_APP_PORT=4195
+  redis:
+    command: '''sh'' ''-c'' ''mkdir -p /var/lib/redis && exec redis-server --port "$$REDIS_PORT" --save ''\''''''\'''' --appendonly yes --appendfsync always --aof-load-corrupt-tail-max-size 65536 --maxmemory "$${REDIS_MAXMEMORY:-256mb}" --maxmemory-policy noeviction --dir /var/lib/redis'''
   risingwave:
     command: '''/usr/local/bin/appliance-risingwave.sh'''
     environment:
@@ -141,16 +149,12 @@ processes:
       exit_on_end: true
     environment:
       - CDC_GROUPS=["golaberto-matches-games","golaberto-recent-championships","golaberto-rounds","golaberto-sofascore-admission","golaberto-team-directory","golaberto-team-enrichment","golaberto-team-profiles"]
+      - CDC_REPLAY_PORT=4195
+      - CDC_RETRY_GROUPS=["golaberto-team-enrichment","golaberto-team-profiles","golaberto-team-directory","golaberto-matches-games","golaberto-recent-championships","golaberto-sofascore-admission"]
   render:
     availability:
       exit_on_end: true
-  mesh-events:
-    availability:
-      exit_on_end: true
   conduit:
-    availability:
-      exit_on_end: true
-  compute:
     availability:
       exit_on_end: true
   sofascore:
@@ -165,6 +169,85 @@ processes:
       restart: on_failure
       exit_on_end: true
 APPLIANCE
+COPY <<'SUBSCRIPTIONS' /mesh-events/subscriptions/retry.yaml
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: golaberto-team-enrichment-retry
+spec:
+  pubsubname: redis-streams
+  topic: golaberto-team-enrichment-retry
+  routes:
+    default: /golaberto-team-enrichment/replay
+  deadLetterTopic: golaberto-team-enrichment-dead
+scopes:
+  - mechaed
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: golaberto-team-profiles-retry
+spec:
+  pubsubname: redis-streams
+  topic: golaberto-team-profiles-retry
+  routes:
+    default: /golaberto-team-profiles/replay
+  deadLetterTopic: golaberto-team-profiles-dead
+scopes:
+  - mechaed
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: golaberto-team-directory-retry
+spec:
+  pubsubname: redis-streams
+  topic: golaberto-team-directory-retry
+  routes:
+    default: /golaberto-team-directory/replay
+  deadLetterTopic: golaberto-team-directory-dead
+scopes:
+  - mechaed
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: golaberto-matches-games-retry
+spec:
+  pubsubname: redis-streams
+  topic: golaberto-matches-games-retry
+  routes:
+    default: /golaberto-matches-games/replay
+  deadLetterTopic: golaberto-matches-games-dead
+scopes:
+  - mechaed
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: golaberto-recent-championships-retry
+spec:
+  pubsubname: redis-streams
+  topic: golaberto-recent-championships-retry
+  routes:
+    default: /golaberto-recent-championships/replay
+  deadLetterTopic: golaberto-recent-championships-dead
+scopes:
+  - mechaed
+---
+apiVersion: dapr.io/v2alpha1
+kind: Subscription
+metadata:
+  name: golaberto-sofascore-admission-retry
+spec:
+  pubsubname: redis-streams
+  topic: golaberto-sofascore-admission-retry
+  routes:
+    default: /golaberto-sofascore-admission/replay
+  deadLetterTopic: golaberto-sofascore-admission-dead
+scopes:
+  - mechaed
+SUBSCRIPTIONS
 RUN printf '%s\n' '#!/bin/sh' 'set -e' 'while sleep "${POKE_INTERVAL_SECONDS:-60}"; do' '  curl -fsS -X POST -H "Authorization: Bearer ${SERVICE_JWT}" "http://ticker:9998/poke?caller=appliance" >/dev/null || { echo "clock: the ticker refused its poke" >&2; exit 1; }' 'done' > /usr/local/bin/appliance-clock.sh && chmod 755 /usr/local/bin/appliance-clock.sh
 ENV PATH=/usr/lib/postgresql/18/bin:/usr/local/bin:$PATH
 ENV PGDATA=/var/lib/pgsql/data
@@ -210,7 +293,7 @@ COPY --link --from=golaberto-airlock /packages /packages
 COPY --link --from=golaberto-airlock-mesh /daprd /daprd
 COPY --link --from=golaberto-airlock-mesh /dapr /dapr
 COPY --link --from=golaberto-airlock-upgrade /airlock-upgrade.sql /airlock-upgrade.sql
-COPY --from=redis:8.2.11-bookworm@sha256:b0b01167ff47bc3868e56a967895a26be4230891a1f42a78ab61cdd227accc8d /usr/local/bin/redis-server /usr/local/bin/redis-cli /usr/local/bin/
+COPY --from=redis:8.4.8-trixie@sha256:90cb779e1f814f1123532293f7a7a18a6a48bdc01aa0a9d54ce9f3d61b71018f /usr/local/bin/redis-server /usr/local/bin/redis-cli /usr/local/bin/
 COPY --from=golaberto-mesh-events /daprd /usr/local/bin/daprd
 COPY --from=golaberto-mesh-events /dapr/components/ /mesh-events/dapr/components/
 COPY --from=golaberto-conduit /app/conduit /usr/local/bin/conduit
@@ -218,6 +301,7 @@ COPY --from=golaberto-conduit /app/connectors/ /usr/local/bin/
 COPY docker/*.yaml docker/
 COPY --from=golaberto-transform /redpanda-connect /usr/local/bin/redpanda-connect
 COPY --from=golaberto-transform /cdc-trace.yaml /transform/cdc-trace.yaml
+COPY --from=golaberto-transform /durable-retry.yaml /transform/durable-retry.yaml
 COPY --link --from=golaberto-timer-check /timer-check.sql /timer-check.sql
 COPY --from=golaberto-compute /app/ /compute-app/
 COPY --link --from=golaberto-compute /deno-dir /deno-dir
@@ -274,7 +358,7 @@ RUN grep -v AIRLOCK_SEAL_DEV /.bayt/process-compose.yaml > /tmp/process-compose.
 RUN awk 'skip { d += gsub(/\{/, "{") - gsub(/\}/, "}"); if (d <= 0) skip = 0; next } /handle @rendered \{/ { skip = 1; d = 1; next } { print }' /etc/caddy/Caddyfile > /tmp/Caddyfile && mv /tmp/Caddyfile /etc/caddy/Caddyfile
 RUN nu -c 'let f = "/dapr/airlock/acquire.yaml"; let b = (open $f); if $b.spec.baseUrl != "http://sofascore:8080" { error make {msg: "appliance: unexpected bridge endpoint in acquire"} }; $b | upsert spec.baseUrl "http://sofascore:8081" | to yaml | save -f $f'
 RUN --network=none deno check --cached-only --frozen --config /compute-app/deno.json /compute-app/main.ts /compute-app/cage.ts /compute-app/step-worker.ts && touch /compute-app/extensions/.installed-v1.5.6
-RUN nu -c 'let f = "/.bayt/process-compose.yaml"; open $f | upsert processes.compute.depends_on.risingwave {condition: "process_healthy"} | if ("transform" in $in.processes) { update processes.transform.entrypoint {|p| $p.processes.transform.entrypoint | each {|a| $a | str replace " ($$cdir | path join '\''events.yaml'\'')" "" } } } else { $in } | to yaml | save -f $f'
+RUN nu -c 'let f = "/.bayt/process-compose.yaml"; open $f | upsert processes.compute.depends_on.risingwave {condition: "process_healthy"} | upsert processes.compute.availability.exit_on_end true | if ("transform" in $in.processes) { update processes.transform.entrypoint {|p| $p.processes.transform.entrypoint | each {|a| $a | str replace " ($$cdir | path join '\''events.yaml'\'')" "" } } } else { $in } | to yaml | save -f $f'
 RUN ports="8081"; for p in $ports; do if grep -Eq ":-$p\}" /.bayt/process-compose.yaml; then echo "appliance: bridge port $p is one an appliance process takes; name another" >&2; exit 1; fi; done; dup="$(printf '%s\n' $ports | sort | uniq -d)"; if [ -n "$dup" ]; then echo "appliance: bridges share port $dup" >&2; exit 1; fi
 RUN ELECTRIC_SECRET=validation-only caddy validate --adapter caddyfile --config /etc/caddy/Caddyfile
 

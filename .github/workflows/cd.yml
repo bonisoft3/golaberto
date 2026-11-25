@@ -69,10 +69,11 @@ jobs:
             --project=trash-362115 --zone=us-central1-a --quiet \
             --ssh-flag="-o StrictHostKeyChecking=accept-new" \
             --command="set -eu
-              sudo docker login -u oauth2accesstoken --password-stdin https://us-central1-docker.pkg.dev
-              trap 'sudo docker logout https://us-central1-docker.pkg.dev >/dev/null 2>&1 || true' EXIT
-              sudo docker pull '${IMAGE_REF}'
-              sudo docker logout https://us-central1-docker.pkg.dev >/dev/null 2>&1 || true
+              cfg=\$(mktemp -d)
+              trap 'sudo rm -rf \"\$cfg\"' EXIT
+              sudo env DOCKER_CONFIG=\"\$cfg\" docker login -u oauth2accesstoken --password-stdin https://us-central1-docker.pkg.dev
+              sudo env DOCKER_CONFIG=\"\$cfg\" docker pull '${IMAGE_REF}'
+              sudo rm -rf \"\$cfg\"
               sudo cp -a /mnt/disks/golaberto/config/run-bounded.sh /mnt/disks/golaberto/config/run-bounded.sh.prev
               sudo sed -i 's|^image=.*|image=${IMAGE_REF}|' /mnt/disks/golaberto/config/run-bounded.sh
               sudo grep -Fxq 'image=${IMAGE_REF}' /mnt/disks/golaberto/config/run-bounded.sh

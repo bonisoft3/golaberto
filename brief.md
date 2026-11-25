@@ -111,6 +111,8 @@ their own, which the page keeps while they type.
 - [[jogador]]: one player: name, position and country; their season in each
   championship and team; and the games they played, with their minutes, goals
   and cards.
+- [[jogadores]]: forty visible players per page, fetched with one extra row to
+  decide whether another page exists without a second query.
 
 - [[estadios]]: every stadium, with its city and country, narrowed by a name
   typed.

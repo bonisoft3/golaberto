@@ -2498,6 +2498,7 @@ loop: surface: checks: "image-renderers": {
 }
 
 loop: surface: checks: "team-chart-renderer": {verb: "test", cmds: ["\(pronto.#Harness.rule); mise exec -- deno test \(pronto.#Harness.flags) --allow-read --allow-env tests/team-chart-renderer.ts"], note: "pure chart geometry, accessible links and safe SVG node output"}
+loop: surface: checks: "directory-pagination": {verb: "test", cmds: ["\(pronto.#Harness.rule); mise exec -- deno test \(pronto.#Harness.flags) -A tests/directory-pagination.ts"], note: "one bounded directory read displays forty rows and derives the next page from its extra row"}
 
 loop: surface: checks: "team-enrichment-import": {verb: "test", cmds: ["python3 -m unittest discover -s tools -p team_enrichment_import_test.py"], note: "legacy snapshot parsing, stable identity and validation are deterministic"}
 loop: surface: checks: "cloudflare-policy":      {verb: "test", cmds: ["\((pronto.#Platform & {tree: "pronto"}).rule); mise exec -- deno test -A --no-check --config ($pronto | path join deno.json) --lock ($pronto | path join deno.lock) --frozen tools/publish-cloudflare.test.ts", "\(pronto.#Platforms.rule); mise exec -- deno test -A --no-check \(pronto.#Platforms.flags) tools/bootstrap-cloudflare.test.ts"], note: "Cloudflare composition preserves storage, secrets, snapshot isolation and demand rendering"}

@@ -24,6 +24,7 @@ _playerDirectoryMarkup: """
 	<div class="page"><div class="content catalog">
 	\((#PagedRead & {
 		key:      "players-directory"
+		probe:    false
 		owner:    "00000000-0000-0000-0000-000000000000"
 		table:    "player_directory"
 		filter:   _playerDirectoryFilter
@@ -48,7 +49,7 @@ _playerDirectoryMarkup: """
 		content: """
 			<div class="table-wrap"><table class="grid catalog-table">
 			  <thead><tr><th scope="col" data-text="{msg.col_player}"></th><th scope="col" data-text="{msg.player_full_name}"></th><th scope="col" data-text="{msg.player_position}"></th><th scope="col" data-text="{msg.col_country}"></th><th scope="col" data-text="{msg.player_latest_club}"></th><th scope="col" class="num" data-text="{msg.player_rating}"></th><th scope="col" class="num wide" data-text="{msg.col_off_rating}"></th><th scope="col" class="num wide" data-text="{msg.col_def_rating}"></th></tr></thead>
-			  <tbody data-live="player_directory" data-filter="\(_playerDirectoryFilter)&offset={offset}&limit=40" data-order='\(_playerDirectoryOrder)' data-empty="{msg.players_empty}">
+			  <tbody data-live="player_directory" data-filter="\(_playerDirectoryFilter)&offset={offset}&limit=41" data-order='\(_playerDirectoryOrder)' data-empty="{msg.players_empty}">
 			    <template data-item data-when="latest_team_id=not.is.null">\((#PlayerDirectoryRow & {latestTeam: true}).out)</template>
 			    <template data-item data-when="latest_team_id=is.null">\((#PlayerDirectoryRow & {latestTeam: false}).out)</template>
 			  </tbody>

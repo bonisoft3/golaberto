@@ -322,6 +322,13 @@
                 }
               ]
             },
+            "directory-pagination": {
+              "cmds": [
+                {
+                  "do": "use tools.nu [run-mise]; let omnishell = (run-mise where github:bonisoft3/omnishell | str trim); mise exec -- deno test --config ($omnishell | path join test deno.json) --lock ($omnishell | path join test deno.lock) --frozen -A tests/directory-pagination.ts"
+                }
+              ]
+            },
             "team-enrichment-import": {
               "cmds": [
                 {

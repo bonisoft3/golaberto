@@ -99,6 +99,8 @@ processes:
       period_seconds: 1
       timeout_seconds: 5
       failure_threshold: 10
+    shutdown:
+      timeout_seconds: 10
   visual:
     depends_on:
       launch:
@@ -336,6 +338,8 @@ processes:
       period_seconds: 5
       timeout_seconds: 5
       failure_threshold: 36
+    shutdown:
+      timeout_seconds: 10
   conduit:
     depends_on:
       database:
@@ -373,6 +377,8 @@ processes:
       period_seconds: 5
       timeout_seconds: 5
       failure_threshold: 44
+    shutdown:
+      timeout_seconds: 10
   compute:
     depends_on:
       crud:
@@ -420,6 +426,8 @@ processes:
       period_seconds: 5
       timeout_seconds: 5
       failure_threshold: 2190
+    shutdown:
+      timeout_seconds: 10
   ticker:
     depends_on:
       crud:
@@ -514,6 +522,8 @@ processes:
       period_seconds: 5
       timeout_seconds: 5
       failure_threshold: 36
+    shutdown:
+      timeout_seconds: 10
   airlock-mesh:
     depends_on:
       sofascore:
@@ -553,6 +563,8 @@ processes:
       period_seconds: 5
       timeout_seconds: 5
       failure_threshold: 36
+    shutdown:
+      timeout_seconds: 10
   check-acceptance:
     depends_on:
       launch:
@@ -664,6 +676,8 @@ processes:
       period_seconds: 5
       timeout_seconds: 5
       failure_threshold: 32
+    shutdown:
+      timeout_seconds: 10
   sofascore:
     entrypoint:
     - mise
@@ -716,6 +730,8 @@ processes:
       period_seconds: 1
       timeout_seconds: 5
       failure_threshold: 150
+    shutdown:
+      timeout_seconds: 10
   rclone-s3:
     depends_on:
       database:
@@ -746,6 +762,8 @@ processes:
       period_seconds: 1
       timeout_seconds: 5
       failure_threshold: 60
+    shutdown:
+      timeout_seconds: 10
   crud:
     depends_on:
       database:
@@ -784,6 +802,8 @@ processes:
       period_seconds: 5
       timeout_seconds: 5
       failure_threshold: 36
+    shutdown:
+      timeout_seconds: 10
   electric:
     depends_on:
       database:
@@ -832,6 +852,8 @@ processes:
       period_seconds: 1
       timeout_seconds: 5
       failure_threshold: 60
+    shutdown:
+      timeout_seconds: 10
   redis:
     depends_on:
       "bayt:portcheck":
@@ -856,6 +878,8 @@ processes:
       period_seconds: 5
       timeout_seconds: 3
       failure_threshold: 36
+    shutdown:
+      timeout_seconds: 10
   transform:
     depends_on:
       redis:

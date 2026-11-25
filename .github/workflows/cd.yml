@@ -1,0 +1,92 @@
+name: cd
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: cd
+  cancel-in-progress: false
+
+jobs:
+  gcp-vm:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Free runner disk space
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc
+
+      - uses: actions/checkout@v7
+
+      - name: Authenticate to GCP (Workload Identity Federation)
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: projects/646949889529/locations/global/workloadIdentityPools/github-pool/providers/bonisoft3-golaberto
+          service_account: golaberto-vm-deployer@trash-362115.iam.gserviceaccount.com
+
+      - uses: google-github-actions/setup-gcloud@v3
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
+
+      - uses: docker/setup-buildx-action@v4
+        with:
+          driver: docker
+
+      - name: Build and push release-docker image
+        id: image
+        env:
+          BAYT_DOCKER_REPOSITORY: us-central1-docker.pkg.dev/trash-362115/pronto/golaberto
+          BAYT_IMAGE_TAG: ${{ github.ref_name }}
+          DOCKER_DEFAULT_PLATFORM: linux/amd64
+        run: |
+          docker compose build release-docker
+          docker compose push release-docker
+          digest="$(docker buildx imagetools inspect "${BAYT_DOCKER_REPOSITORY}:${BAYT_IMAGE_TAG}" | awk '/^Digest:/ {print $2; exit}')"
+          test -n "$digest"
+          echo "ref=${BAYT_DOCKER_REPOSITORY}@${digest}" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy release image to golaberto VM
+        env:
+          IMAGE_REF: ${{ steps.image.outputs.ref }}
+        run: |
+          gcloud auth print-access-token | gcloud compute ssh golaberto \
+            --project=trash-362115 --zone=us-central1-a --quiet \
+            --ssh-flag="-o StrictHostKeyChecking=accept-new" \
+            --command="set -eu
+              sudo docker login -u oauth2accesstoken --password-stdin https://us-central1-docker.pkg.dev
+              trap 'sudo docker logout https://us-central1-docker.pkg.dev >/dev/null 2>&1 || true' EXIT
+              sudo docker pull '${IMAGE_REF}'
+              sudo docker logout https://us-central1-docker.pkg.dev >/dev/null 2>&1 || true
+              sudo cp -a /mnt/disks/golaberto/config/run-bounded.sh /mnt/disks/golaberto/config/run-bounded.sh.prev
+              sudo sed -i 's|^image=.*|image=${IMAGE_REF}|' /mnt/disks/golaberto/config/run-bounded.sh
+              sudo grep -Fxq 'image=${IMAGE_REF}' /mnt/disks/golaberto/config/run-bounded.sh
+              sudo /mnt/disks/golaberto/config/run-bounded.sh
+              for _ in \$(seq 1 60); do
+                if [ \"\$(curl -sf http://127.0.0.1:8080/health || true)\" = 'ok' ]; then
+                  exit 0
+                fi
+                sleep 3
+              done
+              echo 'Health check timed out on VM; rolling back to previous image' >&2
+              sudo docker logs --tail 80 golaberto >&2 || true
+              sudo cp -a /mnt/disks/golaberto/config/run-bounded.sh.prev /mnt/disks/golaberto/config/run-bounded.sh
+              sudo /mnt/disks/golaberto/config/run-bounded.sh || true
+              exit 1"
+
+      - name: Verify live origin health
+        run: |
+          for _ in $(seq 1 20); do
+            if [ "$(curl -sf https://golaberto.bonisoft3.com/health || true)" = "ok" ]; then
+              break
+            fi
+            sleep 3
+          done
+          test "$(curl -sf https://golaberto.bonisoft3.com/health)" = "ok"
+          status="$(curl -so /dev/null -w '%{http_code}' -m 10 https://golaberto.bonisoft3.com/)"
+          test "$status" = "200"

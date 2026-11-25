@@ -115,22 +115,25 @@ _championshipStandingsCells: (#StandingsCells & {championship_param: "{param.cha
 }
 #PageArrows: {
 	let P = self
+	probe:  *true | bool
 	key:    string
 	table:  string
 	filter: string
 	order:  string
 	select: *"id" | string
+	_probe: [if P.probe {"  <span data-live=\"\(P.table)\" data-filter=\"\(P.filter)&amp;offset={next_offset}&amp;limit=1\" data-select=\"\(P.select)\" data-order='\(P.order)' data-empty=\"\"><template data-item><i data-next-page hidden></i></template></span>"}, ""][0]
 	out: """
 		<nav class="archive-pager" data-page-offset="{offset}" aria-label="{msg.archive_pages}">
 		  <button id="\(P.key)-previous" type="button" class="btn-quiet page-previous" data-text="{msg.page_previous}"></button>
 		  <span class="page-status"><span data-text="{msg.page_label}"></span> <b data-text="{page}" data-text-format="number"></b></span>
-		  <span data-live="\(P.table)" data-filter="\(P.filter)&amp;offset={next_offset}&amp;limit=1" data-select="\(P.select)" data-order='\(P.order)' data-empty=""><template data-item><i data-next-page hidden></i></template></span>
+		\(P._probe)
 		  <button id="\(P.key)-next" type="button" class="btn-quiet page-next" data-text="{msg.page_next}"></button>
 		</nav>
 		"""
 }
 #PagedRead: {
 	let P = self
+	probe:       *true | bool
 	probeSelect: *"id" | string
 	anchored:    *false | bool
 	seed:        *false | bool
@@ -154,7 +157,7 @@ _championshipStandingsCells: (#StandingsCells & {championship_param: "{param.cha
 		  <div class="page-window">
 		\(P.controls)
 		\(P.content)
-		\((#PageArrows & {key: P.key, table: P.table, filter: P.filter, order: P.order, select: P.probeSelect}).out)
+		\((#PageArrows & {key: P.key, table: P.table, filter: P.filter, order: P.order, select: P.probeSelect, probe: P.probe}).out)
 		  </div>
 		</div>
 		"""

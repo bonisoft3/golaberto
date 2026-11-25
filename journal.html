@@ -28,6 +28,11 @@
     <h1>GolAberto — The Open Football Statistics Encyclopedia</h1>
     <p>An open football archive in Portuguese, Spanish, and English covering championships, phases, groups, qualification zones, match line-ups, referees, stadiums, and live-recounted standings tables across South American and world football. <a href="#initial-brief">Latest product brief ↓</a></p>
   </header>
+<article>
+  <time datetime="2026-11-24">24 November 2026</time>
+  <h2>Bounded directory pagination</h2>
+  <p>The players directory fetches at most 41 rows, displays 40, and derives the next-page arrow from the extra row. The separate next-page request is gone. Generated with the existing renderer on main; the Chromium regression passed empty, partial, full, overflow and shrinking result sets.</p>
+</article>
 <article id="bounded-verification-2026-11-10">
 <h2>2026-11-10 — Archive verification catches transfer and memory limits</h2>
 <p>The native runtime now sorts outputs once and publishes by ordinal ranges. Ratings and odds read pages bounded by both rows and bytes, retaining the existing numerical input limit. DuckDB uses one execution thread under its 512 MiB engine budget. These changes address full-archive failures without changing the calculation window or WASM algorithm.</p>

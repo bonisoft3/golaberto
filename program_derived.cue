@@ -664,8 +664,7 @@ code: surface: screens: {
 		reads: [
 			{table: "archive_page", kind: "live", nested: false, lists: [], route: "view", clauses: [{"col":"id","op":"eq"}], embeds: [], orders: []},
 			{table: "geography_region", kind: "live", nested: true, lists: [], route: "view", clauses: [], embeds: [], limit: 6, orders: ["name"]},
-			{table: "player_directory", kind: "live", nested: true, lists: [], route: "server", embeds: [], limit: 40, orders: ["name","id","rating"]},
-			{table: "player_directory", kind: "live", nested: true, lists: [], route: "server", embeds: [], limit: 1, orders: ["name","id","rating"]},
+			{table: "player_directory", kind: "live", nested: true, lists: [], route: "server", embeds: [], limit: 41, orders: ["name","id","rating"]},
 		]
 		writes: []
 		charts: [

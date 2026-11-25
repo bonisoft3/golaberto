@@ -50,10 +50,13 @@ jobs:
         env:
           BAYT_DOCKER_REPOSITORY: us-central1-docker.pkg.dev/trash-362115/pronto/golaberto
           BAYT_IMAGE_TAG: ${{ github.ref_name }}
+          BUILDX_BAKE_ENTITLEMENTS_FS: "0"
           DOCKER_DEFAULT_PLATFORM: linux/amd64
-          COMPOSE_BAKE: "true"
         run: |
-          docker compose build --push release-docker
+          docker compose config > "$RUNNER_TEMP/compose.yaml"
+          docker buildx bake -f "$RUNNER_TEMP/compose.yaml" --push \
+            --set 'golaberto-release-docker.platforms=linux/amd64' \
+            golaberto-release-docker
           digest="$(docker buildx imagetools inspect "${BAYT_DOCKER_REPOSITORY}:${BAYT_IMAGE_TAG}" | awk '/^Digest:/ {print $2; exit}')"
           test -n "$digest"
           echo "ref=${BAYT_DOCKER_REPOSITORY}@${digest}" >> "$GITHUB_OUTPUT"

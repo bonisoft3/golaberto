@@ -72,6 +72,7 @@ jobs:
               cfg=\$(mktemp -d)
               trap 'sudo rm -rf \"\$cfg\"' EXIT
               sudo env DOCKER_CONFIG=\"\$cfg\" docker login -u oauth2accesstoken --password-stdin https://us-central1-docker.pkg.dev
+              sudo docker image prune -af
               sudo env DOCKER_CONFIG=\"\$cfg\" docker pull '${IMAGE_REF}'
               sudo rm -rf \"\$cfg\"
               sudo cp -a /mnt/disks/golaberto/config/run-bounded.sh /mnt/disks/golaberto/config/run-bounded.sh.prev

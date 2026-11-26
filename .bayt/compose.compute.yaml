@@ -11,7 +11,7 @@ services:
         golaberto-airlock-upgrade: service:golaberto-airlock-upgrade
         golaberto-timer-check: service:golaberto-timer-check
         libraries_mecha-compute-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.35.1@sha256:c9bd4cd9201c0c329c3c204da0e9253cefbe6a00fbde912370faee7908ce95a4}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-compute:0.36.0@sha256:8e67a4d5b5622ef3f842395744de497b6a199a9c48f03ad2ceacea2e098e3d05}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-compute-image}
       context: ..
       dockerfile: .bayt/Dockerfile.compute
       target: compute

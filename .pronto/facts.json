@@ -451,7 +451,7 @@
     {"path":"shell/shared/match-context.css","sha256":"82adee5243457f43844c87f5fc2f76beda6153e4c668e3e669d315161a806ac5","derived":false},
     {"path":"shell/shared/match-probability.css","sha256":"541bf4e91ff50385340c538773d2555174976cfddcd344f111a91bd1228a8bb3","derived":false},
     {"path":"shell/shared/team.css","sha256":"505fb5d8e6fd8a2921bcb8bac85b31ee42770f8d42e544ad015d32ac7d6f223a","derived":false},
-    {"path":"shell/design.css","sha256":"2a7dd7ad526e29d0dc290c8cb4edec9856b9fbceedbf473a004c63c6c50c6a78","derived":true}
+    {"path":"shell/design.css","sha256":"330036c142ea910614f1a19379d96f6ba0161fe676cee37168400edd0cd1bda9","derived":true}
   ],
   "cel_ir": [
     {"cel":"this == '' || (this.size() <= 4999 && this.matches('^[1-9][0-9]{0,3}(,[1-9][0-9]{0,3})*$'))"},
